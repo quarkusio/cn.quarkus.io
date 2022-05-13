@@ -18,158 +18,177 @@ msgstr ""
 
 #. type: YAML Front Matter: author
 #: upstream/_posts/2021-09-23-unused-beans.adoc:1
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "mkouba"
-msgstr ""
+msgstr "mkouba"
 
 #. type: YAML Front Matter: date
 #: upstream/_posts/2021-09-23-unused-beans.adoc:1
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "2021-09-23"
-msgstr ""
+msgstr "2021-09-23"
 
 #. type: YAML Front Matter: layout
 #: upstream/_posts/2021-09-23-unused-beans.adoc:1
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "post"
-msgstr ""
+msgstr "职位"
 
 #. type: YAML Front Matter: synopsis
 #: upstream/_posts/2021-09-23-unused-beans.adoc:1
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "Why does Quarkus detect and remove unused beans by default?"
-msgstr ""
+msgstr "为什么Quarkus默认会检测并删除未使用的豆子？"
 
 #. type: YAML Front Matter: tags
 #: upstream/_posts/2021-09-23-unused-beans.adoc:1
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "cdi arc"
-msgstr ""
+msgstr "cdi arc"
 
 #. type: YAML Front Matter: title
 #: upstream/_posts/2021-09-23-unused-beans.adoc:1
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "Unused Beans and Why We Remove Them"
-msgstr ""
+msgstr "未使用的豆子和我们为什么要移除它们"
 
 #. type: Plain text
 #: upstream/_posts/2021-09-23-unused-beans.adoc:13
+#, fuzzy
 msgid "Quarkus is a build-time oriented stack, i.e. it tries to do as much as possible at build time to improve the startup time and memory usage of your application.  However, it's not always so easy and straightforward as many existing frameworks and libraries do not take this design choice into account.  And CDI is one of them."
-msgstr ""
+msgstr "Quarkus是一个面向构建时间的堆栈，也就是说，它试图在构建时间做尽可能多的事情来改善你的应用程序的启动时间和内存使用。然而，这并不总是那么容易和直接，因为许多现有的框架和库并没有考虑到这种设计选择。而CDI就是其中之一。"
 
 #. type: Title ==
 #: upstream/_posts/2021-09-23-unused-beans.adoc:14
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "Why Bother"
-msgstr ""
+msgstr "何必纠结"
 
 #. type: Plain text
 #: upstream/_posts/2021-09-23-unused-beans.adoc:22
+#, fuzzy
 msgid "A traditional CDI container attempts to find all beans during the application bootstrap.  For each bean a metadata object is created and kept for the lifetime of the application.  This allows for certain degree of dynamicity at runtime but it's suboptimal when it comes to memory consumption and application startup time.  Quarkus, on the other hand, attempts to detect and remove all _unused_ beans, interceptors and decorators during build by default.  And the reason is simple.  This optimization helps to minimize the amount of generated classes and the number of metadata objects used at runtime, thus conserving memory."
-msgstr ""
+msgstr "传统的CDI容器试图在应用启动期间找到所有的Bean。为每个Bean创建一个元数据对象，并在应用程序的生命周期内保存。这允许在运行时有一定程度的动态性，但在内存消耗和应用程序启动时间方面，它是次优的。另一方面，Quarkus试图在构建过程中默认检测并删除所有 _未使用的_ Bean、拦截器和装饰器。原因很简单。这种优化有助于尽量减少生成的类和运行时使用的元数据对象的数量，从而节约内存。"
 
 #. type: Plain text
 #: upstream/_posts/2021-09-23-unused-beans.adoc:29
+#, fuzzy
 msgid "Speaking of generated classes.  The bean discovery, validation and wiring all components together - all this is perfomed at build time.  Quarkus then stores the collected metadata in the bytecode, i.e. for each bean one or more classes are generated.  In order to fullfill some basic CDI API requirements, a bean has at least a corresponding `javax.enterprise.inject.spi.Bean` implementation.  If it's a normal scoped bean then a client proxy class must be also generated.  Finally, intercepted and decorated beans require some more internal constructs."
-msgstr ""
+msgstr "说到生成的类。Bean的发现、验证和所有组件的连接--这些都是在构建时完成的。然后，Quarkus将收集到的元数据存储在字节码中，也就是说，为每个Bean生成一个或多个类。为了满足一些基本的CDI API要求，一个Bean至少有一个相应的 `javax.enterprise.inject.spi.Bean` 实现。如果它是一个普通范围的Bean，那么也必须生成一个客户端代理类。最后，拦截的和装饰的Bean需要一些更多的内部构造。"
 
 #. type: Plain text
 #: upstream/_posts/2021-09-23-unused-beans.adoc:36
+#, fuzzy
 msgid "Imagine that your application contains 50 beans that are actually not used anywhere.  If they have a normal scope (e.g. `@ApplicationScoped`) and are intercepted (e.g. declare a method annotated with `@Transactional`) you can expect more than 150 generated classes.  And these classes are completely useless.  Still, the container would have to instantiate and hold a reference on those 50+ bean metadata classes.  Needless to say, that the bean classes and any referenced classes cannot be a subject to dead code elimination when a native image is generated.  Therefore, Quarkus implements an algorithm to get rid of all these classes."
-msgstr ""
+msgstr "想象一下，你的应用程序包含50个Bean，它们实际上并没有在任何地方使用。如果它们有一个正常的作用域（例如： `@ApplicationScoped` ），并且被拦截（例如：声明一个用 `@Transactional` 注释的方法），你可以期待超过150个生成的类。而这些类是完全无用的。尽管如此，容器还是必须实例化并保持对这50多个bean元数据类的引用。不用说，在生成本地图像时，Bean类和任何被引用的类不能成为消除死代码的对象。因此，Quarkus实现了一种算法来消除所有这些类。"
 
 #. type: Title ==
 #: upstream/_posts/2021-09-23-unused-beans.adoc:37
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "What’s Actually Removed?"
-msgstr ""
+msgstr "实际上被移除的是什么？"
 
 #. type: Plain text
 #: upstream/_posts/2021-09-23-unused-beans.adoc:41
+#, fuzzy
 msgid "Quarkus first identifies so-called _unremovable_ beans that form the roots in the dependency tree.  Unremovable beans:"
-msgstr ""
+msgstr "Quarkus首先识别所谓的 _不可移动的_ Bean，它们构成了依赖树的根。不可拆卸的豆子。"
 
 #. type: Plain text
 #: upstream/_posts/2021-09-23-unused-beans.adoc:43
+#, fuzzy
 msgid "declare an observer method, or"
-msgstr ""
+msgstr "声明一个观察者方法，或"
 
 #. type: Plain text
 #: upstream/_posts/2021-09-23-unused-beans.adoc:44
+#, fuzzy
 msgid "have a name designated via `@Named`, or"
-msgstr ""
+msgstr "有一个通过 `@Named` 指定的名称，或"
 
 #. type: Plain text
 #: upstream/_posts/2021-09-23-unused-beans.adoc:45
+#, fuzzy
 msgid "are annotated with `@io.quarkus.arc.Unremovable`, or"
-msgstr ""
+msgstr "被注释为 `@io.quarkus.arc.Unremovable` ，或"
 
 #. type: Plain text
 #: upstream/_posts/2021-09-23-unused-beans.adoc:46
+#, fuzzy
 msgid "are excluded via the `quarkus.arc.unremovable-types` config property, or"
-msgstr ""
+msgstr "通过 `quarkus.arc.unremovable-types` 配置属性排除，或"
 
 #. type: Plain text
 #: upstream/_posts/2021-09-23-unused-beans.adoc:47
+#, fuzzy
 msgid "are otherwise identified by Quarkus extensions."
-msgstr ""
+msgstr "是由Quarkus扩展的其他标识。"
 
 #. type: Plain text
 #: upstream/_posts/2021-09-23-unused-beans.adoc:51
+#, fuzzy
 msgid "The last point is probably most important, because this is how application entry points are made unremovable.  A good example is a JAX-RS resource class, identified by the RESTEasy extension.  Another example is a bean which declares a `@Scheduled` method, identified by the Scheduler extension."
-msgstr ""
+msgstr "最后一点可能是最重要的，因为这就是应用程序的入口点是如何变得不可移动的。一个很好的例子是一个JAX-RS资源类，由RESTEasy扩展识别。另一个例子是一个声明了 `@Scheduled` 方法的bean，由Scheduler扩展识别。"
 
 #. type: Plain text
 #: upstream/_posts/2021-09-23-unused-beans.adoc:53
+#, fuzzy
 msgid "An _unused_ bean:"
-msgstr ""
+msgstr "一个 _未使用的_ 豆子。"
 
 #. type: Plain text
 #: upstream/_posts/2021-09-23-unused-beans.adoc:55
+#, fuzzy
 msgid "is not unremovable, and"
-msgstr ""
+msgstr "并非不可移除，而且"
 
 #. type: Plain text
 #: upstream/_posts/2021-09-23-unused-beans.adoc:56
+#, fuzzy
 msgid "is not eligible for injection to any injection point in the dependency tree, and"
-msgstr ""
+msgstr "没有资格被注入到依赖树中的任何注入点，并且"
 
 #. type: Plain text
 #: upstream/_posts/2021-09-23-unused-beans.adoc:57
+#, fuzzy
 msgid "does not declare any producer which is eligible for injection to any injection point in the dependency tree, and"
-msgstr ""
+msgstr "没有声明任何有资格被注入到依赖树中任何注入点的生产者，并且"
 
 #. type: Plain text
 #: upstream/_posts/2021-09-23-unused-beans.adoc:58
+#, fuzzy
 msgid "is not eligible for injection into any `javax.enterprise.inject.Instance` or `javax.inject.Provider` injection point."
-msgstr ""
+msgstr "没有资格注射到任何 `javax.enterprise.inject.Instance` 或 `javax.inject.Provider` 注射点。"
 
 #. type: Plain text
 #: upstream/_posts/2021-09-23-unused-beans.adoc:60
+#, fuzzy
 msgid "Finally, unused interceptors and decorators are not associated with any bean."
-msgstr ""
+msgstr "最后，未使用的拦截器和装饰器不与任何Bean关联。"
 
 #. type: Plain text
 #: upstream/_posts/2021-09-23-unused-beans.adoc:62
+#, fuzzy
 msgid "When using the dev mode (e.g. running `./mvnw quarkus:dev`), you can see more information about which beans are being removed in the Dev UI."
-msgstr ""
+msgstr "当使用开发模式时（例如运行 `./mvnw quarkus:dev` ），你可以在开发界面看到更多关于哪些Bean被移除的信息。"
 
 #. type: Title ==
 #: upstream/_posts/2021-09-23-unused-beans.adoc:63
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "Main Drawback"
-msgstr ""
+msgstr "主要缺点"
 
 #. type: Plain text
 #: upstream/_posts/2021-09-23-unused-beans.adoc:72
+#, fuzzy
 msgid "But there's one problem.  Quarkus can't detect the programmatic lookup performed via the `CDI.current()` static method.  Therefore, it is possible that a certain bean removal results in a false positive error, i.e. a bean is removed although it's actually used.  In such cases, you'll notice a big warning in the log.  Of course, users and extension authors have several options how to eliminate these errors.  For users, the easiest way is to add a special annotation: `@io.quarkus.arc.Unremovable` or use the `quarkus.arc.unremovable-types` config property.  Finally, it's also possible to disable this optimization via the `quarkus.arc.remove-unused-beans=false` config property."
-msgstr ""
+msgstr "但有一个问题。Quarkus无法检测到通过 `CDI.current()` 静态方法进行的程序化查询。因此，有可能某个Bean的移除导致假阳性错误，也就是说，一个Bean被移除了，尽管它实际上被使用。在这种情况下，你会注意到日志中的一个大警告。当然，用户和扩展的作者有几种选择来消除这些错误。对于用户来说，最简单的方法是添加一个特殊的注释： `@io.quarkus.arc.Unremovable` 或使用 `quarkus.arc.unremovable-types` 配置属性。最后，也可以通过 `quarkus.arc.remove-unused-beans=false` 配置属性来禁用这种优化。"
 
 #. type: Title ==
 #: upstream/_posts/2021-09-23-unused-beans.adoc:73
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "Conclusion"
-msgstr ""
+msgstr "总结"
 
 #. type: Plain text
 #: upstream/_posts/2021-09-23-unused-beans.adoc:76
