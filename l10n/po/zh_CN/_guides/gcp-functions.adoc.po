@@ -1,0 +1,838 @@
+# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2022-05-12 15:52+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. This guide is maintained in the main Quarkus repository
+#. and pull requests should be submitted there:
+#. https://github.com/quarkusio/quarkus/tree/main/docs/src/main/asciidoc
+#. type: Title =
+#: upstream/_guides/gcp-functions.adoc:6
+#, fuzzy, no-wrap
+msgid "Google Cloud Functions (Serverless)"
+msgstr "谷歌云功能（无服务器）"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:13
+#, fuzzy
+msgid "The `quarkus-google-cloud-functions` extension allows you to use Quarkus to build your Google Cloud Functions.  Your functions can use injection annotations from CDI or Spring and other Quarkus facilities as you need them."
+msgstr " `quarkus-google-cloud-functions` 扩展允许你使用Quarkus来构建你的Google Cloud Functions。你的函数可以使用CDI或Spring的注入注解，以及其他你需要的Quarkus设施。"
+
+#. type: Title ==
+#: upstream/_guides/gcp-functions.adoc:16
+#, fuzzy, no-wrap
+msgid "Prerequisites"
+msgstr "先决条件"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:21
+#, fuzzy
+msgid "https://cloud.google.com/[A Google Cloud Account].  Free accounts work."
+msgstr "link:https://cloud.google.com/[一个谷歌云账户] 。免费账户可以使用。"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:22
+#, fuzzy
+msgid "https://cloud.google.com/sdk[Cloud SDK CLI Installed]"
+msgstr "link:https://cloud.google.com/sdk[安装了云端SDK CLI]"
+
+#. type: Title ==
+#: upstream/_guides/gcp-functions.adoc:23
+#, fuzzy, no-wrap
+msgid "Solution"
+msgstr "解决方案"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:27
+#, fuzzy
+msgid "This guide walks you through generating a sample project followed by creating multiple functions showing how to implement `HttpFunction`, `BackgroundFunction` and `RawBackgroundFunction` in Quarkus.  Once built, you will be able to deploy the project to Google Cloud."
+msgstr "本指南将引导你生成一个示例项目，然后创建多个函数，展示如何在Quarkus中实现 `HttpFunction` , `BackgroundFunction` 和 `RawBackgroundFunction` 。一旦建成，你将能够把项目部署到谷歌云。"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:29
+#, fuzzy
+msgid "If you don't want to follow all these steps, you can go right to the completed example."
+msgstr "如果你不想遵循所有这些步骤，你可以直接进入完成的例子。"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:31
+#, fuzzy
+msgid "Clone the Git repository: `git clone {quickstarts-clone-url}`, or download an {quickstarts-archive-url}[archive]."
+msgstr "克隆 Git 仓库。 `git clone {quickstarts-clone-url}` ，或者下载一个{quickstarts-archive-url}[存档]。"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:33
+#, fuzzy
+msgid "The solution is located in the `google-cloud-functions-quickstart` {quickstarts-tree-url}/google-cloud-functions-quickstart[directory]."
+msgstr "该解决方案位于 `google-cloud-functions-quickstart` {quickstarts-treeurl}/google-cloud-functions-quickstart[目录]中。"
+
+#. type: Title ==
+#: upstream/_guides/gcp-functions.adoc:35
+#, fuzzy, no-wrap
+msgid "Creating the Maven Deployment Project"
+msgstr "创建Maven部署项目"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:39
+#, fuzzy
+msgid "Create an application with the `quarkus-google-cloud-functions` extension.  You can use the following Maven command to create it:"
+msgstr "创建一个带有 `quarkus-google-cloud-functions` 扩展的应用程序。你可以使用下面的Maven命令来创建它。"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:45
+#, fuzzy
+msgid "Now, let's remove the `index.html` from `resources/META-INF/resources` or it will be picked up instead of your Function."
+msgstr " `resources/META-INF/resources` 现在，让我们把 `index.html` ，否则它将代替你的功能被拾起。"
+
+#. type: Title ==
+#: upstream/_guides/gcp-functions.adoc:46
+#, fuzzy, no-wrap
+msgid "Login to Google Cloud"
+msgstr "登录到谷歌云"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:49
+#, fuzzy
+msgid "Login to Google Cloud is necessary for deploying the application and it can be done as follows:"
+msgstr "登录谷歌云对于部署应用程序是必要的，可以按以下方式进行。"
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:53
+#, no-wrap
+msgid "gcloud auth login\n"
+msgstr ""
+
+#. type: Title ==
+#: upstream/_guides/gcp-functions.adoc:55
+#, fuzzy, no-wrap
+msgid "Creating the functions"
+msgstr "创建功能"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:59
+#, fuzzy
+msgid "For this example project, we will create four functions, one `HttpFunction`, one `BackgroundFunction` (Storage event), one `RawBackgroundFunction` (PubSub event) and one `CloudEventsFunction` (storage event using the Cloud Events specification)."
+msgstr "对于这个例子项目，我们将创建四个函数，一个 `HttpFunction` ，一个 `BackgroundFunction` （存储事件），一个 `RawBackgroundFunction` （PubSub事件）和一个 `CloudEventsFunction` （使用云事件规范的存储事件）。"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:61
+#, fuzzy
+msgid "Quarkus supports Cloud Functions gen 1 and gen 2. For an overview of Cloud Functions gen 2 see https://cloud.google.com/functions/docs/2nd-gen/overview[this page] on the Google Cloud Functions documentation. To use gen 2 you must use `gcloud beta` command and add the `--gen2` parameter."
+msgstr "Quarkus支持Cloud Functions gen 1和gen 2。关于Cloud Functions gen 2的概述，请参见Google Cloud Functions文档中的 link:https://cloud.google.com/functions/docs/2nd-gen/overview[这一页] 。要使用gen 2，你必须使用 `gcloud beta` 命令并添加 `--gen2` 参数。"
+
+#. type: Title ==
+#: upstream/_guides/gcp-functions.adoc:62
+#, fuzzy, no-wrap
+msgid "Choose Your Function"
+msgstr "选择你的功能"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:67
+#, fuzzy
+msgid "The `quarkus-google-cloud-functions` extension scans your project for a class that directly implements the Google Cloud `HttpFunction`, `BackgroundFunction`, `RawBackgroundFunction` or `CloudEventsFunction` interface.  It must find a class in your project that implements one of these interfaces or it will throw a build time failure.  If it finds more than one function classes, a build time exception will also be thrown."
+msgstr " `quarkus-google-cloud-functions` 扩展会扫描你的项目，寻找直接实现谷歌云 `HttpFunction` , `BackgroundFunction` , `RawBackgroundFunction` 或 `CloudEventsFunction` 接口的类。它必须在你的项目中找到一个实现这些接口之一的类，否则它将抛出一个构建失败。如果它找到一个以上的函数类，也会抛出一个构建时间异常。"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:71
+#, fuzzy
+msgid "Sometimes, though, you might have a few related functions that share code and creating multiple maven modules is just an overhead you don't want to do.  The extension allows you to bundle multiple functions in one project and use configuration or an environment variable to pick the function you want to deploy."
+msgstr "不过有时候，你可能会有几个相关的功能共享代码，创建多个maven模块只是你不想做的开销。该扩展允许你在一个项目中捆绑多个功能，并使用配置或环境变量来选择你要部署的功能。"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:73
+#, fuzzy
+msgid "To configure the name of the function, you can use the following configuration property:"
+msgstr "要配置函数的名称，你可以使用以下配置属性。"
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:77
+#, no-wrap
+msgid "quarkus.google-cloud-functions.function=test\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:81
+#, fuzzy
+msgid "The `quarkus.google-cloud-functions.function` property tells Quarkus which function to deploy. This can be overridden with an environment variable too."
+msgstr " `quarkus.google-cloud-functions.function` 属性告诉Quarkus要部署哪个函数。这也可以用环境变量来覆盖。"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:84
+#, fuzzy
+msgid "The CDI name of the function class must match the value specified within the `quarkus.google-cloud-functions.function` property.  This must be done using the `@Named` annotation."
+msgstr "函数类的CDI名称必须与 `quarkus.google-cloud-functions.function` 属性内指定的值一致。这必须使用 `@Named` 注释来完成。"
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:90
+#, no-wrap
+msgid ""
+"@Named(\"test\")\n"
+"public class TestHttpFunction implements HttpFunction {\n"
+"}\n"
+msgstr ""
+
+#. type: Title ===
+#: upstream/_guides/gcp-functions.adoc:93
+#: upstream/_guides/gcp-functions.adoc:257
+#: upstream/_guides/gcp-functions.adoc:391
+#, fuzzy, no-wrap
+msgid "The HttpFunction"
+msgstr "HttpFunction"
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:109
+#, no-wrap
+msgid ""
+"import javax.ws.rs.GET;\n"
+"import javax.ws.rs.Path;\n"
+"import javax.ws.rs.Produces;\n"
+"import javax.ws.rs.core.MediaType;\n"
+"import java.io.Writer;\n"
+"import javax.enterprise.context.ApplicationScoped;\n"
+"import javax.inject.Inject;\n"
+"import javax.inject.Named;\n"
+"import com.google.cloud.functions.HttpFunction;\n"
+"import com.google.cloud.functions.HttpRequest;\n"
+"import com.google.cloud.functions.HttpResponse;\n"
+"import io.quarkus.gcp.function.test.service.GreetingService;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:114
+#, no-wrap
+msgid ""
+"@Named(\"httpFunction\") // <1>\n"
+"@ApplicationScoped // <2>\n"
+"public class HttpFunctionTest implements HttpFunction { // <3>\n"
+"    @Inject GreetingService greetingService; // <4>\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:121
+#, no-wrap
+msgid ""
+"    @Override\n"
+"    public void service(HttpRequest httpRequest, HttpResponse httpResponse) throws Exception { // <5>\n"
+"        Writer writer = httpResponse.getWriter();\n"
+"        writer.write(greetingService.hello());\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:123
+#: upstream/_guides/gcp-functions.adoc:160
+#: upstream/_guides/gcp-functions.adoc:192
+#: upstream/_guides/gcp-functions.adoc:231
+#, fuzzy
+msgid "The `@Named` annotation allows to name the CDI bean to be used by the `quarkus.google-cloud-functions.function` property, this is optional."
+msgstr " `@Named` 注解允许命名CDI bean，以便由 `quarkus.google-cloud-functions.function` 属性使用，这是可选的。"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:124
+#: upstream/_guides/gcp-functions.adoc:161
+#: upstream/_guides/gcp-functions.adoc:193
+#: upstream/_guides/gcp-functions.adoc:232
+#, fuzzy
+msgid "The function must be a CDI bean"
+msgstr "该函数必须是一个CDI豆"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:125
+#, fuzzy
+msgid "This is a regular Google Cloud Function implementation, so it needs to implement `com.google.cloud.functions.HttpFunction`."
+msgstr "这是一个常规的谷歌云功能实现，所以需要实现 `com.google.cloud.functions.HttpFunction` 。"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:126
+#: upstream/_guides/gcp-functions.adoc:163
+#: upstream/_guides/gcp-functions.adoc:195
+#: upstream/_guides/gcp-functions.adoc:234
+#, fuzzy
+msgid "Injection works inside your function."
+msgstr "注入在你的函数中起作用。"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:127
+#: upstream/_guides/gcp-functions.adoc:164
+#: upstream/_guides/gcp-functions.adoc:196
+#, fuzzy
+msgid "This is standard Google Cloud Function implementation, nothing fancy here."
+msgstr "这是标准的谷歌云功能实现，这里没有什么花哨的东西。"
+
+#. type: Title ===
+#: upstream/_guides/gcp-functions.adoc:128
+#: upstream/_guides/gcp-functions.adoc:280
+#: upstream/_guides/gcp-functions.adoc:406
+#, fuzzy, no-wrap
+msgid "The BackgroundFunction"
+msgstr "背景函数"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:131
+#, fuzzy
+msgid "This `BackgroundFunction` is triggered by a Storage event, you can use any events supported by Google Cloud instead."
+msgstr "这个 `BackgroundFunction` 是由一个存储事件触发的，你可以使用谷歌云支持的任何事件来代替。"
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:140
+#, no-wrap
+msgid ""
+"import javax.enterprise.context.ApplicationScoped;\n"
+"import javax.inject.Inject;\n"
+"import javax.inject.Named;\n"
+"import com.google.cloud.functions.BackgroundFunction;\n"
+"import com.google.cloud.functions.Context;\n"
+"import io.quarkus.gcp.function.test.service.GreetingService;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:146
+#, no-wrap
+msgid ""
+"@Named(\"storageTest\") // <1>\n"
+"@ApplicationScoped // <2>\n"
+"public class BackgroundFunctionStorageTest implements BackgroundFunction<BackgroundFunctionStorageTest.StorageEvent> { // <3>\n"
+"    @Inject GreetingService greetingService;  // <4>\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:152
+#, no-wrap
+msgid ""
+"    @Override\n"
+"    public void accept(StorageEvent event, Context context) throws Exception { // <5>\n"
+"        System.out.println(\"Receive event: \" + event);\n"
+"        System.out.println(\"Be polite, say \" + greetingService.hello());\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:158
+#, no-wrap
+msgid ""
+"    //\n"
+"    public static class StorageEvent { // <6>\n"
+"        public String name;\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:162
+#, fuzzy
+msgid "This is a regular Google Cloud Function implementation, so it needs to implement `com.google.cloud.functions.BackgroundFunction`."
+msgstr "这是一个常规的谷歌云功能实现，所以需要实现 `com.google.cloud.functions.BackgroundFunction` 。"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:165
+#, fuzzy
+msgid "This is the class the event will be deserialized to."
+msgstr "这是该事件将被反序列化的类。"
+
+#. type: Title ===
+#: upstream/_guides/gcp-functions.adoc:166
+#: upstream/_guides/gcp-functions.adoc:319
+#: upstream/_guides/gcp-functions.adoc:428
+#, fuzzy, no-wrap
+msgid "The RawBackgroundFunction"
+msgstr "RawBackgroundFunction"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:169
+#, fuzzy
+msgid "This `RawBackgroundFunction` is triggered by a PubSub event, you can use any events supported by Google Cloud instead."
+msgstr "这个 `RawBackgroundFunction` 是由PubSub事件触发的，你可以使用谷歌云支持的任何事件来代替。"
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:178
+#, no-wrap
+msgid ""
+"import javax.enterprise.context.ApplicationScoped;\n"
+"import javax.inject.Inject;\n"
+"import javax.inject.Named;\n"
+"import com.google.cloud.functions.Context;\n"
+"import com.google.cloud.functions.RawBackgroundFunction;\n"
+"import io.quarkus.gcp.function.test.service.GreetingService;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:183
+#, no-wrap
+msgid ""
+"@Named(\"rawPubSubTest\") // <1>\n"
+"@ApplicationScoped // <2>\n"
+"public class RawBackgroundFunctionPubSubTest implements RawBackgroundFunction { // <3>\n"
+"@Inject GreetingService greetingService; // <4>\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:190
+#, no-wrap
+msgid ""
+"    @Override\n"
+"    public void accept(String event, Context context) throws Exception { // <5>\n"
+"        System.out.println(\"PubSub event: \" + event);\n"
+"        System.out.println(\"Be polite, say \" + greetingService.hello());\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:194
+#, fuzzy
+msgid "This is a regular Google Cloud Function implementation, so it needs to implement `com.google.cloud.functions.RawBackgroundFunction`."
+msgstr "这是一个常规的谷歌云功能实现，所以需要实现 `com.google.cloud.functions.RawBackgroundFunction` 。"
+
+#. type: Title ===
+#: upstream/_guides/gcp-functions.adoc:197
+#: upstream/_guides/gcp-functions.adoc:348
+#: upstream/_guides/gcp-functions.adoc:450
+#, fuzzy, no-wrap
+msgid "The CloudEventsFunction"
+msgstr "云事件功能"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:200
+#: upstream/_guides/gcp-functions.adoc:351
+#, fuzzy
+msgid "`CloudEventsFunction` is a feature of Cloud Functions gen 2 only."
+msgstr " `CloudEventsFunction` 这只是云功能第2代的一个特点。"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:202
+#, fuzzy
+msgid "This `CloudEventsFunction` is triggered by a Cloud Events Storage event, you can use any Cloud Events supported by Google Cloud instead."
+msgstr "这个 `CloudEventsFunction` ，是由一个云事件存储事件触发的，你可以使用谷歌云支持的任何云事件来代替。"
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:208
+#, no-wrap
+msgid ""
+"import javax.enterprise.context.ApplicationScoped;\n"
+"import javax.inject.Inject;\n"
+"import javax.inject.Named;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:210
+#, no-wrap
+msgid "import com.google.cloud.functions.CloudEventsFunction;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:213
+#, no-wrap
+msgid ""
+"import io.cloudevents.CloudEvent;\n"
+"import io.quarkus.gcp.function.test.service.GreetingService;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:219
+#, no-wrap
+msgid ""
+"@Named(\"cloudEventTest\") // <1>\n"
+"@ApplicationScoped // <2>\n"
+"public class CloudEventStorageTest implements CloudEventsFunction { // <3>\n"
+"    @Inject\n"
+"    GreetingService greetingService;  // <4>\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:229
+#, no-wrap
+msgid ""
+"    @Override\n"
+"    public void accept(CloudEvent cloudEvent) throws Exception { // <5>\n"
+"        System.out.println(\"Receive event Id: \" + cloudEvent.getId());\n"
+"        System.out.println(\"Receive event Subject: \" + cloudEvent.getSubject());\n"
+"        System.out.println(\"Receive event Type: \" + cloudEvent.getType());\n"
+"        System.out.println(\"Receive event Data: \" + new String(cloudEvent.getData().toBytes())); // <6>\n"
+"        System.out.println(\"Be polite, say \" + greetingService.hello());\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:233
+#, fuzzy
+msgid "This is a regular Google Cloud Function implementation, so it needs to implement `com.google.cloud.functions.CloudEventsFunction`."
+msgstr "这是一个常规的谷歌云功能实现，所以需要实现 `com.google.cloud.functions.CloudEventsFunction` 。"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:235
+#, fuzzy
+msgid "This is standard Google Cloud Function implementation, nothing fancy here except that it receives a `io.cloudevents.CloudEvent`."
+msgstr "这是标准的谷歌云功能实现，除了接收一个 `io.cloudevents.CloudEvent` 。"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:236
+#, fuzzy
+msgid "This is the storage event inside the Cloud Events."
+msgstr "这是在云事件里面的存储事件。"
+
+#. type: Title ==
+#: upstream/_guides/gcp-functions.adoc:237
+#, fuzzy, no-wrap
+msgid "Build and Deploy to Google Cloud"
+msgstr "构建和部署到谷歌云"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:240
+#, fuzzy
+msgid "To build your application, you can package it using the standard command:"
+msgstr "要构建你的应用程序，你可以使用标准命令将其打包。"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:244
+#, fuzzy
+msgid "The result of the previous command is a single JAR file inside the `target/deployment` repository that contains classes and dependencies of the project."
+msgstr "前面命令的结果是在 `target/deployment` 资源库中的一个JAR文件，其中包含项目的类和依赖关系。"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:246
+#, fuzzy
+msgid "Then you will be able to use `gcloud functions deploy` command to deploy your function to Google Cloud."
+msgstr "然后你将能够使用 `gcloud functions deploy` 命令将你的功能部署到谷歌云。"
+
+#. type: delimited block =
+#: upstream/_guides/gcp-functions.adoc:250
+#, fuzzy
+msgid "The first time you launch this command, you can have the following error message:"
+msgstr "第一次启动这个命令时，你可能会有以下错误信息。"
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:253
+#, no-wrap
+msgid "ERROR: (gcloud.functions.deploy) OperationError: code=7, message=Build Failed: Cloud Build has not been used in project <project_name> before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/cloudbuild.googleapis.com/overview?project=<my-project> then retry.\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:255
+#, fuzzy
+msgid "This means that Cloud Build is not activated yet. To overcome this error, open the URL shown in the error, follow the instructions and then wait a few minutes before retrying the command."
+msgstr "这意味着Cloud Build还没有被激活。要克服这个错误，请打开错误中显示的URL，按照指示操作，然后等待几分钟再重试命令。"
+
+#. type: delimited block =
+#: upstream/_guides/gcp-functions.adoc:260
+#, fuzzy
+msgid "This is an example command to deploy your `HttpFunction` to Google Cloud:"
+msgstr "这是一个将你的 `HttpFunction` 部署到谷歌云的示例命令。"
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:266
+#, no-wrap
+msgid ""
+"gcloud functions deploy quarkus-example-http \\\n"
+"  --entry-point=io.quarkus.gcp.functions.QuarkusHttpFunction \\\n"
+"  --runtime=java11 --trigger-http --source=target/deployment\n"
+msgstr ""
+
+#. type: delimited block =
+#: upstream/_guides/gcp-functions.adoc:271
+#, fuzzy
+msgid "The entry point must always be set to `io.quarkus.gcp.functions.QuarkusHttpFunction` as this is the class that integrates Cloud Functions with Quarkus."
+msgstr "入口点必须始终设置为 `io.quarkus.gcp.functions.QuarkusHttpFunction` ，因为这是将云功能与Quarkus整合的类。"
+
+#. type: delimited block =
+#: upstream/_guides/gcp-functions.adoc:276
+#: upstream/_guides/gcp-functions.adoc:308
+#: upstream/_guides/gcp-functions.adoc:339
+#: upstream/_guides/gcp-functions.adoc:370
+#, fuzzy
+msgid "You can also use the new Java 17 runtime by using `--runtime=java17` in the gcloud command line."
+msgstr "你也可以通过在gcloud命令行中使用 `--runtime=java17` ，使用新的Java 17运行时间。"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:279
+#, fuzzy
+msgid "This command will give you as output a `httpsTrigger.url` that points to your function."
+msgstr "这条命令将给你输出一个 `httpsTrigger.url` ，指向你的函数。"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:283
+#, fuzzy
+msgid "Before deploying your function, you need to create a bucket."
+msgstr "在部署你的函数之前，你需要创建一个桶。"
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:287
+#, no-wrap
+msgid "gsutil mb gs://quarkus-hello\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:291
+#, fuzzy
+msgid "This is an example command to deploy your `BackgroundFunction` to Google Cloud, as the function is triggered by a Storage event, it needs to use `--trigger-event google.storage.object.finalize` and the `--trigger-resource` parameter with the name of a previously created bucket:"
+msgstr "这是一个将你的 `BackgroundFunction` 部署到谷歌云的命令示例，由于该函数是由一个存储事件触发的，它需要使用 `--trigger-event google.storage.object.finalize` ，并在 `--trigger-resource` ，参数为先前创建的桶的名称。"
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:298
+#, no-wrap
+msgid ""
+"gcloud functions deploy quarkus-example-storage \\\n"
+"    --entry-point=io.quarkus.gcp.functions.QuarkusBackgroundFunction \\\n"
+"    --trigger-resource quarkus-hello --trigger-event google.storage.object.finalize \\\n"
+"    --runtime=java11 --source=target/deployment\n"
+msgstr ""
+
+#. type: delimited block =
+#: upstream/_guides/gcp-functions.adoc:303
+#: upstream/_guides/gcp-functions.adoc:334
+#, fuzzy
+msgid "The entry point must always be set to `io.quarkus.gcp.functions.QuarkusBackgroundFunction` as this is the class that integrates Cloud Functions with Quarkus."
+msgstr "入口点必须始终设置为 `io.quarkus.gcp.functions.QuarkusBackgroundFunction` ，因为这是将云功能与Quarkus整合的类。"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:311
+#, fuzzy
+msgid "To trigger the event, you can send a file to the GCS `quarkus-hello` bucket or you can use gcloud to simulate one:"
+msgstr "为了触发事件，你可以发送一个文件到GCS的 `quarkus-hello` bucket，或者你可以用gcloud来模拟一个。"
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:315
+#, no-wrap
+msgid "gcloud functions call quarkus-example-storage  --data '{\"name\":\"test.txt\"}'\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:318
+#, fuzzy
+msgid "`--data` contains the GCS event, it is a JSON document with the name of the file added to the bucket."
+msgstr " `--data` 包含GCS事件，它是一个JSON文档，包含添加到桶中的文件名称。"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:323
+#, fuzzy
+msgid "This is an example command to deploy your `RawBackgroundFunction` to Google Cloud, as the function is triggered by a PubSub event, it needs to use `--trigger-event google.pubsub.topic.publish` and the `--trigger-resource` parameter with the name of a previously created topic:"
+msgstr "这是一个将你的 `RawBackgroundFunction` 部署到谷歌云的命令示例，由于该函数是由PubSub事件触发的，它需要使用 `--trigger-event google.pubsub.topic.publish` ，并在 `--trigger-resource` ，参数是先前创建的主题的名称。"
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:329
+#, no-wrap
+msgid ""
+"gcloud functions deploy quarkus-example-pubsub \\\n"
+"  --entry-point=io.quarkus.gcp.functions.QuarkusBackgroundFunction \\\n"
+"  --runtime=java11 --trigger-resource hello_topic --trigger-event google.pubsub.topic.publish --source=target/deployment\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:342
+#, fuzzy
+msgid "To trigger the event, you can send a file to the `hello_topic` topic or you can use gcloud to simulate one:"
+msgstr "为了触发事件，你可以发送一个文件到 `hello_topic` 主题，或者你可以使用gcloud来模拟一个。"
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:346
+#, no-wrap
+msgid "gcloud functions call quarkus-example-pubsub --data '{\"data\":{\"greeting\":\"world\"}}'\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:354
+#, fuzzy
+msgid "This is an example command to deploy your `CloudEventsFunction` to Google Cloud, as the function is triggered by a Storage event, it needs to use `--trigger-bucket` parameter with the name of a previously created bucket:"
+msgstr "这是一个将你的 `CloudEventsFunction` 部署到谷歌云的命令示例，由于该函数是由一个存储事件触发的，它需要使用 `--trigger-bucket` 参数，其中有一个先前创建的桶的名称。"
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:360
+#, no-wrap
+msgid ""
+"gcloud beta functions deploy quarkus-example-cloud-event --gen2 \\\n"
+"  --entry-point=io.quarkus.gcp.functions.QuarkusCloudEventsFunction \\\n"
+"  --runtime=java11 --trigger-bucket=example-cloud-event --source=target/deployment\n"
+msgstr ""
+
+#. type: delimited block =
+#: upstream/_guides/gcp-functions.adoc:365
+#, fuzzy
+msgid "The entry point must always be set to `io.quarkus.gcp.functions.QuarkusCloudEventsFunction` as this is the class that integrates Cloud Functions with Quarkus."
+msgstr "入口点必须始终设置为 `io.quarkus.gcp.functions.QuarkusCloudEventsFunction` ，因为这是将云功能与Quarkus整合的类。"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:373
+#, fuzzy
+msgid "To trigger the event, you can send a file to the GCS `example-cloud-event` bucket."
+msgstr "为了触发事件，你可以发送一个文件到GCS `example-cloud-event` bucket。"
+
+#. type: Title ==
+#: upstream/_guides/gcp-functions.adoc:374
+#, fuzzy, no-wrap
+msgid "Testing locally"
+msgstr "本地测试"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:377
+#, fuzzy
+msgid "The easiest way to locally test your function is using the Cloud Function invoker JAR."
+msgstr "本地测试你的函数最简单的方法是使用云函数调用器JAR。"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:379
+#, fuzzy
+msgid "You can download it via Maven using the following command:"
+msgstr "你可以使用以下命令通过Maven下载它。"
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:385
+#, no-wrap
+msgid ""
+"mvn dependency:copy \\\n"
+"  -Dartifact='com.google.cloud.functions.invoker:java-function-invoker:1.1.0' \\\n"
+"  -DoutputDirectory=.\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:388
+#, fuzzy
+msgid "Before using the invoker, you first need to build your function via:"
+msgstr "在使用调用器之前，你首先需要通过构建你的函数。"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:394
+#, fuzzy
+msgid "To test an `HttpFunction`, you can use this command to launch your function locally."
+msgstr "要测试一个 `HttpFunction` ，你可以用这个命令在本地启动你的函数。"
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:400
+#, no-wrap
+msgid ""
+"java -jar java-function-invoker-1.1.0.jar \\\n"
+"  --classpath target/google-cloud-functions-1.0.0-SNAPSHOT-runner.jar \\\n"
+"  --target io.quarkus.gcp.functions.QuarkusHttpFunction\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:403
+#: upstream/_guides/gcp-functions.adoc:418
+#: upstream/_guides/gcp-functions.adoc:440
+#: upstream/_guides/gcp-functions.adoc:464
+#, fuzzy
+msgid "The `--classpath` parameter needs to be set to the previously packaged JAR that contains your function class and all Quarkus related classes."
+msgstr " `--classpath` 参数需要被设置为先前打包的JAR，其中包含你的函数类和所有Quarkus相关的类。"
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:405
+#, fuzzy
+msgid "Your endpoints will be available on http://localhost:8080."
+msgstr "你的端点将可以在 http://localhost:8080 "
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:409
+#: upstream/_guides/gcp-functions.adoc:431
+#, fuzzy
+msgid "For background functions, you launch the invoker with a target class of `io.quarkus.gcp.functions.BackgroundFunction`."
+msgstr "对于背景函数，你用一个目标类 `io.quarkus.gcp.functions.BackgroundFunction` 来启动调用器。"
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:415
+#: upstream/_guides/gcp-functions.adoc:437
+#, no-wrap
+msgid ""
+"java -jar java-function-invoker-1.1.0.jar \\\n"
+"  --classpath target/google-cloud-functions-1.0.0-SNAPSHOT-runner.jar \\\n"
+"  --target io.quarkus.gcp.functions.QuarkusBackgroundFunction\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:420
+#: upstream/_guides/gcp-functions.adoc:442
+#, fuzzy
+msgid "Then you can call your background function via an HTTP call with a payload containing the event:"
+msgstr "然后你可以通过HTTP调用你的后台函数，其有效载荷包含事件。"
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:424
+#, no-wrap
+msgid "curl localhost:8080 -d '{\"data\":{\"name\":\"hello.txt\"}}'\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:427
+#, fuzzy
+msgid "This will call your Storage background function with an event `{\"name\":\"hello.txt\"}`, so an event on the `hello.txt` file."
+msgstr "这将调用你的Storage后台函数，有一个事件 `{\"name\":\"hello.txt\"}` ，所以是一个关于 `hello.txt` 文件的事件。"
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:446
+#, no-wrap
+msgid "curl localhost:8080 -d '{\"data\":{\"greeting\":\"world\"}}'\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:449
+msgid "This will call your PubSub background function with a PubSubMessage `{\"greeting\":\"world\"}`."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:453
+msgid "`CloudEventsFunction` is a feature of Cloud Function gen 2 only."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:455
+msgid "For cloud events functions, you launch the invoker with a target class of `io.quarkus.gcp.functions.QuarkusCloudEventsFunction`."
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:461
+#, no-wrap
+msgid ""
+"java -jar java-function-invoker-1.1.0.jar \\\n"
+"  --classpath target/google-cloud-functions-1.0.0-SNAPSHOT-runner.jar \\\n"
+"  --target io.quarkus.gcp.functions.QuarkusCloudEventsFunction\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:466
+msgid "Then you can call your cloud events function via an HTTP call with a payload containing the event:"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/gcp-functions.adoc:491
+#, no-wrap
+msgid ""
+"curl localhost:8080 \\\n"
+"  -X POST \\\n"
+"  -H \"Content-Type: application/json\" \\\n"
+"  -H \"ce-id: 123451234512345\" \\\n"
+"  -H \"ce-specversion: 1.0\" \\\n"
+"  -H \"ce-time: 2020-01-02T12:34:56.789Z\" \\\n"
+"  -H \"ce-type: google.cloud.storage.object.v1.finalized\" \\\n"
+"  -H \"ce-source: //storage.googleapis.com/projects/_/buckets/MY-BUCKET-NAME\" \\\n"
+"  -H \"ce-subject: objects/MY_FILE.txt\" \\\n"
+"  -d '{\n"
+"        \"bucket\": \"MY_BUCKET\",\n"
+"        \"contentType\": \"text/plain\",\n"
+"        \"kind\": \"storage#object\",\n"
+"        \"md5Hash\": \"...\",\n"
+"        \"metageneration\": \"1\",\n"
+"        \"name\": \"MY_FILE.txt\",\n"
+"        \"size\": \"352\",\n"
+"        \"storageClass\": \"MULTI_REGIONAL\",\n"
+"        \"timeCreated\": \"2020-04-23T07:38:57.230Z\",\n"
+"        \"timeStorageClassUpdated\": \"2020-04-23T07:38:57.230Z\",\n"
+"        \"updated\": \"2020-04-23T07:38:57.230Z\"\n"
+"      }'\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/gcp-functions.adoc:493
+msgid "This will call your cloud events function with an event on the `\"MY_FILE.txt` file."
+msgstr ""

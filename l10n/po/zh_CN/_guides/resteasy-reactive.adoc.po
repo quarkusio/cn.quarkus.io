@@ -1,0 +1,4290 @@
+# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2022-05-12 15:52+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. This guide is maintained in the main Quarkus repository
+#. and pull requests should be submitted there:
+#. https://github.com/quarkusio/quarkus/tree/main/docs/src/main/asciidoc
+#. type: Title =
+#: upstream/_guides/resteasy-reactive.adoc:6
+#, fuzzy, no-wrap
+msgid "Writing REST Services with RESTEasy Reactive"
+msgstr "用RESTEasy Reactive编写REST服务"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:20
+#, fuzzy
+msgid "This guide explains how to write REST Services with RESTEasy Reactive in Quarkus."
+msgstr "本指南介绍了如何在Quarkus中用RESTEasy Reactive编写REST服务。"
+
+#. type: delimited block =
+#: upstream/_guides/resteasy-reactive.adoc:25
+#, fuzzy
+msgid "This is the reference guide for RESTEasy Reactive.  For a more lightweight introduction, please refer to the xref:rest-json.adoc[Writing JSON REST services guides]."
+msgstr "这是RESTEasy Reactive的参考指南。如需更轻量级的介绍，请参考 link:rest-json.html[编写JSON REST服务指南] 。"
+
+#. type: Title ==
+#: upstream/_guides/resteasy-reactive.adoc:27
+#, fuzzy, no-wrap
+msgid "What is RESTEasy Reactive?"
+msgstr "什么是RESTEasy Reactive？"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:33
+#, fuzzy
+msgid "RESTEasy Reactive is a new link:{jaxrsspec}[JAX-RS] implementation written from the ground up to work on our common https://vertx.io/[Vert.x] layer and is thus fully reactive, while also being very tightly integrated with Quarkus and consequently moving a lot of work to build time."
+msgstr "RESTEasy Reactive是一个新的 link:{jaxrsspec}[JAX-RS] 实现，从底层写起，在我们的通用 link:https://vertx.io/[Vert.x] 层上工作，因此是完全反应式的，同时也与Quarkus非常紧密地集成，因此将大量的工作转移到构建时间。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:37
+#, fuzzy
+msgid "You should be able to use it in place of any JAX-RS implementation, but on top of that it has great performance for both blocking and non-blocking endpoints, and a lot of new features on top of what JAX-RS provides."
+msgstr "你应该可以用它来代替任何JAX-RS的实现，但除此之外，它对阻塞和非阻塞的端点都有很好的性能，并且在JAX-RS提供的基础上有很多新的功能。"
+
+#. type: Title ==
+#: upstream/_guides/resteasy-reactive.adoc:38
+#, fuzzy, no-wrap
+msgid "Writing endpoints"
+msgstr "编写端点"
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:40
+#, fuzzy, no-wrap
+msgid "Getting started"
+msgstr "开始工作"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:43
+#, fuzzy
+msgid "Add the following import to your build file:"
+msgstr "在你的构建文件中添加以下导入。"
+
+#. type: Block title
+#: upstream/_guides/resteasy-reactive.adoc:45
+#, fuzzy, no-wrap
+msgid "pom.xml"
+msgstr "pom.xml"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:51
+#, no-wrap
+msgid ""
+"<dependency>\n"
+"    <groupId>io.quarkus</groupId>\n"
+"    <artifactId>quarkus-resteasy-reactive</artifactId>\n"
+"</dependency>\n"
+msgstr ""
+
+#. type: Block title
+#: upstream/_guides/resteasy-reactive.adoc:54
+#, fuzzy, no-wrap
+msgid "build.gradle"
+msgstr "build.gradle"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:57
+#, no-wrap
+msgid "implementation(\"io.quarkus:quarkus-resteasy-reactive\")\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:60
+#, fuzzy
+msgid "You can now write your first endpoint in the `org.acme.rest.Endpoint` class:"
+msgstr "现在你可以在 `org.acme.rest.Endpoint` 类中编写你的第一个端点。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:64
+#: upstream/_guides/resteasy-reactive.adoc:104
+#: upstream/_guides/resteasy-reactive.adoc:126
+#: upstream/_guides/resteasy-reactive.adoc:178
+#: upstream/_guides/resteasy-reactive.adoc:286
+#: upstream/_guides/resteasy-reactive.adoc:338
+#: upstream/_guides/resteasy-reactive.adoc:578
+#: upstream/_guides/resteasy-reactive.adoc:621
+#: upstream/_guides/resteasy-reactive.adoc:655
+#: upstream/_guides/resteasy-reactive.adoc:691
+#: upstream/_guides/resteasy-reactive.adoc:730
+#: upstream/_guides/resteasy-reactive.adoc:838
+#: upstream/_guides/resteasy-reactive.adoc:863
+#: upstream/_guides/resteasy-reactive.adoc:891
+#: upstream/_guides/resteasy-reactive.adoc:955
+#: upstream/_guides/resteasy-reactive.adoc:990
+#: upstream/_guides/resteasy-reactive.adoc:1196
+#: upstream/_guides/resteasy-reactive.adoc:1222
+#: upstream/_guides/resteasy-reactive.adoc:1264
+#: upstream/_guides/resteasy-reactive.adoc:1297
+#: upstream/_guides/resteasy-reactive.adoc:1360
+#: upstream/_guides/resteasy-reactive.adoc:1598
+#: upstream/_guides/resteasy-reactive.adoc:1632
+#: upstream/_guides/resteasy-reactive.adoc:1696
+#: upstream/_guides/resteasy-reactive.adoc:1750
+#: upstream/_guides/resteasy-reactive.adoc:1775
+#: upstream/_guides/resteasy-reactive.adoc:1840
+#: upstream/_guides/resteasy-reactive.adoc:1943
+#: upstream/_guides/resteasy-reactive.adoc:2068
+#, no-wrap
+msgid "package org.acme.rest;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:67
+#: upstream/_guides/resteasy-reactive.adoc:107
+#: upstream/_guides/resteasy-reactive.adoc:341
+#: upstream/_guides/resteasy-reactive.adoc:628
+#: upstream/_guides/resteasy-reactive.adoc:658
+#: upstream/_guides/resteasy-reactive.adoc:993
+#: upstream/_guides/resteasy-reactive.adoc:1199
+#: upstream/_guides/resteasy-reactive.adoc:1227
+#, no-wrap
+msgid ""
+"import javax.ws.rs.GET;\n"
+"import javax.ws.rs.Path;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:70
+#: upstream/_guides/resteasy-reactive.adoc:192
+#: upstream/_guides/resteasy-reactive.adoc:593
+#: upstream/_guides/resteasy-reactive.adoc:631
+#, no-wrap
+msgid ""
+"@Path(\"\")\n"
+"public class Endpoint {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:76
+#, no-wrap
+msgid ""
+"    @GET\n"
+"    public String hello() {\n"
+"        return \"Hello, World!\";\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:78
+#, fuzzy, no-wrap
+msgid "Terminology"
+msgstr "术语"
+
+#. type: Labeled list
+#: upstream/_guides/resteasy-reactive.adoc:80
+#, fuzzy, no-wrap
+msgid "REST"
+msgstr "REST"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:81
+#, fuzzy
+msgid "https://en.wikipedia.org/wiki/Representational_state_transfer[REpresentational State Transfer]"
+msgstr "link:https://en.wikipedia.org/wiki/Representational_state_transfer[代表性状态转移]"
+
+#. type: Labeled list
+#: upstream/_guides/resteasy-reactive.adoc:81
+#, fuzzy, no-wrap
+msgid "Endpoint"
+msgstr "端点"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:82
+#, fuzzy
+msgid "Java method which is called to serve a REST call"
+msgstr "调用Java方法，为REST调用提供服务"
+
+#. type: Labeled list
+#: upstream/_guides/resteasy-reactive.adoc:82
+#, fuzzy, no-wrap
+msgid "URL / URI (Uniform Resource Locator / Identifier)"
+msgstr "URL / URI（统一资源定位器/标识符）。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:83
+#, fuzzy
+msgid "Used to identify the location of REST resources (https://tools.ietf.org/html/rfc7230#section-2.7[specification])"
+msgstr "用于识别REST资源的位置 link:https://tools.ietf.org/html/rfc7230#section-2.7[（规范] ）。"
+
+#. type: Labeled list
+#: upstream/_guides/resteasy-reactive.adoc:83
+#, fuzzy, no-wrap
+msgid "Resource"
+msgstr "资源"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:84
+#, fuzzy
+msgid "Represents your domain object. This is what your API serves and modifies. Also called an `entity` in JAX-RS."
+msgstr "代表你的领域对象。这是你的API所服务和修改的内容。在 JAX-RS 中也称为 `entity` 。"
+
+#. type: Labeled list
+#: upstream/_guides/resteasy-reactive.adoc:84
+#, fuzzy, no-wrap
+msgid "Representation"
+msgstr "代表性"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:85
+#, fuzzy
+msgid "How your resource is represented on the wire, can vary depending on content types"
+msgstr "你的资源如何在网上表现出来，可以根据内容类型而有所不同"
+
+#. type: Labeled list
+#: upstream/_guides/resteasy-reactive.adoc:85
+#, fuzzy, no-wrap
+msgid "Content type"
+msgstr "内容类型"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:86
+#, fuzzy
+msgid "Designates a particular representation (also called a media type), for example `text/plain` or `application/json`"
+msgstr "指定一个特定的代表（也称为媒体类型），例如 `text/plain` 或 `application/json` "
+
+#. type: Labeled list
+#: upstream/_guides/resteasy-reactive.adoc:86
+#, fuzzy, no-wrap
+msgid "HTTP"
+msgstr "HTTP"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:87
+#, fuzzy
+msgid "Underlying wire protocol for routing REST calls (see https://tools.ietf.org/html/rfc7230[HTTP specifications])"
+msgstr "用于路由REST调用的底层有线协议（见 link:https://tools.ietf.org/html/rfc7230[HTTP规范] ）。"
+
+#. type: Labeled list
+#: upstream/_guides/resteasy-reactive.adoc:87
+#, fuzzy, no-wrap
+msgid "HTTP request"
+msgstr "HTTP请求"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:88
+#, fuzzy
+msgid "the request part of the HTTP call, consisting of an HTTP method, a target URI, headers and an optional message body"
+msgstr "HTTP调用的请求部分，由一个HTTP方法、一个目标URI、头信息和一个可选的信息体组成。"
+
+#. type: Labeled list
+#: upstream/_guides/resteasy-reactive.adoc:88
+#, fuzzy, no-wrap
+msgid "HTTP response"
+msgstr "HTTP响应"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:89
+#, fuzzy
+msgid "the response part of the HTTP call, consisting of an HTTP response status, headers and an optional message body"
+msgstr "HTTP调用的响应部分，由HTTP响应状态、头信息和可选的信息体组成。"
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:90
+#, fuzzy, no-wrap
+msgid "Declaring endpoints: URI mapping"
+msgstr "声明端点。URI映射"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:94
+#, fuzzy
+msgid "Any class annotated with a link:{jaxrsapi}/javax/ws/rs/Path.html[`@Path`] annotation can have its methods exposed as REST endpoints, provided they have an HTTP method annotation (see below)."
+msgstr "任何被注解为 link:{jaxrsapi}/javax/ws/rs/Path.html[`@Path`] 注解的类都可以将其方法作为REST端点公开，只要它们有一个HTTP方法注释（见下文）。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:97
+#, fuzzy
+msgid "That link:{jaxrsapi}/javax/ws/rs/Path.html[`@Path`] annotation defines the URI prefix under which those methods will be exposed. It can be empty, or contain a prefix such as `rest` or `rest/V1`."
+msgstr "该 link:{jaxrsapi}/javax/ws/rs/Path.html[`@Path`] 注释定义了URI前缀，这些方法将在该前缀下暴露。它可以是空的，或者包含一个前缀，如 `rest` 或 `rest/V1` 。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:100
+#, fuzzy
+msgid "Each exposed endpoint method can in turn have another link:{jaxrsapi}/javax/ws/rs/Path.html[`@Path`] annotation which adds to its containing class annotation. For example, this defines a `rest/hello` endpoint:"
+msgstr "每个暴露的端点方法可以依次有另一个 link:{jaxrsapi}/javax/ws/rs/Path.html[`@Path`] 注释，该注释添加到其包含的类注释中。例如，这定义了一个 `rest/hello` 端点。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:110
+#, no-wrap
+msgid ""
+"@Path(\"rest\")\n"
+"public class Endpoint {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:117
+#, no-wrap
+msgid ""
+"    @Path(\"hello\")\n"
+"    @GET\n"
+"    public String hello() {\n"
+"        return \"Hello, World!\";\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:120
+#, fuzzy
+msgid "See <<uri-parameters,URI parameters>> for more information about URI mapping."
+msgstr "关于URI映射的更多信息，请参阅URI link:#uri-parameters[参数] 。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:122
+#, fuzzy
+msgid "You can set the root path for all rest endpoints using the `@ApplicationPath` annotation, as shown below."
+msgstr "你可以使用 `@ApplicationPath` 注释为所有的休息端点设置根路径，如下图所示。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:129
+#, no-wrap
+msgid ""
+"import javax.ws.rs.ApplicationPath;\n"
+"import javax.ws.rs.core.Application;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:132
+#, no-wrap
+msgid ""
+"@ApplicationPath(\"/api\")\n"
+"public static class MyApplication extends Application {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:134
+#: upstream/_guides/resteasy-reactive.adoc:1686
+#: upstream/_guides/resteasy-reactive.adoc:1867
+#: upstream/_guides/resteasy-reactive.adoc:1882
+#, no-wrap
+msgid "}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:139
+#, fuzzy
+msgid "This will cause all rest endpoints to be resolve relative to `/api`, so the endpoint above with `@Path(\"rest\")` would be accessible at `/api/rest/. You can also set the `quarkus.rest.path` build time property to set the root path if you don't want to use an annotation."
+msgstr "这将导致所有其余的端点被解析为相对于 `/api` ，所以上面的端点与 `@Path(\"rest\")` 将在 `/api/rest/. You can also set the `quarkus.rest.path` 构建时间属性来设置根路径，如果你不想使用注释。"
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:140
+#, fuzzy, no-wrap
+msgid "Declaring endpoints: HTTP methods"
+msgstr "声明端点。HTTP方法"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:144
+#, fuzzy
+msgid "Each endpoint method must be annotated with one of the following annotations, which defines which HTTP method will be mapped to the method:"
+msgstr "每个端点方法都必须用以下注解之一进行注解，该注解定义了哪个HTTP方法将被映射到该方法。"
+
+#. type: Block title
+#: upstream/_guides/resteasy-reactive.adoc:145
+#, fuzzy, no-wrap
+msgid "Table HTTP method annotations"
+msgstr "表HTTP方法注释"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:147
+#: upstream/_guides/resteasy-reactive.adoc:237
+#, fuzzy, no-wrap
+msgid "Annotation"
+msgstr "注释"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:149
+#: upstream/_guides/resteasy-reactive.adoc:239
+#: upstream/_guides/resteasy-reactive.adoc:373
+#: upstream/_guides/resteasy-reactive.adoc:548
+#: upstream/_guides/resteasy-reactive.adoc:789
+#: upstream/_guides/resteasy-reactive.adoc:926
+#: upstream/_guides/resteasy-reactive.adoc:1132
+#: upstream/_guides/resteasy-reactive.adoc:1380
+#: upstream/_guides/resteasy-reactive.adoc:1397
+#: upstream/_guides/resteasy-reactive.adoc:1485
+#: upstream/_guides/resteasy-reactive.adoc:1505
+#, fuzzy, no-wrap
+msgid "Usage"
+msgstr "使用方法"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:150
+#, fuzzy, no-wrap
+msgid "link:{jaxrsapi}/javax/ws/rs/GET.html[`@GET`]"
+msgstr "link:{jaxrsapi}/javax/ws/rs/GET.html[`@GET`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:152
+#, fuzzy, no-wrap
+msgid "Obtain a resource representation, should not modify state, link:{httpspec}#section-4.2.2[idempotent] (link:{httpspec}#section-4.3.1[HTTP docs])"
+msgstr "获得一个资源表示，不应修改状态，可 link:{httpspec}#section-4.2.2[重复使用] link:{httpspec}#section-4.3.1[（HTTP文档] ）。"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:153
+#, fuzzy, no-wrap
+msgid "link:{jaxrsapi}/javax/ws/rs/HEAD.html[`@HEAD`]"
+msgstr "link:{jaxrsapi}/javax/ws/rs/HEAD.html[`@HEAD`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:155
+#, fuzzy, no-wrap
+msgid "Obtain metadata about a resource, similar to `GET` with no body (link:{httpspec}#section-4.3.2[HTTP docs])"
+msgstr "获取关于一个资源的元数据，类似于 `GET` ，没有主体 link:{httpspec}#section-4.3.2[（HTTP文档] ）。"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:156
+#, fuzzy, no-wrap
+msgid "link:{jaxrsapi}/javax/ws/rs/POST.html[`@POST`]"
+msgstr "link:{jaxrsapi}/javax/ws/rs/POST.html[`@POST`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:158
+#, fuzzy, no-wrap
+msgid "Create a resource and obtain a link to it (link:{httpspec}#section-4.3.3[HTTP docs])"
+msgstr "创建一个资源并获得其链接 link:{httpspec}#section-4.3.3[（HTTP文档] ）。"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:159
+#, fuzzy, no-wrap
+msgid "link:{jaxrsapi}/javax/ws/rs/PUT.html[`@PUT`]"
+msgstr "link:{jaxrsapi}/javax/ws/rs/PUT.html[`@PUT`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:161
+#, fuzzy, no-wrap
+msgid "Replace a resource or create one, should be link:{httpspec}#section-4.2.2[idempotent] (link:{httpspec}#section-4.3.4[HTTP docs])"
+msgstr "替换一个资源或创建一个资源，应该是 link:{httpspec}#section-4.2.2[empotent的] link:{httpspec}#section-4.3.4[（HTTP文档] ）。"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:162
+#, fuzzy, no-wrap
+msgid "link:{jaxrsapi}/javax/ws/rs/DELETE.html[`@DELETE`]"
+msgstr "link:{jaxrsapi}/javax/ws/rs/DELETE.html[`@DELETE`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:164
+#, fuzzy, no-wrap
+msgid "Delete an existing resource, link:{httpspec}#section-4.2.2[idempotent]  (link:{httpspec}#section-4.3.5[HTTP docs])"
+msgstr "删除一个现有的资源， link:{httpspec}#section-4.2.2[无用] 的 link:{httpspec}#section-4.3.5[(HTTP文档] )"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:165
+#, fuzzy, no-wrap
+msgid "link:{jaxrsapi}/javax/ws/rs/OPTIONS.html[`@OPTIONS`]"
+msgstr "link:{jaxrsapi}/javax/ws/rs/OPTIONS.html[`@OPTIONS`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:167
+#, fuzzy, no-wrap
+msgid "Obtain information about a resource, link:{httpspec}#section-4.2.2[idempotent] (link:{httpspec}#section-4.3.7[HTTP docs])"
+msgstr "获取关于一个资源的信息， link:{httpspec}#section-4.2.2[无条件] 的 link:{httpspec}#section-4.3.7[（HTTP文档] ）。"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:168
+#, fuzzy, no-wrap
+msgid "link:{jaxrsapi}/javax/ws/rs/PATCH.html[`@PATCH`]"
+msgstr "link:{jaxrsapi}/javax/ws/rs/PATCH.html[`@PATCH`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:170
+#, fuzzy, no-wrap
+msgid "Update a resource, or create one, not link:{httpspec}#section-4.2.2[idempotent] (https://tools.ietf.org/html/rfc5789#section-2[HTTP docs])"
+msgstr "更新一个资源，或创建一个资源，而不是 link:{httpspec}#section-4.2.2[同态的] link:https://tools.ietf.org/html/rfc5789#section-2[（HTTP文档）]"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:174
+#, fuzzy
+msgid "You can also declare other HTTP methods by declaring them as an annotation with the link:{jaxrsapi}/javax/ws/rs/HttpMethod.html[`@HttpMethod`] annotation:"
+msgstr "你也可以将其他的HTTP方法作为注解来声明，注解的内容包括 link:{jaxrsapi}/javax/ws/rs/HttpMethod.html[`@HttpMethod`] 注释。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:181
+#, no-wrap
+msgid ""
+"import java.lang.annotation.Retention;\n"
+"import java.lang.annotation.RetentionPolicy;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:184
+#, no-wrap
+msgid ""
+"import javax.ws.rs.HttpMethod;\n"
+"import javax.ws.rs.Path;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:189
+#, no-wrap
+msgid ""
+"@Retention(RetentionPolicy.RUNTIME)\n"
+"@HttpMethod(\"CHEESE\")\n"
+"@interface CHEESE {\n"
+"}\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:198
+#, no-wrap
+msgid ""
+"    @CHEESE\n"
+"    public String hello() {\n"
+"        return \"Hello, Cheese World!\";\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:200
+#, fuzzy, no-wrap
+msgid "Declaring endpoints: representation / content types"
+msgstr "声明端点：表示/内容类型"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:205
+#, fuzzy
+msgid "Each endpoint method may consume or produce specific resource representations, which are indicated by the HTTP link:{httpspec}#section-3.1.1.5[`Content-Type`] header, which in turn contains link:{httpspec}#section-3.1.1.1[MIME (Media Type)] values, such as the following:"
+msgstr "每个端点方法可以消费或产生特定的资源表示，这些表示由HTTP link:{httpspec}#section-3.1.1.5[`Content-Type`] 标头表示，它又包含 link:{httpspec}#section-3.1.1.1[MIME（媒体类型）] 值，如以下。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:207
+#, fuzzy
+msgid "`text/plain` which is the default for any endpoint returning a `String`."
+msgstr " `text/plain` 这是任何返回 的端点的默认值。 `String` "
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:208
+#, fuzzy
+msgid "`text/html` for HTML (such as with xref:qute.adoc[Qute templating])"
+msgstr " `text/html` 用于HTML（如用 link:qute.html[Qute模板化] ）。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:209
+#, fuzzy
+msgid "`application/json` for a <<json,JSON REST endpoint>>"
+msgstr " `application/json` 为一个 link:#json[JSON REST端点]"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:210
+#, fuzzy
+msgid "`text/*` which is a sub-type wildcard for any text media type"
+msgstr " `text/*` 这是对任何文本媒体类型的子类型通配符"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:211
+#, fuzzy
+msgid "`\\*/*` which is a wildcard for any media type"
+msgstr " `*/*` 这是对任何媒体类型的通配符"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:216
+#, fuzzy
+msgid "You may annotate your endpoint class with the link:{jaxrsapi}/javax/ws/rs/Produces.html[`@Produces`] or link:{jaxrsapi}/javax/ws/rs/Consumes.html[`@Consumes`] annotations, which allow you to specify one or more media types that your endpoint may accept as HTTP request body or produce as HTTP response body. Those class annotations apply to each method."
+msgstr "你可以在你的端点类上注上 link:{jaxrsapi}/javax/ws/rs/Produces.html[`@Produces`] 或 link:{jaxrsapi}/javax/ws/rs/Consumes.html[`@Consumes`] 注释，它允许你指定一个或多个媒体类型，你的端点可以作为HTTP请求体接受或作为HTTP响应体产生。这些类注解适用于每个方法。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:220
+#, fuzzy
+msgid "Any method may also be annotated with the link:{jaxrsapi}/javax/ws/rs/Produces.html[`@Produces`] or link:{jaxrsapi}/javax/ws/rs/Consumes.html[`@Consumes`] annotations, in which case they override any eventual class annotation."
+msgstr "任何方法也可以用 link:{jaxrsapi}/javax/ws/rs/Produces.html[`@Produces`] 或 link:{jaxrsapi}/javax/ws/rs/Consumes.html[`@Consumes`] 注释，在这种情况下，它们会覆盖任何最终的类注释。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:223
+#, fuzzy
+msgid "The link:{jaxrsapi}/javax/ws/rs/core/MediaType.html[`MediaType`] class has many constants you can use to point to specific pre-defined media types."
+msgstr "该 link:{jaxrsapi}/javax/ws/rs/core/MediaType.html[`MediaType`] 类有许多常量，你可以用来指向特定的预定义媒体类型。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:225
+#, fuzzy
+msgid "See <<negotiation>> for more information."
+msgstr "更多信息见 link:#negotiation[[谈判]] 。"
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:226
+#, fuzzy, no-wrap
+msgid "Accessing request parameters"
+msgstr "访问请求参数"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:232
+#, fuzzy
+msgid "don't forget to configure your compiler to generate parameter name information with `-parameters` (javac)  or `<parameters>` or `<maven.compiler.parameters>` (https://maven.apache.org/plugins/maven-compiler-plugin/compile-mojo.html#parameters[Maven])."
+msgstr "不要忘了配置你的编译器，以生成参数名称信息，用 `-parameters` （javac）或 `<parameters>` 或 `<maven.compiler.parameters>` link:https://maven.apache.org/plugins/maven-compiler-plugin/compile-mojo.html#parameters[（Maven] ）。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:234
+#, fuzzy
+msgid "The following HTTP request elements may be obtained by your endpoint method:"
+msgstr "以下的HTTP请求元素可以通过你的端点方法获得。"
+
+#. type: Block title
+#: upstream/_guides/resteasy-reactive.adoc:235
+#, fuzzy, no-wrap
+msgid "Table HTTP request parameter annotations"
+msgstr "表 HTTP请求参数注释"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:237
+#, fuzzy, no-wrap
+msgid "HTTP element"
+msgstr "HTTP元素"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:240
+#, fuzzy, no-wrap
+msgid "[[path-parameter]]Path parameter"
+msgstr "link:[, id=\"path-parameter\"] 路径参数"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:241
+#, fuzzy, no-wrap
+msgid "link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestPath.html[`@RestPath`] (or nothing)"
+msgstr "link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestPath.html[`@RestPath`] (或没有)"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:244
+#, fuzzy, no-wrap
+msgid ""
+"URI template parameter (simplified version of the https://tools.ietf.org/html/rfc6570[URI Template specification]), \n"
+"see <<uri-parameters,URI parameters>> for more information."
+msgstr "URI模板参数（ link:https://tools.ietf.org/html/rfc6570[URI模板规范] 的简化版本），更多信息见 link:#uri-parameters[URI参数] 。"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:245
+#, fuzzy, no-wrap
+msgid "Query parameter"
+msgstr "查询参数"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:246
+#, fuzzy, no-wrap
+msgid "link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestQuery.html[`@RestQuery`]"
+msgstr "link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestQuery.html[`@RestQuery`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:248
+#, fuzzy, no-wrap
+msgid "The value of an https://tools.ietf.org/html/rfc3986#section-3.4[URI query parameter]"
+msgstr "一个 link:https://tools.ietf.org/html/rfc3986#section-3.4[URI查询参数] 的值"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:249
+#, fuzzy, no-wrap
+msgid "Header"
+msgstr "标题"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:250
+#, fuzzy, no-wrap
+msgid "link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestHeader.html[`@RestHeader`]"
+msgstr "link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestHeader.html[`@RestHeader`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:252
+#, fuzzy, no-wrap
+msgid "The value of an https://tools.ietf.org/html/rfc7230#section-3.2[HTTP header]"
+msgstr "link:https://tools.ietf.org/html/rfc7230#section-3.2[HTTP头] 的值"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:253
+#, fuzzy, no-wrap
+msgid "Cookie"
+msgstr "饼干"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:254
+#, fuzzy, no-wrap
+msgid "link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestCookie.html[`@RestCookie`]"
+msgstr "link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestCookie.html[`@RestCookie`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:256
+#, fuzzy, no-wrap
+msgid "The value of an https://tools.ietf.org/html/rfc6265#section-4.2[HTTP cookie]"
+msgstr "一个 link:https://tools.ietf.org/html/rfc6265#section-4.2[HTTP cookie] 的值"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:257
+#, fuzzy, no-wrap
+msgid "Form parameter"
+msgstr "表格参数"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:258
+#, fuzzy, no-wrap
+msgid "link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestForm.html[`@RestForm`]"
+msgstr "link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestForm.html[`@RestForm`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:260
+#, fuzzy, no-wrap
+msgid "The value of an https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST[HTTP URL-encoded FORM]"
+msgstr "一个 link:https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST[HTTP URL编码的FORM] 的值"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:261
+#, fuzzy, no-wrap
+msgid "Matrix parameter"
+msgstr "矩阵参数"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:262
+#, fuzzy, no-wrap
+msgid "link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestMatrix.html[`@RestMatrix`]"
+msgstr "link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestMatrix.html[`@RestMatrix`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:264
+#, fuzzy, no-wrap
+msgid "The value of an https://tools.ietf.org/html/rfc3986#section-3.3[URI path segment parameter]"
+msgstr "一个 link:https://tools.ietf.org/html/rfc3986#section-3.3[URI路径段参数] 的值"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:268
+#, fuzzy
+msgid "For each of those annotations, you may specify the name of the element they refer to, otherwise they will use the name of the annotated method parameter."
+msgstr "对于每一个注释，你可以指定它们所引用的元素的名称，否则它们将使用注释的方法参数的名称。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:270
+#, fuzzy
+msgid "If a client made the following HTTP call:"
+msgstr "如果一个客户端进行了以下的HTTP调用。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:277
+#, no-wrap
+msgid ""
+"POST /cheeses;variant=goat/tomme?age=matured HTTP/1.1\n"
+"Content-Type: application/x-www-form-urlencoded\n"
+"Cookie: level=hardcore\n"
+"X-Cheese-Secret-Handshake: fist-bump\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:279
+#, no-wrap
+msgid "smell=strong\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:282
+#, fuzzy
+msgid "Then you could obtain all the various parameters with this endpoint method:"
+msgstr "然后你可以用这个端点方法获得所有的各种参数。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:289
+#, no-wrap
+msgid ""
+"import javax.ws.rs.POST;\n"
+"import javax.ws.rs.Path;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:296
+#, no-wrap
+msgid ""
+"import org.jboss.resteasy.reactive.RestCookie;\n"
+"import org.jboss.resteasy.reactive.RestForm;\n"
+"import org.jboss.resteasy.reactive.RestHeader;\n"
+"import org.jboss.resteasy.reactive.RestMatrix;\n"
+"import org.jboss.resteasy.reactive.RestPath;\n"
+"import org.jboss.resteasy.reactive.RestQuery;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:299
+#, no-wrap
+msgid ""
+"@Path(\"/cheeses/{type}\")\n"
+"public class Endpoint {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:311
+#, no-wrap
+msgid ""
+"    @POST\n"
+"    public String allParams(@RestPath String type,\n"
+"                            @RestMatrix String variant,\n"
+"                            @RestQuery String age,\n"
+"                            @RestCookie String level,\n"
+"                            @RestHeader(\"X-Cheese-Secret-Handshake\")\n"
+"                            String secretHandshake,\n"
+"                            @RestForm String smell) {\n"
+"        return type + \"/\" + variant + \"/\" + age + \"/\" + level + \"/\" + secretHandshake + \"/\" + smell;\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:316
+#, fuzzy
+msgid "the link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestPath.html[`@RestPath`] annotation is optional: any parameter whose name matches an existing URI template variable will be automatically assumed to have link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestPath.html[`@RestPath`]."
+msgstr "的注释是可选的。 link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestPath.html[`@RestPath`] 注释是可选的：任何名称与现有URI模板变量相匹配的参数将被自动假定为具有 link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestPath.html[`@RestPath`] ."
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:324
+#, fuzzy
+msgid "You can also use any of the JAX-RS annotations link:{jaxrsapi}/javax/ws/rs/PathParam.html[`@PathParam`], link:{jaxrsapi}/javax/ws/rs/QueryParam.html[`@QueryParam`], link:{jaxrsapi}/javax/ws/rs/HeaderParam.html[`@HeaderParam`], link:{jaxrsapi}/javax/ws/rs/CookieParam.html[`@CookieParam`], link:{jaxrsapi}/javax/ws/rs/FormParam.html[`@FormParam`] or link:{jaxrsapi}/javax/ws/rs/MatrixParam.html[`@MatrixParam`] for this, but they require you to specify the parameter name."
+msgstr "你也可以使用任何一个JAX-RS注解 link:{jaxrsapi}/javax/ws/rs/PathParam.html[`@PathParam`] , link:{jaxrsapi}/javax/ws/rs/QueryParam.html[`@QueryParam`] , link:{jaxrsapi}/javax/ws/rs/HeaderParam.html[`@HeaderParam`] , link:{jaxrsapi}/javax/ws/rs/CookieParam.html[`@CookieParam`] , link:{jaxrsapi}/javax/ws/rs/FormParam.html[`@FormParam`] 或 link:{jaxrsapi}/javax/ws/rs/MatrixParam.html[`@MatrixParam`] 来实现这一点，但它们要求你指定参数名称。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:326
+#, fuzzy
+msgid "See <<parameter-mapping>> for more advanced use-cases."
+msgstr "更多高级用例见 link:#parameter-mapping[[参数映射]] 。"
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:327
+#, fuzzy, no-wrap
+msgid "Declaring URI parameters"
+msgstr "声明URI参数"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:334
+#, fuzzy
+msgid "You can declare URI parameters and use regular expressions in your path, so for instance the following endpoint will serve requests for `/hello/stef/23` and `/hello` but not `/hello/stef/0x23`:"
+msgstr "你可以声明URI参数，并在路径中使用正则表达式，因此，例如以下端点将为 `/hello/stef/23` 和 `/hello` 的请求提供服务，但不包括 `/hello/stef/0x23` 。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:344
+#: upstream/_guides/resteasy-reactive.adoc:1912
+#, no-wrap
+msgid ""
+"@Path(\"hello\")\n"
+"public class Endpoint {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:350
+#, no-wrap
+msgid ""
+"    @Path(\"{name}/{age:\\\\d+}\")\n"
+"    @GET\n"
+"    public String personalisedHello(String name, int age) {\n"
+"        return \"Hello \" + name + \" is your age really \" + age + \"?\";\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:356
+#, no-wrap
+msgid ""
+"    @GET\n"
+"    public String genericHello() {\n"
+"        return \"Hello stranger\";\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:359
+#, fuzzy, no-wrap
+msgid "Accessing the request body"
+msgstr "访问请求主体"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:364
+#, fuzzy
+msgid "Any method parameter with no annotation will receive the method body.footnote:[Unless it is a <<path-parameter,URI template parameter>> or a <<context-objects,context object>>.], after it has been mapped from its HTTP representation to the Java type of the parameter."
+msgstr "任何没有注释的方法参数都会收到方法主体。[ link:#_footnotedef_1[1, id=\"_footnoteref_1\", class=\"footnote\", title=\"View footnote.\"]]，在它被从HTTP表示法映射到参数的Java类型之后。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:366
+#, fuzzy
+msgid "The following parameter types will be supported out of the box:"
+msgstr "以下参数类型将在开箱时得到支持。"
+
+#. type: Block title
+#: upstream/_guides/resteasy-reactive.adoc:369
+#, fuzzy, no-wrap
+msgid "Table Request body parameter type"
+msgstr "表 请求主体参数类型"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:371
+#: upstream/_guides/resteasy-reactive.adoc:546
+#: upstream/_guides/resteasy-reactive.adoc:787
+#: upstream/_guides/resteasy-reactive.adoc:1378
+#: upstream/_guides/resteasy-reactive.adoc:1395
+#: upstream/_guides/resteasy-reactive.adoc:1483
+#: upstream/_guides/resteasy-reactive.adoc:1503
+#, fuzzy, no-wrap
+msgid "Typ"
+msgstr "类型"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:374
+#, fuzzy, no-wrap
+msgid "link:{jdkapi}/java/io/File.html[`File`]"
+msgstr "link:{jdkapi}/java/io/File.html[`File`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:376
+#, fuzzy, no-wrap
+msgid "The entire request body in a temporary file"
+msgstr "整个请求正文在一个临时文件中"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:377
+#, fuzzy, no-wrap
+msgid "`byte[]`"
+msgstr " `byte[]` "
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:379
+#, fuzzy, no-wrap
+msgid "The entire request body, not decoded"
+msgstr "整个请求正文，未被解码"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:380
+#, fuzzy, no-wrap
+msgid "`char[]`"
+msgstr " `char[]` "
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:382
+#: upstream/_guides/resteasy-reactive.adoc:385
+#, fuzzy, no-wrap
+msgid "The entire request body, decoded"
+msgstr "整个请求正文，经过解码"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:383
+#, fuzzy, no-wrap
+msgid "link:{jdkapi}/java/lang/String.html[`String`]"
+msgstr "link:{jdkapi}/java/lang/String.html[`String`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:386
+#, fuzzy, no-wrap
+msgid "link:{jdkapi}/java/io/InputStream.html[`InputStream`]"
+msgstr "link:{jdkapi}/java/io/InputStream.html[`InputStream`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:388
+#: upstream/_guides/resteasy-reactive.adoc:391
+#, fuzzy, no-wrap
+msgid "The request body in a blocking stream"
+msgstr "阻塞流中的请求主体"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:389
+#, fuzzy, no-wrap
+msgid "link:{jdkapi}/java/io/Reader.html[`Reader`]"
+msgstr "link:{jdkapi}/java/io/Reader.html[`Reader`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:392
+#, fuzzy, no-wrap
+msgid "All Java primitives and their wrapper classes"
+msgstr "所有的Java原语和它们的封装类"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:394
+#, fuzzy, no-wrap
+msgid "Java primitive types"
+msgstr "Java原始类型"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:395
+#, fuzzy, no-wrap
+msgid "link:{jdkapi}/java/math/BigDecimal.html[`BigDecimal`], link:{jdkapi}/java/math/BigInteger.html[`BigInteger`]"
+msgstr "link:{jdkapi}/java/math/BigDecimal.html[`BigDecimal`] , link:{jdkapi}/java/math/BigInteger.html[`BigInteger`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:397
+#, fuzzy, no-wrap
+msgid "Large integers and decimals."
+msgstr "大整数和小数。"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:399
+#, fuzzy, no-wrap
+msgid ""
+"link:{jsonpapi}/javax/json/JsonArray.html[`JsonArray`], link:{jsonpapi}/javax/json/JsonArray.html[`JsonObject`],\n"
+"link:{jsonpapi}/javax/json/JsonArray.html[`JsonStructure`], link:{jsonpapi}/javax/json/JsonArray.html[`JsonValue`]"
+msgstr "link:{jsonpapi}/javax/json/JsonArray.html[`JsonArray`] , link:{jsonpapi}/javax/json/JsonArray.html[`JsonObject`] , link:{jsonpapi}/javax/json/JsonArray.html[`JsonStructure`] , link:{jsonpapi}/javax/json/JsonArray.html[`JsonValue`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:401
+#, fuzzy, no-wrap
+msgid "JSON value types"
+msgstr "JSON值类型"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:402
+#, fuzzy, no-wrap
+msgid "link:{vertxapi}io/vertx/core/buffer/Buffer.html[`Buffer`]"
+msgstr "link:{vertxapi}io/vertx/core/buffer/Buffer.html[`Buffer`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:404
+#, fuzzy, no-wrap
+msgid "Vert.x Buffer"
+msgstr "Vert.x 缓冲区"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:405
+#, fuzzy, no-wrap
+msgid "any other type"
+msgstr "任何其他类型"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:407
+#, fuzzy, no-wrap
+msgid "Will be <<json,mapped from JSON to that type>>"
+msgstr "将被 link:#json[从JSON映射到该类型] 中"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:410
+#, fuzzy
+msgid "You can add support for more <<readers-writers,body parameter types>>."
+msgstr "你可以添加对更多 link:#readers-writers[身体参数类型] 的支持。"
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:412
+#, fuzzy, no-wrap
+msgid "Handling Multipart Form data"
+msgstr "处理多部分表格数据"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:417
+#, fuzzy
+msgid "To handle HTTP requests that have `multipart/form-data` as their content type, RESTEasy Reactive introduces the link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/MultipartForm.html[`@MultipartForm`] annotation.  Let us look at an example of its use."
+msgstr "为了处理以 `multipart/form-data` 为内容类型的HTTP请求，RESTEasy Reactive引入了 link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/MultipartForm.html[`@MultipartForm`] 注解。让我们看看它的一个使用例子。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:420
+#, fuzzy
+msgid "Assuming an HTTP request containing a file upload and a form value containing a string description need to be handled, we could write a POJO that will hold this information like so:"
+msgstr "假设需要处理一个包含文件上传的HTTP请求和一个包含字符串描述的表单值，我们可以写一个POJO来保存这些信息，像这样。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:424
+#: upstream/_guides/resteasy-reactive.adoc:495
+#, no-wrap
+msgid "import javax.ws.rs.core.MediaType;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:428
+#, no-wrap
+msgid ""
+"import org.jboss.resteasy.reactive.PartType;\n"
+"import org.jboss.resteasy.reactive.RestForm;\n"
+"import org.jboss.resteasy.reactive.multipart.FileUpload;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:430
+#, no-wrap
+msgid "public class FormData {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:434
+#, no-wrap
+msgid ""
+"    @RestForm\n"
+"    @PartType(MediaType.TEXT_PLAIN)\n"
+"    public String description;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:438
+#, no-wrap
+msgid ""
+"    @RestForm(\"image\")\n"
+"    public FileUpload file;\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:443
+#, fuzzy
+msgid "The `name` field will contain the data contained in the part of HTTP request called `description` (because link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestForm.html[`@RestForm`] does not define a value, the field name is used), while the `file` field will contain data about the uploaded file in the `image` part of HTTP request."
+msgstr " `name` 字段将包含HTTP请求中名为 `description` 的部分所包含的数据（因为 link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestForm.html[`@RestForm`] 没有定义一个值，所以使用字段名），而 `file` 字段将包含HTTP请求中 `image` 部分的上传文件的数据。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:446
+#, fuzzy
+msgid "link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/multipart/FileUpload.html[`FileUpload`] provides access to various metadata of the uploaded file. If however all you need is a handle to the uploaded file, `java.nio.file.Path` or `java.io.File` could be used."
+msgstr "link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/multipart/FileUpload.html[`FileUpload`] 提供对上传文件的各种元数据的访问。然而，如果你只需要一个上传文件的句柄，可以使用 `java.nio.file.Path` 或 `java.io.File` 。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:448
+#, fuzzy
+msgid "When access to all uploaded files without specifying the form names is needed, RESTEasy Reactive allows the use of `@RestForm List<FileUpload>`, where it is important to **not** set a name for the link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestForm.html[`@RestForm`] annotation."
+msgstr "当需要在不指定表格名称的情况下访问所有上传的文件时，RESTEasy Reactive允许使用 `@RestForm List<FileUpload>` ，其中重要的是 *不要* 为 link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestForm.html[`@RestForm`] 注释。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:452
+#, fuzzy
+msgid "link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/PartType.html[`@PartType`] is used to aid in deserialization of the corresponding part of the request into the desired Java type. It is very useful when for example the corresponding body part is JSON and needs to be converted to a POJO."
+msgstr "link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/PartType.html[`@PartType`] 是用来帮助将请求的相应部分反序列化为所需的Java类型。例如，当相应的主体部分是JSON并需要转换为POJO时，它就非常有用。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:454
+#, fuzzy
+msgid "This POJO could be used in a Resource method like so:"
+msgstr "这个POJO可以在一个资源方法中使用，就像这样。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:462
+#, no-wrap
+msgid ""
+"import javax.ws.rs.Consumes;\n"
+"import javax.ws.rs.POST;\n"
+"import javax.ws.rs.Path;\n"
+"import javax.ws.rs.Produces;\n"
+"import javax.ws.rs.core.MediaType;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:464
+#, no-wrap
+msgid "import org.jboss.resteasy.reactive.MultipartForm;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:467
+#: upstream/_guides/resteasy-reactive.adoc:521
+#, no-wrap
+msgid ""
+"@Path(\"multipart\")\n"
+"public class Endpoint {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:476
+#, no-wrap
+msgid ""
+"    @POST\n"
+"    @Produces(MediaType.APPLICATION_JSON)\n"
+"    @Consumes(MediaType.MULTIPART_FORM_DATA)\n"
+"    @Path(\"form\")\n"
+"    public String form(@MultipartForm FormData formData) {\n"
+"        // return something\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:480
+#, fuzzy
+msgid "The use of link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/MultipartForm.html[`@MultipartForm`] as method parameter makes RESTEasy Reactive handle the request as a multipart form request."
+msgstr "使用 link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/MultipartForm.html[`@MultipartForm`] 作为方法参数，使RESTEasy Reactive将该请求作为一个多部分表单请求来处理。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:482
+#, fuzzy
+msgid "The use of `@MultipartForm` is actually unnecessary as RESTEasy Reactive can infer this information from the use of `@Consumes(MediaType.MULTIPART_FORM_DATA)`"
+msgstr "使用 `@MultipartForm` 实际上是不必要的，因为RESTEasy Reactive可以通过使用 `@Consumes(MediaType.MULTIPART_FORM_DATA)` "
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:488
+#, fuzzy
+msgid "When handling file uploads, it is very important to move the file to permanent storage (like a database, a dedicated file system or a cloud storage) in your code that handles the POJO.  Otherwise, the file will no longer be accessible when the request terminates.  Moreoever if `quarkus.http.body.delete-uploaded-files-on-end` is set to true, Quarkus will delete the uploaded file when the HTTP response is sent. If the setting is disabled, the file will reside on the file system of the server (in the directory defined by the `quarkus.http.body.uploads-directory` configuration option), but as the uploaded files are saved with a UUID file name and no additional metadata is saved, these files are essentially a random dump of files."
+msgstr "当处理文件上传时，在你处理POJO的代码中，将文件移动到永久存储（如数据库、专用文件系统或云存储）是非常重要的。否则，当请求终止时，该文件将不再被访问。此外，如果 `quarkus.http.body.delete-uploaded-files-on-end` ，Quarkus将在发送HTTP响应时删除上传的文件。如果设置为禁用，文件将驻留在服务器的文件系统中（在由 `quarkus.http.body.uploads-directory` 配置选项定义的目录中），但由于上传的文件是以UUID文件名保存的，没有保存额外的元数据，这些文件基本上是随机转储的文件。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:491
+#, fuzzy
+msgid "Similarly, RESTEasy Reactive can produce Multipart Form data to allow users download files from the server. For example, we could write a POJO that will hold the information we want to expose as:"
+msgstr "同样地，RESTEasy Reactive可以产生Multipart Form数据，让用户从服务器上下载文件。例如，我们可以写一个POJO，将我们想要公开的信息保存为。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:498
+#, no-wrap
+msgid ""
+"import org.jboss.resteasy.reactive.PartType;\n"
+"import org.jboss.resteasy.reactive.RestForm;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:500
+#, no-wrap
+msgid "public class DownloadFormData {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:503
+#, no-wrap
+msgid ""
+"    @RestForm\n"
+"    String name;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:508
+#, no-wrap
+msgid ""
+"    @RestForm\n"
+"    @PartType(MediaType.APPLICATION_OCTET_STREAM)\n"
+"    File file;\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:511
+#, fuzzy
+msgid "And then expose this POJO via a Resource like so:"
+msgstr "然后像这样通过一个资源公开这个POJO。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:518
+#, no-wrap
+msgid ""
+"import javax.ws.rs.GET;\n"
+"import javax.ws.rs.Path;\n"
+"import javax.ws.rs.Produces;\n"
+"import javax.ws.rs.core.MediaType;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:529
+#, no-wrap
+msgid ""
+"    @GET\n"
+"    @Produces(MediaType.MULTIPART_FORM_DATA)\n"
+"    @Path(\"file\")\n"
+"    public DownloadFormData getFile() {\n"
+"        // return something\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:532
+#, fuzzy
+msgid "For the time being, returning Multipart data is limited to be blocking endpoints."
+msgstr "目前，返回的Multipart数据被限制在阻塞的端点。"
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:533
+#, fuzzy, no-wrap
+msgid "Returning a response body"
+msgstr "返回一个响应体"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:538
+#, fuzzy
+msgid "In order to return an HTTP response, simply return the resource you want from your method. The method return type and its optional content type will be used to decide how to serialise it to the HTTP response (see <<negotiation>> for more advanced information)."
+msgstr "为了返回一个HTTP响应，只需从你的方法中返回你想要的资源。方法的返回类型和其可选的内容类型将被用来决定如何将其序列化到HTTP响应中（更多高级信息见 link:#negotiation[[谈判]] ）。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:541
+#, fuzzy
+msgid "You can return any of the pre-defined types that you can read from the <<resource-types,HTTP response>>, and any other type will be mapped <<json,from that type to JSON>>."
+msgstr "你可以返回任何你可以从 link:#resource-types[HTTP响应] 中读取的预定义类型，任何其他类型将 link:#json[从该类型映射到JSON] 。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:543
+#, fuzzy
+msgid "In addition, the following return types are also supported:"
+msgstr "此外，还支持以下返回类型。"
+
+#. type: Block title
+#: upstream/_guides/resteasy-reactive.adoc:544
+#, fuzzy, no-wrap
+msgid "Table Additional response body parameter type"
+msgstr "表 附加响应体参数类型"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:549
+#, fuzzy, no-wrap
+msgid "link:{jdkapi}/java/nio/file/Path.html[`Path`]"
+msgstr "link:{jdkapi}/java/nio/file/Path.html[`Path`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:551
+#, fuzzy, no-wrap
+msgid "The contents of the file specified by the given path"
+msgstr "由给定路径指定的文件的内容"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:552
+#, fuzzy, no-wrap
+msgid "link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/PathPart.html[`PathPart`]"
+msgstr "link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/PathPart.html[`PathPart`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:554
+#, fuzzy, no-wrap
+msgid "The partial contents of the file specified by the given path"
+msgstr "由给定路径指定的文件的部分内容"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:555
+#, fuzzy, no-wrap
+msgid "link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/FilePart.html[`FilePart`]"
+msgstr "link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/FilePart.html[`FilePart`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:557
+#, fuzzy, no-wrap
+msgid "The partial contents of a file"
+msgstr "一个文件的部分内容"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:558
+#, fuzzy, no-wrap
+msgid "link:{vertxapi}/io/vertx/core/file/AsyncFile.html[`AsyncFile`]"
+msgstr "link:{vertxapi}/io/vertx/core/file/AsyncFile.html[`AsyncFile`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:560
+#, fuzzy, no-wrap
+msgid "Vert.x AsyncFile, which can be in full, or partial"
+msgstr "Vert.x AsyncFile，它可以是完整的，也可以是部分的"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:566
+#, fuzzy
+msgid "Alternately, you can also return a <<reactive,reactive type>> such as link:{mutinyapi}/io/smallrye/mutiny/Uni.html[`Uni`], link:{mutinyapi}/io/smallrye/mutiny/Multi.html[`Multi`] or link:{jdkapi}/java/util/concurrent/CompletionStage.html[`CompletionStage`] that resolve to one of the mentioned return types."
+msgstr "另外，你也可以返回一个 link:#reactive[反应式类型] ，如 link:{mutinyapi}/io/smallrye/mutiny/Uni.html[`Uni`] , link:{mutinyapi}/io/smallrye/mutiny/Multi.html[`Multi`] 或 link:{jdkapi}/java/util/concurrent/CompletionStage.html[`CompletionStage`] 来解析上述的返回类型之一。"
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:567
+#, fuzzy, no-wrap
+msgid "Setting other response properties"
+msgstr "设置其他响应属性"
+
+#. type: Title ====
+#: upstream/_guides/resteasy-reactive.adoc:569
+#, fuzzy, no-wrap
+msgid "Manually setting the response"
+msgstr "手动设置响应"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:574
+#, fuzzy
+msgid "If you need to set more properties on the HTTP response than just the body, such as the status code or headers, you can make your method return `org.jboss.resteasy.reactive.RestResponse` from a resource method.  An example of this could look like:"
+msgstr "如果你需要在HTTP响应上设置更多的属性，而不仅仅是正文，比如状态代码或头文件，你可以让你的方法从资源方法中返回 `org.jboss.resteasy.reactive.RestResponse` 。这方面的一个例子可以是这样的。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:582
+#, no-wrap
+msgid ""
+"import java.time.Duration;\n"
+"import java.time.Instant;\n"
+"import java.util.Date;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:587
+#, no-wrap
+msgid ""
+"import javax.ws.rs.GET;\n"
+"import javax.ws.rs.Path;\n"
+"import javax.ws.rs.core.MediaType;\n"
+"import javax.ws.rs.core.NewCookie;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:590
+#, no-wrap
+msgid ""
+"import org.jboss.resteasy.reactive.RestResponse;\n"
+"import org.jboss.resteasy.reactive.RestResponse.ResponseBuilder;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:608
+#, no-wrap
+msgid ""
+"    @GET\n"
+"    public RestResponse<String> hello() {\n"
+"        // HTTP OK status with text/plain content type\n"
+"        return ResponseBuilder.ok(\"Hello, World!\", MediaType.TEXT_PLAIN_TYPE)\n"
+"         // set a response header\n"
+"         .header(\"X-Cheese\", \"Camembert\")\n"
+"         // set the Expires response header to two days from now\n"
+"         .expires(Date.from(Instant.now().plus(Duration.ofDays(2))))\n"
+"         // send a new cookie\n"
+"         .cookie(new NewCookie(\"Flavour\", \"chocolate\"))\n"
+"         // end of builder API\n"
+"         .build();\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:612
+#, fuzzy
+msgid "You can also use the JAX-RS type link:{jaxrsapi}/javax/ws/rs/core/Response.html[`Response`] but it is not strongly typed to your entity."
+msgstr "你也可以使用JAX-RS类型 link:{jaxrsapi}/javax/ws/rs/core/Response.html[`Response`] 但它对你的实体不是强类型的。"
+
+#. type: Title ====
+#: upstream/_guides/resteasy-reactive.adoc:613
+#, fuzzy, no-wrap
+msgid "Using annotations"
+msgstr "使用注释"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:617
+#, fuzzy
+msgid "Alternatively, if you only need to set the status code and / or HTTP headers with static values, you can use `@org.jboss.resteasy.reactive.ResponseStatus` and /or `ResponseHeader` respectively.  An example of this could look like:"
+msgstr "另外，如果你只需要设置状态代码和/或HTTP头的静态值，你可以分别使用 `@org.jboss.resteasy.reactive.ResponseStatus` 和/或 `ResponseHeader` 。这方面的一个例子可以是这样的。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:625
+#, no-wrap
+msgid ""
+"import org.jboss.resteasy.reactive.Header;\n"
+"import org.jboss.resteasy.reactive.ResponseHeaders;\n"
+"import org.jboss.resteasy.reactive.ResponseStatus;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:639
+#, no-wrap
+msgid ""
+"    @ResponseStatus(201)\n"
+"    @ResponseHeader(name = \"X-Cheese\", value = \"Camembert\")\n"
+"    @GET\n"
+"    public String hello() {\n"
+"        return \"Hello, World!\";\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:641
+#, fuzzy, no-wrap
+msgid "Async/reactive support"
+msgstr "支持异步/反应式"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:651
+#, fuzzy
+msgid "If your endpoint method needs to accomplish an asynchronous or reactive task before being able to answer, you can declare your method to return the link:{mutinyapi}/io/smallrye/mutiny/Uni.html[`Uni`] type (from https://smallrye.io/smallrye-mutiny/[Mutiny]), in which case the current HTTP request will be automatically suspended after your method, until the returned link:{mutinyapi}/io/smallrye/mutiny/Uni.html[`Uni`] instance resolves to a value, which will be mapped to a response exactly according to the previously described rules:"
+msgstr "如果你的端点方法需要在能够回答之前完成一个异步或反应式任务，你可以声明你的方法要返回 link:{mutinyapi}/io/smallrye/mutiny/Uni.html[`Uni`] 类型（来自 link:https://smallrye.io/smallrye-mutiny/[Mutiny] ），在这种情况下，当前的HTTP请求将在你的方法之后自动暂停，直到返回的 link:{mutinyapi}/io/smallrye/mutiny/Uni.html[`Uni`] 实例解析为一个值，该值将完全按照之前描述的规则被映射为一个响应。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:660
+#: upstream/_guides/resteasy-reactive.adoc:1229
+#, no-wrap
+msgid "import io.smallrye.mutiny.Uni;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:663
+#: upstream/_guides/resteasy-reactive.adoc:746
+#, no-wrap
+msgid ""
+"@Path(\"escoffier\")\n"
+"public class Endpoint {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:669
+#, no-wrap
+msgid ""
+"    @GET\n"
+"    public Uni<Book> culinaryGuide() {\n"
+"        return Book.findByIsbn(\"978-2081229297\");\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:675
+#, fuzzy
+msgid "This allows you to not block the event-loop thread while the book is being fetched from the database, and allows Quarkus to serve more requests until your book is ready to be sent to the client and terminate this request. Check out our <<execution-model,Execution Model documentation>> for more information."
+msgstr "这允许你在从数据库中获取图书时不阻塞事件循环线程，并允许Quarkus提供更多的请求，直到你的图书准备好被发送到客户端并终止这个请求。请查看我们的 link:#execution-model[执行模型文档] 以了解更多信息。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:678
+#, fuzzy
+msgid "The link:{jdkapi}/java/util/concurrent/CompletionStage.html[`CompletionStage`] return type is also supported."
+msgstr "也支持 link:{jdkapi}/java/util/concurrent/CompletionStage.html[`CompletionStage`] 返回类型也被支持。"
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:679
+#, fuzzy, no-wrap
+msgid "Streaming support"
+msgstr "流媒体支持"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:684
+#, fuzzy
+msgid "If you want to stream your response element by element, you can make your endpoint method return a link:{mutinyapi}/io/smallrye/mutiny/Multi.html[`Multi`] type (from https://smallrye.io/smallrye-mutiny/[Mutiny]).  This is especially useful for streaming text or binary data."
+msgstr "如果你想把你的响应元素逐个流化，你可以让你的端点方法返回一个 link:{mutinyapi}/io/smallrye/mutiny/Multi.html[`Multi`] 类型（来自 link:https://smallrye.io/smallrye-mutiny/[Mutiny] ）。这对于流化文本或二进制数据特别有用。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:687
+#, fuzzy
+msgid "This example, using https://github.com/quarkiverse/quarkus-reactive-messaging-http[Reactive Messaging HTTP] shows how to stream text data:"
+msgstr "这个例子，使用 link:https://github.com/quarkiverse/quarkus-reactive-messaging-http[Reactive Messaging HTTP] 展示了如何流式传输文本数据。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:695
+#, no-wrap
+msgid ""
+"import javax.inject.Inject;\n"
+"import javax.ws.rs.GET;\n"
+"import javax.ws.rs.Path;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:697
+#, no-wrap
+msgid "import org.eclipse.microprofile.reactive.messaging.Channel;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:699
+#, no-wrap
+msgid "import io.smallrye.mutiny.Multi;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:702
+#, no-wrap
+msgid ""
+"@Path(\"logs\")\n"
+"public class Endpoint {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:706
+#, no-wrap
+msgid ""
+"    @Inject\n"
+"    @Channel(\"log-out\")\n"
+"    Multi<String> logs;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:712
+#, no-wrap
+msgid ""
+"    @GET\n"
+"    public Multi<String> streamLogs() {\n"
+"        return logs;\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:717
+#, fuzzy
+msgid "Response filters are not invoked on streamed responses, because they would give a false impression that you can set headers or HTTP status codes, which is not true after the initial response."
+msgstr "响应过滤器不在流式响应上调用，因为它们会给人一种错误的印象，即你可以设置头信息或HTTP状态码，而在初始响应之后，这并不是真的。"
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:718
+#, fuzzy, no-wrap
+msgid "Server-Sent Event (SSE) support"
+msgstr "支持服务器发送事件（SSE）"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:726
+#, fuzzy
+msgid "If you want to stream JSON objects in your response, you can use https://html.spec.whatwg.org/multipage/server-sent-events.html[Server-Sent Events] by just annotating your endpoint method with link:{jaxrsapi}/javax/ws/rs/Produces.html[`@Produces(MediaType.SERVER_SENT_EVENTS)`] and specifying that each element should be <<json,serialised to JSON>> with `@RestStreamElementType(MediaType.APPLICATION_JSON)`."
+msgstr "如果你想在你的响应中串联JSON对象，你可以使用 link:https://html.spec.whatwg.org/multipage/server-sent-events.html[服务器发送的事件] ，只需在你的端点方法上注以 link:{jaxrsapi}/javax/ws/rs/Produces.html[`@Produces(MediaType.SERVER_SENT_EVENTS)`] 并指定每个元素应被 link:#json[序列化为JSON] ， `@RestStreamElementType(MediaType.APPLICATION_JSON)` 。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:736
+#, no-wrap
+msgid ""
+"import javax.inject.Inject;\n"
+"import javax.ws.rs.GET;\n"
+"import javax.ws.rs.Path;\n"
+"import javax.ws.rs.Produces;\n"
+"import javax.ws.rs.core.MediaType;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:738
+#, no-wrap
+msgid "import org.jboss.resteasy.reactive.RestStreamElementType;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:741
+#, no-wrap
+msgid ""
+"import io.smallrye.mutiny.Multi;\n"
+"import io.smallrye.mutiny.Uni;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:743
+#, no-wrap
+msgid "import io.smallrye.reactive.messaging.annotations.Channel;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:751
+#, no-wrap
+msgid ""
+"    // Inject our Book channel\n"
+"    @Inject\n"
+"    @Channel(\"book-out\")\n"
+"    Multi<Book> books;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:761
+#, no-wrap
+msgid ""
+"    @GET\n"
+"    // Send the stream over SSE\n"
+"    @Produces(MediaType.SERVER_SENT_EVENTS)\n"
+"    // Each element will be sent as JSON\n"
+"    @RestStreamElementType(MediaType.APPLICATION_JSON)\n"
+"    public Multi<Book> stream() {\n"
+"        return books;\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:763
+#, fuzzy, no-wrap
+msgid "Controlling HTTP Caching features"
+msgstr "控制HTTP缓存功能"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:768
+#, fuzzy
+msgid "RESTEasy Reactive provides the link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/Cache.html[`@Cache`] and link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/NoCache.html[`@NoCache`] annotations to facilitate handling HTTP caching semantics, i.e. setting the 'Cache-Control' HTTP header."
+msgstr "RESTEasy Reactive提供了 link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/Cache.html[`@Cache`] 和 link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/NoCache.html[`@NoCache`] 注解，以方便处理HTTP缓存语义，即设置 \"Cache-Control \"HTTP头。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:771
+#, fuzzy
+msgid "These annotations can be placed either on a Resource Method or a Resource Class (in which case it applies to all Resource Methods of the class that do *not* contain the same annotation) and allow users to return domain objects and not have to deal with building up the `Cache-Control` HTTP header explicitly."
+msgstr "这些注解既可以放在资源方法上，也可以放在资源类上（在这种情况下，它适用于类中 *不* 包含相同注解的所有资源方法），并允许用户返回域对象，而不必明确处理建立 `Cache-Control` HTTP头的问题。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:775
+#, fuzzy
+msgid "While link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/Cache.html[`@Cache`] builds a complex `Cache-Control` header, link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/NoCache.html[`@NoCache`] is a simplified notation to say that you don't want anything cached; i.e. `Cache-Control: nocache`."
+msgstr "虽然 link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/Cache.html[`@Cache`] 构建了一个复杂的 `Cache-Control` 头。 link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/NoCache.html[`@NoCache`] 是一个简化的符号，表示你不希望有任何缓存；也就是说， `Cache-Control: nocache` 。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:777
+#, fuzzy
+msgid "More information on the `Cache-Control` header and be found in link:https://datatracker.ietf.org/doc/html/rfc7234[RFC 7234]"
+msgstr "关于 `Cache-Control` 标头的更多信息可在 link:https://datatracker.ietf.org/doc/html/rfc7234[RFC 7234] 中找到。"
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:778
+#, fuzzy, no-wrap
+msgid "Accessing context objects"
+msgstr "访问上下文对象"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:784
+#, fuzzy
+msgid "There are a number of contextual objects that the framework will give you, if your endpoint method takes parameters of the following type:"
+msgstr "如果你的端点方法需要以下类型的参数，框架会给你一些上下文对象。"
+
+#. type: Block title
+#: upstream/_guides/resteasy-reactive.adoc:785
+#: upstream/_guides/resteasy-reactive.adoc:922
+#: upstream/_guides/resteasy-reactive.adoc:1128
+#, fuzzy, no-wrap
+msgid "Table Context object"
+msgstr "表情境对象"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:790
+#, fuzzy, no-wrap
+msgid "link:{jaxrsapi}/javax/ws/rs/core/HttpHeaders.html[`HttpHeaders`]"
+msgstr "link:{jaxrsapi}/javax/ws/rs/core/HttpHeaders.html[`HttpHeaders`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:792
+#, fuzzy, no-wrap
+msgid "All the request headers"
+msgstr "所有的请求标头"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:793
+#, fuzzy, no-wrap
+msgid "link:{jaxrsapi}/javax/ws/rs/container/ResourceInfo.html[`ResourceInfo`]"
+msgstr "link:{jaxrsapi}/javax/ws/rs/container/ResourceInfo.html[`ResourceInfo`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:795
+#, fuzzy, no-wrap
+msgid "Information about the current endpoint method and class (requires reflection)"
+msgstr "关于当前端点方法和类的信息（需要反射）。"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:796
+#, fuzzy, no-wrap
+msgid "link:{jaxrsapi}/javax/ws/rs/core/SecurityContext.html[`SecurityContext`]"
+msgstr "link:{jaxrsapi}/javax/ws/rs/core/SecurityContext.html[`SecurityContext`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:798
+#, fuzzy, no-wrap
+msgid "Access to the current user and roles"
+msgstr "对当前用户和角色的访问"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:799
+#, fuzzy, no-wrap
+msgid "link:{resteasy-reactive-api}/org/jboss/resteasy/reactive/server/SimpleResourceInfo.html[`SimpleResourceInfo`]"
+msgstr "link:{resteasy-reactive-api}/org/jboss/resteasy/reactive/server/SimpleResourceInfo.html[`SimpleResourceInfo`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:801
+#, fuzzy, no-wrap
+msgid "Information about the current endpoint method and class (no reflection required)"
+msgstr "有关当前端点方法和类的信息（不需要反射）。"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:802
+#, fuzzy, no-wrap
+msgid "link:{jaxrsapi}/javax/ws/rs/core/UriInfo.html[`UriInfo`]"
+msgstr "link:{jaxrsapi}/javax/ws/rs/core/UriInfo.html[`UriInfo`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:804
+#, fuzzy, no-wrap
+msgid "Provides information about the current endpoint and application URI"
+msgstr "提供关于当前端点和应用程序URI的信息"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:805
+#, fuzzy, no-wrap
+msgid "link:{jaxrsapi}/javax/ws/rs/core/Application.html[`Application`]"
+msgstr "link:{jaxrsapi}/javax/ws/rs/core/Application.html[`Application`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:807
+#, fuzzy, no-wrap
+msgid "Advanced: Current JAX-RS application class"
+msgstr "高级。当前的JAX-RS应用类"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:808
+#, fuzzy, no-wrap
+msgid "link:{jaxrsapi}/javax/ws/rs/core/Configuration.html[`Configuration`]"
+msgstr "link:{jaxrsapi}/javax/ws/rs/core/Configuration.html[`Configuration`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:810
+#, fuzzy, no-wrap
+msgid "Advanced: Configuration about the deployed JAX-RS application"
+msgstr "高级。关于部署的JAX-RS应用程序的配置"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:811
+#, fuzzy, no-wrap
+msgid "link:{jaxrsapi}/javax/ws/rs/ext/Providers.html[`Providers`]"
+msgstr "link:{jaxrsapi}/javax/ws/rs/ext/Providers.html[`Providers`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:813
+#, fuzzy, no-wrap
+msgid "Advanced: Runtime access to JAX-RS providers"
+msgstr "高级。运行时访问JAX-RS提供者"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:814
+#, fuzzy, no-wrap
+msgid "link:{jaxrsapi}/javax/ws/rs/core/Request.html[`Request`]"
+msgstr "link:{jaxrsapi}/javax/ws/rs/core/Request.html[`Request`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:816
+#, fuzzy, no-wrap
+msgid "Advanced: Access to the current HTTP method and <<preconditions>>"
+msgstr "高级。访问当前的HTTP方法和 link:#preconditions[[前提条件]] 。"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:817
+#, fuzzy, no-wrap
+msgid "link:{jaxrsapi}/javax/ws/rs/core/ResourceContext.html[`ResourceContext`]"
+msgstr "link:{jaxrsapi}/javax/ws/rs/core/ResourceContext.html[`ResourceContext`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:819
+#, fuzzy, no-wrap
+msgid "Advanced: access to instances of endpoints"
+msgstr "高级：访问端点的实例"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:820
+#, fuzzy, no-wrap
+msgid "link:{resteasy-reactive-api}/org/jboss/resteasy/reactive/server/spi/ServerRequestContext.html[`ServerRequestContext`]"
+msgstr "link:{resteasy-reactive-api}/org/jboss/resteasy/reactive/server/spi/ServerRequestContext.html[`ServerRequestContext`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:822
+#, fuzzy, no-wrap
+msgid "Advanced: RESTEasy Reactive access to the current request/response"
+msgstr "高级。RESTEasy 对当前请求/响应的反应性访问"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:823
+#, fuzzy, no-wrap
+msgid "link:{jaxrsapi}/javax/ws/rs/sse/Sse.html[`Sse`]"
+msgstr "link:{jaxrsapi}/javax/ws/rs/sse/Sse.html[`Sse`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:825
+#, fuzzy, no-wrap
+msgid "Advanced: Complex SSE use-cases"
+msgstr "先进的。复杂的SSE用例"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:826
+#, fuzzy, no-wrap
+msgid "link:{vertxapi}/io/vertx/core/http/HttpServerRequest.html[`HttpServerRequest`]"
+msgstr "link:{vertxapi}/io/vertx/core/http/HttpServerRequest.html[`HttpServerRequest`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:828
+#, fuzzy, no-wrap
+msgid "Advanced: Vert.x HTTP Request"
+msgstr "高级。Vert.x HTTP请求"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:829
+#, fuzzy, no-wrap
+msgid "link:{vertxapi}/io/vertx/core/http/HttpServerResponse.html[`HttpServerResponse`]"
+msgstr "link:{vertxapi}/io/vertx/core/http/HttpServerResponse.html[`HttpServerResponse`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:831
+#, fuzzy, no-wrap
+msgid "Advanced: Vert.x HTTP Response"
+msgstr "高级。Vert.x HTTP响应"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:834
+#, fuzzy
+msgid "For example, here is how you can return the name of the currently logged-in user:"
+msgstr "例如，下面是如何返回当前登录的用户的名字。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:840
+#: upstream/_guides/resteasy-reactive.adoc:865
+#: upstream/_guides/resteasy-reactive.adoc:893
+#, no-wrap
+msgid "import java.security.Principal;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:844
+#: upstream/_guides/resteasy-reactive.adoc:871
+#: upstream/_guides/resteasy-reactive.adoc:897
+#, no-wrap
+msgid ""
+"import javax.ws.rs.GET;\n"
+"import javax.ws.rs.Path;\n"
+"import javax.ws.rs.core.SecurityContext;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:847
+#: upstream/_guides/resteasy-reactive.adoc:874
+#: upstream/_guides/resteasy-reactive.adoc:900
+#, no-wrap
+msgid ""
+"@Path(\"user\")\n"
+"public class Endpoint {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:854
+#, no-wrap
+msgid ""
+"    @GET\n"
+"    public String userName(SecurityContext security) {\n"
+"        Principal user = security.getUserPrincipal();\n"
+"        return user != null ? user.getName() : \"<NOT LOGGED IN>\";\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:859
+#, fuzzy
+msgid "You can also inject those context objects using https://javadoc.io/static/javax.inject/javax.inject/1/javax/inject/Inject.html[`@Inject`] on fields of the same type:"
+msgstr "你也可以使用以下方法注入这些上下文对象 link:https://javadoc.io/static/javax.inject/javax.inject/1/javax/inject/Inject.html[`@Inject`] 在相同类型的字段上注入这些上下文对象。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:867
+#, no-wrap
+msgid "import javax.inject.Inject;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:877
+#, no-wrap
+msgid ""
+"    @Inject\n"
+"    SecurityContext security;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:884
+#: upstream/_guides/resteasy-reactive.adoc:913
+#, no-wrap
+msgid ""
+"    @GET\n"
+"    public String userName() {\n"
+"        Principal user = security.getUserPrincipal();\n"
+"        return user != null ? user.getName() : \"<NOT LOGGED IN>\";\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:887
+#, fuzzy
+msgid "Or even on your endpoint constructor:"
+msgstr "甚至是在你的端点构造器上。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:902
+#, no-wrap
+msgid "    SecurityContext security;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:906
+#, no-wrap
+msgid ""
+"    Endpoint(SecurityContext security) {\n"
+"        this.security = security;\n"
+"    }\n"
+msgstr ""
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:916
+#, fuzzy, no-wrap
+msgid "JSON serialisation"
+msgstr "JSON序列化"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:921
+#, fuzzy
+msgid "Instead of importing `io.quarkus:quarkus-resteasy-reactive`, you can import either of the following modules to get support for JSON:"
+msgstr "不需要导入 `io.quarkus:quarkus-resteasy-reactive` ，你可以导入以下任一模块来获得对JSON的支持。"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:924
+#: upstream/_guides/resteasy-reactive.adoc:1130
+#, fuzzy, no-wrap
+msgid "GAV"
+msgstr "GAV"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:927
+#, fuzzy, no-wrap
+msgid "`io.quarkus:quarkus-resteasy-reactive-jackson`"
+msgstr " `io.quarkus:quarkus-resteasy-reactive-jackson` "
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:929
+#, fuzzy, no-wrap
+msgid "https://github.com/FasterXML/jackson[Jackson support]"
+msgstr "link:https://github.com/FasterXML/jackson[杰克逊支持]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:930
+#, fuzzy, no-wrap
+msgid "`io.quarkus:quarkus-resteasy-reactive-jsonb`"
+msgstr " `io.quarkus:quarkus-resteasy-reactive-jsonb` "
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:932
+#, fuzzy, no-wrap
+msgid "https://eclipse-ee4j.github.io/jsonb-api/[JSON-B support]"
+msgstr "link:https://eclipse-ee4j.github.io/jsonb-api/[支持JSON-B]"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:937
+#, fuzzy
+msgid "In both cases, importing those modules will allow HTTP message bodies to be read from JSON and serialised to JSON, for <<resource-types,all the types not already registered with a more specific serialisation>>."
+msgstr "在这两种情况下，导入这些模块将允许HTTP消息体从JSON中读取并序列化为JSON，对于 link:#resource-types[所有尚未注册为更具体的序列化的类型] 。"
+
+#. type: Title ====
+#: upstream/_guides/resteasy-reactive.adoc:938
+#, fuzzy, no-wrap
+msgid "Advanced Jackson-specific features"
+msgstr "先进的杰克逊特定功能"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:941
+#, fuzzy
+msgid "When using the `quarkus-resteasy-reactive-jackson` extension there are some advanced features that RESTEasy Reactive supports."
+msgstr "在使用 `quarkus-resteasy-reactive-jackson` 扩展时，有一些高级功能是RESTEasy Reactive支持的。"
+
+#. type: Title =====
+#: upstream/_guides/resteasy-reactive.adoc:943
+#, fuzzy, no-wrap
+msgid "Secure serialization"
+msgstr "安全序列化"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:947
+#, fuzzy
+msgid "When used with Jackson to perform JSON serialization, RESTEasy Reactive provides the ability to limit the set of fields that are serialized based on the roles of the current user.  This is achieved by simply annotating the fields (or getters) of the POJO being returned with `@io.quarkus.resteasy.reactive.jackson.SecureField`."
+msgstr "当与Jackson一起使用来执行JSON序列化时，RESTEasy Reactive提供了根据当前用户的角色来限制被序列化的字段集的能力。这可以通过简单地在POJO的字段（或getters）上标注 `@io.quarkus.resteasy.reactive.jackson.SecureField` 来实现。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:949
+#, fuzzy
+msgid "A simple example could be the following:"
+msgstr "一个简单的例子可以是如下。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:951
+#, fuzzy
+msgid "Assume we have a POJO named `Person` which looks like so:"
+msgstr "假设我们有一个名为 `Person` 的POJO，它看起来像这样。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:957
+#, no-wrap
+msgid "import io.quarkus.resteasy.reactive.jackson.SecureField;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:959
+#, no-wrap
+msgid "public class Person {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:964
+#, no-wrap
+msgid ""
+"    @SecureField(rolesAllowed = \"admin\")\n"
+"    private final Long id;\n"
+"    private final String first;\n"
+"    private final String last;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:970
+#, no-wrap
+msgid ""
+"    public Person(Long id, String first, String last) {\n"
+"        this.id = id;\n"
+"        this.first = first;\n"
+"        this.last = last;\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:974
+#, no-wrap
+msgid ""
+"    public Long getId() {\n"
+"        return id;\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:978
+#, no-wrap
+msgid ""
+"    public String getFirst() {\n"
+"        return first;\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:983
+#, no-wrap
+msgid ""
+"    public String getLast() {\n"
+"        return last;\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:986
+#, fuzzy
+msgid "A very simple JAX-RS Resource that uses `Person` could be:"
+msgstr "一个非常简单的使用 `Person` 的JAX-RS资源可以是。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:996
+#, no-wrap
+msgid ""
+"@Path(\"person\")\n"
+"public class Person {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1003
+#, no-wrap
+msgid ""
+"    @Path(\"{id}\")\n"
+"    @GET\n"
+"    public Person getPerson(Long id) {\n"
+"        return new Person(id, \"foo\", \"bar\");\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1007
+#, fuzzy
+msgid "Assuming security has been set up for the application (see our xref:security.adoc[guide] for more details), when a user with the `admin` role performs an HTTP GET on `/person/1` they will receive:"
+msgstr "假设已经为应用程序设置了安全性（更多细节见我们的 link:security.html[指南] ），当一个具有 `admin` 角色的用户对 `/person/1` 执行HTTP GET时，他们将收到。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1015
+#, no-wrap
+msgid ""
+"{\n"
+"  \"id\": 1,\n"
+"  \"first\": \"foo\",\n"
+"  \"last\": \"bar\"\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1018
+#, fuzzy
+msgid "as the response."
+msgstr "作为回应。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1020
+#, fuzzy
+msgid "Any user however that does not have the `admin` role will receive:"
+msgstr "然而，任何没有 `admin` 角色的用户将收到。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1027
+#, no-wrap
+msgid ""
+"{\n"
+"  \"first\": \"foo\",\n"
+"  \"last\": \"bar\"\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1031
+#, fuzzy
+msgid "No additional configuration needs to be applied for this secure serialization to take place. However, users can use the `@io.quarkus.resteasy.reactive.jackson.EnableSecureSerialization` and `@io.quarkus.resteasy.reactive.jackson.DisableSecureSerialization` annotation to opt-in or out for specific JAX-RS Resource classes or methods."
+msgstr "要进行这种安全序列化，不需要进行额外的配置。然而，用户可以使用 `@io.quarkus.resteasy.reactive.jackson.EnableSecureSerialization` 和 `@io.quarkus.resteasy.reactive.jackson.DisableSecureSerialization` 注解来选择是否适用于特定的 JAX-RS 资源类或方法。"
+
+#. type: Title =====
+#: upstream/_guides/resteasy-reactive.adoc:1032
+#, fuzzy, no-wrap
+msgid "@JsonView support"
+msgstr "支持@JsonView"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1036
+#, fuzzy
+msgid "JAX-RS methods can be annotated with https://fasterxml.github.io/jackson-annotations/javadoc/2.10/com/fasterxml/jackson/annotation/JsonView.html[@JsonView] in order to customize the serialization of the returned POJO, on a per method-basis. This is best explained with an example."
+msgstr "JAX-RS方法可以用 link:https://fasterxml.github.io/jackson-annotations/javadoc/2.10/com/fasterxml/jackson/annotation/JsonView.html[@JsonView] 来注释，以便在每个方法的基础上定制返回的POJO的序列化。这最好用一个例子来解释。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1038
+#, fuzzy
+msgid "A typical use of `@JsonView` is to hide certain fields on certain methods. In that vein, let's define two views:"
+msgstr " `@JsonView` 的一个典型用途是在某些方法上隐藏某些字段。本着这种精神，让我们定义两个视图。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1042
+#, no-wrap
+msgid "public class Views {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1045
+#, no-wrap
+msgid ""
+"    public static class Public {\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1049
+#, no-wrap
+msgid ""
+"    public static class Private extends Public {\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1052
+#, fuzzy
+msgid "Let's assume we have the `User` POJO on which we want to hide some field during serialization. A simple example of this is:"
+msgstr "让我们假设我们有 `User` POJO，我们想在序列化过程中隐藏一些字段。这方面的一个简单例子是"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1056
+#, no-wrap
+msgid "public class User {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1059
+#, no-wrap
+msgid ""
+"    @JsonView(Views.Private.class)\n"
+"    public int id;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1063
+#, no-wrap
+msgid ""
+"    @JsonView(Views.Public.class)\n"
+"    public String name;\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1067
+#, fuzzy
+msgid "Depending on the JAX-RS method that returns this user, we might want to exclude the `id` field from serialization - for example you might want an insecure method to not expose this field. The way we can achieve that in RESTEasy Reactive is shown in the following example:"
+msgstr "根据返回该用户的JAX-RS方法，我们可能希望从序列化中排除 `id` 字段 - 例如，你可能希望不安全的方法不暴露这个字段。我们可以在RESTEasy Reactive中实现这一目标的方法见下面的例子。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1076
+#, no-wrap
+msgid ""
+"@JsonView(Views.Public.class)\n"
+"@GET\n"
+"@Path(\"/public\")\n"
+"public User userPublic() {\n"
+"    return testUser();\n"
+"}\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1083
+#, no-wrap
+msgid ""
+"@JsonView(Views.Private.class)\n"
+"@GET\n"
+"@Path(\"/private\")\n"
+"public User userPrivate() {\n"
+"    return testUser();\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1087
+#, fuzzy
+msgid "When the result the `userPublic` method is serialized, the `id` field will not be contained in the response as the `Public` view does not include it.  The result of `userPrivate` however will include the `id` as expected when serialized."
+msgstr "当 `userPublic` 方法的结果被序列化时， `id` 字段将不会被包含在响应中，因为 `Public` 视图不包括它。然而， `userPrivate` 的结果在序列化时将包括预期的 `id` 。"
+
+#. type: Title =====
+#: upstream/_guides/resteasy-reactive.adoc:1088
+#, fuzzy, no-wrap
+msgid "Completely customized per method serialization"
+msgstr "完全按方法序列化定制"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1092
+#, fuzzy
+msgid "There are times when you need to completely customize the serialization of a POJO on a per JAX-RS method basis. For such use cases, the `@io.quarkus.resteasy.reactive.jackson.CustomSerialization` annotation is a great tool, as it allows you to configure a per-method `com.fasterxml.jackson.databind.ObjectWriter` which can be configured at will."
+msgstr "有些时候，你需要在每个JAX-RS方法的基础上完全定制POJO的序列化。对于这样的用例， `@io.quarkus.resteasy.reactive.jackson.CustomSerialization` 注解是一个很好的工具，因为它允许你配置一个可以随意配置的每个方法 `com.fasterxml.jackson.databind.ObjectWriter` 。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1094
+#, fuzzy
+msgid "Here is an example use case:"
+msgstr "下面是一个用例。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1103
+#, no-wrap
+msgid ""
+"@CustomSerialization(UnquotedFields.class)\n"
+"@GET\n"
+"@Path(\"/invalid-use-of-custom-serializer\")\n"
+"public User invalidUseOfCustomSerializer() {\n"
+"    return testUser();\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1106
+#, fuzzy
+msgid "where `UnquotedFields` is a `BiFunction` defined as so:"
+msgstr "其中 `UnquotedFields` 是一个 `BiFunction` ，定义如下。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1110
+#, no-wrap
+msgid "public static class UnquotedFields implements BiFunction<ObjectMapper, Type, ObjectWriter> {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1116
+#, no-wrap
+msgid ""
+"    @Override\n"
+"    public ObjectWriter apply(ObjectMapper objectMapper, Type type) {\n"
+"        return objectMapper.writer().without(JsonWriteFeature.QUOTE_FIELD_NAMES);\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1119
+#, fuzzy
+msgid "Essentially what this class does is force Jackson to not include quotes in the field names."
+msgstr "本质上，这个类所做的是强迫杰克逊在字段名中不包括引号。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1121
+#, fuzzy
+msgid "It is important to note that this customization is only performed for the serialization of the JAX-RS methods that use `@CustomSerialization(UnquotedFields.class)`."
+msgstr "需要注意的是，这种定制只对使用 `@CustomSerialization(UnquotedFields.class)` 的JAX-RS方法的序列化进行。"
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:1122
+#, fuzzy, no-wrap
+msgid "XML serialisation"
+msgstr "XML序列化"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1127
+#, fuzzy
+msgid "To enable XML support, add the `quarkus-resteasy-reactive-jaxb` extension to your project."
+msgstr "要启用XML支持，请将 `quarkus-resteasy-reactive-jaxb` 扩展到你的项目。"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:1133
+#, fuzzy, no-wrap
+msgid "`io.quarkus:quarkus-resteasy-reactive-jaxb`"
+msgstr " `io.quarkus:quarkus-resteasy-reactive-jaxb` "
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:1135
+#, fuzzy, no-wrap
+msgid "https://javaee.github.io/jaxb-v2/[XML support]"
+msgstr "link:https://javaee.github.io/jaxb-v2/[支持XML]"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1140
+#, fuzzy
+msgid "Importing this module will allow HTTP message bodies to be read from XML and serialised to XML, for <<resource-types,all the types not already registered with a more specific serialisation>>."
+msgstr "导入这个模块将允许HTTP消息体从XML中读取并序列化为XML，对于 link:#resource-types[所有尚未注册的类型都有更具体的序列化] 。"
+
+#. type: Title ==
+#: upstream/_guides/resteasy-reactive.adoc:1141
+#, fuzzy, no-wrap
+msgid "CORS filter"
+msgstr "CORS过滤器"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1146
+#, fuzzy
+msgid "link:https://en.wikipedia.org/wiki/Cross-origin_resource_sharing[Cross-origin resource sharing] (CORS) is a mechanism that allows restricted resources on a web page to be requested from another domain outside the domain from which the first resource was served."
+msgstr "link:https://en.wikipedia.org/wiki/Cross-origin_resource_sharing[跨源资源共享] （CORS）是一种机制，它允许从提供第一个资源的域之外的另一个域请求网页上的限制性资源。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1150
+#, fuzzy
+msgid "Quarkus comes with a CORS filter at the HTTP layer level.  Read the xref:http-reference.adoc#cors-filter[HTTP Reference Documentation] to learn how to use it."
+msgstr "Quarkus在HTTP层上自带了一个CORS过滤器。阅读 link:http-reference.html#cors-filter[HTTP参考文档] ，了解如何使用它。"
+
+#. type: Title ==
+#: upstream/_guides/resteasy-reactive.adoc:1151
+#, fuzzy, no-wrap
+msgid "More advanced usage"
+msgstr "更高级的用法"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1155
+#, fuzzy
+msgid "Here are some more advanced topics that you may not need to know about initially, but could prove useful for more complex use cases."
+msgstr "这里有一些更高级的主题，你最初可能不需要了解，但对于更复杂的用例可能证明是有用的。"
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:1156
+#, fuzzy, no-wrap
+msgid "Execution model, blocking, non-blocking"
+msgstr "执行模式，阻断，非阻断"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1161
+#, fuzzy
+msgid "RESTEasy Reactive is implemented using two main thread types:"
+msgstr "RESTEasy Reactive是用两种主要的线程类型实现的。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1163
+#, fuzzy
+msgid "Event-loop threads: which are responsible, among other things, for reading bytes from the HTTP request and"
+msgstr "事件循环线程：除其他事项外，负责从HTTP请求中读取字节和"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1164
+#, fuzzy
+msgid "writing bytes back to the HTTP response"
+msgstr "向HTTP响应写回字节数"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1165
+#, fuzzy
+msgid "Worker threads: they are pooled and can be used to offload long-running operations"
+msgstr "工作线程：它们是池化的，可用于卸载长期运行的操作。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1169
+#, fuzzy
+msgid "The event-loop threads (also called IO threads) are responsible for actually performing all the IO operations in an asynchronous way, and to trigger any listener interested in the completion of those IO operations."
+msgstr "事件循环线程（也称为IO线程）负责以异步方式实际执行所有的IO操作，并触发任何对这些IO操作的完成感兴趣的监听器。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1173
+#, fuzzy
+msgid "By default, the thread RESTEasy Reactive will run endpoint methods on depends on the signature of the method.  If a method returns one of the following types then it is considered non-blocking, and will be run on the IO thread by default:"
+msgstr "默认情况下，RESTEasy Reactive将在哪个线程上运行端点方法取决于方法的签名。如果一个方法返回下列类型之一，那么它就被认为是非阻塞的，并默认在IO线程上运行。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1175
+#, fuzzy
+msgid "`io.smallrye.mutiny.Uni`"
+msgstr " `io.smallrye.mutiny.Uni` "
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1176
+#, fuzzy
+msgid "`io.smallrye.mutiny.Multi`"
+msgstr " `io.smallrye.mutiny.Multi` "
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1177
+#, fuzzy
+msgid "`java.util.concurrent.CompletionStage`"
+msgstr " `java.util.concurrent.CompletionStage` "
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1178
+#, fuzzy
+msgid "`org.reactivestreams.Publisher`"
+msgstr " `org.reactivestreams.Publisher` "
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1179
+#, fuzzy
+msgid "Kotlin `suspended` methods"
+msgstr "Kotlin `suspended` 方法"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1184
+#, fuzzy
+msgid "This 'best guess' approach means that the majority of operations will run on the correct thread by default. If you are writing reactive code then your method will generally return one of these types, and will be executed on the IO thread.  If you are writing blocking code your methods will generally return the result directly, and these will be run on a worker thread."
+msgstr "这种 \"最佳猜测 \"的方法意味着大多数操作都会默认在正确的线程上运行。如果你写的是反应式代码，那么你的方法一般会返回这些类型中的一种，并且会在IO线程上执行。如果你写的是阻塞式代码，你的方法一般会直接返回结果，这些将在一个工作线程上运行。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1190
+#, fuzzy
+msgid "You can override this behaviour using the https://javadoc.io/doc/io.smallrye.common/smallrye-common-annotation/1.5.0/io/smallrye/common/annotation/Blocking.html[`@Blocking`] and https://javadoc.io/doc/io.smallrye.common/smallrye-common-annotation/1.5.0/io/smallrye/common/annotation/NonBlocking.html[`@NonBlocking`] annotations. This can be applied at the method, class or `javax.ws.rs.core.Application` level."
+msgstr "你可以使用以下方法覆盖这一行为 link:https://javadoc.io/doc/io.smallrye.common/smallrye-common-annotation/1.5.0/io/smallrye/common/annotation/Blocking.html[`@Blocking`] 和 link:https://javadoc.io/doc/io.smallrye.common/smallrye-common-annotation/1.5.0/io/smallrye/common/annotation/NonBlocking.html[`@NonBlocking`] 注释来覆盖这一行为。这可以在方法、类或 `javax.ws.rs.core.Application` 层面上应用。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1192
+#, fuzzy
+msgid "The example below will override the default behaviour and always run on a worker thread, even though it returns a `Uni`."
+msgstr "下面的例子将覆盖默认行为，总是在一个工作线程上运行，即使它返回一个 `Uni` 。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1201
+#, no-wrap
+msgid "import io.smallrye.common.annotation.Blocking;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1204
+#: upstream/_guides/resteasy-reactive.adoc:1232
+#, no-wrap
+msgid ""
+"@Path(\"yawn\")\n"
+"public class Endpoint {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1213
+#, no-wrap
+msgid ""
+"    @Blocking\n"
+"    @GET\n"
+"    public Uni<String> blockingHello() throws InterruptedException {\n"
+"        // do a blocking operation\n"
+"        Thread.sleep(1000);\n"
+"        return Uni.createFrom().item(\"Yaaaawwwwnnnnnn…\");\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1218
+#, fuzzy
+msgid "Most of the time, there are ways to achieve the same blocking operations in an asynchronous/reactive way, using https://smallrye.io/smallrye-mutiny/[Mutiny], http://hibernate.org/reactive/[Hibernate Reactive] or any of the xref:quarkus-reactive-architecture.adoc#quarkus-extensions-enabling-reactive[Quarkus Reactive extensions] for example:"
+msgstr "大多数时候，有办法以异步/反应式的方式实现同样的阻塞操作，例如使用 link:https://smallrye.io/smallrye-mutiny/[Mutiny] 、 link:http://hibernate.org/reactive/[Hibernate Reactive] 或任何 link:quarkus-reactive-architecture.html#quarkus-extensions-enabling-reactive[Quarkus Reactive扩展] 。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1224
+#, no-wrap
+msgid "import java.time.Duration;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1240
+#, no-wrap
+msgid ""
+"    @GET\n"
+"    public Uni<String> blockingHello() throws InterruptedException {\n"
+"        return Uni.createFrom().item(\"Yaaaawwwwnnnnnn…\")\n"
+"                // do a non-blocking sleep\n"
+"                .onItem().delayIt().by(Duration.ofSeconds(2));\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1245
+#, fuzzy
+msgid "If a method or class is annotated with `javax.transaction.Transactional` then it will also be treated as a blocking method. This is because JTA is a blocking technology, and is generally used with other blocking technology such as Hibernate and JDBC. An explicit `@Blocking` or `@NonBlocking` on the class will override this behaviour."
+msgstr "如果一个方法或类被注解为 `javax.transaction.Transactional` ，那么它也将被视为一个阻塞的方法。这是因为JTA是一种阻塞技术，并且通常与其他阻塞技术一起使用，如Hibernate和JDBC。在类上明确的 `@Blocking` 或 `@NonBlocking` 将覆盖这种行为。"
+
+#. type: Title ====
+#: upstream/_guides/resteasy-reactive.adoc:1246
+#, fuzzy, no-wrap
+msgid "Overriding the default behaviour"
+msgstr "重写默认行为"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1250
+#, fuzzy
+msgid "If you want to override the default behaviour you can annotate a `javax.ws.rs.core.Application` subclass in your application with `@Blocking` or `@NonBlocking`, and this will set the default for every method that does not have an explicit annotation."
+msgstr "如果你想覆盖默认行为，你可以在你的应用程序中用 `@Blocking` 或 `@NonBlocking` 注释一个 `javax.ws.rs.core.Application` 子类，这将为每个没有明确注释的方法设置默认行为。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1253
+#, fuzzy
+msgid "Behaviour can still be overridden on a class or method level by annotating them directly, however all endpoints without an annotation will now follow the default, no matter their method signature."
+msgstr "行为仍然可以通过直接注解的方式在类或方法层面上被重写，但是所有没有注解的端点现在都将遵循默认，无论其方法签名是什么。"
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:1255
+#, fuzzy, no-wrap
+msgid "Exception mapping"
+msgstr "异常映射"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1260
+#, fuzzy
+msgid "If your application needs to return non-nominal HTTP codes in error cases, the best is to throw exceptions that will result in the proper HTTP response being sent by the framework using link:{jaxrsapi}/javax/ws/rs/WebApplicationException.html[`WebApplicationException`] or any of its subtypes:"
+msgstr "如果你的应用程序需要在错误情况下返回非名义的HTTP代码，最好是抛出异常，这将导致框架发送正确的HTTP响应，使用 link:{jaxrsapi}/javax/ws/rs/WebApplicationException.html[`WebApplicationException`] 或其任何一个子类型。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1269
+#, no-wrap
+msgid ""
+"import javax.ws.rs.BadRequestException;\n"
+"import javax.ws.rs.GET;\n"
+"import javax.ws.rs.NotFoundException;\n"
+"import javax.ws.rs.Path;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1272
+#: upstream/_guides/resteasy-reactive.adoc:1334
+#, no-wrap
+msgid ""
+"@Path(\"cheeses/{cheese}\")\n"
+"public class Endpoint {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1284
+#, no-wrap
+msgid ""
+"    @GET\n"
+"    public String findCheese(String cheese) {\n"
+"        if(cheese == null)\n"
+"            // send a 400\n"
+"            throw new BadRequestException();\n"
+"        if(!cheese.equals(\"camembert\"))\n"
+"            // send a 404\n"
+"            throw new NotFoundException(\"Unknown cheese: \" + cheese);\n"
+"        return \"Camembert is a very nice cheese\";\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1293
+#, fuzzy
+msgid "If your endpoint method is delegating calls to another service layer which does not know of JAX-RS, you need a way to turn service exceptions to an HTTP response, and you can do that using the link:{resteasy-reactive-api}/org/jboss/resteasy/reactive/server/ServerExceptionMapper.html[`@ServerExceptionMapper`] annotation on a method, with one parameter of the exception type you want to handle, and turning that exception into a link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestResponse.html[`RestResponse`] (or a link:{mutinyapi}/io/smallrye/mutiny/Uni.html[`Uni<RestResponse<?>>`]):"
+msgstr "如果你的端点方法被委托给另一个不知道JAX-RS的服务层，你需要一种方法来把服务异常变成HTTP响应，你可以使用 link:{resteasy-reactive-api}/org/jboss/resteasy/reactive/server/ServerExceptionMapper.html[`@ServerExceptionMapper`] 注解来实现这一点，在方法上有一个你想处理的异常类型的参数，并将该异常变成一个 link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestResponse.html[`RestResponse`] (或一个 link:{mutinyapi}/io/smallrye/mutiny/Uni.html[`Uni<RestResponse<?>>`] ):"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1299
+#, no-wrap
+msgid "import java.util.Map;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1306
+#, no-wrap
+msgid ""
+"import javax.enterprise.context.ApplicationScoped;\n"
+"import javax.inject.Inject;\n"
+"import javax.ws.rs.BadRequestException;\n"
+"import javax.ws.rs.GET;\n"
+"import javax.ws.rs.Path;\n"
+"import javax.ws.rs.core.Response;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1309
+#: upstream/_guides/resteasy-reactive.adoc:1363
+#, no-wrap
+msgid ""
+"import org.jboss.resteasy.reactive.server.ServerExceptionMapper;\n"
+"import org.jboss.resteasy.reactive.RestResponse;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1312
+#, no-wrap
+msgid ""
+"class UnknownCheeseException extends RuntimeException {\n"
+"    public final String name;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1317
+#, no-wrap
+msgid ""
+"    public UnknownCheeseException(String name) {\n"
+"        this.name = name;\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1323
+#, no-wrap
+msgid ""
+"@ApplicationScoped\n"
+"class CheeseService {\n"
+"    private static final Map<String, String> cheeses = \n"
+"            Map.of(\"camembert\", \"Camembert is a very nice cheese\",\n"
+"                   \"gouda\", \"Gouda is acceptable too, especially with cumin\");\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1331
+#, no-wrap
+msgid ""
+"    public String findCheese(String name) {\n"
+"        String ret = cheeses.get(name);\n"
+"        if(ret != null)\n"
+"            return ret;\n"
+"        throw new UnknownCheeseException(name);\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1337
+#, no-wrap
+msgid ""
+"    @Inject\n"
+"    CheeseService cheeses;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1342
+#, no-wrap
+msgid ""
+"    @ServerExceptionMapper\n"
+"    public RestResponse<String> mapException(UnknownCheeseException x) {\n"
+"        return RestResponse.status(Response.Status.NOT_FOUND, \"Unknown cheese: \" + x.name);\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1351
+#, no-wrap
+msgid ""
+"    @GET\n"
+"    public String findCheese(String cheese) {\n"
+"        if(cheese == null)\n"
+"            // send a 400\n"
+"            throw new BadRequestException();\n"
+"        return cheeses.findCheese(cheese);\n"
+"    }\n"
+"} \n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1356
+#, fuzzy
+msgid "exception mappers defined in REST endpoint classes will only be called if the exception is thrown in the same class. If you want to define global exception mappers, simply define them outside a REST endpoint class:"
+msgstr "在REST端点类中定义的异常映射器只有在同一类中抛出的异常才会被调用。如果你想定义全局的异常映射器，只需在REST端点类之外定义它们。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1370
+#, no-wrap
+msgid ""
+"class ExceptionMappers {\n"
+"    @ServerExceptionMapper\n"
+"    public RestResponse<String> mapException(UnknownCheeseException x) {\n"
+"        return RestResponse.status(Response.Status.NOT_FOUND, \"Unknown cheese: \" + x.name);\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1373
+#, fuzzy
+msgid "You can also declare link:{jaxrsspec}#exceptionmapper[exception mappers in the JAX-RS way]."
+msgstr "你也可以 link:{jaxrsspec}#exceptionmapper[用JAX-RS的方式] 声明 link:{jaxrsspec}#exceptionmapper[异常映射器] 。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1375
+#, fuzzy
+msgid "Your exception mapper may declare any of the following parameter types:"
+msgstr "你的异常映射器可以声明以下任何一种参数类型。"
+
+#. type: Block title
+#: upstream/_guides/resteasy-reactive.adoc:1376
+#, fuzzy, no-wrap
+msgid "Table Exception mapper parameters"
+msgstr "表 异常映射器参数"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:1381
+#, fuzzy, no-wrap
+msgid "An exception type"
+msgstr "一个异常类型"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:1383
+#, fuzzy, no-wrap
+msgid "Defines the exception type you want to handle"
+msgstr "定义了你要处理的异常类型"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:1384
+#: upstream/_guides/resteasy-reactive.adoc:1486
+#, fuzzy, no-wrap
+msgid "Any of the <<context-objects,Context objects>>"
+msgstr "任何一个 link:#context-objects[上下文对象]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:1387
+#: upstream/_guides/resteasy-reactive.adoc:1489
+#, fuzzy, no-wrap
+msgid "link:{jaxrsapi}/javax/ws/rs/container/ContainerRequestContext.html[`ContainerRequestContext`]"
+msgstr "link:{jaxrsapi}/javax/ws/rs/container/ContainerRequestContext.html[`ContainerRequestContext`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:1389
+#: upstream/_guides/resteasy-reactive.adoc:1491
+#, fuzzy, no-wrap
+msgid "A context object to access the current request"
+msgstr "一个用于访问当前请求的上下文对象"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1392
+#: upstream/_guides/resteasy-reactive.adoc:1500
+#, fuzzy
+msgid "It may declare any of the following return types:"
+msgstr "它可以声明以下任何一种返回类型。"
+
+#. type: Block title
+#: upstream/_guides/resteasy-reactive.adoc:1393
+#, fuzzy, no-wrap
+msgid "Table Exception mapper return types"
+msgstr "表 异常映射器的返回类型"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:1398
+#, fuzzy, no-wrap
+msgid "link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestResponse.html[`RestResponse`] or link:{jaxrsapi}/javax/ws/rs/core/Response.html[`Response`]"
+msgstr "link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestResponse.html[`RestResponse`] 或 link:{jaxrsapi}/javax/ws/rs/core/Response.html[`Response`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:1400
+#, fuzzy, no-wrap
+msgid "The response to send to the client when the exception occurs"
+msgstr "当异常发生时，向客户端发送的响应。"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:1401
+#, fuzzy, no-wrap
+msgid "link:{mutinyapi}/io/smallrye/mutiny/Uni.html[`Uni<RestResponse>`] or link:{mutinyapi}/io/smallrye/mutiny/Uni.html[`Uni<Response>`]"
+msgstr "link:{mutinyapi}/io/smallrye/mutiny/Uni.html[`Uni<RestResponse>`] 或 link:{mutinyapi}/io/smallrye/mutiny/Uni.html[`Uni<Response>`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:1403
+#, fuzzy, no-wrap
+msgid "An asynchronous response to send to the client when the exception occurs"
+msgstr "异常发生时，向客户端发送的异步响应"
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:1405
+#, fuzzy, no-wrap
+msgid "Request or response filters"
+msgstr "请求或响应过滤器"
+
+#. type: Title ====
+#: upstream/_guides/resteasy-reactive.adoc:1407
+#, fuzzy, no-wrap
+msgid "Via annotations"
+msgstr "通过注释"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1410
+#, fuzzy
+msgid "You can declare functions which are invoked in the following phases of the request processing:"
+msgstr "你可以声明在请求处理的以下阶段调用的函数。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1412
+#, fuzzy
+msgid "Before the endpoint method is identified: pre-routing request filter"
+msgstr "在确定端点方法之前：预路由请求过滤器"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1413
+#, fuzzy
+msgid "After routing, but before the endpoint method is called: normal request filter"
+msgstr "在路由之后，但在端点方法被调用之前：正常的请求过滤器"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1414
+#, fuzzy
+msgid "After the endpoint method is called: response filter"
+msgstr "在端点方法被调用后：响应过滤器"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1418
+#, fuzzy
+msgid "These filters allow you to do various things such as examine the request URI, HTTP method, influence routing, look or change request headers, abort the request, or modify the response."
+msgstr "这些过滤器允许你做各种事情，如检查请求URI、HTTP方法、影响路由、查看或改变请求头、中止请求或修改响应。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1422
+#, fuzzy
+msgid "Request filters can be declared with the link:{resteasy-reactive-api}/org/jboss/resteasy/reactive/server/ServerRequestFilter.html[`@ServerRequestFilter`] annotation:"
+msgstr "请求过滤器可以用 link:{resteasy-reactive-api}/org/jboss/resteasy/reactive/server/ServerRequestFilter.html[`@ServerRequestFilter`] 注解来声明。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1426
+#, no-wrap
+msgid "import java.util.Optional;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1428
+#, no-wrap
+msgid "class Filters {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1436
+#, no-wrap
+msgid ""
+"    @ServerRequestFilter(preMatching = true)\n"
+"    public void preMatchingFilter(ContainerRequestContext requestContext) {\n"
+"        // make sure we don't lose cheese lovers\n"
+"        if(\"yes\".equals(requestContext.getHeaderString(\"Cheese\"))) {\n"
+"            requestContext.setRequestUri(URI.create(\"/cheese\"));\n"
+"        }\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1446
+#, no-wrap
+msgid ""
+"    @ServerRequestFilter\n"
+"    public Optional<RestResponse<Void>> getFilter(ContainerRequestContext ctx) {\n"
+"        // only allow GET methods for now\n"
+"        if(ctx.getMethod().equals(HttpMethod.GET)) {\n"
+"            return Optional.of(RestResponse.status(Response.Status.METHOD_NOT_ALLOWED));\n"
+"        }\n"
+"        return Optional.empty();\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: delimited block =
+#: upstream/_guides/resteasy-reactive.adoc:1455
+#, fuzzy
+msgid "Request filters are usually executed on the same thread that the method that handles the request will be executed.  That means that if the method servicing the request is annotated with `@Blocking`, then the filters will also be run on the worker thread.  If the method is annotated with `@NonBlocking` (or is not annotated at all), then the filters will also be run on the same event-loop thread."
+msgstr "请求过滤器通常是在处理请求的方法将被执行的同一线程上执行的。这意味着，如果处理请求的方法被注解为 `@Blocking` ，那么过滤器也将在工作线程上运行。如果该方法被注释为 `@NonBlocking` （或者根本没有被注释），那么过滤器也将在同一个事件循环线程上运行。"
+
+#. type: delimited block =
+#: upstream/_guides/resteasy-reactive.adoc:1459
+#, fuzzy
+msgid "If however a filter needs to be run on the event-loop despite the fact that the method servicing the request will be run on a worker thread, then `@ServerRequestFilter(nonBlocking=true)` can be used.  Note however, that these filters need to be run before **any** filter that does not use that setting and would run on a worker thread."
+msgstr "然而，如果一个过滤器需要在事件循环中运行，尽管服务于请求的方法将在工作线程上运行，那么可以使用 `@ServerRequestFilter(nonBlocking=true)` 。然而，请注意，这些过滤器需要在 *任何* 不使用该设置并在工作线程上运行的过滤器之前运行。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1464
+#, fuzzy
+msgid "Similarly, response filters can be declared with the link:{resteasy-reactive-api}/org/jboss/resteasy/reactive/server/ServerResponseFilter.html[`@ServerResponseFilter`] annotation:"
+msgstr "类似地，响应过滤器也可以用 link:{resteasy-reactive-api}/org/jboss/resteasy/reactive/server/ServerResponseFilter.html[`@ServerResponseFilter`] 注解来声明。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1477
+#, no-wrap
+msgid ""
+"class Filters {\n"
+"    @ServerResponseFilter\n"
+"    public void getFilter(ContainerResponseContext responseContext) {\n"
+"        Object entity = responseContext.getEntity();\n"
+"        if(entity instanceof String) {\n"
+"            // make it shout\n"
+"            responseContext.setEntity(((String)entity).toUpperCase());\n"
+"        }\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1480
+#, fuzzy
+msgid "Your filters may declare any of the following parameter types:"
+msgstr "你的过滤器可以声明以下任何一种参数类型。"
+
+#. type: Block title
+#: upstream/_guides/resteasy-reactive.adoc:1481
+#, fuzzy, no-wrap
+msgid "Table Filter parameters"
+msgstr "表格中的过滤器参数"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:1492
+#, fuzzy, no-wrap
+msgid "link:{jaxrsapi}/javax/ws/rs/container/ContainerResponseContext.html[`ContainerResponseContext`]"
+msgstr "link:{jaxrsapi}/javax/ws/rs/container/ContainerResponseContext.html[`ContainerResponseContext`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:1494
+#, fuzzy, no-wrap
+msgid "A context object to access the current response"
+msgstr "一个用于访问当前响应的上下文对象"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:1495
+#, fuzzy, no-wrap
+msgid "link:{jdkapi}/java/lang/Throwable.html[`Throwable`]"
+msgstr "link:{jdkapi}/java/lang/Throwable.html[`Throwable`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:1497
+#, fuzzy, no-wrap
+msgid "Any thrown exception, or `null` (only for response filters)"
+msgstr "任何抛出的异常，或 `null` （仅适用于响应过滤器）。"
+
+#. type: Block title
+#: upstream/_guides/resteasy-reactive.adoc:1501
+#, fuzzy, no-wrap
+msgid "Table Filter return types"
+msgstr "表过滤器的返回类型"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:1506
+#, fuzzy, no-wrap
+msgid "link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestResponse.html[`RestResponse<?>`] or link:{jaxrsapi}/javax/ws/rs/core/Response.html[`Response`]"
+msgstr "link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestResponse.html[`RestResponse<?>`] 或 link:{jaxrsapi}/javax/ws/rs/core/Response.html[`Response`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:1508
+#, fuzzy, no-wrap
+msgid "The response to send to the client instead of continuing the filter chain, or `null` if the filter chain should proceed"
+msgstr "发送给客户端的响应，而不是继续过滤链，或者 `null` ，如果过滤链应该继续进行。"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:1509
+#, fuzzy, no-wrap
+msgid "link:{jdkapi}/java/util/Optional.html[`Optional<RestResponse<?>>`] or link:{jdkapi}/java/util/Optional.html[`Optional<Response>`]"
+msgstr "link:{jdkapi}/java/util/Optional.html[`Optional<RestResponse<?>>`] 或 link:{jdkapi}/java/util/Optional.html[`Optional<Response>`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:1511
+#, fuzzy, no-wrap
+msgid "An optional response to send to the client instead of continuing the filter chain, or an empty value if the filter chain should proceed"
+msgstr "发送给客户端的可选响应，而不是继续过滤链，如果过滤链应该继续，则为空值。"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:1512
+#, fuzzy, no-wrap
+msgid "link:{mutinyapi}/io/smallrye/mutiny/Uni.html[`Uni<RestResponse<?>>`] or link:{mutinyapi}/io/smallrye/mutiny/Uni.html[`Uni<Response>`]"
+msgstr "link:{mutinyapi}/io/smallrye/mutiny/Uni.html[`Uni<RestResponse<?>>`] 或 link:{mutinyapi}/io/smallrye/mutiny/Uni.html[`Uni<Response>`]"
+
+#. type: Table
+#: upstream/_guides/resteasy-reactive.adoc:1514
+#, fuzzy, no-wrap
+msgid "An asynchronous response to send to the client instead of continuing the filter chain, or `null` if the filter chain should proceed"
+msgstr "发送给客户端的异步响应，而不是继续过滤链，或者 `null` ，如果过滤链应该继续进行。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1517
+#, fuzzy
+msgid "You can restrict the Resource methods for which a filter runs, by using link:{jaxrsapi}/javax/ws/rs/NameBinding.html[`@NameBinding`] meta-annotations."
+msgstr "你可以通过使用以下方法来限制过滤器运行的资源方法 link:{jaxrsapi}/javax/ws/rs/NameBinding.html[`@NameBinding`] 元注释。"
+
+#. type: Title ====
+#: upstream/_guides/resteasy-reactive.adoc:1518
+#, fuzzy, no-wrap
+msgid "The JAX-RS way"
+msgstr "JAX-RS方式"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1521
+#, fuzzy
+msgid "You can also link:{jaxrsspec}#filters[declare request and response filters in the JAX-RS way]."
+msgstr "你也可以 link:{jaxrsspec}#filters[用JAX-RS的方式声明请求和响应过滤器] 。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1526
+#, fuzzy
+msgid "Both HTTP request and response can be intercepted by providing `ContainerRequestFilter` or `ContainerResponseFilter` implementations respectively. These filters are suitable for processing the metadata associated with a message: HTTP headers, query parameters, media type, and other metadata. They also have the capability to abort the request processing, for instance when the user does not have the permissions to access the endpoint."
+msgstr "HTTP请求和响应都可以通过分别提供 `ContainerRequestFilter` 或 `ContainerResponseFilter` 实现来拦截。这些过滤器适用于处理与消息相关的元数据。HTTP头信息、查询参数、媒体类型和其他元数据。它们还具有中止请求处理的能力，例如，当用户没有访问端点的权限时。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1529
+#, fuzzy
+msgid "Let's use `ContainerRequestFilter` to add logging capability to our service. We can do that by implementing `ContainerRequestFilter` and annotating it with the `@Provider` annotation:"
+msgstr "让我们使用 `ContainerRequestFilter` ，为我们的服务添加日志功能。我们可以通过实现 `ContainerRequestFilter` ，并使用 `@Provider` 注释来实现这一功能。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1533
+#, no-wrap
+msgid "package org.acme.rest.json;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1536
+#, no-wrap
+msgid ""
+"import io.vertx.core.http.HttpServerRequest;\n"
+"import org.jboss.logging.Logger;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1542
+#, no-wrap
+msgid ""
+"import javax.ws.rs.container.ContainerRequestContext;\n"
+"import javax.ws.rs.container.ContainerRequestFilter;\n"
+"import javax.ws.rs.core.Context;\n"
+"import javax.ws.rs.core.UriInfo;\n"
+"import javax.ws.rs.ext.Provider;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1545
+#, no-wrap
+msgid ""
+"@Provider\n"
+"public class LoggingFilter implements ContainerRequestFilter {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1547
+#, no-wrap
+msgid "    private static final Logger LOG = Logger.getLogger(LoggingFilter.class);\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1550
+#, no-wrap
+msgid ""
+"    @Context\n"
+"    UriInfo info;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1553
+#, no-wrap
+msgid ""
+"    @Context\n"
+"    HttpServerRequest request;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1556
+#, no-wrap
+msgid ""
+"    @Override\n"
+"    public void filter(ContainerRequestContext context) {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1560
+#, no-wrap
+msgid ""
+"        final String method = context.getMethod();\n"
+"        final String path = info.getPath();\n"
+"        final String address = request.remoteAddress().toString();\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1564
+#, no-wrap
+msgid ""
+"        LOG.infof(\"Request %s %s from IP %s\", method, path, address);\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1567
+#, fuzzy
+msgid "Now, whenever a REST method is invoked, the request will be logged into the console:"
+msgstr "现在，每当REST方法被调用时，该请求将被记录到控制台。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1574
+#, no-wrap
+msgid ""
+"2019-06-05 12:44:26,526 INFO  [org.acm.res.jso.LoggingFilter] (executor-thread-1) Request GET /legumes from IP 127.0.0.1\n"
+"2019-06-05 12:49:19,623 INFO  [org.acm.res.jso.LoggingFilter] (executor-thread-1) Request GET /fruits from IP 0:0:0:0:0:0:0:1\n"
+"2019-06-05 12:50:44,019 INFO  [org.acm.res.jso.LoggingFilter] (executor-thread-1) Request POST /fruits from IP 0:0:0:0:0:0:0:1\n"
+"2019-06-05 12:51:04,485 INFO  [org.acm.res.jso.LoggingFilter] (executor-thread-1) Request GET /fruits from IP 127.0.0.1\n"
+msgstr ""
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:1576
+#, fuzzy, no-wrap
+msgid "Readers and Writers: mapping entities and HTTP bodies"
+msgstr "读者和写作者：映射实体和HTTP体"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1584
+#, fuzzy
+msgid "Whenever your endpoint methods return a object (of when they return a link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestResponse.html[`RestResponse<?>`] or link:{jaxrsapi}/javax/ws/rs/core/Response.html[`Response`] with an entity), RESTEasy Reactive will look for a way to map that into an HTTP response body."
+msgstr "每当你的端点方法返回一个对象时（当它们返回一个 link:{resteasy-reactive-common-api}/org/jboss/resteasy/reactive/RestResponse.html[`RestResponse<?>`] 或 link:{jaxrsapi}/javax/ws/rs/core/Response.html[`Response`] 与一个实体），RESTEasy Reactive就会寻找一种方法将其映射到HTTP响应体中。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1587
+#, fuzzy
+msgid "Similarly, whenever your endpoint method takes an object as parameter, we will look for a way to map the HTTP request body into that object."
+msgstr "同样地，只要你的端点方法需要一个对象作为参数，我们就会寻找一种方法将HTTP请求体映射到该对象中。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1592
+#, fuzzy
+msgid "This is done via a pluggable system of link:{jaxrsapi}/javax/ws/rs/ext/MessageBodyReader.html[`MessageBodyReader`] and link:{jaxrsapi}/javax/ws/rs/ext/MessageBodyWriter.html[`MessageBodyWriter`] interfaces, which are responsible for defining which Java type they map from/to, for which media types, and how they turn HTTP bodies to/from Java instances of that type."
+msgstr "这是通过一个可插拔的系统来实现的，该系统包括 link:{jaxrsapi}/javax/ws/rs/ext/MessageBodyReader.html[`MessageBodyReader`] 和 link:{jaxrsapi}/javax/ws/rs/ext/MessageBodyWriter.html[`MessageBodyWriter`] 接口的可插拔系统来完成，这些接口负责定义它们从哪种Java类型映射到哪种媒体类型，以及它们如何将HTTP体转化为/从该类型的Java实例。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1594
+#, fuzzy
+msgid "For example, if we have our own `Cheese` type on our endpoint:"
+msgstr "例如，如果我们在端点上有自己的 `Cheese` 类型。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1602
+#: upstream/_guides/resteasy-reactive.adoc:1754
+#, no-wrap
+msgid ""
+"import javax.ws.rs.GET;\n"
+"import javax.ws.rs.PUT;\n"
+"import javax.ws.rs.Path;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1605
+#, no-wrap
+msgid ""
+"class Cheese {\n"
+"    public String name;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1610
+#, no-wrap
+msgid ""
+"    public Cheese(String name) {\n"
+"        this.name = name;\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1613
+#: upstream/_guides/resteasy-reactive.adoc:1757
+#, no-wrap
+msgid ""
+"@Path(\"cheese\")\n"
+"public class Endpoint {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1618
+#, no-wrap
+msgid ""
+"    @GET\n"
+"    public Cheese sayCheese() {\n"
+"        return new Cheese(\"Cheeeeeese\");\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1624
+#, no-wrap
+msgid ""
+"    @PUT\n"
+"    public void addCheese(Cheese cheese) {\n"
+"        System.err.println(\"Received a new cheese: \" + cheese.name);\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1628
+#, fuzzy
+msgid "Then we can define how to read and write it with our body reader/writers, annotated with link:{jaxrsapi}/javax/ws/rs/ext/Provider.html[`@Provider`]:"
+msgstr "然后我们可以用我们的主体读写器来定义如何读写它，注释为 link:{jaxrsapi}/javax/ws/rs/ext/Provider.html[`@Provider`] :"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1639
+#: upstream/_guides/resteasy-reactive.adoc:1703
+#, no-wrap
+msgid ""
+"import java.io.IOException;\n"
+"import java.io.InputStream;\n"
+"import java.io.OutputStream;\n"
+"import java.lang.annotation.Annotation;\n"
+"import java.lang.reflect.Type;\n"
+"import java.nio.charset.StandardCharsets;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1646
+#, no-wrap
+msgid ""
+"import javax.ws.rs.WebApplicationException;\n"
+"import javax.ws.rs.core.MediaType;\n"
+"import javax.ws.rs.core.MultivaluedMap;\n"
+"import javax.ws.rs.ext.MessageBodyReader;\n"
+"import javax.ws.rs.ext.MessageBodyWriter;\n"
+"import javax.ws.rs.ext.Provider;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1650
+#, no-wrap
+msgid ""
+"@Provider\n"
+"public class CheeseBodyHandler implements MessageBodyReader<Cheese>, \n"
+"                                           MessageBodyWriter<Cheese> {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1656
+#, no-wrap
+msgid ""
+"    @Override\n"
+"    public boolean isWriteable(Class<?> type, Type genericType, \n"
+"                               Annotation[] annotations, MediaType mediaType) {\n"
+"        return type == Cheese.class;\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1666
+#, no-wrap
+msgid ""
+"    @Override\n"
+"    public void writeTo(Cheese t, Class<?> type, Type genericType, \n"
+"                        Annotation[] annotations, MediaType mediaType,\n"
+"                        MultivaluedMap<String, Object> httpHeaders, \n"
+"                        OutputStream entityStream)\n"
+"            throws IOException, WebApplicationException {\n"
+"        entityStream.write((\"[CheeseV1]\" + t.name)\n"
+"                           .getBytes(StandardCharsets.UTF_8));\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1672
+#, no-wrap
+msgid ""
+"    @Override\n"
+"    public boolean isReadable(Class<?> type, Type genericType, \n"
+"                              Annotation[] annotations, MediaType mediaType) {\n"
+"        return type == Cheese.class;\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1684
+#, no-wrap
+msgid ""
+"    @Override\n"
+"    public Cheese readFrom(Class<Cheese> type, Type genericType, \n"
+"                            Annotation[] annotations, MediaType mediaType,\n"
+"                            MultivaluedMap<String, String> httpHeaders,\n"
+"                            InputStream entityStream)\n"
+"            throws IOException, WebApplicationException {\n"
+"        String body = new String(entityStream.readAllBytes(), StandardCharsets.UTF_8);\n"
+"        if(body.startsWith(\"[CheeseV1]\"))\n"
+"            return new Cheese(body.substring(11));\n"
+"        throw new IOException(\"Invalid cheese: \" + body);\n"
+"    }\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1692
+#, fuzzy
+msgid "If you want to get the most performance our of your writer, you can extend the link:{resteasy-reactive-api}/org/jboss/resteasy/reactive/server/spi/ServerMessageBodyWriter.html[`ServerMessageBodyWriter`] instead of link:{jaxrsapi}/javax/ws/rs/ext/MessageBodyWriter.html[`MessageBodyWriter`] where you will be able to use less reflection and bypass the blocking IO layer:"
+msgstr "如果你想让你的写作者获得最大的性能，你可以延长 link:{resteasy-reactive-api}/org/jboss/resteasy/reactive/server/spi/ServerMessageBodyWriter.html[`ServerMessageBodyWriter`] 而不是 link:{jaxrsapi}/javax/ws/rs/ext/MessageBodyWriter.html[`MessageBodyWriter`] 的扩展，这样你就可以使用更少的反射并绕过阻塞的IO层。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1709
+#, no-wrap
+msgid ""
+"import javax.ws.rs.WebApplicationException;\n"
+"import javax.ws.rs.core.MediaType;\n"
+"import javax.ws.rs.core.MultivaluedMap;\n"
+"import javax.ws.rs.ext.MessageBodyReader;\n"
+"import javax.ws.rs.ext.Provider;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1713
+#, no-wrap
+msgid ""
+"import org.jboss.resteasy.reactive.server.spi.ResteasyReactiveResourceInfo;\n"
+"import org.jboss.resteasy.reactive.server.spi.ServerMessageBodyWriter;\n"
+"import org.jboss.resteasy.reactive.server.spi.ServerRequestContext;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1717
+#, no-wrap
+msgid ""
+"@Provider\n"
+"public class CheeseBodyHandler implements MessageBodyReader<Cheese>, \n"
+"                                           ServerMessageBodyWriter<Cheese> {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1719
+#, no-wrap
+msgid "    // …\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1725
+#, no-wrap
+msgid ""
+"    @Override\n"
+"    public boolean isWriteable(Class<?> type, ResteasyReactiveResourceInfo target, \n"
+"                               MediaType mediaType) {\n"
+"        return type == Cheese.class;\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1732
+#, no-wrap
+msgid ""
+"    @Override\n"
+"    public void writeResponse(Cheese t, ServerRequestContext context) \n"
+"      throws WebApplicationException, IOException {\n"
+"        context.serverResponse().end(\"[CheeseV1]\" + t.name);\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1737
+#, fuzzy
+msgid "You can restrict which content-types your reader/writer apply to by adding link:{jaxrsapi}/javax/ws/rs/Consumes.html[`Consumes`]/link:{jaxrsapi}/javax/ws/rs/Produces.html[`Produces`] annotations on your provider class."
+msgstr "你可以通过添加以下内容来限制你的阅读器/写入器适用于哪些内容类型 link:{jaxrsapi}/javax/ws/rs/Consumes.html[`Consumes`] / link:{jaxrsapi}/javax/ws/rs/Produces.html[`Produces`] 注释来限制你的阅读器/写入器适用于哪些内容类型，在你的提供者类上添加/注释。"
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:1738
+#, fuzzy, no-wrap
+msgid "Reader and Writer interceptors"
+msgstr "读取器和写入器拦截器"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1744
+#, fuzzy
+msgid "Just as you can intercept requests and responses, you can also intercept readers and writers, by extending the link:{jaxrsapi}/javax/ws/rs/ext/ReaderInterceptor.html[`ReaderInterceptor`] or link:{jaxrsapi}/javax/ws/rs/ext/WriterInterceptor.html[`WriterInterceptor`] on a class annotated with link:{jaxrsapi}/javax/ws/rs/ext/Provider.html[`@Provider`]."
+msgstr "就像你可以拦截请求和响应一样，你也可以拦截读者和写者，通过扩展 link:{jaxrsapi}/javax/ws/rs/ext/ReaderInterceptor.html[`ReaderInterceptor`] 或 link:{jaxrsapi}/javax/ws/rs/ext/WriterInterceptor.html[`WriterInterceptor`] 注释的类上扩展或 link:{jaxrsapi}/javax/ws/rs/ext/Provider.html[`@Provider`] ."
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1746
+#, fuzzy
+msgid "If we look at this endpoint:"
+msgstr "如果我们看一下这个端点。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1762
+#, no-wrap
+msgid ""
+"    @GET\n"
+"    public String sayCheese() {\n"
+"        return \"Cheeeeeese\";\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1768
+#, no-wrap
+msgid ""
+"    @PUT\n"
+"    public void addCheese(String cheese) {\n"
+"        System.err.println(\"Received a new cheese: \" + cheese);\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1771
+#, fuzzy
+msgid "We can add reader and writer interceptors like this:"
+msgstr "我们可以这样添加读者和作者拦截器。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1777
+#, no-wrap
+msgid "import java.io.IOException;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1784
+#, no-wrap
+msgid ""
+"import javax.ws.rs.WebApplicationException;\n"
+"import javax.ws.rs.ext.Provider;\n"
+"import javax.ws.rs.ext.ReaderInterceptor;\n"
+"import javax.ws.rs.ext.ReaderInterceptorContext;\n"
+"import javax.ws.rs.ext.WriterInterceptor;\n"
+"import javax.ws.rs.ext.WriterInterceptorContext;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1787
+#, no-wrap
+msgid ""
+"@Provider\n"
+"public class CheeseIOInterceptor implements ReaderInterceptor, WriterInterceptor {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1795
+#, no-wrap
+msgid ""
+"    @Override\n"
+"    public void aroundWriteTo(WriterInterceptorContext context)\n"
+"      throws IOException, WebApplicationException {\n"
+"        System.err.println(\"Before writing \" + context.getEntity());\n"
+"        context.proceed();\n"
+"        System.err.println(\"After writing \" + context.getEntity());\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1805
+#, no-wrap
+msgid ""
+"    @Override\n"
+"    public Object aroundReadFrom(ReaderInterceptorContext context)\n"
+"      throws IOException, WebApplicationException {\n"
+"        System.err.println(\"Before reading \" + context.getGenericType());\n"
+"        Object entity = context.proceed();\n"
+"        System.err.println(\"After reading \" + entity);\n"
+"        return entity;\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Title ====
+#: upstream/_guides/resteasy-reactive.adoc:1807
+#, fuzzy, no-wrap
+msgid "RESTEasy Reactive and REST Client Reactive interactions"
+msgstr "RESTEasy的反应式和REST客户端的反应式互动"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1811
+#, fuzzy
+msgid "In Quarkus, the RESTEasy Reactive extension and xref:rest-client-reactive.adoc[the REST Client Reactive extension] share the same infrastructure.  One important consequence of this consideration is that they share the same list of providers (in the JAX-RS meaning of the word)."
+msgstr "在Quarkus中，RESTEasy Reactive扩展和 link:rest-client-reactive.html[REST Client Reactive扩展] 共享相同的基础设施。这种考虑的一个重要结果是，它们共享相同的提供者列表（按照JAX-RS这个词的含义）。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1814
+#, fuzzy
+msgid "For instance, if you declare a `WriterInterceptor`, it will by default intercept both the servers calls and the client calls, which might not be the desired behavior."
+msgstr "例如，如果你声明一个 `WriterInterceptor` ，它将默认拦截服务器和客户端的调用，这可能不是你想要的行为。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1816
+#, fuzzy
+msgid "However, you can change this default behavior and constrain a provider to:"
+msgstr "然而，你可以改变这种默认行为，并将一个提供者约束为。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1818
+#, fuzzy
+msgid "only consider *server* calls by adding the `@ConstrainedTo(RuntimeType.SERVER)` annotation to your provider;"
+msgstr "通过向你的提供者添加 `@ConstrainedTo(RuntimeType.SERVER)` 注释，只考虑 *服务器* 调用。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1819
+#, fuzzy
+msgid "only consider *client* calls by adding the `@ConstrainedTo(RuntimeType.CLIENT)` annotation to your provider."
+msgstr "通过向你的提供者添加 `@ConstrainedTo(RuntimeType.CLIENT)` 注释，只考虑 *客户端* 调用。"
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:1820
+#, fuzzy, no-wrap
+msgid "Parameter mapping"
+msgstr "参数映射"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1824
+#, fuzzy
+msgid "All <<request-parameters,Request Parameters>> can be declared as link:{jdkapi}/java/lang/String.html[`String`], but also any of the following types:"
+msgstr "所有的 link:#request-parameters[请求参数] 都可以被声明为 link:{jdkapi}/java/lang/String.html[`String`] ，但也可以是以下任何一种类型。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1827
+#, fuzzy
+msgid "Types for which a link:{jaxrsapi}/javax/ws/rs/ext/ParamConverter.html[`ParamConverter`] is available via a registered link:{jaxrsapi}/javax/ws/rs/ext/ParamConverterProvider.html[`ParamConverterProvider`]."
+msgstr "的类型。 link:{jaxrsapi}/javax/ws/rs/ext/ParamConverter.html[`ParamConverter`] 是通过一个注册的 link:{jaxrsapi}/javax/ws/rs/ext/ParamConverterProvider.html[`ParamConverterProvider`] ."
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1828
+#, fuzzy
+msgid "Primitive types."
+msgstr "原始类型。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1829
+#, fuzzy
+msgid "Types that have a constructor that accepts a single link:{jdkapi}/java/lang/String.html[`String`] argument."
+msgstr "有一个接受单一参数的构造函数的类型。 link:{jdkapi}/java/lang/String.html[`String`] 参数的类型。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1832
+#, fuzzy
+msgid "Types that have a static method named `valueOf` or `fromString` with a single link:{jdkapi}/java/lang/String.html[`String`] argument that return an instance of the type. If both methods are present then `valueOf` will be used unless the type is an `enum` in which case `fromString` will be used."
+msgstr "拥有一个静态方法的类型，该方法名为 `valueOf` 或 `fromString` ，有一个单一的参数。 link:{jdkapi}/java/lang/String.html[`String`] 参数，返回该类型的一个实例。如果两个方法都存在，那么将使用 `valueOf` ，除非该类型是 `enum` ，在这种情况下将使用 `fromString` 。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1834
+#, fuzzy
+msgid "link:{jdkapi}/java/util/List.html[`List<T>`], link:{jdkapi}/java/util/Set.html[`Set<T>`], or link:{jdkapi}/java/util/SortedSet.html[`SortedSet<T>`], where `T` satisfies any above criterion."
+msgstr "link:{jdkapi}/java/util/List.html[`List<T>`] , link:{jdkapi}/java/util/Set.html[`Set<T>`] ，或 link:{jdkapi}/java/util/SortedSet.html[`SortedSet<T>`] ，其中 `T` 满足上述任何标准。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1836
+#, fuzzy
+msgid "The following example illustrates all those possibilities:"
+msgstr "下面的例子说明了所有这些可能性。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1844
+#, no-wrap
+msgid ""
+"import java.lang.annotation.Annotation;\n"
+"import java.lang.reflect.Type;\n"
+"import java.util.List;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1850
+#, no-wrap
+msgid ""
+"import javax.ws.rs.GET;\n"
+"import javax.ws.rs.Path;\n"
+"import javax.ws.rs.ext.ParamConverter;\n"
+"import javax.ws.rs.ext.ParamConverterProvider;\n"
+"import javax.ws.rs.ext.Provider;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1852
+#, no-wrap
+msgid "import org.jboss.resteasy.reactive.RestQuery;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1855
+#, no-wrap
+msgid ""
+"@Provider\n"
+"class MyConverterProvider implements ParamConverterProvider {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1865
+#, no-wrap
+msgid ""
+"    @Override\n"
+"    public <T> ParamConverter<T> getConverter(Class<T> rawType, Type genericType,\n"
+"                                              Annotation[] annotations) {\n"
+"        // declare a converter for this type\n"
+"        if(rawType == Converter.class) {\n"
+"            return (ParamConverter<T>) new MyConverter();\n"
+"        }\n"
+"        return null;\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1870
+#, no-wrap
+msgid ""
+"// this is my custom converter\n"
+"class MyConverter implements ParamConverter<Converter> {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1875
+#, no-wrap
+msgid ""
+"    @Override\n"
+"    public Converter fromString(String value) {\n"
+"        return new Converter(value);\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1880
+#, no-wrap
+msgid ""
+"    @Override\n"
+"    public String toString(Converter value) {\n"
+"        return value.value;\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1890
+#, no-wrap
+msgid ""
+"// this uses a converter\n"
+"class Converter {\n"
+"    String value;\n"
+"    Converter(String value) {\n"
+"        this.value = value;\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1898
+#, no-wrap
+msgid ""
+"class Constructor {\n"
+"    String value;\n"
+"    // this will use the constructor\n"
+"    public Constructor(String value) {\n"
+"        this.value = value;\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1909
+#, no-wrap
+msgid ""
+"class ValueOf {\n"
+"    String value;\n"
+"    private ValueOf(String value) {\n"
+"        this.value = value;\n"
+"    }\n"
+"    // this will use the valueOf method\n"
+"    public static ValueOf valueOf(String value) {\n"
+"        return new ValueOf(value);\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1922
+#, no-wrap
+msgid ""
+"    @Path(\"{converter}/{constructor}/{primitive}/{valueOf}\")\n"
+"    @GET\n"
+"    public String convertions(Converter converter, Constructor constructor,\n"
+"                              int primitive, ValueOf valueOf, \n"
+"                              @RestQuery List<Constructor> list) {\n"
+"        return converter + \"/\" + constructor + \"/\" + primitive \n"
+"               + \"/\" + valueOf + \"/\" + list;\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Title ====
+#: upstream/_guides/resteasy-reactive.adoc:1924
+#, fuzzy, no-wrap
+msgid "Handling dates"
+msgstr "处理日期"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1928
+#, fuzzy
+msgid "RESTEasy Reactive supports the use of the implementations of `java.time.Temporal` (like `java.time.LocalDateTime`) as query, path or form params. Furthermore it provides the `@org.jboss.resteasy.reactive.DateFormat` annotation which can be used to set a custom expected pattern (otherwise the JDK's default format for each type is used implicitly)."
+msgstr "RESTEasy Reactive支持使用 `java.time.Temporal` （如 `java.time.LocalDateTime` ）的实现作为查询、路径或表单参数。此外，它还提供了 `@org.jboss.resteasy.reactive.DateFormat` 注解，可以用来设置一个自定义的预期模式（否则就隐含地使用JDK对每种类型的默认格式）。"
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:1929
+#, fuzzy, no-wrap
+msgid "Preconditions"
+msgstr "前提条件"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1933
+#, fuzzy
+msgid "https://tools.ietf.org/html/rfc7232[HTTP allows requests to be conditional], based on a number of conditions, such as:"
+msgstr "link:https://tools.ietf.org/html/rfc7232[HTTP允许请求是有条件的] ，基于一些条件，如：。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1935
+#, fuzzy
+msgid "Date of last resource modification"
+msgstr "最后一次修改资源的日期"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1936
+#, fuzzy
+msgid "A resource tag, similar to a hash code of the resource to designate its state or version"
+msgstr "一个资源标签，类似于资源的哈希代码，用于指定其状态或版本。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:1939
+#, fuzzy
+msgid "Let's see how you can do conditional request validation using the link:{jaxrsapi}/javax/ws/rs/core/Request.html[`Request`] context object:"
+msgstr "让我们看看你如何使用 link:{jaxrsapi}/javax/ws/rs/core/Request.html[`Request`] 上下文对象进行有条件的请求验证。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1948
+#, no-wrap
+msgid ""
+"import java.time.Instant;\n"
+"import java.time.temporal.ChronoUnit;\n"
+"import java.time.temporal.TemporalUnit;\n"
+"import java.util.Date;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1956
+#, no-wrap
+msgid ""
+"import javax.ws.rs.GET;\n"
+"import javax.ws.rs.PUT;\n"
+"import javax.ws.rs.Path;\n"
+"import javax.ws.rs.core.EntityTag;\n"
+"import javax.ws.rs.core.Request;\n"
+"import javax.ws.rs.core.Response;\n"
+"import javax.ws.rs.core.Response.ResponseBuilder;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1959
+#, no-wrap
+msgid ""
+"@Path(\"conditional\")\n"
+"public class Endpoint {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1966
+#, no-wrap
+msgid ""
+"    // It's important to keep our date on seconds because that's how it's sent to the\n"
+"    // user in the Last-Modified header\n"
+"    private Date date = Date.from(Instant.now().truncatedTo(ChronoUnit.SECONDS));\n"
+"    private int version = 1;\n"
+"    private EntityTag tag = new EntityTag(\"v1\");\n"
+"    private String resource = \"Some resource\";\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1979
+#, no-wrap
+msgid ""
+"    @GET\n"
+"    public Response get(Request request) {\n"
+"        // first evaluate preconditions\n"
+"        ResponseBuilder conditionalResponse = request.evaluatePreconditions(date, tag);\n"
+"        if(conditionalResponse != null)\n"
+"            return conditionalResponse.build();\n"
+"        // preconditions are OK\n"
+"        return Response.ok(resource)\n"
+"                .lastModified(date)\n"
+"                .tag(tag)\n"
+"                .build();\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:1997
+#, no-wrap
+msgid ""
+"    @PUT\n"
+"    public Response put(Request request, String body) {\n"
+"        // first evaluate preconditions\n"
+"        ResponseBuilder conditionalResponse = request.evaluatePreconditions(date, tag);\n"
+"        if(conditionalResponse != null)\n"
+"            return conditionalResponse.build();\n"
+"        // preconditions are OK, we can update our resource\n"
+"        resource = body;\n"
+"        date = Date.from(Instant.now().truncatedTo(ChronoUnit.SECONDS));\n"
+"        version++;\n"
+"        tag = new EntityTag(\"v\" + version);\n"
+"        return Response.ok(resource)\n"
+"                .lastModified(date)\n"
+"                .tag(tag)\n"
+"                .build();\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:2000
+#, fuzzy
+msgid "When we call `GET /conditional` the first time, we will get this response:"
+msgstr "当我们第一次拨打 `GET /conditional` ，我们会得到这样的回应。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:2008
+#, no-wrap
+msgid ""
+"HTTP/1.1 200 OK\n"
+"Content-Type: text/plain;charset=UTF-8\n"
+"ETag: \"v1\"\n"
+"Last-Modified: Wed, 09 Dec 2020 16:10:19 GMT\n"
+"Content-Length: 13\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:2010
+#, no-wrap
+msgid "Some resource\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:2013
+#, fuzzy
+msgid "So now if we want to check if we need to fetch a new version, we can make the following request:"
+msgstr "因此，现在如果我们想检查是否需要获取一个新的版本，我们可以发出以下请求。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:2019
+#, no-wrap
+msgid ""
+"GET /conditional HTTP/1.1\n"
+"Host: localhost:8080\n"
+"If-Modified-Since: Wed, 09 Dec 2020 16:10:19 GMT\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:2022
+#, fuzzy
+msgid "And we would get the following response:"
+msgstr "而我们会得到以下回应。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:2026
+#, no-wrap
+msgid "HTTP/1.1 304 Not Modified\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:2032
+#, fuzzy
+msgid "Because the resource has not been modified since that date. This saves on sending the resource, but can also help your users detect concurrent modification, for example, let's suppose that one client wants to update the resource, but another user has modified it since. You can follow the previous `GET` request with this update:"
+msgstr "因为该资源在该日期后没有被修改。这节省了发送资源的时间，但也可以帮助你的用户检测到并发的修改，例如，假设一个客户想要更新资源，但另一个用户之后又修改了它。你可以在之前的 `GET` ，这个更新的请求。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:2041
+#, no-wrap
+msgid ""
+"PUT /conditional HTTP/1.1\n"
+"Host: localhost:8080\n"
+"If-Unmodified-Since: Wed, 09 Dec 2020 16:25:43 GMT\n"
+"If-Match: v1\n"
+"Content-Length: 8\n"
+"Content-Type: text/plain\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:2043
+#, no-wrap
+msgid "newstuff\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:2047
+#, fuzzy
+msgid "And if some other user has modified the resource between your `GET` and your `PUT` you would get this answer back:"
+msgstr "而如果有其他用户修改了你的 `GET` 和你的 `PUT` 之间的资源，你会得到这样的回答。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:2053
+#, no-wrap
+msgid ""
+"HTTP/1.1 412 Precondition Failed\n"
+"ETag: \"v2\"\n"
+"Content-Length: 0\n"
+msgstr ""
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:2055
+#, fuzzy, no-wrap
+msgid "Negotiation"
+msgstr "谈判"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:2062
+#, fuzzy
+msgid "One of the main ideas of REST (https://tools.ietf.org/html/rfc7231#section-3.4[and HTTP]) is that your resource is independent from its representation, and that both the client and server are free to represent their resources in as many media types as they want. This allows the server to declare support for multiple representations and let the client declare which ones it supports and get served something appropriate."
+msgstr "REST link:https://tools.ietf.org/html/rfc7231#section-3.4[（和HTTP] ）的一个主要观点是，你的资源是独立于它的表现形式的，而且客户和服务器都可以自由地以他们想要的媒体类型来表现他们的资源。这使得服务器可以声明支持多种表现形式，并让客户端声明它支持哪些表现形式，并获得适当的服务。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:2064
+#, fuzzy
+msgid "The following endpoint supports serving cheese in plain text or JSON:"
+msgstr "以下端点支持提供纯文本或JSON格式的奶酪。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:2075
+#, no-wrap
+msgid ""
+"import javax.ws.rs.Consumes;\n"
+"import javax.ws.rs.GET;\n"
+"import javax.ws.rs.PUT;\n"
+"import javax.ws.rs.Path;\n"
+"import javax.ws.rs.Produces;\n"
+"import javax.ws.rs.core.MediaType;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:2077
+#, no-wrap
+msgid "import com.fasterxml.jackson.annotation.JsonCreator;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:2089
+#, no-wrap
+msgid ""
+"class Cheese {\n"
+"    public String name;\n"
+"    @JsonCreator\n"
+"    public Cheese(String name) {\n"
+"        this.name = name;\n"
+"    }\n"
+"    @Override\n"
+"    public String toString() {\n"
+"        return \"Cheese: \" + name;\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:2092
+#, no-wrap
+msgid ""
+"@Path(\"negotiated\")\n"
+"public class Endpoint {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:2098
+#, no-wrap
+msgid ""
+"    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})\n"
+"    @GET\n"
+"    public Cheese get() {\n"
+"        return new Cheese(\"Morbier\");\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:2104
+#, no-wrap
+msgid ""
+"    @Consumes(MediaType.TEXT_PLAIN)\n"
+"    @PUT\n"
+"    public Cheese putString(String cheese) {\n"
+"        return new Cheese(cheese);\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:2111
+#, no-wrap
+msgid ""
+"    @Consumes(MediaType.APPLICATION_JSON)\n"
+"    @PUT\n"
+"    public Cheese putJson(Cheese cheese) {\n"
+"        return cheese;\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:2115
+#, fuzzy
+msgid "The user will be able to select which representation it gets with the link:{httpspec}#section-5.3.2[`Accept`] header, in the case of JSON:"
+msgstr "用户将能够选择它所得到的表示方法与 link:{httpspec}#section-5.3.2[`Accept`] 头，如果是JSON的话。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:2121
+#, no-wrap
+msgid ""
+"> GET /negotiated HTTP/1.1\n"
+"> Host: localhost:8080\n"
+"> Accept: application/json\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:2127
+#, no-wrap
+msgid ""
+"< HTTP/1.1 200 OK\n"
+"< Content-Type: application/json\n"
+"< Content-Length: 18\n"
+"< \n"
+"< {\"name\":\"Morbier\"} \n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:2130
+#, fuzzy
+msgid "And for text:"
+msgstr "而对于文字。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:2142
+#, no-wrap
+msgid ""
+"> GET /negotiated HTTP/1.1\n"
+"> Host: localhost:8080\n"
+"> Accept: text/plain\n"
+"> \n"
+"< HTTP/1.1 200 OK\n"
+"< Content-Type: text/plain\n"
+"< Content-Length: 15\n"
+"< \n"
+"< Cheese: Morbier \n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:2145
+#, fuzzy
+msgid "Similarly, you can `PUT` two different representations. JSON:"
+msgstr "同样地，你可以 `PUT` 两种不同的表示方法。JSON。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:2154
+#, no-wrap
+msgid ""
+"> PUT /negotiated HTTP/1.1\n"
+"> Host: localhost:8080\n"
+"> Content-Type: application/json\n"
+"> Content-Length: 16\n"
+"> \n"
+"> {\"name\": \"brie\"}\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:2160
+#, no-wrap
+msgid ""
+"< HTTP/1.1 200 OK\n"
+"< Content-Type: application/json;charset=UTF-8\n"
+"< Content-Length: 15\n"
+"< \n"
+"< {\"name\":\"brie\"} \n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:2163
+#, fuzzy
+msgid "Or plain text:"
+msgstr "或纯文本。"
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:2172
+#, no-wrap
+msgid ""
+"> PUT /negotiated HTTP/1.1\n"
+"> Host: localhost:8080\n"
+"> Content-Type: text/plain\n"
+"> Content-Length: 9\n"
+">\n"
+"> roquefort\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:2178
+#, no-wrap
+msgid ""
+"< HTTP/1.1 200 OK\n"
+"< Content-Type: application/json;charset=UTF-8\n"
+"< Content-Length: 20\n"
+"< \n"
+"< {\"name\":\"roquefort\"} \n"
+msgstr ""
+
+#. type: Title ===
+#: upstream/_guides/resteasy-reactive.adoc:2180
+#, fuzzy, no-wrap
+msgid "HTTP Compression"
+msgstr "HTTP压缩"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:2184
+#, fuzzy
+msgid "The body of an HTTP response is not compressed by default.  You can enable the HTTP compression support by means of `quarkus.http.enable-compression=true`."
+msgstr "默认情况下，HTTP响应的主体是不压缩的。你可以通过 `quarkus.http.enable-compression=true` .NET来启用HTTP压缩支持。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:2186
+#, fuzzy
+msgid "If compression support is enabled then the response body is compressed if:"
+msgstr "如果启用了压缩支持，那么响应体将被压缩，如果。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:2188
+#, fuzzy
+msgid "the resource method is annotated with `@io.quarkus.vertx.http.Compressed`, or"
+msgstr "该资源方法被注释为 `@io.quarkus.vertx.http.Compressed` ，或"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:2189
+#, fuzzy
+msgid "the `Content-Type` header is set and the value is a compressed media type as configured via `quarkus.http.compress-media-types`."
+msgstr " `Content-Type` 头被设置，其值是通过 `quarkus.http.compress-media-types` 配置的压缩媒体类型。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:2191
+#, fuzzy
+msgid "The response body is never compressed if:"
+msgstr "响应主体永远不会被压缩，如果。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:2193
+#, fuzzy
+msgid "the resource method is annotated with `@io.quarkus.vertx.http.Uncompressed`, or"
+msgstr "该资源方法被注释为 `@io.quarkus.vertx.http.Uncompressed` ，或"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:2194
+#, fuzzy
+msgid "the `Content-Type` header is not set."
+msgstr " `Content-Type` header未被设置。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:2196
+#, fuzzy
+msgid "By default, the following list of media types is compressed: `text/html`, `text/plain`, `text/xml`, `text/css`, `text/javascript` and `application/javascript`."
+msgstr "默认情况下，以下媒体类型的列表被压缩。 `text/html` , `text/plain` , `text/xml` , `text/css` , `text/javascript` 和 `application/javascript` 。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:2198
+#, fuzzy
+msgid "If the client does not support HTTP compression then the response body is not compressed."
+msgstr "如果客户端不支持HTTP压缩，那么响应体就不会被压缩。"
+
+#. type: Title ==
+#: upstream/_guides/resteasy-reactive.adoc:2200
+#, fuzzy, no-wrap
+msgid "Include/Exclude JAX-RS classes with build time conditions"
+msgstr "包括/排除具有构建时间条件的JAX-RS类"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:2204
+#, fuzzy
+msgid "Quarkus enables the inclusion or exclusion of JAX-RS Resources, Providers and Features directly thanks to build time conditions in the same that it does for CDI beans.  Thus, the various JAX-RS classes can be annotated with profile conditions (`@io.quarkus.arc.profile.IfBuildProfile` or `@io.quarkus.arc.profile.UnlessBuildProfile`) and/or with property conditions (`io.quarkus.arc.properties.IfBuildProperty` or `io.quarkus.arc.properties.UnlessBuildProperty`) to indicate to Quarkus at build time under which conditions these JAX-RS classes should be included."
+msgstr "Quarkus 可以直接通过构建时间条件来实现 JAX-RS 资源、提供者和特性的包含或排除，就像它对 CDI Bean 所做的一样。因此，各种 JAX-RS 类可以用配置文件条件（ `@io.quarkus.arc.profile.IfBuildProfile` 或 `@io.quarkus.arc.profile.UnlessBuildProfile` ）和/或属性条件（ `io.quarkus.arc.properties.IfBuildProperty` 或 `io.quarkus.arc.properties.UnlessBuildProperty` ）来注释，以便在构建时向 Quarkus 指示在哪些条件下这些 JAX-RS 类应该被包含。"
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:2206
+msgid "In the following example, Quarkus includes the endpoint `sayHello` if and only if the build profile `app1` has been enabled."
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:2211
+#, no-wrap
+msgid ""
+"@IfBuildProfile(\"app1\")\n"
+"public class ResourceForApp1Only {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/resteasy-reactive.adoc:2218
+#, no-wrap
+msgid ""
+"    @GET\n"
+"    @Path(\"sayHello\")\n"
+"    public String sayHello() {\n"
+"        return \"hello\";\n"
+"     }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:2221
+msgid "Please note that if a JAX-RS Application has been detected and the method `getClasses()` and/or `getSingletons()` has/have been overridden, Quarkus will ignore the build time conditions and consider only what has been defined in the JAX-RS Application."
+msgstr ""
+
+#. type: Title ==
+#: upstream/_guides/resteasy-reactive.adoc:2223
+#, no-wrap
+msgid "RESTEasy Reactive client"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:2226
+msgid "In addition to the Server side, RESTEasy Reactive comes with a new MicroProfile REST Client implementation that is non-blocking at its core."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:2228
+msgid "Please note that the `quarkus-rest-client` extension may not be used with RESTEasy Reactive, use `quarkus-rest-client-reactive` instead."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/resteasy-reactive.adoc:2229
+msgid "See the xref:rest-client-reactive.adoc[REST Client Reactive Guide] for more information about the reactive REST client."
+msgstr ""

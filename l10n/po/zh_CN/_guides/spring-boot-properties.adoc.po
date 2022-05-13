@@ -1,0 +1,650 @@
+# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2022-05-12 15:52+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. This guide is maintained in the main Quarkus repository
+#. and pull requests should be submitted there:
+#. https://github.com/quarkusio/quarkus/tree/main/docs/src/main/asciidoc
+#. type: Title =
+#: upstream/_guides/spring-boot-properties.adoc:6
+#, fuzzy, no-wrap
+msgid "Accessing application properties with Spring Boot properties API"
+msgstr "用Spring Boot属性API访问应用程序属性"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:12
+#, fuzzy
+msgid "If you prefer to use Spring Boot `@ConfigurationProperties` annotated class to access application properties instead of a Quarkus native `@ConfigProperties` or a MicroProfile `@ConfigProperty` approach, you can do that with this extension."
+msgstr "如果你喜欢使用Spring Boot `@ConfigurationProperties` 注释的类来访问应用程序的属性，而不是Quarkus本地 `@ConfigProperties` 或MicroProfile `@ConfigProperty` 方法，你可以通过这个扩展来实现。"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:15
+#, fuzzy
+msgid "Spring Boot `@ConfigurationProperties` has a few limitations. For instance, `Map` injection is not supported. Consider using xref:config-mappings.adoc[Mapping configuration to objects]."
+msgstr "Spring Boot `@ConfigurationProperties` 有一些限制。例如，不支持 `Map` 注入。可以考虑使用 link:config-mappings.html[Mapping configuration to objects] 。"
+
+#. type: Title ==
+#: upstream/_guides/spring-boot-properties.adoc:16
+#, fuzzy, no-wrap
+msgid "Prerequisites"
+msgstr "先决条件"
+
+#. type: Title ==
+#: upstream/_guides/spring-boot-properties.adoc:20
+#, fuzzy, no-wrap
+msgid "Solution"
+msgstr "解决方案"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:24
+#, fuzzy
+msgid "We recommend that you follow the instructions in the next sections and create the application step by step.  However, you can go right to the completed example."
+msgstr "我们建议你按照下面几节的说明，一步一步地创建应用程序。然而，你可以直接进入已完成的例子。"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:26
+#, fuzzy
+msgid "Clone the Git repository: `git clone {quickstarts-clone-url}`, or download an {quickstarts-archive-url}[archive]."
+msgstr "克隆 Git 仓库。 `git clone {quickstarts-clone-url}` ，或者下载一个{quickstarts-archive-url}[存档]。"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:28
+#, fuzzy
+msgid "The solution is located in the `spring-boot-properties-quickstart` {quickstarts-tree-url}/spring-boot-properties-quickstart[directory]."
+msgstr "该解决方案位于 `spring-boot-properties-quickstart` {quickstarts-treeurl}/spring-boot-properties-quickstart[目录]中。"
+
+#. type: Title ==
+#: upstream/_guides/spring-boot-properties.adoc:29
+#, fuzzy, no-wrap
+msgid "Creating the Maven project"
+msgstr "创建Maven项目"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:32
+#, fuzzy
+msgid "First, we need a new project. Create a new project with the following command:"
+msgstr "首先，我们需要一个新的项目。用以下命令创建一个新项目。"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:38
+#, fuzzy
+msgid "This command generates a project and imports the `spring-boot-properties` extension."
+msgstr "该命令生成一个项目并导入 `spring-boot-properties` 扩展。"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:41
+#, fuzzy
+msgid "If you already have your Quarkus project configured, you can add the `spring-boot-properties` extension to your project by running the following command in your project base directory:"
+msgstr "如果你已经配置了你的Quarkus项目，你可以通过在你的项目基础目录下运行以下命令，将 `spring-boot-properties` 扩展到你的项目。"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:46
+#, fuzzy
+msgid "This will add the following to your build file:"
+msgstr "这将在你的构建文件中添加以下内容。"
+
+#. type: Block title
+#: upstream/_guides/spring-boot-properties.adoc:48
+#, fuzzy, no-wrap
+msgid "pom.xml"
+msgstr "pom.xml"
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:54
+#, no-wrap
+msgid ""
+"<dependency>\n"
+"    <groupId>io.quarkus</groupId>\n"
+"    <artifactId>quarkus-spring-boot-properties</artifactId>\n"
+"</dependency>\n"
+msgstr ""
+
+#. type: Block title
+#: upstream/_guides/spring-boot-properties.adoc:57
+#, fuzzy, no-wrap
+msgid "build.gradle"
+msgstr "build.gradle"
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:60
+#, no-wrap
+msgid "implementation(\"io.quarkus:quarkus-spring-boot-properties\")\n"
+msgstr ""
+
+#. type: Title ==
+#: upstream/_guides/spring-boot-properties.adoc:62
+#, fuzzy, no-wrap
+msgid "GreetingController"
+msgstr "问候语控制器"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:66
+#, fuzzy
+msgid "First, create a `GreetingResource` JAX-RS resource in the `src/main/java/org/acme/spring/boot/properties/GreetingResource.java` file that looks like:"
+msgstr "首先，在 `src/main/java/org/acme/spring/boot/properties/GreetingResource.java` 文件中创建一个 `GreetingResource` JAX-RS资源，看起来像。"
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:70
+#: upstream/_guides/spring-boot-properties.adoc:94
+#: upstream/_guides/spring-boot-properties.adoc:119
+#: upstream/_guides/spring-boot-properties.adoc:175
+#: upstream/_guides/spring-boot-properties.adoc:192
+#: upstream/_guides/spring-boot-properties.adoc:216
+#: upstream/_guides/spring-boot-properties.adoc:250
+#: upstream/_guides/spring-boot-properties.adoc:271
+#: upstream/_guides/spring-boot-properties.adoc:295
+#: upstream/_guides/spring-boot-properties.adoc:327
+#: upstream/_guides/spring-boot-properties.adoc:365
+#, no-wrap
+msgid "package org.acme.spring.boot.properties;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:75
+#, no-wrap
+msgid ""
+"import javax.ws.rs.GET;\n"
+"import javax.ws.rs.Path;\n"
+"import javax.ws.rs.Produces;\n"
+"import javax.ws.rs.core.MediaType;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:78
+#, no-wrap
+msgid ""
+"@Path(\"/hello\")\n"
+"public class GreetingResource {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:85
+#, no-wrap
+msgid ""
+"    @GET\n"
+"    @Produces(MediaType.TEXT_PLAIN)\n"
+"    public String hello() {\n"
+"        return \"hello\";\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Title ==
+#: upstream/_guides/spring-boot-properties.adoc:87
+#, fuzzy, no-wrap
+msgid "Injecting properties"
+msgstr "注射特性"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:90
+#, fuzzy
+msgid "Create a new class `src/main/java/org/acme/spring/boot/properties/GreetingProperties.java` with a message field:"
+msgstr "创建一个新的类 `src/main/java/org/acme/spring/boot/properties/GreetingProperties.java` ，有一个消息字段。"
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:96
+#: upstream/_guides/spring-boot-properties.adoc:177
+#: upstream/_guides/spring-boot-properties.adoc:254
+#: upstream/_guides/spring-boot-properties.adoc:331
+#, no-wrap
+msgid "import org.springframework.boot.context.properties.ConfigurationProperties;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:99
+#: upstream/_guides/spring-boot-properties.adoc:180
+#: upstream/_guides/spring-boot-properties.adoc:257
+#: upstream/_guides/spring-boot-properties.adoc:334
+#, no-wrap
+msgid ""
+"@ConfigurationProperties(\"greeting\")\n"
+"public class GreetingProperties {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:102
+#, no-wrap
+msgid ""
+"    public String text;\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:107
+#, fuzzy
+msgid "Here `text` field is public, but it could also be a private field with getter and setter or just a public getter in an interface.  Because `text` does not have a default value it is considered required and unless it is defined in a configuration file (`application.properties` by default)  your application will fail to start.  Define this property in your `src/main/resources/application.properties` file:"
+msgstr "这里 `text` 字段是公共的，但它也可以是一个带有getter和setter的私有字段，或者只是一个接口中的公共getter。因为 `text` 没有默认值，所以它被认为是必需的，除非它被定义在一个配置文件中（默认为 `application.properties` ），否则你的应用程序将无法启动。在你的 `src/main/resources/application.properties` 文件中定义这个属性。"
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:112
+#, no-wrap
+msgid ""
+"# Your configuration properties\n"
+"greeting.text = hello\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:115
+#, fuzzy
+msgid "Now modify `GreetingResource` to start using the `GreetingProperties`:"
+msgstr "现在修改 `GreetingResource` ，开始使用 `GreetingProperties` 。"
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:125
+#: upstream/_guides/spring-boot-properties.adoc:198
+#: upstream/_guides/spring-boot-properties.adoc:277
+#: upstream/_guides/spring-boot-properties.adoc:371
+#, no-wrap
+msgid ""
+"import javax.inject.Inject;\n"
+"import javax.ws.rs.GET;\n"
+"import javax.ws.rs.Path;\n"
+"import javax.ws.rs.Produces;\n"
+"import javax.ws.rs.core.MediaType;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:128
+#: upstream/_guides/spring-boot-properties.adoc:201
+#: upstream/_guides/spring-boot-properties.adoc:280
+#: upstream/_guides/spring-boot-properties.adoc:374
+#, no-wrap
+msgid ""
+"@Path(\"/greeting\")\n"
+"public class GreetingResource {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:131
+#: upstream/_guides/spring-boot-properties.adoc:204
+#: upstream/_guides/spring-boot-properties.adoc:283
+#: upstream/_guides/spring-boot-properties.adoc:377
+#, no-wrap
+msgid ""
+"    @Inject\n"
+"    GreetingProperties properties;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:138
+#, no-wrap
+msgid ""
+"    @GET\n"
+"    @Produces(MediaType.TEXT_PLAIN)\n"
+"    public String hello() {\n"
+"        return properties.text;\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:141
+#, fuzzy
+msgid "Run the tests to verify that application still functions correctly."
+msgstr "运行测试以验证应用程序仍然正常运行。"
+
+#. type: Title ==
+#: upstream/_guides/spring-boot-properties.adoc:142
+#, fuzzy, no-wrap
+msgid "Package and run the application"
+msgstr "包装和运行应用程序"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:145
+#, fuzzy
+msgid "Run the application in dev mode with:"
+msgstr "在开发模式下运行应用程序。"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:149
+#, fuzzy
+msgid "Open your browser to http://localhost:8080/greeting."
+msgstr "打开你的浏览器， http://localhost:8080/greeting "
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:151
+#, fuzzy
+msgid "Changing the configuration file is immediately reflected."
+msgstr "改变配置文件会立即反映出来。"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:153
+#, fuzzy
+msgid "As usual, the application can be packaged using:"
+msgstr "像往常一样，该应用程序可以用以下方式打包。"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:157
+#, fuzzy
+msgid "And executed using `java -jar target/quarkus-app/quarkus-run.jar`."
+msgstr "并使用 `java -jar target/quarkus-app/quarkus-run.jar` 。"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:159
+#, fuzzy
+msgid "You can also generate the native executable with:"
+msgstr "你也可以用以下方法生成本地可执行文件。"
+
+#. type: Title ==
+#: upstream/_guides/spring-boot-properties.adoc:162
+#, fuzzy, no-wrap
+msgid "Default values"
+msgstr "默认值"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:165
+#, fuzzy
+msgid "Now let's add a suffix for a greeting for which we'll set a default value."
+msgstr "现在让我们为问候语添加一个后缀，我们将为其设置一个默认值。"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:169
+#, fuzzy
+msgid "Properties with default values can be configured in a configuration file just like any other property.  However, the default value will be used if the property was not defined in a configuration file."
+msgstr "具有默认值的属性可以在配置文件中配置，就像其他属性一样。然而，如果该属性没有在配置文件中定义，则将使用默认值。"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:171
+#, fuzzy
+msgid "Go ahead and add the new field to the `GreetingProperties` class:"
+msgstr "继续前进，将新的字段添加到 `GreetingProperties` 类。"
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:182
+#: upstream/_guides/spring-boot-properties.adoc:259
+#, no-wrap
+msgid "    public String text;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:185
+#, no-wrap
+msgid ""
+"    public String suffix = \"!\";\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:188
+#: upstream/_guides/spring-boot-properties.adoc:267
+#, fuzzy
+msgid "And update the `GreetingResource` and its test `GreetingResourceTest`:"
+msgstr "并更新 `GreetingResource` ，其测试 `GreetingResourceTest` 。"
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:211
+#, no-wrap
+msgid ""
+"    @GET\n"
+"    @Produces(MediaType.TEXT_PLAIN)\n"
+"    public String hello() {\n"
+"        return properties.text + properties.suffix;\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:219
+#: upstream/_guides/spring-boot-properties.adoc:298
+#, no-wrap
+msgid ""
+"import io.quarkus.test.junit.QuarkusTest;\n"
+"import org.junit.jupiter.api.Test;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:222
+#: upstream/_guides/spring-boot-properties.adoc:301
+#, no-wrap
+msgid ""
+"import static io.restassured.RestAssured.given;\n"
+"import static org.hamcrest.CoreMatchers.is;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:225
+#: upstream/_guides/spring-boot-properties.adoc:304
+#, no-wrap
+msgid ""
+"@QuarkusTest\n"
+"public class GreetingResourceTest {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:235
+#, no-wrap
+msgid ""
+"    @Test\n"
+"    public void testHelloEndpoint() {\n"
+"        given()\n"
+"          .when().get(\"/greeting\")\n"
+"          .then()\n"
+"             .statusCode(200)\n"
+"             .body(is(\"hello!\"));\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:238
+#: upstream/_guides/spring-boot-properties.adoc:317
+#, fuzzy
+msgid "Run the tests to verify the change."
+msgstr "运行测试以验证变化。"
+
+#. type: Title ==
+#: upstream/_guides/spring-boot-properties.adoc:239
+#, fuzzy, no-wrap
+msgid "Optional values"
+msgstr "可选值"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:244
+#, fuzzy
+msgid "Properties with optional values are the middle-ground between standard and properties with default values.  While a missing property in a configuration file will not cause your application to fail, it will nevertheless not have a value set.  We use `java.util.Optional` type to define such properties."
+msgstr "具有可选值的属性是标准属性和具有默认值的属性之间的中间地带。虽然在配置文件中缺少一个属性不会导致你的应用程序失败，但它还是没有一个值的设置。我们使用 `java.util.Optional` 类型来定义这种属性。"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:246
+#, fuzzy
+msgid "Add an optional `name` property to the `GreetingProperties`:"
+msgstr "在 `GreetingProperties` ，添加一个可选的 `name` 属性。"
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:252
+#: upstream/_guides/spring-boot-properties.adoc:329
+#, no-wrap
+msgid "import java.util.Optional;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:261
+#, no-wrap
+msgid "    public String suffix = \"!\";\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:264
+#, no-wrap
+msgid ""
+"    public Optional<String> name;\n"
+"}\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:290
+#, no-wrap
+msgid ""
+"    @GET\n"
+"    @Produces(MediaType.TEXT_PLAIN)\n"
+"    public String hello() {\n"
+"        return properties.text + \", \" + properties.name.orElse(\"You\") + properties.suffix;\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:314
+#, no-wrap
+msgid ""
+"    @Test\n"
+"    public void testHelloEndpoint() {\n"
+"        given()\n"
+"          .when().get(\"/greeting\")\n"
+"          .then()\n"
+"             .statusCode(200)\n"
+"             .body(is(\"hello, You!\"));\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Title ==
+#: upstream/_guides/spring-boot-properties.adoc:318
+#, fuzzy, no-wrap
+msgid "Grouping properties"
+msgstr "分组属性"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:323
+#, fuzzy
+msgid "Now we have three properties in our `GreetingProperties` class.  While `name` could be considered more of a runtime property (and maybe could be passed as an HTTP query parameter in the future), `text` and `suffix` are used to define a message template.  Let's group these two properties in a separate inner class:"
+msgstr "现在我们的 `GreetingProperties` 类中有三个属性。虽然 `name` 可以被认为是更多的运行时属性（也许将来可以作为HTTP查询参数传递），但 `text` 和 `suffix` 是用来定义一个消息模板。让我们把这两个属性放在一个单独的内部类中。"
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:336
+#, no-wrap
+msgid "    public Message message;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:338
+#, no-wrap
+msgid "    public Optional<String> name;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:340
+#, no-wrap
+msgid "    public static class Message {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:342
+#, no-wrap
+msgid "        public String text;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:346
+#, no-wrap
+msgid ""
+"        public String suffix = \"!\";\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:349
+#, fuzzy
+msgid "Here `Message` properties class is defined as an inner class, but it could also be a top level class."
+msgstr "这里 `Message` 属性类被定义为一个内层类，但它也可以是一个顶层类。"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:352
+#, fuzzy
+msgid "Having such property groups brings more structure to your configuration.  This is especially useful when then number of properties grows."
+msgstr "拥有这样的属性组可以为你的配置带来更多的结构。当属性的数量增加时，这尤其有用。"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:355
+#, fuzzy
+msgid "Because of the additional class, our property names have changed.  Let's update the properties file and the `GreetingResource` class."
+msgstr "因为有了额外的类，我们的属性名称已经改变了。让我们更新一下属性文件和 `GreetingResource` 类。"
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:360
+#, no-wrap
+msgid ""
+"# Your configuration properties\n"
+"greeting.message.text = hello\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/spring-boot-properties.adoc:384
+#, no-wrap
+msgid ""
+"    @GET\n"
+"    @Produces(MediaType.TEXT_PLAIN)\n"
+"    public String hello() {\n"
+"        return properties.message.text + \", \" + properties.name.orElse(\"You\") + properties.message.suffix;\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Title ==
+#: upstream/_guides/spring-boot-properties.adoc:386
+#, fuzzy, no-wrap
+msgid "More Spring guides"
+msgstr "更多春季指南"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:389
+#, fuzzy
+msgid "Quarkus has more Spring compatibility features. See the following guides for more details:"
+msgstr "Quarkus有更多的Spring兼容功能。更多细节请参见以下指南。"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:391
+#, fuzzy
+msgid "xref:spring-di.adoc[Quarkus - Extension for Spring DI]"
+msgstr "link:spring-di.html[Quarkus - Spring DI的扩展]"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:392
+#, fuzzy
+msgid "xref:spring-web.adoc[Quarkus - Extension for Spring Web]"
+msgstr "link:spring-web.html[Quarkus - Spring Web的扩展]"
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:393
+msgid "xref:spring-data-jpa.adoc[Quarkus - Extension for Spring Data JPA]"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:394
+msgid "xref:spring-data-rest.adoc[Quarkus - Extension for Spring Data REST]"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:395
+msgid "xref:spring-security.adoc[Quarkus - Extension for Spring Security]"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:396
+msgid "xref:spring-cloud-config-client.adoc[Quarkus - Reading properties from Spring Cloud Config Server]"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:397
+msgid "xref:spring-cache.adoc[Quarkus - Extension for Spring Cache]"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/spring-boot-properties.adoc:397
+msgid "xref:spring-scheduled.adoc[Quarkus - Extension for Spring Scheduled]"
+msgstr ""

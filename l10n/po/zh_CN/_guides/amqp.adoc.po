@@ -1,0 +1,870 @@
+# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2022-05-12 15:52+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. This guide is maintained in the main Quarkus repository
+#. and pull requests should be submitted there:
+#. https://github.com/quarkusio/quarkus/tree/main/docs/src/main/asciidoc
+#. type: Title =
+#: upstream/_guides/amqp.adoc:6
+#, fuzzy, no-wrap
+msgid "Getting Started to SmallRye Reactive Messaging with AMQP 1.0"
+msgstr "使用AMQP 1.0的SmallRye反应式消息传递入门"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:11
+#, fuzzy
+msgid "This guide demonstrates how your Quarkus application can utilize SmallRye Reactive Messaging to interact with AMQP 1.0."
+msgstr "本指南展示了你的Quarkus应用程序如何利用SmallRye Reactive Messaging与AMQP 1.0进行交互。"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:16
+#, fuzzy
+msgid "If you want to use RabbitMQ, you should use the xref:rabbitmq.adoc[SmallRye Reactive Messaging RabbitMQ extension].  Alternatively, if want to use RabbitMQ with AMQP 1.0 you need to enable the AMQP 1.0 plugin in the RabbitMQ broker; check the https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/3.9/amqp/amqp.html#amqp-rabbitmq[connecting to RabbitMQ] documentation."
+msgstr "如果您想使用 RabbitMQ，您应该使用 link:rabbitmq.html[SmallRye Reactive Messaging RabbitMQ 扩展] 。另外，如果想使用 RabbitMQ 与 AMQP 1.0，您需要在 RabbitMQ 代理中启用 AMQP 1.0 插件；查看 link:https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/3.9/amqp/amqp.html#amqp-rabbitmq[连接 RabbitMQ] 文档。"
+
+#. type: Title ==
+#: upstream/_guides/amqp.adoc:17
+#, fuzzy, no-wrap
+msgid "Prerequisites"
+msgstr "先决条件"
+
+#. type: Title ==
+#: upstream/_guides/amqp.adoc:22
+#, fuzzy, no-wrap
+msgid "Architecture"
+msgstr "建筑学"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:28
+#, fuzzy
+msgid "In this guide, we are going to develop two applications communicating with an AMQP broker.  We will use https://activemq.apache.org/components/artemis/[Artemis], but you can use any AMQP 1.0 broker.  The first application sends a _quote request_ to an AMQP queue and consumes messages from the _quote_ queue.  The second application receives the _quote request_ and sends a _quote_ back."
+msgstr "在本指南中，我们将开发两个与AMQP代理通信的应用程序。我们将使用 link:https://activemq.apache.org/components/artemis/[Artemis] ，但你可以使用任何AMQP 1.0代理。第一个应用程序向一个AMQP队列发送一个 _报价请求_ ，并从 _报价_ 队列中消费消息。第二个应用程序接收 _报价请求_ 并发送一个 _报价_ 回来。"
+
+#. type: Named 'alt' AttributeList argument for macro 'image'
+#: upstream/_guides/amqp.adoc:29
+#, fuzzy, no-wrap
+msgid "Architecture,"
+msgstr "建筑。"
+
+#. type: Target for macro image
+#: upstream/_guides/amqp.adoc:29
+#, no-wrap
+msgid "amqp-qs-architecture.png"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:34
+#, fuzzy
+msgid "The first application, the `producer`, will let the user request some quotes over an HTTP endpoint.  For each quote request, a random identifier is generated and returned to the user, to put the quote request on _pending_.  At the same time the generated request id is sent over the `quote-requests` queue."
+msgstr "第一个应用程序， `producer` ，将让用户通过一个HTTP端点请求一些报价。对于每一个报价请求，都会生成一个随机的标识符并返回给用户，以使报价请求处于 _等待_ 状态。同时，生成的请求ID被发送到 `quote-requests` 队列中。"
+
+#. type: Named 'alt' AttributeList argument for macro 'image'
+#: upstream/_guides/amqp.adoc:35
+#, fuzzy, no-wrap
+msgid "Producer"
+msgstr "制作人"
+
+#. type: Target for macro image
+#: upstream/_guides/amqp.adoc:35
+#, no-wrap
+msgid "amqp-qs-app-screenshot.png"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:38
+#, fuzzy
+msgid "The second application, the `processor`, in turn, will read from the `quote-requests` queue put a random price to the quote, and send it to a queue named `quotes`."
+msgstr "第二个应用程序， `processor` ，反过来，将从 `quote-requests` 队列中读取把一个随机价格的报价，并将其发送到一个名为 `quotes` 的队列。"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:41
+#, fuzzy
+msgid "Lastly, the `producer` will read the quotes and send them to the browser using server-sent events.  The user will therefore see the quote price updated from _pending_ to the received price in real-time."
+msgstr "最后， `producer` 将读取报价并使用服务器发送的事件将其发送到浏览器。因此，用户将看到报价从 _待定_ 价格实时更新到收到的价格。"
+
+#. type: Title ==
+#: upstream/_guides/amqp.adoc:42
+#, fuzzy, no-wrap
+msgid "Solution"
+msgstr "解决方案"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:46
+#, fuzzy
+msgid "We recommend that you follow the instructions in the next sections and create applications step by step.  However, you can go right to the completed example."
+msgstr "我们建议你按照下面几节的说明，一步一步地创建应用程序。然而，你可以直接进入已完成的例子。"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:48
+#, fuzzy
+msgid "Clone the Git repository: `git clone {quickstarts-clone-url}`, or download an {quickstarts-archive-url}[archive]."
+msgstr "克隆 Git 仓库。 `git clone {quickstarts-clone-url}` ，或者下载一个{quickstarts-archive-url}[存档]。"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:50
+#, fuzzy
+msgid "The solution is located in the `amqp-quickstart` {quickstarts-tree-url}/amqp-quickstart[directory]."
+msgstr "该解决方案位于 `amqp-quickstart` {quickstarts-treeurl}/amqp-quickstart[目录]中。"
+
+#. type: Title ==
+#: upstream/_guides/amqp.adoc:51
+#, fuzzy, no-wrap
+msgid "Creating the Maven Project"
+msgstr "创建Maven项目"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:54
+#, fuzzy
+msgid "First, we need to create two projects: the _producer_ and the _processor_."
+msgstr "首先，我们需要创建两个项目： _生产者_ 和 _处理器_ 。"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:56
+#, fuzzy
+msgid "To create the _producer_ project, in a terminal run:"
+msgstr "要创建 _生产者_ 项目，在终端运行。"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:63
+#, fuzzy
+msgid "This command creates the project structure and select the two Quarkus extensions we will be using:"
+msgstr "这个命令创建了项目结构，并选择了我们将要使用的两个Quarkus扩展。"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:65
+#, fuzzy
+msgid "RESTEasy Reactive and its Jackson support to handle JSON payloads"
+msgstr "RESTEasy Reactive和它的Jackson支持处理JSON有效载荷"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:66
+#, fuzzy
+msgid "The Reactive Messaging AMQP connector"
+msgstr "Reactive Messaging AMQP连接器"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:68
+#, fuzzy
+msgid "To create the _processor_ project, from the same directory, run:"
+msgstr "要创建 _处理器_ 项目，在同一目录下，运行。"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:75
+#, fuzzy
+msgid "At that point you should have the following structure:"
+msgstr "在这一点上，你应该有以下结构。"
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:101
+#, no-wrap
+msgid ""
+".\n"
+"├── amqp-quickstart-processor\n"
+"│  ├── README.md\n"
+"│  ├── mvnw\n"
+"│  ├── mvnw.cmd\n"
+"│  ├── pom.xml\n"
+"│  └── src\n"
+"│     └── main\n"
+"│        ├── docker\n"
+"│        ├── java\n"
+"│        └── resources\n"
+"│           └── application.properties\n"
+"└── amqp-quickstart-producer\n"
+"   ├── README.md\n"
+"   ├── mvnw\n"
+"   ├── mvnw.cmd\n"
+"   ├── pom.xml\n"
+"   └── src\n"
+"      └── main\n"
+"         ├── docker\n"
+"         ├── java\n"
+"         └── resources\n"
+"            └── application.properties\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:104
+#, fuzzy
+msgid "Open the two projects in your favorite IDE."
+msgstr "在你喜欢的IDE中打开这两个项目。"
+
+#. type: Title ==
+#: upstream/_guides/amqp.adoc:105
+#, fuzzy, no-wrap
+msgid "The Quote object"
+msgstr "报价对象"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:110
+#, fuzzy
+msgid "The `Quote` class will be used in both `producer` and `processor` projects.  For the sake of simplicity we will duplicate the class.  In both projects, create the `src/main/java/org/acme/amqp/model/Quote.java` file, with the following content:"
+msgstr " `Quote` 类将在 `producer` 和 `processor` 两个项目中使用。为了简单起见，我们将重复这个类。在两个项目中，创建 `src/main/java/org/acme/amqp/model/Quote.java` 文件，内容如下。"
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:114
+#, no-wrap
+msgid "package org.acme.amqp.model;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:116
+#, no-wrap
+msgid "import io.quarkus.runtime.annotations.RegisterForReflection;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:119
+#, no-wrap
+msgid ""
+"@RegisterForReflection\n"
+"public class Quote {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:122
+#, no-wrap
+msgid ""
+"    public String id;\n"
+"    public int price;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:127
+#, no-wrap
+msgid ""
+"    /**\n"
+"    * Default constructor required for Jackson serializer\n"
+"    */\n"
+"    public Quote() { }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:132
+#, no-wrap
+msgid ""
+"    public Quote(String id, int price) {\n"
+"        this.id = id;\n"
+"        this.price = price;\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:141
+#, no-wrap
+msgid ""
+"    @Override\n"
+"    public String toString() {\n"
+"        return \"Quote{\" +\n"
+"                \"id='\" + id + '\\'' +\n"
+"                \", price=\" + price +\n"
+"                '}';\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:145
+#, fuzzy
+msgid "JSON representation of `Quote` objects will be used in messages sent to the AMQP queues and also in the server-sent events sent to browser clients."
+msgstr " `Quote` 对象的JSON表示法将被用于发送到AMQP队列的消息中，也被用于发送到浏览器客户端的服务器发送的事件。"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:147
+#, fuzzy
+msgid "Quarkus has built-in capabilities to deal with JSON AMQP messages."
+msgstr "Quarkus有内置的能力来处理JSON AMQP消息。"
+
+#. type: Block title
+#: upstream/_guides/amqp.adoc:149
+#, fuzzy, no-wrap
+msgid "@RegisterForReflection"
+msgstr "@RegisterForReflection"
+
+#. type: delimited block =
+#: upstream/_guides/amqp.adoc:154
+#, fuzzy
+msgid "The `@RegisterForReflection` annotation instructs Quarkus to include the class (including fields and methods) when building the native executable.  This will be useful later when we run the applications as native executables inside containers.  Without, the native compilation would remove the fields and methods during the dead-code elimination phase."
+msgstr " `@RegisterForReflection` 注释指示Quarkus在构建本地可执行文件时包含该类（包括字段和方法）。这在以后我们在容器内作为本地可执行文件运行应用程序时将会很有用。如果没有，本地编译会在消除死代码阶段删除这些字段和方法。"
+
+#. type: Title ==
+#: upstream/_guides/amqp.adoc:156
+#, fuzzy, no-wrap
+msgid "Sending quote request"
+msgstr "发出报价请求"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:159
+#, fuzzy
+msgid "Inside the `producer` project locate the generated `src/main/java/org/acme/amqp/producer/QuotesResource.java` file, and update the content to be:"
+msgstr "在 `producer` 项目中找到生成的 `src/main/java/org/acme/amqp/producer/QuotesResource.java` 文件，并将其内容更新为。"
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:163
+#, no-wrap
+msgid "package org.acme.amqp.producer;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:165
+#, no-wrap
+msgid "import java.util.UUID;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:171
+#, no-wrap
+msgid ""
+"import javax.ws.rs.GET;\n"
+"import javax.ws.rs.POST;\n"
+"import javax.ws.rs.Path;\n"
+"import javax.ws.rs.Produces;\n"
+"import javax.ws.rs.core.MediaType;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:175
+#, no-wrap
+msgid ""
+"import org.acme.amqp.model.Quote;\n"
+"import org.eclipse.microprofile.reactive.messaging.Channel;\n"
+"import org.eclipse.microprofile.reactive.messaging.Emitter;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:177
+#, no-wrap
+msgid "import io.smallrye.mutiny.Multi;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:180
+#, no-wrap
+msgid ""
+"@Path(\"/quotes\")\n"
+"public class QuotesResource {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:182
+#, no-wrap
+msgid "    @Channel(\"quote-requests\") Emitter<String> quoteRequestEmitter; // <1>\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:195
+#, no-wrap
+msgid ""
+"    /**\n"
+"     * Endpoint to generate a new quote request id and send it to \"quote-requests\" AMQP queue using the emitter.\n"
+"     */\n"
+"    @POST\n"
+"    @Path(\"/request\")\n"
+"    @Produces(MediaType.TEXT_PLAIN)\n"
+"    public String createRequest() {\n"
+"        UUID uuid = UUID.randomUUID();\n"
+"        quoteRequestEmitter.send(uuid.toString()); // <2>\n"
+"        return uuid.toString();\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:197
+#, fuzzy
+msgid "Inject a Reactive Messaging `Emitter` to send messages to the `quote-requests` channel."
+msgstr "注入一个Reactive Messaging `Emitter` ，向 `quote-requests` 通道发送消息。"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:198
+#, fuzzy
+msgid "On a post request, generate a random UUID and send it to the AMQP queue using the emitter."
+msgstr "在一个post请求中，生成一个随机的UUID并使用发射器将其发送到AMQP队列。"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:202
+#, fuzzy
+msgid "The `quote-requests` channel is going to be managed as a AMQP queue, as that's the only connector on the classpath.  If not indicated otherwise, like in this example, Quarkus uses the channel name as AMQP queue name.  So, in this example, the application sends messages to the `quote-requests` queue."
+msgstr " `quote-requests` 通道将被作为一个AMQP队列来管理，因为这是classpath上唯一的连接器。如果没有其他指示，就像在这个例子中，Quarkus使用通道名称作为AMQP队列名称。因此，在这个例子中，应用程序发送消息到 `quote-requests` 队列。"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:204
+#, fuzzy
+msgid "When you have multiple connectors, you would need to indicate which connector you want to use in the application configuration."
+msgstr "当你有多个连接器时，你需要指出你想在应用程序配置中使用哪个连接器。"
+
+#. type: Title ==
+#: upstream/_guides/amqp.adoc:205
+#, fuzzy, no-wrap
+msgid "Processing quote requests"
+msgstr "处理报价请求"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:209
+#, fuzzy
+msgid "Now let's consume the quote request and give out a price.  Inside the `processor` project, locate the `src/main/java/org/acme/amqp/processor/QuoteProcessor.java` file and add the following:"
+msgstr "现在让我们来消费报价请求并给出一个价格。在 `processor` 项目中，找到 `src/main/java/org/acme/amqp/processor/QuoteProcessor.java` 文件并添加以下内容。"
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:213
+#, no-wrap
+msgid "package org.acme.amqp.processor;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:215
+#, no-wrap
+msgid "import java.util.Random;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:217
+#, no-wrap
+msgid "import javax.enterprise.context.ApplicationScoped;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:221
+#, no-wrap
+msgid ""
+"import org.acme.amqp.model.Quote;\n"
+"import org.eclipse.microprofile.reactive.messaging.Incoming;\n"
+"import org.eclipse.microprofile.reactive.messaging.Outgoing;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:223
+#, no-wrap
+msgid "import io.smallrye.reactive.messaging.annotations.Blocking;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:230
+#, no-wrap
+msgid ""
+"/**\n"
+" * A bean consuming data from the \"request\" AMQP queue and giving out a random quote.\n"
+" * The result is pushed to the \"quotes\" AMQP queue.\n"
+" */\n"
+"@ApplicationScoped\n"
+"public class QuoteProcessor {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:232
+#, no-wrap
+msgid "    private Random random = new Random();\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:242
+#, no-wrap
+msgid ""
+"    @Incoming(\"requests\")       // <1>\n"
+"    @Outgoing(\"quotes\")         // <2>\n"
+"    @Blocking                   // <3>\n"
+"    public Quote process(String quoteRequest) throws InterruptedException {\n"
+"        // simulate some hard working task\n"
+"        Thread.sleep(200);\n"
+"        return new Quote(quoteRequest, random.nextInt(100));\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:244
+#, fuzzy
+msgid "Indicates that the method consumes the items from the `requests` channel"
+msgstr "表示该方法从 `requests` 通道消耗项目。"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:245
+#, fuzzy
+msgid "Indicates that the objects returned by the method are sent to the `quotes` channel"
+msgstr "表示方法返回的对象被发送到 `quotes` channel。"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:246
+#, fuzzy
+msgid "Indicates that the processing is _blocking_ and cannot be run on the caller thread."
+msgstr "表示该处理是 _阻塞的_ ，不能在调用者线程上运行。"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:248
+#, fuzzy
+msgid "The `process` method is called for every AMQP message from the `quote-requests` queue, and will send a `Quote` object to the `quotes` queue."
+msgstr " `process` 方法为来自 `quote-requests` 队列的每一个AMQP消息被调用，并将发送一个 `Quote` 对象到 `quotes` 队列。"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:251
+#, fuzzy
+msgid "Because we want to consume messages from the `quotes-requests` queue into the `requests` channel, we need to configure this association.  Open the `src/main/resources/application.properties` file and add:"
+msgstr "因为我们想把 `quotes-requests` 队列中的消息消耗到 `requests` 通道中，我们需要配置这个关联。打开 `src/main/resources/application.properties` 文件并添加。"
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:255
+#, no-wrap
+msgid "mp.messaging.incoming.requests.address=quote-requests\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:258
+#, fuzzy
+msgid "The configuration keys are structured as follows:"
+msgstr "配置键的结构如下。"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:260
+#, fuzzy
+msgid "`mp.messaging.[outgoing|incoming].{channel-name}.property=value`"
+msgstr " `mp.messaging.[outgoing|incoming].{channel-name}.property=value` "
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:262
+#, fuzzy
+msgid "In our case, we want to configure the `address` attribute to indicate the name of the queue."
+msgstr "在我们的案例中，我们想配置 `address` 属性来表示队列的名称。"
+
+#. type: Title ==
+#: upstream/_guides/amqp.adoc:263
+#, fuzzy, no-wrap
+msgid "Receiving quotes"
+msgstr "接收报价"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:267
+#, fuzzy
+msgid "Back to our `producer` project.  Let's modify the `QuotesResource` to consume quotes, bind it to an HTTP endpoint to send events to clients:"
+msgstr "回到我们的 `producer` 项目。让我们修改 `QuotesResource` ，以消耗报价，将其绑定到一个HTTP端点，向客户发送事件。"
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:272
+#, no-wrap
+msgid ""
+"import io.smallrye.mutiny.Multi;\n"
+"//...\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:274
+#, no-wrap
+msgid "@Channel(\"quotes\") Multi<Quote> quotes;     // <1>\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:283
+#, no-wrap
+msgid ""
+"/**\n"
+" * Endpoint retrieving the \"quotes\" queue and sending the items to a server sent event.\n"
+" */\n"
+"@GET\n"
+"@Produces(MediaType.SERVER_SENT_EVENTS) // <2>\n"
+"public Multi<Quote> stream() {\n"
+"    return quotes; // <3>\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:285
+#, fuzzy
+msgid "Injects the `quotes` channel using the `@Channel` qualifier"
+msgstr "使用 `@Channel` 修饰语注入 `quotes` 通道。"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:286
+#, fuzzy
+msgid "Indicates that the content is sent using `Server Sent Events`"
+msgstr "表示内容是用 `Server Sent Events` "
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:287
+#, fuzzy
+msgid "Returns the stream (_Reactive Stream_)"
+msgstr "返回流 _（Reactive Stream_ ）。"
+
+#. type: Title ==
+#: upstream/_guides/amqp.adoc:288
+#, fuzzy, no-wrap
+msgid "The HTML page"
+msgstr "HTML页面"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:291
+#, fuzzy
+msgid "Final touch, the HTML page reading the converted prices using SSE."
+msgstr "最后一点，HTML页面使用SSE读取转换后的价格。"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:293
+#, fuzzy
+msgid "Create inside the `producer` project `src/main/resources/META-INF/resources/quotes.html` file, with the following content:"
+msgstr "在 `producer` 项目内创建 `src/main/resources/META-INF/resources/quotes.html` 文件，内容如下。"
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:297
+#, no-wrap
+msgid "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <title>Quotes</title>\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:333
+#, no-wrap
+msgid ""
+"    <link rel=\"stylesheet\" type=\"text/css\"\n"
+"          href=\"https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly.min.css\">\n"
+"    <link rel=\"stylesheet\" type=\"text/css\"\n"
+"          href=\"https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly-additions.min.css\">\n"
+"</head>\n"
+"<body>\n"
+"<div class=\"container\">\n"
+"    <div class=\"card\">\n"
+"        <div class=\"card-body\">\n"
+"            <h2 class=\"card-title\">Quotes</h2>\n"
+"            <button class=\"btn btn-info\" id=\"request-quote\">Request Quote</button>\n"
+"            <div class=\"quotes\"></div>\n"
+"        </div>\n"
+"    </div>\n"
+"</div>\n"
+"</body>\n"
+"<script src=\"https://code.jquery.com/jquery-3.6.0.min.js\"></script>\n"
+"<script>\n"
+"    $(\"#request-quote\").click((event) => {\n"
+"        fetch(\"/quotes/request\", {method: \"POST\"})\n"
+"        .then(res => res.text())\n"
+"        .then(qid => {\n"
+"            var row = $(`<h4 class='col-md-12' id='${qid}'>Quote # <i>${qid}</i> | <strong>Pending</strong></h4>`);\n"
+"            $(\".quotes\").append(row);\n"
+"        });\n"
+"    });\n"
+"    var source = new EventSource(\"/quotes\");\n"
+"    source.onmessage = (event) => {\n"
+"      var json = JSON.parse(event.data);\n"
+"      $(`#${json.id}`).html(function(index, html) {\n"
+"        return html.replace(\"Pending\", `\\$\\xA0${json.price}`);\n"
+"      });\n"
+"    };\n"
+"</script>\n"
+"</html>\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:337
+#, fuzzy
+msgid "Nothing spectacular here.  On each received quote, it updates the page."
+msgstr "这里没有什么了不起的。在每次收到的报价中，它都会更新页面。"
+
+#. type: Title ==
+#: upstream/_guides/amqp.adoc:338
+#, fuzzy, no-wrap
+msgid "Get it running"
+msgstr "让它运行"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:341
+#, fuzzy
+msgid "You just need to run both applications using:"
+msgstr "你只需要使用运行这两个应用程序。"
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:345
+#, no-wrap
+msgid "> mvn -f amqp-quickstart-producer quarkus:dev\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:348
+#, fuzzy
+msgid "And, in a separate terminal:"
+msgstr "而且，在一个单独的终端。"
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:352
+#, no-wrap
+msgid "> mvn -f amqp-quickstart-processor quarkus:dev\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:356
+#, fuzzy
+msgid "Quarkus starts a AMQP broker automatically, configures the application and shares the broker instance between different applications.  See xref:amqp-dev-services.adoc[Dev Services for AMQP] for more details."
+msgstr "Quarkus自动启动一个AMQP代理，配置应用程序并在不同的应用程序之间共享代理实例。更多的细节请看 link:amqp-dev-services.html[AMQP的开发服务] 。"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:359
+#, fuzzy
+msgid "Open `http://localhost:8080/quotes.html` in your browser and request some quotes by clicking the button."
+msgstr "打开 `<a href=\"http://localhost:8080/quotes.html\" class=\"bare\">http://localhost:8080/quotes.html</a>` 在你的浏览器中，通过点击按钮要求一些报价。"
+
+#. type: Title ==
+#: upstream/_guides/amqp.adoc:360
+#, fuzzy, no-wrap
+msgid "Running in JVM or Native mode"
+msgstr "在JVM或本地模式下运行"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:364
+#, fuzzy
+msgid "When not running in dev or test mode, you will need to start your AMQP broker.  You can follow the instructions from the https://activemq.apache.org/components/artemis/documentation/latest/using-server.html[Apache ActiveMQ Artemis website] or create a `docker-compose.yaml` file with the following content:"
+msgstr "当不在开发或测试模式下运行时，你将需要启动你的AMQP代理。你可以按照 link:https://activemq.apache.org/components/artemis/documentation/latest/using-server.html[Apache ActiveMQ Artemis网站] 的说明，或者创建一个 `docker-compose.yaml` ，内容如下。"
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:368
+#, no-wrap
+msgid "version: '2'\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:370
+#, no-wrap
+msgid "services:\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:382
+#, no-wrap
+msgid ""
+"  artemis:\n"
+"    image: quay.io/artemiscloud/activemq-artemis-broker:0.1.2\n"
+"    ports:\n"
+"      - \"8161:8161\"\n"
+"      - \"61616:61616\"\n"
+"      - \"5672:5672\"\n"
+"    environment:\n"
+"      AMQ_USER: quarkus\n"
+"      AMQ_PASSWORD: quarkus\n"
+"    networks:\n"
+"      - amqp-quickstart-network\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:395
+#, no-wrap
+msgid ""
+"  producer:\n"
+"    image: quarkus-quickstarts/amqp-quickstart-producer:1.0-${QUARKUS_MODE:-jvm}\n"
+"    build:\n"
+"      context: amqp-quickstart-producer\n"
+"      dockerfile: src/main/docker/Dockerfile.${QUARKUS_MODE:-jvm}\n"
+"    environment:\n"
+"      AMQP_HOST: artemis\n"
+"      AMQP_PORT: 5672\n"
+"    ports:\n"
+"      - \"8080:8080\"\n"
+"    networks:\n"
+"      - amqp-quickstart-network\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:406
+#, no-wrap
+msgid ""
+"  processor:\n"
+"    image: quarkus-quickstarts/amqp-quickstart-processor:1.0-${QUARKUS_MODE:-jvm}\n"
+"    build:\n"
+"      context: amqp-quickstart-processor\n"
+"      dockerfile: src/main/docker/Dockerfile.${QUARKUS_MODE:-jvm}\n"
+"    environment:\n"
+"      AMQP_HOST: artemis\n"
+"      AMQP_PORT: 5672\n"
+"    networks:\n"
+"      - amqp-quickstart-network\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:410
+#, no-wrap
+msgid ""
+"networks:\n"
+"  amqp-quickstart-network:\n"
+"    name: amqp-quickstart\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:414
+#, fuzzy
+msgid "Note how the AMQP broker location is configured.  The `amqp.host` and `amqp.port` (`AMQP_HOST` and `AMQP_PORT` environment variables) properties configure location."
+msgstr "注意AMQP代理的位置是如何配置的。 `amqp.host` 和 `amqp.port` ( `AMQP_HOST` 和 `AMQP_PORT` 环境变量) 属性配置了位置。"
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:417
+#, fuzzy
+msgid "First, make sure you stopped the applications, and build both applications in JVM mode with:"
+msgstr "首先，确保你停止了应用程序，并在JVM模式下构建两个应用程序。"
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:422
+#, no-wrap
+msgid ""
+"> mvn -f amqp-quickstart-producer clean package\n"
+"> mvn -f amqp-quickstart-processor clean package\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:426
+#, fuzzy
+msgid "Once packaged, run `docker compose up --build`.  The UI is exposed on http://localhost:8080/quotes.html"
+msgstr "一旦打包完毕，运行 `docker compose up --build` 。UI暴露在 http://localhost:8080/quotes.html "
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:428
+#, fuzzy
+msgid "To run your applications as native, first we need to build the native executables:"
+msgstr "要以本地方式运行你的应用程序，首先我们需要构建本地可执行文件。"
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:433
+#, no-wrap
+msgid ""
+"> mvn -f amqp-quickstart-producer package -Pnative  -Dquarkus.native.container-build=true\n"
+"> mvn -f amqp-quickstart-processor package -Pnative -Dquarkus.native.container-build=true\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:437
+msgid "The `-Dquarkus.native.container-build=true` instructs Quarkus to build Linux 64bits native executables, who can run inside containers.  Then, run the system using:"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/amqp.adoc:442
+#, no-wrap
+msgid ""
+"> export QUARKUS_MODE=native\n"
+"> docker compose up --build\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:445
+msgid "As before, the UI is exposed on http://localhost:8080/quotes.html"
+msgstr ""
+
+#. type: Title ==
+#: upstream/_guides/amqp.adoc:446
+#, no-wrap
+msgid "Going further"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:450
+msgid "This guide has shown how you can interact with AMQP 1.0 using Quarkus.  It utilizes https://smallrye.io/smallrye-reactive-messaging[SmallRye Reactive Messaging] to build data streaming applications."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/amqp.adoc:453
+msgid "If you did the Kafka quickstart, you have realized that it's the same code.  The only difference is the connector configuration and the JSON mapping."
+msgstr ""

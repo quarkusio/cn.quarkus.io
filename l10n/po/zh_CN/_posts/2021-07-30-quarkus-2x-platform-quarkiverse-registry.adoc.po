@@ -1,0 +1,413 @@
+# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2022-05-12 15:52+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. type: YAML Front Matter: author
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:1
+#, fuzzy, no-wrap
+msgid "alexeyloubyansky"
+msgstr "阿列克谢-卢比安斯基"
+
+#. type: YAML Front Matter: date
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:1
+#, fuzzy, no-wrap
+msgid "2021-07-30"
+msgstr "2021-07-30"
+
+#. type: YAML Front Matter: layout
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:1
+#, fuzzy, no-wrap
+msgid "post"
+msgstr "职位"
+
+#. type: YAML Front Matter: synopsis
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:1
+#, fuzzy, no-wrap
+msgid "The platform model and supporting tools available in Quarkus 2.1.0.Final make it easy to discover and work with the Quarkus extension ecosystem."
+msgstr "Quarkus 2.1.0.Final中提供的平台模型和支持工具使得发现和使用Quarkus扩展生态系统变得容易。"
+
+#. type: YAML Front Matter: tags
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:1
+#, fuzzy, no-wrap
+msgid "release"
+msgstr "释放"
+
+#. type: YAML Front Matter: title
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:1
+#, fuzzy, no-wrap
+msgid "Platforms and Streams: a new way to discover Quarkus extensions"
+msgstr "平台和流：发现Quarkus扩展的新方法"
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:11
+#, fuzzy
+msgid "Co-authored by Erin Schnabel"
+msgstr "合著：Erin Schnabel"
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:13
+#, fuzzy
+msgid "As you may have seen from recent Quarkus Insights episodes (#48, #55 and #57, specifically), we've made a number of changes to our tools in the 2.x stream to improve the developer experience.  When 2.0 was released, a few sharp-eyed Quarkus CLI users spotted some new options and we're excited to explain what those are all about with the release of Quarkus 2.1."
+msgstr "正如你可能从最近的Quarkus Insights episodes（#48，#55和#57，特别是）中看到的，我们在2.x流中对我们的工具做了一些改变以改善开发者的体验。当2.0发布时，一些眼尖的Quarkus CLI用户发现了一些新的选项，我们很高兴在Quarkus 2.1的发布中解释这些选项是怎么回事。"
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:15
+#, fuzzy, no-wrap
+msgid "**TL;DR:** We have a whole new set of more granular BOMs that you can use instead of the big `quarkus-universe-bom`. We have deployed a registry service that aligns and manages platform compatibility across these more granular BOMs and our tools (maven, gradle and CLI) know how to work with this registry to simplify the discovery of extensions that work with your project.\n"
+msgstr " *TL;DR：* 我们有一套全新的更细化的BOM，你可以用它来代替大 `quarkus-universe-bom` 。我们已经部署了一个注册表服务，在这些更细化的BOM中调整和管理平台兼容性，我们的工具（maven、gradle和CLI）知道如何与这个注册表合作，以简化发现适用于你项目的扩展。"
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:17
+#, fuzzy
+msgid "As of the 2.1.0.Final release, the Quarkus CLI uses this registry to resolve the Quarkus platform used by your project."
+msgstr "从2.1.0.Final版本开始，Quarkus CLI使用这个注册表来解决你的项目所使用的Quarkus平台。"
+
+#. type: delimited block -
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:25
+#, no-wrap
+msgid ""
+"# The client will create a project with the latest/recommended quarkus release\n"
+"$ quarkus create\n"
+"# You can use the --stream parameter to narrow to a specific release \n"
+"$ quarkus create -S 2.0\n"
+"$ quarkus create -S 2.1\n"
+msgstr ""
+
+#. type: Title ==
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:27
+#, fuzzy, no-wrap
+msgid "The Evolution of the Platform Model"
+msgstr "平台模式的演变"
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:33
+#, fuzzy
+msgid "The Quarkus 1.x platform was based on a single BOM - `io.quarkus:quarkus-universe-bom`, that would be imported by Quarkus applications. The universe BOM would include all the Quarkus platform extensions plus their dependencies. BOMs are meant to make it easy to align common dependencies on versions that work for all the libraries and frameworks used in an application.  However, badly composed BOMs may actually make it very difficult or practically impossible to achieve that. Generally speaking, the wider the scope of the dependencies a BOM manages, the higher the risk of running into incompatiblity issues when users include libraries that aren't managed by the BOM into their applications."
+msgstr "Quarkus 1.x平台是基于一个单一的BOM - `io.quarkus:quarkus-universe-bom` ，它将被Quarkus应用程序导入。宇宙BOM将包括所有Quarkus平台的扩展和它们的依赖关系。BOMs的目的是使其容易调整共同的依赖关系，使其适用于应用程序中使用的所有库和框架的版本。然而，糟糕的BOM构成可能实际上使其很难或实际上无法实现。一般来说，BOM管理的依赖关系的范围越广，当用户在他们的应用程序中加入不受BOM管理的库时，遇到不兼容问题的风险就越高。"
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:36
+#, fuzzy
+msgid "The `io.quarkus:quarkus-universe-bom`, as its artifactId implies, is certainly a large and diverse BOM, including dependencies of Camel, Google Cloud Services, Kogito, OptaPlanner and other Quarkus platform members. Importing `io.quarkus:quarkus-universe-bom` will enforce ~3600 dependency version constraints on an application."
+msgstr " `io.quarkus:quarkus-universe-bom` ，正如它的artifactId所暗示的，肯定是一个庞大而多样的BOM，包括Camel、Google Cloud Services、Kogito、OptaPlanner和其他Quarkus平台成员的依赖关系。导入 `io.quarkus:quarkus-universe-bom` ，将对一个应用程序执行~3600个依赖版本约束。"
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:41
+#, fuzzy
+msgid "Besides the fact that it's practically always way more than necessary, it may actually cause a serious compatibility issue that could have been avoided if the Quarkus platform BOM was not trying to manage the \"universe\".  For example, including a library that depends on a different version of the `commons-beanutils:commons-beanutils` than Camel Quarkus into an application that actually does not include any Camel Quarkus extension may become problematic, because the `io.quarkus:quarkus-universe-bom` will enforce the version required by Camel Quarkus."
+msgstr "除了它实际上总是远远超过需要之外，它实际上可能导致严重的兼容性问题，如果Quarkus平台的BOM不试图管理 \"宇宙 \"的话，这些问题本来是可以避免的。例如，在一个实际上不包含任何Camel Quarkus扩展的应用程序中包含一个依赖于不同版本的 `commons-beanutils:commons-beanutils` 的库可能会成为问题，因为 `io.quarkus:quarkus-universe-bom` 将执行Camel Quarkus所要求的版本。"
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:43
+#, fuzzy
+msgid "As of Quarkus 2.0.0.Final, in addition to the monolithic `io.quarkus:quarkus-universe-bom`, we also define a number of platform-member-specific BOMs, e.g."
+msgstr "从Quarkus 2.0.0.Final开始，除了单体 `io.quarkus:quarkus-universe-bom` ，我们还定义了一些针对平台成员的BOM，例如："
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:45
+#, fuzzy
+msgid "`io.quarkus.platform:quarkus-bom:2.1.0.Final` - an equivalent of the `io.quarkus:quarkus-bom`;"
+msgstr " `io.quarkus.platform:quarkus-bom:2.1.0.Final` - 一个相当于 。 `io.quarkus:quarkus-bom` "
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:46
+#, fuzzy
+msgid "`io.quarkus.platform:quarkus-camel-bom:2.1.0.Final` - manages only the Camel Quarkus-related extensions and their required dependencies;"
+msgstr " `io.quarkus.platform:quarkus-camel-bom:2.1.0.Final` - 只管理Camel Quarkus相关的扩展及其所需的依赖。"
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:47
+#, fuzzy
+msgid "`io.quarkus.platform:quarkus-kogito-bom:2.1.0.Final` - manages only the Kogito Quarkus-related extensions and their required dependencies;"
+msgstr " `io.quarkus.platform:quarkus-kogito-bom:2.1.0.Final` - 只管理Kogito Quarkus相关的扩展和它们所需的依赖。"
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:48
+#, fuzzy
+msgid "etc"
+msgstr "等等"
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:50
+#, fuzzy
+msgid "Now applications need to import only the relevant BOMs, which avoids enforcing dependency constraints from the rest of the \"universe\"."
+msgstr "现在，应用程序只需要导入相关的BOM，这就避免了从 \"宇宙 \"的其他部分强制执行依赖性约束。"
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:52
+#, fuzzy
+msgid "Given that every member-specific BOM is actually a fragment of the `io.quarkus:quarkus-universe-bom`, member BOMs can be imported in any order w/o creating a conflict."
+msgstr "鉴于每个成员特定的BOM实际上是 `io.quarkus:quarkus-universe-bom` 的一个片段，成员BOM可以按任何顺序导入而不产生冲突。"
+
+#. type: Title ==
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:53
+#, fuzzy, no-wrap
+msgid "Dev Tools Support"
+msgstr "开发工具支持"
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:56
+#, fuzzy
+msgid "The dev tools, such as the Quarkus CLI, Maven or Gradle plugins, can be used to create and manage a Quarkus application project using the new platform model."
+msgstr "开发工具，如Quarkus CLI、Maven或Gradle插件，可以用来创建和管理使用新平台模型的Quarkus应用项目。"
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:59
+#, fuzzy
+msgid "The `io.quarkus:quarkus-universe-bom` was still the default BOM in Quarkus 2.0.0.Final. As of Quarkus 2.1.0.Final, we recommend using the more granular, member-specific BOMs instead."
+msgstr " `io.quarkus:quarkus-universe-bom` 在Quarkus 2.0.0.Final中仍然是默认的BOM。从Quarkus 2.1.0.Final开始，我们建议使用更细化的、针对特定成员的BOM来代替。"
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:61
+#, fuzzy
+msgid "The easiest way to explore this new platform resolution capability is using the new https://quarkus.io/guides/cli-tooling[Quarkus CLI], which can be installed using e.g."
+msgstr "探索这种新的平台解决能力的最简单方法是使用新的 link:https://quarkus.io/guides/cli-tooling[Quarkus CLI] ，它可以通过以下方式安装，例如"
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:65
+#, fuzzy
+msgid "```shell curl -Ls https://sh.jbang.dev | bash -s - app install --fresh --force quarkus@quarkusio ```"
+msgstr " `` "
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:67
+#, fuzzy
+msgid "Once installed you can create a project by executing"
+msgstr "一旦安装完毕，你可以通过执行以下命令创建一个项目"
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:71
+#, fuzzy
+msgid "```shell quarkus create app ```"
+msgstr " `` "
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:73
+#, fuzzy
+msgid "For earlier versions of the CLI (pre-2.1.0.Final), you need to specify the `--registry-client` option, or the created project will use the `io.quarkus:quarkus-universe-bom` associated with the client's version."
+msgstr "对于早期版本的CLI（2.1.0.Final之前），你需要指定 `--registry-client` 选项，否则创建的项目将使用与客户端版本相关的 `io.quarkus:quarkus-universe-bom` 。"
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:93
+#, fuzzy, no-wrap
+msgid ""
+"The generated `pom.xml` will be importing the following BOM:\n"
+"```xml\n"
+"    <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>\n"
+"    <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>\n"
+"    <quarkus.platform.version>2.1.0.Final</quarkus.platform.version>\n"
+"    <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>\n"
+"  </properties>\n"
+"  <dependencyManagement>\n"
+"    <dependencies>\n"
+"      <dependency>\n"
+"        <groupId>${quarkus.platform.group-id}</groupId>\n"
+"        <artifactId>${quarkus.platform.artifact-id}</artifactId>\n"
+"        <version>${quarkus.platform.version}</version>\n"
+"        <type>pom</type>\n"
+"        <scope>import</scope>\n"
+"      </dependency>\n"
+"    </dependencies>\n"
+"  </dependencyManagement>\n"
+"```\n"
+msgstr "生成的 `pom.xml` ，将导入以下BOM。"
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:95
+#, fuzzy
+msgid "which is an equivalent of the `io.quarkus:quarkus-bom` that does not include any of the other platform members, such as Camel, Kogito, OptaPlanner, etc."
+msgstr "这是一个等同于 `io.quarkus:quarkus-bom` ，不包括任何其他平台成员，如Camel、Kogito、OptaPlanner，等等。"
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:97
+#, fuzzy
+msgid "Let's create another project that does include a Kogito extension:"
+msgstr "让我们创建另一个项目，其中确实包括一个Kogito扩展。"
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:101
+#, fuzzy
+msgid "```shell quarkus create -x kogito-quarkus-rules kogito-app ```"
+msgstr " `` "
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:103
+#, fuzzy
+msgid "The new project imports two BOMs (i.e. two fragments of the `io.quarkus:quarkus-universe-bom` that are relevant to the project):"
+msgstr "新项目导入两个BOM（即两个与项目相关的 `io.quarkus:quarkus-universe-bom` 的片段）。"
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:134
+#, fuzzy, no-wrap
+msgid ""
+"```xml\n"
+"    <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>\n"
+"    <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>\n"
+"    <quarkus.platform.version>2.1.0.Final</quarkus.platform.version>\n"
+"    <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>\n"
+"  </properties>\n"
+"  <dependencyManagement>\n"
+"    <dependencies>\n"
+"      <dependency>\n"
+"        <groupId>${quarkus.platform.group-id}</groupId>\n"
+"        <artifactId>quarkus-kogito-bom</artifactId>\n"
+"        <version>${quarkus.platform.version}</version>\n"
+"        <type>pom</type>\n"
+"        <scope>import</scope>\n"
+"      </dependency>\n"
+"      <dependency>\n"
+"        <groupId>${quarkus.platform.group-id}</groupId>\n"
+"        <artifactId>${quarkus.platform.artifact-id}</artifactId>\n"
+"        <version>${quarkus.platform.version}</version>\n"
+"        <type>pom</type>\n"
+"        <scope>import</scope>\n"
+"      </dependency>\n"
+"    </dependencies>\n"
+"  </dependencyManagement>\n"
+"  <dependencies>\n"
+"    <dependency>\n"
+"      <groupId>org.kie.kogito</groupId>\n"
+"      <artifactId>kogito-quarkus-rules</artifactId>\n"
+"    </dependency>\n"
+"```\n"
+msgstr ""
+" `<quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>\n"
+"    <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>\n"
+"    <quarkus.platform.version>2.1.0.Final</quarkus.platform.version>\n"
+"    <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>\n"
+"  </properties>\n"
+"  <dependencyManagement>\n"
+"    <dependencies>\n"
+"      <dependency>\n"
+"        <groupId>${quarkus.platform.group-id}</groupId>\n"
+"        <artifactId>quarkus-kogito-bom</artifactId>\n"
+"        <version>${quarkus.platform.version}</version>\n"
+"        <type>pom</type>\n"
+"        <scope>import</scope>\n"
+"      </dependency>\n"
+"      <dependency>\n"
+"        <groupId>${quarkus.platform.group-id}</groupId>\n"
+"        <artifactId>${quarkus.platform.artifact-id}</artifactId>\n"
+"        <version>${quarkus.platform.version}</version>\n"
+"        <type>pom</type>\n"
+"        <scope>import</scope>\n"
+"      </dependency>\n"
+"    </dependencies>\n"
+"  </dependencyManagement>\n"
+"  <dependencies>\n"
+"    <dependency>\n"
+"      <groupId>org.kie.kogito</groupId>\n"
+"      <artifactId>kogito-quarkus-rules</artifactId>\n"
+"    </dependency>` "
+
+#. type: Title ==
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:135
+#, fuzzy, no-wrap
+msgid "Wider Quarkus Ecosystem Support in the Dev Tools"
+msgstr "开发工具中更广泛的Quarkus生态系统支持"
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:141
+#, fuzzy
+msgid "The https://quarkus.io/guides/platform[Quarkus platform] does not represent the whole Quarkus extension ecosystem, aka Quarkiverse, but rather a set of extensions that target the primary use-cases of Quarkus as a development stack. Which means that there are still plenty of Quarkus extensions that aren't present in a Quarkus platform (BOM), e.g. most of the extensions hosted on the https://github.com/quarkiverse[Quarkiverse Hub]. These non-platform extensions could still be added to Quarkus applications as usual application dependencies. The Quarkus 2.1.0.Final dev tools make it very easy, e.g."
+msgstr "link:https://quarkus.io/guides/platform[Quarkus平台] 并不代表整个Quarkus扩展生态系统，又称Quarkiverse，而是一组针对Quarkus作为开发堆栈的主要用例的扩展。这意味着仍有大量的Quarkus扩展没有出现在Quarkus平台（BOM）中，例如，大部分托管在 link:https://github.com/quarkiverse[Quarkiverse Hub] 上的扩展。这些非平台的扩展仍然可以像通常的应用程序依赖性一样被添加到Quarkus应用程序中。Quarkus 2.1.0.Final开发工具使之非常容易，例如"
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:145
+#, fuzzy
+msgid "```shell quarkus create -x prettytime test-time-app ```"
+msgstr " `` "
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:147
+#, fuzzy
+msgid "will create a new Quarkus project with a non-platform https://github.com/quarkiverse/quarkus-prettytime[Quarkus Pretty Time extension]."
+msgstr "将创建一个新的Quarkus项目，该项目有一个非平台的 link:https://github.com/quarkiverse/quarkus-prettytime[Quarkus Pretty Time扩展] 。"
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:172
+#, fuzzy, no-wrap
+msgid ""
+"```xml\n"
+"    <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>\n"
+"    <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>\n"
+"    <quarkus.platform.version>2.1.0.Final</quarkus.platform.version>\n"
+"    <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>\n"
+"  </properties>\n"
+"  <dependencyManagement>\n"
+"    <dependencies>\n"
+"      <dependency>\n"
+"        <groupId>${quarkus.platform.group-id}</groupId>\n"
+"        <artifactId>${quarkus.platform.artifact-id}</artifactId>\n"
+"        <version>${quarkus.platform.version}</version>\n"
+"        <type>pom</type>\n"
+"        <scope>import</scope>\n"
+"      </dependency>\n"
+"    </dependencies>\n"
+"  </dependencyManagement>\n"
+"  <dependencies>\n"
+"    <dependency>\n"
+"      <groupId>io.quarkiverse.prettytime</groupId>\n"
+"      <artifactId>quarkus-prettytime</artifactId>\n"
+"      <version>0.1.0</version>\n"
+"    </dependency>\n"
+"```\n"
+msgstr ""
+" `<quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>\n"
+"    <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>\n"
+"    <quarkus.platform.version>2.1.0.Final</quarkus.platform.version>\n"
+"    <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>\n"
+"  </properties>\n"
+"  <dependencyManagement>\n"
+"    <dependencies>\n"
+"      <dependency>\n"
+"        <groupId>${quarkus.platform.group-id}</groupId>\n"
+"        <artifactId>${quarkus.platform.artifact-id}</artifactId>\n"
+"        <version>${quarkus.platform.version}</version>\n"
+"        <type>pom</type>\n"
+"        <scope>import</scope>\n"
+"      </dependency>\n"
+"    </dependencies>\n"
+"  </dependencyManagement>\n"
+"  <dependencies>\n"
+"    <dependency>\n"
+"      <groupId>io.quarkiverse.prettytime</groupId>\n"
+"      <artifactId>quarkus-prettytime</artifactId>\n"
+"      <version>0.1.0</version>\n"
+"    </dependency>` "
+
+#. type: Title ==
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:173
+#, no-wrap
+msgid "Registry Client Support in the Maven and Gradle Plugins"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:176
+msgid "The Quarkus Maven and Gradle plugins can still be used to manage Quarkus projects."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_posts/2021-07-30-quarkus-2x-platform-quarkiverse-registry.adoc:181
+#, no-wrap
+msgid ""
+"```shell\n"
+"mvn io.quarkus:quarkus-maven-plugin:2.1.0.Final:create \\\n"
+"    -Dextensions=kogito-quarkus-rules,prettytime \\\n"
+"    -DprojectGroupId=org.acme -DprojectArtifactId=quarkus-app -DprojectVersion=1.0 \\\n"
+"```\n"
+msgstr ""

@@ -1,0 +1,353 @@
+# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2022-05-12 15:52+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. type: YAML Front Matter: author
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:1
+#, fuzzy, no-wrap
+msgid "cescoffier"
+msgstr "鹤壁市"
+
+#. type: YAML Front Matter: date
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:1
+#, fuzzy, no-wrap
+msgid "2020-11-03"
+msgstr "2020-11-03"
+
+#. type: YAML Front Matter: layout
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:1
+#, fuzzy, no-wrap
+msgid "post"
+msgstr "职位"
+
+#. type: YAML Front Matter: synopsis
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:1
+#, fuzzy, no-wrap
+msgid "Offset commiting strategies in the Kafka connector"
+msgstr "Kafka连接器中的偏移提交策略"
+
+#. type: YAML Front Matter: tags
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:1
+#, fuzzy, no-wrap
+msgid "reactive kafka"
+msgstr "反应式卡夫卡"
+
+#. type: YAML Front Matter: title
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:1
+#, fuzzy, no-wrap
+msgid "Kafka - When to commit?"
+msgstr "Kafka - 何时提交？"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:15
+#, fuzzy
+msgid "In a https://quarkus.io/blog/kafka-failure-strategy/[previous blog post], we have looked at failure strategies provided by the Reactive Messaging Kafka connector.  But, imagine it's our lucky day, and for once it worked.  We should inform Kafka that the processing succeeded.  In Kafka terminology, we call this: _offset commit_.  This post covers the different strategies to commit offsets with the Reactive Messaging Kafka connector."
+msgstr "在 link:https://quarkus.io/blog/kafka-failure-strategy/[之前的一篇博文] 中，我们已经研究了Reactive Messaging Kafka连接器提供的失败策略。但是，想象一下，今天是我们的幸运日，而且这一次成功了。我们应该通知Kafka，处理成功了。在Kafka术语中，我们称之为： _偏移提交_ 。这篇文章涵盖了用Reactive Messaging Kafka连接器提交偏移量的不同策略。"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:17
+#, fuzzy
+msgid "## Kafka Consumer Group and Offsets"
+msgstr "卡夫卡消费者集团和抵偿\n"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:21
+#, fuzzy
+msgid "Kafka organizes records (_i.e._ messages) around _topics_.  Each topic has a name, and applications send records to topics and poll records from topics.  So far, nothing out of the ordinary."
+msgstr "Kafka围绕 _主题_ 组织记录 _（即_ 消息）。每个主题都有一个名字，应用程序向主题发送记录，并从主题轮询记录。到目前为止，没有什么不寻常的地方。"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:28
+#, fuzzy
+msgid "Topics are divided into partitions.  Each partition is an ordered, immutable sequence of records.  Sending a message to a topic appends it to the selected partition.  Each message from a partition gets a sequential id number called _offset_.  It uniquely identifies each message within the partition.  So, with Kafka, you can identify an individual record using a `<topic, partition, offset>` tuple."
+msgstr "主题被划分为分区。每个分区是一个有序的、不可改变的记录序列。向一个主题发送消息会将其附加到选定的分区中。分区中的每条消息都有一个连续的ID号码，称为 _offset_ 。它可以唯一地识别分区中的每条消息。因此，在Kafka中，你可以使用 `<topic, partition, offset>` tuple来识别一个单独的记录。"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:30
+#, fuzzy
+msgid "image:/assets/images/posts/kafka-commit-strategies/topics-partitions.png[]"
+msgstr "image:/assets/images/posts/kafka-commit-strategies/topics-partitions.png[alt=\"topics partitions\"]"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:35
+#, fuzzy
+msgid "When an application consumes messages from Kafka, it uses a Kafka consumer.  With this consumer, it polls batches of messages from a specific topic, for example, `movies` or `actors`.  Retrieved messages belong to partitions assigned to this consumer.  And that aspect is essential."
+msgstr "当一个应用程序从Kafka消费消息时，它使用一个Kafka消费者。通过这个消费者，它从一个特定的主题中轮询成批的消息，例如， `movies` 或 `actors` 。检索的消息属于分配给这个消费者的分区。而这一方面是至关重要的。"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:39
+#, fuzzy
+msgid "Consumers belong to a consumer group, identified with a name (`A` and `B` in the picture above).  A group contains one or more consumers.  In general, when you scale up your application, it creates a consumer joining the same group."
+msgstr "消费者属于一个消费者组，用一个名称标识（上图中的 `A` 和 `B` ）。一个组包含一个或多个消费者。一般来说，当你扩展你的应用程序时，它会创建一个加入同一组的消费者。"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:41
+#, fuzzy
+msgid "image:/assets/images/posts/kafka-commit-strategies/consumer-groups.png[]"
+msgstr "image:/assets/images/posts/kafka-commit-strategies/consumer-groups.png[alt=\"consumer groups\"]"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:49
+#, fuzzy
+msgid "Each consumer group receives each record from a topic once.  To achieve this, it assigns each consumer from a group to a set of partitions.  For example, in the above picture, the consumer from the application A1 receives the records from the partitions 0 and 1.  A2 receives the records from the partition 2.  App B is the only consumer from its consumer group.  So, it gets the records from all three partitions.  Consequently (ignore rebalance or other subtilities for now), each record from a topic is only received once per consumer group, by a specific consumer from that group."
+msgstr "每个消费者组从一个主题中接收一次每个记录。为了实现这一点，它把每个消费者从一个组分配到一组分区。例如，在上图中，来自应用A1的消费者接收来自分区0和1的记录。A2接收来自分区2的记录。应用程序B是其消费者组中唯一的消费者。所以，它从所有三个分区获得记录。因此（暂时忽略再平衡或其他子程序），每个主题的记录在每个消费者组中只被该组的特定消费者接收一次。"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:54
+#, fuzzy
+msgid "To orchestrate each consumer group's progress, each consumer periodically informs the broker of its current position - the last processed offset.  It commits the offset, indicating that all the previous records from that partition have been processed.  So, if a consumer stops and comes back later, it restarts from the last committed position (if assigned to that partition again).  Note that this behavior is configurable."
+msgstr "为了协调每个消费者组的进展，每个消费者定期通知经纪人它的当前位置--最后处理的偏移。它提交该偏移量，表明该分区以前的所有记录都已被处理。因此，如果一个消费者停止并在稍后回来，它将从最后提交的位置重新开始（如果再次分配到该分区）。请注意，这种行为是可配置的。"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:61
+#, fuzzy
+msgid "What's important to notice is the periodic aspect of the commit.  Offset commit is expensive, and to enhance performance, we should not commit the offset after each processed record.  In this regard, Kafka behaves differently from traditional messaging solutions, such as JMS, which acknowledges each message individually.  Another important characteristic is the positional aspect of the commit.  You commit the position indicating that all the records located before that position are processed.  But is it really the case?"
+msgstr "需要注意的是提交的周期性问题。偏移量提交是很昂贵的，为了提高性能，我们不应该在每条处理过的记录后提交偏移量。在这方面，Kafka的行为与传统的消息传递解决方案不同，比如JMS，它对每条消息进行单独确认。另一个重要的特点是提交的位置性。你提交的位置表明，位于该位置之前的所有记录都被处理了。但情况真的是这样吗？"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:63
+#, fuzzy
+msgid "### The Kafka default behavior"
+msgstr "Kafka的默认行为"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:66
+#, fuzzy
+msgid "The Apache Kafka consumer uses an auto-commit approach by default.  Applications using such a consumer are structured around a polling loop:"
+msgstr "Apache Kafka消费者默认使用自动提交的方式。使用这种消费者的应用程序是围绕着一个轮询循环的结构。"
+
+#. type: delimited block -
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:73
+#, no-wrap
+msgid ""
+"while(true) {\n"
+"    ConsumerRecords records = consumer.poll(Duration.ofMillis(10000));\n"
+"    processRetrievedRecords(records);\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:77
+#, fuzzy
+msgid "Such a program polls a batch of records, processes them, and then polls the next set.  While calling the `poll` method, the consumer periodically commits the last offset of the previous batches transparently."
+msgstr "这样的程序轮询一批记录，处理它们，然后轮询下一组。在调用 `poll` 方法的同时，消费者定期透明地提交以前批次的最后一个偏移。"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:83
+#, fuzzy
+msgid "Quite nice, right? If the application fails to process a message, it throws an exception, which either interrupts the while loop or is handled gracefully (within the `processRetrievedRecords` method).  In the first case, it means that it won't commit anymore (as it happens in the `poll` method, not called anymore).  If the application restarts, it resumes from the last committed offset (or apply the `auto.offset.reset` strategy, defaulting to `latest`, if there are no offsets for this group yet).  It may re-process a set of messages (it's the application's responsibility to handle duplicates), but at least nothing is lost."
+msgstr "相当不错，对吗？如果应用程序不能处理一个消息，它会抛出一个异常，这个异常要么中断while循环，要么被优雅地处理（在 `processRetrievedRecords` 方法中）。在第一种情况下，这意味着它不会再提交（因为它发生在 `poll` 方法中，不再被调用）。如果应用程序重新启动，它将从最后提交的偏移量开始恢复（或者应用 `auto.offset.reset` 策略，默认为 `latest` ，如果该组还没有偏移量）。它可能会重新处理一组消息（处理重复的消息是应用程序的责任），但至少没有什么损失。"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:86
+#, fuzzy
+msgid "So, is there anything wrong with this? Looks wonderful... until you add a pinch of asynchrony."
+msgstr "那么，这有什么问题吗？看起来很好......直到你加入一撮异步性。"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:88
+#, fuzzy
+msgid "## What if the message's processing is asynchronous"
+msgstr "如果消息的处理是异步的，怎么办？\n"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:93
+#, fuzzy
+msgid "If the message processing is asynchronous (offloaded to another thread, use non-blocking I/O...), failures may not interrupt the while loop from above.  Failure happens asynchronously, outside the polling thread.  If the `poll` method gets called again despite a failed processing, and _auto-commit_ is still enabled, we may commit offsets while something wrong happened.  If some processing of previously retrieved records is not completed yet, while this auto commit happens, it may consider the record as processed correctly, but the outcome is unknown at that point."
+msgstr "如果消息处理是异步的(offloaded to another thread, use non-blocking I/O??)，失败可能不会中断上面的while循环。失败是异步发生的，在轮询线程之外。如果 `poll` 方法在处理失败的情况下再次被调用，并且 _自动提交_ 仍然被启用，我们可能会在发生错误的情况下提交偏移量。如果之前检索到的记录的一些处理还没有完成，而这个自动提交发生了，它可能会认为记录被正确处理了，但结果在这时是未知的。"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:102
+#, fuzzy
+msgid "So to handle these case, we can disable the auto-commit and switch to manual commit.  In this case, it's the application's responsibility to commit the offsets regularly.  So, the application needs to track the polled records, their processing, failures, and periodically commits the offsets.  It might not look too tricky, but actually, it can become quite challenging.  Again, in asynchronous scenarios, you may complete the processing of messages in various orders.  For example, if you call a remote service for each record, the responses may not come in the same orders as the records.  You need to track messages individually and only commit the offsets if all the previous messages are processed successfully.  Without this, you may commit offsets while there is processing from previous records still in progress or even failed processing."
+msgstr "所以为了处理这些情况，我们可以禁用自动提交，转为手动提交。在这种情况下，定期提交偏移量是应用程序的责任。所以，应用程序需要跟踪轮询的记录，它们的处理情况，失败情况，并定期提交偏移量。这看起来并不复杂，但实际上，它可能变得相当具有挑战性。同样，在异步场景中，你可能以不同的顺序完成消息的处理。例如，如果你为每条记录调用一个远程服务，响应可能与记录的顺序不一样。你需要单独跟踪消息，并且只有在所有先前的消息被成功处理后才提交偏移量。如果不这样做，你可能会在以前的记录还在处理中的时候提交偏移，甚至是处理失败。"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:104
+#, fuzzy
+msgid "What can we do about this?"
+msgstr "对此我们能做些什么呢？"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:106
+#, fuzzy
+msgid "## Kafka connector commit strategies"
+msgstr "Kafka连接器的提交策略\n"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:108
+#, fuzzy
+msgid "When using Reactive Messaging and the Kafka connector, you entered an asynchronous world."
+msgstr "当使用Reactive Messaging和Kafka连接器时，你进入了一个异步的世界。"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:113
+#, fuzzy
+msgid "Message processing may not happen synchronously and sequentially.  When a Reactive Messaging `Message` processing completes, it acknowledges the message.  In the case of processing failures, it sends a negative acknowledgment.  The Kafka connector receives these acknowledgments and can decide what needs to be done, basically: to commit or not to commit."
+msgstr "消息处理可能不会同步和顺序地发生。当一个反应式消息 `Message` 处理完成后，它对消息进行确认。在处理失败的情况下，它会发送一个否定的确认。Kafka连接器收到这些确认后，可以决定需要做什么，基本上是：提交或不提交。"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:115
+#, fuzzy
+msgid "You can choose among three strategies:"
+msgstr "你可以在三种策略中选择。"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:117
+#, fuzzy
+msgid "throttled (default starting Quarkus 1.10)"
+msgstr "节流（默认从Quarkus 1.10开始）。"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:118
+#, fuzzy
+msgid "latest (default before Quarkus 1.10)"
+msgstr "最新的（Quarkus 1.10之前默认的）。"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:119
+#, fuzzy
+msgid "ignore (default if `enabled.auto.commit=true` is set)"
+msgstr "忽略（如果设置了 `enabled.auto.commit=true` ，则默认为忽略）。"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:121
+#, fuzzy
+msgid "This is configured using the `commit-strategy` attribute:"
+msgstr "这是用 `commit-strategy` 属性配置的。"
+
+#. type: delimited block -
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:126
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:142
+#, no-wrap
+msgid ""
+"mp.messaging.incoming.my-channel.connector=smallrye-kafka\n"
+"mp.messaging.incoming.my-channel.commit-strategy=throttled\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:129
+#, fuzzy
+msgid "## The throttled strategy"
+msgstr "节流的策略\n"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:134
+#, fuzzy
+msgid "The throttled strategy can be seen as an asynchronous variant of the default \"auto-commit\" behavior described above.  When enabled, the connector tracks each received message and monitors their acknowledgment.  When the connector finds out that all messages before a position are processed successfully, it commits that position.  This commit happens periodically to avoid committing too often."
+msgstr "节流策略可以被看作是上述默认 \"自动提交 \"行为的异步变体。当启用时，连接器会跟踪每个收到的消息，并监控它们的确认情况。当连接器发现某个位置之前的所有消息都被成功处理，它就会提交该位置。这种提交是定期发生的，以避免提交过于频繁。"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:137
+#, fuzzy
+msgid "This strategy provides very good throughput and can handle asynchronous processing.  To enable this strategy configures the channel with:"
+msgstr "这个策略提供了非常好的吞吐量，并且可以处理异步处理。要启用这个策略，需要在通道上配置。"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:150
+#, fuzzy
+msgid "There is one detail to mention.  If an old message is neither acked nor nacked, the strategy cannot commit the position anymore.  It will enqueue messages forever, waiting for that missing ack to happen.  It can lead to out of memory, as the connector would never be able to commit a position and to clear the queue.  Fortunately, the strategy detects this situation and reports a failure to the connector, marking the application unhealthy.  The `throttled.unprocessed-record-max-age.ms` attribute configures the deadline for each message to be acked or nacked before being considered as a poison pill (Default is 1 minute)."
+msgstr "有一个细节需要提及。如果一个旧的信息既没有被应答也没有被拒绝，策略就不能再提交头寸。它将永远排队等候消息，等待那个缺失的ack发生。这可能会导致内存不足，因为连接器将永远无法提交头寸和清除队列。幸运的是，策略会检测到这种情况，并向连接器报告失败，标记应用程序不健康。 `throttled.unprocessed-record-max-age.ms` 属性配置了每个消息在被认为是毒丸之前被吸纳或拒绝的最后期限（默认是1分钟）。"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:152
+#, fuzzy
+msgid "## The Ignore strategy"
+msgstr "忽略战略\n"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:157
+#, fuzzy
+msgid "The connector uses this strategy by default if you explicitly enabled Kafka's auto-commit (with the `enable.auto.commit` attribute set to `true`).  In this case, the connector ignores acknowledgment and won't commit the offsets.  The Kafka consumer commits the offset periodically when polling batches, as described above.  This strategy works well if the message processing is synchronous and failures handled gracefully."
+msgstr "如果你明确启用了Kafka的自动提交功能（将 `enable.auto.commit` 属性设置为 `true` ），那么连接器默认使用这种策略。在这种情况下，连接器会忽略确认，不会提交偏移量。Kafka消费者在轮询批处理时定期提交偏移量，如上所述。如果消息处理是同步的，并且故障处理是优雅的，那么这个策略就很有效。"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:159
+#, fuzzy
+msgid "You can enable this strategy by configured enabled-auto-commit to true:"
+msgstr "你可以通过将enabled-auto-commit配置为true来启用这个策略。"
+
+#. type: delimited block -
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:164
+#, no-wrap
+msgid ""
+"mp.messaging.incoming.my-channel.connector=smallrye-kafka\n"
+"mp.messaging.incoming.my-channel.enable.auto.commit=true\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:167
+#, fuzzy
+msgid "Be aware that starting Quarkus 1.9, auto commit is disabled by default. So you need to explicitly enable it."
+msgstr "请注意，从Quarkus 1.9开始，自动提交默认是禁用的。所以你需要明确地启用它。"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:171
+#, fuzzy
+msgid "If you don't enable auto-commit, using this strategy is still possible but will never commit the offsets.  In other words, you would restart from the oldest stored records every time.  While there are use cases for this, double-check that's what you want. In this case, enable this strategy with:"
+msgstr "如果你不启用自动提交，使用这种策略仍然是可能的，但永远不会提交偏移量。换句话说，你每次都会从最古老的存储记录重新开始。虽然有这样的用例，但要仔细检查这是否是你想要的。在这种情况下，用以下方法启用这个策略。"
+
+#. type: delimited block -
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:176
+#, no-wrap
+msgid ""
+"mp.messaging.incoming.my-channel.connector=smallrye-kafka\n"
+"mp.messaging.incoming.my-channel.commit-strategy=ignore\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:179
+#, fuzzy
+msgid "## The latest strategy"
+msgstr "最新战略\n"
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:183
+#, no-wrap
+msgid ""
+"This strategy commits the offset every time a message is acknowledged.\n"
+"This strategy tends to commit often, and so decrease the throughput.   \n"
+"However, it also reduces the risk of duplicates if the messages are processed synchronously. \n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:185
+msgid "Enable this strategy with:"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:190
+#, no-wrap
+msgid ""
+"mp.messaging.incoming.my-channel.connector=smallrye-kafka\n"
+"mp.messaging.incoming.my-channel.commit-strategy=latest\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:193
+msgid "## Conclusion"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:198
+msgid "In general, use the `throttled` strategy.  It provides high-throughput and handles the asynchronous use cases.  This strategy is becoming the default strategy in Quarkus 1.10.  You can also switch to the `ignore` strategy if the Kafka auto-commit is acceptable for you, or if you want to skip offset commit altogether."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_posts/2020-11-03-kafka-commit-strategies.adoc:200
+msgid "That concludes this blog post.  The next one will discuss how to receive and produce Cloud Events using the Kafka connector."
+msgstr ""

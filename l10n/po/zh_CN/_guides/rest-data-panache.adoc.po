@@ -1,0 +1,898 @@
+# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2022-05-12 15:52+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. This guide is maintained in the main Quarkus repository
+#. and pull requests should be submitted there:
+#. https://github.com/quarkusio/quarkus/tree/main/docs/src/main/asciidoc
+#. type: Title =
+#: upstream/_guides/rest-data-panache.adoc:6
+#, fuzzy, no-wrap
+msgid "Generating JAX-RS resources with Panache"
+msgstr "用Panache生成JAX-RS资源"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:13
+#, fuzzy
+msgid "A lot of web applications are monotonous CRUD applications with REST APIs that are tedious to write.  To streamline this task, REST Data with Panache extension can generate the basic CRUD endpoints for your entities and repositories."
+msgstr "很多网络应用是单调的CRUD应用，带有REST API，编写起来很乏味。为了简化这项工作，REST Data with Panache扩展可以为你的实体和存储库生成基本的CRUD端点。"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:16
+#, fuzzy
+msgid "While this extension is still experimental and provides a limited feature set, we hope to get an early feedback for it.  Currently, this extension supports Hibernate ORM and MongoDB with Panache and can generate CRUD resources that work with `application/json` and `application/hal+json` content."
+msgstr "虽然这个扩展仍然是实验性的，并提供了有限的功能集，但我们希望能得到早期的反馈。目前，这个扩展支持Hibernate ORM和带有Panache的MongoDB，并能生成与 `application/json` 和 `application/hal+json` 内容一起工作的CRUD资源。"
+
+#. type: Title ==
+#: upstream/_guides/rest-data-panache.adoc:19
+#, fuzzy, no-wrap
+msgid "Setting up REST Data with Panache"
+msgstr "用Panache设置REST数据"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:22
+#, fuzzy
+msgid "Quarkus provides the following extensions to set up REST Data with Panache. Please, check out the next compatibility table to use the right one according to the technology you're using:"
+msgstr "Quarkus提供了以下扩展来设置Panache的REST数据。请查看下一个兼容性表，根据你所使用的技术使用正确的扩展。"
+
+#. type: Block title
+#: upstream/_guides/rest-data-panache.adoc:23
+#, fuzzy, no-wrap
+msgid "Compatibility Table"
+msgstr "兼容性表"
+
+#. type: Table
+#: upstream/_guides/rest-data-panache.adoc:25
+#, fuzzy, no-wrap
+msgid "Extension"
+msgstr "延伸"
+
+#. type: Table
+#: upstream/_guides/rest-data-panache.adoc:25
+#, fuzzy, no-wrap
+msgid "Hibernate"
+msgstr "冬眠"
+
+#. type: Table
+#: upstream/_guides/rest-data-panache.adoc:27
+#, fuzzy, no-wrap
+msgid "RESTEasy"
+msgstr "锐意进取"
+
+#. type: Table
+#: upstream/_guides/rest-data-panache.adoc:28
+#, fuzzy, no-wrap
+msgid "<<hr-hibernate-orm, quarkus-hibernate-orm-rest-data-panache>>"
+msgstr "link:#hr-hibernate-orm[quarkus-hibernate-orm-rest-data-panache]"
+
+#. type: Table
+#: upstream/_guides/rest-data-panache.adoc:29
+#: upstream/_guides/rest-data-panache.adoc:37
+#, fuzzy, no-wrap
+msgid "`ORM`"
+msgstr " `ORM` "
+
+#. type: Table
+#: upstream/_guides/rest-data-panache.adoc:31
+#: upstream/_guides/rest-data-panache.adoc:38
+#, fuzzy, no-wrap
+msgid "`Classic and Reactive`"
+msgstr " `Classic and Reactive` "
+
+#. type: Table
+#: upstream/_guides/rest-data-panache.adoc:32
+#, fuzzy, no-wrap
+msgid "<<hr-hibernate-reactive, quarkus-hibernate-reactive-rest-data-panache>>"
+msgstr "link:#hr-hibernate-reactive[quarkus-hibernate-reactive-rest-data-panache]"
+
+#. type: Table
+#: upstream/_guides/rest-data-panache.adoc:33
+#: upstream/_guides/rest-data-panache.adoc:35
+#, fuzzy, no-wrap
+msgid "`Reactive`"
+msgstr " `Reactive` "
+
+#. type: Table
+#: upstream/_guides/rest-data-panache.adoc:36
+#, fuzzy, no-wrap
+msgid "<<hr-mongodb, quarkus-mongodb-rest-data-panache>>"
+msgstr "link:#hr-mongodb[quarkus-mongodb-rest-data-panache]"
+
+#. type: Title ===
+#: upstream/_guides/rest-data-panache.adoc:41
+#, fuzzy, no-wrap
+msgid "Hibernate ORM"
+msgstr "Hibernate ORM"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:44
+#: upstream/_guides/rest-data-panache.adoc:129
+#, fuzzy
+msgid "Add the required dependencies to your build file"
+msgstr "在你的构建文件中添加所需的依赖性"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:45
+#, fuzzy
+msgid "Hibernate ORM REST Data with Panache extension (`quarkus-hibernate-orm-rest-data-panache`)"
+msgstr "Hibernate ORM REST数据与Panache扩展 ( `quarkus-hibernate-orm-rest-data-panache` )"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:46
+#, fuzzy
+msgid "A JDBC driver extension (`quarkus-jdbc-postgresql`, `quarkus-jdbc-h2`, `quarkus-jdbc-mariadb`, ...)"
+msgstr "一个JDBC驱动扩展( `quarkus-jdbc-postgresql` , `quarkus-jdbc-h2` , `quarkus-jdbc-mariadb` , ...)"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:47
+#, fuzzy
+msgid "One of the RESTEasy JSON serialization extensions (the extension supports both RESTEasy Classic and RESTEasy Reactive)"
+msgstr "RESTEasy JSON序列化扩展之一（该扩展同时支持RESTEasy Classic和RESTEasy Reactive）。"
+
+#. type: Block title
+#: upstream/_guides/rest-data-panache.adoc:49
+#: upstream/_guides/rest-data-panache.adoc:133
+#, fuzzy, no-wrap
+msgid "pom.xml"
+msgstr "pom.xml"
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:59
+#, no-wrap
+msgid ""
+"<dependency>\n"
+"    <groupId>io.quarkus</groupId>\n"
+"    <artifactId>quarkus-hibernate-orm-rest-data-panache</artifactId>\n"
+"</dependency>\n"
+"<dependency>\n"
+"    <groupId>io.quarkus</groupId>\n"
+"    <artifactId>quarkus-jdbc-postgresql</artifactId>\n"
+"</dependency>\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:65
+#, no-wrap
+msgid ""
+"<!-- Use this if you are using RESTEasy Reactive -->\n"
+"<dependency>\n"
+"    <groupId>io.quarkus</groupId>\n"
+"    <artifactId>quarkus-resteasy-reactive-jackson</artifactId>\n"
+"</dependency>\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:73
+#, no-wrap
+msgid ""
+"<!-- Use this if you are going to use RESTEasy Classic -->\n"
+"<!--\n"
+"<dependency>\n"
+"    <groupId>io.quarkus</groupId>\n"
+"    <artifactId>quarkus-resteasy-jackson</artifactId>\n"
+"</dependency>\n"
+"-->\n"
+msgstr ""
+
+#. type: Block title
+#: upstream/_guides/rest-data-panache.adoc:76
+#: upstream/_guides/rest-data-panache.adoc:164
+#, fuzzy, no-wrap
+msgid "build.gradle"
+msgstr "build.gradle"
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:80
+#, no-wrap
+msgid ""
+"implementation(\"io.quarkus:quarkus-hibernate-orm-rest-data-panache\")\n"
+"implementation(\"io.quarkus:quarkus-jdbc-postgresql\")\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:83
+#, no-wrap
+msgid ""
+"// Use this if you are using RESTEasy Reactive\n"
+"implementation(\"io.quarkus:quarkus-resteasy-reactive-jackson\")\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:86
+#, no-wrap
+msgid ""
+"// Use this if you are going to use RESTEasy Classic\n"
+"// implementation(\"io.quarkus:quarkus-resteasy-jackson\")\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:89
+#, fuzzy
+msgid "Implement the Panache entities and/or repositories as explained in the xref:hibernate-orm-panache.adoc[Hibernate ORM with Panache guide]."
+msgstr "按照 link:hibernate-orm-panache.html[Hibernate ORM with Panache指南] 中的解释，实现Panache实体和/或存储库。"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:90
+#: upstream/_guides/rest-data-panache.adoc:124
+#: upstream/_guides/rest-data-panache.adoc:179
+#, fuzzy
+msgid "Define the interfaces for generation as explained in <<hr-generating-resources, the resource generation section>>."
+msgstr "按照 link:#hr-generating-resources[资源生成部分] 的解释，定义生成的接口。"
+
+#. type: Title ===
+#: upstream/_guides/rest-data-panache.adoc:92
+#, fuzzy, no-wrap
+msgid "Hibernate Reactive"
+msgstr "Hibernate反应式"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:95
+#, fuzzy
+msgid "Add the required dependencies to your `pom.xml`"
+msgstr "将所需的依赖项添加到你的 `pom.xml` "
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:96
+#, fuzzy
+msgid "Hibernate Reactive REST Data with Panache extension (`quarkus-hibernate-reactive-rest-data-panache`)"
+msgstr "Hibernate Reactive REST Data with Panache extension ( `quarkus-hibernate-reactive-rest-data-panache` )"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:97
+#, fuzzy
+msgid "A Vert.x reactive database driver extension (`quarkus-reactive-pg-client`, `quarkus-reactive-mysql-client`, ...)"
+msgstr "一个Vert.x反应式数据库驱动扩展( `quarkus-reactive-pg-client` , `quarkus-reactive-mysql-client` , ...)"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:98
+#, fuzzy
+msgid "One of the RESTEasy Reactive serialization extensions (`quarkus-resteasy-reactive-jsonb`, `quarkus-resteasy-reactive-jackson`, ...)"
+msgstr "RESTEasy Reactive序列化扩展之一 ( `quarkus-resteasy-reactive-jsonb` , `quarkus-resteasy-reactive-jackson` , ...)"
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:120
+#, no-wrap
+msgid ""
+"<dependencies>\n"
+"    <dependency>\n"
+"        <groupId>io.quarkus</groupId>\n"
+"        <artifactId>quarkus-hibernate-reactive-rest-data-panache</artifactId>\n"
+"    </dependency>\n"
+"    <dependency>\n"
+"        <groupId>io.quarkus</groupId>\n"
+"        <artifactId>quarkus-reactive-pg-client</artifactId>\n"
+"    </dependency>\n"
+"   <!-- Use these if you are using RESTEasy Reactive Jackson -->\n"
+"    <dependency>\n"
+"        <groupId>io.quarkus</groupId>\n"
+"        <artifactId>quarkus-resteasy-reactive-jackson</artifactId>\n"
+"    </dependency>\n"
+"    <dependency>\n"
+"        <groupId>io.quarkus</groupId>\n"
+"        <artifactId>quarkus-resteasy-reactive-links</artifactId>\n"
+"    </dependency>\n"
+"</dependencies>\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:123
+#, fuzzy
+msgid "Implement the Panache entities and/or repositories as explained in the xref:hibernate-reactive-panache.adoc[Hibernate Reactive with Panache guide]."
+msgstr "按照 link:hibernate-reactive-panache.html[Hibernate Reactive with Panache指南] 中的解释，实现Panache实体和/或存储库。"
+
+#. type: Title ===
+#: upstream/_guides/rest-data-panache.adoc:126
+#, fuzzy, no-wrap
+msgid "MongoDB"
+msgstr "梦之城_梦之城娱乐_梦之城国际娱乐_梦之城国际娱乐平台"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:130
+#, fuzzy
+msgid "MongoDB REST Data with Panache extension (`quarkus-mongodb-rest-data-panache`)"
+msgstr "MongoDB REST数据与Panache扩展 ( `quarkus-mongodb-rest-data-panache` )"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:131
+#, fuzzy
+msgid "One of the RESTEasy JSON serialization extensions (`quarkus-resteasy-reactive-jackson` or `quarkus-resteasy-reactive-jsonb`)"
+msgstr "RESTEasy的一个JSON序列化扩展 ( `quarkus-resteasy-reactive-jackson` 或 `quarkus-resteasy-reactive-jsonb` )"
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:139
+#, no-wrap
+msgid ""
+"<dependency>\n"
+"    <groupId>io.quarkus</groupId>\n"
+"    <artifactId>quarkus-mongodb-rest-data-panache</artifactId>\n"
+"</dependency>\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:149
+#, no-wrap
+msgid ""
+"<!-- Use these if you are using RESTEasy Reactive -->\n"
+"<dependency>\n"
+"    <groupId>io.quarkus</groupId>\n"
+"    <artifactId>quarkus-resteasy-reactive-jackson</artifactId>\n"
+"</dependency>\n"
+"<dependency>\n"
+"    <groupId>io.quarkus</groupId>\n"
+"    <artifactId>quarkus-resteasy-reactive-links</artifactId>\n"
+"</dependency>\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:161
+#, no-wrap
+msgid ""
+"<!-- Use these if you are going to use RESTEasy Classic -->\n"
+"<!--\n"
+"<dependency>\n"
+"    <groupId>io.quarkus</groupId>\n"
+"    <artifactId>quarkus-resteasy-jackson</artifactId>\n"
+"</dependency>\n"
+"<dependency>\n"
+"    <groupId>org.jboss.resteasy</groupId>\n"
+"    <artifactId>resteasy-links</artifactId>\n"
+"</dependency>\n"
+"-->\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:167
+#, no-wrap
+msgid "implementation(\"io.quarkus:quarkus-mongodb-rest-data-panache\")\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:171
+#, no-wrap
+msgid ""
+"// Use these if you are using RESTEasy Reactive\n"
+"implementation(\"io.quarkus:quarkus-resteasy-reactive-jackson\")\n"
+"implementation(\"io.quarkus:quarkus-resteasy-reactive-links\")\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:175
+#, no-wrap
+msgid ""
+"// Use these if you are going to use RESTEasy Classic\n"
+"// implementation(\"io.quarkus:quarkus-resteasy-jackson\")\n"
+"// implementation(\"io.quarkus:resteasy-links\")\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:178
+#, fuzzy
+msgid "Implement the Panache entities and/or repositories as explained in the xref:mongodb-panache.adoc[MongoDB with Panache guide]."
+msgstr "按照 link:mongodb-panache.html[MongoDB with Panache指南] 中的解释，实现Panache实体和/或存储库。"
+
+#. type: Title ==
+#: upstream/_guides/rest-data-panache.adoc:181
+#, fuzzy, no-wrap
+msgid "Generating resources"
+msgstr "生成资源"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:186
+#, fuzzy
+msgid "REST Data with Panache generates JAX-RS resources based on the interfaces available in your application.  For each entity and repository that you want to generate, provide a resource interface.  _Do not implement these interfaces and don't provide custom methods because they will be ignored._ You can, however, override the methods from the extended interface in order to customize them (see the section at the end)."
+msgstr "REST Data with Panache会根据你的应用程序中可用的接口生成JAX-RS资源。对于你想生成的每个实体和资源库，提供一个资源接口。 _不要实现这些接口，也不要提供自定义方法，因为它们会被忽略。然_ 而，你可以覆盖扩展接口中的方法，以便对其进行自定义（见最后一节）。"
+
+#. type: Title ===
+#: upstream/_guides/rest-data-panache.adoc:187
+#, fuzzy, no-wrap
+msgid "PanacheEntityResource"
+msgstr "磐石实体资源（PanacheEntityResource"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:190
+#, fuzzy
+msgid "If your application has an entity (e.g. `Person`) that extends either `PanacheEntity` or `PanacheEntityBase` class, you could instruct REST Data with Panache to generate its JAX-RS resource with the following interface:"
+msgstr "如果你的应用程序有一个实体（例如 `Person` ），它扩展了 `PanacheEntity` 或 `PanacheEntityBase` 类，你可以指示 REST Data with Panache 用以下接口生成其 JAX-RS 资源。"
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:195
+#, no-wrap
+msgid ""
+"public interface PeopleResource extends PanacheEntityResource<Person, Long> {\n"
+"}\n"
+msgstr ""
+
+#. type: Title ===
+#: upstream/_guides/rest-data-panache.adoc:197
+#, fuzzy, no-wrap
+msgid "PanacheRepositoryResource"
+msgstr "储存库资源"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:200
+#, fuzzy
+msgid "If your application has a simple entity (e.g. `Person`) and a repository (e.g. `PersonRepository`) that implements either `PanacheRepository` or `PanacheRepositoryBase` interface, you could instruct REST Data with Panache to generate its JAX-RS resource with the following interface:"
+msgstr "如果你的应用程序有一个简单的实体（例如 `Person` ）和一个实现了 `PanacheRepository` 或 `PanacheRepositoryBase` 接口的资源库（例如 `PersonRepository` ），你可以指示 REST Data with Panache 用以下接口生成其 JAX-RS 资源。"
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:205
+#, no-wrap
+msgid ""
+"public interface PeopleResource extends PanacheRepositoryResource<PersonRepository, Person, Long> {\n"
+"}\n"
+msgstr ""
+
+#. type: Title ===
+#: upstream/_guides/rest-data-panache.adoc:207
+#, fuzzy, no-wrap
+msgid "PanacheMongoEntityResource"
+msgstr "淘宝网上的实体资源"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:210
+#, fuzzy
+msgid "If your application has an entity (e.g. `Person`) that extends either `PanacheMongoEntity` or `PanacheMongoEntityBase` class, you could instruct REST Data with Panache to generate its JAX-RS resource with the following interface:"
+msgstr "如果你的应用程序有一个实体（例如 `Person` ），它扩展了 `PanacheMongoEntity` 或 `PanacheMongoEntityBase` 类，你可以指示 REST Data with Panache 用以下接口生成其 JAX-RS 资源。"
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:215
+#, no-wrap
+msgid ""
+"public interface PeopleResource extends PanacheMongoEntityResource<Person, Long> {\n"
+"}\n"
+msgstr ""
+
+#. type: Title ===
+#: upstream/_guides/rest-data-panache.adoc:217
+#, fuzzy, no-wrap
+msgid "PanacheMongoRepositoryResource"
+msgstr "储存库资源（PanacheMongoRepositoryResource"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:220
+#, fuzzy
+msgid "If your application has a simple entity (e.g. `Person`) and a repository (e.g. `PersonRepository`) that implements either `PanacheMongoRepository` or `PanacheMongoRepositoryBase` interface, you could instruct REST Data with Panache to generate its JAX-RS resource with the following interface:"
+msgstr "如果你的应用程序有一个简单的实体（例如 `Person` ）和一个实现了 `PanacheMongoRepository` 或 `PanacheMongoRepositoryBase` 接口的资源库（例如 `PersonRepository` ），你可以指示 REST Data with Panache 用以下接口生成其 JAX-RS 资源。"
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:225
+#, no-wrap
+msgid ""
+"public interface PeopleResource extends PanacheMongoRepositoryResource<PersonRepository, Person, Long> {\n"
+"}\n"
+msgstr ""
+
+#. type: Title ===
+#: upstream/_guides/rest-data-panache.adoc:227
+#, fuzzy, no-wrap
+msgid "The generated resource"
+msgstr "生成的资源"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:231
+#, fuzzy
+msgid "The generated resources will be functionally equivalent for both entities and repositories.  The only difference being the particular data access pattern and data storage in use."
+msgstr "生成的资源对实体和资源库来说在功能上都是等同的。唯一的区别是使用的特定数据访问模式和数据存储。"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:234
+#, fuzzy
+msgid "If you have defined one of the `PeopleResource` interfaces mentioned above, this extension will generate its implementation using a particular data access strategy.  The implemented class then will be used by a generated JAX-RS resource, which will look like this:"
+msgstr "如果你已经定义了上面提到的 `PeopleResource` 接口之一，这个扩展将使用特定的数据访问策略生成其实现。然后，这个实现的类将被生成的JAX-RS资源所使用，它看起来像这样。"
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:240
+#, no-wrap
+msgid ""
+"public class PeopleResourceJaxRs { // The actual class name is going to be unique\n"
+"    @Inject\n"
+"    PeopleResource resource;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:251
+#, no-wrap
+msgid ""
+"    @GET\n"
+"    @Path(\"{id}\")\n"
+"    @Produces(\"application/json\")\n"
+"    public Person get(@PathParam(\"id\") Long id){\n"
+"        Person person = resource.get(id);\n"
+"        if (person == null) {\n"
+"            throw new WebApplicationException(404);\n"
+"        }\n"
+"        return person;\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:262
+#, no-wrap
+msgid ""
+"    @GET\n"
+"    @Produces(\"application/json\")\n"
+"    public Response list(@QueryParam(\"sort\") List<String> sortQuery,\n"
+"            @QueryParam(\"page\") @DefaultValue(\"0\") int pageIndex,\n"
+"            @QueryParam(\"size\") @DefaultValue(\"20\") int pageSize) {\n"
+"        Page page = Page.of(pageIndex, pageSize);\n"
+"        Sort sort = getSortFromQuery(sortQuery);\n"
+"        List<Person> people = resource.list(page, sort);\n"
+"        // ... build a response with page links and return a 200 response with a list\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:271
+#, no-wrap
+msgid ""
+"    @Transactional\n"
+"    @POST\n"
+"    @Consumes(\"application/json\")\n"
+"    @Produces(\"application/json\")\n"
+"    public Response add(Person personToSave) {\n"
+"        Person person = resource.add(person);\n"
+"        // ... build a new location URL and return 201 response with an entity\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:285
+#, no-wrap
+msgid ""
+"    @Transactional\n"
+"    @PUT\n"
+"    @Path(\"{id}\")\n"
+"    @Consumes(\"application/json\")\n"
+"    @Produces(\"application/json\")\n"
+"    public Response update(@PathParam(\"id\") Long id, Person personToSave) {\n"
+"        if (resource.get(id) == null) {\n"
+"            Person person = resource.update(id, personToSave);\n"
+"            return Response.status(204).build();\n"
+"        }\n"
+"        Person person = resource.update(id, personToSave);\n"
+"        // ... build a new location URL and return 201 response with an entity\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:295
+#, no-wrap
+msgid ""
+"    @Transactional\n"
+"    @DELETE\n"
+"    @Path(\"{id}\")\n"
+"    public void delete(@PathParam(\"id\") Long id) {\n"
+"        if (!resource.delete(id)) {\n"
+"            throw new WebApplicationException(404);\n"
+"        }\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Title ==
+#: upstream/_guides/rest-data-panache.adoc:297
+#, fuzzy, no-wrap
+msgid "Resource customisation"
+msgstr "资源定制"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:301
+#, fuzzy
+msgid "REST Data with Panache provides a `@ResourceProperties` and `@MethodProperties` annotations that can be used to customize certain features of the resource.  It can be used in your resource interface:"
+msgstr "REST Data with Panache提供了一个 `@ResourceProperties` 和 `@MethodProperties` 注释，可以用来定制资源的某些功能。它可以在你的资源界面中使用。"
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:308
+#, no-wrap
+msgid ""
+"@ResourceProperties(hal = true, path = \"my-people\")\n"
+"public interface PeopleResource extends PanacheEntityResource<Person, Long> {\n"
+"    @MethodProperties(path = \"all\")\n"
+"    List<Person> list(Page page, Sort sort);\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:312
+#, no-wrap
+msgid ""
+"    @MethodProperties(exposed = false)\n"
+"    boolean delete(Long id);\n"
+"}\n"
+msgstr ""
+
+#. type: Title ===
+#: upstream/_guides/rest-data-panache.adoc:314
+#, fuzzy, no-wrap
+msgid "Available options"
+msgstr "可用的选项"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:317
+#, fuzzy
+msgid "`@ResourceProperties`"
+msgstr " `@ResourceProperties` "
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:319
+#, fuzzy
+msgid "`exposed` - whether resource could be exposed. A global resource property that can be overridden for each method. Default is `true`."
+msgstr " `exposed` - 资源是否可以被暴露。一个全局资源属性，可以为每个方法重写。默认是 。 `true` "
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:320
+#, fuzzy
+msgid "`path` - resource base path. Default path is a hyphenated lowercase resource name without a suffix of `resource` or `controller`."
+msgstr " `path` - 资源的基本路径。默认路径是一个连字符的小写资源名称，没有后缀 或 。 `resource` `controller` "
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:324
+#, fuzzy
+msgid "`paged` - whether collection responses should be paged or not.  First, last, previous and next page URIs are included in the response headers if they exist.  Request page index and size are taken from the `page` and `size` query parameters that default to `0` and `20` respectively.  Default is `true`."
+msgstr " `paged` - 采集响应是否应该被分页。如果存在第一页、最后一页、上一页和下一页的URI，它们将被包含在响应头文件中。请求页面索引和大小取自 和 查询参数，默认为 和 。默认是 。 `page` `size` `0` `20` `true` "
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:326
+#, fuzzy
+msgid "`hal` - in addition to the standard `application/json` responses, generates additional methods that can return `application/hal+json` responses if requested via an `Accept` header.  Default is `false`."
+msgstr " `hal` - 除了标准的 响应外，如果通过 标头请求，还可以生成额外的方法，返回 响应。默认是 。 `application/json` `Accept` `application/hal+json` `false` "
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:327
+#, fuzzy
+msgid "`halCollectionName` - name that should be used when generating a hal collection response. Default name is a hyphenated lowercase resource name without a suffix of `resource` or `controller`."
+msgstr " `halCollectionName` - 生成hal集合响应时应使用的名称。默认名称是一个连字符的小写资源名称，没有后缀 或 。 `resource` `controller` "
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:329
+#, fuzzy
+msgid "`@MethodProperties`"
+msgstr " `@MethodProperties` "
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:331
+#, fuzzy
+msgid "`exposed` - does not expose a particular HTTP verb when set to `false`. Default is `true`."
+msgstr " `exposed` - 当设置为 ，则不暴露特定的HTTP动词。默认是 。 `false` `true` "
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:332
+#, fuzzy
+msgid "`path` - operation path (this is appended to the resource base path). Default is an empty string."
+msgstr " `path` - 操作路径（这被附加到资源基础路径上）。默认是一个空字符串。"
+
+#. type: Title ==
+#: upstream/_guides/rest-data-panache.adoc:333
+#, fuzzy, no-wrap
+msgid "Query parameters"
+msgstr "查询参数"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:336
+#, fuzzy
+msgid "REST Data with Panache supports the following query parameters with the generated resources."
+msgstr "REST Data with Panache支持以下查询参数与生成的资源。"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:339
+#, fuzzy
+msgid "`page` - a page number which should be returned by a list operation.  It applies to the paged resources only and is a number starting with 0. Default is 0."
+msgstr " `page` - 列表操作应该返回的页数。它只适用于被分页的资源，是一个从0开始的数字。 默认是0。"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:341
+#, fuzzy
+msgid "`size` - a page size which should be returned by a list operation.  It applies to the paged resources only and is a number starting with 1. Default is 20."
+msgstr " `size` - 应该由列表操作返回的页面大小。它只适用于被分页的资源，是一个从1开始的数字。 默认是20。"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:344
+#, fuzzy
+msgid "`sort` - a comma separated list of fields which should be used for sorting a result of a list operation.  Fields are sorted in the ascending order unless they're prefixed with a `-`.  E.g. `?sort=name,-age` will sort the result by the name ascending by the age descending."
+msgstr " `sort` - 逗号分隔的字段列表，用于对列表操作的结果进行排序。字段以升序排序，除非它们的前缀是 。例如， ，将按姓名升序排序，按年龄降序排序。 `-` `?sort=name,-age` "
+
+#. type: Title ==
+#: upstream/_guides/rest-data-panache.adoc:345
+#, fuzzy, no-wrap
+msgid "Response body examples"
+msgstr "答复体例"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:349
+#, fuzzy
+msgid "As mentioned above REST Data with Panache supports the `application/json` and `application/hal+json` response content types.  Here are a couple of examples of how a response body would look like for the `get` and `list` operations assuming there are five `Person` records in a database."
+msgstr "如上所述，REST Data with Panache支持 `application/json` 和 `application/hal+json` 响应内容类型。下面是几个例子，假设数据库中有5条 `Person` 记录，那么 `get` 和 `list` 操作的响应体是什么样子的。"
+
+#. type: Title ===
+#: upstream/_guides/rest-data-panache.adoc:350
+#, fuzzy, no-wrap
+msgid "GET /people/1"
+msgstr "GET /people/1"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:353
+#: upstream/_guides/rest-data-panache.adoc:394
+#, fuzzy
+msgid "`Accept: application/json`"
+msgstr " `Accept: application/json` "
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:361
+#, no-wrap
+msgid ""
+"{\n"
+"  \"id\": 1,\n"
+"  \"name\": \"John Johnson\",\n"
+"  \"birth\": \"1988-01-10\"\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:364
+#: upstream/_guides/rest-data-panache.adoc:413
+#, fuzzy
+msgid "`Accept: application/hal+json`"
+msgstr " `Accept: application/hal+json` "
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:389
+#, no-wrap
+msgid ""
+"{\n"
+"  \"id\": 1,\n"
+"  \"name\": \"John Johnson\",\n"
+"  \"birth\": \"1988-01-10\",\n"
+"  \"_links\": {\n"
+"    \"self\": {\n"
+"      \"href\": \"http://example.com/people/1\"\n"
+"    },\n"
+"    \"remove\": {\n"
+"      \"href\": \"http://example.com/people/1\"\n"
+"    },\n"
+"    \"update\": {\n"
+"      \"href\": \"http://example.com/people/1\"\n"
+"    },\n"
+"    \"add\": {\n"
+"      \"href\": \"http://example.com/people\"\n"
+"    },\n"
+"    \"list\": {\n"
+"      \"href\": \"http://example.com/people\"\n"
+"    }\n"
+"  }\n"
+"}\n"
+msgstr ""
+
+#. type: Title ===
+#: upstream/_guides/rest-data-panache.adoc:391
+#, fuzzy, no-wrap
+msgid "GET /people?page=0&size=2"
+msgstr "GET /people?page=0&size=2"
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:409
+#, no-wrap
+msgid ""
+"[\n"
+"  {\n"
+"    \"id\": 1,\n"
+"    \"name\": \"John Johnson\",\n"
+"    \"birth\": \"1988-01-10\"\n"
+"  },\n"
+"  {\n"
+"    \"id\": 2,\n"
+"    \"name\": \"Peter Peterson\",\n"
+"    \"birth\": \"1986-11-20\"\n"
+"  }\n"
+"]\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/rest-data-panache.adoc:481
+#, no-wrap
+msgid ""
+"{\n"
+"  \"_embedded\": [\n"
+"    {\n"
+"      \"id\": 1,\n"
+"      \"name\": \"John Johnson\",\n"
+"      \"birth\": \"1988-01-10\",\n"
+"      \"_links\": {\n"
+"        \"self\": {\n"
+"          \"href\": \"http://example.com/people/1\"\n"
+"        },\n"
+"        \"remove\": {\n"
+"          \"href\": \"http://example.com/people/1\"\n"
+"        },\n"
+"        \"update\": {\n"
+"          \"href\": \"http://example.com/people/1\"\n"
+"        },\n"
+"        \"add\": {\n"
+"          \"href\": \"http://example.com/people\"\n"
+"        },\n"
+"        \"list\": {\n"
+"          \"href\": \"http://example.com/people\"\n"
+"        }\n"
+"      }\n"
+"    },\n"
+"    {\n"
+"      \"id\": 2,\n"
+"      \"name\": \"Peter Peterson\",\n"
+"      \"birth\": \"1986-11-20\",\n"
+"      \"_links\": {\n"
+"        \"self\": {\n"
+"          \"href\": \"http://example.com/people/2\"\n"
+"        },\n"
+"        \"remove\": {\n"
+"          \"href\": \"http://example.com/people/2\"\n"
+"        },\n"
+"        \"update\": {\n"
+"          \"href\": \"http://example.com/people/2\"\n"
+"        },\n"
+"        \"add\": {\n"
+"          \"href\": \"http://example.com/people\"\n"
+"        },\n"
+"        \"list\": {\n"
+"          \"href\": \"http://example.com/people\"\n"
+"        }\n"
+"      }\n"
+"    }\n"
+"  ],\n"
+"  \"_links\": {\n"
+"    \"add\": {\n"
+"      \"href\": \"http://example.com/people\"\n"
+"    },\n"
+"    \"list\": {\n"
+"      \"href\": \"http://example.com/people\"\n"
+"    },\n"
+"    \"first\": {\n"
+"      \"href\": \"http://example.com/people?page=0&size=2\"\n"
+"    },\n"
+"    \"last\": {\n"
+"      \"href\": \"http://example.com/people?page=2&size=2\"\n"
+"    },\n"
+"    \"next\": {\n"
+"      \"href\": \"http://example.com/people?page=1&size=2\"\n"
+"    }\n"
+"  }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:484
+#, fuzzy
+msgid "Both responses would also contain these headers:"
+msgstr "这两个回应也将包含这些标题。"
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:486
+#, fuzzy
+msgid "Link: < http://example.com/people?page=0&size=2 >; rel=\"first\""
+msgstr "链接：< http://example.com/people?page=0&size=2 >; rel=\"第一\""
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:487
+msgid "Link: < http://example.com/people?page=2&size=2 >; rel=\"last\""
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:488
+msgid "Link: < http://example.com/people?page=1&size=2 >; rel=\"next\""
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/rest-data-panache.adoc:489
+msgid "A `previous` link header (and hal link) would not be included, because the previous page does not exist."
+msgstr ""

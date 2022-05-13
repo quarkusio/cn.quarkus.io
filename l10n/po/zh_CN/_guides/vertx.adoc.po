@@ -1,0 +1,868 @@
+# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2022-05-12 15:52+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. This guide is maintained in the main Quarkus repository
+#. and pull requests should be submitted there:
+#. https://github.com/quarkusio/quarkus/tree/main/docs/src/main/asciidoc
+#. type: Title =
+#: upstream/_guides/vertx.adoc:6
+#, fuzzy, no-wrap
+msgid "Using Eclipse Vert.x API from a Quarkus Application"
+msgstr "从Quarkus应用程序中使用Eclipse Vert.x API"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:12
+#, fuzzy
+msgid "https://vertx.io[Vert.x] is a toolkit for building reactive applications.  As described in the xref:quarkus-reactive-architecture.adoc[Quarkus Reactive Architecture], Quarkus uses Vert.x underneath."
+msgstr "link:https://vertx.io[Vert.x] 是一个用于构建反应式应用的工具包。正如 link:quarkus-reactive-architecture.html[Quarkus反应式架构] 中所描述的，Quarkus在下面使用Vert.x。"
+
+#. type: Positional ($1) AttributeList argument for macro 'image'
+#: upstream/_guides/vertx.adoc:13
+#, fuzzy, no-wrap
+msgid "Quarkus Reactive Core"
+msgstr "夸库斯反应性核心"
+
+#. type: Target for macro image
+#: upstream/_guides/vertx.adoc:13
+#, no-wrap
+msgid "quarkus-reactive-core.png"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:16
+#, fuzzy
+msgid "Quarkus applications can access and use the Vert.x APIs."
+msgstr "Quarkus应用程序可以访问和使用Vert.x APIs。"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:18
+#, fuzzy
+msgid "This guide presents how you can build a Quarkus application using:"
+msgstr "本指南介绍了如何使用Quarkus构建一个应用程序。"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:20
+#, fuzzy
+msgid "the managed instance of Vert.x"
+msgstr "Vert.x的管理实例"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:21
+#, fuzzy
+msgid "the Vert.x event bus"
+msgstr "Vert.x事件总线"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:22
+#, fuzzy
+msgid "the Vert.x Web Client"
+msgstr "Vert.x网络客户端"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:25
+#, fuzzy
+msgid "It's an introductory guide.  The xref:vertx-reference.adoc[Vert.x reference guide] covers more advanced features such as verticles, and native transports."
+msgstr "这是一个介绍性的指南。 link:vertx-reference.html[Vert.x参考指南] 涵盖了更多的高级功能，如垂直和本地传输。"
+
+#. type: Title ==
+#: upstream/_guides/vertx.adoc:26
+#, fuzzy, no-wrap
+msgid "Architecture"
+msgstr "建筑学"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:29
+#, fuzzy
+msgid "We are going to build a simple application exposing four HTTP endpoints:"
+msgstr "我们将建立一个简单的应用程序，暴露四个HTTP端点。"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:31
+#, fuzzy
+msgid "`/vertx/lorem` returns the content from a small file"
+msgstr " `/vertx/lorem` 返回一个小文件的内容"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:32
+#, fuzzy
+msgid "`/vertx/book` returns the content from a large file (a book)"
+msgstr " `/vertx/book` 返回一个大文件的内容（一本书）。"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:33
+#, fuzzy
+msgid "`/vertx/hello` uses the Vert.x event bus to produce the response"
+msgstr " `/vertx/hello` 使用Vert.x事件总线来产生响应"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:34
+#, fuzzy
+msgid "`/vertx/web` uses the Vert.x Web Client to retrieve data from Wikipedia"
+msgstr " `/vertx/web` 使用Vert.x Web客户端从维基百科检索数据"
+
+#. type: Positional ($1) AttributeList argument for macro 'image'
+#: upstream/_guides/vertx.adoc:35
+#, fuzzy, no-wrap
+msgid "Architecture of the Vert.x guide"
+msgstr "Vert.x指南的架构"
+
+#. type: Target for macro image
+#: upstream/_guides/vertx.adoc:35
+#, no-wrap
+msgid "quarkus-vertx-guide-architecture.png"
+msgstr ""
+
+#. type: Title ==
+#: upstream/_guides/vertx.adoc:37
+#, fuzzy, no-wrap
+msgid "Solution"
+msgstr "解决方案"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:41
+#, fuzzy
+msgid "We recommend that you follow the instructions in the following sections and create the application step by step.  However, you can go right to the completed example."
+msgstr "我们建议你按照以下章节的说明，一步一步地创建应用程序。然而，你可以直接进入已完成的例子。"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:43
+#, fuzzy
+msgid "Clone the Git repository: `git clone {quickstarts-clone-url}`, or download an {quickstarts-archive-url}[archive]."
+msgstr "克隆 Git 仓库。 `git clone {quickstarts-clone-url}` ，或者下载一个{quickstarts-archive-url}[存档]。"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:45
+#, fuzzy
+msgid "The solution is located in the `vertx-quickstart` {quickstarts-tree-url}/vertx-quickstart[directory]."
+msgstr "该解决方案位于 `vertx-quickstart` {quickstarts-treeurl}/vertx-quickstart[目录]中。"
+
+#. type: Block title
+#: upstream/_guides/vertx.adoc:47
+#, fuzzy, no-wrap
+msgid "Mutiny"
+msgstr "叛变"
+
+#. type: delimited block =
+#: upstream/_guides/vertx.adoc:51
+#, fuzzy
+msgid "This guide uses the Mutiny API.  If you are not familiar with Mutiny, check xref:mutiny-primer.adoc[Mutiny - an intuitive, reactive programming library]."
+msgstr "本指南使用Mutiny API。如果你不熟悉Mutiny，请查看 link:mutiny-primer.html[Mutiny--一个直观的、反应式的编程库] 。"
+
+#. type: Title ==
+#: upstream/_guides/vertx.adoc:54
+#, fuzzy, no-wrap
+msgid "Bootstrapping the application"
+msgstr "引导应用程序"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:58
+#, fuzzy
+msgid "Click on https://code.quarkus.io/?a=quarkus-getting-started-vertx&nc=true&e=resteasy-reactive-jackson&e=vertx[this link] to configure your application.  It selected a few extensions:"
+msgstr "点击 link:https://code.quarkus.io/?a=quarkus-getting-started-vertx&nc=true&e=resteasy-reactive-jackson&e=vertx[这个链接] 来配置你的应用程序。它选择了几个扩展。"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:60
+#, fuzzy
+msgid "`resteasy-reactive-jackson`, which also brings `resteasy-reactive`. We are going to use it to expose our HTTP endpoints."
+msgstr " `resteasy-reactive-jackson` ，它也带来了 `resteasy-reactive` 。我们将使用它来暴露我们的HTTP端点。"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:61
+#, fuzzy
+msgid "`vertx`, which provides access to the underlying managed Vert.x"
+msgstr " `vertx` ，它提供对底层管理的Vert.x的访问。"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:64
+#, fuzzy
+msgid "Click on the `Generate your application` button, download the zip file and unzip it.  Then, open the project in your favorite IDE."
+msgstr "点击 `Generate your application` 按钮，下载压缩文件并解压。然后，在你喜欢的IDE中打开该项目。"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:66
+#, fuzzy
+msgid "If you open the generated build file, you can see the selected extensions:"
+msgstr "如果你打开生成的构建文件，你可以看到选定的扩展。"
+
+#. type: Block title
+#: upstream/_guides/vertx.adoc:68 upstream/_guides/vertx.adoc:90
+#, fuzzy, no-wrap
+msgid "pom.xml"
+msgstr "pom.xml"
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:78
+#, no-wrap
+msgid ""
+"<dependency>\n"
+"  <groupId>io.quarkus</groupId>\n"
+"  <artifactId>quarkus-resteasy-reactive-jackson</artifactId>\n"
+"</dependency>\n"
+"<dependency>\n"
+"  <groupId>io.quarkus</groupId>\n"
+"  <artifactId>quarkus-vertx</artifactId>\n"
+"</dependency>\n"
+msgstr ""
+
+#. type: Block title
+#: upstream/_guides/vertx.adoc:81 upstream/_guides/vertx.adoc:99
+#, fuzzy, no-wrap
+msgid "build.gradle"
+msgstr "build.gradle"
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:85
+#, no-wrap
+msgid ""
+"implementation(\"io.quarkus:quarkus-resteasy-reactive-jackson\")\n"
+"implementation(\"io.quarkus:quarkus-vertx\")\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:88
+#, fuzzy
+msgid "While you are in your build file, add the following dependency:"
+msgstr "当你在你的构建文件中，添加以下依赖关系。"
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:96
+#, no-wrap
+msgid ""
+"<dependency>\n"
+"  <groupId>io.smallrye.reactive</groupId>\n"
+"  <artifactId>smallrye-mutiny-vertx-web-client</artifactId>\n"
+"</dependency>\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:102
+#, no-wrap
+msgid "implementation(\"io.smallrye.reactive:smallrye-mutiny-vertx-web-client\")\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:105
+#, fuzzy
+msgid "This dependency provides the Vert.x Web Client, which we will be using to implement the `/web` endpoint."
+msgstr "这个依赖关系提供了Vert.x Web客户端，我们将用它来实现 `/web` 端点。"
+
+#. type: Title ==
+#: upstream/_guides/vertx.adoc:107
+#, fuzzy, no-wrap
+msgid "Accessing the managed Vert.x instance"
+msgstr "访问被管理的Vert.x实例"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:111
+#, fuzzy
+msgid "Create the `src/main/java/org/acme/VertxResource.java` file.  It will contain our HTTP endpoints."
+msgstr "创建 `src/main/java/org/acme/VertxResource.java` 文件。它将包含我们的HTTP端点。"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:113
+#, fuzzy
+msgid "In this file, copy the following code:"
+msgstr "在这个文件中，复制以下代码。"
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:117
+#, no-wrap
+msgid "package org.acme;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:119
+#, no-wrap
+msgid "import io.vertx.mutiny.core.Vertx;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:122
+#, no-wrap
+msgid ""
+"import javax.inject.Inject;\n"
+"import javax.ws.rs.Path;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:125
+#, no-wrap
+msgid ""
+"@Path(\"/vertx\")                        // <1>\n"
+"public class VertxResource {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:127
+#, no-wrap
+msgid "    private final Vertx vertx;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:133
+#, no-wrap
+msgid ""
+"    @Inject                             // <2>\n"
+"    public VertxResource(Vertx vertx) { // <3>\n"
+"        this.vertx = vertx;             // <4>\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:135
+#, fuzzy
+msgid "Declare the root HTTP path."
+msgstr "声明根HTTP路径。"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:136
+#, fuzzy
+msgid "We use constructor injection to receive the managed Vert.x instance. Field injection works too."
+msgstr "我们使用构造函数注入来接收管理的Vert.x实例。字段注入也可以。"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:137
+#, fuzzy
+msgid "Receives the Vert.x instance as a constructor parameter"
+msgstr "接收Vert.x实例作为构造函数的参数"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:138
+#, fuzzy
+msgid "Store the managed Vert.x instance into a field."
+msgstr "将管理的Vert.x实例存储到一个字段中。"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:140
+#, fuzzy
+msgid "With this, we can start implementing the endpoints."
+msgstr "有了这个，我们就可以开始实现端点。"
+
+#. type: Title ==
+#: upstream/_guides/vertx.adoc:141
+#, fuzzy, no-wrap
+msgid "Using Vert.x Core API"
+msgstr "使用Vert.x核心API"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:146
+#, fuzzy
+msgid "The injected Vert.x instance provides a set of APIs you can use.  The one we are going to use in this section is the Vert.x File System.  It provides a non-blocking API to access files."
+msgstr "注入的Vert.x实例提供了一组你可以使用的API。我们在本节中要使用的是Vert.x文件系统。它提供了一个非阻塞的API来访问文件。"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:149
+#, fuzzy
+msgid "In the `src/main/resource` directory, create a `lorem.txt` file with the following content:"
+msgstr "在 `src/main/resource` 目录中，创建一个 `lorem.txt` 文件，内容如下。"
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:153
+#, no-wrap
+msgid "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:156
+#, fuzzy
+msgid "Then, in the `VertxResource` file add the following method:"
+msgstr "然后，在 `VertxResource` 文件中添加以下方法。"
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:165
+#, no-wrap
+msgid ""
+"@GET                                                                                   // <1>\n"
+"@Path(\"/lorem\")\n"
+"public Uni<String> readShortFile() {                                                   // <2>\n"
+"    return vertx.fileSystem().readFile(\"lorem.txt\")                                    // <3>\n"
+"            .onItem().transform(content -> content.toString(StandardCharsets.UTF_8));  // <4>\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:167
+#, fuzzy
+msgid "This endpoint handles HTTP `GET` request on path `/lorem` (so the full path will be `vertx/lorem`)"
+msgstr "这个端点处理HTTP `GET` 请求，路径是 `/lorem` （所以全路径是 `vertx/lorem` ）。"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:168
+#, fuzzy
+msgid "As the Vert.x API is asynchronous, our method returns a `Uni`. The content is written into the HTTP response when the asynchronous operation represented by the Uni completes."
+msgstr "由于Vert.x的API是异步的，我们的方法返回一个 `Uni` 。当Uni所代表的异步操作完成后，内容会被写入HTTP响应中。"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:169
+#, fuzzy
+msgid "We use the Vert.x file system API to read the created file"
+msgstr "我们使用Vert.x文件系统API来读取创建的文件"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:170
+#, fuzzy
+msgid "Once the file is read, the content is stored in an in-memory buffer.  We transform this buffer into a String."
+msgstr "一旦文件被读取，其内容就被存储在一个内存缓冲区内。我们将这个缓冲区转化为一个字符串。"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:172
+#, fuzzy
+msgid "In a terminal, navigate to the root of the project and run:"
+msgstr "在终端中，导航到项目的根部并运行。"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:176
+#, fuzzy
+msgid "In another terminal, run:"
+msgstr "在另一个终端，运行。"
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:180
+#, no-wrap
+msgid "> curl http://localhost:8080/vertx/lorem\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:183
+#, fuzzy
+msgid "You should see the content of the file printed in the console."
+msgstr "你应该看到该文件的内容被打印在控制台。"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:185
+#, fuzzy
+msgid "Quarkus provides other ways to serve static files. This is an example made for the guide."
+msgstr "Quarkus提供了其他方法来提供静态文件。这是为指南制作的一个例子。"
+
+#. type: Title ==
+#: upstream/_guides/vertx.adoc:186
+#, fuzzy, no-wrap
+msgid "Using Vert.x stream capability"
+msgstr "使用Vert.x流能力"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:190
+#, fuzzy
+msgid "Reading a file and storing the content in memory works for small files, but not big ones.  In this section, we will see how you can use Vert.x streaming capability."
+msgstr "读取文件并将内容存储在内存中对小文件有效，但对大文件无效。在本节中，我们将看到你如何使用Vert.x的流媒体能力。"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:194
+#, fuzzy
+msgid "First, download https://www.gutenberg.org/files/2600/2600-0.txt[War and Peace] and store it in `src/main/resources/book.txt`.  It's a 3.2 Mb file, which, while not being huge, illustrates the purpose of streams.  This time, we will not accumulate the file's content in memory and write it in one batch, but read it chunk by chunk and write these chunks into the HTTP response one by one."
+msgstr "首先，下载 link:https://www.gutenberg.org/files/2600/2600-0.txt[《战争与和平] 》，并将其存储在 `src/main/resources/book.txt` 。这是一个3.2Mb的文件，虽然不是很大，但说明了流的目的。这一次，我们不会把文件的内容积累在内存中并一次性写入，而是逐块读取，并把这些块逐一写入HTTP响应中。"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:196
+#, fuzzy
+msgid "So, you should have the following files in your project:"
+msgstr "因此，你的项目中应该有以下文件。"
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:217
+#, no-wrap
+msgid ""
+".\n"
+"├── mvnw\n"
+"├── mvnw.cmd\n"
+"├── pom.xml\n"
+"├── README.md\n"
+"├── src\n"
+"│  └── main\n"
+"│     ├── docker\n"
+"│     │  ├── ...\n"
+"│     ├── java\n"
+"│     │  └── org\n"
+"│     │     └── acme\n"
+"│     │        └── VertxResource.java\n"
+"│     └── resources\n"
+"│        ├── application.properties\n"
+"│        ├── book.txt\n"
+"│        └── lorem.txt\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:220
+#, fuzzy
+msgid "Add the following method to the `VertxResource` class:"
+msgstr "在 `VertxResource` 类中添加以下方法。"
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:233
+#, no-wrap
+msgid ""
+"@GET\n"
+"@Path(\"/book\")\n"
+"public Multi<String> readLargeFile() {                                               // <1>\n"
+"    return vertx.fileSystem().open(\"book.txt\",                                       // <2>\n"
+"                    new OpenOptions().setRead(true)\n"
+"            )\n"
+"            .onItem().transformToMulti(file -> file.toMulti())                       // <3>\n"
+"            .onItem().transform(content -> content.toString(StandardCharsets.UTF_8)) // <4>\n"
+"                    + \"\\n------------\\n\");                                           // <5>\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:235
+#, fuzzy
+msgid "This time, we return a Multi as we want to stream the chunks"
+msgstr "这一次，我们返回一个Multi，因为我们想要流式处理这些块。"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:236
+#, fuzzy
+msgid "We open the file using the `open` method. It returns a `Uni<AsyncFile>`"
+msgstr "我们使用 `open` 方法打开该文件。它返回一个 `Uni<AsyncFile>` "
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:237
+#, fuzzy
+msgid "When the file is opened, we retrieve a `Multi` which will contain the chunks."
+msgstr "当文件被打开时，我们检索到一个 `Multi` ，它将包含各块内容。"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:238
+#, fuzzy
+msgid "For each chunk, we produce a String"
+msgstr "对于每个块，我们产生一个字符串"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:239
+#, fuzzy
+msgid "To visually see the chunks in the response, we append a separator"
+msgstr "为了直观地看到响应中的分块，我们附加了一个分隔符"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:241
+#, fuzzy
+msgid "Then, in a terminal, run:"
+msgstr "然后，在终端中，运行。"
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:245
+#, no-wrap
+msgid "> curl http://localhost:8080/vertx/book\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:249
+#, fuzzy
+msgid "It should retrieve the book content.  In the output you should see the separator like:"
+msgstr "它应该检索到书的内容。在输出中，你应该看到像这样的分隔符。"
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:254
+#, no-wrap
+msgid ""
+"...\n"
+"The little princess had also left the tea table and followed Hélène.\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:256
+#, no-wrap
+msgid "“Wait a moment, I’ll get my work.... Now then, what\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:261
+#, fuzzy, no-wrap
+msgid ""
+" are you\n"
+"thinking of?” she went on, turning to Prince Hippolyte. “Fetch me my\n"
+"workbag.”\n"
+"...\n"
+msgstr ""
+"你是\n"
+"她继续说，转向希波吕特王子。\"给我拿我的\n"
+"工作包。\"\n"
+"..."
+
+#. type: Title ==
+#: upstream/_guides/vertx.adoc:263
+#, fuzzy, no-wrap
+msgid "Using the event bus"
+msgstr "使用事件总线"
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:273
+msgid "One of the core features of Vert.x is the https://vertx.io/docs/vertx-core/java/#event_bus[event bus].  It provides a message-based backbone to your application.  So, you can have components interacting using asynchronous message passing, and so decouple your components.  You can send a message to a single consumer, or dispatch to multiple consumers, or implement a request-reply interaction, where you send a message (request) and expect a response.  This is what we are going to use in this section.  Our `VertxResource` will send a message containing a name to the `greetings` address.  Another component will receive the message and produce the \"hello $name\" response.  The `VertxResource` will receive the response and return it as the HTTP response."
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:275
+msgid "So, first, let's extend our `VertxResource` class with the following code:"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:278 upstream/_guides/vertx.adoc:348
+msgid "[source, java]"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:281
+#, fuzzy, no-wrap
+msgid ""
+"@Inject\n"
+"EventBus bus;                                                   // <1>\n"
+msgstr "@Inject EventBus bus; // <1>"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:288
+#, fuzzy, no-wrap
+msgid ""
+"@GET\n"
+"@Path(\"/hello\")\n"
+"public Uni<String> hello(@QueryParam(\"name\") String name) {     // <2>\n"
+"    return bus.<String>request(\"greetings\", name)               // <3>\n"
+"            .onItem().transform(response -> response.body());   // <4>\n"
+"}\n"
+msgstr "@GET @Path(\"/hello\") public Uni<String> hello(@QueryParam(\"name\") String name) { // <2> return bus.<String>request(\"greetings\", name) // <3> .onItem().transform( response → response.body() ) ; // <4> }"
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:293
+#, no-wrap
+msgid ""
+"<1> Inject the event bus. Alternatively you can use `vertx.eventBus()`.\n"
+"<2> We receive a _name_ as a query parameter\n"
+"<3> We use the `request` method to initiate the request-reply interaction. We send the name to the \"greetings\" address.\n"
+"<4> When the response is received, we extract the body and return it as the HTTP response\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:296
+#, no-wrap
+msgid ""
+"Now, we need the other side: the component receiving the name and replying.\n"
+"Create the `src/main/java/org/acme/GreetingService.java` file with the following content:\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:298 upstream/_guides/vertx.adoc:365
+#, no-wrap
+msgid "[source, java]\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:300
+#, fuzzy
+msgid "package org.acme;"
+msgstr "软件包 org.acme.com"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:302
+#, fuzzy
+msgid "import io.quarkus.vertx.ConsumeEvent;"
+msgstr "输入 io.quarkus.vertx.ConsumeEvent.ConsumeEvent。"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:304
+#, fuzzy
+msgid "import javax.enterprise.context.ApplicationScoped;"
+msgstr "导入javax.enterprise.context.ApplicationScoped。"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:307
+#, fuzzy, no-wrap
+msgid ""
+"@ApplicationScoped                          // <1>\n"
+"public class GreetingService {\n"
+msgstr "@ApplicationScoped // <1> 公众课 GreetingService {"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:313
+#, fuzzy, no-wrap
+msgid ""
+"    @ConsumeEvent(\"greetings\")              // <2>\n"
+"    public String hello(String name) {      // <3>\n"
+"        return \"Hello \" + name;             // <4>\n"
+"    }\n"
+"}\n"
+msgstr ""
+"    @ConsumeEvent(\"greetings\") //(2)\n"
+"    public String hello(String name) { //(3)\n"
+"        返回 \"Hello\" + name; //(4)\n"
+"    }\n"
+"}"
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:318
+#, no-wrap
+msgid ""
+"<1> Declaring a CDI Bean in the Application scope. Quarkus will create a single instance of this class.\n"
+"<2> Use the `@ConsumeEvent` annotation to declare a consumer. It is possible to use the Vert.x API https://vertx.io/docs/vertx-core/java/#_acknowledging_messages_sending_replies[directly] too.\n"
+"<3> Receive the message payload as a method parameter. The returned object will be the reply.\n"
+"<4> Return the response. This response is sent back to the `VertxResource` class\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:321
+#, no-wrap
+msgid ""
+"Let's try this.\n"
+"In a terminal, run:\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:324 upstream/_guides/vertx.adoc:385
+#, no-wrap
+msgid "[source, bash]\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:326
+#, fuzzy
+msgid "curl \"http://localhost:8080/vertx/hello?name=bob\""
+msgstr "curl \"http://localhost:8080/vertx/hello?name=bob\""
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:329
+#, no-wrap
+msgid "You should get the expected `Hello bob` message back.\n"
+msgstr ""
+
+#. type: Title ==
+#: upstream/_guides/vertx.adoc:330
+#, fuzzy, no-wrap
+msgid "Using Vert.x Clients"
+msgstr "使用Vert.x客户端"
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:336
+msgid "So far, we have used the Vert.x Core API.  Vert.x offers much more.  It provides a vast ecosystem.  In this section, we will see how you can use the Vert.x Web Client, a reactive HTTP client."
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:340
+msgid "Note that some Quarkus extensions are wrapping Vert.x clients and manage them for you.  That's the case for the reactive data sources, Redis, mail...  That's not the case with the Web Client."
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:343
+msgid "Remember, at the beginning of the guide, we added the `smallrye-mutiny-vertx-web-client` dependency to our `pom.xml` file.  It's now time to use it."
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:346
+msgid "First, we need to create an instance of `WebClient`.  Extend the `VertxResource` class with the `client` field and the creation of the web client in the constructor:"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:351
+#, fuzzy, no-wrap
+msgid ""
+"private final Vertx vertx;\n"
+"private final WebClient client;            // <1>\n"
+msgstr "private final Vertx vertx; private final WebClient client; // <1>."
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:357
+#, fuzzy, no-wrap
+msgid ""
+"@Inject\n"
+"public VertxResource(Vertx vertx) {\n"
+"    this.vertx = vertx;\n"
+"    this.client = WebClient.create(vertx); // <2>\n"
+"}\n"
+msgstr "@Inject public VertxResource(Vertx vertx) { this.vertx = vertx; this.client = WebClient.create(vertx); // <2> }"
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:360
+#, no-wrap
+msgid ""
+"<1> Store the `WebClient`, so we will be able to use it in our HTTP endpoint\n"
+"<2> Create the `WebClient`. Be sure to use the `io.vertx.mutiny.ext.web.client.WebClient` class\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:363
+#, no-wrap
+msgid ""
+"Let's now implement a new HTTP endpoint that queries the Wikipedia API to retrieve the pages about Quarkus in the different languages.\n"
+"Add the following method to the `VertxResource` class:\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:367
+#, fuzzy
+msgid "private static final String URL = \"https://en.wikipedia.org/w/api.php?action=parse&page=Quarkus&format=json&prop=langlinks\";"
+msgstr "private static final String URL = \"https://en.wikipedia.org/w/api.php?action=parse&page=Quarkus&format=json&prop=langlinks\";"
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:376
+#, fuzzy, no-wrap
+msgid ""
+"@GET\n"
+"@Path(\"/web\")\n"
+"public Uni<JsonArray> retrieveDataFromWikipedia() {                     // <1>\n"
+"    return client.getAbs(URL).send()                                    // <2>\n"
+"            .onItem().transform(HttpResponse::bodyAsJsonObject)         // <3>\n"
+"            .onItem().transform(json -> json.getJsonObject(\"parse\")     // <4>\n"
+"                                        .getJsonArray(\"langlinks\"));\n"
+"}\n"
+msgstr "@GET @Path(\"/web\") public Uni<JsonArray> retrieveDataFromWikipedia() { // <1> return client.getAbs(URL).send() // <2> .onItem() 。transform(HttpResponse::bodyAsJsonObject) // <3> .onItem().transform(json → json.getJsonObject(\"parse\") // <4> .getJsonArray(\"langlinks\") ）; }"
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:381
+#, no-wrap
+msgid ""
+"<1> This endpoint returns a JSON Array. Vert.x provides a convenient way to manipulate JSON Object and Array. More details about these in xref:vertx-reference.adoc#using-vert-x-json[the reference guide].\n"
+"<2> Send a `GET` request to the Wikipedia API\n"
+"<3> Once the response is received, extract it as a JSON Object\n"
+"<4> Extract the `langlinks` array from the response.\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:383
+#, no-wrap
+msgid "Then, invoke the endpoint using:\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/vertx.adoc:387
+msgid "curl http://localhost:8080/vertx/web"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:391
+#, no-wrap
+msgid "The response indicates that, in addition to the English page, there are a German and a French page about Quarkus on wikipedia.\n"
+msgstr ""
+
+#. type: Title ==
+#: upstream/_guides/vertx.adoc:392
+#, no-wrap
+msgid "Going further"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:397
+msgid "This guide introduced how you can use Vert.x APIs from a Quarkus application.  It's just a brief overview.  If you want to know more, check the xref:vertx-reference.adoc[reference guide about Vert.x in Quarkus]."
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:401
+msgid "As we have seen, the event bus is the connecting tissue of Vert.x applications.  Quarkus integrates it so different beans can interact with asynchronous messages.  This part is covered in the xref:reactive-event-bus.adoc[event bus documentation]."
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/vertx.adoc:402
+msgid "Learn how to implement highly performant, low-overhead database applications on Quarkus with the xref:reactive-sql-clients.adoc[Reactive SQL Clients]."
+msgstr ""
