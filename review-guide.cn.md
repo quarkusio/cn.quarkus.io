@@ -9,9 +9,7 @@
 
 ### 打开拉取请求
 
-拉取请求列表可以在[项目页面](https://github.com/quarkusio/cn.quarkus.io)的“拉取请求”选项卡上找到。
-可以显示。从列表中选择拉取请求以打开拉取请求页面。
-拉取请求页面上有几个子选项卡。
+可以从[项目页面](https://github.com/quarkusio/cn.quarkus.io)的“Pull Requests”选项卡中查看 Pull Requests列表。从列表中选择拉取请求以打开拉取请求页面。拉取请求页面上有几个子选项卡。
 
 ### 对话选项卡
 
