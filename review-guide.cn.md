@@ -41,13 +41,13 @@
 单击输入表格菜单中的“±”按钮。建议对目标行进行更正的注释符号会自动插入，因此
 请更正翻译并发送。
 
-! [更改建议评论表] (internal/docs/images/Suggestion-comment-form.png)
+![更改建议评论表](internal/docs/images/suggestion-comment-form.png)
 
 ### 变更提案评论的反映
 
 更改建议评论如下图所示，您可以通过点击“提交建议”按钮当场将更改应用到 Pull Request。
 
-! [更改建议意见表] (internal/docs/images/suggest-comment.png)
+![更改建议意见表](internal/docs/images/suggestion-comment.png)
 
 如果您认为自己愿意进行更正无可争议，请反映更改。
 “将建议添加到批处理”按钮是用于在一次提交中应用更改的按钮。
