@@ -72,6 +72,5 @@
 使用 `gh` 命令在本地检查并修复 Pull Request 分支，
 也可以通过将其重新创建为新的拉取请求来对其进行修改。
 如果您习惯于从命令行工作，请尝试一下。
-按照`gh`命令的[安装程序](https://github.com/cli/cli#installation)安装，然后安装。
-按照从“拉取请求”页面上的“打开方式”按钮打开的“GitHub CLI”中的签出过程进行签出。
+按照`gh`命令的[安装程序](https://github.com/cli/cli#installation)进行安装，然后按照从 Pull Request 页面上的“打开方式”按钮打开的“GitHub CLI”上的检出程序进行检出。
 
