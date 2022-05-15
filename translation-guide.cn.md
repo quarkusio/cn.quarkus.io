@@ -1,5 +1,5 @@
-# quarkus.io 翻译项目翻译指南
-quarkus.io 翻译项目正在翻译[quarkus.io](https://quarkus.io)。
+# cn.quarkus.io 翻译项目翻译指南
+cn.quarkus.io 翻译项目正在翻译[quarkus.io](https://quarkus.io)。
 
 ## 翻译方法
 [quarkus.io](https://quarkus.io)是一个使用 Jekyll 的静态站点，其内容由 asciidoctor (.adoc) 描述。该存储库位于[quarkusio/quarkusio.github.io](https://github.com/quarkusio/quarkusio.github.io )，并在 CC BY 3.0 下发布。在这个项目中，我们使用名为 po4a 的实用程序从 .adoc 文件中提取文本，对其进行翻译，将其写回 .adoc 文件，然后构建它以构建一个中文版网站。该存储库使用 po4a 提取文本、运用翻译记忆库翻译应用程序、机器翻译起草和回写处理的 GitHub Actions工作流自动动化地提取、管理和翻译文本。翻译结果保存在[l10n目录](l10n)。
@@ -19,7 +19,7 @@ quarkus.io 翻译项目正在翻译[quarkus.io](https://quarkus.io)。
 因为说到底是机器翻译，很多不通顺和不准确的部分被标记为“需要确认”(fuzzy)，只要不去掉“需要确认”标记，翻译的内容就不能被发布。所以，请大家审核并修改译文，去掉“需要确认”的标记。
 
 ### 待翻译文件
-最终目标是翻译[l10n目录](l10n) 下的所有.po文件，目前优先考虑围绕 [l10n/po/zh_CN/_guides目录](l10n/po/zh_CN/_guides)和[l10n/po/ja_JP/_posts目录](l10n/po/ja_JP/_posts)翻译网站的“手册”和“博客”这些主要内容，后续再翻译其他内容。
+最终目标是翻译[l10n目录](l10n) 下的所有.po文件，目前优先考虑围绕 [l10n/po/zh_CN/_guides目录](l10n/po/zh_CN/_guides)和[l10n/po/zh_CN/_posts目录](l10n/po/zh_CN/_posts)翻译网站的“手册”和“博客”这些主要内容，后续再翻译其他内容。
 
 ### 免翻译语句的处理
 .po 文件可能包含不需要完整翻译的句子，例如源代码和 URL。在这种情况下，无需照原样复制原始文本。请把翻译留空。然后将按原样使用原始文本。
