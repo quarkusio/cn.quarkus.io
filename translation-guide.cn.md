@@ -2,7 +2,7 @@
 quarkus.io 翻译项目正在翻译[quarkus.io](https://quarkus.io)。
 
 ## 翻译方法
-[quarkus.io](https://quarkus.io)是一个使用 Jekyll 的静态站点，其内容由 asciidoctor (.adoc) 描述。该存储库位于[quarkusio/quarkusio.github.io](https://github.com/quarkusio/quarkusio.github.io )，并在 CC BY 3.0 下发布。在这个项目中，我们使用名为 po4a 的实用程序从 .adoc 文件中提取文本，对其进行翻译，将其写回 .adoc 文件，然后构建它以构建一个中文版网站。使用 po4a 提取文本、使用翻译记忆库的翻译应用程序、机器翻译起草和回写处理的工作流程由该存储库的 GitHub Actions 自动化，提取的文本管理翻译文本。它保存在[l10n目录](l10n)。
+[quarkus.io](https://quarkus.io)是一个使用 Jekyll 的静态站点，其内容由 asciidoctor (.adoc) 描述。该存储库位于[quarkusio/quarkusio.github.io](https://github.com/quarkusio/quarkusio.github.io )，并在 CC BY 3.0 下发布。在这个项目中，我们使用名为 po4a 的实用程序从 .adoc 文件中提取文本，对其进行翻译，将其写回 .adoc 文件，然后构建它以构建一个中文版网站。该存储库使用 po4a 提取文本、运用翻译记忆库翻译应用程序、机器翻译起草和回写处理的 GitHub Actions工作流自动动化地提取、管理和翻译文本。翻译结果保存在[l10n目录](l10n)。
 
 ## 对翻译的贡献
 如果您愿意为翻译做出贡献，请在本地克隆此存储库，编辑手头[l10n目录](l10n)下的 .po 文件，然后发送 Pull-Request。您可以在[此处](l10n/stats/translation.csv)查看每个文件的翻译状态。
