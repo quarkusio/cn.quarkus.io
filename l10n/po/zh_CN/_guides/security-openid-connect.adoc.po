@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2022-05-12 15:52+0000\n"
+"POT-Creation-Date: 2022-05-17 15:04+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -383,7 +383,7 @@ msgstr "配置示例。"
 msgid ""
 "%prod.quarkus.oidc.auth-server-url=http://localhost:8180/realms/quarkus\n"
 "quarkus.oidc.client-id=backend-service\n"
-"quarkus.oidc.client-secret=secret\n"
+"quarkus.oidc.credentials.secret=secret\n"
 msgstr ""
 
 #. type: delimited block -
@@ -414,9 +414,8 @@ msgstr "启动和配置Keycloak服务器"
 
 #. type: Plain text
 #: upstream/_guides/security-openid-connect.adoc:183
-#, fuzzy
-msgid "Do not start the Keycloak server when you run the application in a dev mode - `Dev Services for Keycloak` will launch a container. See <<keycloak-dev-mode, Running the Application in Dev mode>> section below for more information."
-msgstr "当你以开发模式运行应用程序时，不要启动Keycloak服务器 - `Dev Services for Keycloak` 将启动一个容器。更多信息请参见下面在 link:#keycloak-dev-mode[开发模式下运行应用程序] 的部分。"
+msgid "Do not start the Keycloak server when you run the application in a dev mode - `Dev Services for Keycloak` will launch a container. See <<keycloak-dev-mode, Running the Application in Dev mode>> section below for more information. Make sure to put the {quickstarts-tree-url}/security-openid-connect-quickstart/config/quarkus-realm.json[realm configuration file] on the classpath (`target/classes` directory) so that it gets imported automatically when running in dev mode - unless you have already built a {quickstarts-tree-url}/security-openid-connect-quickstart[complete solution] in which case this realm file will be added to the classpath during the build."
+msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/security-openid-connect.adoc:185
@@ -584,7 +583,7 @@ msgstr "喝完一杯咖啡后，你就可以直接运行这个二进制文件。
 #. type: delimited block -
 #: upstream/_guides/security-openid-connect.adoc:255
 #, no-wrap
-msgid "./target/security-openid-connect-quickstart-runner\n"
+msgid "./target/security-openid-connect-quickstart-1.0.0-SNAPSHOT-runner\n"
 msgstr ""
 
 #. type: Title ===
@@ -673,7 +672,7 @@ msgstr "为了访问管理端点，你应该获得一个 `admin` 用户的令牌
 #, no-wrap
 msgid ""
 "export access_token=$(\\\n"
-"    curl --insecure -X POST https://localhost:8543/realms/quarkus/protocol/openid-connect/token \\\n"
+"    curl --insecure -X POST http://localhost:8180/realms/quarkus/protocol/openid-connect/token \\\n"
 "    --user backend-service:secret \\\n"
 "    -H 'content-type: application/x-www-form-urlencoded' \\\n"
 "    -d 'username=admin&password=admin&grant_type=password' | jq --raw-output '.access_token' \\\n"
@@ -825,7 +824,7 @@ msgstr "此外，一个自定义的 `SecurityIdentityAugmentor` ，也可以用�
 #. type: Title ===
 #: upstream/_guides/security-openid-connect.adoc:380
 #, fuzzy, no-wrap
-msgid "Token Verification And Introspection "
+msgid "Token Verification And Introspection"
 msgstr "代币验证和反省"
 
 #. type: Plain text
@@ -1289,24 +1288,20 @@ msgid "import static org.hamcrest.Matchers.equalTo;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect.adoc:642
+#: upstream/_guides/security-openid-connect.adoc:641
 #, no-wrap
-msgid ""
-"import java.util.Arrays;\n"
-"import java.util.HashSet;\n"
+msgid "import java.util.Set;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect.adoc:645
-#: upstream/_guides/security-openid-connect.adoc:883
+#: upstream/_guides/security-openid-connect.adoc:643
+#: upstream/_guides/security-openid-connect.adoc:695
 #, no-wrap
-msgid ""
-"import org.hamcrest.Matchers;\n"
-"import org.junit.jupiter.api.Test;\n"
+msgid "import org.junit.jupiter.api.Test;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect.adoc:651
+#: upstream/_guides/security-openid-connect.adoc:649
 #, no-wrap
 msgid ""
 "import io.quarkus.test.common.QuarkusTestResource;\n"
@@ -1317,7 +1312,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect.adoc:655
+#: upstream/_guides/security-openid-connect.adoc:653
 #, no-wrap
 msgid ""
 "@QuarkusTest\n"
@@ -1326,13 +1321,13 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect.adoc:665
+#: upstream/_guides/security-openid-connect.adoc:663
 #, no-wrap
 msgid ""
 "    @Test\n"
 "    public void testBearerToken() {\n"
-"        RestAssured.given().auth().oauth2(getAccessToken(\"alice\", new HashSet<>(Arrays.asList(\"user\"))))\n"
-"            .when().get(\"/api/users/preferredUserName\")\n"
+"        RestAssured.given().auth().oauth2(getAccessToken(\"alice\", Set.of(\"user\")))\n"
+"            .when().get(\"/api/users/me\")\n"
 "            .then()\n"
 "            .statusCode(200)\n"
 "            // the test endpoint returns the name extracted from the injected SecurityIdentity Principal\n"
@@ -1341,7 +1336,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect.adoc:674
+#: upstream/_guides/security-openid-connect.adoc:672
 #, no-wrap
 msgid ""
 "    private String getAccessToken(String userName, Set<String> groups) {\n"
@@ -1355,31 +1350,36 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect.adoc:677
+#: upstream/_guides/security-openid-connect.adoc:675
 #, fuzzy
 msgid "Note that the `quarkus-test-oidc-server` extension includes a signing RSA private key file in a `JSON Web Key` (`JWK`) format and points to it with a `smallrye.jwt.sign.key.location` configuration property. It allows to use a no argument `sign()` operation to sign the token."
 msgstr "请注意， `quarkus-test-oidc-server` 扩展包括一个 `JSON Web Key` ( `JWK` ) 格式的签名 RSA 私钥文件，并通过 `smallrye.jwt.sign.key.location` 配置属性指向它。它允许使用一个无参数的 `sign()` 操作来签署令牌。"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect.adoc:680
+#: upstream/_guides/security-openid-connect.adoc:678
 #, fuzzy
 msgid "Testing your `quarkus-oidc` `service` application with `OidcWiremockTestResource` provides the best coverage as even the communication channel is tested against the Wiremock HTTP stubs.  `OidcWiremockTestResource` will be enhanced going forward to support more complex Bearer token test scenarios."
 msgstr "用 `OidcWiremockTestResource` 测试你的 `quarkus-oidc` `service` 应用程序，可以提供最好的覆盖率，因为即使是通信通道也是针对Wiremock HTTP存根进行测试的。 `OidcWiremockTestResource` 将在未来得到加强，以支持更复杂的Bearer token测试场景。"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect.adoc:683
+#: upstream/_guides/security-openid-connect.adoc:681
 #, fuzzy
 msgid "If there is an immediate need for a test to define Wiremock stubs not currently supported by `OidcWiremockTestResource` one can do so via a `WireMockServer` instance injected into the test class, for example:"
 msgstr "如果一个测试需要立即定义Wiremock存根，而目前 `OidcWiremockTestResource` 不支持，可以通过注入测试类的 `WireMockServer` 实例来实现，例如。"
 
+#. type: delimited block =
+#: upstream/_guides/security-openid-connect.adoc:685
+msgid "`OidcWiremockTestResource` does not work with `@QuarkusIntegrationTest` against Docker containers, because the Wiremock server is running in the JVM running the test, which cannot be accessed from the Docker container running the Quarkus application."
+msgstr ""
+
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect.adoc:687
+#: upstream/_guides/security-openid-connect.adoc:690
 #, no-wrap
 msgid "package io.quarkus.it.keycloak;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect.adoc:690
+#: upstream/_guides/security-openid-connect.adoc:693
 #, no-wrap
 msgid ""
 "import static com.github.tomakehurst.wiremock.client.WireMock.matching;\n"
@@ -1387,13 +1387,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect.adoc:692
-#, no-wrap
-msgid "import org.junit.jupiter.api.Test;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/security-openid-connect.adoc:695
+#: upstream/_guides/security-openid-connect.adoc:698
 #, no-wrap
 msgid ""
 "import com.github.tomakehurst.wiremock.WireMockServer;\n"
@@ -1401,13 +1395,11 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect.adoc:701
+#: upstream/_guides/security-openid-connect.adoc:702
 #, no-wrap
 msgid ""
-"import io.quarkus.test.common.QuarkusTestResource;\n"
 "import io.quarkus.test.junit.QuarkusTest;\n"
 "import io.quarkus.test.oidc.server.OidcWireMock;\n"
-"import io.quarkus.test.oidc.server.OidcWiremockTestResource;\n"
 "import io.restassured.RestAssured;\n"
 msgstr ""
 
@@ -1416,7 +1408,6 @@ msgstr ""
 #, no-wrap
 msgid ""
 "@QuarkusTest\n"
-"@QuarkusTestResource(OidcWiremockTestResource.class)\n"
 "public class CustomOidcWireMockStubTest {\n"
 msgstr ""
 
@@ -1434,7 +1425,7 @@ msgstr ""
 msgid ""
 "    @Test\n"
 "    public void testInvalidBearerToken() {\n"
-"        wireMockServer.stubFor(WireMock.post(\"/realms/quarkus/protocol/openid-connect/token/introspect\")\n"
+"        wireMockServer.stubFor(WireMock.post(\"/auth/realms/quarkus/protocol/openid-connect/token/introspect\")\n"
 "                .withRequestBody(matching(\".*token=invalid_token.*\"))\n"
 "                .willReturn(WireMock.aResponse().withStatus(400)));\n"
 msgstr ""
@@ -1683,6 +1674,14 @@ msgstr ""
 msgid ""
 "import static io.quarkus.test.keycloak.server.KeycloakTestResourceLifecycleManager.getAccessToken;\n"
 "import static org.hamcrest.Matchers.equalTo;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/security-openid-connect.adoc:883
+#, no-wrap
+msgid ""
+"import org.hamcrest.Matchers;\n"
+"import org.junit.jupiter.api.Test;\n"
 msgstr ""
 
 #. type: delimited block -
@@ -2176,3 +2175,7 @@ msgstr ""
 #: upstream/_guides/security-openid-connect.adoc:1153
 msgid "xref:security.adoc[Quarkus Security]"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Do not start the Keycloak server when you run the application in a dev mode - `Dev Services for Keycloak` will launch a container. See <<keycloak-dev-mode, Running the Application in Dev mode>> section below for more information."
+#~ msgstr "当你以开发模式运行应用程序时，不要启动Keycloak服务器 - `Dev Services for Keycloak` 将启动一个容器。更多信息请参见下面在 link:#keycloak-dev-mode[开发模式下运行应用程序] 的部分。"
