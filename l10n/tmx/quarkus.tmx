@@ -5430,6 +5430,550 @@ This guide will walk you through all that.
     </tu>
     <tu>
       <tuv xml:lang="en">
+        <seg>Getting Started With Reactive</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>响应式入门</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>_Reactive_ is a set of principles to build robust, efficient, and concurrent applications and systems.  These principles let you handle more load than traditional approaches while using the resources (CPU and memory) more efficiently while also reacting to failures gracefully.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>_Reactive_ 是一组用于构建健壮、高效且并发的应用程序和系统的原则。 这些原则使您可以处理比传统方法更多的负载，同时更有效地使用资源（CPU 和内存），同时还可以优雅地对故障做出反应。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Quarkus is a _Reactive_ framework.  Since the beginning, _Reactive_ has been an essential tenet of the Quarkus architecture.  It includes many reactive features and offers a broad ecosystem.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Quarkus是一个 _Reactive_ 框架。 从一开始，_Reactive_ 就一直是Quarkus架构的基本原则。 它包括许多反应式功能，并提供广泛的生态系统。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This guide is not an in-depth article about what _Reactive_ is and how Quarkus enables reactive architectures.  If you want to read more about these topics, refer to the xref:quarkus-reactive-architecture.adoc[Reactive Architecture guide], which provides an overview of the Quarkus reactive ecosystem.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>本指南不是一篇关于 _Reactive_ 是什么以及Quarkus如何实现响应式架构的深入文章。 如果你想阅读更多关于这些主题的信息，请参考 xref:quarkus-reactive-architecture.adoc[响应式架构指南]，它提供了Quarkus响应式生态系统的概述。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In this guide, we will get you started with some reactive features of Quarkus.  We are going to implement a simple CRUD application.  Yet, unlike in the xref:hibernate-orm-panache.adoc[Hibernate with Panache guide], it uses the reactive features of Quarkus.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在本指南中，我们将带您开始了解Quarkus的一些响应式功能。 我们将实现一个简单的 CRUD 应用程序。 这部分与 xref:hibernate-orm-panache.adoc[Hibernate与Panache指南]不同，它使用了Quarkus的响应式功能。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This guide will help you with:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>本指南将帮助您：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Bootstrapping a reactive CRUD application with Quarkus</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用 Quarkus 引导响应式 CRUD 应用程序</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Using Hibernate Reactive with Panache to interact with a database in a reactive fashion</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>将 Hibernate Reactive 与 Panache 结合使用，以响应式方式与数据库进行交互</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Using RESTEasy Reactive to implement HTTP API while enforcing the reactive principle</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用 RESTEasy Reactive 实现 HTTP API，同时强制执行响应式原则</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Packaging and Running the application</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>打包和运行应用程序</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Verify that Maven is using the Java version you expect.  If you have multiple JDKs installed, make sure Maven is using the expected one.  You can verify which JDK Maven uses by running `mvn --version.`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>验证Maven正在使用您期望的Java版本。如果安装了多个JDK，请确保Maven使用的是适当的版本。你可以通过运行 `mvn --version` 来验证Maven使用的是哪个JDK</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Imperative vs. Reactive: a question of threads</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>指令式与响应式：线程的问题</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>As mentioned above, in this guide, we are going to implement a reactive CRUD application.  But you may wonder what the differences and benefits are in comparison to the traditional and imperative model.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如上所述，在本指南中，我们将实现一个响应式CRUD应用程序。但您可能想知道，与传统的、指令式的模式相比，它有什么不同和好处。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To better understand the contrast, we need to explain the difference between the reactive and imperative execution models.  It's essential to comprehend that _Reactive_ is not just a different execution model, but that distinction is necessary to understand this guide.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>为了更好地理解这种对比，我们需要解释响应式执行模型和指令式执行模型之间的区别。理解 _Reactive_ 不仅仅是一种不同的执行模型是必要的，而且这一区别对于理解本指南是必要的。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In the traditional and imperative approach, frameworks assign a thread to handle the request.  So, the whole processing of the request runs on this worker thread.  This model does not scale very well.  Indeed, to handle multiple concurrent requests, you need multiple threads; and so your application concurrency is constrained by the number of threads.  In addition, these threads are blocked as soon as your code interacts with remote services.  So, it leads to inefficient usage of the resources, as you may need more threads, and each thread, as they are mapped to OS threads, has a cost in terms of memory and CPU.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在传统的指令式方法中，框架分配一个线程来处理请求。因此，请求的整个处理都运行在这个工作线程上。这个模型的扩展性不太好。事实上，要处理多个并发请求，你需要多个线程。因此，应用程序的并发性受到线程数量的限制。此外，只要您的代码与远程服务交互，这些线程就会被阻塞。因此，这会导致资源的低效使用，因为您可能需要更多的线程，而每个线程在映射到OS线程时，在内存和CPU方面都有成本。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>On the other side, the reactive model relies on non-blocking I/Os and a different execution model.  Non-blocking I/O provides an efficient way to deal with concurrent I/O.  A minimal amount of threads called I/O threads, can handle many concurrent I/O.  With such a model, request processing is not delegated to a worker thread but uses these I/O threads directly.It saves memory and CPU as there is no need to create worker threads to handle the requests.  It also improves the concurrency as it removes the constraint on the number of threads.  Finally, it also improves response time as it reduces the number of thread switches.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>另一方面，响应式模型依赖于非阻塞 I/O和不同的执行模型。非阻塞I/O提供了一种处理并发I/O的有效方法。最小数量的线程称为I/O线程，可以处理许多并发I/O。使用这样的模型，请求处理不会委托给工作线程，而是直接使用这些I/O线程。它节省了内存和CPU，因为不需要创建工作线程来处理请求。它还改善了并发性，因为它消除了对线程数量的限制。最后，它还改善了响应时间，因为它减少了线程开关的数量。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>From sequential to continuation style</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>从顺序到延续风格</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>So, with the reactive execution model, the requests are processed using I/O threads.  But that's not all.  An I/O thread can handle multiple concurrent requests.  How? Here is the trick and one of the most significant differences between reactive and imperative.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>因此，使用响应式执行模型，请求是使用I/O线程处理的。但这还不是全部。一个I/O线程可以处理多个并发请求。如何实现？这是一个技巧，也是响应式和指令式之间最重要的区别之一。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>When processing a request requires interacting with a remote service, like an HTTP API or a database, it does not block the execution while waiting for the response.  Instead, it schedules the I/O operation and attaches a continuation, i.e., the request processing remaining code.  This continuation can be passed as a callback (a function invoked with the I/O outcome), or use more advanced constructs such as reactive programming or co-routines.  Regardless of how the continuation is expressed, the essential aspect is the release of the I/O thread and, as a consequence, the fact that this thread can be used to process another request.  When the scheduled I/O completes, the I/O thread executes the continuation, and the processing of the pending request continues.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>当处理请求需要与远程服务(如HTTP API或数据库)交互时，它不会在等待响应时阻塞执行。相反，它调度I/O操作并附加一个延续，即请求处理剩余的代码。这种延续可以作为回调传递 (与I/O结果一起调用的函数)，或者使用更高级的结构，诸如响应式编程或协同程序。不管延续是如何表示的，最基本的方面是释放I/O线程，因此，这个线程可以用来处理另一个请求。当计划的I/O完成时，I/O线程执行延续，并继续处理挂起的请求。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>So, unlike the imperative model, where I/O blocks the execution, reactive switches to a continuation-based design, where the I/O threads are released, and continuation invoked when the I/Os complete.  As a result, the I/O thread can handle multiple concurrent requests, improving the overall concurrency of the application.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>因此，与I/O阻塞执行的指令式模型不同，响应式切换到基于延续的设计，其中I/O线程被释放，而延续在I/O完成时被调用。因此，I/O线程可以处理多个并发请求，从而提高应用程序的整体并发性。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>But, there is a catch.  We need a way to write continuation-passing code.  There are many ways of doing this.  In Quarkus, we propose:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>但是，有一个问题。我们需要一种方法来编写延续传递代码。有很多方法可以做到这一点。在Quarkus，我们提出：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In this guide, we will use Mutiny.  To know more about Mutiny, check the xref:mutiny-primer.adoc[Mutiny documentation].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在本指南中，我们将使用Mutiny。想要了解更多关于Mutiny的信息，请查看 xref:mutiny-primer.adoc[Mutiny文档]。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Project Loom is coming to the JDK soon and proposes a virtual thread-based model.  The Quarkus architecture is ready to support Loom as soon as it's become globally available.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Loom项目很快就会加入到JDK中，它提出了一个基于虚拟线程的模型。一旦在全局范围内可用，Quarkus架构就可以支持Loom。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Bootstrapping the Reactive Fruits application</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>启动响应式水果应用程序</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>With this in mind, let's see how we can develop a CRUD application with Quarkus, which will use the I/O thread to handle the HTTP requests, interact with a database, process the result, and write the HTTP response; in other words: a reactive CRUD application.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>考虑到这一点，让我们看看如何使用Quarkus开发一个CRUD应用程序，它将使用I/O线程处理HTTP请求，与数据库交互，处理结果，并编写HTTP响应，换句话说：一个响应式CRUD应用程序。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>While we recommend you to follow the step-by-step instructions, you can find the final solution on https://github.com/quarkusio/quarkus-quickstarts/tree/main/hibernate-reactive-panache-quickstart.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>虽然我们建议您按照步骤操作，但您可以在 https://github.com/quarkusio/quarkus-quickstarts/tree/main/hibernate-reactive-panache-quickstart上找到最终的解决方案。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>First, go to https://code.quarkus.io[code.quarkus.io] and select the following extensions:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>首先，访问 https://code.quarkus.io[code.quarkus.io] 并选择以下扩展：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Extensions</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>扩展</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The last extension is the reactive database driver for PostgreSQL.  Hibernate Reactive uses that driver to interact with the database without blocking the caller thread.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>最后一个扩展是PostgreSQL的响应式数据库驱动程序。Hibernate响应式使用该驱动程序与数据库交互，而不会阻塞调用线程。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Once selected, click on "Generate your application", download the zip file, unzip it and open the code in your favorite IDE.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>选中后，单击 "Generate your application"，下载压缩文件，解压缩并在您喜欢的IDE中打开代码。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Reactive Panache Entity</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>响应式Panache实体</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Let's start with the `Fruit` entity.Create the `src/main/java/org/acme/hibernate/orm/panache/Fruit.java` file with the following content:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>让我们从 `Fruit` 实体开始。创建 `src/main/java/org/acme/hibernate/orm/panache/Fruit.java` 文件，内容如下:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Make sure you import the reactive variant of `PanacheEntity`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>确保你导入了 `PanacheEntity` 的响应式类库。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This class represents `Fruits`.  It's a straightforward entity with a single field (`name`).  Note that it uses `io.quarkus.hibernate.reactive.panache.PanacheEntity`, the reactive variant of `PanacheEntity`.  So, behind the scenes, Hibernate uses the execution model we described above.  It interacts with the database without blocking the thread.  In addition, this reactive `PanacheEntity` proposes a reactive API.  We will use this API to implement the REST endpoint.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这个类代表 `Fruits`。它是一个简单的实体，只有一个字段 (`name`)。注意，它使用的是 `io.quarkus.hibernate.reactive.panache.PanacheEntity`，是 `PanacheEntity` 的响应式类库。因此，Hibernate在幕后使用我们前面描述的执行模型。它与数据库交互而不阻塞线程。此外，这个响应式的 `PanacheEntity` 提出了一个响应式API。我们将使用这个API来实现REST端点。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Before going further, open the `src/main/resource/application.properties` file and add:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在继续之前，打开 `src/main/resource/application.properties` 文件并添加：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>It instructs the application to use PostgreSQL for the database and to handle the database schema generation.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>它指示应用程序对数据库使用PostgreSQL，并处理数据库模式的生成。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In the same directory, create an `import.sql` file, which inserts a few fruits, so we don't start with an empty database in dev mode:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在同一个目录中，创建一个 `import.sql` 文件，它插入了一些水果数据，所以我们不会在dev模式中面对一个空数据库开始：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In a terminal, launch the application in dev mode using: `./mvnw quarkus:dev`.  Quarkus automatically starts a database instance for you and configure the application. Now we only need to implement the HTTP endpoint.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在终端中，使用：`./mvnw quarkus:dev`。Quarkus会自动为您启动一个数据库实例并配置应用程序。现在我们只需要实现HTTP端点。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Reactive Resource</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>响应式资源</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Because the interaction with the database is non-blocking and asynchronous, we need to use asynchronous constructs to implement our HTTP resource.  Quarkus uses Mutiny as its central reactive programming model.  So, it supports returning Mutiny types (`Uni` and `Multi`) from HTTP endpoints.  Also, our Fruit Panache entity exposes methods using these types, so we only need to implement the _glue_.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>由于与数据库的交互是非阻塞的和异步的，我们需要使用异步构造来实现我们的HTTP资源。Quarkus使用Mutiny作为其核心响应式编程模型。因此，它支持从HTTP端点返回Mutiny类型 (`Uni` and `Multi`) 。此外，水果Panache实例使用这些类型公开方法，因此我们只需要实现 _glue_。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Create the `src/main/java/org/acme/hibernate/orm/panache/FruitResource.java` file with the following content:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>创建 `src/main/java/org/acme/hibernate/orm/panache/FruitResource.java` 文件，内容如下：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Let's start with the `getAll` method. The `getAll` method returns all the fruits stored in the database.  In the `FruitResource`, add the following code:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>让我们从 `getAll` 方法开始。 `getAll` 方法返回存储在数据库中的所有水果对象。在 `FruitResource` 中，添加以下代码：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Open http://localhost:8080/fruits to invoke this method:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>打开 http://localhost:8080/fruits 调用这个方法：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>We get the expected JSON array.  RESTEasy Reactive automatically maps the list into a JSON Array, except if instructed otherwise.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>我们得到了预期的JSON数组。RESTEasy Reactive自动将列表映射到JSON数组，除非另有指示。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Look at the return type; it returns a `Uni` of `List&lt;Fruit&gt;`.  `Uni` is an asynchronous type.  It's a bit like a future.  It's a placeholder that will get its value (item) later.  When it receives the item (Mutiny says it _emits_ its item), you can attach some behavior.  That's how we express the continuation: get a uni, and when the uni emits its item, execute the rest of the processing.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>看看返回类型，它返回 `List&lt;Fruit&gt;` 的 `Uni` 。`Uni` 是一个异步类型。这有点像未来。它是一个占位符，稍后将获得它的值条目 (item) 。当它接收条目(Mutiny说它 _输出_ 的条目)时，你可以附加一些行为。这就是我们表示延续的方式：获取一个uni，当uni输出它的条目时，执行其余的处理。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Reactive developers may wonder why we can't return a stream of fruits directly.  It tends to be a bad idea when dealing with a database.  Relational databases do not handle streaming well.  It’s a problem of protocols not designed for this use case.  So, to stream rows from the database, you need to keep a connection (and sometimes a transaction) open until all the rows are consumed.  If you have slow consumers, you break the golden rule of databases: don’t hold connections for too long.  Indeed, the number of connections is rather low, and having consumers keeping them for too long will dramatically reduce the concurrency of your application.  So, when possible, use a `Uni&lt;List&lt;T&gt;&gt;` and load the content.  If you have a large set of results, implement pagination.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>响应式程序开发者可能会想为什么我们不能直接返回水果流。在处理数据库时，这往往不是一个好主意。关系数据库不能很好地处理流。这是协议不是为这个用例设计的问题。因此，要从数据库流输出行，您需要保持一个连接（有时是一个事务）打开，直到所有行都被消耗掉。如果您的用户很慢，那么您就违反了数据库的黄金法则：不要保持连接太长时间。实际上，可用连接的数量相当少，并且让使用者保持这些连接太长时间将极大地降低应用程序的并发性。所以，如果可能的话，使用 `Uni&lt;List&lt;T&gt;&gt;` 并加载内容。如果有大量结果，则实现分页。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Let's continue our API with `getSingle`:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>让我们用 `getSingle` 继续我们的API：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In this case, we use `Fruit.findById` to retrieve the fruit.  It returns a `Uni`, which will complete when the database has retrieved the row.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在本例中，我们使用 `Fruit.findById` 来检索水果。当数据库检索到该行时，它将返回一个 `Uni`。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `create` method allows adding a new fruit to the database:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`create` 方法允许向数据库中添加新水果记录：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The code is a bit more involved.  To write to a database, we need a transaction.  So we use `Panache.withTransaction` to get one (asynchronously) and call the `persist` method when we receive the transaction.  The `persist` method is also returning a `Uni`.  This `Uni` emits the result of the insertion of the fruit in the database.  Once the insertion completes (and that's our continuation), we create a `201 CREATED` response.  RESTEasy Reactive automatically reads the request body as JSON and creates the `Fruit` instance.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>代码稍微复杂一些。要写入数据库，我们需要一个事务。所以我们用 `Panache.withTransaction` 来获取一个（异步），并在接收到事务时调用 `persist` 方法。 `persist` 方法也返回一个 `Uni`。这个 `Uni` 发出水果插入数据库的结果。一旦插入完成（这就是我们的延续），我们创建一个 `201 CREATED` 响应。RESTEasy Reactive会自动将请求体读取为JSON并创建 `Fruit` 实例。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `.onItem().transform(...)` can be replaced with `.map(...)`.  `map` is a shortcut.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`.onItem().transform(...)`  可以用 `.map(...)` 取代。`map` 是它的快捷方式。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you have https://curl.se/[curl] on your machine, you can try the endpoint using:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果在您的机器安装了 https://curl.se/[curl]命令，便可以尝试使用端点：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Following the same ideas, you can implement the other CRUD methods.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>遵循相同的思路，您可以实现其他CRUD方法。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Testing and Running</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>测试和运行</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Testing a reactive application is similar to testing a non-reactive one: use the HTTP endpoint and verify the HTTP responses.  The fact that the application is reactive does not change anything.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>测试响应式应用程序与测试非响应式应用程序类似：使用HTTP端点并验证HTTP响应。应用程序是响应式的这一事实并没有改变任何事情。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In https://github.com/quarkusio/quarkus-quickstarts/blob/main/hibernate-reactive-panache-quickstart/src/test/java/org/acme/hibernate/orm/panache/FruitsEndpointTest.java[FruitsEndpointTest.java] you can see how the test for the fruit application can be implemented.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在 https://github.com/quarkusio/quarkus-quickstarts/blob/main/hibernate-reactive-panache-quickstart/src/test/java/org/acme/hibernate/orm/panache/FruitsEndpointTest.java[FruitsEndpointTest.java]中，您可以看到如何实现水果应用程序的测试。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Packaging and running the application does not change either.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>打包和运行应用程序也不会改变。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can use the following command as usual:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>您可以像往常一样使用以下命令：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>or to build a native executable:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>或者构建一个原生可执行文件：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can also package the application in a container.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>还可以将应用程序打包在容器中。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To run the application, don’t forget to start a database and provide the configuration to your application.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>要运行应用程序，不要忘记启动数据库并为应用程序提供配置。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>For example, you can use Docker to run your database:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>例如，你可以使用Docker来运行你的数据库：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Then, launch the application using:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>然后，使用以下命令启动应用程序：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Or, if you packaged your application as native executable, use:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>或者，如果你将你的应用打包为原生可执行文件，使用：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The parameters passed to the application are described in the datasource guide.  There are other ways to configure the application - please check the xref:config-reference.adoc#configuration_sources[configuration guide] to have an overview of the possibilities (such as env variable, .env files and so on).</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>传递给应用程序的参数在数据源指南中进行了描述。还有其他配置应用程序的方法 - 请查看 xref:config-reference.adoc#configuration_sources[配置指南]来概览各种可能性（例如env变量，.env文件等等）。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Going further</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>进一步探索</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This guide is a brief introduction to some reactive features offered by Quarkus.  Quarkus is a reactive framework, and so offers a lot of reactive features.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>本指南简要介绍了Quarkus提供的一些响应式特性。Quarkus是一个响应式框架，因此提供了许多响应式特性。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you want to continue on this topic check:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你想继续这个话题，请检查：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
         <seg>Running the application</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
@@ -6874,6 +7418,758 @@ This guide will walk you through all that.
       </tuv>
       <tuv xml:lang="zh_CN">
         <seg>这是一个非常简单的REST端点，对"/hello "上的请求返回 "Hello from RESTEasy Reactive"。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Learn how to create a reactive application with Quarkus and explore the different reactive features offered by Quarkus.  This guide covers:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>了解如何使用Quarkus创建响应式应用程序，并探索Quarkus提供的不同响应式功能。 本指南涵盖：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>A quick glance at the Quarkus engine and how it enables reactive</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>快速浏览一下Quarkus引擎和它如何实现响应式</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The bootstrap of a reactive application using RESTEasy Reactive</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用 RESTEasy Reactive 的响应式应用程序的引导</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Creating a reactive JAX-RS endpoint (asynchronous, streams...)</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>创建响应式 JAX-RS 端点（异步、流等）</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Using reactive database access</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用响应式数据库访问</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Interacting with other reactive APIs</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>与其他响应式API交互</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Solutions</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>解决方案</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The solutions are located in the `getting-started-reactive` and `getting-started-reactive-crud` directories.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>解决方案位于 `getting-started-reactive` 和 `getting-started-reactive-crud` 目录中。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Quarkus is reactive.  If you look under the hood, you will find a reactive engine powering your Quarkus application.  This engine is Eclipse Vert.x (https://vertx.io).  All network I/O passes through the non-blocking and reactive Vert.x engine.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Quarkus是响应式的。如果您仔细观察，就会发现一个为Quarkus应用程序提供动力的响应式引擎。这个引擎就是Eclipse Vert.x (https://vertx.io)。所有网络I/O都通过非阻塞和响应性的 Vert.x 引擎。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Let's take 2 examples to explain how it works.  Imagine an incoming HTTP request.  The (Vert.x) HTTP server, embedded in Quarkus, receives the request and then routes it to the application.  If the request targets an _imperative_ method (traditional JAX-RS, code annotated with `@Blocking`...), the routing layer invokes the resource method in a _worker_ thread and writes the response when the data is available.  So far, nothing new or outstanding.  The following picture depicts this behavior.  In this case, the application code is invoked on a worker thread, and the business logic can block that thread.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>让我们举两个例子来解释它是如何工作的。想象一个传入的HTTP请求。嵌入在Quarkus中的 (Vert.x) HTTP服务器接收请求，然后将其路由到应用程序。如果请求的目标是一个 _imperative_ 方法（传统的JAX-RS，代码注释为 `@Blocking`…），路由层在 _worker_ 线程中调用资源方法，并在数据可用时写入响应。到目前为止，还没有什么新的或突出的。下图描述了这种行为。在这种情况下，应用程序代码是在工作线程上调用的，而业务逻辑会阻塞该线程。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>But, if the HTTP request targets a reactive method (JAX-RS using RESTEasy Reactive, reactive routes, `@Incoming` method not annotated with `@Blocking`...), the routing layer invokes the route on the I/O thread giving lots of benefits such as higher concurrency and performance:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>但是，如果HTTP请求的目标是一个响应式方法（JAX-RS使用RESTEasy响应式，响应式路由， `@Incoming` 方法没有注释 `@Blocking`…），路由层会在I/O线程上调用路由，这会带来很多好处，比如更高的并发性和性能：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Because Quarkus uses the I/O thread to invoke your code, we save context-switches, avoid large thread pool management, and so improve the resource utilization.  However, the code must **NOT** block that thread.  Why? Because, I/O threads are used to handle multiple concurrent requests.  As soon as the handling of a request cannot make progress because it needs to execute some I/O, it schedules these I/O and passes a continuation.  It releases the thread which can handle another request.  When the scheduled I/O complete, the continuation is executed, back on the I/O thread.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>因为Quarkus使用I/O线程来调用代码，所以我们节省了上下文切换，避免了大型线程池管理，从而提高了资源利用率。但是，代码必须 **NOT** 阻塞该线程。为什么？因为，I/O线程用于处理多个并发请求。一旦一个请求的处理因为需要执行一些I/O而无法进行，它就会调度这些I/O，并传递一个延续。它释放可以处理另一个请求的线程。当计划的I/O完成时，继续执行，返回到I/O线程。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>As a consequence, many Quarkus components are designed with reactive in mind, such as database access (PostgreSQL, MySQL, Mongo, etc.), application services (mail, template engine, etc.), messaging (Kafka, AMQP, etc.) and so on.  But, to fully benefit from this model, the application code should be written in a non-blocking manner.  That’s where having a reactive API is an ultimate weapon.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>因此，许多Quarkus组件在设计时都考虑了响应式，比如数据库访问（PostgreSQL, MySQL, Mongo等），应用服务（邮件，模板引擎等），消息传递（Kafka, AMQP等）等等。但是，要完全受益于此模型，应用程序代码应该以非阻塞的方式编写。这就是运用一个响应式API这个终极武器的地方。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>https://github.com/smallrye/smallrye-mutiny[Mutiny] is a reactive programming library allowing to express and compose asynchronous actions.  It offers two types:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>https://github.com/smallrye/smallrye-mutiny[Mutiny]是一个响应式编程库，允许表达和组合异步动作。它提供两种类型：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`io.smallrye.mutiny.Multi` - for multi-item (with back-pressure) streams</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`io.smallrye.mutiny.Multi` - 用于多条目(回压)流</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Both types are lazy and follow a subscription pattern.  The computation only starts once there is an actual need for it (i.e. a subscriber enlists).</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这两种类型都是惰性的，并且遵循订阅模式。计算只在有实际需要时才开始（即订阅者登记）。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Both `Uni` and `Multi` expose event-driven APIs: you express what you want to do upon a given event (success, failure, etc.).  These APIs are divided into groups (types of operations) to make it more expressive and avoid having 100s of methods attached to a single class.  The main types of operations are about reacting to failure, completion, manipulating items, extracting, or collecting them.  It provides a smooth coding experience, with a navigable API, and the result does not require too much knowledge around reactive.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg> `Uni` 和 `Multi` 都公开了事件驱动的API：你表达了在给定事件上你想做什么(成功，失败等)。这些API被分成组（操作类型），以使其更具表达性，并避免将100个方法附加到单个类上。主要的操作类型是对失败、完成、操作项、提取或收集它们作出反应。它提供了一种流畅的编码体验，具有可导航的API，并且结果不需要太多关于响应式的知识。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You may wonder about Reactive Streams (https://www.reactive-streams.org/).  `Multi` implements Reactive Streams `Publisher`, and so implements the Reactive Streams back-pressure mechanism.  `Uni` does not implement `Publisher` as the subscription to the `Uni` is enough to indicate you are interested in the result.  It is again with the idea of simpler and smoother APIs in mind as the Reactive Streams subscription/request ceremony is more complex.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你可能想知道响应流 (https://www.reactive-streams.org/)。  `Multi` 实现了响应流 `Publisher`，因此实现了响应流回压机制。  `Uni` 没有实现 `Publisher` ，因为' Uni '的订阅足以表明你对结果感兴趣。由于响应流的订阅/请求仪式更加复杂，所以它再次考虑了更简单、更流畅的API。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Embracing the unification of reactive and imperative pillars from Quarkus, both `Uni` and `Multi` provide bridges to imperative constructs.  For example, you can transform a `Multi` into an `Iterable` or _await_ the item produced by a `Uni`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>拥抱来自Quarkus的响应和指令支柱的统一， `Uni` 和 `Multi` 都为指令式结构提供了桥梁。例如，你可以将 `Multi` 转换为 `Iterable` ，或者 _await_ `Uni` 生成元素。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>At that point, if you are a RxJava or a Reactor user, you may wonder how you can use your familiar `Flowable`, `Single`, `Flux`, `Mono`...  Mutiny allows converting `Unis` and `Multis` from and to RX Java and Reactor types:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在这一点上，如果你是RxJava或Reactor的用户，你可能想知道如何使用你熟悉的 `Flowable`，`Single`，`Flux`，`Mono`… Mutiny允许从 `Unis` 和 `Multis` 到RX Java和Reactor类型的转换：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>But, what about Vert.x? Vert.x APIs are also available using Mutiny types.  The following snippet shows a usage of the Vert.x Web Client:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>但是，Vert.x呢？Vert.x API也可以使用Mutiny类型。下面的代码片段展示了Vert.x Web 客户端的用法：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Last but not least, Mutiny has built-in integration with MicroProfile Context Propagation so you can propagate transactions, traceability data, and so on in your reactive pipeline.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>最后但并非最不重要的是，Mutiny内置了与MicroProfile上下文传播的集成，因此您可以在响应管道中传播事务、跟踪数据等。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>But enough talking, let's get our hands dirty!</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>说得够多了，我们动手吧！</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>There are several ways to implement reactive application with Quarkus.  In this guide we are going to use RESTEasy Reactive, an implementation of RESTEasy benefiting from the Quarkus reactive engine.  By default, it invokes the HTTP endpoint on the I/O thread.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用Quarkus实现响应式应用程序有几种方法。在本指南中，我们将使用RESTEasy Reactive，一个受益于Quarkus Reactive引擎的RESTEasy的实现。默认情况下，它调用I/O线程上的HTTP端点。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>While it's possible to use _traditional_ RESTEasy, you would need to add the `quarkus-resteasy-mutiny` extension, and the method will still be invoked on a _worker_ thread.  So, while it would use reactive programming, it would still require worker threads, which defeats the purpose.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>虽然可以使用_traditional_ RESTEasy，但需要添加 `quarkus-resteasy-mutiny` 扩展，该方法仍然会在 _worker_ 线程上调用。因此，虽然它将使用响应式编程，但仍然需要工作线程，这与目的不符。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>For Linux and macOS users</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>对于Linux和macOS用户</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If using cmd, (don't use forward slash `\`)</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果使用cmd，（不要使用正斜杠 `\`）</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If using Powershell, wrap `-D` parameters in double quotes</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果使用Powershell，请将 `-D` 参数用双引号括起来</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>It generates the following in `./getting-started-reactive`:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>它会在 `./getting-started-reactive`中生成如下内容：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Reactive JAX-RS resources</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>响应式 JAX-RS 资源</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>During the project creation, the `src/main/java/org/acme/getting/started/ReactiveGreetingResource.java` file has been created with the following content:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在项目创建过程中， `src/main/java/org/acme/getting/started/ReactiveGreetingResource.java` 文件已经创建了以下内容：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>It's a very simple REST endpoint, returning "Hello RESTEasy Reactive" to requests on "/hello".  As it uses RESTEAsy Reactive, this method is called on the I/O thread.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这是一个非常简单的REST端点，在 "/hello"上返回 "Hello RESTEasy Reactive" 请求。当它使用RESTEAsy响应式时，这个方法在I/O线程上被调用。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To instruct Quarkus to invoke this method on a _worker_ thread, annotate it with the `io.smallrye.common.annotation.Blocking` annotation.  You can use `@Blocking` on a method, class or enable it for the whole application by annotated an `Application` class:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>要让Quarkus在_worker_线程上调用这个方法，请使用 `io.smallrye.common.annotation.Blocking` 注释它。你可以在一个方法、类上使用 ' @Blocking '，或者在整个应用中通过注释一个 `Application` 类来启用它：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Let's now create a `ReactiveGreetingService` class with the following content:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>现在让我们创建一个 `ReactiveGreetingService` 类，包含以下内容：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Then, edit the `ReactiveGreetingResource` class to match the following content:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>然后，编辑 `ReactiveGreetingResource` 类，以匹配以下内容：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `ReactiveGreetingService` class contains a straightforward method producing a `Uni`.  While, in this example, the resulting item is emitted immediately, you can imagine any async API producing a `Uni`.  We cover this later in this guide.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`ReactiveGreetingService` 类包含一个生成 `Uni` 的简单方法。虽然在这个例子中，产生的条目是立即发出的，你可以想象任何异步API产生一个 `Uni`。我们将在本指南的后面讨论这个问题。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Now, start the application using:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>现在，使用以下命令启动应用程序：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Once running, check you get the expected greeting message by opening http://localhost:8080/hello/greeting/neo.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>运行后，通过打开 http://localhost:8080/hello/greeting/neo 检查您是否得到了预期的问候信息。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Handling streams</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>处理流</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>So far, we only return an asynchronous result.  In this section, we extend the application with streams conveying multiple items.  These streams could come from Kafka or any other source of data, but to keep things simple, we just generate periodic greeting messages.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>到目前为止，我们只返回一个异步结果。在本节中，我们使用传输多个条目的流来扩展应用程序。这些数据流可以来自Kafka或任何其他数据源，但为了简单起见，我们只生成周期性的问候消息。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In the `ReactiveGreetingService`, add the following method:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在 `ReactiveGreetingService` 中，添加以下方法：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>you may need to add the `import io.smallrye.mutiny.Multi;` and `import java.time.Duration;` statements.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你可能需要添加 `import io.smallrye.mutiny.Multi;` 和 `import java.time.Duration;` 语句。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>It generates a greeting message every second and stops after `count` messages.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>它每秒钟生成一条问候信息，并在 `count` 信息后停止。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In the `ReactiveGreetingResource` add the following method:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在 `ReactiveGreetingResource` 中添加以下方法：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This endpoint streams the items to the client as a JSON Array.  The name and number of messages are parameterized using path parameters.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这个端点将项目以JSON数组的形式发送给客户端。消息的名称和数量用路径参数进行参数化。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>So calling the endpoint produces something like:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>所以调用端点会产生如下结果：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>We can also generate Server-Sent Event responses by returning a `Multi`:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>我们也可以通过返回一个 `Multi` 来生成服务器发送的事件响应：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The only difference with the previous snippet is the produced type and the `@RestSseElementType` annotation indicating the type of each event.  As the `@Produces` annotation defines `SERVER_SENT_EVENTS`, JAX-RS needs it to knows the content type of each (nested) event.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>与前面代码片段唯一的区别是生成的类型和指示每个事件类型的 `@RestSseElementType` 注解。由于 `@Produces` 注解定义了 `SERVER_SENT_EVENTS`，JAX-RS需要它知道每个（嵌套）事件的内容类型。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You may need to add the `import org.jboss.resteasy.reactive.RestSseElementType;` statement.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你可能需要添加 `import org.jboss.resteasy.reactive.RestSseElementType;` 语句。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can see the result using:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你可以使用以下命令看到结果：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Using Reactive APIs</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用响应式 API</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Using Quarkus reactive APIs</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用Quarkus响应式API</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Quarkus provides many reactive APIs using the Mutiny model.  In this section, we are going to see how you can use the Reactive PostgreSQL driver to interact with your database in a non-blocking and reactive way.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Quarkus使用Mutiny模型提供了许多响应式API。在本节中，我们将看到如何使用响应式PostgreSQL驱动程序以一种非阻塞和响应式的方式与数据库交互。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Create a new project using:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用以下命令创建一个新项目：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This application is interacting with a PostgreSQL database, so you need one:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这个应用程序与一个PostgreSQL数据库交互，所以你需要一个：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Then, let's configure our datasource.  Open the `src/main/resources/application.properties` and add the following content:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>然后，让我们配置数据源。打开 `src/main/resources/application.properties` 并添加以下内容：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The 3 first lines define the datasource.  The last line is going to be used in the application to indicate whether we insert a few items when the application gets initialized.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>第3行定义数据源。最后一行将在应用程序中用于指示在应用程序初始化时是否插入一些条目。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Now, let's create our _entity_.  Create the `org.acme.reactive.crud.Fruit` class with the following content:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>现在，让我们创建 _entity_。创建 `org.acme.reactive.crud.Fruit` 类具有以下内容：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This _entity_ contains a few fields and methods to find, update, and delete rows from the database.  These methods return either `Unis` or `Multis` as the produced items are emitted asynchronously when the results have been retrieved.  Notice that the reactive PostgreSQL client already provides `Uni` and `Multi` instances.  So you only transform the results from the database into _business-friendly_ objects.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这个 _entity_ 包含一些字段和方法，用于从数据库中查找、更新和删除行。当检索到结果时，所生成的项被异步触发，这些方法返回 `Unis` 或 `Multis` 。注意，响应式PostgreSQL客户端已经提供了 `Uni` 和 `Multi` 实例。因此，您只需将来自数据库的结果转换为 _business-friendly_ 对象。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>For the purposes of initializing the database when the application starts, we will create a class named `DBInit` with the following content:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>为了在应用程序启动时初始化数据库，我们将创建一个名为 `DBInit` 的类，其内容如下：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Then, let's use this `Fruit` class in the `FruitResource`.  Edit the `FruitResource` class to match the following content:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>然后，让我们在 `FruitResource` 中使用这个 `Fruit` 类。编辑 `FruitResource` 类，匹配以下内容：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This resource returns `Uni` and `Multi` instances based on the result produced by the `Fruit` class.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这个资源根据 `Fruit` 类产生的结果返回 `Uni` 和 `Multi` 实例。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Using Vert.x clients</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用 Vert.x 客户端</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The previous example uses a _service_ provided by Quarkus.  Also, you can use Vert.x clients directly.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>前面的示例使用了Quarkus提供的_service_。同样，你也可以直接使用Vert.x客户端。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>First of all, make sure the `quarkus-vertx` extension is present. If not, activate the extension by executing the following command:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>首先，确保存在 `quarkus-vertx` 扩展。如果没有激活扩展，请执行如下命令来激活：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Or add `quarkus-vertx` into your dependencies manually.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>或者手动将 `quarkus-vertx` 添加到依赖项中。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>There is a Mutiny version of the Vert.x APIs.  This API is divided into several artifacts you can import independently:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>有一个Mutiny 版本的Vert.x的API。这个API被分为几个可以独立导入的工件：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Description</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>描述</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can also check the available APIs on http://smallrye.io/smallrye-reactive-utils/apidocs/.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>您还可以在 http://smallrye.io/smallrye-reactive-utils/apidocs/ 上查看可用的API。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Let's take an example.  Add the following dependency to your application:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>我们举个例子。添加以下依赖到你的应用程序：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>It provides the Mutiny API of the Vert.x Web Client.  Then, you can use the web client as follows:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>它提供了Vert.x Web客户端的Mutiny API。然后，您可以使用如下web客户端：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>There are 2 important points:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>有两点很重要：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The injected Vert.x instance has the `io.vertx.mutiny.core.Vertx` type which is the Mutiny variant of Vert.x;</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>注入的 Vert.x 实例是 `io.vertx.mutiny.core.Vertx` 类型，它是 Vert.x 的 Mutiny 变量；</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The Web Client is created from `io.vertx.mutiny.ext.web.client.WebClient`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Web客户端是从 `io.vertx.mutiny.ext.web.client.WebClient` 创建的。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The Mutiny version of the Vert.x APIs also offers:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Mutiny 版本的 Vert.x API 还提供：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`andAwait` methods such as `sendAndAwait`. `andAwait` indicates that the caller thread is blocked until the result is available.  Be aware not to block the event loop / IO thread that way.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`andAwait` 方法，例如 `sendAndAwait`。 `andAwait` 表示调用方线程被阻塞，直到结果可用。注意不要用这种方式阻塞事件循环/ IO线程。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`andForget` methods such as `writeAndForget`. `andForget` is available for method returning a `Uni`.  `andForget` indicates that you don't need the resulting `Uni` indicating the success or failure of the operation.  However, remember that if you don't subscribe, the operation would not be triggered.  `andForget` manages this for you and manage the subscription.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`andForget` 方法，如 `writeAndForget`。 `andForget` 可用于返回 `Uni` 的方法。  `andForget` 表示你不需要结果的 `Uni` 来表示操作的成功或失败。但是请记住，如果您不订阅，操作将不会被触发。  `andForget` 为您管理这个和管理订阅。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Using RxJava or Reactor APIs</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用 RxJava 或 Reactor API</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Mutiny provides utilities to convert RxJava 2 and Project Reactor types to `Uni` and `Multi`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Mutiny提供工具来将 RxJava 2 和 Project Reactor 类型转换为 `Uni` 和 `Multi`。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>RxJava 2 converters are available in the following dependency:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>RxJava 2转换器有以下依赖项：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>So if you have an API returning RxJava 2 types (`Completable`, `Single`, `Maybe`, `Observable`, `Flowable`), you can create `Unis` and `Multis` as follows:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>因此，如果你有一个返回RxJava 2类型 (`Completable`, `Single`, `Maybe`, `Observable`, `Flowable`) 的API，你可以创建 `Unis` 和 `Multis` ，如下所示：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can also transform `Unis` and `Multis` into RxJava types:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你也可以将 `Unis` 和 `Multis` 转换成 RxJava 类型：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Project Reactor converters are available in the following dependency:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>项目 Reactor 转换器在以下依赖项中可用：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>So if you have an API returning Reactor types (`Mono`, `Flux`), you can create `Unis` and `Multis` as follows:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>那么如果你有一个API返回 Reactor 类型 (`Mono`, `Flux`)，你可以创建 `Unis` 和 `Multis` 如下：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can also transform `Unis` and `Multis` into Reactor types:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你也可以将 `Unis` 和 `Multis` 转换为 Reactor 类型：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Using CompletionStages or Publisher API</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用CompletionStages或Publisher API</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you are facing an API using `CompletionStage`, `CompletableFuture`, or `Publisher`, you can convert back and forth.  First, both `Uni` and `Multi` can be created from a `CompletionStage` or from a `Supplier&lt;CompletionStage&gt;`. For example:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你面对的是使用 `CompletionStage`, `CompletableFuture` 或 `Publisher` 的API，你可以来回转换。首先， `Uni` 和 `Multi` 都可以从 `CompletionStage` 或 `Supplier&lt;CompletionStage&gt;`创建。例如：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>On `Uni`, you can also produce a `CompletionStage` using `subscribeAsCompletionStage()` that produces a `CompletionStage` that would get the item or failure emitted by the `Uni`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在 `Uni` 上，你也可以使用 `subscribeAsCompletionStage()` 来产生一个 `CompletionStage` 。 `CompletionStage` 会获得由 `Uni` 发出的条目或失败。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can also create `Unis` and `Multis` from instances of `Publisher` using `createFrom().publisher(Publisher)`.  You can transform a `Uni` into a `Publisher` using `toMulti`.  Indeed, `Multi` implements `Publisher`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你也可以使用 `createFrom().publisher(Publisher)` 从 `Publisher` 的实例中创建 `Unis` 和 `Multis` 。你可以使用 `toMulti` 将 `Uni` 转换为 `Publisher` 。事实上， `Multi` 实现了 `Publisher`。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This guide is an introduction to reactive in Quarkus.  There are plenty of Quarkus features that are already reactive.  The following list gives you a few examples:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>本指南是关于Quarkus响应式的介绍。Quarkus 的许多特性已经具有了响应式风格。下面列出了一些例子：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>link:mailer[Sending email]</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>link:mailer[发送电邮件]</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>link:reactive-routes[Using reactive routes]</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>link:reactive-routes[使用响应式路由]</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Java 11+ installed with `JAVA_HOME` configured appropriately.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Java 11+安装并适当配置了 `JAVA_HOME` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The parameters passed to the application are described in the datasource guide.  There are other ways to configure the application - please check the link:config-reference#configuration_sources[configuration guide] to have an overview of the possibilities (such as env variable, .env files and so on).</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>传递给应用程序的参数在数据源指南中进行了描述。还有其他配置应用程序的方法 - 请查看 link:config-reference#configuration_sources[配置指南]来概览各种可能性（例如env变量，.env文件等等）。</seg>
       </tuv>
     </tu>
     <tu>
