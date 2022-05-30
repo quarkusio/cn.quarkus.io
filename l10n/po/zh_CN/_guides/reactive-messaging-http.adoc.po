@@ -3,129 +3,116 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "POT-Creation-Date: 2022-05-12 15:52+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2022-05-30 21:16+0800\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #. This guide is maintained in the main Quarkus repository
 #. and pull requests should be submitted there:
 #. https://github.com/quarkusio/quarkus/tree/main/docs/src/main/asciidoc
 #. type: Title =
 #: upstream/_guides/reactive-messaging-http.adoc:6
-#, fuzzy, no-wrap
+#, no-wrap
 msgid "Using HTTP with Reactive Messaging"
-msgstr "使用HTTP与反应式消息传递"
+msgstr "将 HTTP 与响应式消息结合使用"
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:12
-#, fuzzy
 msgid "This guide demonstrates how your Quarkus application can utilize SmallRye Reactive Messaging to consume and produce HTTP messages."
-msgstr "本指南展示了你的Quarkus应用程序如何利用SmallRye Reactive Messaging来消费和产生HTTP消息。"
+msgstr "本指南演示您的 Quarkus 应用程序如何利用 SmallRye Reactive Messaging 来使用和生成 HTTP 消息。"
 
 #. type: Title ==
 #: upstream/_guides/reactive-messaging-http.adoc:13
-#, fuzzy, no-wrap
+#, no-wrap
 msgid "Prerequisites"
 msgstr "先决条件"
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:16
-#, fuzzy
 msgid "To complete this guide, you need:"
-msgstr "要完成这个指南，你需要。"
+msgstr "完成这个指南，你需要:"
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:18
-#, fuzzy
 msgid "less than 15 minutes"
-msgstr "不到15分钟"
+msgstr "少于15分钟"
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:19
-#, fuzzy
 msgid "an IDE"
-msgstr "一个IDE"
+msgstr "一个编辑器"
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:20
-#, fuzzy
 msgid "JDK 11+ installed with `JAVA_HOME` configured appropriately"
-msgstr "安装了JDK 11+，并适当配置了 `JAVA_HOME` "
+msgstr "JDK 11及以上版本，并已正确配置 `JAVA_HOME`"
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:21
-#, fuzzy
 msgid "Apache Maven {maven-version}"
 msgstr "Apache Maven {maven-version}"
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:22
-#, fuzzy
 msgid "GraalVM, Docker or Podman installed if you want to run in native mode."
-msgstr "如果你想在本地模式下运行，请安装GraalVM、Docker或Podman。"
+msgstr "如果你想以本地模式运行，请确保已经安装GraalVM、Docker或Podman。"
 
 #. type: Title ==
 #: upstream/_guides/reactive-messaging-http.adoc:23
-#, fuzzy, no-wrap
+#, no-wrap
 msgid "Architecture"
-msgstr "建筑学"
+msgstr "架构"
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:27
-#, fuzzy
 msgid "In this guide we will implement a service, namely `CostConverter` that consumes HTTP messages with costs in multiple currencies and converts each cost to its value in Euro."
-msgstr "在本指南中，我们将实现一个服务，即 `CostConverter` ，该服务消耗带有多种货币成本的HTTP消息，并将每个成本转换为其欧元价值。"
+msgstr "在本指南中，我们将实现一项服务，即 `CostConverter`，它将以多种货币成本的方式消费 HTTP 消息，并将每个成本转换为其以欧元为单位的价值。"
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:30
-#, fuzzy
 msgid "To let a user easily try out the service, we will implement an HTTP resource summing up the costs (`CostCollector`), and a simple web page to add new costs and watch the sum."
-msgstr "为了让用户轻松地尝试服务，我们将实现一个HTTP资源，总结成本（ `CostCollector` ），以及一个简单的网页来添加新的成本和观察总和。"
+msgstr "为了让用户轻松试用服务，我们将实现一个 HTTP 资源来汇总成本 (`CostCollector`)，以及一个简单的网页来添加新的成本并查看总和。"
 
 #. type: Title ==
 #: upstream/_guides/reactive-messaging-http.adoc:32
-#, fuzzy, no-wrap
+#, no-wrap
 msgid "Solution"
 msgstr "解决方案"
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:36
-#, fuzzy
 msgid "We recommend that you follow the instructions in the next sections and create the application step by step.  However, you can go right to the completed example."
-msgstr "我们建议你按照下面几节的说明，一步一步地创建应用程序。然而，你可以直接进入已完成的例子。"
+msgstr "我们建议您按照下一节的说明逐步创建应用程序。然而，您可以直接转到已完成的示例。"
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:38
-#, fuzzy
 msgid "Clone the Git repository: `git clone {quickstarts-clone-url}`, or download an {quickstarts-archive-url}[archive]."
-msgstr "克隆 Git 仓库。 `git clone {quickstarts-clone-url}` ，或者下载一个{quickstarts-archive-url}[存档]。"
+msgstr "克隆 Git 仓库: `git clone {quickstarts-clone-url}` ，或下载一个{quickstarts-archive-url}[存档]。"
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:40
-#, fuzzy
 msgid "The solution is located in the `reactive-messaging-http-quickstart` {quickstarts-tree-url}/reactive-messaging-http-quickstart[directory]."
 msgstr "该解决方案位于 `reactive-messaging-http-quickstart` {quickstarts-treeurl}/reactive-messaging-http-quickstart[目录]中。"
 
 #. type: Title ==
 #: upstream/_guides/reactive-messaging-http.adoc:41
-#, fuzzy, no-wrap
+#, no-wrap
 msgid "Creating the Maven Project"
 msgstr "创建Maven项目"
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:44
-#, fuzzy
 msgid "First, we need a new project. Create a new project with the following command:"
-msgstr "首先，我们需要一个新的项目。用以下命令创建一个新项目。"
+msgstr "首先，我们需要一个新的项目。使用以下命令创建一个新的项目:"
 
 #. type: delimited block -
 #: upstream/_guides/reactive-messaging-http.adoc:53
@@ -141,21 +128,19 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:56
-#, fuzzy
 msgid "This command generates a Maven project, importing the Reactive Messaging and HTTP connector extensions."
-msgstr "该命令生成了一个Maven项目，导入了Reactive Messaging和HTTP连接器扩展。"
+msgstr "该命令生成一个Maven项目，导入Reactive Messaging和HTTP connector 扩展。"
 
 #. type: Title ==
 #: upstream/_guides/reactive-messaging-http.adoc:57
-#, fuzzy, no-wrap
+#, no-wrap
 msgid "The Converter"
 msgstr "转换器"
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:60
-#, fuzzy
 msgid "Create the `src/main/java/org/acme/reactivehttp/CostConverter.java` file, with the following content:"
-msgstr "创建 `src/main/java/org/acme/reactivehttp/CostConverter.java` 文件，内容如下。"
+msgstr "创建 `src/main/java/org/acme/reactivehttp/CostConverter.java` 文件，内容如下:"
 
 #. type: delimited block -
 #: upstream/_guides/reactive-messaging-http.adoc:64
@@ -236,27 +221,23 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:104
-#, fuzzy
 msgid "Consume messages from the `incoming-costs` stream."
-msgstr "消耗来自 `incoming-costs` 流的信息。"
+msgstr "从 `incoming-costs` 流中消费消息。"
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:105
-#, fuzzy
 msgid "Dispatch returned values to the `outgoing-costs` stream."
-msgstr "将返回的值分配到 `outgoing-costs` 流。"
+msgstr "发送返回值到 `outgoing-costs` 流中。"
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:108
-#, fuzzy
 msgid "Consume an event with payload of type `Cost` and produce a `double`.  In the case of consuming an arbitrary object, the reactive-messaging-http extension will attempt to deserialize the request body as a JSON object."
-msgstr "消耗一个具有 `Cost` 类型的有效载荷的事件，并产生一个 `double` 。在消耗一个任意对象的情况下，reactive-messaging-http扩展将尝试把请求体反序列化为一个JSON对象。"
+msgstr "消费一个 具有`Cost` 类型的有效载荷的事件，并生成一个 `double` 。在消费任意一个对象的情况下，reactive-messaging-http 扩展将尝试把请求体反序列化为一个JSON对象。"
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:110
-#, fuzzy
 msgid "Let's define the `Cost` class:"
-msgstr "让我们定义一下 `Cost` 类。"
+msgstr "让我们定义 `Cost` 类:"
 
 #. type: delimited block -
 #: upstream/_guides/reactive-messaging-http.adoc:117
@@ -306,45 +287,39 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:140
-#, fuzzy
 msgid "In the next step, we will create configurations for both streams in the `application.properties` file."
-msgstr "在下一步，我们将在 `application.properties` 文件中为两个流创建配置。"
+msgstr "在下一步中，我们将在 `application.properties` 文件中为这两个流创建配置。"
 
 #. type: Title ==
 #: upstream/_guides/reactive-messaging-http.adoc:141
-#, fuzzy, no-wrap
+#, no-wrap
 msgid "Configuring the HTTP connector"
 msgstr "配置HTTP连接器"
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:145
-#, fuzzy
 msgid "We need to configure the HTTP connector. This is done in the `application.properties` file.  The keys are structured as follows:"
-msgstr "我们需要配置HTTP连接器。这是在 `application.properties` 文件中完成的。这些键的结构如下。"
+msgstr "我们需要配置HTTP连接器。这是在 `application.properties` 文件中完成的。键的结构如下:"
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:147
-#, fuzzy
 msgid "`mp.messaging.[outgoing|incoming].{channel-name}.{property}=value`"
-msgstr " `mp.messaging.[outgoing|incoming].{channel-name}.{property}=value` "
+msgstr "`mp.messaging.[outgoing|incoming].{channel-name}.{property}=value`"
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:149
-#, fuzzy
 msgid "The `channel-name` segment must match the value set in the `@Incoming` and `@Outgoing` annotation:"
-msgstr " `channel-name` 段必须与 `@Incoming` 和 `@Outgoing` 注释中设定的值相匹配。"
+msgstr "`channel-name` 片段必须与 `@Incoming` 和 `@Outgoing` 注解中设定的值相匹配:"
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:151
-#, fuzzy
 msgid "`incoming-costs` -> a source that receives costs"
-msgstr " `incoming-costs` → 一个接受费用的来源"
+msgstr "`incoming-costs` → 收取成本的来源"
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:152
-#, fuzzy
 msgid "`outgoing-costs` -> a sink that receives converted costs"
-msgstr " `outgoing-costs` → 一个接受转换成本的水槽"
+msgstr "`outgoing-costs` → 接收转换成本的接收器"
 
 #. type: delimited block -
 #: upstream/_guides/reactive-messaging-http.adoc:156
@@ -401,15 +376,14 @@ msgstr ""
 
 #. type: Title ==
 #: upstream/_guides/reactive-messaging-http.adoc:178
-#, fuzzy, no-wrap
+#, no-wrap
 msgid "The CostCollector"
-msgstr "成本收集器（The CostCollector"
+msgstr "成本收集器（The CostCollector)"
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:182
-#, fuzzy
 msgid "To illustrate that converting messages and passing them through works, let's add an endpoint that will receive the outgoing costs and sum them up.  This is a usual JAX-RS endpoint."
-msgstr "为了说明转换消息和传递消息是可行的，让我们添加一个端点，该端点将接收传出的费用并将其汇总。这是一个通常的JAX-RS端点。"
+msgstr "为了说明转换消息和传递消息是可行的，让我们添加一个端点来接收传出成本并将它们相加。 这是一个常见的 JAX-RS 端点。"
 
 #. type: delimited block -
 #: upstream/_guides/reactive-messaging-http.adoc:191
@@ -464,15 +438,14 @@ msgstr ""
 
 #. type: Title ==
 #: upstream/_guides/reactive-messaging-http.adoc:212
-#, fuzzy, no-wrap
+#, no-wrap
 msgid "The HTML page"
 msgstr "HTML页面"
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:215
-#, fuzzy
 msgid "To conveniently interact with the application, let's create a simple web page."
-msgstr "为了方便与应用程序的互动，让我们创建一个简单的网页。"
+msgstr "为了方便地与应用程序交互，让我们创建一个简单的网页。"
 
 #. type: Plain text
 #: upstream/_guides/reactive-messaging-http.adoc:218
