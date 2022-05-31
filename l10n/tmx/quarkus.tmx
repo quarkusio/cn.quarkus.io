@@ -10955,6 +10955,372 @@ https://github.com/quarkusio/quarkus/tree/main/docs/src/main/asciidoc.
     </tu>
     <tu>
       <tuv xml:lang="en">
+        <seg>an IDE</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>一个编辑器</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Apache Maven {maven-version}</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Apache Maven {maven-version}</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>GraalVM, Docker or Podman installed if you want to run in native mode.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你想以本地模式运行，请确保已经安装GraalVM、Docker或Podman。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In this guide we will implement a service, namely `CostConverter` that consumes HTTP messages with costs in multiple currencies and converts each cost to its value in Euro.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在本指南中我们将实现一项服务，名为 `CostConverter` ，它将以多种货币成本的方式消费 HTTP 消息，并将每个成本转换为其以欧元为单位的价值。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To let a user easily try out the service, we will implement an HTTP resource summing up the costs (`CostCollector`), and a simple web page to add new costs and watch the sum.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>为了让用户轻松试用该服务，我们将实现一个 HTTP 资源来汇总成本 ( `CostCollector` )，以及一个简单的网页来添加新的成本并查看总和。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>We recommend that you follow the instructions in the next sections and create the application step by step.  However, you can go right to the completed example.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>我们建议您按照下一节的说明逐步创建应用程序。然而，您可以直接转到已完成的示例。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Clone the Git repository: `git clone {quickstarts-clone-url}`, or download an {quickstarts-archive-url}[archive].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>克隆 Git 仓库: `git clone {quickstarts-clone-url}` ，或下载一个 {quickstarts-archive-url}[存档] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The solution is located in the `reactive-messaging-http-quickstart` {quickstarts-tree-url}/reactive-messaging-http-quickstart[directory].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>该解决方案位于 `reactive-messaging-http-quickstart` {quickstarts-treeurl}/reactive-messaging-http-quickstart[目录] 中。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Creating the Maven Project</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>创建Maven项目</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>First, we need a new project. Create a new project with the following command:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>首先，我们需要一个新的项目。使用以下命令创建一个新的项目:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This command generates a Maven project, importing the Reactive Messaging and HTTP connector extensions.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>该命令生成一个Maven项目，导入Reactive Messaging和HTTP 连接扩展。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The Converter</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>转换器</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Create the `src/main/java/org/acme/reactivehttp/CostConverter.java` file, with the following content:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>创建 `src/main/java/org/acme/reactivehttp/CostConverter.java` 文件，内容如下:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Consume messages from the `incoming-costs` stream.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>从 `incoming-costs` 流中消费消息。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Dispatch returned values to the `outgoing-costs` stream.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>发送返回值到 `outgoing-costs` 流中。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Consume an event with payload of type `Cost` and produce a `double`.  In the case of consuming an arbitrary object, the reactive-messaging-http extension will attempt to deserialize the request body as a JSON object.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>消费一个具有 `Cost` 类型的有效载荷的事件，并生成一个 `double` 。在消费任意一个对象的情况下，reactive-messaging-http 扩展将尝试把请求体反序列化为一个JSON对象。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Let's define the `Cost` class:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>让我们定义 `Cost` 类:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In the next step, we will create configurations for both streams in the `application.properties` file.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>下一步，我们将在 `application.properties` 文件中为这两个流创建配置。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Configuring the HTTP connector</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>配置HTTP连接器</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>We need to configure the HTTP connector. This is done in the `application.properties` file.  The keys are structured as follows:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>我们需要配置HTTP连接器。这是在 `application.properties` 文件中完成的。 键的结构如下:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`mp.messaging.[outgoing|incoming].{channel-name}.{property}=value`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`mp.messaging.[outgoing|incoming].{channel-name}.{property}=value`</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `channel-name` segment must match the value set in the `@Incoming` and `@Outgoing` annotation:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`channel-name` 片段必须与 `@Incoming` 和 `@Outgoing` 注解中设定的值相匹配:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The CostCollector</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>成本收集器（The CostCollector)</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To illustrate that converting messages and passing them through works, let's add an endpoint that will receive the outgoing costs and sum them up.  This is a usual JAX-RS endpoint.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>为了说明转换消息和传递消息是可行的，让我们添加一个端点来接收传出成本并将它们相加。 这是一个常见的 JAX-RS 端点。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To conveniently interact with the application, let's create a simple web page.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>为了方便地与应用程序交互，让我们创建一个简单的网页。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The page will provide a form to add costs, and an info of the current sum of costs.  The page periodically updates the sum by requesting the current sum from `/cost-collector`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>该页面将提供一个表格用以添加成本，以及展示当前成本总和的信息。 该页面通过请求 `/cost-collector` 来定期更新当前成本的总和。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Create the `src/main/resources/META-INF/resources/index.html` file, with the following content:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>创建 `src/main/resources/META-INF/resources/index.html` 文件, 包含以下内容:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Get it running</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>让它运行起来</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Run the application using:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用以下命令运行应用程序:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Open `http://localhost:8080/index.html` in your browser.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在您的浏览器中打开 `http://localhost:8080/index.html`。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Running Native</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>以本机可执行文件运行</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can build the native executable with:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>您可以使用以下命令构建本机可执行文件:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>All `quarkus-http` connector options:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>所有 `quarkus-http` 连接器选项:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg># Message payload serializer, optional, implementation of `io.quarkus.reactivemessaging.http.runtime.serializers.Serializer`
+mp.messaging.outgoing.&lt;channelName&gt;.serializer=com.example.MySerializer
+</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg># 消息负载序列化器，可选的， `io.quarkus.reactivemessaging.http.runtime.serializers.Serializer` 的实现
+mp.messaging.outgoing.&lt;channelName&gt;.serializer=com.example.MySerializer
+</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg># The number of attempts to make for sending a request to a remote endpoint. Must not be less than zero
+# Zero by default
+mp.messaging.outgoing.&lt;channelName&gt;.maxRetries=3
+</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg># 尝试向远程端点发送请求的次数。不得小于零
+# 默认为0
+mp.messaging.outgoing.&lt;channelName&gt;.maxRetries=3
+</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg># Configures the random factor when using back-off with maxRetries &gt; 0. 0.5 by default
+mp.messaging.outgoing.&lt;channelName&gt;.jitter=0.3
+</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg># 配置当使用回退且maxRetries &gt; 0时使用的随机因子。 默认为0.5
+mp.messaging.outgoing.&lt;channelName&gt;.jitter=0.3
+</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg># Configures a back-off delay between attempts to send a request.
+# A random factor (jitter) is applied to increase the delay when several failures happen.
+mp.messaging.outgoing.&lt;channelName&gt;.delay=1s
+</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg># 配置尝试发送请求之间的回退延迟。
+# 当发生多个故障时，随机因子（抖动）被使用来增加延迟。
+mp.messaging.outgoing.&lt;channelName&gt;.delay=1s
+</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>#The HTTP method (either `POST` or `PUT`), `POST` by default
+mp.messaging.outgoing.&lt;channelName&gt;.method=PUT
+</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>#HTTP 请求方式 ( `POST` 或 `PUT` ),默认为 `POST` 
+mp.messaging.outgoing.&lt;channelName&gt;.method=PUT
+</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>#INCOMING
+# The HTTP method (either `POST` or `PUT`, `POST` by default
+mp.messaging.incoming.&lt;channelName&gt;.method=POST
+</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>#INCOMING
+# HTTP 请求方式 ( `POST` 或 `PUT` ,默认为 `POST` 
+mp.messaging.incoming.&lt;channelName&gt;.method=POST
+</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Reactive Messaging</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>响应式消息</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This extension utilizes SmallRye Reactive Messaging to build data streaming applications.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>此扩展利用 SmallRye 响应式消息来构建数据流应用程序。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you want to go further check the documentation of https://smallrye.io/smallrye-reactive-messaging[SmallRye Reactive Messaging], the implementation used in Quarkus.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果您想进一步了解文档 https://smallrye.io/smallrye-reactive-messaging[SmallRye Reactive Messaging], 在Quarkus中使用的实现。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
         <seg>Guides - Latest</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
