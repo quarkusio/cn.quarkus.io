@@ -13097,6 +13097,156 @@ https://github.com/quarkusio/quarkus/tree/main/docs/src/main/asciidoc.
     </tu>
     <tu>
       <tuv xml:lang="en">
+        <seg>To ease the containerization of native executables, Quarkus provides a base image providing the requirements to run these executables.  The `quarkus-micro-image:1.0` image is:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>为了简化本地可执行文件的容器化步骤，Quarkus提供了一个包含运行这些可执行文件依赖的基础镜像。 `quarkus-micro-image:1.0` 镜像是:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>small (based on `ubi8-micro`)</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>小的 (基于 `ubi8-micro` )</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>contains the right set of dependencies (glibc, libstdc++, zlib)</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>包含正确的依赖项（glibc、libstdc++、zlib）</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>support upx-compressed executables (more details on the xref:upx.adoc[enabling compression documentation])</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>支持upx压缩的可执行文件（更多相关细节在 link:upx.html[启用压缩文档] 中）</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Using the base image</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用此基础镜像</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In your `Dockerfile`, just use:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在你的 `Dockerfile` 中，只需使用:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Extending the image</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>扩展该镜像</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Your application may have additional requirements.  For example, if you have an application that requires `libfreetype.so`, you need to copy the native libraries to the container.  In this case, you need to use a multi-stage `dockerfile` to copy the required libraries:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你的应用程序可能有其他的额外要求。例如，如果你有一个依赖于 `libfreetype.so` 的应用程序，你需要将本地库拷贝到容器当中。在这种情况下，你需要使用一个多阶段的 `dockerfile` 来拷贝所需要的依赖库:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg># Second stage - copy the dependencies
+FROM quay.io/quarkus/quarkus-micro-image:1.0
+COPY --from=BUILD \
+   /lib64/libfreetype.so.6 \
+   /lib64/libbz2.so.1 \
+   /lib64/libpng16.so.16 \
+   /lib64/
+</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg># 第二阶段 - 拷贝依赖库
+FROM quay.io/quarkus/quarkus-micro-image:1.0
+COPY --from=BUILD \
+   /lib64/libfreetype.so.6 \
+   /lib64/libbz2.so.1 \
+   /lib64/libpng16.so.16 \
+   /lib64/
+</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you need to have access to the full AWT support, you need more than just `libfreetype.so`, but also the font and font configurations:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你需要获得对AWT的完整支持，你需要的不仅仅是 `libfreetype.so` ，同时还需要字体和字体配置:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg># Second stage - copy the dependencies
+FROM quay.io/quarkus/quarkus-micro-image:1.0
+COPY --from=BUILD \
+   /lib64/libfreetype.so.6 \
+   /lib64/libgcc_s.so.1 \
+   /lib64/libbz2.so.1 \
+   /lib64/libpng16.so.16 \
+   /lib64/libm.so.6 \
+   /lib64/libbz2.so.1 \
+   /lib64/libexpat.so.1 \
+   /lib64/libuuid.so.1 \
+   /lib64/
+</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg># 第二阶段 - 拷贝依赖库
+FROM quay.io/quarkus/quarkus-micro-image:1.0
+COPY --from=BUILD \
+   /lib64/libfreetype.so.6 \
+   /lib64/libgcc_s.so.1 \
+   /lib64/libbz2.so.1 \
+   /lib64/libpng16.so.16 \
+   /lib64/libm.so.6 \
+   /lib64/libbz2.so.1 \
+   /lib64/libexpat.so.1 \
+   /lib64/libuuid.so.1 \
+   /lib64/
+</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Alternative - Using ubi-minimal</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>替代方案 - 使用 ubi-minimal</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If the micro image does not suit your requirements, you can use https://catalog.redhat.com/software/containers/ubi8/ubi-minimal/5c359a62bed8bd75a2c3fba8[UBI- Minimal].  It's a bigger image, but contains more utilities and is closer to a full Linux distribution.  Typically, it contains a package manager (`microdnf`), so you can install packages more easily.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果微镜像不符合你的要求，你可以使用 https://catalog.redhat.com/software/containers/ubi8/ubi-minimal/5c359a62bed8bd75a2c3fba8[UBI- Minimal]。这是一个更大的镜像，但包含了更多实用程序 且更接近于完整的 Linux 发行版。通常，它包含一个包管理器 (`microdnf`)，因此你可以利用它更方便地安装软件包。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To use this base image, use the following `Dockerfile`:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>要使用该基础镜像，使用以下 `Dockerfile`:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
         <seg>By default, integration tests runs using the `prod` profile.  This can be overridden using the `quarkus.test.native-image-profile` property.  For example, in your `application.properties` file, add: `quarkus.test.native-image-profile=test`.  Alternatively, you can run your tests with: `./mvnw verify -Pnative -Dquarkus.test.native-image-profile=test`.  However, don't forget that when the native executable is built the `prod` profile is enabled.  So, the profile you enable this way must be compatible with the produced executable.</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
