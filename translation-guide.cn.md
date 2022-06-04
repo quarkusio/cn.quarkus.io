@@ -21,8 +21,13 @@ cn.quarkus.io 翻译项目正在翻译[quarkus.io](https://quarkus.io)。
 ### 待翻译文件
 最终目标是翻译[l10n目录](l10n) 下的所有.po文件，目前优先考虑围绕 [l10n/po/zh_CN/_guides目录](l10n/po/zh_CN/_guides)和[l10n/po/zh_CN/_posts目录](l10n/po/zh_CN/_posts)翻译网站的“手册”和“博客”这些主要内容，后续再翻译其他内容。
 
+请注意可能有多个版本的指南手册在 [l10n/po/zh_CN/_versions目录](l10n/po/zh_CN/_versions)，虽然我们可以在审核合并译文后，自动更新其中的大部分内容，但还是有可能存在部分内容没有翻译，所以希望您能在网站重新部署后，及时查看不同版本下的手册内容，确保都已经正确翻译。
+
 ### 免翻译语句的处理
 .po 文件可能包含不需要完整翻译的句子，例如源代码和 URL。在这种情况下，无需照原样复制原始文本。请把翻译留空。然后将按原样使用原始文本。
+
+### 翻译细节注意事项
+请参考[我们的讨论](https://github.com/quarkusio/cn.quarkus.io/discussions/62)
 
 ### 翻译结果预览
 当您翻译好.po文件，发送Pull-Request，然后自动在GitHub Actions中建立网站，并在5分钟内发送针对Pull-Request的临时浏览URL。您可以灵活运用临时网站确认翻译结果的预览，来验证翻译效果。
