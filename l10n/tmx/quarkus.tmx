@@ -14444,10 +14444,3412 @@ This guide will walk you through all that.
     </tu>
     <tu>
       <tuv xml:lang="en">
+        <seg>Simplified MongoDB with Panache and Kotlin</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>用Panache和Kotlin简化MongoDB</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>MongoDB is a well known NoSQL Database that is widely used. MongoDB with Panache offers a new layer atop this familiar framework.  This guide will not dive in to the specifics of either as those are already covered in the xref:mongodb-panache.adoc[MongoDB with Panache guide].  In this guide, we'll cover the Kotlin specific changes needed to use MongoDB with Panache in your Kotlin-based Quarkus applications.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>MongoDB是一个众所周知的NoSQL数据库，被广泛使用。MongoDB与Panache在这个熟悉的框架之上提供了一个新的层次。本指南将不深入讨论这两者的具体细节，因为这些内容已经在 link:mongodb-panache.html[MongoDB with Panache指南] 中涵盖。在本指南中，我们将介绍在基于Kotlin的Quarkus应用程序中使用MongoDB with Panache所需的Kotlin特定变化。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>First: an example</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>第一：一个例子</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>As we saw in the MongoDB with Panache guide, it allows us to extend the functionality in our entities and repositories (also known as DAOs) with some automatically provided functionality.  When using Kotlin, the approach is very similar to what we see in the Java version with a slight change or two.  To Panache-enable your entity, you would define it something like:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>正如我们在MongoDB with Panache指南中所看到的，它允许我们用一些自动提供的功能来扩展我们实体和存储库（也称为DAO）中的功能。在使用Kotlin时，该方法与我们在Java版本中看到的非常相似，只是有一两个微小的变化。为了使你的实体具有Panache功能，你可以这样定义它：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>As you can see our entities remain simple.  There is, however, a slight difference from the Java version.  The Kotlin language doesn't support the notion of static methods in quite the same way as Java does.  Instead, we must use a https://kotlinlang.org/docs/tutorials/kotlin-for-py/objects-and-companion-objects.html#companion-objects[companion object]:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如你所见，我们的实体仍然很简单。然而，与Java版本有一点不同。Kotlin语言并不像Java那样支持静态方法的概念。相反，我们必须使用一个 link:https://kotlinlang.org/docs/tutorials/kotlin-for-py/objects-and-companion-objects.html#companion-objects[companion object（同伴对象）] ：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The companion object holds all the methods not related to a specific instance allowing for general management and querying bound to a specific type.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>companion object持有所有与特定实例无关的方法，允许进行一般管理和与特定类型绑定的查询。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Here there are options, but we've chosen the `lateinit` approach.  This allows us to declare these fields as non-null knowing they will be properly assigned either by the constructor (not shown) or by the MongoDB POJO codec loading data from the database.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这里有一些选项，但我们选择了 `lateinit` 的方法。这允许我们将这些字段声明为非空，因为我们知道它们会被构造函数（未显示）或从数据库加载数据的MongoDB POJO编解码器正确分配。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>These types differ from the Java types mentioned in those tutorials.  For Kotlin support, all the Panache types will be found in the `io.quarkus.mongodb.panache.kotlin` package.  This subpackage allows for the distinction between the Java and Kotlin variants and allows for both to be used unambiguously in a single project.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这些类型与那些教程中提到的Java类型不同。对于Kotlin支持，所有的Panache类型将在 `io.quarkus.mongodb.panache.kotlin` 包中都可以找到。这个子包允许区分Java和Kotlin变体，并允许在一个项目中明确地使用这两种类型。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In the Kotlin version, we've simply moved the bulk of the link:https://www.martinfowler.com/eaaCatalog/activeRecord.html[`active record pattern`] functionality to the `companion object`.  Apart from this slight change, we can then work with our types in ways that map easily from the Java side of world.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在Kotlin版本中，我们只是把大部分的功能 link:https://www.martinfowler.com/eaaCatalog/activeRecord.html[`active record pattern`] 转移到了 `companion object` 。除了这个细微的变化，我们还可以从 Java 方面轻松映射的方式来处理我们的类型。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Using the repository pattern</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用资源库模式</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Defining your entity</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>定义你的实体</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>When using the repository pattern, you can define your entities as regular POJO.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>当使用存储库模式时，你可以将你的实体定义为普通的POJO。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Defining your repository</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>定义你的存储库</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>When using Repositories, you get the exact same convenient methods as with the active record pattern, injected in your Repository, by making them implement `PanacheMongoRepository`:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>当使用 Repositories 时，你可以得到与活动记录模式完全相同的方便方法，注入到你的 Repository 中，通过它们实现 `PanacheMongoRepository` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>All the operations that are defined on `PanacheMongoEntityBase` are available on your repository, so using it is exactly the same as using the active record pattern, except you need to inject it:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>所有在 `PanacheMongoEntityBase` 上定义的操作都可以在你的版本库上使用，所以使用它与使用active record（活动记录）模式完全一样，只是你需要注入它。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Most useful operations</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>最有用的操作</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Once you have written your repository, here are the most common operations you will be able to perform:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>编写存储库后，您可以执行以下最常见的操作：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>All `list` methods have equivalent `stream` versions.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>所有 `list` 方法都有相对应的 `stream` 版本。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>For more examples, please consult the xref:mongodb-panache.adoc[Java version] for complete details.  Both APIs are the same and work identically except for some Kotlin-specific tweaks to make things feel more natural to Kotlin developers.  These tweaks include things like better use of nullability and the lack of `Optional` on API methods.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>关于更多的例子，请参考 link:mongodb-panache.html[Java版本] 以获取完整详细信息。除了一些针对Kotlin的调整以使Kotlin开发者感觉更自然外，两个API都是一样的，工作方式也是一样的。这些调整包括更好地使用nullability和API方法上缺乏 `Optional` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Setting up and configuring MongoDB with Panache</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用 Panache 设置和配置 MongoDB</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To get started using MongoDB with Panache with Kotlin, you can, generally, follow the steps laid out in the Java tutorial.  The biggest change to configuring your project is the Quarkus artifact to include.  You can, of course, keep the Java version if you need but if all you need are the Kotlin APIs then include the following dependency instead:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>要开始使用带有 Kotlin 的 Panache 的 MongoDB，您通常可以按照 Java 教程中列出的步骤进行操作。配置项目的最大变化是要包含的 Quarkus 工件。当然，如果需要，您可以保留 Java 版本，但如果您只需要 Kotlin API，那么请包含以下依赖项：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Note the addition of `-kotlin` on the end.  Generally you'll only need this version but if your project will be using both Java and Kotlin code, you can safely include both artifacts.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>注意最后添加了 `-kotlin` 。通常你只需要这个版本，但如果你的项目将同时使用 Java 和 Kotlin 代码，你可以安全地包含这两个工件。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Java System Properties - `aws.accessKeyId` and `aws.secretAccessKey`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Java 系统属性 - `aws.accessKeyId` 和 `aws.secretAccessKey` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Environment Variables - `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>环境变量 - `AWS_ACCESS_KEY_ID` 和 `AWS_SECRET_ACCESS_KEY` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Credential profiles file at the default location (`~/.aws/credentials`) shared by all AWS SDKs and the AWS CLI</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>所有 AWS 开发工具包和 AWS CLI 共享的默认位置 （ `~.awscredentials` ）的凭证配置文件</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Credentials delivered through the Amazon ECS if the `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI` environment variable is set and the security manager has permission to access the variable,</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果设置了 `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI` 环境变量并且安全管理员有权访问该变量，则通过 Amazon ECS 传递的凭证，</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Instance profile credentials delivered through the Amazon EC2 metadata service</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>通过 Amazon EC2 元数据服务交付的实例配置文件凭证</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
         <seg>By default, integration tests runs using the `prod` profile.  This can be overridden using the `quarkus.test.native-image-profile` property.  For example, in your `application.properties` file, add: `quarkus.test.native-image-profile=test`.  Alternatively, you can run your tests with: `./mvnw verify -Pnative -Dquarkus.test.native-image-profile=test`.  However, don't forget that when the native executable is built the `prod` profile is enabled.  So, the profile you enable this way must be compatible with the produced executable.</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
         <seg>默认情况下，集成测试使用 `prod` 配置文件运行。这可以用 `quarkus.test.native-image-profile` 属性来覆盖。例如，在你的 `application.properties` 文件中，添加： `quarkus.test.native-image-profile=test` 。或者，你可以用以下方式运行你的测试。 `./mvnw verify -Pnative -Dquarkus.test.native-image-profile=test` 。然而，不要忘记当原生可执行文件被构建时， `prod` 配置文件被启用。因此，你通过这种方式启用的配置文件必须与生成的可执行文件兼容。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Build Items</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>构建项目</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Here you can find a list of Build Items and the extension that provides them:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在这里，您可以找到构建项目的列表以及提供它们的扩展：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This guide is the companion to the xref:vertx.adoc[Using Eclipse Vert.x API from a Quarkus Application] guide.  It provides more advanced details about the usage and the configuration of the Vert.x instance used by Quarkus.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>本指南是《 link:vertx.html[从Quarkus应用程序中使用Eclipse Vert.x API] 》指南的补充。它提供了关于Quarkus使用的Vert.x实例的使用和配置的更多高级细节。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Accessing the Vert.x instance</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>访问Vert.x实例</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To access the managed Vert.x instance, add the `quarkus-vertx` extension to your project.  Note that this dependency may already be installed (as a transitive dependency).</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>要访问管理的Vert.x实例，请在你的项目中添加 `quarkus-vertx` 扩展。注意，这个依赖可能已经安装了（作为一个过渡性依赖）。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>With this extension, you can retrieve the managed instance of Vert.x using either field or constructor injection:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>通过这个扩展，你可以使用字段或构造函数注入检索Vert.x的托管实例：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can inject either the:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你也可以这样注入：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>We recommend using the Mutiny variant as it integrates with the other reactive APIs provided by Quarkus.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>我们推荐使用Mutiny变体，因为它可以与Quarkus提供的其他响应式API集成。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you are not familiar with Mutiny, check xref:mutiny-primer.adoc[Mutiny - an intuitive reactive programming library].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你不熟悉Mutiny，请查看 link:mutiny-primer.html[Mutiny - 一个直观的响应式编程库] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Documentation about the Vert.x Mutiny variant is available on https://smallrye.io/smallrye-mutiny-vertx-bindings.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>关于Vert.x Mutiny变体的文档可在 https://smallrye.io/smallrye-mutiny-vertx-bindings </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Configuring the Vert.x instance</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>配置Vert.x实例</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can configure the Vert.x instance from the `application.properties` file.  The following table lists the supported properties:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你可以从 `application.properties` 文件中配置Vert.x实例。下表列出了支持的属性：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In addition to Vert.x core, you can use most Vert.x ecosystem libraries.  Some Quarkus extension already wraps Vert.x libraries.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>除了Vert.x核心，你可以使用大多数Vert.x生态系统库。一些Quarkus扩展已经包装了Vert.x库。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Available APIs</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>可用的API</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The following table lists the most used libraries from the Vert.x ecosystem.  To access these APIs, add the indicated extension or dependency to your project.  Refer to the associated documentation to learn how to use them.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>下表列出了Vert.x生态系统中最常用的库。要访问这些API，请在你的项目中添加指定的扩展或依赖性。请参考相关文档，了解如何使用它们。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Extension or Dependency</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>扩展或依赖性</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>https://quarkus.io/guides/amqp</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg> https://cn.quarkus.io/guides/amqp </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Circuit Breaker</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>熔断器</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>https://vertx.io/docs/vertx-circuit-breaker/java/</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg> https://vertx.io/docs/vertx-circuit-breaker/java/ </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>https://vertx.io/docs/vertx-consul-client/java/</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg> https://vertx.io/docs/vertx-consul-client/java/ </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>https://quarkus.io/guides/reactive-sql-clients</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg> https://cn.quarkus.io/guides/reactive-sql-clients </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>https://quarkus.io/guides/kafka</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg> https://cn.quarkus.io/guides/kafka </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Mail Client</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>邮件客户端</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>https://quarkus.io/guides/mailer</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg> https://cn.quarkus.io/guides/mailer </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>https://quarkus.io/guides/mqtt</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg> https://cn.quarkus.io/guides/mqtt </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>https://vertx.io/docs/vertx-rabbitmq-client/java</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg> https://vertx.io/docs/vertx-rabbitmq-client/java </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>https://quarkus.io/guides/redis</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg> https://cn.quarkus.io/guides/redis </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>https://vertx.io/docs/vertx-web-client/java/</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg> https://vertx.io/docs/vertx-web-client/java/ </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To learn more about the usage of the Vert.x Mutiny API, refer to https://smallrye.io/smallrye-mutiny-vertx-bindings.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>要了解更多关于Vert.x Mutiny API的用法，请参考 https://smallrye.io/smallrye-mutiny-vertx-bindings</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Example of usage</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用示例</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This section gives an example using the Vert.x `WebClient` in the context of a RESTEasy Reactive application.  As indicated in the table above, add the following dependency to your project:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>本节给出一个在RESTEasy Reactive应用程序中使用Vert.x `WebClient` 的例子。如上表所示，在你的项目中添加以下依赖：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Now, in your code, you can create an instance of `WebClient`:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>现在，在你的代码中，你可以创建一个 `WebClient` 的实例：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This resource creates a `WebClient` and, upon request, uses this client to invoke a remote HTTP API.  Depending on the result, the response is forwarded as received, or it creates a JSON object wrapping the error.  The `WebClient` is asynchronous (and non-blocking), to the endpoint returns a `Uni`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>该资源创建了一个 `WebClient` ，并在请求时使用该客户端来调用远程HTTP API。根据结果，响应被转发，或者创建一个包含错误的 JSON 对象。 `WebClient` 是异步的（和非阻塞的），端点返回一个 `Uni` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The application can also run as a native executable.  But, first, we need to instruct Quarkus to enable _ssl_ (if the remote API uses HTTPS).  Open the `src/main/resources/application.properties` and add:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>该应用程序也可以作为一个本地可执行文件运行。但是，首先，我们需要指示Quarkus启用 _ssl_ （如果远程API使用HTTPS）。打开 `src/main/resources/application.properties` ，并添加：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Then, create the native executable with:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>然后，用以下方法创建本地可执行文件：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Using Vert.x JSON</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用Vert.x JSON</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Vert.x APIs often rely on JSON.  Vert.x provides two convenient classes to manipulate JSON document: `io.vertx.core.json.JsonObject` and `io.vertx.core.json.JsonArray`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Vert.x的API经常依赖JSON。Vert.x提供了两个方便的类来操作JSON文档： `io.vertx.core.json.JsonObject` 和 `io.vertx.core.json.JsonArray` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`JsonObject` can be used to map an object into its JSON representation and build an object from a JSON document:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`JsonObject` 可用于将一个对象映射到其JSON表示中，并从JSON文档中建立一个对象。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Note that these features use the mapper managed by the `quarkus-jackson` extension.  Refer to xref:rest-json.adoc#json[Jackson configuration] to customize the mapping.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>注意，这些功能使用由 `quarkus-jackson` 扩展管理的映射器。请参考 link:rest-json.html#json[Jackson的配置] 来自定义映射。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>JSON Object and JSON Array are both supported as Quarkus HTTP endpoint requests and response bodies (using classic RESTEasy and RESTEasy Reactive).  Consider these endpoints:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>JSON Object和JSON Array都支持作为Quarkus HTTP端点的请求和响应体（使用经典的RESTEasy和RESTEasy Reactive）。考虑一下这些端点：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>http://localhost:8080/hello/Quarkus/object returns:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg> http://localhost:8080/hello/Quarkus/object 返回：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>http://localhost:8080/hello/Quarkus/array returns:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg> http://localhost:8080/hello/Quarkus/array 返回：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This works equally well when the JSON content is a request body or is wrapped in a `Uni`, `Multi`, `CompletionStage` or `Publisher`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>当JSON内容是一个请求体或被包裹在一个 `Uni` , `Multi` , `CompletionStage` 或 `Publisher` 中时，这同样适用。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Using verticles</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用verticles</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>link:https://vertx.io/docs/vertx-core/java/#_verticles[Verticles] is "a simple, scalable, actor-like deployment and concurrency model" provided by _Vert.x_.  This model does not claim to be a strict actor-model implementation, but it shares similarities, especially concerning concurrency, scaling, and deployment.  To use this model, you write and _deploy_ verticles, communicating by sending messages on the event bus.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>link:https://vertx.io/docs/vertx-core/java/#&lt;em&gt;verticles[Verticles] 是_Vert.x提供的 "一个简单的、可扩展的、类似于演员的部署和并发模型"。这个模型并不声称是一个严格的actor-model实现，但它有相似之处，特别是关于并发、扩展和部署。为了使用这个模型，你编写和 _部署_ 顶点，通过在事件总线上发送消息进行通信。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can deploy _verticles_ in Quarkus.  It supports:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你可以在Quarkus中部署 _verticles_ 。它支持：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>_bare_ verticle - Java classes extending `io.vertx.core.AbstractVerticle`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>_bare_ verticle - 延伸的Java类 `io.vertx.core.AbstractVerticle` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>_Mutiny_ verticle - Java classes extending `io.smallrye.mutiny.vertx.core.AbstractVerticle`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg> _Mutiny_ verticle - 扩展的Java类 `io.smallrye.mutiny.vertx.core.AbstractVerticle` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Deploying verticles</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>部署verticles</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To deploy verticles, use the `deployVerticle` method:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>要部署verticles，使用 `deployVerticle` 方法。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you use the Mutiny-variant of Vert.x, be aware that the `deployVerticle` method returns a `Uni`, and you would need to trigger a subscription to make the actual deployment.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你使用Vert.x的Mutiny-variant，请注意 `deployVerticle` 方法返回一个 `Uni` ，你需要触发一个订阅来进行实际部署。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>An example explaining how to deploy verticles during the initialization of the application will follow.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>接下来会有一个例子解释如何在应用程序的初始化过程中部署verticles：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Using @ApplicationScoped Beans as Verticle</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用@ApplicationScoped Beans作为Verticle</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In general, Vert.x verticles are not CDI beans.  And so cannot use injection.  However, in Quarkus, you can deploy verticles as beans.  Note that in this case, CDI (Arc in Quarkus) is responsible for creating the instance.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>一般来说，Vert.x的verticles不是CDI beans。所以不能使用注入。然而，在Quarkus中，你可以把verticle部署为Bean。注意，在这种情况下，CDI（Quarkus中的Arc）负责创建实例。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The following snippet provides an example:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>以下代码段提供了一个示例：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>package io.quarkus.vertx.verticles;
+</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>package io.quarkus.vertx.verticles;
+</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>    @ConfigProperty(name = "address") String address;
+</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>    @ConfigProperty(name = "address") String address;
+</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You don't have to inject the `vertx` instance; instead, leverage the protected field from `AbstractVerticle`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你不需要注入 `vertx` 实例；相反，你可以利用 `AbstractVerticle` 的受保护字段。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Then, deploy the verticle instances with:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>然后，用以下方法部署verticle实例。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you want to deploy every exposed `AbstractVerticle`, you can use:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你想部署每个暴露的 `AbstractVerticle` ，你可以使用：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Using multiple verticles instances</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用多个verticles的实例</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>When using `@ApplicationScoped`, you will get a single instance for your verticle.  Having multiple instances of verticles can be helpful to share the load among them.  Each of them will be associated with a different I/O thread (Vert.x event loop).</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>当使用 `@ApplicationScoped` ，你将为你的verticle获得一个实例。拥有多个verticles的实例可以帮助他们分担负载。它们中的每一个都将与不同的I/O线程相关联（Vert.x事件循环）。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To deploy multiple instances of your verticle, use the `@Dependent` scope instead of `@ApplicationScoped`:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>要部署 Verticle 的多个实例，请使用 `@Dependent` 范围而不是 `@ApplicationScoped` ：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Then, deploy your verticle as follows:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>然后，按以下方式部署你的verticle：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `init` method receives an `Instance&lt;MyVerticle&gt;`.  Then, you pass a supplier to the `deployVerticle` method.  The supplier is just calling the `get()` method.  Thanks to the `@Dependent` scope, it returns a new instance on every call.  Finally, you pass the desired number of instances to the `DeploymentOptions`, such as two in the previous example.  It will call the supplier twice, which will create two instances of your verticle.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`init` 方法接收一个 `Instance&lt;MyVerticle&gt;` 。然后，你将提供者传递给 `deployVerticle` 方法。该提供者只是在调用 `get()` 方法。由于 `@Dependent` 范围，它每次调用都会返回一个新的实例。最后，你向 `DeploymentOptions` 传递所需的实例数量，比如在前面的例子中是两个。它将调用提供者两次，这将为你的verticle创建两个实例。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Vert.x comes with a built-in https://vertx.io/docs/vertx-core/java/#event_bus[event bus] that you can use from your Quarkus application.  So, your application components (CDI beans, resources...) can interact using asynchronous events, thus promoting loose-coupling.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Vert.x有一个内置的 link:https://vertx.io/docs/vertx-core/java/#event_bus[事件总线] ，你可以从你的Quarkus应用程序中使用。因此，你的应用程序组件（CDI Bean、resources......）可以使用异步事件进行交互，从而促进松散耦合。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>With the event bus, you send _messages_ to _virtual addresses_.  The event bus offers three types of delivery mechanisms:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>通过事件总线，你可以向 _virtual addresses_ 发送 _messages_。事件总线提供三种类型的传递机制：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>point-to-point - send the message, one consumer receives it. If several consumers listen to the address, a round-robin is applied;</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>point-to-point - 发送消息，一个消费者接收。如果有几个消费者监听该地址，则采用轮流的方式；</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>publish/subscribe - publish a message; all the consumers listening to the address are receiving the message;</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>publish/subscribe - 发布一个消息；所有监听该地址的消费者都在接收该消息。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>request/reply - send the message and expect a response. The receiver can respond to the message in an asynchronous fashion.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>request/reply - 发送消息并期望得到响应。接收者可以以异步的方式对消息作出回应。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>All these delivery mechanisms are non-blocking and are providing one of the fundamental bricks to build reactive applications.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>所有这些交付机制都是无阻塞的，并提供了构建响应式应用的基本砖块之一。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>While you can use the Vert.x API to register consumers, Quarkus comes with declarative support.  To consume events, use the `io.quarkus.vertx.ConsumeEvent` annotation:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>虽然你可以使用Vert.x的API来注册消费者，但Quarkus带有声明性支持。要消费事件，请使用 `io.quarkus.vertx.ConsumeEvent` 注解。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>import io.quarkus.vertx.ConsumeEvent;
+</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>import io.quarkus.vertx.ConsumeEvent;
+</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If not set, the address is the fully qualified name of the bean; for instance, in this snippet, it's `org.acme.vertx.GreetingService`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果没有设置，地址是Bean的完全限定名称；例如，在这个片段中，它是 `org.acme.vertx.GreetingService` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The method parameter is the message body. If the method returns _something_, it's the message response.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>方法参数是消息主体。如果该方法返回 _something_ ，那就是消息的响应。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Configuring the address</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>配置地址</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `@ConsumeEvent` annotation can be configured to set the address:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>可以配置 `@ConsumeEvent` 注解设置地址：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Receive the messages sent to the `greeting` address</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>接收发送到 `greeting` 地址的信息</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Asynchronous processing</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>异步处理</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The previous examples use synchronous processing.  Asynchronous processing is also possible by returning either an `io.smallrye.mutiny.Uni` or a `java.util.concurrent.CompletionStage`:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>前面的例子使用了同步处理。异步处理也可以通过返回一个 `io.smallrye.mutiny.Uni` 或一个 `java.util.concurrent.CompletionStage` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The previous example uses Mutiny reactive types.  If you are not familiar with Mutiny, check xref:mutiny-primer.adoc[Mutiny - an intuitive reactive programming library].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>前面的例子使用了Mutiny响应式类型。如果你不熟悉Mutiny，请查看 link:mutiny-primer.html[Mutiny - 一个直观的响应式编程库] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Blocking processing</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>阻塞处理</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>By default, the code consuming the event must be _non-blocking_, as it's called on an I/O thread.  If your processing is blocking, use the `@io.smallrye.common.annotation.Blocking` annotation:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>默认情况下，消费该事件的代码必须是 _非阻塞的_ ，因为它是在一个I/O线程上调用的。如果你的处理是阻塞的，请使用 `@io.smallrye.common.annotation.Blocking` 注解。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Alternatively, you can use the `blocking` attribute from the `@ConsumeEvent` annotation:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>或者，你可以使用 `@ConsumeEvent` 注解中的 `blocking` 属性。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>When using `@Blocking`, it ignores the value of the `blocking` attribute of `@ConsumeEvent`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>当使用 `@Blocking` ，它忽略了 `blocking` 属性的值 `@ConsumeEvent` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Replying to messages</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>回复信息</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The _return_ value of a method annotated with `@ConsumeEvent` is used to respond to the incoming message.  For instance, in the following snippet, the returned `String` is the response.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>用 `@ConsumeEvent` 注解的方法的 _返回值_ 被用来响应传入的消息。例如，在下面的代码片段中，返回的 是 `String` 类型。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can also return a `Uni&lt;T&gt;` or a `CompletionStage&lt;T&gt;` to handle asynchronous reply:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你也可以返回一个 `Uni&lt;T&gt;` 或一个 `CompletionStage&lt;T&gt;` 来处理异步回复：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can inject an `executor` if you use the Context Propagation extension:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你使用Context Propagation扩展，你可以注入一个 `executor` ：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Implementing fire and forget interactions</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>实现即发即弃（fire and forget）交互</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You don't have to reply to received messages.  Typically, for a _fire and forget_ interaction, the messages are consumed, and the sender does not need to know about it.  To implement this pattern, your consumer method returns `void`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你不需要回复收到的消息。通常情况下，对于 _fire 和 forget_ 交互来说，消息被消耗掉了，发送者不需要知道这件事。为了实现这种模式，你的消费者方法返回 `void` 类型 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Dealing with messages</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>处理信息</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Unlike the previous example using the _payloads_ directly, you can also use `Message` directly:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>与之前直接使用 _有效载荷_ 的例子不同，你也可以直接使用 `Message` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Handling Failures</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>处理故障</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If a method annotated with `@ConsumeEvent` throws an exception, then:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果一个用 `@ConsumeEvent` 注解的方法抛出一个异常，那么：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>if a reply handler is set, then the failure is propagated back to the sender via an `io.vertx.core.eventbus.ReplyException` with code `ConsumeEvent#FAILURE_CODE` and the exception message,</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果设置了一个回复处理程序，那么失败就会通过一个带有代码 `ConsumeEvent#FAILURE_CODE` 和异常消息的 `io.vertx.core.eventbus.ReplyException` 传播回发送者，</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>if no reply handler is set, then the exception is rethrown (and wrapped in a `RuntimeException` if necessary) and can be handled by the default exception handler, i.e. `io.vertx.core.Vertx#exceptionHandler()`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果没有设置回复处理程序，那么异常会被重新抛出（如果需要的话，会被包裹在一个 `RuntimeException` ），并且可以由默认的异常处理程序来处理，即 `io.vertx.core.Vertx#exceptionHandler()` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Sending messages</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>发送信息</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Sending and publishing messages use the Vert.x event bus:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>发送和发布消息使用Vert.x事件总线。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Inject the Event bus</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>注入事件总线</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Send a message to the address `greeting`. Message payload is `name`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>发送消息到地址 `greeting` 。消息的有效载荷是 `name` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `EventBus` object provides methods to:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`EventBus` 对象提供了以下方法：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`send` a message to a specific address - one single consumer receives the message.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`send` 一个消息到一个特定的地址 - 单个消费者收到该消息。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`publish` a message to a specific address - all consumers receive the messages.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`publish` 向一个特定的地址发送消息--所有的消费者都会收到这些消息。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Using codecs</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用编解码器</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The https://vertx.io/docs/vertx-core/java/#event_bus[Vert.x Event Bus] uses codecs to _serialize_ and _deserialize_ objects.  Quarkus provides a default codec for local delivery.  So you can exchange objects as follows:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>link:https://vertx.io/docs/vertx-core/java/#event_bus[Vert.x事件总线] 使用编解码器来 _序列化_ 和 _反序列化_ 对象。Quarkus为本地交付提供了一个默认的编解码器。所以你可以按以下方式交换对象：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you want to use a specific codec, you need to set it on both ends explicitly:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你想使用一个特定的编解码器，你需要在两端明确地设置它：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Set the name of the codec to use to send the message</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>设置用于发送消息的编解码器的名称</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Set the codec to use to receive the message</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>设置用于接收信息的编解码器</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Combining HTTP and the event bus</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>结合HTTP和事件总线</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Let's revisit a greeting HTTP endpoint and use asynchronous message passing to delegate the call to a separated bean.  It uses the request/reply dispatching mechanism.  Instead of implementing the business logic inside the JAX-RS endpoint, we are sending a message.  Another bean consumes this message, and the response is sent using the _reply_ mechanism.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>让我们重新访问一个响应的HTTP端点，并使用异步消息传递将调用委托给一个单独的bean。它使用了request/reply的调度机制。我们不是在JAX-RS端点内实现业务逻辑，而是发送一个消息。另一个Bean使用这个消息，并使用 _回复_ 机制发送响应。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In your HTTP endpoint class, inject the event bus and uses the `request` method to send a message to the event bus and expect a response:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在你的HTTP端点类中，注入事件总线，并使用 `request` 方法向事件总线发送一个消息，并期待一个响应：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>the HTTP method returns a `Uni`.  If you are using RESTEasy Reactive, `Uni` support is built-in.  If you are using _classic_ RESTEasy, you need to add the `quarkus resteasy-mutiny` extension to your project.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>HTTP方法返回一个 `Uni` 。如果你使用的是RESTEasy Reactive， `Uni` 支持是内置的。如果你使用的是 _经典的_ RESTEasy，你需要在你的项目中添加 `quarkus resteasy-mutiny` 扩展。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>We need a consumer listening on the `greeting` address.  This consumer can be in the same class or another bean such as:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>我们需要一个消费者监听 `greeting` 地址。这个消费者可以在同一个类中，也可以是另一个Bean，比如：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This bean receives the name and returns the greeting message.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这个Bean接收名字并返回响应信息。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>With this in place, every HTTP request on `/bus/quarkus` sends a message to the event bus, waits for a reply, and when this one arrives, writes the HTTP response:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>有了这个， `/bus/quarkus` 上的每个HTTP请求都会向事件总线发送一个消息，等待回复，当这个回复到来时，就会写入HTTP响应：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Hello Quarkus
+</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Hello Quarkus
+</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To better understand, let's detail how the HTTP request/response has been handled:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>为了更好地理解，让我们详细介绍一下HTTP request/response 是如何被处理的：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The request is received by the `greeting` method</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>该请求由 `greeting` 方法接收</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Another bean receives this message and computes the response</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>另一个Bean收到这个消息，并计算出响应</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This response is sent back using the reply mechanism</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用回复机制发回此响应</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Once the reply is received by the sender, the content is written to the HTTP response</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>一旦发送方收到回复，会将内容写入 HTTP 响应</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Bi-directional communication with browsers using SockJS</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用SockJS与浏览器进行双向通信</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The SockJS bridge provided by Vert.x allows browser applications and Quarkus applications to communicate using the event bus.  It connects both sides.  So, both sides can send messages received on the other side.  It supports the three delivery mechanisms.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Vert.x提供的SockJS桥允许浏览器应用程序和Quarkus应用程序使用事件总线进行通信。它连接了双方。所以，双方都可以发送在另一方收到的消息。它支持三种传递机制。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>SockJS negotiates the communication channel between the Quarkus application and the browser.  If WebSockets are supported, it uses them; otherwise, it degrades to SSE, long polling, etc.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>SockJS负责协商Quarkus应用程序和浏览器之间的通信渠道。如果支持WebSockets，它就使用它们；否则，它就退化为SSE、long polling等。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>So use SockJS, you need to configure the bridge, especially the addresses that will be used to communicate:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>因此，使用SockJS，你需要配置桥梁，特别是将用于通信的地址：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This code configures the SockJS bridge to send all the messages targeting the `ticks` address to the connected browsers.  More detailled explanations about the configuration can be found on https://vertx.io/docs/vertx-web/java/#_sockjs_event_bus_bridge[the Vert.x SockJS Bridge documentation].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这段代码配置了SockJS桥接器，以将所有针对 `ticks` 地址的信息发送到所连接的浏览器。更详细的配置说明可以在 https://vertx.io/docs/vertx-web/java/#_sockjs_event_bus_bridge[Vert.x SockJS Bridge文档] 中找到。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The browser must use the `vertx-eventbus` JavaScript library to consume the message:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>浏览器必须使用 `vertx-eventbus` JavaScript库来消费该信：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Native Transport</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>本地运输</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Native transports are not supported in GraalVM produced binaries.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>GraalVM生产的二进制文件中不支持本地传输。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Vert.x is capable of using https://netty.io/wiki/native-transports.html[Netty's native transports], which offers performance improvements on specific platforms.To enable them, you must include the appropriate dependency for your platform. It's usually a good idea to have both to keep your application platform agnostic. Netty is smart enough to use the correct one, that includes none at all on unsupported platforms:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Vert.x能够使用 https://netty.io/wiki/native-transports.html[Netty的本地传输] ，在特定的平台上提供性能改进。要启用它们，你必须为你的平台包含适当的依赖。通常，为了保持你的应用程序与平台无关，这是个好主意。Netty很聪明，会使用正确的依赖，包括在不支持的平台上根本不使用：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You will also have to explicitly configure Vert.x to use the native transport.  In `application.properties` add:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你还必须明确地配置Vert.x来使用本地传输。在 `application.properties` 中添加：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Or in `application.yml`:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>或者在 `application.yml` ：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If all is well quarkus will log:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果一切顺利的话，quarkus 会输出以下日志：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Native Linux Transport</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>本地Linux传输</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>On Linux you can enable the following socket options:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在Linux上，你可以启用以下socket选项：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Native MacOS Transport</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>本地MacOS传输</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>On MacOS Sierra and above you can enable the following socket options:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在MacOS Sierra及以上版本，你可以启用以下socket选项：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Listening to a Unix Domain Socket</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>监听Unix Domain Socket</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Listening on a Unix domain socket allows us to dispense with the overhead of TCP if the connection to the quarkus service is established from the same host. This can happen if access to the service goes through a proxy which is often the case if you're setting up a service mesh with a proxy like Envoy.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果与 quarkus 服务的连接是从同一主机建立的，那么侦听 Unix 域套接字允许我们免除 TCP 的开销。如果通过代理访问服务可能会发生这种情况，如果您使用 Envoy 等代理设置服务网格，通常会出现这种情况。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This will only work on platforms that support &lt;&lt;native-transport&gt;&gt;.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这仅适用于支持 link:#native-transport[[native-transport]] 的平台。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Enable the appropriate &lt;&lt;native-transport&gt;&gt; and set the following environment property:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>启用适当的 link:#native-transport[[native-transport]] 并设置以下环境属性：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>By itself this will not disable the tcp socket which by default will open on `0.0.0.0:8080`. It can be explicitly disabled:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>就其本身而言，这不会禁用默认情况下将在 0.0.0.0:8080 上打开的 tcp socket（套接字）。可以明确禁用它：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>These properties can be set through Java's `-D` command line parameter or on `application.properties`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这些属性可以通过 Java 的 `-D` 命令行参数或在 `application.properties` 上设置。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Read only deployment environments</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>只读部署环境</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In environments with read only file systems you may receive errors of the form:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在具有只读文件系统的环境中，您可能会收到以下形式的错误：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Assuming `/tmp/` is writable this can be fixed by setting the `vertx.cacheDirBase` property to point to a directory in `/tmp/` for instance in OpenShift by creating an environment variable `JAVA_OPTS` with the value `-Dvertx.cacheDirBase=/tmp/vertx`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>假设 `/tmp/` 是可写的，可以通过将 `vertx.cacheDirBase` 属性设置为指向 `/tmp/` 中的目录来修复此问题，例如在OpenShift中，通过创建一个值为 `-Dvertx.cacheDirBase=/tmp/vertx` ,名为 `JAVA_OPTS` 的环境变量。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Simplified MongoDB with Panache</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用Panache简化MongoDB</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>MongoDB is a well known NoSQL Database that is widely used, but using its raw API can be cumbersome as you need to express your entities and your queries as a MongoDB link:{mongodb-doc-root-url}/bson/documents/#document[`Document`].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>MongoDB是一个广为人知的NoSQL数据库，但使用其原始API可能很麻烦，因为你需要将你的实体和你的查询表达为MongoDB的 link:{mongodb-doc-root-url}/bson/documents/#document[`Document`] .</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>MongoDB with Panache provides active record style entities (and repositories) like you have in xref:hibernate-orm-panache.adoc[Hibernate ORM with Panache] and focuses on making your entities trivial and fun to write in Quarkus.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>带有Panache的MongoDB提供了活跃的记录风格的实体（和存储库），就像你在 link:hibernate-orm-panache.html[带有Panache的Hibernate ORM] 中所拥有的那样，并专注于使你的实体在Quarkus中编写起来既简单又有趣。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>It is built on top of the xref:mongodb.adoc[MongoDB Client] extension.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>它是建立在 link:mongodb.html[MongoDB客户端] 扩展之上的。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Panache allows you to write your MongoDB entities like this:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Panache允许你像这样写你的MongoDB实体：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You have noticed how much more compact and readable the code is compared to using the MongoDB API? Does this look interesting? Read on!</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你是否注意到与使用MongoDB API相比，代码更加紧凑和可读？这看起来是不是很有趣？请继续阅读!</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>the `list()` method might be surprising at first. It takes fragments of PanacheQL queries (subset of JPQL) and contextualizes the rest.  That makes for very concise but yet readable code.  MongoDB native queries are also supported.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`list()` 的方法一开始可能会让人吃惊。它采用PanacheQL查询的片段（JPQL的子集），并将其余部分进行上下文处理。这使得代码非常简明，但又可读。也支持MongoDB本地查询。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>what was described above is essentially the link:https://www.martinfowler.com/eaaCatalog/activeRecord.html[active record pattern], sometimes just called the entity pattern.  MongoDB with Panache also allows for the use of the more classical link:https://martinfowler.com/eaaCatalog/repository.html[repository pattern] via `PanacheMongoRepository`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>上面所描述的本质上是 link:https://www.martinfowler.com/eaaCatalog/activeRecord.html[活动记录模式] ，有时也称为实体模式。带有Panache的MongoDB也允许通过 `PanacheMongoRepository` ，使用更经典的 link:https://martinfowler.com/eaaCatalog/repository.html[存储库模式] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The solution is located in the `mongodb-panache-quickstart` {quickstarts-tree-url}/mongodb-panache-quickstart[directory].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>该解决方案位于 `mongodb-panache-quickstart` {quickstarts-tree-url}/mongodb-panache-quickstart[目录] 中。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This command generates a Maven structure importing the RESTEasy Reactive Jackson and MongoDB with Panache extensions.  After this, the `quarkus-mongodb-panache` extension has been added to your build file.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>该命令生成一个Maven结构，导入RESTEasy Reactive Jackson和MongoDB with Panache扩展。在此之后， `quarkus-mongodb-panache` 扩展已被添加到您的构建文件中。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you don't want to generate a new project, add the dependency in your build file:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你不想生成一个新的项目，可以在你的构建文件中添加该依赖关系：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To get started:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>起步：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Make your entities extend `PanacheMongoEntity` (optional if you are using the repository pattern)</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使你的实体继承 `PanacheMongoEntity` （如果你使用资源库模式，则是可选的）。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Optionally, use the `@MongoEntity` annotation to specify the name of the collection, the name of the database or the name of the client.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>可以选择使用 `@MongoEntity` 注解来指定集合的名称、数据库的名称或客户端的名称。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Then add the relevant configuration properties in `{config-file}`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>然后在 `{config-file}` 中添加相关的配置属性。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `quarkus.mongodb.database` property will be used by MongoDB with Panache to determine the name of the database where your entities will be persisted (if not overridden by `@MongoEntity`).</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>MongoDB将使用 `quarkus.mongodb.database` 属性和Panache来确定实体将持久化的数据库的名称。（如果没有被 `@MongoEntity` 重写）。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `@MongoEntity` annotation allows configuring:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`@MongoEntity` 注解允许根据以下配置：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>the name of the client for multi-tenant application, see xref:mongodb.adoc#multiple-mongodb-clients[Multiple MongoDB Clients]. Otherwise, the default client will be used.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>多租户应用程序的客户端名称，见 link:mongodb.html#multiple-mongodb-clients[多个MongoDB客户端] 。否则，将使用默认客户端。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>the name of the database, otherwise, the `quarkus.mongodb.database` property will be used.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>数据库的名称，否则，将使用 `quarkus.mongodb.database` 属性。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>the name of the collection, otherwise the simple name of the class will be used.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>集合的名称，否则将使用该类的简单名称。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>For advanced configuration of the MongoDB client, you can follow the xref:mongodb.adoc#configuring-the-mongodb-database[Configuring the MongoDB database guide].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>对于MongoDB客户端的高级配置，你可以遵循配置 link:mongodb.html#configuring-the-mongodb-database[MongoDB数据库指南] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Solution 1: using the active record pattern</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>解决方案1：使用active record（活动记录）模式</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To define a Panache entity, simply extend `PanacheMongoEntity` and add your columns as public fields.  You can add the `@MongoEntity` annotation to your entity if you need to customize the name of the collection, the database, or the client.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>要定义一个Panache实体，只需扩展 `PanacheMongoEntity` ，并添加你的列作为公共字段。如果你需要自定义集合、数据库或客户端的名称，你可以向你的实体添加 `@MongoEntity` 注解。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Annotating with `@MongoEntity` is optional. Here the entity will be stored in the `ThePerson` collection instead of the default `Person` collection.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`@MongoEntity` 注解是可选的。在这里，实体将被存储在 `ThePerson` 集合中，而不是默认的 `Person` 集合。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>MongoDB with Panache uses the link:{mongodb-doc-root-url}/bson/pojos/[PojoCodecProvider] to convert your entities to a MongoDB `Document`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>带有Panache的MongoDB使用 link:{mongodb-doc-root-url}/bson/pojos/[PojoCodecProvider] 将你的实体转换为MongoDB `Document` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You will be allowed to use the following annotations to customize this mapping:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你将被允许使用以下注解来自定义这种映射：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`@BsonId`: allows you to customize the ID field, see &lt;&lt;custom-ids,Custom IDs&gt;&gt;.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`@BsonId` ：允许你自定义ID字段，见 link:#custom-ids[自定义ID] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`@BsonProperty`: customize the serialized name of the field.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`@BsonProperty` ：自定义字段的序列化名称。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`@BsonIgnore`: ignore a field during the serialization.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`@BsonIgnore` ：在序列化过程中忽略一个字段。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you need to write accessors, you can:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你需要编写访问器，你可以这样编写：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>public class Person extends PanacheMongoEntity {
+</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>public class Person extends PanacheMongoEntity {
+</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>And thanks to our field access rewrite, when your users read `person.name` they will actually call your `getName()` accessor, and similarly for field writes and the setter.  This allows for proper encapsulation at runtime as all fields calls will be replaced by the corresponding getter/setter calls.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>而且由于我们的字段访问重写，当你的用户读取 `person.name` ，他们实际上会调用你的 `getName()` 方法，类似的还有字段写入和设置器。这允许在运行时进行适当的封装，因为所有字段的调用都将被相应的getter/setter调用所取代。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Once you have written your entity, here are the most common operations you will be able to perform:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>编写实体后，可以执行以下最常见的操作：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>A `persistOrUpdate()` method exist that persist or update an entity in the database, it uses the __upsert__ capability of MongoDB to do it in a single query.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>存在一个 `persistOrUpdate()` 方法来持久化或更新数据库中的实体，它使用MongoDB的 __upsert__ 功能在单个查询中完成此操作。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Adding entity methods</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>添加实体方法</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Add custom queries on your entities inside the entities themselves.  That way, you and your co-workers can find them easily, and queries are co-located with the object they operate on.  Adding them as static methods in your entity class is the Panache Active Record way.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在实体本身内部的实体上添加自定义查询。这样，您和您的同事可以轻松找到它们，并且查询与他们操作的对象位于同一位置。将它们作为静态方法添加到实体类中是 Panache Active Record 方式。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Solution 2: using the repository pattern</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>解决方案2：使用资源库模式</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can define your entity as regular POJO.  You can add the `@MongoEntity` annotation to your entity if you need to customize the name of the collection, the database, or the client.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你可以将你的实体定义为普通的POJO。如果你需要自定义集合、数据库或客户端的名称，你可以给你的实体添加 `@MongoEntity` 注解。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can use public fields or private fields with getters/setters.  If you don't want to manage the ID by yourself, you can make your entity extends `PanacheMongoEntity`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你可以使用公共字段或带有getters/setters的私有字段。如果你不想自己管理ID，你可以让你的实体继承 `PanacheMongoEntity` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>When using Repositories, you can get the exact same convenient methods as wit the active record pattern, injected in your Repository, by making them implements `PanacheMongoRepository`:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>当使用 Repositories 时，你可以得到与主动记录模式完全相同的方便方法，注入到你的 Repository 中，通过使它们实现 `PanacheMongoRepository` 接口 ：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The rest of the documentation show usages based on the active record pattern only, but keep in mind that they can be performed with the repository pattern as well.  The repository pattern examples have been omitted for brevity.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>其余的文档只展示了基于活动记录模式的用法，但请记住，这些用法也可以用资源库模式来执行。为了简洁起见，已省略存储库模式示例。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Writing a JAX-RS resource</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>编写一个JAX-RS资源</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>First, include one of the RESTEasy extensions to enable JAX-RS endpoints, for example, add the `io.quarkus:quarkus-resteasy-reactive-jackson` dependency for JAX-RS and JSON support.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>首先，包括RESTEasy的一个扩展，以启用JAX-RS端点，例如，添加 `io.quarkus:quarkus-resteasy-reactive-jackson` 依赖来支持JAX-RS和JSON。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Then, you can create the following resource to create/read/update/delete your Person entity:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>然后，你可以创建以下资源来create/read/update/delete你的Person实体：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Advanced Query</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>高级查询</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Paging</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>分页</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You should only use `list` and `stream` methods if your collection contains small enough data sets. For larger data sets you can use the `find` method equivalents, which return a `PanacheQuery` on which you can do paging:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你的集合包含足够小的数据集，你应该只使用 `list` 和 `stream` 方法。对于较大的数据集，你可以使用 `find` 方法来替代，它返回一个 `PanacheQuery` ，你可以对其进行分页。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `PanacheQuery` type has many other methods to deal with paging and returning streams.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`PanacheQuery` 类型有许多其他方法来处理分页和返回流。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Using a range instead of pages</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用range而不是pages</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`PanacheQuery` also allows range-based queries.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`PanacheQuery` 也允许基于范围的查询。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You cannot mix ranges and pages: if you use a range, all methods that depend on having a current page will throw an `UnsupportedOperationException`; you can switch back to paging using `page(Page)` or `page(int, int)`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你不能混合使用ranges和pages：如果你使用range，所有依赖于拥有当前页面的方法将抛出一个 `UnsupportedOperationException` ；你可以使用 `page(Page)` 或 `page(int, int)` 切换回分页。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Sorting</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>排序</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>All methods accepting a query string also accept an optional `Sort` parameter, which allows you to abstract your sorting:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>所有接受查询字符串的方法也接受一个可选的 `Sort` 参数，这使你可以抽象出你的排序：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `Sort` class has plenty of methods for adding columns and specifying sort direction.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`Sort` 类有很多方法用于添加列和指定排序方向。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Simplified queries</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>简化查询</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Normally, MongoDB queries are of this form: `{'firstname': 'John', 'lastname':'Doe'}`, this is what we call MongoDB native queries.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>通常情况下，MongoDB的查询是这种形式： `{'firstname': 'John', 'lastname':'Doe'}` ，这就是我们所说的MongoDB原生查询。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can use them if you want, but we also support what we call **PanacheQL** that can be seen as a subset of link:https://docs.oracle.com/javaee/7/tutorial/persistence-querylanguage.htm#BNBTG[JPQL] (or link:https://docs.jboss.org/hibernate/orm/5.4/userguide/html_single/Hibernate_User_Guide.html#hql[HQL]) and allows you to easily express a query.  MongoDB with Panache will then map it to a MongoDB native query.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你愿意，你可以使用它们，但我们也支持所谓的 **PanacheQL** ，它可以被看作是 link:https://docs.oracle.com/javaee/7/tutorial/persistence-querylanguage.htm#BNBTG[JPQL] （或 link:https://docs.jboss.org/hibernate/orm/5.4/userguide/html_single/Hibernate_User_Guide.html#hql[HQL] ）的一个子集，并允许你轻松地表达一个查询。使用Panache的MongoDB会将其映射为MongoDB的原生查询。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If your query does not start with `{`, we will consider it a PanacheQL query:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你的查询不是以 `{` 开始，我们将认为它是一个PanacheQL查询：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`&lt;singlePropertyName&gt;` (and single parameter) which will expand to `{'singleColumnName': '?1'}`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`&lt;singlePropertyName&gt;` (和单一参数），这将扩展为 `{'singleColumnName': '?1'}` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`&lt;query&gt;` will expand to `{&lt;query&gt;}` where we will map the PanacheQL query to MongoDB native query form. We support the following operators that will be mapped to the corresponding MongoDB operators: 'and', 'or' ( mixing 'and' and 'or' is not currently supported), '=', '&gt;', '&gt;=', '&lt;', '&lt;=', '!=', 'is null', 'is not null', and 'like' that is mapped to the MongoDB `$regex` operator (both String and JavaScript patterns are supported).</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`&lt;query&gt;` 将扩展到 ，在这里我们将把PanacheQL查询映射到MongoDB原生查询形式。我们支持以下运算符，它们将被映射为相应的MongoDB运算符：'and'、 'or'（目前不支持 'and' 和 'or'一起使用）、'='、'&gt;'、'&gt;='、 '&lt;'、'&lt;='、'!='、'is null'、'is not null' 和 'like' 映射到 MongoDB `regex` 运算符（支持字符串和 JavaScript 模式）</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Here are some query examples:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>下面是一些查询例子：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`firstname = ?1 and status = ?2` will be mapped to `{'firstname': ?1, 'status': ?2}`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`firstname = ?1 and status = ?2` 将被映射到 `{'firstname': ?1, 'status': ?2}` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`amount &gt; ?1 and firstname != ?2` will be mapped to `{'amount': {'$gt': ?1}, 'firstname': {'$ne': ?2}}`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`amount &gt; ?1 and firstname != ?2` 将被映射到 `{'amount': {'$gt': ?1}, 'firstname': {'$ne': ?2}}` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`lastname like ?1` will be mapped to `{'lastname': {'$regex': ?1}}`. Be careful that this will be link:https://docs.mongodb.com/manual/reference/operator/query/regex/#op._S_regex[MongoDB regex] support and not SQL like pattern.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`lastname like ?1` 将被映射到 `{'lastname': {'$regex': ?1}}` 。注意 link:https://docs.mongodb.com/manual/reference/operator/query/regex/#op._S_regex[MongoDB的regex] 支持，而不是类似SQL模式。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`lastname is not null` will be mapped to `{'lastname':{'$exists': true}}`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`lastname is not null` 将被映射到 `{'lastname':{'$exists': true}}` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`status in ?1` will be mapped to `{'status':{$in: [?1]}}`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`status in ?1` 将被映射到 `{'status':{$in: [?1]}}` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>MongoDB queries must be valid JSON documents, using the same field multiple times in a query is not allowed using PanacheQL as it would generate an invalid JSON (see link:https://github.com/quarkusio/quarkus/issues/12086[this issue on github]).</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>MongoDB查询必须是有效的JSON文档，不允许使用 PanacheQL 在查询中多次使用同一字段，因为它将生成无效的JSON（见 link:https://github.com/quarkusio/quarkus/issues/12086[这个问题在github上] ）。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>We also handle some basic date type transformations: all fields of type `Date`, `LocalDate`, `LocalDateTime` or `Instant` will be mapped to the link:https://docs.mongodb.com/manual/reference/bson-types/#date[BSON Date] using the `ISODate` type (UTC datetime).  The MongoDB POJO codec doesn't support `ZonedDateTime` and `OffsetDateTime` so you should convert them prior usage.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>我们还处理一些基本的日期类型转换：所有类型为 `Date` , `LocalDate` , `LocalDateTime` 或 `Instant` 的字段都将使用 `ISODate` 类型（UTC日期时间）映射到 link:https://docs.mongodb.com/manual/reference/bson-types/#date[BSON Date] 。MongoDB的POJO编解码器不支持 `ZonedDateTime` 和 `OffsetDateTime` ，因此你应该在使用前转换它们</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>MongoDB with Panache also supports extended MongoDB queries by providing a `Document` query, this is supported by the find/list/stream/count/delete/update methods.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>带有Panache的MongoDB还支持扩展的MongoDB查询，提供了一个 `Document` 查询，这被find/list/stream/count/delete/update方法所支持。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>MongoDB with Panache offers operations to update multiple documents based on an update document and a query : `Person.update("foo = ?1, bar = ?2", fooName, barName).where("name = ?1", name)`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>带有Panache的MongoDB提供了基于一个更新文档和一个查询的操作来更新多个文档： `Person.update("foo = ?1, bar = ?2", fooName, barName).where("name = ?1", name)` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>For these operations, you can express the update document the same way you express your queries, here are some examples:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>对于这些操作，你可以用表达查询的同样方式来表达更新文件，这里有一些例子：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`&lt;singlePropertyName&gt;` (and single parameter) which will expand to the update document `{'$set' : {'singleColumnName': '?1'}}`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`&lt;singlePropertyName&gt;` (和单一参数），这将扩展到更新文档 `{'$set' : {'singleColumnName': '?1'}}` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`firstname = ?1, status = ?2` will be mapped to the update document `{'$set' : {'firstname': ?1, 'status': ?2}}`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`firstname = ?1, status = ?2` 将被映射到更新文档中 `{'$set' : {'firstname': ?1, 'status': ?2}}` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`firstname = :firstname, status = :status` will be mapped to the update document `{'$set' : {'firstname': :firstname, 'status': :status}}`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`firstname = :firstname, status = :status` 将被映射到更新文档中 `{'$set' : {'firstname': :firstname, 'status': :status}}` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`{'firstname' : ?1, 'status' : ?2}` will be mapped to the update document `{'$set' : {'firstname': ?1, 'status': ?2}}`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`{'firstname' : ?1, 'status' : ?2}` 将被映射到更新文档中 `{'$set' : {'firstname': ?1, 'status': ?2}}` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`{'firstname' : firstname, 'status' : :status}` ` will be mapped to the update document `{'$set' : {'firstname': :firstname, 'status': :status}}`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`{'firstname' : firstname, 'status' : :status}` `将被映射到更新文档中。 `{'$set' : {'firstname': :firstname, 'status': :status}}` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Query parameters</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>查询参数</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can pass query parameters, for both native and PanacheQL queries, by index (1-based) as shown below:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>对于原生和PanacheQL查询，你可以通过索引（基于1）传递查询参数，如下所示：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Or by name using a `Map`:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>或者使用 `Map` ，按名字来命名：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Or using the convenience class `Parameters` either as is or to build a `Map`:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>或者使用方便的类 `Parameters` ，既可以是原样，也可以是建立一个 `Map` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Every query operation accepts passing parameters by index (`Object...`), or by name (`Map&lt;String,Object&gt;` or `Parameters`).</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>每个查询操作都接受按索引（ `Object...` ）或按名称（ `Map&lt;String,Object&gt;` 或 `Parameters` ）传递参数。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>When you use query parameters, be careful that PanacheQL queries will refer to the Object parameters name but native queries will refer to MongoDB field names.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>当你使用查询参数时，要注意PanacheQL查询将参考Object参数名称，但本地查询将参考MongoDB字段名称。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Imagine the following entity:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>想象一下下面这个实体：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Both `findByNameWithPanacheQLQuery()` and `findByNameWithNativeQuery()` methods will return the same result but query written in PanacheQL will use the entity field name: `name`, and native query will use the MongoDB field name: `lastname`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`findByNameWithPanacheQLQuery()` 和 `findByNameWithNativeQuery()` 方法都将返回相同的结果，但用PanacheQL编写的查询将使用实体字段名： `name` ，而原生查询将使用MongoDB字段名： `lastname` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Query projection</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>查询映射</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Query projection can be done with the `project(Class)` method on the `PanacheQuery` object that is returned by the `find()` methods.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>查询映射可以使用 `find()` 方法返回的 `PanacheQuery` 对象上的 `project(Class)` 方法来完成。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can use it to restrict which fields will be returned by the database, the ID field will always be returned, but it's not mandatory to include it inside the projection class.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你可以用它来限制哪些字段将被数据库返回，ID字段将始终被返回，但并不强制要求在映射类中包含它。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>For this, you need to create a class (a POJO) that will only contain the projected fields.  This POJO needs to be annotated with `@ProjectionFor(Entity.class)` where `Entity` is the name of your entity class.  The field names, or getters, of the projection class will be used to restrict which properties will be loaded from the database.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>为此，你需要创建一个只包含映射字段的类（一个POJO）。这个POJO需要被注释为 `@ProjectionFor(Entity.class)` ，其中 `Entity` 是你的实体类的名称。映射类的字段名称或 getter 将用于限制将从数据库加载的属性。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Projection can be done for both PanacheQL and native queries.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>对PanacheQL和原生查询都可以进行映射。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Using `@BsonProperty` is not needed to define custom column mappings, as the mappings from the entity class will be used.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用 `@BsonProperty` ，不需要定义自定义列映射，因为将使用来自实体类的映射。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can have your projection class extends from another class. In this case, the parent class also needs to have use `@ProjectionFor` annotation.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你可以让你的映射类从另一个类继承。在这种情况下，父类也需要有使用 `@ProjectionFor` 注解。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Query debugging</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>查询调试</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>As MongoDB with Panache allows writing simplified queries, it is sometimes handy to log the generated native queries for debugging purpose.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>由于带有Panache的MongoDB允许编写简化的查询，有时为调试目的而记录生成的原生查询是很方便的。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This can be achieved by setting to DEBUG the following log category inside your `application.properties`:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这可以通过在你的 `application.properties` ，将以下日志类别设置为DEBUG来实现：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The PojoCodecProvider: easy object to BSON document conversion.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>PojoCodecProvider：简单的object（对象）到 BSON 文档的转换。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>MongoDB with Panache uses the link:{mongodb-doc-root-url}/bson/pojos[PojoCodecProvider], with link:{mongodb-doc-root-url}/pojos/#pojo-support[automatic POJO support], to automatically convert your object to a BSON document.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Panache的MongoDB使用 link:{mongodb-doc-root-url}/bson/pojos[PojoCodecProvider] ， link:{mongodb-doc-root-url}/pojos/#pojo-support[自动支持POJO] ，自动将你的对象转换为BSON文档。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In case you encounter the `org.bson.codecs.configuration.CodecConfigurationException` exception, it means the codec is not able to automatically convert your object.  This codec obeys the Java Bean standard, so it will successfully convert a POJO using public fields or getters/setters.  You can use `@BsonIgnore` to make a field, or a getter/setter, ignored by the codec.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你遇到了 `org.bson.codecs.configuration.CodecConfigurationException` 异常，这意味着编解码器不能自动转换你的对象。这个编解码器遵守Java Bean的标准，所以它将成功地转换使用公共字段或getter/setters的POJO。你可以使用 `@BsonIgnore` ，使一个字段或一个getter/setter被编解码器所忽略。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If your class doesn't obey these rules (for example by including a method that starts with `get` but is not a setter), you could provide a custom codec for it.  Your custom codec will be automatically discovered and registered inside the codec registry.  See xref:mongodb.adoc#simplifying-mongodb-client-usage-using-bson-codec[Using BSON codec].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你的类不遵守这些规则（例如，包括一个以 `get` 开始但不是setter的方法），你可以为它提供一个自定义的编解码器。你的自定义编解码器将被自动发现并在编解码器注册表内注册。参见 link:mongodb.html#simplifying-mongodb-client-usage-using-bson-codec[使用BSON编解码器] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Transactions</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>事务</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>MongoDB offers ACID transactions since version 4.0.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>MongoDB从4.0版本开始提供ACID事务。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To use them with MongoDB with Panache you need to annotate the method that starts the transaction with the `@Transactional` annotation.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>要将它们与带有 Panache 的 MongoDB 一起使用，你需要在相应的方法上使用 `@Transactional` 注解启动事务。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Transaction support inside MongoDB with Panache is still experimental.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用Panache的MongoDB内部的事务支持仍处于试验阶段。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Custom IDs</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>自定义ID</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>IDs are often a touchy subject. In MongoDB, they are usually auto-generated by the database with an `ObjectId` type.  In MongoDB with Panache the ID are defined by a field named `id` of the `org.bson.types.ObjectId` type, but if you want to customize them, once again we have you covered.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>ID往往是一个敏感的话题。在MongoDB中，，它们通常由数据库以 `ObjectId` 类型自动生成。 在带有 Panache 的 MongoDB 中，ID是由一个名为 `org.bson.types.ObjectId` 类型的名为 `id` 的字段定义的，但如果你想自定义它们，我们再次为您提供服务。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can specify your own ID strategy by extending `PanacheMongoEntityBase` instead of `PanacheMongoEntity`. Then you just declare whatever ID you want as a public field by annotating it by `@BsonId`:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你可以通过继承 `PanacheMongoEntityBase` ，而不是 `PanacheMongoEntity` ，来指定你自己的ID策略。然后你只要通过 `@BsonId` ，将你想要的任何ID声明为一个公共字段。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you're using repositories, then you will want to extend `PanacheMongoRepositoryBase` instead of `PanacheMongoRepository` and specify your ID type as an extra type parameter:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你使用存储库，那么你要继承 `PanacheMongoRepositoryBase` ，而不是 `PanacheMongoRepository` ，并指定你的ID类型作为一个额外的类型参数：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>When using `ObjectId`, MongoDB will automatically provide a value for you, but if you use a custom field type, you need to provide the value by yourself.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>当使用 `ObjectId` ，MongoDB会自动为你提供一个值，但如果你使用一个自定义字段类型，你需要自己提供一个值。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`ObjectId` can be difficult to use if you want to expose its value in your REST service.  So we created Jackson and JSON-B providers to serialize/deserialize them as a `String` which are automatically registered if your project depends on either the RESTEasy Reactive Jackson extension or the RESTEasy Reactive JSON-B extension.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果您想在 REST 服务中公开它的值，则 `ObjectId` 可能很难使用。因此，我们创建了 Jackson 和 JSON-B 提供程序，将它们序列化为 `String` ，如果您的项目依赖于 RESTEasy Reactive Jackson 扩展或 RESTEasy Reactive JSON-B 扩展，则会自动注册。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you use the standard `ObjectId` ID type, don't forget to retrieve your entity by creating a new `ObjectId` when the identifier comes from a path parameter. For example:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你使用标准的 `ObjectId` ID类型，当标识符来自路径参数时，不要忘记通过创建一个新的 `ObjectId` 来检索你的实体。例如：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Working with Kotlin Data classes</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用Kotlin Data classes工作</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Kotlin data classes are a very convenient way of defining data carrier classes, making them a great match to define an entity class.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Kotlin data classes是定义数据载体类的一种非常方便的方式，非常适合定义实体类。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>But this type of class comes with some limitations: all fields needs to be initialized at construction time or be marked as nullable, and the generated constructor needs to have as parameters all the fields of the data class.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>但是这种类型的类有一些限制：所有的字段都需要在构造时被初始化或者被标记为nullable（可空），而且生成的构造函数需要有数据类的所有字段作为参数。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>MongoDB with Panache uses the link:{mongodb-doc-root-url}/bson/pojos[PojoCodecProvider], a MongoDB codec which mandates the presence of a parameterless constructor.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>带有Panache的MongoDB使用 link:{mongodb-doc-root-url}/bson/pojos[PojoCodecProvider] ，这是一个MongoDB编解码器，它强制要求存在一个无参数构造函数。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Therefore, if you want to use a data class as an entity class, you need a way to make Kotlin generate an empty constructor.  To do so, you need to provide default values for all the fields of your classes.  The following sentence from the Kotlin documentation explains it:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>因此，如果你想使用一个数据类作为实体类，你需要一种方法来使Kotlin生成一个空的构造函数。要做到这一点，你需要为你的类的所有字段提供默认值。下面这句话来自Kotlin文档的解释：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>__On the JVM, if the generated class needs to have a parameterless constructor, default values for all properties have to be specified (see Constructors).__</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>__在JVM上，如果生成的类需要有一个无参数的构造函数，就必须为所有属性指定默认值（见构造函数）。__</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If for whatever reason, the aforementioned solution is deemed unacceptable, there are alternatives.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果由于某种原因，上述解决方案被认为是不可接受的，那么还有其他选择。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>First, you can create a BSON Codec which will be automatically registered by Quarkus and will be used instead of the `PojoCodecProvider`.  See this part of the documentation: xref:mongodb.adoc#simplifying-mongodb-client-usage-using-bson-codec[Using BSON codec].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>首先，你可以创建一个BSON编解码器，它将被Quarkus自动注册，并代替 `PojoCodecProvider` 。见这部分文档。 link:mongodb.html#simplifying-mongodb-client-usage-using-bson-codec[使用BSON编解码器] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Another option is to use the `@BsonCreator` annotation to tell the `PojoCodecProvider` to use the Kotlin data class default constructor, in this case all constructor parameters have to be annotated with `@BsonProperty`: see link:{mongodb-doc-root-url}/bson/pojos/#supporting-pojos-without-no-args-constructors[Supporting pojos without no args constructor].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>另一个选择是使用 `@BsonCreator` 注解来告诉 `PojoCodecProvider` 使用Kotlin数据类的默认构造函数，在这种情况下，所有的构造函数参数都必须用 `@BsonProperty` 注解：见 link:{mongodb-doc-root-url}/bson/pojos/#supporting-pojos-without-no-args-constructors[支持pojos无args构造函数] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This will only work when the entity extends `PanacheMongoEntityBase` and not `PanacheMongoEntity`, as the ID field also needs to be included in the constructor.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这只有在实体继承了 `PanacheMongoEntityBase` ，而不是 `PanacheMongoEntity` ，这样才会起作用，因为ID字段也需要被包含在构造函数中。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>An example of a `Person` class defined as a Kotlin data class would look like:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>一个定义为Kotlin数据类的 `Person` 类的例子是这样的：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Here we use `var` but note that `val` can also be used.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这里我们使用 `var` ，但注意也可以使用 `val` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `@BsonId` annotation is used instead of `@BsonProperty("_id")` for brevity's sake, but use of either is valid.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>为了简洁起见，使用了 `@BsonId` 注解，而不是 `@BsonProperty("_id")` ，但使用其中任何一种都是有效的。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The last option is to the use the link:https://kotlinlang.org/docs/reference/compiler-plugins.html#no-arg-compiler-plugin[no-arg] compiler plugin.  This plugin is configured with a list of annotations, and the end result is the generation of no-args constructor for each class annotated with them.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>最后一个选项是使用 link:https://kotlinlang.org/docs/reference/compiler-plugins.html#no-arg-compiler-plugin[无arg（参数）] 编译器插件。这个插件是用一个注释列表来配置的，最终的结果是为每个有注释的类生成无args（参数）构造函数。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>For MongoDB with Panache, you could use the `@MongoEntity` annotation on your data class for this:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>对于带有Panache的MongoDB，你可以在你的数据类上使用 `@MongoEntity` 注解来实现这一点。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Reactive Entities and Repositories</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>响应式实体和存储库</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>MongoDB with Panache allows using reactive style implementation for both entities and repositories.  For this, you need to use the Reactive variants when defining your entities : `ReactivePanacheMongoEntity` or `ReactivePanacheMongoEntityBase`, and when defining your repositories: `ReactivePanacheMongoRepository` or `ReactivePanacheMongoRepositoryBase`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>带有Panache的MongoDB允许对实体和存储库使用响应式实现。为此，你需要在定义实体时使用Reactive变形： `ReactivePanacheMongoEntity` 或 `ReactivePanacheMongoEntityBase` ，在定义存储库时使用： `ReactivePanacheMongoRepository` 或 `ReactivePanacheMongoRepositoryBase` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The reactive API of the MongoDB with Panache uses Mutiny reactive types.  If you are not familiar with Mutiny, check xref:mutiny-primer.adoc[Mutiny - an intuitive reactive programming library].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Panache的MongoDB的反应式API使用Mutiny反应式类型。如果你不熟悉Mutiny，请查看 link:mutiny-primer.html[Mutiny - 一个直观的响应式编程库] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The reactive variant of the `Person` class will be:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`Person` 类的响应式变形将是：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You will have access to the same functionalities of the _imperative_ variant inside the reactive one: bson annotations, custom ID, PanacheQL, ...  But the methods on your entities or repositories will all return reactive types.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你可以在 _imperative_ 变形中使用同样的功能：Bson注释、自定义ID、PanacheQL......但是你的实体或资源库上的方法将全部返回响应式类型。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>See the equivalent methods from the imperative example with the reactive variant:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>请参阅带有响应变形的命令式示例中的等效方法：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you use MongoDB with Panache in conjunction with RESTEasy Reactive, you can directly return a reactive type inside your JAX-RS resource endpoint.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果您将MongoDB和Panache和RESTEasy Reactive结合使用，您可以直接在JAX-RS资源端点内返回一个响应式类型。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The same query facility exists for the reactive types, but the `stream()` methods act differently: they return a `Multi` (which implement a reactive stream `Publisher`) instead of a `Stream`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>响应类型存在相同的查询工具，但 `stream()` 方法的作用不同：它们返回一个 `Multi` （实现了反应式流 `Publisher` ），而不是 `Stream` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>It allows more advanced reactive use cases, for example, you can use it to send server-sent events (SSE) via RESTEasy Reactive:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>它允许更高级的响应式用例，例如，你可以用它来通过RESTEasy Reactive发送服务器发送的事件（SSE）：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`@RestStreamElementType(MediaType.APPLICATION_JSON)` tells RESTEasy Reactive to serialize the object in JSON.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`@RestStreamElementType(MediaType.APPLICATION_JSON)` 告诉RESTEasy Reactive将对象序列化为JSON格式。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Transactions are not supported for Reactive Entities and Repositories.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>响应式实体和存储库不支持事务。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Using the active-record pattern</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用active-record模式</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you are using the active-record pattern you cannot use Mockito directly as it does not support mocking static methods, but you can use the `quarkus-panache-mock` module which allows you to use Mockito to mock all provided static methods, including your own.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你使用active-record模式，你不能直接使用Mockito，因为它不支持模拟静态方法，但你可以使用 `quarkus-panache-mock` 模块，它允许你使用Mockito来模拟所有提供的静态方法，包括你自己的。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Add this dependency to your `pom.xml`:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>将此依赖添加到你的 `pom.xml` 中 ：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Given this simple entity:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>提供这个简单的实体：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can write your mocking test like this:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你可以像这样写你的模拟测试。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Be sure to call your `verify` methods on `PanacheMock` rather than `Mockito`, otherwise you won't know what mock object to pass.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>请确保在 `PanacheMock` 而不是 `Mockito` 上调用你的 `verify` 方法，否则你将不知道要传递什么模拟对象。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you are using the repository pattern you can use Mockito directly, using the `quarkus-junit5-mockito` module, which makes mocking beans much easier:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你使用存储库模式，你可以直接使用Mockito，使用 `quarkus-junit5-mockito` 模块，这使得模拟Bean变得更加容易：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>And this repository:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>还有这个储存库：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>How and why we simplify MongoDB API</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>我们如何以及为什么要简化MongoDB的API</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>When it comes to writing MongoDB entities, there are a number of annoying things that users have grown used to reluctantly deal with, such as:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在编写MongoDB实体时，用户已经习惯了不情愿地处理许多烦人的事情，例如：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Duplicating ID logic: most entities need an ID, most people don't care how it's set, because it's not really relevant to your model.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>重复ID逻辑：大多数实体需要一个ID，大多数人并不关心它是如何设置的，因为它与你的模型并不真正相关。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Dumb getters and setters: since Java lacks support for properties in the language, we have to create fields, then generate getters and setters for those fields, even if they don't actually do anything more than read/write the fields.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>繁琐的 getters 和 setters：由于Java语言中缺乏对属性的支持，我们必须创建字段，然后为这些字段getters 和 setters，即使它们除了read/write字段外实际上没有做任何事情。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Traditional EE patterns advise to split entity definition (the model) from the operations you can do on them (DAOs, Repositories), but really that requires an unnatural split between the state and its operations even though we would never do something like that for regular objects in the Object Oriented architecture, where state and methods are in the same class. Moreover, this requires two classes per entity, and requires injection of the DAO or Repository where you need to do entity operations, which breaks your edit flow and requires you to get out of the code you're writing to set up an injection point before coming back to use it.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>传统的EE模式建议将实体定义（模型）与你可以对其进行的操作（DAO、Repositories）分开，但实际上这需要在状态和其操作之间进行不自然的分割，尽管在面向对象的架构中，我们永远不会对普通对象做这样的事情，因为状态和方法是在同一个类中。此外，这需要每个实体有两个类，并且需要在你需要进行实体操作的地方注入DAO或Repository，这就破坏了你的编辑流程，需要你从正在编写的代码中跳出来，建立一个注入点，然后再回来使用它。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>MongoDB queries are super powerful, but overly verbose for common operations, requiring you to write queries even when you don't need all the parts.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>MongoDB的查询功能超级强大，但对于普通操作来说过于冗长，即使不需要所有的部分，也需要你编写查询。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>MongoDB queries are JSON based, so you will need some String manipulation or using the `Document` type and it will need a lot of boilerplate code.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>MongoDB的查询是基于JSON的，所以你需要一些String操作或使用 `Document` 类型，它需要大量的模板代码。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>With Panache, we took an opinionated approach to tackle all these problems:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>通过Panache，我们采取了一种有主见的方法来解决所有这些问题：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Make your entities extend `PanacheMongoEntity`: it has an ID field that is auto-generated. If you require a custom ID strategy, you can extend `PanacheMongoEntityBase` instead and handle the ID yourself.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>让你的实体继承 `PanacheMongoEntity` ：它有一个自动生成的ID字段。如果你需要一个自定义的ID策略，你可以继承 `PanacheMongoEntityBase` ，而不是自己处理ID。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Use public fields. Get rid of dumb getter and setters. Under the hood, we will generate all getters and setters that are missing, and rewrite every access to these fields to use the accessor methods. This way you can still write _useful_ accessors when you need them, which will be used even though your entity users still use field accesses.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用公共字段。摆脱繁琐的getter和setters。在后台，我们将生成所有缺失的getter和setter，并重写对这些字段的每个访问，以使用访问器方法。这样，当你需要时，你仍然可以写出 _有用的_ 访问器，即使你的实体用户仍然使用字段访问，也会被使用。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>With the active record pattern: put all your entity logic in static methods in your entity class and don't create DAOs.  Your entity superclass comes with lots of super useful static methods, and you can add your own in your entity class.  Users can just start using your entity `Person` by typing `Person.` and getting completion for all the operations in a single place.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用活动记录模式：把你所有的实体逻辑放在实体类的静态方法中，不要创建DAO。你的实体超类带有很多超级有用的静态方法，你也可以在你的实体类中添加你自己的静态方法。用户可以通过输入 `Person.` ，开始使用你的实体 `Person` ，并在一个地方获得所有操作的完成。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Don't write parts of the query that you don't need: write `Person.find("order by name")` or `Person.find("name = ?1 and status = ?2", "Loïc", Status.Alive)` or even better `Person.find("name", "Loïc")`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>不要写你不需要的查询部分：写 `Person.find("order by name")` 或 `Person.find("name = ?1 and status = ?2", "Loïc", Status.Alive)` ，甚至更好的 `Person.find("name", "Loïc")` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>That's all there is to it: with Panache, MongoDB has never looked so trim and neat.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这就是它的全部内容：有了Panache，MongoDB看起来从未如此简洁</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Defining entities in external projects or jars</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在外部项目或jar中定义实体</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>MongoDB with Panache relies on compile-time bytecode enhancements to your entities.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>带有Panache的MongoDB依赖于对你的实体进行编译时的字节码增强。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>It attempts to identity archives with Panache entities (and consumers of Panache entities)  by the presence of the marker file `META-INF/panache-archive.marker`. Panache includes an annotation processor that will automatically create this file in archives that depend on Panache (even indirectly). If you have disabled annotation processors you may need to create this file manually in some cases.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>它试图通过标记文件 `META-INFpanache-archive.marker` 的存在来识别具有 Panache 实体（和 Panache 实体的消费者）的档案。 Panache 包含一个注释处理器，它将自动在依赖于 Panache（甚至间接）的档案中创建此文件。如果您禁用了注释处理器，在某些情况下您可能需要手动创建此文件。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Using the MongoDB Client</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用MongoDB客户端</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>MongoDB is a well known NoSQL Database that is widely used.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>MongoDB是一个众所周知的NoSQL数据库，被广泛使用。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In this guide, we see how you can get your REST services to use the MongoDB database.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在本指南中，我们看到如何让你的REST服务使用MongoDB数据库。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>MongoDB installed or Docker installed</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>安装了MongoDB或安装了Docker</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The application built in this guide is quite simple: the user can add elements in a list using a form and the list is updated.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>本指南中构建的应用程序非常简单：用户可以使用一个表单在列表中添加元素并更新列表。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>All the information between the browser and the server is formatted as JSON.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>浏览器和服务器之间的所有信息都被格式化为JSON。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The elements are stored in MongoDB.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这些元素被存储在MongoDB中。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The solution is located in the `mongodb-quickstart` {quickstarts-tree-url}/mongodb-quickstart[directory].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>该解决方案位于 `mongodb-quickstart` {quickstarts-tree-url}/mongodb-quickstart[目录]中。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This command generates a Maven structure importing the RESTEasy Reactive Jackson and MongoDB Client extensions.  After this, the `quarkus-mongodb-client` extension has been added to your build file.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>该命令生成一个导入RESTEasy Reactive Jackson和MongoDB客户端扩展的Maven结构。在此之后， `quarkus-mongodb-client` 扩展已被添加到您的构建文件中。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you already have your Quarkus project configured, you can add the `mongodb-client` extension to your project by running the following command in your project base directory:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你已经配置了你的Quarkus项目，你可以通过在你的项目基础目录下运行以下命令，将 `mongodb-client` 扩展添加到你的项目中：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This will add the following to your `pom.xml`:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这将在你的 `pom.xml` 中添加以下内容：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Creating your first JSON REST service</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>创建你的第一个JSON REST服务</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In this example, we will create an application to manage a list of fruits.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在这个例子中，我们将创建一个应用程序来管理fruit列表。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>First, let's create the `Fruit` bean as follows:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>首先，让我们创建 `Fruit` 实体类，如下所示：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Nothing fancy. One important thing to note is that having a default constructor is required by the JSON serialization layer.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这非常的简单。需要注意的一件事是， JSON 序列化层需要具有默认构造函数。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Now create a `org.acme.mongodb.FruitService` that will be the business layer of our application and store/load the fruits from the mongoDB database.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>现在创建一个 `org.acme.mongodb.FruitService` ，它将是我们应用程序的业务层，并从mongoDB数据库 store/load fruits。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Now, create the `org.acme.mongodb.FruitResource` class as follows:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>现在，创建 `org.acme.mongodb.FruitResource` 类，如下所示：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The implementation is pretty straightforward and you just need to define your endpoints using the JAX-RS annotations and use the `FruitService` to list/add new fruits.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>实现起来非常简单，你只需要使用JAX-RS注解来定义你的端点，并使用 `FruitService` 来list/add新的fruits。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Configuring the MongoDB database</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>配置MongoDB数据库</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The main property to configure is the URL to access to MongoDB, almost all configuration can be included in the connection URI so we advise you to do so, you can find more information in the MongoDB documentation: https://docs.mongodb.com/manual/reference/connection-string/</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>要配置的主要属性是访问MongoDB的URL，几乎所有的配置都可以包含在连接URI中，所以我们建议你这样做，你可以在MongoDB文档中找到更多信息 https://docs.mongodb.com/manual/reference/connection-string/ </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>A sample configuration should look like this:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>示例配置应如下所示：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In this example, we are using a single instance running on localhost:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在此示例中，我们在 localhost 上运行的单个实例：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you need more configuration properties, there is a full list at the end of this guide.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你需要更多的配置属性，在本指南的末尾有一个完整的列表。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>By default Quarkus will restrict the use of JNDI within an application, as a precaution to try and mitigate any future vulnerabilities similar to log4shell.  Because the `mongo+srv` protocol often used to connect to MongoDB requires JNDI, this protection is automatically disabled when using the MongoDB client extension.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>默认情况下，Quarkus会限制在应用程序中使用JNDI，作为一种预防措施，以尝试缓解所有将来类似于 log4shell 的漏洞。因为通常用于连接MongoDB的 `mongo+srv` 协议需要JNDI，所以在使用MongoDB客户端扩展时，这种保护会自动关闭。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Dev Services (Configuration Free Databases)</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>开发服务（免配置数据库）。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Quarkus supports a feature called Dev Services that allows you to create various datasources without any config. In the case of MongoDB this support extends to the default MongoDB connection.  What that means practically, is that if you have not configured `quarkus.mongodb.connection-string` Quarkus will automatically start a MongoDB container when running tests or dev-mode, and automatically configure the connection.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Quarkus支持一种叫做Dev Services的功能，它允许你在没有任何配置的情况下创建各种数据源。在MongoDB的情况下，这种支持延伸到默认的MongoDB连接。也就是说，如果你没有配置 `quarkus.mongodb.connection-string` ，Quarkus会在运行测试或开发模式时自动启动一个MongoDB容器，并自动配置连接。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>When running the production version of the application, the MongoDB connection need to be configured as normal, so if you want to include a production database config in your `application.properties` and continue to use Dev Services we recommend that you use the `%prod.` profile to define your MongoDB settings.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>当运行应用程序的生产版本时，MongoDB连接需要正常配置，如果您希望在 `application.properties` 中包含生产数据库配置并继续使用开发服务，我们建议你使用 `%prod.` 配置文件来定义你的MongoDB设置。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Multiple MongoDB Clients</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>多个MongoDB客户端</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>MongoDB allows you to configure multiple clients.  Using several clients works the same way as having a single client.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>MongoDB允许你配置多个客户端。使用多个客户端的方式与拥有一个客户端的方式相同。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Notice there's an extra bit in the key (the `users` and `inventory` segments).  The syntax is as follows: `quarkus.mongodb.[optional name.][mongo connection property]`.  If the name is omitted, it configures the default client.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>注意在键中有一个额外的位（ `users` 和 `inventory` 段）。语法如下： `quarkus.mongodb.[optional name.][mongo connection property]` 。如果省略了名称，则配置默认的客户端。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The use of multiple MongoDB clients enables multi-tenancy for MongoDB by allowing to connect to multiple MongoDB clusters. + If you want to connect to multiple databases inside the same cluster, multiple clients are **not** necessary as a single client is able to access all databases in the same cluster (like a JDBC connection is able to access to multiple schemas inside the same database).</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>多个 MongoDB 客户端的使用通过允许连接到多个 MongoDB 集群来实现 MongoDB 的多租户。+ 如果你想连接同一集群内的多个数据库，则 **不** 需要使用多个客户端，因为单个客户端能够访问同一集群内的所有数据库（就像JDBC连接能够访问同一数据库内的多个模式）。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Named Mongo client Injection</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>以Mongo客户端的名字进行注入</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>When using multiple clients, each `MongoClient`, you can select the client to inject using the `io.quarkus.mongodb.MongoClientName` qualifier.  Using the above properties to configure three different clients, you can also inject each one as follows:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>当使用多个客户端时，每个 `MongoClient` ，你可以使用 `io.quarkus.mongodb.MongoClientName` 修饰语选择要注入的客户端。使用上述属性来配置三个不同的客户端，你也可以按以下方式来注入每个客户端：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Running a MongoDB Database</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>运行MongoDB数据库</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>As by default, `MongoClient` is configured to access a local MongoDB database on port 27017 (the default MongoDB port), if you have a local running database on this port, there is nothing more to do before being able to test it!</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在默认情况下， `MongoClient` 被配置为在27017端口（默认的MongoDB端口）上访问本地的MongoDB数据库，如果你在这个端口上有一个本地运行的数据库，那么在能够测试之前，不需要做其他操作！</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you want to use Docker to run a MongoDB database, you can use the following command to launch one:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你想使用Docker来运行MongoDB数据库，你可以使用以下命令来启动一个数据库：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you use &lt;&lt;dev-services,Dev Services&gt;&gt;, launching the container manually is not necessary!</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你使用 link:#dev-services[开发服务] ，则不需要手动启动容器！</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Creating a frontend</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>创建一个网页</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Now let's add a simple web page to interact with our `FruitResource`.  Quarkus automatically serves static resources located under the `META-INF/resources` directory.  In the `src/main/resources/META-INF/resources` directory, add a `fruits.html` file with the content from this {quickstarts-blob-url}/mongodb-quickstart/src/main/resources/META-INF/resources/fruits.html[fruits.html] file in it.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>现在让我们添加一个简单的网页来与我们的 `FruitResource` 进行交互。Quarkus会自动提供位于 `META-INF/resources` 目录下的静态资源。在 `src/main/resources/META-INF/resources` 目录中，添加一个 `fruits.html` 文件，其中包含这个 {quickstarts-blob-url}/mongodb-quickstart/src/main/resources/META-INF/resources/fruits.html[fruits.html] 文件的内容。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can now interact with your REST service:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>现在你可以与你的REST服务进行交互：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>start Quarkus with:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>启动Quarkus：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>open a browser to `http://localhost:8080/fruits.html`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>打开浏览器访问 `&lt;a href="http://localhost:8080/fruits.html" class="bare"&gt;http://localhost:8080/fruits.html&lt;/a&gt;` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Reactive MongoDB Client</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>响应式MongoDB客户端</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>A reactive MongoDB Client is included in Quarkus.  Using it is as easy as using the classic MongoDB Client.  You can rewrite the previous example to use it like the following.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Quarkus中包含一个响应式MongoDB客户端。使用它就像使用经典的MongoDB客户端一样简单。你可以重写前面的例子来使用它，如下所示：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Deprecation</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>弃用</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `io.quarkus.mongodb.ReactiveMongoClient` client is deprecated and will be removed in the future.  It is recommended to switch to the `io.quarkus.mongodb.reactive.ReactiveMongoClient` client providing the `Mutiny` API.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`io.quarkus.mongodb.ReactiveMongoClient` 客户端已被废弃，并将在未来被删除。建议切换到提供 `Mutiny` API的 `io.quarkus.mongodb.reactive.ReactiveMongoClient` 客户端。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The MongoDB reactive client uses Mutiny reactive types.  If you are not familiar with Mutiny, check xref:mutiny-primer.adoc[Mutiny - an intuitive reactive programming library].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>MongoDB的响应式客户端使用Mutiny响应式类型。如果你不熟悉Mutiny，请查看 link:mutiny-primer.html[Mutiny - 一个直观的响应式编程库] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Simplifying MongoDB Client usage using BSON codec</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用BSON编解码器简化MongoDB客户端的使用</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>By using a Bson `Codec`, the MongoDB Client will take care of the transformation of your domain object to/from a MongoDB `Document` automatically.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>通过使用Bson `Codec` ，MongoDB 客户端将自动处理您的域对象与 MongoDB `Document` 的相互转化。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>First you need to create a Bson `Codec` that will tell Bson how to transform your entity to/from a MongoDB `Document`.  Here we use a `CollectibleCodec` as our object is retrievable from the database (it has a MongoDB identifier), if not we would have used a `Codec` instead.  More information in the codec documentation: https://mongodb.github.io/mongo-java-driver/3.10/bson/codecs.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>首先你需要创建一个Bson `Codec` ，它将告诉Bson如何将你的实体与MongoDB `Document` 的相互转化。这里我们使用一个 `CollectibleCodec` ，因为我们的对象可以从数据库中检索到（它有一个MongoDB标识符），如果不是这样，我们会使用一个 `Codec` 。更多信息见编解码器文档 https://mongodb.github.io/mongo-java-driver/3.10/bson/codecs</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Then you need to create a `CodecProvider` to link this `Codec` to the `Fruit` class.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>然后你需要创建一个 `CodecProvider` 来把这个 `Codec` 链接到 `Fruit` 类。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Quarkus takes care of registering the `CodecProvider` for you as a CDI bean of `@Singleton` scope.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Quarkus负责为你注册 `CodecProvider` ，作为 `@Singleton` 范围的CDI bean。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Finally, when getting the `MongoCollection` from the database you can use directly the `Fruit` class instead of the `Document` one, the codec will automatically map the `Document` to/from your `Fruit` class.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>最后，当从数据库中获取 `MongoCollection` 时，你可以直接使用 `Fruit` 类，而不是 `Document` ，编解码器会自动将 `Document` 与 `Fruit` 类相互映射（从 `Fruit` 类映射 `Document` 或者将 `Document` 映射到 `Fruit` 类）。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Here is an example of using a `MongoCollection` with the `FruitCodec`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这是一个将 `MongoCollection` 与 `FruitCodec` 一起使用的示例。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The link:http://mongodb.github.io/mongo-java-driver/3.12/bson/pojos[POJO Codec] provides a set of annotations that enable the customization of the way a POJO is mapped to a MongoDB collection and this codec is initialized automatically by Quarkus</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>link:http://mongodb.github.io/mongo-java-driver/3.12/bson/pojos[POJO编解码器] 提供了一组注解，可以自定义POJO映射到MongoDB集合的方式，该编解码器由Quarkus自动初始化。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>One of these annotations is the `@BsonDiscriminator` annotation that allows to storage multiple Java types in a single MongoDB collection by adding a discriminator field inside the document. It can be useful when working with abstract types or interfaces.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>其中一个注解是 `@BsonDiscriminator` ，它允许通过在文档中添加一个判别字段来在单个MongoDB集合中存储多个Java类型。在处理抽象类型或接口时，它可能很有用。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Quarkus will automatically register all the classes annotated with `@BsonDiscriminator` with the POJO codec.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Quarkus 将使用 POJO codec自动注册所有使用 `@BsonDiscriminator` 的类。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The POJO Codec have enhanced generic support via `PropertyCodecProvider`, Quarkus will automatically register any `PropertyCodecProvider` with the POJO Codec (these classes are automatically made CDI beans of `@Singleton` scope).  When building native executables and using generic types, you might need to register the type arguments for reflection.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>POJO Codec通过 `PropertyCodecProvider` 增强了对泛型的支持，Quarkus会自动在POJO Codec中注册任何 `PropertyCodecProvider` （这些类会自动成为 `@Singleton` 范围的CDI bean）。当构建本地可执行文件和使用用泛型类型时，你可能需要用反射来注册类型参数。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Simplifying MongoDB with Panache</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>用Panache简化MongoDB</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The xref:mongodb-panache.adoc[MongoDB with Panache] extension facilitates the usage of MongoDB by providing active record style entities (and repositories) like you have in xref:hibernate-orm-panache.adoc[Hibernate ORM with Panache] and focuses on making your entities trivial and fun to write in Quarkus.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>link:mongodb-panache.html[MongoDB with Panache] 扩展通过提供活动记录样式实体（和存储库）来促进 MongoDB 的使用，就像您在 link:hibernate-orm-panache.html[Hibernate ORM with Panache] 中所拥有的一样，并关注让你的实体在 Quarkus 中编写变得简单而有趣。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you are using the `quarkus-smallrye-health` extension, `quarkus-mongodb-client` will automatically add a readiness health check to validate the connection to the cluster.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你使用 `quarkus-smallrye-health` 扩展， `quarkus-mongodb-client` 将自动添加就绪状态检查，以验证与集群的连接。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This behavior can be disabled by setting the `quarkus.mongodb.health.enabled` property to `false` in your `application.properties`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>可以通过在 `application.properties` 中将 `quarkus.mongodb.health.enabled` 属性设置为 `false` 来禁用此行为。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Metrics</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>指标</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you are using the `quarkus-micrometer` or `quarkus-smallrye-metrics` extension, `quarkus-mongodb-client` can provide metrics about the connection pools.  This behavior must first be enabled by setting the `quarkus.mongodb.metrics.enabled` property to `true` in your `application.properties`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你使用 `quarkus-micrometer` 或 `quarkus-smallrye-metrics` 扩展， `quarkus-mongodb-client` 可以提供关于连接池的指标。这种行为必须首先通过在你的 `application.properties` 中设置 `quarkus.mongodb.metrics.enabled` 属性为 `true` 来启用。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>So when you access the `/q/metrics` endpoint of your application you will have information about the connection pool status.  When using xref:smallrye-metrics.adoc[SmallRye Metrics], connection pool metrics will be available under the `vendor` scope.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>因此，当你访问你的应用程序的 `/q/metrics` 端点时，你将得到有关连接池状态的信息。当使用 link:smallrye-metrics.html[SmallRye Metrics] 时，连接池指标将在 `vendor` 范围内可用。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Tracing</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>跟踪</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you are using the `quarkus-smallrye-opentracing` extension, `quarkus-mongodb-client` can register traces about the commands executed.  This behavior must be enabled by setting the `quarkus.mongodb.tracing.enabled` property to `true` in your `application.properties` and adding the dependency `io.opentracing.contrib:opentracing-mongo-common` to your pom.xml (for more info read the xref:opentracing.adoc#mongodb-client[OpenTracing - MongoDB client] section).</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你使用 `quarkus-smallrye-opentracing` 扩展， `quarkus-mongodb-client` 可以注册关于所执行命令的跟踪。必须通过在你的 `application.properties` 中将 `quarkus.mongodb.tracing.enabled` 属性设置为 `true` 并在你的 pom.xml 中添加依赖性 `io.opentracing.contrib:opentracing-mongo-common` 来启用这一行为（更多信息请阅读 link:opentracing.html#mongodb-client[OpenTracing - MongoDB 客户端] 部分）。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Read the xref:opentracing.adoc[OpenTracing] guide, for how to configure OpenTracing and how to use the Jaeger tracer.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>阅读 link:opentracing.html[OpenTracing] 指南，了解如何配置OpenTracing以及如何使用Jaeger追踪器。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Testing helpers</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>测试助手</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To start a MongoDB database for your unit tests, Quarkus provides two `QuarkusTestResourceLifecycleManager` that relies on link:https://github.com/flapdoodle-oss/de.flapdoodle.embed.mongo[Flapdoodle embedded MongoDB].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>为了给你的单元测试启动MongoDB数据库，Quarkus提供了两个 `QuarkusTestResourceLifecycleManager` 依赖于 link:https://github.com/flapdoodle-oss/de.flapdoodle.embed.mongo[Flapdoodle嵌入式MongoDB] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`io.quarkus.test.mongodb.MongoTestResource` will start a single instance on port 27017.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`io.quarkus.test.mongodb.MongoTestResource` 将在27017端口启动一个单一的实例。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`io.quarkus.test.mongodb.MongoReplicaSetTestResource` will start a replicaset with two instances, one on port 27017 and the other on port 27018.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`io.quarkus.test.mongodb.MongoReplicaSetTestResource` 将启动一个有两个实例的复制集，一个在27017端口，另一个在27018端口。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To use them, you need to add the `io.quarkus:quarkus-test-mongodb` dependency to your pom.xml.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>要使用它们，你需要在你的pom.xml中添加 `io.quarkus:quarkus-test-mongodb` 依赖。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>For more information about the usage of a `QuarkusTestResourceLifecycleManager` please read xref:getting-started-testing.adoc#quarkus-test-resource[Quarkus test resource].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>有关 `QuarkusTestResourceLifecycleManager` 的更多信息，请阅读 link:getting-started-testing.html#quarkus-test-resource[Quarkus测试资源] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The legacy client</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>旧客户端</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>We don't include the legacy MongoDB client by default. It contains the now retired MongoDB Java API (DB, DBCollection,... )  and the `com.mongodb.MongoClient` that is now superseded by `com.mongodb.client.MongoClient`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>我们默认不包括旧版的MongoDB客户端。它包含现已废弃的MongoDB Java API（DB、DBCollection......）以及现已被 `com.mongodb.client.MongoClient` 所取代的 `com.mongodb.MongoClient` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you want to use the legacy API, you need to add the following dependency to your build file:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你想使用旧的API，你需要在你的构建文件中添加以下依赖：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Building a native executable</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>构建一个本地可执行文件</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can use the MongoDB client in a native executable.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你可以在一个本地可执行文件中使用MongoDB客户端。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you want to use SSL/TLS encryption, you need to add these properties in your `application.properties`:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你想使用SSL/TLS加密，你需要在你的 `application.properties` 中添加这些属性：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can then build a native executable with the usual command:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>然后你可以用常用的命令构建一个本地可执行文件：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Running it is as simple as executing `./target/mongodb-quickstart-1.0.0-SNAPSHOT-runner`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>运行它就像执行 `./target/mongodb-quickstart-1.0.0-SNAPSHOT-runner` 一样简单。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can then point your browser to `http://localhost:8080/fruits.html` and use your application.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>然后你可以使用的浏览器访问 `&lt;a href="http://localhost:8080/fruits.html" class="bare"&gt;http://localhost:8080/fruits.html&lt;/a&gt;` 来使用你的应用程序。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Currently, Quarkus doesn't support link:https://docs.mongodb.com/manual/core/security-client-side-encryption/[Client-Side Field Level Encryption] in native mode.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>目前，Quarkus在本地模式下不支持 link:https://docs.mongodb.com/manual/core/security-client-side-encryption/[客户端字段级加密] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you encounter the following error when running your application in native mode: + `Failed to encode 'MyObject'. Encoding 'myVariable' errored with: Can't find a codec for class org.acme.MyVariable.` + This means that the `org.acme.MyVariable` class is not known to GraalVM, the remedy is to add the `@RegisterForReflection` annotation to your `MyVariable class`.  More details about the `@RegisterForReflection` annotation can be found on the xref:writing-native-applications-tips.adoc#registerForReflection[native application tips] page.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你在本地模式下运行你的应用程序时遇到以下错误。+ `Failed to encode 'MyObject'. Encoding 'myVariable' errored with: Can’t find a codec for class org.acme.MyVariable.` + 这意味着GeralVM不知道 `org.acme.MyVariable` 类，补救措施是将 `@RegisterForReflection` 注解添加到你的 `MyVariable class` 。关于 `@RegisterForReflection` 注解的更多细节可以在 link:writing-native-applications-tips.html#registerForReflection[本地应用程序提示] 页面找到。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Using mongo+srv:// urls</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用mongo+srv:// urls</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`mongo+srv://` urls are supported out of the box in JVM mode.  However, in native, the default DNS resolver, provided by the MongoDB client, uses JNDI and does not work in native mode.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`mongo+srv://` urls在JVM模式下支持开箱即用。然而，在本地模式下，MongoDB客户端提供的默认DNS解析器使用的是JNDI，在本地模式下无法工作。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you need to use `mongo+srv://` in native mode, you can configure an alternative DNS resolver.  This feature is **experimental** and may introduce a difference between JVM applications and native applications.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你需要在原生模式下使用 `mongo+srv:` ，你可以配置一个备用的DNS解析器。此功能是**实验性**的，可能会在 JVM 应用程序和本机应用程序之间产生差异。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To enable the alternative DNS resolver, use:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>要启用备用 DNS 解析器，请使用：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>As indicated in the property name, it uses Vert.x to retrieve the DNS records.  By default, it tries to read the first `nameserver` from `/etc/resolv.conf`, if this file exists.  You can also configure your DNS server:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如属性名称所示，它使用 Vert.x 检索 DNS 记录。默认情况下，如果此文件存在，它会尝试从 `etcresolv.conf` 中读取第一个 `nameserver`。您还可以这样配置 DNS 服务器：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Also, you can configure the lookup timeout using:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>此外，您可以使用以下方法配置来查找超时：</seg>
       </tuv>
     </tu>
     <tu>
@@ -14488,6 +17890,14 @@ This guide will walk you through all that.
       </tuv>
       <tuv xml:lang="zh_CN">
         <seg>减少反射的使用</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>All configuration options</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>所有配置选项</seg>
       </tuv>
     </tu>
     <tu>
