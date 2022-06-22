@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2022-05-12 15:52+0000\n"
+"POT-Creation-Date: 2022-06-22 10:12+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -161,7 +161,7 @@ msgstr "这将在你的构建文件中添加以下内容。"
 
 #. type: Block title
 #: upstream/_guides/smallrye-graphql.adoc:78
-#: upstream/_guides/smallrye-graphql.adoc:828
+#: upstream/_guides/smallrye-graphql.adoc:1009
 #, fuzzy, no-wrap
 msgid "pom.xml"
 msgstr "pom.xml"
@@ -178,7 +178,7 @@ msgstr ""
 
 #. type: Block title
 #: upstream/_guides/smallrye-graphql.adoc:87
-#: upstream/_guides/smallrye-graphql.adoc:837
+#: upstream/_guides/smallrye-graphql.adoc:1018
 #, fuzzy, no-wrap
 msgid "build.gradle"
 msgstr "build.gradle"
@@ -756,7 +756,6 @@ msgstr "在GraphiQL中输入以下内容，以检索两部电影。"
 
 #. type: delimited block -
 #: upstream/_guides/smallrye-graphql.adoc:396
-#: upstream/_guides/smallrye-graphql.adoc:503
 #, no-wrap
 msgid ""
 "query getFilms {\n"
@@ -795,8 +794,8 @@ msgstr "到目前为止，我们已经创建了一个GraphQL API来检索电影�
 
 #. type: Plain text
 #: upstream/_guides/smallrye-graphql.adoc:406
-#: upstream/_guides/smallrye-graphql.adoc:512
-#: upstream/_guides/smallrye-graphql.adoc:622
+#: upstream/_guides/smallrye-graphql.adoc:510
+#: upstream/_guides/smallrye-graphql.adoc:619
 #, fuzzy
 msgid "Add the following to our `FilmResource` class:"
 msgstr "在我们的 `FilmResource` 类中添加以下内容。"
@@ -884,14 +883,14 @@ msgstr "这里以批处理的方式接收电影，让你取到相应的英雄。
 
 #. type: Title ===
 #: upstream/_guides/smallrye-graphql.adoc:457
-#, fuzzy, no-wrap
-msgid "Reactive"
-msgstr "反应性的"
+#, no-wrap
+msgid "Non blocking"
+msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/smallrye-graphql.adoc:460
 #, fuzzy
-msgid "Queries can be made reactive by using `Uni`, or `CompletionStage` as a return type, for example:"
+msgid "Queries can be made reactive by using `Uni` as a return type, or adding `@NonBlocking` to the method:"
 msgstr "例如，通过使用 `Uni` ，或 `CompletionStage` 作为返回类型，可以使查询具有反应性。"
 
 #. type: delimited block -
@@ -906,60 +905,68 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:471
+#: upstream/_guides/smallrye-graphql.adoc:472
 #, fuzzy
-msgid "Due to the underlying library, graphql-java, `Uni` is creating a `CompletionStage` under the hood."
-msgstr "由于底层库graphql-java的存在， `Uni` 在引擎盖下创建了一个 `CompletionStage` 。"
-
-#. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:473
-#, fuzzy
-msgid "Or you can use `CompletionStage`:"
+msgid "Or you can use `@NonBlocking`:"
 msgstr "或者你可以使用 `CompletionStage` 。"
 
 #. type: delimited block -
 #: upstream/_guides/smallrye-graphql.adoc:481
+#: upstream/_guides/smallrye-graphql.adoc:495
 #, no-wrap
 msgid ""
 "    @Query\n"
 "    @Description(\"Get a Films from a galaxy far far away\")\n"
-"    public CompletionStage<Film> getFilm(int filmId) {\n"
+"    @NonBlocking\n"
+"    public Film getFilm(int filmId) {\n"
 "        // ...\n"
 "    }\n"
 msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/smallrye-graphql.adoc:484
-#, fuzzy
-msgid "Using `Uni` or `CompletionStage` means that when a request contains more than one query, they will be executed concurrently."
-msgstr "使用 `Uni` 或 `CompletionStage` ，意味着当一个请求包含一个以上的查询时，它们将被同时执行。"
+msgid "Using `Uni` or `@NonBlocking` means that the request will be executed on Event-loop threads rather than Worker threads."
+msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/smallrye-graphql.adoc:486
-#, fuzzy
-msgid "For instance, the query below will fetch `film0` and `film1` concurrently:"
-msgstr "例如，下面的查询将同时获取 `film0` 和 `film1` 。"
+msgid "You can mix Blocking and Non-blocking in one request,"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/smallrye-graphql.adoc:499
+#, no-wrap
+msgid ""
+"    public List<Hero> heroes(@Source Film film) { \n"
+"        return service.getHeroesByFilm(film);\n"
+"    }\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/smallrye-graphql.adoc:502
+msgid "Above will fetch the film on the event-loop threads, but switch to the worker thread to fetch the heroes."
+msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/smallrye-graphql.adoc:505
+#: upstream/_guides/smallrye-graphql.adoc:503
 #, fuzzy, no-wrap
 msgid "Mutations"
 msgstr "突变"
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:508
+#: upstream/_guides/smallrye-graphql.adoc:506
 #, fuzzy
 msgid "Mutations are used when data is created, updated or deleted."
 msgstr "当数据被创建、更新或删除时，会用到突变。"
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:510
+#: upstream/_guides/smallrye-graphql.adoc:508
 #, fuzzy
 msgid "Let's now add the ability to add and delete heroes to our GraphQL API."
 msgstr "现在让我们把添加和删除英雄的能力添加到我们的GraphQL API。"
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:520
+#: upstream/_guides/smallrye-graphql.adoc:518
 #, no-wrap
 msgid ""
 "    @Mutation\n"
@@ -970,7 +977,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:525
+#: upstream/_guides/smallrye-graphql.adoc:523
 #, no-wrap
 msgid ""
 "    @Mutation\n"
@@ -980,13 +987,13 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:528
+#: upstream/_guides/smallrye-graphql.adoc:526
 #, fuzzy
 msgid "Enter the following into `GraphiQL` to insert a `Hero`:"
 msgstr "在 `GraphiQL` 中输入以下内容，以插入一个 `Hero` 。"
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:546
+#: upstream/_guides/smallrye-graphql.adoc:544
 #, no-wrap
 msgid ""
 "mutation addHero {\n"
@@ -1007,25 +1014,25 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:549
+#: upstream/_guides/smallrye-graphql.adoc:547
 #, fuzzy
 msgid "By using this mutation we have created a `Hero` entity in our service."
 msgstr "通过使用这种突变，我们在我们的服务中创建了一个 `Hero` 的实体。"
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:554
+#: upstream/_guides/smallrye-graphql.adoc:552
 #, fuzzy
 msgid "Notice how in the response we have retrieved the `name` and `surname` of the created Hero. This is because we selected to retrieve these fields in the response within the `{ }` in the mutation query.  This can easily be a server side generated field that the client may require."
 msgstr "请注意在响应中我们是如何检索到创建的Hero的 `name` 和 `surname` 。这是因为我们选择了在突变查询中的 `{ }` 响应中检索这些字段。这很容易成为客户端可能需要的一个服务器端生成的字段。"
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:556
+#: upstream/_guides/smallrye-graphql.adoc:554
 #, fuzzy
 msgid "Let's now try deleting an entry:"
 msgstr "现在让我们试着删除一个条目。"
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:565
+#: upstream/_guides/smallrye-graphql.adoc:563
 #, no-wrap
 msgid ""
 "mutation DeleteHero {\n"
@@ -1037,43 +1044,36 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:569
+#: upstream/_guides/smallrye-graphql.adoc:567
 #, fuzzy
 msgid "Similar to the `createHero` mutation method we also retrieve the `name` and `surname` of the hero we have deleted which is defined in `{ }`."
 msgstr "与 `createHero` 突变方法类似，我们还检索了我们所删除的英雄的 `name` 和 `surname` ，该英雄定义在 `{ }` 。"
 
 #. type: Title ==
-#: upstream/_guides/smallrye-graphql.adoc:570
+#: upstream/_guides/smallrye-graphql.adoc:568
 #, fuzzy, no-wrap
 msgid "Subscriptions"
 msgstr "订阅"
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:573
-#, fuzzy
-msgid "Subscriptions allows you to subscribe to a query. It allows you to receive events."
-msgstr "订阅允许你订阅一个查询。它允许你接收事件。"
+#: upstream/_guides/smallrye-graphql.adoc:572
+msgid "Subscriptions allows you to subscribe to a query. It allows you to receive events and is using web sockets.  See the https://github.com/enisdenjo/graphql-ws/blob/master/PROTOCOL.md[GraphQL over WebSocket Protocol] spec for more details."
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:575
-#, fuzzy
-msgid "Subscription is currently still considered experimental."
-msgstr "订阅目前仍被认为是实验性的。"
-
-#. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:577
+#: upstream/_guides/smallrye-graphql.adoc:574
 #, fuzzy
 msgid "Example: We want to know when new Heroes are being created:"
 msgstr "例子。我们想知道什么时候有新的英雄被创建。"
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:582
+#: upstream/_guides/smallrye-graphql.adoc:579
 #, no-wrap
 msgid "    BroadcastProcessor<Hero> processor = BroadcastProcessor.create(); // <1>\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:589
+#: upstream/_guides/smallrye-graphql.adoc:586
 #, no-wrap
 msgid ""
 "    @Mutation\n"
@@ -1085,7 +1085,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:594
+#: upstream/_guides/smallrye-graphql.adoc:591
 #, no-wrap
 msgid ""
 "    @Subscription\n"
@@ -1095,31 +1095,31 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:598
+#: upstream/_guides/smallrye-graphql.adoc:595
 #, fuzzy
 msgid "The `Multi` processor that will broadcast any new Heros"
 msgstr " `Multi` 处理器，将广播任何新的Heros"
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:599
+#: upstream/_guides/smallrye-graphql.adoc:596
 #, fuzzy
 msgid "When adding a new Hero, also broadcast it"
 msgstr "当添加一个新的英雄时，也要广播它"
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:600
+#: upstream/_guides/smallrye-graphql.adoc:597
 #, fuzzy
 msgid "Make the stream available in the schema and as a WebSocket during runtime"
 msgstr "使流在模式中可用，并在运行时作为WebSocket使用"
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:603
+#: upstream/_guides/smallrye-graphql.adoc:600
 #, fuzzy
 msgid "Any client that now connect to the `/graphql` WebSocket connection will receive events on new Heroes being created:"
 msgstr "现在连接到 `/graphql` WebSocket连接的任何客户端都将收到新英雄被创建的事件。"
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:613
+#: upstream/_guides/smallrye-graphql.adoc:610
 #, no-wrap
 msgid ""
 "subscription ListenForNewHeroes {\n"
@@ -1131,19 +1131,19 @@ msgid ""
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/smallrye-graphql.adoc:616
+#: upstream/_guides/smallrye-graphql.adoc:613
 #, fuzzy, no-wrap
 msgid "Creating Queries by fields"
 msgstr "按字段创建查询"
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:620
+#: upstream/_guides/smallrye-graphql.adoc:617
 #, fuzzy
 msgid "Queries can also be done on individual fields. For example, let's create a method to query heroes by their last name."
 msgstr "查询也可以在单个字段上进行。例如，让我们创建一个方法，按英雄的姓氏查询他们。"
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:629
+#: upstream/_guides/smallrye-graphql.adoc:626
 #, no-wrap
 msgid ""
 "    @Query\n"
@@ -1153,19 +1153,19 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:633
+#: upstream/_guides/smallrye-graphql.adoc:630
 #, fuzzy
 msgid "By using the `@DefaultValue` annotation we have determined that the surname value will be `Skywalker` when the parameter is not provided."
 msgstr "通过使用 `@DefaultValue` 注释，我们已经确定，当没有提供参数时，姓的值将是 `Skywalker` 。"
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:635
+#: upstream/_guides/smallrye-graphql.adoc:632
 #, fuzzy
 msgid "Test the following queries with GraphiQL:"
 msgstr "用GraphiQL测试以下查询。"
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:652
+#: upstream/_guides/smallrye-graphql.adoc:649
 #, no-wrap
 msgid ""
 "query heroWithDefaultSurname {\n"
@@ -1185,19 +1185,19 @@ msgid ""
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/smallrye-graphql.adoc:654
+#: upstream/_guides/smallrye-graphql.adoc:651
 #, fuzzy, no-wrap
 msgid "Context"
 msgstr "背景介绍"
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:657
+#: upstream/_guides/smallrye-graphql.adoc:654
 #, fuzzy
 msgid "You can get information about the GraphQL request anywhere in your code, using this experimental, SmallRye specific feature:"
 msgstr "你可以在你的代码中的任何地方获得关于GraphQL请求的信息，使用这个实验性的、SmallRye特有的功能。"
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:662
+#: upstream/_guides/smallrye-graphql.adoc:659
 #, no-wrap
 msgid ""
 "@Inject\n"
@@ -1205,13 +1205,13 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:665
+#: upstream/_guides/smallrye-graphql.adoc:662
 #, fuzzy
 msgid "or as a parameter in your method if you are in the `GraphQLApi` class, for instance:"
 msgstr "或在你的方法中作为一个参数，如果你在 `GraphQLApi` ，例如。"
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:673
+#: upstream/_guides/smallrye-graphql.adoc:670
 #, no-wrap
 msgid ""
 "    @Query\n"
@@ -1222,85 +1222,85 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:676
+#: upstream/_guides/smallrye-graphql.adoc:673
 #, fuzzy
 msgid "The context object allows you to get:"
 msgstr "上下文对象允许你获得。"
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:678
+#: upstream/_guides/smallrye-graphql.adoc:675
 #, fuzzy
 msgid "the original request (Query/Mutation)"
 msgstr "原始请求（查询/变异）。"
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:679
+#: upstream/_guides/smallrye-graphql.adoc:676
 #, fuzzy
 msgid "the arguments"
 msgstr "论点"
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:680
+#: upstream/_guides/smallrye-graphql.adoc:677
 #, fuzzy
 msgid "the path"
 msgstr "道路"
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:681
+#: upstream/_guides/smallrye-graphql.adoc:678
 #, fuzzy
 msgid "the selected fields"
 msgstr "选定的字段"
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:682
+#: upstream/_guides/smallrye-graphql.adoc:679
 #, fuzzy
 msgid "any variables"
 msgstr "任何变量"
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:684
+#: upstream/_guides/smallrye-graphql.adoc:681
 #, fuzzy
 msgid "This allows you to optimize the downstream queries to the datastore."
 msgstr "这允许你优化对数据存储的下游查询。"
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:686
+#: upstream/_guides/smallrye-graphql.adoc:683
 #, fuzzy
 msgid "See the https://javadoc.io/doc/io.smallrye/smallrye-graphql-api/latest/io/smallrye/graphql/api/Context.html[JavaDoc] for more details."
 msgstr "更多细节请参见 link:https://javadoc.io/doc/io.smallrye/smallrye-graphql-api/latest/io/smallrye/graphql/api/Context.html[JavaDoc] 。"
 
 #. type: Title ===
-#: upstream/_guides/smallrye-graphql.adoc:687
+#: upstream/_guides/smallrye-graphql.adoc:684
 #, fuzzy, no-wrap
 msgid "GraphQL-Java"
 msgstr "图形QL-Java"
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:690
+#: upstream/_guides/smallrye-graphql.adoc:687
 #, fuzzy
 msgid "This context object also allows you to fall down to the underlying https://www.graphql-java.com/[graphql-java] features by using the leaky abstraction:"
 msgstr "这个上下文对象也允许你通过使用泄漏的抽象来下降到底层的 link:https://www.graphql-java.com/[graphql-java] 特性。"
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:694
+#: upstream/_guides/smallrye-graphql.adoc:691
 #, no-wrap
 msgid "DataFetchingEnvironment dfe = context.unwrap(DataFetchingEnvironment.class);\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:697
+#: upstream/_guides/smallrye-graphql.adoc:694
 #, fuzzy
 msgid "You can also get access to the underlying `graphql-java` during schema generation, to add your own features directly:"
 msgstr "在模式生成过程中，你也可以获得对底层 `graphql-java` ，以直接添加你自己的功能。"
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:701
+#: upstream/_guides/smallrye-graphql.adoc:698
 #, no-wrap
 msgid "public GraphQLSchema.Builder addMyOwnEnum(@Observes GraphQLSchema.Builder builder) {\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:708
+#: upstream/_guides/smallrye-graphql.adoc:705
 #, no-wrap
 msgid ""
 "    // Here add your own features directly, example adding an Enum\n"
@@ -1312,7 +1312,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:711
+#: upstream/_guides/smallrye-graphql.adoc:708
 #, no-wrap
 msgid ""
 "    return builder.additionalType(myOwnEnum);\n"
@@ -1320,52 +1320,58 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:714
+#: upstream/_guides/smallrye-graphql.adoc:711
 #, fuzzy
 msgid "By using the `@Observer` you can add anything to the Schema builder."
 msgstr "通过使用 `@Observer` ，你可以向模式构建器添加任何东西。"
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:716
+#: upstream/_guides/smallrye-graphql.adoc:713
 #, fuzzy
 msgid "For the Observer to work, you need to enable events. In `application.properties`, add the following: `quarkus.smallrye-graphql.events.enabled=true`."
 msgstr "为了使观察者发挥作用，你需要启用事件。在 `application.properties` ，添加以下内容。 `quarkus.smallrye-graphql.events.enabled=true` ."
 
 #. type: Title ==
-#: upstream/_guides/smallrye-graphql.adoc:717
+#: upstream/_guides/smallrye-graphql.adoc:714
+#, no-wrap
+msgid "Adapting"
+msgstr ""
+
+#. type: Title ===
+#: upstream/_guides/smallrye-graphql.adoc:716
 #, fuzzy, no-wrap
-msgid "Map to Scalar"
+msgid "Adapt to Scalar"
 msgstr "地图上的Scalar"
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:721
+#: upstream/_guides/smallrye-graphql.adoc:720
 #, fuzzy
 msgid "Another SmallRye specific experimental feature, allows you to map an existing scalar (that is mapped by the implementation to a certain Java type) to another type, or to map complex object, that would typically create a `Type` or `Input` in GraphQL, to an existing scalar."
 msgstr "另一个SmallRye特定的实验性功能，允许你将现有的标量（被实现映射到某种Java类型）映射到另一种类型，或者将复杂的对象（通常会在GraphQL中创建一个 `Type` 或 `Input` ）映射到现有的标量。"
 
-#. type: Title ===
-#: upstream/_guides/smallrye-graphql.adoc:722
+#. type: Title ====
+#: upstream/_guides/smallrye-graphql.adoc:721
 #, fuzzy, no-wrap
-msgid "Mapping an existing Scalar to another type:"
+msgid "Adapting an existing Scalar to another type:"
 msgstr "将一个现有的Scalar映射到另一个类型。"
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:727
+#: upstream/_guides/smallrye-graphql.adoc:726
 #, no-wrap
 msgid "public class Movie {\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:730
+#: upstream/_guides/smallrye-graphql.adoc:729
 #, no-wrap
 msgid ""
-"    @ToScalar(Scalar.Int.class)\n"
+"    @AdaptToScalar(Scalar.Int.class)\n"
 "    Long idLongThatShouldChangeToInt;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:733
-#: upstream/_guides/smallrye-graphql.adoc:748
+#: upstream/_guides/smallrye-graphql.adoc:732
+#: upstream/_guides/smallrye-graphql.adoc:747
 #, no-wrap
 msgid ""
 "    // ....\n"
@@ -1373,69 +1379,70 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:736
+#: upstream/_guides/smallrye-graphql.adoc:735
 #, fuzzy
-msgid "Above will map the `Long` java type to an `Int` Scalar type, rather than the https://download.eclipse.org/microprofile/microprofile-graphql-1.0/microprofile-graphql.html#scalars[default] `BigInteger`."
+msgid "Above will adapt the `Long` java type to an `Int` Scalar type, rather than the https://download.eclipse.org/microprofile/microprofile-graphql-1.0/microprofile-graphql.html#scalars[default] `BigInteger`."
 msgstr "以上将把 `Long` java类型映射为 `Int` Scalar类型，而不是 link:https://download.eclipse.org/microprofile/microprofile-graphql-1.0/microprofile-graphql.html#scalars[默认的] `BigInteger` 。"
 
-#. type: Title ===
-#: upstream/_guides/smallrye-graphql.adoc:737
+#. type: Title ====
+#: upstream/_guides/smallrye-graphql.adoc:736
 #, fuzzy, no-wrap
-msgid "Mapping a complex object to a Scalar type:"
+msgid "Adapting a complex object to a Scalar type:"
 msgstr "将一个复杂的对象映射到一个Scalar类型。"
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:742
+#: upstream/_guides/smallrye-graphql.adoc:741
 #, no-wrap
 msgid "public class Person {\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:745
+#: upstream/_guides/smallrye-graphql.adoc:744
 #, no-wrap
 msgid ""
-"    @ToScalar(Scalar.String.class)\n"
+"    @AdaptToScalar(Scalar.String.class)\n"
 "    Phone phone;\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:751
+#: upstream/_guides/smallrye-graphql.adoc:750
 #, fuzzy
 msgid "This will, rather than creating a `Type` or `Input` in GraphQL, map to a String scalar."
 msgstr "这将，而不是在GraphQL中创建一个 `Type` 或 `Input` ，映射到一个String标量。"
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:755
+#: upstream/_guides/smallrye-graphql.adoc:754
 #, fuzzy
 msgid "To be able to do the above, the `Phone` object needs to have a constructor that takes a String (or `Int` / `Date` / etc.), or have a setter method for the String (or `Int` / `Date` / etc.), or have a `fromString` (or `fromInt` / `fromDate` - depending on the Scalar type) static method."
 msgstr "为了能够完成上述工作， `Phone` 对象需要有一个接受字符串（或 `Int` / `Date` / 等）的构造函数，或有一个字符串（或 `Int` / `Date` / 等）的设置方法，或有一个 `fromString` （或 `fromInt` / `fromDate` - 取决于 Scalar 类型）静态方法。"
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:757
+#: upstream/_guides/smallrye-graphql.adoc:756
+#: upstream/_guides/smallrye-graphql.adoc:782
 #, fuzzy
 msgid "For example:"
 msgstr "比如说。"
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:761
+#: upstream/_guides/smallrye-graphql.adoc:760
 #, no-wrap
 msgid "public class Phone {\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:763
+#: upstream/_guides/smallrye-graphql.adoc:762
 #, no-wrap
 msgid "    private String number;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:765
+#: upstream/_guides/smallrye-graphql.adoc:764
 #, no-wrap
 msgid "    // Getters and setters....\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:772
+#: upstream/_guides/smallrye-graphql.adoc:771
 #, no-wrap
 msgid ""
 "    public static Phone fromString(String number) {\n"
@@ -1447,25 +1454,289 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:775
+#: upstream/_guides/smallrye-graphql.adoc:774
 #, fuzzy
-msgid "See more about the `@ToScalar` feature in the https://javadoc.io/static/io.smallrye/smallrye-graphql-api/1.0.6/index.html?io/smallrye/graphql/api/ToScalar.html[JavaDoc]."
+msgid "See more about the `@AdaptToScalar` feature in the https://javadoc.io/static/io.smallrye/smallrye-graphql-api/1.5.0/io/smallrye/graphql/api/AdaptToScalar.html[JavaDoc]."
 msgstr "请参阅 link:https://javadoc.io/static/io.smallrye/smallrye-graphql-api/1.0.6/index.html?io/smallrye/graphql/api/ToScalar.html[JavaDoc] 中关于 `@ToScalar` 功能的更多信息。"
 
+#. type: Title ===
+#: upstream/_guides/smallrye-graphql.adoc:775
+#, no-wrap
+msgid "Adapt with"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/smallrye-graphql.adoc:778
+msgid "Another option for more complex cases is to provide an Adapter. You can then do the mapping yourself in the adapter."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/smallrye-graphql.adoc:780
+#, fuzzy
+msgid "See more about the `AdaptWith` feature in the https://javadoc.io/static/io.smallrye/smallrye-graphql-api/1.5.0/io/smallrye/graphql/api/AdaptWith.html[JavaDoc]."
+msgstr "请参阅 link:https://javadoc.io/static/io.smallrye/smallrye-graphql-api/1.0.6/index.html?io/smallrye/graphql/api/ToScalar.html[JavaDoc] 中关于 `@ToScalar` 功能的更多信息。"
+
+#. type: delimited block -
+#: upstream/_guides/smallrye-graphql.adoc:789
+#, no-wrap
+msgid ""
+"    public class Profile {\n"
+"        // Map this to an email address\n"
+"        @AdaptWith(AddressAdapter.class)\n"
+"        public Address address;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/smallrye-graphql.adoc:792
+#, no-wrap
+msgid ""
+"        // other getters/setters...\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/smallrye-graphql.adoc:794
+#, no-wrap
+msgid "    public class AddressAdapter implements Adapter<EmailAddress, Address> {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/smallrye-graphql.adoc:802
+#, no-wrap
+msgid ""
+"        @Override\n"
+"        public Address from(EmailAddress email) {\n"
+"            Address a = new Address();\n"
+"            a.addressType = AddressType.email;\n"
+"            a.addLine(email.getValue());\n"
+"            return a;\n"
+"        }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/smallrye-graphql.adoc:811
+#, no-wrap
+msgid ""
+"        @Override\n"
+"        public EmailAddress to(Address address) {\n"
+"            if (address != null && address.addressType != null && address.addressType.equals(AddressType.email)) {\n"
+"                return new EmailAddress(address.lines.get(0));\n"
+"            }\n"
+"            return null;\n"
+"        }\n"
+"    }\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/smallrye-graphql.adoc:815
+msgid "`@JsonbTypeAdapter` is also supported."
+msgstr ""
+
+#. type: Title ===
+#: upstream/_guides/smallrye-graphql.adoc:816
+#, no-wrap
+msgid "Built-in support for Maps"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/smallrye-graphql.adoc:821
+msgid "By default, due to the fact that maps are hard to model in a schema (as the keys and values can be dynamic at runtime) GraphQL does not support maps by default.  Using the above adaption, `Map` support is added for Quarkus and are mapped to an `Entry<Key,Value>` with an optional key parameter.  This allows you to return a map, and optionally query it by key."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/smallrye-graphql.adoc:823
+#, fuzzy
+msgid "Example:"
+msgstr "比如说。"
+
+#. type: delimited block -
+#: upstream/_guides/smallrye-graphql.adoc:831
+#, no-wrap
+msgid ""
+"    @Query\n"
+"    public Map<ISO6391, Language> language() {\n"
+"        return languageService.getLanguages();\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/smallrye-graphql.adoc:838
+#, no-wrap
+msgid ""
+"    public enum ISO6391 {\n"
+"        af,\n"
+"        en,\n"
+"        de,\n"
+"        fr\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/smallrye-graphql.adoc:845
+#, no-wrap
+msgid ""
+"    public class Language {\n"
+"        private ISO6391 iso6391;\n"
+"        private String nativeName;\n"
+"        private String enName;\n"
+"        private String please;\n"
+"        private String thankyou;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/smallrye-graphql.adoc:848
+#, no-wrap
+msgid ""
+"        // Getters & Setters\n"
+"    }\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/smallrye-graphql.adoc:852
+msgid "The key and value object can be any of Enum, Scalar or Complex object"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/smallrye-graphql.adoc:854
+msgid "You can now query the whole map with all the fields:"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/smallrye-graphql.adoc:869
+#, no-wrap
+msgid ""
+"{\n"
+"  language{\n"
+"    key\n"
+"    value {\n"
+"      enName\n"
+"      iso6391\n"
+"      nativeName\n"
+"      please\n"
+"      thankyou\n"
+"    }\n"
+"  }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/smallrye-graphql.adoc:872
+msgid "This will return a result like this for example:"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/smallrye-graphql.adoc:921
+#, no-wrap
+msgid ""
+"{\n"
+"  \"data\": {\n"
+"    \"language\": [\n"
+"      {\n"
+"        \"key\": \"fr\",\n"
+"        \"value\": {\n"
+"          \"enName\": \"french\",\n"
+"          \"iso6391\": \"fr\",\n"
+"          \"nativeName\": \"français\",\n"
+"          \"please\": \"s'il te plaît\",\n"
+"          \"thankyou\": \"merci\"\n"
+"        }\n"
+"      },\n"
+"      {\n"
+"        \"key\": \"af\",\n"
+"        \"value\": {\n"
+"          \"enName\": \"afrikaans\",\n"
+"          \"iso6391\": \"af\",\n"
+"          \"nativeName\": \"afrikaans\",\n"
+"          \"please\": \"asseblief\",\n"
+"          \"thankyou\": \"dankie\"\n"
+"        }\n"
+"      },\n"
+"      {\n"
+"        \"key\": \"de\",\n"
+"        \"value\": {\n"
+"          \"enName\": \"german\",\n"
+"          \"iso6391\": \"de\",\n"
+"          \"nativeName\": \"deutsch\",\n"
+"          \"please\": \"bitte\",\n"
+"          \"thankyou\": \"danke dir\"\n"
+"        }\n"
+"      },\n"
+"      {\n"
+"        \"key\": \"en\",\n"
+"        \"value\": {\n"
+"          \"enName\": \"english\",\n"
+"          \"iso6391\": \"en\",\n"
+"          \"nativeName\": \"english\",\n"
+"          \"please\": \"please\",\n"
+"          \"thankyou\": \"thank you\"\n"
+"        }\n"
+"      }\n"
+"    ]\n"
+"  }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/smallrye-graphql.adoc:924
+msgid "You can also query by key"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/smallrye-graphql.adoc:935
+#, no-wrap
+msgid ""
+"{\n"
+"  language (key:af){\n"
+"    value {\n"
+"      please\n"
+"      thankyou\n"
+"    }\n"
+"  }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/smallrye-graphql.adoc:938
+msgid "That will return only that value in the map:"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/smallrye-graphql.adoc:953
+#, no-wrap
+msgid ""
+"{\n"
+"  \"data\": {\n"
+"    \"language\": [\n"
+"      {\n"
+"        \"value\": {\n"
+"          \"please\": \"asseblief\",\n"
+"          \"thankyou\": \"dankie\"\n"
+"        }\n"
+"      }\n"
+"    ]\n"
+"  }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/smallrye-graphql.adoc:956
+msgid "The default map adapter can to overridden with our own implementation."
+msgstr ""
+
 #. type: Title ==
-#: upstream/_guides/smallrye-graphql.adoc:776
+#: upstream/_guides/smallrye-graphql.adoc:957
 #, fuzzy, no-wrap
 msgid "Error code"
 msgstr "错误代码"
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:779
+#: upstream/_guides/smallrye-graphql.adoc:960
 #, fuzzy
 msgid "You can add an error code on the error output in the GraphQL response by using the (SmallRye specific) `@ErrorCode`:"
 msgstr "你可以通过使用（SmallRye专用） `@ErrorCode` ，在GraphQL响应中的错误输出上添加一个错误代码。"
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:786
+#: upstream/_guides/smallrye-graphql.adoc:967
 #, no-wrap
 msgid ""
 "@ErrorCode(\"some-business-error-code\")\n"
@@ -1475,13 +1746,13 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:789
+#: upstream/_guides/smallrye-graphql.adoc:970
 #, fuzzy
 msgid "When `SomeBusinessException` occurs, the error output will contain the Error code:"
 msgstr "当 `SomeBusinessException` ，错误输出将包含错误代码。"
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:816
+#: upstream/_guides/smallrye-graphql.adoc:997
 #, no-wrap
 msgid ""
 "{\n"
@@ -1511,24 +1782,24 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:819
+#: upstream/_guides/smallrye-graphql.adoc:1000
 #, fuzzy
 msgid "The error code"
 msgstr "错误代码"
 
 #. type: Title ==
-#: upstream/_guides/smallrye-graphql.adoc:820
+#: upstream/_guides/smallrye-graphql.adoc:1001
 #, fuzzy, no-wrap
 msgid "Additional Notes"
 msgstr "补充说明"
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:826
+#: upstream/_guides/smallrye-graphql.adoc:1007
 msgid "If you are using the `smallrye-graphql` extension and the `micrometer` metrics extension is present and metrics are enabled, you may encounter a `java.lang.NoClassDefFoundError` as some versions of the `smallrye-graphql` extension have runtime requirements on the Microprofile Metrics API.  Add the following MicroProfile Metrics API dependency to resolve the issue:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:834
+#: upstream/_guides/smallrye-graphql.adoc:1015
 #, no-wrap
 msgid ""
 "<dependency>\n"
@@ -1538,29 +1809,53 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/smallrye-graphql.adoc:840
+#: upstream/_guides/smallrye-graphql.adoc:1021
 #, no-wrap
 msgid "implementation(\"org.eclipse.microprofile.metrics:microprofile-metrics-api\")\n"
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/smallrye-graphql.adoc:842
+#: upstream/_guides/smallrye-graphql.adoc:1023
 #, no-wrap
 msgid "Conclusion"
 msgstr "解决方案"
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:846
+#: upstream/_guides/smallrye-graphql.adoc:1027
 msgid "SmallRye GraphQL enables clients to retrieve the exact data that is required preventing `Over-fetching` and `Under-fetching`."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/smallrye-graphql.adoc:849
+#: upstream/_guides/smallrye-graphql.adoc:1030
 msgid "The GraphQL API can be expanded without breaking previous queries enabling easy API `evolution`."
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/smallrye-graphql.adoc:851
+#: upstream/_guides/smallrye-graphql.adoc:1032
 #, no-wrap
 msgid "Configuration Reference"
 msgstr "配置参考"
+
+#, fuzzy
+#~ msgid "Reactive"
+#~ msgstr "反应性的"
+
+#, fuzzy
+#~ msgid "Due to the underlying library, graphql-java, `Uni` is creating a `CompletionStage` under the hood."
+#~ msgstr "由于底层库graphql-java的存在， `Uni` 在引擎盖下创建了一个 `CompletionStage` 。"
+
+#, fuzzy
+#~ msgid "Using `Uni` or `CompletionStage` means that when a request contains more than one query, they will be executed concurrently."
+#~ msgstr "使用 `Uni` 或 `CompletionStage` ，意味着当一个请求包含一个以上的查询时，它们将被同时执行。"
+
+#, fuzzy
+#~ msgid "For instance, the query below will fetch `film0` and `film1` concurrently:"
+#~ msgstr "例如，下面的查询将同时获取 `film0` 和 `film1` 。"
+
+#, fuzzy
+#~ msgid "Subscriptions allows you to subscribe to a query. It allows you to receive events."
+#~ msgstr "订阅允许你订阅一个查询。它允许你接收事件。"
+
+#, fuzzy
+#~ msgid "Subscription is currently still considered experimental."
+#~ msgstr "订阅目前仍被认为是实验性的。"
