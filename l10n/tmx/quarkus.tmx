@@ -4307,7 +4307,7 @@ This guide will walk you through all that.
         <seg>Simplified Hibernate Reactive with Panache</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
-        <seg>简化的Hibernate 响应式与Panache</seg>
+        <seg>使用Panache简化Hibernate Reactive</seg>
       </tuv>
     </tu>
     <tu>
@@ -27854,6 +27854,198 @@ Type: _int_</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
         <seg>要创建一个使用本地可执行文件的lambda容器镜像，我们需要做一些不同的事情。在这种情况下，我们将不需要使用来自AWS的 `java:11` 基本镜像，而是使用一个特殊的镜像，该镜像假设lambda的运行环境已经提供。下面的例子创建了一个这样的容器。它假定已经执行了Maven构建（如 `mvn package -Dnative=true` ），并在 `target/` 目录中生成了本地二进制文件。该二进制文件需要命名为 `bootstrap` ，并放置在 `/var/runtime/` 中：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>link:http://hibernate.org/reactive/[Hibernate Reactive] is the only reactive JPA implementation and offers you the full breadth of an Object Relational Mapper allowing you to access your database over reactive drivers.  It makes complex mappings possible, but it does not make simple and common mappings trivial.  Hibernate Reactive with Panache focuses on making your entities trivial and fun to write in Quarkus.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>link:http://hibernate.org/reactive/[Hibernate Reactive] 是唯一的响应式JPA实现，提供了全方位的对象关系映射（Object Relational Mapper，简称ORM）支持，支持通过响应式驱动访问数据库。它使复杂的映射成为可能，它支持编写复杂的映射，但编写简单常用的映射却不够简便。Hibernate Reactive Panache专注于简化ORM实体，让你的Quarkus开发有趣。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>What we're doing in Panache is allow you to write your Hibernate Reactive entities like this:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Panache允许这样编写Hibernate Reactive实体：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The solution is located in the `hibernate-reactive-panache-quickstart` {quickstarts-tree-url}/hibernate-reactive-panache-quickstart[directory].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>该解决方案位于 `hibernate-reactive-panache-quickstart` {quickstarts-tree-url}/hibernate-reactive-panache-quickstart[目录] 中。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Setting up and configuring Hibernate Reactive with Panache</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在Hibernate Reactive中配置Panache</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In your `pom.xml`, add the following dependencies:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在你的 `pom.xml` 文件中添加以下依赖项：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>the Hibernate Reactive with Panache extension</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Hibernate Reactive with Panache扩展</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>your reactive driver extension (`quarkus-reactive-pg-client`, `quarkus-reactive-mysql-client`, `quarkus-reactive-db2-client`, ...)</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>响应式驱动扩展 ( `quarkus-reactive-pg-client` , `quarkus-reactive-mysql-client` , `quarkus-reactive-db2-client` , ...)</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>For instance:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>比如：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You should only use the `list` methods if your table contains small enough data sets. For larger data sets you can use the `find` method equivalents, which return a `PanacheQuery` on which you can do paging:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你的表数据量很小，你应该只用到 `list` 方法。对于较大的数据集，你可以使用对应的 `find` 方法，它返回一个 `PanacheQuery` ，可以对其进行分页查询操作：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The projection class needs to be a valid Java Bean and have a constructor that contains all its attributes, this constructor will be used to instantiate the projection DTO instead of using the entity class. This must be the only constructor of the class.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>投影类必须是有效的Java Bean，并且拥有一个包含所有属性的构造方法，这个构造方法用于实例化投影DTO，而不是使用实体类。这个构造方法必须是唯一的构造方法。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This constructor will be used by Hibernate, and it must have a matching constructor with all the class attributes as parameters.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Hibernate会用到这个构造方法，它必须有一个匹配的构造函数，所有的类属性都是参数。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The implementation of the `project(Class)` method uses the constructor's parameter names to build the select clause of the query, so the compiler must be configured to store parameter names inside the compiled class.  This is enabled by default if you are using the Quarkus Maven archetype. If you are not using it, add the property `&lt;maven.compiler.parameters&gt;true&lt;/maven.compiler.parameters&gt;` to your pom.xml.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在 `project(Class)` 方法的实现中，使用构造函数的参数名来构建查询的select子句，所以编译器必须配置为在编译的类中保留参数名。如果是使用Quarkus Maven archetype创建的项目，该功能默认是启用的。如果你没有使用，请在你的 `pom.xml` 中添加该属性 `&lt;maven.compiler.parameters&gt;true&lt;/maven.compiler.parameters&gt;` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Hibernate Reactive in Quarkus currently does not support multiple persistence units.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Quarkus中的Hibernate Reactive目前不支持多个持久化单元。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Make sure to wrap methods modifying your database (e.g. `entity.persist()`) within a transaction. Marking a CDI bean method `@ReactiveTransactional` will do that for you and make that method a transaction boundary. Alternatively, you can use `Panache.withTransaction()` for the same effect. We recommend doing so at your application entry point boundaries like your REST endpoint controllers.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>请确保修改数据库的方法（例如： `entity.persist()` ）处于同一个事务中。给一个CDI bean方法增加 `@ReactiveTransactional` 注解，可以确保该方法即事务边界。另外，你也可以使用 `Panache.withTransaction()` 来达到同样的效果。我们建议在应用端点的边界这样做，比如REST端点的Controller。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You cannot use `@Transactional` with Hibernate Reactive for your transactions: you must use `@ReactiveTransactional`, and your annotated method must return a `Uni` to be non-blocking. Otherwise it needs be called from a non-`VertxThread` thread and will become blocking.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在Hibernate Reactive中，不能对事务使用 `@Transactional` 注解，必须使用 `@ReactiveTransactional` ，而且被注解的方法必须返回一个 `Uni` ，才能保证方法是非阻塞的。否则，Quarkus会用一个非 `VertxThread` 的线程调用这个方法，并使它阻塞。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `@ReactiveTransactional` annotation will also work for testing.  This means that changes done during the test will be propagated to the database.  If you want any changes made to be rolled back at the end of the test you can use the `io.quarkus.test.TestReactiveTransaction` annotation.  This will run the test method in a transaction, but roll it back once the test method is complete to revert any database changes.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`@ReactiveTransactional` 注解也可用于测试。这意味着在测试期间所做数据变更将被持久化到数据库中。如果你想在测试结束时回滚所有数据库变更，可以使用 `io.quarkus.test.TestReactiveTransaction` 注解。加入这个注解后将在一个事务中运行测试方法，当测试方法完成，就会回滚事务，以恢复所有数据库的变更。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Be careful that locks are released when the transaction ends, so the method that invokes the lock query must be called within a transaction.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>请注意，事务结束时锁会被释放，所以带锁查询的方法必须在事务中调用。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Add this dependency to your build file:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>将以下依赖性添加到你的构建文件中：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Mocking `Mutiny.Session` and entity instance methods</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>模拟 `Mutiny.Session` , 及实体类的实例方法</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you need to mock entity instance methods, such as `persist()` you can do it by mocking the Hibernate Reactive `Mutiny.Session` object:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你需要模拟实体类的实例方法，比如 `persist()` ，可以通过模拟Hibernate Reactive的 `Mutiny.Session` 对象来实现：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>How and why we simplify Hibernate Reactive mappings</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>我们为什么简化Hibernate Reactive映射？怎么做到的？</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>When it comes to writing Hibernate Reactive entities, there are a number of annoying things that users have grown used to reluctantly deal with, such as:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在编写Hibernate Reactive实体类时，用户已经习惯了被迫处理许多烦人的事情，例如：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>That's all there is to it: with Panache, Hibernate Reactive has never looked so trim and neat.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>以上就是它的全部内容：有了Panache，Hibernate Reactive看起来变得如此轻量和整洁。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Hibernate Reactive with Panache relies on compile-time bytecode enhancements to your entities.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Hibernate Reactive Panache依赖于编译时对实体类的字节码增强。</seg>
       </tuv>
     </tu>
     <tu>
