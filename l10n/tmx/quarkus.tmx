@@ -29621,6 +29621,1509 @@ Type: _int_</seg>
     </tu>
     <tu>
       <tuv xml:lang="en">
+        <seg>Reactive Messaging AMQP 1.0 Connector Reference Documentation</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>响应式消息AMQP 1.0连接器参考文档</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This guide is the companion from the xref:amqp.adoc[Getting Started with AMQP 1.0].  It explains in more details the configuration and usage of the AMQP connector for reactive messaging.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>本指南是 xref:amqp.adoc[AMQP 1.0入门]的配套指南。它更详细地解释了响应式消息AMQP连接器的配置和使用。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This documentation does not cover all the details of the connector.  Refer to the https://smallrye.io/smallrye-reactive-messaging[SmallRye Reactive Messaging website] for further details.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>本文档并没有涵盖连接器的所有细节。请参考 link:https://smallrye.io/smallrye-reactive-messaging[SmallRye 响应式消息网站] ，来了解更多细节。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The AMQP connector allows Quarkus applications to send and receive messages using the AMQP 1.0 protocol.  More details about the protocol can be found in http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-overview-v1.0-os.html[the AMQP 1.0 specification].  It's important to note that AMQP 1.0 and AMQP 0.9.1 (implemented by RabbitMQ) are incompatible.  Check &lt;&lt;using-rabbitmq,Using RabbitMQ&gt;&gt; to get more details.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>AMQP连接器允许Quarkus应用程序使用AMQP 1.0协议来发送和接收消息。关于该协议的更多详情可以在 link:http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-overview-v1.0-os.html[AMQP 1.0规范] 中找到。值得注意的是，AMQP 1.0 和 AMQP 0.9.1（由 RabbitMQ 实现）是不兼容的。请查看 link:#using-rabbitmq[使用 RabbitMQ] 以了解更多详情。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To use the connector, you need to add the `quarkus-smallrye-reactive-messaging-amqp` extension.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>为了使用连接器，你需要添加 `quarkus-smallrye-reactive-messaging-amqp` 扩展。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can add the extension to your project using:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你可以用以下方法将扩展添加到你的项目中：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Or just add the following dependency to your project:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>或者只需在你的项目中添加以下依赖项：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Configuring the AMQP Broker access</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>配置AMQP代理访问</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The AMQP connector connects to AMQP 1.0 brokers such as Apache ActiveMQ or Artemis.  To configure the location and credentials of the broker, add the following properties in the `application.properties`:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>AMQP连接器连接到AMQP 1.0代理，如Apache ActiveMQ或Artemis。要配置代理的位置和凭证，请在 `application.properties` 中添加以下属性：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Configures the broker/router host name. You can do it per channel (using the `host` attribute) or globally using `amqp-host`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>配置代理/路由器的主机名。你可以按通道进行配置（使用 `host` 属性），或使用 `amqp-host` 进行全局配置</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Configures the broker/router port. You can do it per channel (using the `port` attribute) or globally using `amqp-port`. The default is `5672`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>配置代理/路由器的端口。你可以按通道（使用 `port` 属性）进行配置，或使用 `amqp-port` 进行全局配置。默认是 `5672` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Configures the broker/router username if required. You can do it per channel (using the `username` attribute) or globally using `amqp-username`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果需要，请配置代理/路由器的用户名。你可以按通道（使用 `username` 属性）进行配置，或使用 `amqp-username` 进行全局配置。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Configures the broker/router password if required. You can do it per channel (using the `password` attribute) or globally using `amqp-password`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果需要，请配置代理/路由器的密码。你可以按通道（使用 `password` 属性）进行配置，或使用 `amqp-password` 进行全局配置。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Instructs the prices channel to be managed by the AMQP connector</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>指示将由AMQP连接器管理的价格通道。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In dev mode and when running tests, xref:amqp-dev-services.adoc[Dev Services for AMQP] automatically starts an AMQP broker.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在开发模式下，当运行测试时，link:amqp-dev-services.html[AMQP的开发服务] 会自动启动一个AMQP代理。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Receiving AMQP messages</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>接收AMQP消息</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Let's imagine your application receives `Message&lt;Double&gt;`.  You can consume the payload directly:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>让我们想象一下你的应用程序接收 `Message&lt;Double&gt;` 。你可以直接消费该有效载荷：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Or, you can retrieve the Message&lt;Double&gt;:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>或者，你可以检索Message&lt;Double&gt;。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Inbound Metadata</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>入站元数据</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Messages coming from AMQP contain an instance of `IncomingAmqpMetadata` in the metadata.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>来自AMQP的消息在元数据中包含一个 `IncomingAmqpMetadata` 的实例。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Deserialization</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>反序列化</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The connector converts incoming AMQP Messages into Reactive Messaging `Message&lt;T&gt;` instances.  `T` depends on the _body_ of the received AMQP Message.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>连接器将传入的AMQP消息转换为响应式消息 `Message&lt;T&gt;` 实例。 `T` 取决于收到的AMQP消息的 _body_ 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-types-v1.0-os.html[AMQP Type System] defines the supported types.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>link:http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-types-v1.0-os.html[AMQP类型系统] 定义了支持的类型。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`&lt;T&gt;`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`&lt;T&gt;` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>AMQP Value containing a http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-types-v1.0-os.html#section-primitive-type-definitions[AMQP Primitive Type]</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>包含 link:http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-types-v1.0-os.html#section-primitive-type-definitions[AMQP原始类型] 的AMQP值</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>AMQP Value using the `Binary` type</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用 `Binary` 类型的AMQP值</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`List`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`List` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>AMQP Data (with binary content) and the `content-type` is set to `application/json`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>AMQP数据（有二进制内容），并且 `content-type` 被设为 `application/json` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>AMQP Data with a different `content-type`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>带有不同 `content-type` 的AMQP数据</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you send objects with this AMQP connector (outbound connector), it gets encoded as JSON and sent as binary.  The `content-type` is set to `application/json`.  So, you can rebuild the object as follows:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你用这个AMQP连接器（出站连接器）发送对象，它会被编码为JSON，并以二进制形式发送。 `content-type` 被设置为 `application/json` 。因此，你可以按以下方式重建对象。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `Price` instances are automatically encoded to JSON by the connector</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`Price` 实例被连接器自动编码为JSON。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can receive it using a `JsonObject`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你可以使用 `JsonObject` 接收它</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Then, you can reconstruct the instance using the `mapTo` method</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>然后，你可以使用 `mapTo` 方法重新构建该实例</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `mapTo` method uses the Quarkus Jackson mapper. Check xref:rest-json.adoc#json[this guide] to learn more about the mapper configuration.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`mapTo` 方法使用Quarkus Jackson 映射器。请查看 link:rest-json.html#json[本指南] 以了解更多关于映射器的配置。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Acknowledgement</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>消息确认</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>When a Reactive Messaging Message associated with an AMQP Message is acknowledged, it informs the broker that the message has been http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-accepted[accepted].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>当与AMQP消息关联的响应式消息被确认时，它会通知代理该消息已被 link:http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-accepted[接受] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Failure Management</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>失败管理</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If a message produced from an AMQP message is _nacked_, a failure strategy is applied.  The AMQP connector supports six strategies:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果一个由AMQP消息产生的消息是 _nacked_ ，就会应用一个失败策略。AMQP连接器支持六种策略：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`fail` - fail the application; no more AMQP messages will be processed (default).  The AMQP message is marked as rejected.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`fail` - 使应用失败；不再处理AMQP消息（默认）。AMQP消息被标记为拒绝。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`accept` - this strategy marks the AMQP message as _accepted_. The processing continues ignoring the failure.  Refer to the http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-accepted[accepted delivery state documentation].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`accept` - 这个策略将AMQP消息标记为 _accepted_ 。处理会继续进忽略失败的情况。请参考 link:http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-accepted[接受交付状态的文档] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`release` - this strategy marks the AMQP message as _released_. The processing continues with the next message. The broker can redeliver the message.  Refer to the http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-released[released delivery state documentation].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`release` - 这个策略将AMQP消息标记为 _released_ 。继续处理下一条消息。代理可以重新交付消息。请参考 link:http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-released[被释放的交付状态的文档] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`reject` - this strategy marks the AMQP message as rejected. The processing continues with the next message.  Refer to the http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-rejected[rejected delivery state documentation].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`reject` - 这个策略将该AMQP消息标记为拒绝。继续处理下一条消息。请参考 link:http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-rejected[被拒绝的交付状态的文档] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`modified-failed` - this strategy marks the AMQP message as _modified_ and indicates that it failed (with the `delivery-failed` attribute). The processing continues with the next message, but the broker may attempt to redeliver the message.  Refer to the http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-modified[modified delivery state documentation]</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`modified-failed` - 这个策略将AMQP消息标记为 _modified_ ，并指出它失败了（使用 `delivery-failed` 属性）。继续处理下一条消息，但代理可能会尝试重新交付该消息。请参考 link:http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-modified[修改后的交付状态的文档]</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`modified-failed-undeliverable-here` - this strategy marks the AMQP message as _modified_ and indicates that it failed (with the `delivery-failed` attribute). It also indicates that the application cannot process the message, meaning that the broker will not attempt to redeliver the message to this node. The processing continues with the next message.  Refer to the http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-modified[modified delivery state documentation]</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`modified-failed-undeliverable-here` - 这个策略将AMQP消息标记为 _modified_ ，并指出它失败了（使用 `delivery-failed` 属性）。它还表示应用程序不能处理该消息，这意味着代理不会试图将该消息重新交付给这个节点。继续处理下一条消息。请参考 link:http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-modified[修改后的交付状态的文档]</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Sending AMQP messages</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>发送AMQP消息</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>When sending a `Message&lt;T&gt;`, the connector converts the message into an AMQP Message.  The payload is converted to the AMQP Message _body_.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>当发送一个 `Message&lt;T&gt;` 时，连接器将消息转换为AMQP消息。有效载荷被转换为AMQP消息 _body_ 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`T`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`T` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>primitive types or `String`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>原始类型或 `String` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>AMQP Value with the payload</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>带有有效载荷的AMQP值</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`Instant` or `UUID`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`Instant` 或 `UUID` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>AMQP Value using the corresponding AMQP Type</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用相应的AMQP类型的AMQP值</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>AMQP Data using a binary content. The `content-type` is set to `application/json`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用二进制内容的AMQP数据。 `content-type` 被设置为 `application/json` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`io.vertx.mutiny.core.buffer.Buffer`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`io.vertx.mutiny.core.buffer.Buffer` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>AMQP Data using a binary content. No `content-type` set</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用二进制内容的AMQP数据。没有设置 `content-type` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Any other class</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>任何其他类</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The payload is converted to JSON (using a Json Mapper). The result is wrapped into AMQP Data using a **binary** content. The `content-type` is set to `application/json`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>有效载荷被转换为JSON（使用Json Mapper）。结果被包装成使用 *二进制* 内容的AMQP数据。 `content-type` 被设置为 `application/json` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If the message payload cannot be serialized to JSON, the message is _nacked_.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果消息的有效载荷不能被序列化为JSON，那么该消息是 _nacked_ 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Outbound Metadata</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>出站元数据</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>When sending `Messages`, you can add an instance of `OutgoingAmqpMetadata` to influence how the message is going to be sent to AMQP.  For example, you can configure the subjects, properties:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>当发送 `Messages` 时，你可以添加一个 `OutgoingAmqpMetadata` 的实例来影响消息是如何被发送到AMQP的。例如，你可以配置主题、属性。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Dynamic address names</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>动态地址名称</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Sometimes it is desirable to select the destination of a message dynamically.  In this case, you should not configure the address inside your application configuration file, but instead, use the outbound metadata to set the address.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>有时，需要动态选择消息的目的地。在这种情况下，你不应该在你的应用程序配置文件中配置地址，而应该使用出站元数据来设置地址。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>For example, you can send to a dynamic address based on the incoming message:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>例如，你可以根据传入的消息发送至一个动态地址。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To be able to set the address per message, the connector is using an _anonymous sender_.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>为了能够按消息设置地址，连接器使用了一个 _anonymous sender_ 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>By default, the Reactive Messaging `Message` is acknowledged when the broker acknowledged the message.  When using routers, this acknowledgement may not be enabled.  In this case, configure the `auto-acknowledgement` attribute to acknowledge the message as soon as it has been sent to the router.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>默认情况下，当代理确认消息时，响应式消息 `Message` 也会被确认。当使用路由器时，这种确认可能不会被启用。在这种情况下，配置 `auto-acknowledgement` 属性，以便在消息被发送到路由器后立即确认。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If an AMQP message is rejected/released/modified by the broker (or cannot be sent successfully), the message is nacked.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果一个AMQP消息被代理拒绝/释放/修改（或不能成功发送），那么该消息是不被认可的。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Back Pressure and Credits</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>背压和信用</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The back-pressure is handled by AMQP _credits_.  The outbound connector only requests the amount of allowed credits.  When the amount of credits reaches 0, it waits (in a non-blocking fashion) until the broker grants more credits to the AMQP sender.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>背压力是由AMQP _credits_ 来处理的。出站连接器只请求允许的信用额度。当信用额度达到0时，它就会等待（以非阻塞方式），直到代理授予AMQP发送者更多的信用额度。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Configuring the AMQP address</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>配置AMQP地址</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can configure the AMQP address using the `address` attribute:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你可以使用 `address` 属性配置AMQP地址：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If the `address` attribute is not set, the connector uses the channel name.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果没有设置 `address` 属性，连接器将使用通道名称。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To use an existing queue, you need to configure the `address`, `container-id` and, optionally, the `link-name` attributes.  For example, if you have an Apache Artemis broker configured with:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>要使用一个现有的队列，你需要配置 `address` , `container-id` 及可选的 `link-name` 属性。例如，如果你有一个Apache Artemis代理，使用以下方式配置：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You need the following configuration:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你需要以下配置：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You may need to configure the `link-name` attribute, if the queue name is not the channel name:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果队列名称不是通道名称，你可能需要配置 `link-name` 属性：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To use a `MULTICAST` queue, you need to provide the _FQQN_ (fully-qualified queue name) instead of just the name of the queue:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>要使用 `MULTICAST` 队列，你需要提供 _FQQN_ （完全限定队列名称），而不仅仅是队列的名称:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>More details about the AMQP Address model can be found in the https://activemq.apache.org/components/artemis/documentation/2.0.0/address-model.html[Artemis documentation].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>关于AMQP地址模型的更多详情，请参阅 link:https://activemq.apache.org/components/artemis/documentation/2.0.0/address-model.html[Artemis文档] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Execution model and Blocking processing</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>执行模型和阻塞处理</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>@Transactional</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>@Transactional</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Customizing the underlying AMQP client</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>定制底层AMQP客户端</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The connector uses the Vert.x AMQP client underneath.  More details about this client can be found in the https://vertx.io/docs/vertx-amqp-client/java/[Vert.x website].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>连接器在下面使用Vert.x AMQP客户端。关于这个客户端的更多详情，请参阅 link:https://vertx.io/docs/vertx-amqp-client/java/[Vert.x网站] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can customize the underlying client configuration by producing an instance of `AmqpClientOptions` as follows:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你可以通过产生一个 `AmqpClientOptions` 的实例来定制底层的客户端配置，如下所示：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This instance is retrieved and used to configure the client used by the connector.  You need to indicate the name of the client using the `client-options-name` attribute:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这个实例被检索，并用于配置连接器使用的客户端。你需要使用 `client-options-name` 属性指定客户端的名称。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Health reporting</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>健康报告</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you use the AMQP connector with the `quarkus-smallrye-health` extension, it contributes to the readiness and liveness probes.  The AMQP connector reports the readiness and liveness of each channel managed by the connector.  At the moment, the AMQP connector uses the same logic for the readiness and liveness checks.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你将AMQP连接器与 `quarkus-smallrye-health` 扩展一起使用，它将有助于就绪性和活跃度探测。AMQP连接器报告连接器所管理的每个通道的就绪性和活跃度。目前，AMQP连接器对就绪性和活跃度检查使用同样的逻辑。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To disable health reporting, set the `health-enabled` attribute for the channel to false.  On the inbound side (receiving messages from AMQP), the check verifies that the receiver is attached to the broker.  On the outbound side (sending records to AMQP), the check verifies that the sender is attached to the broker.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>要禁用健康报告，请将通道的 `health-enabled` 属性设为false。在入站端（接收来自AMQP的消息），检查会验证接收者是否连接到代理。在出站端（向AMQP发送记录），检查会验证发送者是否连接到代理。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Note that a message processing failures nacks the message, which is then handled by the `failure-strategy`.  It is the responsibility of the `failure-strategy` to report the failure and influence the outcome of the checks.  The `fail` failure strategy reports the failure, and so the check will report the fault.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>请注意，消息处理失败会不认可消息，其然后由 `failure-strategy` 进行处理。报告失败并影响检查的结果是 `failure-strategy` 的责任。 `fail` 失败策略报告失败，因此检查将报告故障。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Using RabbitMQ</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用RabbitMQ</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This connector is for AMQP 1.0. RabbitMQ implements AMQP 0.9.1.  RabbitMQ does not provide AMQP 1.0 by default, but there is a plugin for it.  To use RabbitMQ with this connector, enable and configure the AMQP 1.0 plugin.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>此连接器用于 AMQP 1.0. RabbitMQ 实现 AMQP 0.9.1。RabbitMQ 默认不提供 AMQP 1.0，但有一个插件。要将此连接器与RabbitMQ一起使用，请启用并配置 AMQP 1.0 插件。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Despite the existence of the plugin, a few AMQP 1.0 features won’t work with RabbitMQ.  Thus, we recommend the following configurations.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>尽管存在插件，但少数 AMQP 1.0 特性并不能与 RabbitMQ 一起工作。因此，我们建议采用以下配置。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To receive messages from RabbitMQ:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>要接收来自 RabbitMQ 的消息：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Set durable to false</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>将durable设为false</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To send messages to RabbitMQ:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>要向 RabbitMQ 发送消息：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>set the destination address (anonymous sender are not supported)</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>设置目的地地址（不支持匿名发送者）。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>As a consequence, it’s not possible to change the destination dynamically (using message metadata) when using RabbitMQ.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>因此，在使用 RabbitMQ 时，不可能动态改变目的地（使用消息元数据）。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Receiving Cloud Events</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>接收云事件</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The AMQP connector supports https://cloudevents.io/[Cloud Events].  When the connector detects a _structured_ or _binary_ Cloud Events, it adds a `IncomingCloudEventMetadata&lt;T&gt;` into the metadata of the `Message`.  `IncomingCloudEventMetadata` contains accessors to the mandatory and optional Cloud Event attributes.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>AMQP连接器支持 link:https://cloudevents.io/[云事件] 。当连接器检测到一个 _structured_ 或 _binary_ 云事件时，它会向 `Message` 的元数据中添加一个 `IncomingCloudEventMetadata&lt;T&gt;` 。 `IncomingCloudEventMetadata` 包含对强制和可选云事件属性的访问器。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If the connector cannot extract the Cloud Event metadata, it sends the Message without the metadata.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果连接器不能提取云事件元数据，它将发送没有元数据的消息。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>For more information on receiving Cloud Events, see https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/3.12/amqp/amqp.html#_receiving_cloud_events[Receiving Cloud Events] in SmallRye Reactive Messaging documentation.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>关于接收云事件的更多信息，请参阅SmallRye响应式消息文档中的 link:https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/3.12/amqp/amqp.html#_receiving_cloud_events[接收云事件] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Sending Cloud Events</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>发送云事件</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The AMQP connector supports https://cloudevents.io/[Cloud Events].  The connector sends the outbound record as Cloud Events if:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>AMQP连接器支持 link:https://cloudevents.io/[云事件] 。连接器会将出站记录作为云事件发送，如果：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>the message metadata contains an `io.smallrye.reactive.messaging.ce.OutgoingCloudEventMetadata` instance,</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>消息元数据包含一个 `io.smallrye.reactive.messaging.ce.OutgoingCloudEventMetadata` 实例。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>the channel configuration defines the `cloud-events-type` and `cloud-events-source` attributes.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>通道配置定义了 `cloud-events-type` 和 `cloud-events-source` 属性。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>For more information on sending Cloud Events, see https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/3.12/amqp/amqp.html#_sending_cloud_events[Sending Cloud Events] in SmallRye Reactive Messaging documentation.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>关于发送云事件的更多信息，请参阅SmallRye响应式消息文档中的 link:https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/3.12/amqp/amqp.html#_sending_cloud_events[发送云事件] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Incoming channel configuration</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>传入通道配置</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*address*#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*address*#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The AMQP address. If not set, the channel name is used
+
+Type: _string_</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>AMQP地址。如果没有设置，则使用通道名称
+
+类型: _string_</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>false</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>false</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*auto-acknowledgement*#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*auto-acknowledgement*#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Whether the received AMQP messages must be acknowledged when received
+
+Type: _boolean_</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>收到的AMQP消息是否必须在收到时被确认
+类型: _boolean_</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`false`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`false` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*broadcast*#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*broadcast*#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Whether the received AMQP messages must be dispatched to multiple _subscribers_
+
+Type: _boolean_</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>收到的AMQP消息是否必须派发给多个 _subscribers_ 
+
+类型: _boolean_</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*client-options-name*#
+
+[.no-hyphens]#_(amqp-client-options-name)_#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*client-options-name*#
+
+[.no-hyphens]#_(amqp-client-options-name)_#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The name of the AMQP Client Option bean used to customize the AMQP client configuration
+
+Type: _string_</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>用于定制AMQP客户端配置的AMQP客户端选项bean的名称
+
+类型: _string_</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*cloud-events*#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*cloud-events*#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`true`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`true` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*connect-timeout*#
+
+[.no-hyphens]#_(amqp-connect-timeout)_#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*connect-timeout*#
+
+[.no-hyphens]#_(amqp-connect-timeout)_#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The connection timeout in milliseconds
+
+Type: _int_</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>连接超时以毫秒为单位
+
+类型: _int_</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`1000`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`1000` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*container-id*#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*container-id*#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*durable*#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*durable*#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*failure-strategy*#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*failure-strategy*#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Specify the failure strategy to apply when a message produced from an AMQP message is nacked. Accepted values are `fail` (default), `accept`, `release`, `reject`, `modified-failed`, `modified-failed-undeliverable-here`
+
+Type: _string_</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>当从AMQP消息中产生的消息为不被认可时，指定要应用的失败策略。可接受的值是 `fail` （默认）， `accept` ， `release` ， `reject` ， `modified-failed` ， `modified-failed-undeliverable-here` 
+
+类型: _string_</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`fail`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`fail` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*health-timeout*#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*health-timeout*#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The max number of seconds to wait to determine if the connection with the broker is still established for the readiness check. After that threshold, the check is considered as failed.
+
+Type: _int_</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>等待的最大秒数，以确定用于就绪检查的与代理的连接是否仍在建立。在该阈值之后，检查被认为是失败的。
+
+类型: _int_</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`3`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`3` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*host*#
+
+[.no-hyphens]#_(amqp-host)_#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*host*#
+
+[.no-hyphens]#_(amqp-host)_#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The broker hostname
+
+Type: _string_</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>代理的主机名
+
+类型: _string_</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`localhost`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`localhost` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*link-name*#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*link-name*#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The name of the link. If not set, the channel name is used.
+
+Type: _string_</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>链接的名称。如果没有设置，则使用通道名称。
+
+类型: _string_</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*password*#
+
+[.no-hyphens]#_(amqp-password)_#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*password*#
+
+[.no-hyphens]#_(amqp-password)_#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The password used to authenticate to the broker
+
+Type: _string_</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>用于对代理进行身份验证的密码
+
+类型: _string_</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*port*#
+
+[.no-hyphens]#_(amqp-port)_#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*port*#
+
+[.no-hyphens]#_(amqp-port)_#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The broker port
+
+Type: _int_</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>代理端口
+
+类型: _int_</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`5672`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`5672` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*reconnect-attempts*#
+
+[.no-hyphens]#_(amqp-reconnect-attempts)_#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*reconnect-attempts*#
+
+[.no-hyphens]#_(amqp-reconnect-attempts)_#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The number of reconnection attempts
+
+Type: _int_</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>尝试重新连接的次数
+
+类型: _int_</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`100`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`100` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*reconnect-interval*#
+
+[.no-hyphens]#_(amqp-reconnect-interval)_#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*reconnect-interval*#
+
+[.no-hyphens]#_(amqp-reconnect-interval)_#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The interval in second between two reconnection attempts
+
+Type: _int_</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>两次尝试重新连接之间的间隔（秒）
+
+类型: _int_</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`10`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`10` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*sni-server-name*#
+
+[.no-hyphens]#_(amqp-sni-server-name)_#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*sni-server-name*#
+
+[.no-hyphens]#_(amqp-sni-server-name)_#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If set, explicitly override the hostname to use for the TLS SNI server name
+
+Type: _string_</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果设置了，明确地覆盖用于TLS SNI服务器名称的主机名
+
+类型: _string_</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*tracing-enabled*#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*tracing-enabled*#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*use-ssl*#
+
+[.no-hyphens]#_(amqp-use-ssl)_#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*use-ssl*#
+
+[.no-hyphens]#_(amqp-use-ssl)_#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*username*#
+
+[.no-hyphens]#_(amqp-username)_#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*username*#
+
+[.no-hyphens]#_(amqp-username)_#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The username used to authenticate to the broker
+
+Type: _string_</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>用于对代理进行身份验证的用户名
+
+类型: _string_</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*virtual-host*#
+
+[.no-hyphens]#_(amqp-virtual-host)_#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*virtual-host*#
+
+[.no-hyphens]#_(amqp-virtual-host)_#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If set, configure the hostname value used for the connection AMQP Open frame and TLS SNI server name (if TLS is in use)
+
+Type: _string_</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果设置了，配置用于连接AMQP开放框架和TLS SNI服务器名称的主机名值（如果正在使用TLS）
+
+类型: _string_</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Outgoing channel configuration</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>传出通道配置</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*cloud-events-data-content-type*#
+
+[.no-hyphens]#_(cloud-events-default-data-content-type)_#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*cloud-events-data-content-type*#
+
+[.no-hyphens]#_(cloud-events-default-data-content-type)_#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*cloud-events-data-schema*#
+
+[.no-hyphens]#_(cloud-events-default-data-schema)_#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*cloud-events-data-schema*#
+
+[.no-hyphens]#_(cloud-events-default-data-schema)_#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*cloud-events-insert-timestamp*#
+
+[.no-hyphens]#_(cloud-events-default-timestamp)_#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*cloud-events-insert-timestamp*#
+
+[.no-hyphens]#_(cloud-events-default-timestamp)_#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Whether the connector should insert automatically the `time` attribute into the outgoing Cloud Event. Requires `cloud-events` to be set to `true`. This value is used if the message does not configure the `time` attribute itself
+
+Type: _boolean_</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>连接器是否应将 `time` 属性自动插入到传出的云事件中。要求将 `cloud-events` 设为 `true` 。如果消息本身没有配置 `time` 属性，则使用此值
+
+类型: _boolean_</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*cloud-events-mode*#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*cloud-events-mode*#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`binary`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`binary` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*cloud-events-source*#
+
+[.no-hyphens]#_(cloud-events-default-source)_#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*cloud-events-source*#
+
+[.no-hyphens]#_(cloud-events-default-source)_#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*cloud-events-subject*#
+
+[.no-hyphens]#_(cloud-events-default-subject)_#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*cloud-events-subject*#
+
+[.no-hyphens]#_(cloud-events-default-subject)_#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*cloud-events-type*#
+
+[.no-hyphens]#_(cloud-events-default-type)_#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*cloud-events-type*#
+
+[.no-hyphens]#_(cloud-events-default-type)_#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*credit-retrieval-period*#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*credit-retrieval-period*#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The period (in milliseconds) between two attempts to retrieve the credits granted by the broker. This time is used when the sender run out of credits.
+
+Type: _int_</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>两次尝试检索代理授予的信用额度之间的时间段（以毫秒为单位）。当发送者用完信用额度的时候使用这个时间。
+
+类型: _int_</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`2000`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`2000` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Whether sent AMQP messages are marked durable
+
+Type: _boolean_</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>发送的AMQP消息是否被标记为durable
+
+类型: _boolean_</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*merge*#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*merge*#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*ttl*#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*ttl*#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The time-to-live of the sent AMQP messages. 0 to disable the TTL
+
+Type: _long_</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>发送的AMQP消息的生存时间。0表示禁用TTL
+
+类型: _long_</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>[.no-hyphens]#*use-anonymous-sender*#</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>[.no-hyphens]#*use-anonymous-sender*#</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Whether the connector should use an anonymous sender. Default value is `true` if the broker supports it, `false` otherwise. If not supported, it is not possible to dynamically change the destination address.
+
+Type: _boolean_</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>连接器是否应使用匿名发送者。如果代理支持，则默认值为 `true` ，否则为 `false` 。如果不支持，则无法动态更改目的地地址。
+
+类型: _boolean_</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
         <seg>`throttled` keeps track of received messages and commits an offset of the latest acked message in sequence (meaning, all previous messages were also acked).  This strategy guarantees at-least-once delivery even if the channel performs asynchronous processing.  The connector tracks the received records and periodically (period specified by `auto.commit.interval.ms`, default: 5000 ms) commits the highest consecutive offset.  The connector will be marked as unhealthy if a message associated with a record is not acknowledged in `throttled.unprocessed-record-max-age.ms` (default: 60000 ms).  Indeed, this strategy cannot commit the offset as soon as a single record processing fails (see &lt;&lt;error-handling&gt;&gt; to configure what happens on failing processing).  If `throttled.unprocessed-record-max-age.ms` is set to less than or equal to `0`, it does not perform any health check verification.  Such a setting might lead to running out of memory if there are "poison pill" messages (that are never acked).  This strategy is the default if `enable.auto.commit` is not explicitly set to true.</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
