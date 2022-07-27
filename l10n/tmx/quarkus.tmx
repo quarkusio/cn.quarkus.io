@@ -10051,6 +10051,14 @@ Type: _boolean_</seg>
     </tu>
     <tu>
       <tuv xml:lang="en">
+        <seg>Final touch, the HTML page reading the converted prices using SSE.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>最后，HTML页面使用SSE读取转换后的价格。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
         <seg>Reading properties from Spring Cloud Config Server</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
@@ -12309,6 +12317,14 @@ Type: _boolean_</seg>
     </tu>
     <tu>
       <tuv xml:lang="en">
+        <seg>Running in JVM or Native mode</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在JVM或本地模式下运行</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
         <seg>Reactive</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
@@ -14015,6 +14031,414 @@ Type: _boolean_</seg>
         <seg>当应用程序不请求记录时，轮询是否必须被暂停，或应用程序开始请求记录时轮询是否要恢复。该属性允许实现基于应用容量的背压。需要注意轮询不会停止，但当暂停时不会获取任何记录。
 
 类型: _boolean_</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This guide demonstrates how your Quarkus application can utilize SmallRye Reactive Messaging to interact with AMQP 1.0.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>本指南演示了你的Quarkus应用程序如何使用SmallRye Reactive Messaging来与AMQP 1.0进行交互。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In this guide, we are going to develop two applications communicating with an AMQP broker.  We will use https://activemq.apache.org/components/artemis/[Artemis], but you can use any AMQP 1.0 broker.  The first application sends a _quote request_ to an AMQP queue and consumes messages from the _quote_ queue.  The second application receives the _quote request_ and sends a _quote_ back.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在本指南中，我们将开发两个与AMQP代理进行通信的应用程序。我们将使用 link:https://activemq.apache.org/components/artemis/[Artemis] ，但你可以使用任何AMQP 1.0代理。第一个应用程序向AMQP队列发送一个 _quote request_ ，并消费 _quote_ queue 中的消息。第二个应用程序接收 _quote request_ ， 并发送一个 _quote_ back。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The first application, the `producer`, will let the user request some quotes over an HTTP endpoint.  For each quote request, a random identifier is generated and returned to the user, to put the quote request on _pending_.  At the same time the generated request id is sent over the `quote-requests` queue.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>第一个应用程序 `producer` ，将让用户通过一个HTTP端点请求一些报价。对于每一个报价请求，都会生成一个随机标识符，并返回给用户，以便将报价请求放在 _pending_ 上。同时，生成的请求ID通过 `quote-requests` 队列被发送。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Producer</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>生产者</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The second application, the `processor`, in turn, will read from the `quote-requests` queue put a random price to the quote, and send it to a queue named `quotes`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>反过来，第二个应用程序 `processor` ，将读取 `quote-requests` 队列，将一个随机价格放入报价，并将其发送给一个名为 `quotes` 的队列。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Lastly, the `producer` will read the quotes and send them to the browser using server-sent events.  The user will therefore see the quote price updated from _pending_ to the received price in real-time.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>最后， `producer` 将读取报价，并使用服务器发送事件将其发送给浏览器。因此，用户将实时看到报价从 _pending_ 更新为收到的价格。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>We recommend that you follow the instructions in the next sections and create applications step by step.  However, you can go right to the completed example.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>我们建议你按照下面章节中的说明，一步一步地创建应用程序。但是，你可以直接转到已完成的示例。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The solution is located in the `amqp-quickstart` {quickstarts-tree-url}/amqp-quickstart[directory].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>解决方案位于 `amqp-quickstart` {quickstarts-tree-url}/amqp-quickstart[目录]中。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>First, we need to create two projects: the _producer_ and the _processor_.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>首先，我们需要创建两个项目： _producer_ 和 _processor_ 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To create the _producer_ project, in a terminal run:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>要创建 _producer_ 项目，请在终端中运行：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This command creates the project structure and select the two Quarkus extensions we will be using:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这个命令会创建项目结构，并选择我们将要使用的两个Quarkus扩展：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The Reactive Messaging AMQP connector</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>响应式消息AMQP连接器</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To create the _processor_ project, from the same directory, run:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>要创建 _processor_ 项目，请在同一目录下运行：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>At that point you should have the following structure:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>此时，你应该有如下的结构：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Open the two projects in your favorite IDE.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在你喜欢的IDE中打开这两个项目。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `Quote` class will be used in both `producer` and `processor` projects.  For the sake of simplicity we will duplicate the class.  In both projects, create the `src/main/java/org/acme/amqp/model/Quote.java` file, with the following content:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`Quote` 类将用在 `producer` 和 `processor` 项目中。为了简单起见，我们将重复这个类。在两个项目中，创建 `src/main/java/org/acme/amqp/model/Quote.java` 文件，其内容如下：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>JSON representation of `Quote` objects will be used in messages sent to the AMQP queues and also in the server-sent events sent to browser clients.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`Quote` 对象的JSON表示将被用在发送给AMQP队列的消息中，也被用在发送给浏览器客户端的服务器发送事件中。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Quarkus has built-in capabilities to deal with JSON AMQP messages.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Quarkus有内置的功能来处理JSON AMQP消息。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>@RegisterForReflection</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>@RegisterForReflection</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `@RegisterForReflection` annotation instructs Quarkus to include the class (including fields and methods) when building the native executable.  This will be useful later when we run the applications as native executables inside containers.  Without, the native compilation would remove the fields and methods during the dead-code elimination phase.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`@RegisterForReflection` 注释指示Quarkus在构建本地可执行文件时包含类（包括字段和方法）。这在以后我们在容器中作为本地可执行文件运行应用程序时将会很有用。如果没有这个注释，本地编译会在死代码清除阶段删除这些字段和方法。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Sending quote request</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>发送报价请求</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Inside the `producer` project locate the generated `src/main/java/org/acme/amqp/producer/QuotesResource.java` file, and update the content to be:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在 `producer` 项目中找到生成的 `src/main/java/org/acme/amqp/producer/QuotesResource.java` 文件，并将其内容更新为：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Inject a Reactive Messaging `Emitter` to send messages to the `quote-requests` channel.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>注入一个响应式消息 `Emitter` ，来向 `quote-requests` 通道发送消息。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>On a post request, generate a random UUID and send it to the AMQP queue using the emitter.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在post请求中，生成一个随机的UUID，并使用emitter将其发送给AMQP队列。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Processing quote requests</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>处理报价请求</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Now let's consume the quote request and give out a price.  Inside the `processor` project, locate the `src/main/java/org/acme/amqp/processor/QuoteProcessor.java` file and add the following:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>现在让我们来消费报价请求，并给出一个价格。在 `processor` 项目中，找到 `src/main/java/org/acme/amqp/processor/QuoteProcessor.java` 文件，并添加以下内容：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Indicates that the method consumes the items from the `requests` channel</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>表示该方法消费 `requests` 通道中的项</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Indicates that the objects returned by the method are sent to the `quotes` channel</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>表示方法返回的对象被发送给 `quotes` 通道</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Indicates that the processing is _blocking_ and cannot be run on the caller thread.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>表示该处理是 _blocking_ ，不能在调用者线程上运行。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `process` method is called for every AMQP message from the `quote-requests` queue, and will send a `Quote` object to the `quotes` queue.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`process` 方法被 `quote-requests` 队列中的每一个AMQP消息调用，并将 `Quote` 对象发送给 `quotes` 队列。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`mp.messaging.[outgoing|incoming].{channel-name}.property=value`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`mp.messaging.[outgoing|incoming].{channel-name}.property=value` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Receiving quotes</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>接收报价</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Back to our `producer` project.  Let's modify the `QuotesResource` to consume quotes, bind it to an HTTP endpoint to send events to clients:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>回到我们的 `producer` 项目。让我们修改 `QuotesResource` 来消费报价，将其绑定到一个HTTP端点，来向客户端发送事件：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Injects the `quotes` channel using the `@Channel` qualifier</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用 `@Channel` 修饰符注入 `quotes` 通道</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Indicates that the content is sent using `Server Sent Events`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>表示内容是使用 `Server Sent Events` 发送的</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Returns the stream (_Reactive Stream_)</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>返回流 (_Reactive Stream_) 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Create inside the `producer` project `src/main/resources/META-INF/resources/quotes.html` file, with the following content:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在 `producer` 项目中创建 `src/main/resources/META-INF/resources/quotes.html` 文件，内容如下：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Nothing spectacular here.  On each received quote, it updates the page.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这里没有什么特别之处。对于每一个收到的报价，它都会更新页面。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You just need to run both applications using:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你只需使用以下命令运行这两个应用程序：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>And, in a separate terminal:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>并且，在另一台终端中：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Quarkus starts a AMQP broker automatically, configures the application and shares the broker instance between different applications.  See xref:amqp-dev-services.adoc[Dev Services for AMQP] for more details.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Quarkus会自动启动一个AMQP代理，配置应用程序，并在不同的应用程序之间共享代理实例。要了解更多的细节，请参阅 xref:amqp-dev-services.adoc[AMQP的开发服务] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Open `http://localhost:8080/quotes.html` in your browser and request some quotes by clicking the button.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在你的浏览器中打开 `http://localhost:8080/quotes.html` ，点击按钮来请求一些报价。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>When not running in dev or test mode, you will need to start your AMQP broker.  You can follow the instructions from the https://activemq.apache.org/components/artemis/documentation/latest/using-server.html[Apache ActiveMQ Artemis website] or create a `docker-compose.yaml` file with the following content:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>当不在开发或测试模式下运行时，你需要启动你的AMQP代理。你可以按照 link:https://activemq.apache.org/components/artemis/documentation/latest/using-server.html[Apache ActiveMQ Artemis网站]中的说明，或者使用以下内容创建一个 `docker-compose.yaml` 文件：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Note how the AMQP broker location is configured.  The `amqp.host` and `amqp.port` (`AMQP_HOST` and `AMQP_PORT` environment variables) properties configure location.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>注意AMQP代理的位置是如何配置的。 `amqp.host` 和 `amqp.port` ( `AMQP_HOST` 和 `AMQP_PORT` 环境变量) 属性配置位置。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>First, make sure you stopped the applications, and build both applications in JVM mode with:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>首先，确保你停止了应用程序，并在JVM模式下使用以下命令构建这两个应用程序：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Once packaged, run `docker compose up --build`.  The UI is exposed on http://localhost:8080/quotes.html</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>一旦打包完成，请运行 `docker compose up --build` 。UI在 http://localhost:8080/quotes.html</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To run your applications as native, first we need to build the native executables:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>要以本地方式运行你的应用程序，我们首先需要构建本地可执行文件：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `-Dquarkus.native.container-build=true` instructs Quarkus to build Linux 64bits native executables, who can run inside containers.  Then, run the system using:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`-Dquarkus.native.container-build=true` 指示Quarkus构建可以在容器中运行的64位Linux本地可执行文件。然后，使用以下命令运行系统：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>As before, the UI is exposed on http://localhost:8080/quotes.html</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>与之前一样，UI也是在 http://localhost:8080/quotes.html</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This guide has shown how you can interact with AMQP 1.0 using Quarkus.  It utilizes https://smallrye.io/smallrye-reactive-messaging[SmallRye Reactive Messaging] to build data streaming applications.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>本指南展示了如何使用Quarkus与AMQP 1.0进行交互。它使用 link:https://smallrye.io/smallrye-reactive-messaging[SmallRye响应式消息]来构建数据流应用程序。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you did the Kafka quickstart, you have realized that it's the same code.  The only difference is the connector configuration and the JSON mapping.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你学过Kafka快速入门，你会意识到这是相同的代码。唯一的区别是连接器配置和JSON映射。</seg>
       </tuv>
     </tu>
     <tu>
@@ -20696,6 +21120,46 @@ Type: _int_</seg>
     </tu>
     <tu>
       <tuv xml:lang="en">
+        <seg>The `quote-requests` channel is going to be managed as a AMQP queue, as that's the only connector on the classpath.  If not indicated otherwise, like in this example, Quarkus uses the channel name as AMQP queue name.  So, in this example, the application sends messages to the `quote-requests` queue.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`quote-requests` 通道将被作为一个AMQP队列来管理，因为这是classpath上唯一的连接器。如果没有另行说明，如本例中所示，Quarkus将使用通道名称作为AMQP队列名称。因此，在本例中，应用程序将消息发送给 `quote-requests` 队列。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>When you have multiple connectors, you would need to indicate which connector you want to use in the application configuration.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>当你有多个连接器时，你需要在应用程序配置中指出你想要使用哪个连接器。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Because we want to consume messages from the `quotes-requests` queue into the `requests` channel, we need to configure this association.  Open the `src/main/resources/application.properties` file and add:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>因为我们想把 `quotes-requests` 队列中的消息消费到 `requests` 通道中，因此我们需要配置这个关联。请打开 `src/main/resources/application.properties` 文件并添加：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The configuration keys are structured as follows:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>配置键的结构如下：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In our case, we want to configure the `address` attribute to indicate the name of the queue.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在我们的情形中，我们想配置 `address` 属性来表示队列的名称。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
         <seg>To ease the containerization of native executables, Quarkus provides a base image providing the requirements to run these executables.  The `quarkus-micro-image:1.0` image is:</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
@@ -22836,6 +23300,14 @@ IntelliJ IDEA Ultimate</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
         <seg>Kotlin coroutines提供了一个命令式的编程模型，实际上是以异步、响应式的方式执行。这里提供了一个模块 `io.smallrye.reactive:mutiny-kotlin` ，以简化Mutiny和Kotlin之间的互操作性 ，link:https://smallrye.io/smallrye-mutiny/guides/kotlin[在此] 描述。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you want to use RabbitMQ, you should use the xref:rabbitmq.adoc[SmallRye Reactive Messaging RabbitMQ extension].  Alternatively, if you want to use RabbitMQ with AMQP 1.0 you need to enable the AMQP 1.0 plugin in the RabbitMQ broker; check the https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/3.9/amqp/amqp.html#amqp-rabbitmq[connecting to RabbitMQ] documentation.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你想使用 RabbitMQ，你应该使用 xref:rabbitmq.adoc[SmallRye响应式消息RabbitMQ 扩展] 。另外，如果你想使用带有 AMQP 1.0的RabbitMQ ，你需要在 RabbitMQ 代理中启用 AMQP 1.0 插件；请查看 link:https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/3.9/amqp/amqp.html#amqp-rabbitmq[连接到 RabbitMQ] 文档。</seg>
       </tuv>
     </tu>
     <tu>
@@ -31340,478 +31812,6 @@ This guide will walk you through all that.
       </tuv>
       <tuv xml:lang="zh_CN">
         <seg>最新指南</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>This guide demonstrates how your Quarkus application can utilize SmallRye Reactive Messaging to interact with AMQP 1.0.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>本指南演示了你的Quarkus应用程序如何使用SmallRye Reactive Messaging来与AMQP 1.0进行交互。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>If you want to use RabbitMQ, you should use the xref:rabbitmq.adoc[SmallRye Reactive Messaging RabbitMQ extension].  Alternatively, if you want to use RabbitMQ with AMQP 1.0 you need to enable the AMQP 1.0 plugin in the RabbitMQ broker; check the https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/3.9/amqp/amqp.html#amqp-rabbitmq[connecting to RabbitMQ] documentation.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>如果你想使用 RabbitMQ，你应该使用 xref:rabbitmq.adoc[SmallRye响应式消息RabbitMQ 扩展] 。另外，如果你想使用带有 AMQP 1.0的RabbitMQ ，你需要在 RabbitMQ 代理中启用 AMQP 1.0 插件；请查看 link:https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/3.9/amqp/amqp.html#amqp-rabbitmq[连接到 RabbitMQ] 文档。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>In this guide, we are going to develop two applications communicating with an AMQP broker.  We will use https://activemq.apache.org/components/artemis/[Artemis], but you can use any AMQP 1.0 broker.  The first application sends a _quote request_ to an AMQP queue and consumes messages from the _quote_ queue.  The second application receives the _quote request_ and sends a _quote_ back.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>在本指南中，我们将开发两个与AMQP代理进行通信的应用程序。我们将使用 link:https://activemq.apache.org/components/artemis/[Artemis] ，但你可以使用任何AMQP 1.0代理。第一个应用程序向AMQP队列发送一个 _quote request_ ，并消费 _quote_ queue 中的消息。第二个应用程序接收 _quote request_ ， 并发送一个 _quote_ back。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>The first application, the `producer`, will let the user request some quotes over an HTTP endpoint.  For each quote request, a random identifier is generated and returned to the user, to put the quote request on _pending_.  At the same time the generated request id is sent over the `quote-requests` queue.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>第一个应用程序 `producer` ，将让用户通过一个HTTP端点请求一些报价。对于每一个报价请求，都会生成一个随机标识符，并返回给用户，以便将报价请求放在 _pending_ 上。同时，生成的请求ID通过 `quote-requests` 队列被发送。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Producer</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>生产者</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>The second application, the `processor`, in turn, will read from the `quote-requests` queue put a random price to the quote, and send it to a queue named `quotes`.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>反过来，第二个应用程序 `processor` ，将读取 `quote-requests` 队列，将一个随机价格放入报价，并将其发送给一个名为 `quotes` 的队列。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Lastly, the `producer` will read the quotes and send them to the browser using server-sent events.  The user will therefore see the quote price updated from _pending_ to the received price in real-time.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>最后， `producer` 将读取报价，并使用服务器发送事件将其发送给浏览器。因此，用户将实时看到报价从 _pending_ 更新为收到的价格。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>We recommend that you follow the instructions in the next sections and create applications step by step.  However, you can go right to the completed example.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>我们建议你按照下面章节中的说明，一步一步地创建应用程序。但是，你可以直接转到已完成的示例。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>The solution is located in the `amqp-quickstart` {quickstarts-tree-url}/amqp-quickstart[directory].</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>解决方案位于 `amqp-quickstart` {quickstarts-tree-url}/amqp-quickstart[目录]中。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>First, we need to create two projects: the _producer_ and the _processor_.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>首先，我们需要创建两个项目： _producer_ 和 _processor_ 。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>To create the _producer_ project, in a terminal run:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>要创建 _producer_ 项目，请在终端中运行：</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>This command creates the project structure and select the two Quarkus extensions we will be using:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>这个命令会创建项目结构，并选择我们将要使用的两个Quarkus扩展：</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>The Reactive Messaging AMQP connector</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>响应式消息AMQP连接器</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>To create the _processor_ project, from the same directory, run:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>要创建 _processor_ 项目，请在同一目录下运行：</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>At that point you should have the following structure:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>此时，你应该有如下的结构：</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Open the two projects in your favorite IDE.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>在你喜欢的IDE中打开这两个项目。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>The `Quote` class will be used in both `producer` and `processor` projects.  For the sake of simplicity we will duplicate the class.  In both projects, create the `src/main/java/org/acme/amqp/model/Quote.java` file, with the following content:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>`Quote` 类将用在 `producer` 和 `processor` 项目中。为了简单起见，我们将重复这个类。在两个项目中，创建 `src/main/java/org/acme/amqp/model/Quote.java` 文件，其内容如下：</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>JSON representation of `Quote` objects will be used in messages sent to the AMQP queues and also in the server-sent events sent to browser clients.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>`Quote` 对象的JSON表示将被用在发送给AMQP队列的消息中，也被用在发送给浏览器客户端的服务器发送事件中。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Quarkus has built-in capabilities to deal with JSON AMQP messages.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>Quarkus有内置的功能来处理JSON AMQP消息。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>@RegisterForReflection</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>@RegisterForReflection</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>The `@RegisterForReflection` annotation instructs Quarkus to include the class (including fields and methods) when building the native executable.  This will be useful later when we run the applications as native executables inside containers.  Without, the native compilation would remove the fields and methods during the dead-code elimination phase.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>`@RegisterForReflection` 注释指示Quarkus在构建本地可执行文件时包含类（包括字段和方法）。这在以后我们在容器中作为本地可执行文件运行应用程序时将会很有用。如果没有这个注释，本地编译会在死代码清除阶段删除这些字段和方法。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Sending quote request</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>发送报价请求</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Inside the `producer` project locate the generated `src/main/java/org/acme/amqp/producer/QuotesResource.java` file, and update the content to be:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>在 `producer` 项目中找到生成的 `src/main/java/org/acme/amqp/producer/QuotesResource.java` 文件，并将其内容更新为：</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Inject a Reactive Messaging `Emitter` to send messages to the `quote-requests` channel.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>注入一个响应式消息 `Emitter` ，来向 `quote-requests` 通道发送消息。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>On a post request, generate a random UUID and send it to the AMQP queue using the emitter.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>在post请求中，生成一个随机的UUID，并使用emitter将其发送给AMQP队列。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>The `quote-requests` channel is going to be managed as a AMQP queue, as that's the only connector on the classpath.  If not indicated otherwise, like in this example, Quarkus uses the channel name as AMQP queue name.  So, in this example, the application sends messages to the `quote-requests` queue.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>`quote-requests` 通道将被作为一个AMQP队列来管理，因为这是classpath上唯一的连接器。如果没有另行说明，如本例中所示，Quarkus将使用通道名称作为AMQP队列名称。因此，在本例中，应用程序将消息发送给 `quote-requests` 队列。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>When you have multiple connectors, you would need to indicate which connector you want to use in the application configuration.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>当你有多个连接器时，你需要在应用程序配置中指出你想要使用哪个连接器。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Processing quote requests</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>处理报价请求</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Now let's consume the quote request and give out a price.  Inside the `processor` project, locate the `src/main/java/org/acme/amqp/processor/QuoteProcessor.java` file and add the following:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>现在让我们来消费报价请求，并给出一个价格。在 `processor` 项目中，找到 `src/main/java/org/acme/amqp/processor/QuoteProcessor.java` 文件，并添加以下内容：</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Indicates that the method consumes the items from the `requests` channel</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>表示该方法消费 `requests` 通道中的项</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Indicates that the objects returned by the method are sent to the `quotes` channel</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>表示方法返回的对象被发送给 `quotes` 通道</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Indicates that the processing is _blocking_ and cannot be run on the caller thread.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>表示该处理是 _blocking_ ，不能在调用者线程上运行。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>The `process` method is called for every AMQP message from the `quote-requests` queue, and will send a `Quote` object to the `quotes` queue.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>`process` 方法被 `quote-requests` 队列中的每一个AMQP消息调用，并将 `Quote` 对象发送给 `quotes` 队列。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Because we want to consume messages from the `quotes-requests` queue into the `requests` channel, we need to configure this association.  Open the `src/main/resources/application.properties` file and add:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>因为我们想把 `quotes-requests` 队列中的消息消费到 `requests` 通道中，因此我们需要配置这个关联。请打开 `src/main/resources/application.properties` 文件并添加：</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>The configuration keys are structured as follows:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>配置键的结构如下：</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>`mp.messaging.[outgoing|incoming].{channel-name}.property=value`</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>`mp.messaging.[outgoing|incoming].{channel-name}.property=value` </seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>In our case, we want to configure the `address` attribute to indicate the name of the queue.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>在我们的情形中，我们想配置 `address` 属性来表示队列的名称。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Receiving quotes</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>接收报价</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Back to our `producer` project.  Let's modify the `QuotesResource` to consume quotes, bind it to an HTTP endpoint to send events to clients:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>回到我们的 `producer` 项目。让我们修改 `QuotesResource` 来消费报价，将其绑定到一个HTTP端点，来向客户端发送事件：</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Injects the `quotes` channel using the `@Channel` qualifier</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>使用 `@Channel` 修饰符注入 `quotes` 通道</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Indicates that the content is sent using `Server Sent Events`</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>表示内容是使用 `Server Sent Events` 发送的</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Returns the stream (_Reactive Stream_)</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>返回流 (_Reactive Stream_) 。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Final touch, the HTML page reading the converted prices using SSE.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>最后，HTML页面使用SSE读取转换后的价格。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Create inside the `producer` project `src/main/resources/META-INF/resources/quotes.html` file, with the following content:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>在 `producer` 项目中创建 `src/main/resources/META-INF/resources/quotes.html` 文件，内容如下：</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Nothing spectacular here.  On each received quote, it updates the page.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>这里没有什么特别之处。对于每一个收到的报价，它都会更新页面。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>You just need to run both applications using:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>你只需使用以下命令运行这两个应用程序：</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>And, in a separate terminal:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>并且，在另一台终端中：</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Quarkus starts a AMQP broker automatically, configures the application and shares the broker instance between different applications.  See xref:amqp-dev-services.adoc[Dev Services for AMQP] for more details.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>Quarkus会自动启动一个AMQP代理，配置应用程序，并在不同的应用程序之间共享代理实例。要了解更多的细节，请参阅 xref:amqp-dev-services.adoc[AMQP的开发服务] 。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Open `http://localhost:8080/quotes.html` in your browser and request some quotes by clicking the button.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>在你的浏览器中打开 `http://localhost:8080/quotes.html` ，点击按钮来请求一些报价。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Running in JVM or Native mode</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>在JVM或本地模式下运行</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>When not running in dev or test mode, you will need to start your AMQP broker.  You can follow the instructions from the https://activemq.apache.org/components/artemis/documentation/latest/using-server.html[Apache ActiveMQ Artemis website] or create a `docker-compose.yaml` file with the following content:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>当不在开发或测试模式下运行时，你需要启动你的AMQP代理。你可以按照 link:https://activemq.apache.org/components/artemis/documentation/latest/using-server.html[Apache ActiveMQ Artemis网站]中的说明，或者使用以下内容创建一个 `docker-compose.yaml` 文件：</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Note how the AMQP broker location is configured.  The `amqp.host` and `amqp.port` (`AMQP_HOST` and `AMQP_PORT` environment variables) properties configure location.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>注意AMQP代理的位置是如何配置的。 `amqp.host` 和 `amqp.port` ( `AMQP_HOST` 和 `AMQP_PORT` 环境变量) 属性配置位置。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>First, make sure you stopped the applications, and build both applications in JVM mode with:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>首先，确保你停止了应用程序，并在JVM模式下使用以下命令构建这两个应用程序：</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Once packaged, run `docker compose up --build`.  The UI is exposed on http://localhost:8080/quotes.html</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>一旦打包完成，请运行 `docker compose up --build` 。UI在 http://localhost:8080/quotes.html</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>To run your applications as native, first we need to build the native executables:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>要以本地方式运行你的应用程序，我们首先需要构建本地可执行文件：</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>The `-Dquarkus.native.container-build=true` instructs Quarkus to build Linux 64bits native executables, who can run inside containers.  Then, run the system using:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>`-Dquarkus.native.container-build=true` 指示Quarkus构建可以在容器中运行的64位Linux本地可执行文件。然后，使用以下命令运行系统：</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>As before, the UI is exposed on http://localhost:8080/quotes.html</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>与之前一样，UI也是在 http://localhost:8080/quotes.html</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>This guide has shown how you can interact with AMQP 1.0 using Quarkus.  It utilizes https://smallrye.io/smallrye-reactive-messaging[SmallRye Reactive Messaging] to build data streaming applications.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>本指南展示了如何使用Quarkus与AMQP 1.0进行交互。它使用 link:https://smallrye.io/smallrye-reactive-messaging[SmallRye响应式消息]来构建数据流应用程序。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>If you did the Kafka quickstart, you have realized that it's the same code.  The only difference is the connector configuration and the JSON mapping.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>如果你学过Kafka快速入门，你会意识到这是相同的代码。唯一的区别是连接器配置和JSON映射。</seg>
       </tuv>
     </tu>
     <tu>
