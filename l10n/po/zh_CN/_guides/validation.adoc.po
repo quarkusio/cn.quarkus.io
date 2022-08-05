@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2022-05-12 15:52+0000\n"
+"POT-Creation-Date: 2022-08-05 18:12+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -177,7 +177,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/validation.adoc:82 upstream/_guides/validation.adoc:400
+#: upstream/_guides/validation.adoc:82 upstream/_guides/validation.adoc:430
 #, no-wrap
 msgid "public class Book {\n"
 msgstr ""
@@ -353,7 +353,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/validation.adoc:169 upstream/_guides/validation.adoc:409
+#: upstream/_guides/validation.adoc:169 upstream/_guides/validation.adoc:439
 #, no-wrap
 msgid "}\n"
 msgstr ""
@@ -683,20 +683,71 @@ msgstr "大多数情况下，这些豆子应该被声明为 `@ApplicationScoped`
 msgid "However, in the case of ``ConstraintValidator``s that are dependent of attributes of the constraint annotation (typically when implementing the `initialize(A constraintAnnotation)` method), use the `@Dependent` scope to make sure each annotation context has a separate instance of the `ConstraintValidator` bean."
 msgstr "然而，在 `ConstraintValidator` s依赖于约束注解的属性的情况下（通常在实现 `initialize(A constraintAnnotation)` 方法时），使用 `@Dependent` 范围来确保每个注解上下文都有一个单独的 `ConstraintValidator` Bean实例。"
 
+#. type: Plain text
+#: upstream/_guides/validation.adoc:314
+msgid "If customizing the `ValidatorFactory` through the available configuration properties and the CDI beans above doesn't cover your requirements, you can customize it further by registering `ValidatorFactoryCustomizer` beans."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/validation.adoc:316
+msgid "For instance, you could override the built-in validator enforcing the `@Email` constraint and use `MyEmailValidator` instead with the following class:"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/validation.adoc:321
+#, no-wrap
+msgid ""
+"@ApplicationScoped\n"
+"public class MyEmailValidatorFactoryCustomizer implements ValidatorFactoryCustomizer {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/validation.adoc:325
+#, no-wrap
+msgid ""
+"    @Override\n"
+"    public void customize(BaseHibernateValidatorConfiguration<?> configuration) {\n"
+"        ConstraintMapping constraintMapping = configuration.createConstraintMapping();\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/validation.adoc:330
+#, no-wrap
+msgid ""
+"        constraintMapping\n"
+"                .constraintDefinition(Email.class)\n"
+"                .includeExistingValidators(false)\n"
+"                .validatedBy(MyEmailValidator.class);\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/validation.adoc:334
+#, no-wrap
+msgid ""
+"        configuration.addMapping(constraintMapping);\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/validation.adoc:338
+msgid "All beans implementing `ValidatorFactoryCustomizer` are applied, meaning you can have several of them.  If you need to enforce some ordering, you can use the usual `@javax.annotation.Priority` annotation - beans with higher priority are applied first."
+msgstr ""
+
 #. type: Title ====
-#: upstream/_guides/validation.adoc:312
+#: upstream/_guides/validation.adoc:339
 #, fuzzy, no-wrap
 msgid "Constraint validators as beans"
 msgstr "作为豆类的限制性验证器"
 
 #. type: Plain text
-#: upstream/_guides/validation.adoc:315
+#: upstream/_guides/validation.adoc:342
 #, fuzzy
 msgid "You can declare your constraint validators as CDI beans:"
 msgstr "你可以把你的约束验证器声明为CDI豆。"
 
 #. type: delimited block -
-#: upstream/_guides/validation.adoc:320
+#: upstream/_guides/validation.adoc:347
 #, no-wrap
 msgid ""
 "@ApplicationScoped\n"
@@ -704,7 +755,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/validation.adoc:323
+#: upstream/_guides/validation.adoc:350
 #, no-wrap
 msgid ""
 "    @Inject\n"
@@ -712,7 +763,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/validation.adoc:329
+#: upstream/_guides/validation.adoc:356
 #, no-wrap
 msgid ""
 "    @Override\n"
@@ -723,7 +774,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/validation.adoc:333
+#: upstream/_guides/validation.adoc:360
 #, no-wrap
 msgid ""
 "        return service.validate(value);\n"
@@ -732,43 +783,53 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/validation.adoc:337
+#: upstream/_guides/validation.adoc:364
 #, fuzzy
-msgid "When initializing a constraint validator of a given type, Quarkus will check if a bean of this type is available and, if so, it will use it instead of instantiating one."
+msgid "When initializing a constraint validator of a given type, Quarkus will check if a bean of this type is available and, if so, it will use it instead of instantiating a `ConstraintValidator`."
 msgstr "当初始化一个给定类型的约束验证器时，Quarkus将检查是否有这种类型的bean，如果有，它将使用它而不是实例化一个。"
 
 #. type: Plain text
-#: upstream/_guides/validation.adoc:339
+#: upstream/_guides/validation.adoc:366
 #, fuzzy
 msgid "Thus, as demonstrated in our example, you can fully use injection in your constraint validator beans."
 msgstr "因此，正如我们的例子所展示的，你可以在你的约束验证器Bean中完全使用注入。"
 
 #. type: delimited block =
-#: upstream/_guides/validation.adoc:343
+#: upstream/_guides/validation.adoc:370
+msgid "The scope you choose for your `ConstraintValidator` bean is important:"
+msgstr ""
+
+#. type: delimited block =
+#: upstream/_guides/validation.adoc:372
+msgid "If the same instance of the `ConstraintValidator` bean can be used across the whole application, use the `@ApplicationScoped` scope."
+msgstr ""
+
+#. type: delimited block =
+#: upstream/_guides/validation.adoc:373
 #, fuzzy
-msgid "Except in very specific situations, it is recommended to make the said beans `@ApplicationScoped`."
-msgstr "除非在非常特殊的情况下，建议将上述豆子 `@ApplicationScoped` 。"
+msgid "If the `ConstraintValidator` bean implements the `initialize(A constraintAnnotation)` method and depends on the state of the constraint annotation, use the `@Dependent` scope to make sure each annotation context has a separate and properly configured instance of the `ConstraintValidator` bean."
+msgstr "然而，在 `ConstraintValidator` s依赖于约束注解的属性的情况下（通常在实现 `initialize(A constraintAnnotation)` 方法时），使用 `@Dependent` 范围来确保每个注解上下文都有一个单独的 `ConstraintValidator` Bean实例。"
 
 #. type: Title ===
-#: upstream/_guides/validation.adoc:345
+#: upstream/_guides/validation.adoc:375
 #, fuzzy, no-wrap
 msgid "Validation and localization"
 msgstr "审定和本地化"
 
 #. type: Plain text
-#: upstream/_guides/validation.adoc:348
+#: upstream/_guides/validation.adoc:378
 #, fuzzy
 msgid "By default, constraint violation messages will be returned in the build system locale."
 msgstr "默认情况下，违反约束的信息将以构建系统的语言返回。"
 
 #. type: Plain text
-#: upstream/_guides/validation.adoc:350
+#: upstream/_guides/validation.adoc:380
 #, fuzzy
 msgid "You can configure this behavior by adding the following configuration in your `application.properties`:"
 msgstr "你可以通过在你的 `application.properties` 中添加以下配置来配置这种行为。"
 
 #. type: delimited block -
-#: upstream/_guides/validation.adoc:355
+#: upstream/_guides/validation.adoc:385
 #, no-wrap
 msgid ""
 "# The default locale to use\n"
@@ -776,13 +837,13 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/validation.adoc:359
+#: upstream/_guides/validation.adoc:389
 #, fuzzy
 msgid "If you are using RESTEasy Reactive, in the context of a JAX-RS endpoint, Hibernate Validator will automatically resolve the optimal locale to use from the `Accept-Language` HTTP header, provided the supported locales have been properly specified in the `application.properties`:"
 msgstr "如果你使用的是RESTEasy Reactive，在JAX-RS端点的背景下，Hibernate验证器会自动从 `Accept-Language` HTTP头中解析出要使用的最佳locale，前提是支持的locale已经在 `application.properties` 。"
 
 #. type: delimited block -
-#: upstream/_guides/validation.adoc:364
+#: upstream/_guides/validation.adoc:394
 #, no-wrap
 msgid ""
 "# The list of all the supported locales\n"
@@ -790,37 +851,37 @@ msgid ""
 msgstr ""
 
 #. type: Title ===
-#: upstream/_guides/validation.adoc:366
+#: upstream/_guides/validation.adoc:396
 #, fuzzy, no-wrap
 msgid "Validation groups for REST endpoint or service method validation"
 msgstr "用于REST端点或服务方法验证的验证组"
 
 #. type: Plain text
-#: upstream/_guides/validation.adoc:370
+#: upstream/_guides/validation.adoc:400
 #, fuzzy
 msgid "It's sometimes necessary to enable different validation constraints for the same class when it's passed to a different method."
 msgstr "当同一个类被传递给不同的方法时，有时有必要为它启用不同的验证约束。"
 
 #. type: Plain text
-#: upstream/_guides/validation.adoc:375
+#: upstream/_guides/validation.adoc:405
 #, fuzzy
 msgid "For example, a `Book` may need to have a `null` identifier when passed to the `post` method (because the identifier will be generated), but a non-`null` identifier when passed to the `put` method (because the method needs the identifier to know what to update)."
 msgstr "例如，一个 `Book` ，在传递给 `post` 方法时，可能需要有一个 `null` 的标识符（因为标识符将被生成），但在传递给 `put` 方法时，则需要一个非 `null` 的标识符（因为该方法需要标识符来知道要更新什么）。"
 
 #. type: Plain text
-#: upstream/_guides/validation.adoc:378
+#: upstream/_guides/validation.adoc:408
 #, fuzzy
 msgid "To address this, you can take advantage of validation groups.  Validation groups are markers that you put on your constraints in order to enable or disable them at will."
 msgstr "为了解决这个问题，你可以利用验证组的优势。验证组是你放在约束条件上的标记，以便随意启用或停用它们。"
 
 #. type: Plain text
-#: upstream/_guides/validation.adoc:380
+#: upstream/_guides/validation.adoc:410
 #, fuzzy
 msgid "First, define the `Post` and `Put` groups, which are just Java interfaces."
 msgstr "首先，定义 `Post` 和 `Put` 组，这只是Java接口。"
 
 #. type: delimited block -
-#: upstream/_guides/validation.adoc:389
+#: upstream/_guides/validation.adoc:419
 #, no-wrap
 msgid ""
 "public interface ValidationGroups {\n"
@@ -832,19 +893,19 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/validation.adoc:394
+#: upstream/_guides/validation.adoc:424
 #, fuzzy
 msgid "Make the custom groups extend the `Default` group.  This means that whenever these groups are enabled, the `Default` group is also enabled.  This is useful if you have constraints that you want validated in both the `Post` and `Put` method: you can simply use the default group on those constraints, like on the `title` property below."
 msgstr "使自定义组扩展到 `Default` 组。这意味着，只要这些组被启用， `Default` 组也会被启用。如果你有希望在 `Post` 和 `Put` 方法中都得到验证的约束条件，这就很有用：你可以简单地在这些约束条件上使用默认组，就像在下面的 `title` 属性上。"
 
 #. type: Plain text
-#: upstream/_guides/validation.adoc:396
+#: upstream/_guides/validation.adoc:426
 #, fuzzy
 msgid "Then add the relevant constraints to `Book`, assigning the right group to each constraint:"
 msgstr "然后将相关约束添加到 `Book` ，为每个约束分配正确的组。"
 
 #. type: delimited block -
-#: upstream/_guides/validation.adoc:404
+#: upstream/_guides/validation.adoc:434
 #, no-wrap
 msgid ""
 "    @Null(groups = ValidationGroups.Post.class)\n"
@@ -853,7 +914,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/validation.adoc:407
+#: upstream/_guides/validation.adoc:437
 #, no-wrap
 msgid ""
 "    @NotBlank\n"
@@ -861,13 +922,13 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/validation.adoc:412
+#: upstream/_guides/validation.adoc:442
 #, fuzzy
 msgid "Finally, add a `@ConvertGroup` annotation next to your `@Valid` annotation in your validated method."
 msgstr "最后，在你的验证方法中的 `@Valid` 注释旁边添加一个 `@ConvertGroup` 注释。"
 
 #. type: delimited block -
-#: upstream/_guides/validation.adoc:421
+#: upstream/_guides/validation.adoc:451
 #, no-wrap
 msgid ""
 "@Path(\"/\")\n"
@@ -879,7 +940,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/validation.adoc:428
+#: upstream/_guides/validation.adoc:458
 #, no-wrap
 msgid ""
 "@Path(\"/\")\n"
@@ -891,18 +952,22 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/validation.adoc:432
+#: upstream/_guides/validation.adoc:462
 #, fuzzy
 msgid "Enable the `Post` group, meaning only constraints assigned to the `Post` (and `Default`) groups will be validated for the `book` parameter of the `post` method.  In this case, it means `Book.id` must be `null` and `Book.title` must not be blank."
 msgstr "启用 `Post` 组，意味着只有分配给 `Post` （和 `Default` ）组的约束条件才会被验证为 `post` 方法的 `book` 参数。在这种情况下，这意味着 `Book.id` 必须是 `null` ， `Book.title` 不能是空白。"
 
 #. type: Plain text
-#: upstream/_guides/validation.adoc:435
+#: upstream/_guides/validation.adoc:465
 msgid "Enable the `Put` group, meaning only constraints assigned to the `Put` (and `Default`) groups will be validated for the `book` parameter of the `put` method.  In this case, it means `Book.id` must not be `null` and `Book.title` must not be blank."
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/validation.adoc:437
+#: upstream/_guides/validation.adoc:467
 #, no-wrap
 msgid "Hibernate Validator Configuration Reference"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Except in very specific situations, it is recommended to make the said beans `@ApplicationScoped`."
+#~ msgstr "除非在非常特殊的情况下，建议将上述豆子 `@ApplicationScoped` 。"
