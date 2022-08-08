@@ -32016,6 +32016,138 @@ This guide will walk you through all that.
     </tu>
     <tu>
       <tuv xml:lang="en">
+        <seg>If an extension for schema registry, such as `quarkus-apicurio-registry-avro` or `quarkus-confluent-registry-avro`, is present, Dev Services for Apicurio Registry automatically starts an Apicurio Registry instance in dev mode and when running tests.  Also, all Kafka channels in SmallRye Reactive Messaging are automatically configured to use this registry.  This automatic configuration only applies to serializers and deserializers from Apicurio Registry serde libraries and Confluent Schema Registry serde libraries, because there properties are set:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果存在模式注册表的扩展，如 `quarkus-apicurio-registry-avro` 或 `quarkus-confluent-registry-avro` ，则Apicurio注册表的开发服务会在开发模式下和运行测试时自动启动一个Apicurio注册表实例。此外，SmallRye 响应式消息中的所有Kafka通道都被自动配置为使用该注册表。这个自动配置只适用于Apicurio Registry serde库和Confluent Schema Registry serde库的序列化器和反序列化器，因为设置了以下属性：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Enabling / Disabling Dev Services for Apicurio Registry</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>启用/禁用Apicurio注册表的开发服务</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Dev Services for Apicurio Registry is automatically enabled unless:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Apicurio注册表的开发服务是自动启用的，除非：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`quarkus.apicurio-registry.devservices.enabled` is set to `false`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`quarkus.apicurio-registry.devservices.enabled` 设为 `false` </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Dev Services for Apicurio Registry relies on Docker to start the registry.  If your environment does not support Docker, you will need to start the registry manually, or use an already running registry.  In such case, you can configure the registry URL for all Kafka channels in SmallRye Reactive Messaging with a single property.  For Apicurio Registry serde, that is:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Apicurio注册表的开发服务依赖于Docker来启动注册表。如果你的环境不支持Docker，你需要手动启动注册表，或者使用一个已运行的注册表。在这种情况下，你可以使用一个属性为SmallRye响应式消息中的所有Kafka通道配置注册表的URL。对于Apicurio Registry serde来说，就是：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>mp.messaging.connector.smallrye-kafka.apicurio.registry.url=... your Apicurio Registry URL...
+</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>mp.messaging.connector.smallrye-kafka.apicurio.registry.url=... 你的Apicurio注册表URL...
+</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>For Confluent Schema Registry serde, that is:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>对于Confluent Schema Registry serde来说，就是：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>mp.messaging.connector.smallrye-kafka.schema.registry.url=... your Confluent Schema Registry URL...
+</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>mp.messaging.connector.smallrye-kafka.schema.registry.url=... 你的Confluent Schema Registry URL...
+</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Shared registry</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>共享的注册表</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Most of the time you need to share the registry between applications.  Dev Services for Apicurio Registry implements a _service discovery_ mechanism for your multiple Quarkus applications running in _dev_ mode to share a single registry.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>大多数情况下，你需要在应用程序之间共享注册表。Apicurio注册表的开发服务为你在 _dev_ 模式下运行的多个Quarkus应用程序实现了一种 _service discovery_ 机制，以共享单个注册表。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Dev Services for Apicurio Registry starts the container with the `quarkus-dev-service-apicurio-registry` label which is used to identify the container.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Apicurio注册表的开发服务使用 `quarkus-dev-service-apicurio-registry` 标签来启动容器，该标签用于识别容器。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you need multiple (shared) registries, you can configure the `quarkus.apicurio-registry.devservices.service-name` attribute and indicate the registry name.  It looks for a container with the same value, or starts a new one if none can be found.  The default service name is `apicurio-registry`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你需要多个（共享）注册表，你可以配置 `quarkus.apicurio-registry.devservices.service-name` 属性，并指示注册表名称。它会寻找一个具有相同值的容器，如果找不到，就启动一个新容器。默认的服务名称是 `apicurio-registry` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Sharing is enabled by default in dev mode, but disabled in test mode.  You can disable the sharing with `quarkus.apicurio-registry.devservices.shared=false`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在开发模式下，默认启用共享，但在测试模式下默认禁用共享。你可以使用 `quarkus.apicurio-registry.devservices.shared=false` 来禁用共享。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>By default, Dev Services for Apicurio Registry picks a random port and configures the application.  You can set the port by configuring the `quarkus.apicurio-registry.devservices.port` property.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>默认情况下，Apicurio注册表的开发服务会选择一个随机端口，并配置应用程序。你可以通过配置 `quarkus.apicurio-registry.devservices.port` 属性来设置端口。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Note that the Kafka channels in SmallRye Reactive messaging are automatically configured with the chosen port.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>注意，SmallRye响应式消息中的Kafka通道会自动使用所选的端口进行配置。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Dev Services for Apicurio Registry uses `apicurio/apicurio-registry-mem` images.  You can select any 2.x version from https://hub.docker.com/r/apicurio/apicurio-registry-mem:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Apicurio注册表的开发服务使用 `apicurio/apicurio-registry-mem` 镜像. 你可以从 https://hub.docker.com/r/apicurio/apicurio-registry-mem 中选择任何一个2.x版本:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
         <seg>Whether the connector should insert automatically the `time` attribute into the outgoing Cloud Event. Requires `cloud-events` to be set to `true`. This value is used if the message does not configure the `time` attribute itself
 
 Type: _boolean_</seg>
