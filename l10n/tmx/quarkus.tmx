@@ -3438,6 +3438,1070 @@ If for some reason you need to deploy from your local machine, follow these inst
     </tu>
     <tu>
       <tuv xml:lang="en">
+        <seg>Using JWT RBAC</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用 JWT RBAC</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This guide explains how your Quarkus application can utilize https://github.com/smallrye/smallrye-jwt/[SmallRye JWT] to verify https://tools.ietf.org/html/rfc7519[JSON Web Token]s, represent them as MicroProfile JWT `org.eclipse.microprofile.jwt.JsonWebToken` and provide secured access to the Quarkus HTTP endpoints using Bearer Token Authorization and https://en.wikipedia.org/wiki/Role-based_access_control[Role-Based Access Control].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>本指南旨在阐述如何在你的Quarkus应用程序中使用 https://github.com/smallrye/smallrye-jwt/[SmallRye JWT]来验证 https://tools.ietf.org/html/rfc7519[JSON Web Token]，并将它们呈现为MicroProfile JWT 的 `org.eclipse.microprofile.jwt.JsonWebToken` ，然后使用不记名令牌验证(Bearer Token Authorization)和 https://en.wikipedia.org/wiki/Role-based_access_control[基于角色的访问控制]来保证对Quarkus HTTP端点的安全访问。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Quarkus OpenID Connect `quarkus-oidc` extension also supports Bearer Token Authorization and uses `smallrye-jwt` to represent the bearer tokens as `JsonWebToken`, please read the xref:security-openid-connect.adoc[Using OpenID Connect to Protect Service Applications] guide for more information.  OpenID Connect extension has to be used if the Quarkus application needs to authenticate the users using OIDC Authorization Code Flow, please read xref:security-openid-connect-web-authentication.adoc[Using OpenID Connect to Protect Web Applications] guide for more information.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Quarkus OpenID Connect `quarkus-oidc` 扩展也支持不记名令牌验证(Bearer Token Authorization)，并使用 `smallrye-jwt` 把不记名令牌(bearer token)呈现为 `JsonWebToken` , 请阅读 link:security-openid-connect.html[使用 OpenID Connect 来保护服务应用程序] 指南来了解更多信息。如果Quarkus应用程序需要使用OIDC授权码模式(Authorization Code Flow)来对用户进行认证，就必须使用OpenID Connect扩展，请阅读《 link:security-openid-connect-web-authentication.html[使用OpenID Connect保护Web应用程序] 》指南了解更多信息。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Prerequisites</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>先决条件</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Quickstart</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>快速入门</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Solution</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>解决方案</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>We recommend that you follow the instructions in the next sections and create the application step by step.  However, you can skip right to the completed example.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>我们建议你按照下面几节的说明，一步一步地创建应用程序。不过，你也可以直接跳到已经完成的例子所在的地方。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Clone the Git repository: `git clone {quickstarts-clone-url}`, or download an {quickstarts-archive-url}[archive].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>克隆 Git 仓库。 `git clone {quickstarts-clone-url}` ，或者下载一个 {quickstarts-archive-url}[存档] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The solution is located in the `security-jwt-quickstart` {quickstarts-tree-url}/security-jwt-quickstart[directory].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>该解决方案位于 `security-jwt-quickstart` {quickstarts-tree-url}/security-jwt-quickstart[目录]中。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Creating the Maven project</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>创建Maven项目</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>First, we need a new project. Create a new project with the following command:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>首先，我们需要创建一个新的项目。用以下命令创建一个新项目。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This command generates the Maven project and imports the `smallrye-jwt` extension, which includes the {mp-jwt} support.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>该命令生成Maven项目并导入 `smallrye-jwt` 扩展，其中包括{mp-jwt}支持。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you already have your Quarkus project configured, you can add the `smallrye-jwt` extension to your project by running the following command in your project base directory:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你已经配置了你的Quarkus项目，你可以通过在你的项目基础目录下运行以下命令，将 `smallrye-jwt` 扩展到你的项目。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This will add the following to your build file:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这将在你的build文件中添加以下内容：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>pom.xml</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>pom.xml</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>build.gradle</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>build.gradle</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Examine the JAX-RS resource</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>检查JAX-RS资源</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Create a REST endpoint in `src/main/java/org/acme/security/jwt/TokenSecuredResource.java` with the following content:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在 `src/main/java/org/acme/security/jwt/TokenSecuredResource.java` 里，创建一个REST端点，内容如下:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>REST Endpoint V1</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>REST Endpoint V1</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Here we inject the JsonWebToken interface, an extension of the java.security.Principal interface that provides access to the claims associated with the current authenticated token.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这里我们注入JsonWebToken接口，这是java.security.Principal接口的扩展，提供了对与当前认证令牌authenticated token相关声明的访问。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>@PermitAll is a JSR 250 common security annotation that indicates that the given endpoint is accessible by any caller, authenticated or not.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>@PermitAll是JSR 250的一个通用安全注解，它表明给定的端点可以被任何调用者访问，无论是否经过验证。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Here we inject the JAX-RS SecurityContext to inspect the security state of the call and use a `getResponseString()` function to populate a response string.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这里我们注入JAX-RS SecurityContext来检查调用的安全状态，并使用 `getResponseString()` 函数来得到响应字符串。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Here we check if the call is insecure by checking the request user/caller `Principal` against null.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在这里，我们通过检查请求用户/呼叫者 `Principal` 是否是null值，如果是则不安全。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Here we check that the Principal and JsonWebToken have the same name since JsonWebToken does represent the current Principal.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这里我们检查Principal和JsonWebToken是否有相同的名字，因为JsonWebToken代表了当前的Principal。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Here we get the Principal name.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这里我们得到了Principal的名字。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The reply we build up makes use of the caller name, the `isSecure()` and `getAuthenticationScheme()` states of the request `SecurityContext`, and whether a non-null `JsonWebToken` was injected.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>当我们建立的回复时使用调用者的名字，和 `isSecure()` 和 `getAuthenticationScheme()` 这两个 `SecurityContext` 的状态，以及是否注入了非空的 `JsonWebToken` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Run the application</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>运行应用程序</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Now we are ready to run our application. Use:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>现在我们准备运行我们的应用程序。使用：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>and you should see output similar to:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>而你应该看到类似的输出：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>quarkus:dev Output</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>quarkus:dev 输出</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Now that the REST endpoint is running, we can access it using a command line tool like curl:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>现在，REST端点正在运行，我们可以使用curl这样的命令行工具来访问它：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>We have not provided any JWT in our request, so we would not expect that there is any security state seen by the endpoint, and the response is consistent with that:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>我们在请求中没有提供任何JWT，所以我们不会期望有任何安全状态被终端看到，而响应也与此一致：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Use Ctrl-C to stop the Quarkus server.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用Ctrl-C来停止Quarkus服务器。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>So now let's actually secure something. Take a look at the new endpoint method `helloRolesAllowed` in the following:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>所以，现在让我们真正让一些东西变得安全。看看下面的新端点方法 `helloRolesAllowed` ：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>REST Endpoint V2</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>REST Endpoint V2</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Here we inject `JsonWebToken`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在这里，我们注入 `JsonWebToken`</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This new endpoint will be located at /secured/roles-allowed</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这个新的endpoint将位于/secured/roles-allowed</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>@RolesAllowed is a JSR 250 common security annotation that indicates that the given endpoint is accessible by a caller if they have either a "User" or "Admin" role assigned.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>@RolesAllowed是一个JSR 250通用安全注解，表明如果调用者分配了 "用户 "或 "管理员 "角色，那么他们可以访问给定的端点。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Here we build the reply the same way as in the `hello` method but also add a value of the JWT `birthdate` claim by directly calling the injected `JsonWebToken`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在这里，我们以与 `hello` 方法相同的方式建立回复，但也通过直接调用注入的 `JsonWebToken` ，添加JWT `birthdate` 要求的值。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>After you make this addition to your `TokenSecuredResource`, rerun the `./mvnw compile quarkus:dev` command, and then try `curl -v http://127.0.0.1:8080/secured/roles-allowed; echo` to attempt to access the new endpoint. Your output should be:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在对你的 `TokenSecuredResource` 进行这一补充后，重新运行 `./mvnw compile quarkus:dev` 命令，然后尝试 `curl -v http://127.0.0.1:8080/secured/roles-allowed; echo` 来访问新的端点。你的输出应该是:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Excellent, we have not provided any JWT in the request, so we should not be able to access the endpoint, and we were not. Instead, we received an HTTP 401 Unauthorized error. We need to obtain and pass in a valid JWT to access that endpoint. There are two steps to this, 1) configuring our {extension-name} extension with information on how to validate a JWT, and 2) generating a matching JWT with the appropriate claims.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>很好，我们在请求中没有提供任何JWT，所以我们应该不能够访问这个端点，而我们确实没有。相反，我们收到了一个HTTP 401 Unauthorized错误。我们需要获得并传入一个有效的JWT来访问该端点。这有两个步骤，1）用如何验证JWT的信息配置我们的{extension-name}扩展；2）用适当的声明(claim)生成一个匹配的JWT。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Configuring the {extension-name} Extension Security Information</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>配置{extension-name}扩展安全信息</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Create a `security-jwt-quickstart/src/main/resources/application.properties` with the following content:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>创建一个 `security-jwt-quickstart/src/main/resources/application.properties` ，内容如下:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>application.properties for TokenSecuredResource</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>TokenSecuredResource的application.properties</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>We are setting public key location to point to a classpath publicKey.pem location. We will add this key in part B, &lt;&lt;Adding a Public Key&gt;&gt;.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>我们设置公钥位置以指向classpath publicKey.pem所在位置。我们将在B部分中 &lt;&lt;添加公钥&gt;&gt; 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>We are setting the issuer to the URL string `https://example.com/issuer`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>我们将发行者issuer设置为URL字符串 `https://example.com/issuer` .</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>We are including the public key as a resource in the native executable.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>我们将公钥作为一种资源纳入本地可执行文件。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Adding a Public Key</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>添加公钥</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The https://tools.ietf.org/html/rfc7519[JWT specification] defines various levels of security of JWTs that one can use.  The {mp-jwt} specification requires that JWTs that are signed with the RSA-256 signature algorithm. This in turn requires an RSA public key pair. On the REST endpoint server side, you need to configure the location of the RSA public key to use to verify the JWT sent along with requests. The `mp.jwt.verify.publickey.location=publicKey.pem` setting configured previously expects that the public key is available on the classpath as `publicKey.pem`. To accomplish this, copy the following content to a `security-jwt-quickstart/src/main/resources/publicKey.pem` file.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这个 link:https://tools.ietf.org/html/rfc7519[JWT规范] 定义了人们可以使用的JWTs的各种安全级别。{mp-jwt}规范要求JWTs用RSA-256签名算法进行签名。这反过来又需要一个RSA公钥对。在REST终端服务器端，你需要配置RSA公钥的位置，用来验证与请求一起发送的JWT。之前配置的 `mp.jwt.verify.publickey.location=publicKey.pem` ，意思是公钥要能在classpath上作为 `publicKey.pem` 文件能找到。为了达到这个目的，请将以下内容复制到 `security-jwt-quickstart/src/main/resources/publicKey.pem` 文件中。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Generating a JWT</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>生成一个JWT</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Often one obtains a JWT from an identity manager like https://www.keycloak.org/[Keycloak], but for this quickstart we will generate our own using the JWT generation API provided by `smallrye-jwt` (see xref:security-jwt-build.adoc[Generate JWT tokens with SmallRye JWT] for more information).</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>通常情况下，人们会从身份管理服务器（如 link:https://www.keycloak.org/[Keycloak] ）那里获得JWT，但在这个快速入门中，我们将使用 `smallrye-jwt` 提供的JWT生成API来生成我们自己的JWT（更多信息 link:smallrye-jwt-build.html[见用SmallRye JWT生成JWT令牌] ）。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Take the code from the following listing and place into `security-jwt-quickstart/src/test/java/org/acme/security/jwt/GenerateToken.java`:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>从以下列表中拷贝代码，并将其放入 `security-jwt-quickstart/src/test/java/org/acme/security/jwt/GenerateToken.java` ：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `iss` claim is the issuer of the JWT. This needs to match the server side `mp.jwt.verify.issuer`.  in order for the token to be accepted as valid.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这个 `iss` 声明(claim)是JWT的发行者。这需要与服务器端的 `mp.jwt.verify.issuer` 符合。一遍使令牌被接受为有效的。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `upn` claim is defined by the {mp-jwt} spec as preferred claim to use for the `Principal` seen via the container security APIs.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这个 `upn` 声明(claim)被{mp-jwt}规范定义为首选声明，用做为被container security APIs所能见的 `Principal` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `group` claim provides the groups and top-level roles associated with the JWT bearer.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这个 `group` 声明(claim)提供了与JWT bearer相关的group和最高级别的role。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `birthday` claim. It can be considered to be a sensitive claim, so you may want to consider encrypting the claims, see xref:security-jwt-build.adoc[Generate JWT tokens with SmallRye JWT].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这个 `birthday` 声明(claim)，它可以被认为是一个敏感的声明，所以你可能要考虑对这些声明进行加密， link:smallrye-jwt-build.html[见用SmallRye JWT生成JWT令牌] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Note for this code to work we need the content of the RSA private key that corresponds to the public key we have in the TokenSecuredResource application. Take the following PEM content and place it into `security-jwt-quickstart/src/test/resources/privateKey.pem`:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>注意为了使这段代码工作，我们需要RSA私钥的内容，它与我们在TokenSecuredResource应用程序中的公钥相对应。将以下PEM内容放入 `security-jwt-quickstart/src/test/resources/privateKey.pem` ：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>We will use a `smallrye.jwt.sign.key.location` property to point to this private signing key.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>我们将使用一个 `smallrye.jwt.sign.key.location` 属性来指向这个私人签名钥匙。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Generating Keys with OpenSSL</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>用OpenSSL生成密钥</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>It is also possible to generate a public and private key pair using the OpenSSL command line tool.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>也可以使用OpenSSL命令行工具生成一个公钥和私钥对。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>An additional step is needed for generating the private key for converting it into the PKCS#8 format.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>生成私钥后需要一个额外的步骤，以便将其转换为PKCS#8格式。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can use the generated pair of keys instead of the keys used in this quickstart.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你可以使用生成的这对密钥，而不是本快速入门中使用的密钥。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Now we can generate a JWT to use with `TokenSecuredResource` endpoint. To do this, run the following command:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>现在我们可以生成一个JWT，然后与 `TokenSecuredResource` 端点一起使用。要做到这一点，运行以下命令：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Command to Generate JWT</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>生成JWT的命令</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The JWT string is the Base64 URL encoded string that has 3 parts separated by '.' characters.  First part - JWT headers, second part - JWT claims, third part - JWT signature.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>JWT字符串是Base64 URL编码的字符串，有3个部分，由'.'字符分隔。第一部分 - JWT头，第二部分 - JWT要求，第三部分 - JWT签名。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Finally, Secured Access to /secured/roles-allowed</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>最后，安全访问/secured/roles-allowed</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Now let's use this to make a secured request to the /secured/roles-allowed endpoint. Make sure you have the Quarkus server still running in dev mode, and then run the following command, making sure to use your version of the generated JWT from the previous step:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>现在让我们用它来向/secured/roles-allowed端点发出一个安全请求。确保你的Quarkus服务器仍然运行在开发模式下，然后运行以下命令，确保使用你在上一步中生成的JWT：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Success! We now have:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>成功了!我们现在有：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>an authentication scheme of Bearer</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>一个不记名(bearer)的认证方案</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>birthdate claim value</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>birthdate声明(claim)的值</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Using the JsonWebToken and Claim Injection</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用JsonWebToken和声明(claim)注入</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Now that we can generate a JWT to access our secured REST endpoints, let's see what more we can do with the `JsonWebToken` interface and the JWT claims. The `org.eclipse.microprofile.jwt.JsonWebToken` interface extends the `java.security.Principal` interface, and is in fact the type of the object that is returned by the `javax.ws.rs.core.SecurityContext#getUserPrincipal()` call we used previously. This means that code that does not use CDI but does have access to the REST container `SecurityContext` can get hold of the caller `JsonWebToken` interface by casting the `SecurityContext#getUserPrincipal()`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>现在我们可以生成一个JWT来访问我们的安全REST端点，让我们看看我们还能用 `JsonWebToken` 接口和JWT请求做什么。 `org.eclipse.microprofile.jwt.JsonWebToken` 接口扩展了 `java.security.Principal` 接口，事实上，它是我们之前使用的 `javax.ws.rs.core.SecurityContext#getUserPrincipal()` 调用返回的对象的类型。这意味着不使用CDI但可以访问REST容器 `SecurityContext` 的代码，可以通过转换 `SecurityContext#getUserPrincipal()` 来得到调用者 `JsonWebToken` 的接口。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `JsonWebToken` interface defines methods for accessing claims in the underlying JWT. It provides accessors for common claims that are required by the {mp-jwt} specification as well as arbitrary claims that may exist in the JWT.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这个 `JsonWebToken` 接口定义了用于访问底层JWT中的声明(claims)的方法。它为{mp-jwt}规范所要求的共同声明(common claims)以及JWT中可能存在的任何的声明提供访问器。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>All the JWT claims can also be injected. Let's expand our `TokenSecuredResource` with another endpoint /secured/roles-allowed-admin which uses the injected `birthdate` claim (as opposed to getting it from `JsonWebToken`):</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>所有的JWT声明(claims)也可以被注入。让我们用另一个端点/secured/roles-allowed-admin来扩展我们的 `TokenSecuredResource` ，它使用注入的 `birthdate` （而不是从 `JsonWebToken` 得来）：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Here we inject the JsonWebToken.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这里我们注入JsonWebToken。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Here we inject the `birthday` claim as `String` - this is why the `@RequestScoped` scope is now required.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在这里，我们把 `birthday` 的声明(claim)作为 `String` 注入 - 这就是为什么现在需要 `@RequestScoped` 范围。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Here we use the injected `birthday` claim to build the final reply.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在这里，我们使用注入的 `birthday` 声明(claim)来建立最终的回复。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Now generate the token again and run:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>现在再次生成令牌并运行：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Package and run the application</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>打包并运行应用程序</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>As usual, the application can be packaged using:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>像往常一样，该应用程序可以用以下方式打包:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>And executed using `java -jar target/quarkus-app/quarkus-run.jar`:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>执行程序使用 `java -jar target/quarkus-app/quarkus-run.jar` ：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can also generate the native executable with:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你也可以用以下方法生成本地可执行文件：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Explore the Solution</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>探索解决方案</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The solution repository located in the `security-jwt-quickstart` {quickstarts-tree-url}/security-jwt-quickstart[directory] contains all the versions we have worked through in this quickstart guide as well as some additional endpoints that illustrate subresources with injection of ``JsonWebToken``s and their claims into those using the CDI APIs. We suggest that you check out the quickstart solutions and explore the `security-jwt-quickstart` directory to learn more about the {extension-name} extension features.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>位于 `security-jwt-quickstart` {quickstarts-tree-url}/security-jwt-quickstart[目录]中的解决方案库包含了我们在本快速入门指南中研究过的所有版本，以及一些额外的端点，用以说明将 `JsonWebToken` 及其声明注入到那些使用CDI APIs的子资源。我们建议你查看快速入门解决方案并探索 `security-jwt-quickstart` 目录，以了解更多关于{extension-name}扩展功能的信息。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Supported Injection Scopes</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>支持的注射范围</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`@ApplicationScoped`, `@Singleton` and `@RequestScoped` outer bean injection scopes are all supported when an `org.eclipse.microprofile.jwt.JsonWebToken` is injected, with the `@RequestScoped` scoping for `JsonWebToken` enforced to ensure the current token is represented.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这里 `@ApplicationScoped` , `@Singleton` 和 `@RequestScoped` 外层Bean注入作用域在注入 `org.eclipse.microprofile.jwt.JsonWebToken` 时都是被支持的， `@RequestScoped` 作用域对 `JsonWebToken` 强制执行，以确保当前令牌被呈现。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>However, `@RequestScoped` must be used when the individual token claims are injected as simple types such as `String`, for example:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>然而，当单个令牌要求被注入为简单的类型，例如 `String` ，必须使用 `@RequestScoped` ：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Note you can also use the injected `JsonWebToken` to access the individual claims in which case setting `@RequestScoped` is not necessary.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>请注意，你也可以使用注入的 `JsonWebToken` 来访问各个声明(claims)，在这种情况下，设置 `@RequestScoped` 是没有必要的。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Please see link:https://download.eclipse.org/microprofile/microprofile-jwt-auth-1.2/microprofile-jwt-auth-spec-1.2.html#_cdi_injection_requirements[MP JWT CDI Injection Requirements] for more details.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>请参阅 link:https://download.eclipse.org/microprofile/microprofile-jwt-auth-1.2/microprofile-jwt-auth-spec-1.2.html#_cdi_injection_requirements[MP JWT CDI注入要求] 以了解更多细节。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Supported Public Key Formats</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>支持的公钥格式</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Public Keys may be formatted in any of the following formats, specified in order of precedence:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>公钥可以采用以下任何一种格式，按优先顺序排列：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Public Key Cryptography Standards #8 (PKCS#8) PEM</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>公钥密码学标准#8（PKCS#8） PEM</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>JSON Web Key (JWK)</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>JSON网络密钥（JWK）</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>JSON Web Key Set (JWKS) Base64 URL encoded</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>JSON网络密钥集（JWKS）Base64 URL编码</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Dealing with the verification keys</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>处理验证密钥</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you need to verify the token signature using the asymmetric RSA or Elliptic Curve (EC) key then use the `mp.jwt.verify.publickey.location` property to refer to the local or remote verification key.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你需要使用非对称RSA或椭圆曲线（EC）密钥来验证令牌签名，那么请使用 `mp.jwt.verify.publickey.location` 属性来参考本地或远程验证密钥。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Use `mp.jwt.verify.publickey.algorithm` to customize the verification algorithm (default is `RS256`), for example, set it to `ES256` when working with the EC keys.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>使用 `mp.jwt.verify.publickey.algorithm` 来定制验证算法（默认为 `RS256` ），例如，在使用EC密钥时，将其设置为 `ES256` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you need to verify the token signature using the symmetric secret key then either a `JSON Web Key` (JWK) or `JSON Web Key Set` (JWK Set) format must be used to represent this secret key, for example:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你需要使用对称密匙验证令牌签名，那么必须使用 `JSON Web Key` （JWK）或 `JSON Web Key Set` （JWK Set）格式来呈现这个密匙，例如：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This secret key JWK will also need to be referred to with `smallrye.jwt.verify.key.location`.  `smallrye.jwt.verify.algorithm` should be set to `HS256`/`HS384`/`HS512`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这个密匙JWK也需要用 `smallrye.jwt.verify.key.location` 。 `smallrye.jwt.verify.algorithm` 应该设置为 `HS256` / `HS384` / `HS512` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Parse and Verify JsonWebToken with JWTParser</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>用JWTParser解析和验证JsonWebToken</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If the JWT token can not be injected, for example, if it is embedded in the service request payload or the service endpoint acquires it out of band, then one can use `JWTParser`:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果JWT令牌不能被注入，例如，如果它被嵌入到服务请求的有效载荷中，或者服务端点在带外获得它，那么人们可以使用 `JWTParser` ：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can also use it to customize the way the token is verified or decrypted. For example, one can supply a local `SecretKey`:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你也可以用它来定制令牌的验证或解密方式。例如，可以提供一个本地 `SecretKey` ：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Please also see the &lt;&lt;add-smallrye-jwt, How to Add SmallRye JWT directly&gt;&gt; section about using `JWTParser` without the `HTTP` support provided by `quarkus-smallrye-jwt`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>也请参见 link:#add-smallrye-jwt[如何直接添加SmallRye JWT] 部分，关于在没有 `quarkus-smallrye-jwt` 提供的 `HTTP` 支持的情况下使用 `JWTParser` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Token Decryption</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>令牌解密</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If your application needs to accept the tokens with the encrypted claims or with the encrypted inner signed claims then all you have to do is to set `smallrye.jwt.decrypt.key.location` pointing to the decryption key.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你的应用程序需要接受带有加密的声明(claim)或带有加密的内部签名声明的令牌，那么你所要做的就是设置 `smallrye.jwt.decrypt.key.location` ，指向解密密钥的位置。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If this is the only key property which is set then the incoming token is expected to contain the encrypted claims only.  If either `mp.jwt.verify.publickey` or `mp.jwt.verify.publickey.location` verification properties are also set then the incoming token is expected to contain the encrypted inner-signed token.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果这是唯一被设置的密钥属性，那么传入的令牌预计将只包含加密的claims。如果 `mp.jwt.verify.publickey` 或 `mp.jwt.verify.publickey.location` 验证属性也被设置，那么传入的令牌预计将包含加密的内签令牌。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>See xref:security-jwt-build.adoc[Generate JWT tokens with SmallRye JWT] and learn how to generate the encrypted or inner-signed and then encrypted tokens fast.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>请参阅 link:smallrye-jwt-build.html[使用SmallRye JWT生成JWT令牌] ，了解如何快速生成加密的或内部签名然后加密的令牌。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Custom Factories</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>定制工厂</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`io.smallrye.jwt.auth.principal.DefaultJWTCallerPrincipalFactory` is used by default to parse and verify JWT tokens and convert them to `JsonWebToken` principals.  It uses `MP JWT` and `smallrye-jwt` properties listed in the `Configuration` section to verify and customize JWT tokens.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`io.smallrye.jwt.auth.principal.DefaultJWTCallerPrincipalFactory` 默认用于解析和验证JWT令牌，并将其转换为 `JsonWebToken`。它使用 `MP JWT` `smallrye-jwt` 这些在 `Configuration` 中列出的属性来验证和定制JWT令牌。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you need to provide your own factory, for example, to avoid verifying the tokens again which have already been verified by the firewall, then you can either use a `ServiceLoader` mechanism by providing a `META-INF/services/io.smallrye.jwt.auth.principal.JWTCallerPrincipalFactory` resource or simply have an `Alternative` CDI bean implementation like this one:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你需要提供你自己的工厂，例如，避免再次验证已经被防火墙验证过的令牌，那么你可以通过提供 `META-INF/services/io.smallrye.jwt.auth.principal.JWTCallerPrincipalFactory` 资源来使用 `ServiceLoader` 机制，或者干脆像这样有一个 `Alternative` CDI bean 实现：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Token Propagation</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>令牌传播</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Please see xref:security-openid-connect-client.adoc#token-propagation[Token Propagation] section about the Bearer access token propagation to the downstream services.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>关于不记名(Bearer)访问令牌向下游服务的传播，请参见 link:security-openid-connect-client.html#token-propagation[令牌传播] 部分。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Testing</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>测试</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Wiremock</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Wiremock</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you configure `mp.jwt.verify.publickey.location` to point to HTTPS or HTTP based JsonWebKey (JWK) set then you can use the same approach as described in the xref:security-openid-connect.adoc#integration-testing[OpenID Connect Bearer Token Integration testing] `Wiremock` section but only change the `application.properties` to use MP JWT configuration properties instead:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你配置 `mp.jwt.verify.publickey.location` ，以指向HTTPS或基于HTTP的JsonWebKey（JWK）集，那么你可以使用与 link:security-openid-connect.html#integration-testing[OpenID Connect Bearer Token集成测试] `Wiremock` 部分所述相同的方法，但只需改变 `application.properties` ，以使用MP JWT配置属性来代替：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Keycloak</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Keycloak</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you work with Keycloak and configure `mp.jwt.verify.publickey.location` to point to HTTPS or HTTP based JsonWebKey (JWK) set then you can use the same approach as described in the xref:security-openid-connect.adoc#integration-testing-keycloak[OpenID Connect Bearer Token Integration testing] Keycloak section but only change the `application.properties` to use MP JWT configuration properties instead:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你使用Keycloak，并配置了 `mp.jwt.verify.publickey.location` ，以指向HTTPS或基于HTTP的JsonWebKey（JWK）集，那么你可以使用与 link:security-openid-connect.html#integration-testing-keycloak[OpenID Connect Bearer Token集成测试] `Keycloak` 部分中描述的方法，只是需改变 `application.properties` ，以使用MP JWT配置属性来代替：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Local Public Key</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>本地公钥</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can use the same approach as described in the xref:security-openid-connect.adoc#integration-testing[OpenID Connect Bearer Token Integration testing] `Local Public Key` section but only change the `application.properties` to use MP JWT configuration properties instead:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你可以使用与 link:security-openid-connect.html#integration-testing.adoc[OpenID Connect承载令牌集成测试] `Local Public Key` 部分所述的相同方法，只需改变 `application.properties` ，使用MP JWT配置属性代替：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>TestSecurity annotation</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>TestSecurity 注解</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Add the following dependency:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>添加以下依赖关系：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>and write a test code like this one:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>写一个测试代码如同下面这样的：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>where `ProtectedResource` class may look like this:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>其中 `ProtectedResource` 类可能看起来像这样：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Note that `@TestSecurity` annotation must always be used and its `user` property is returned as `JsonWebToken.getName()` and `roles` property - as `JsonWebToken.getGroups()`.  `@JwtSecurity` annotation is optional and can be used to set the additional token claims.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>请注意，必须始终使用 `@TestSecurity` 注解，并且其 `user` 属性作为 `JsonWebToken.getName()` ， `roles` 属性-作为 `JsonWebToken.getGroups()` 。 `@JwtSecurity` 注释是可选的，可以用来设置额外的标记要求。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>How to check the errors in the logs</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如何检查日志中的错误</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Please enable `io.quarkus.smallrye.jwt.runtime.auth.MpJwtValidator` `TRACE` level logging to see more details about the token verification or decryption errors:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>请启用 `io.quarkus.smallrye.jwt.runtime.auth.MpJwtValidator` `TRACE` 级日志，以查看有关令牌验证或解密错误的更多细节：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Proactive Authentication</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>主动认证</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you'd like to skip the token verification when the public endpoint methods are invoked then please disable the xref:security-built-in-authentication.adoc#proactive-authentication[proactive authentication].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你想在调用公共端点方法时跳过令牌验证，那么请停用 link:security-built-in-authentication.html#proactive-authentication[主动验证] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Note that you can't access the injected `JsonWebToken` in the public methods if the token verification has not been done.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>请注意，如果没有进行令牌验证，你就不能在公共方法中使用注入的 `JsonWebToken` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>How to Add SmallRye JWT directly</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如何直接添加SmallRye JWT</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you work with Quarkus extensions which do not support `HTTP` (for example, `Quarkus GRPC`) or provide their own extension specific `HTTP` support conflicting with the one offered by `quarkus-smallrye-jwt` and `Vert.x HTTP` (example, `Quarkus Amazon Lambda`) and you would like to &lt;&lt;jwt-parser, Parse and Verify JsonWebToken with JWTParser&gt;&gt; then please use `smallrye-jwt` directly instead of `quarkus-smallrye-jwt`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你使用的Quarkus扩展不支持 `HTTP` （例如： `Quarkus GRPC` ），或者他们自己的扩展使用了特定的 `HTTP` ，与 `quarkus-smallrye-jwt` 和 `Vert.x HTTP` 提供的支持相冲突（例如： `Quarkus Amazon Lambda` ），并且你想 link:#jwt-parser[用JWTParser解析和验证JsonWebToken] ，那么请直接使用 `smallrye-jwt` ，而不是 `quarkus-smallrye-jwt` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Add this dependency:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>添加这个依赖性：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>and update `application.properties` to get all the CDI producers provided by `smallrye-jwt` included as follows:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>并更新 `application.properties` ，以获得所有由 `smallrye-jwt` 提供的CDI生产者，包括如下：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
         <seg>Configuration Reference</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
@@ -3446,10 +4510,578 @@ If for some reason you need to deploy from your local machine, follow these inst
     </tu>
     <tu>
       <tuv xml:lang="en">
+        <seg>mp.jwt.verify.publickey</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>mp.jwt.verify.publickey</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `mp.jwt.verify.publickey` config property allows the Public Key text itself to be supplied as a string.  The Public Key will be parsed from the supplied string in the order defined in section &lt;&lt;Supported Public Key Formats&gt;&gt;.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这个 `mp.jwt.verify.publickey` 配置属性允许将公钥文本本身作为一个字符串提供。公钥将按照 &lt;&lt;支持的公钥格式&gt;&gt; 一节中所定义的顺序，从提供的字符串中解析出来。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>mp.jwt.verify.publickey.location</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>mp.jwt.verify.publickey.location</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Config property allows for an external or internal location of Public Key to be specified.  The value may be a relative path or a URL. If the value points to an HTTPS based JWK set then, for it to work in native mode, the `quarkus.ssl.native` property must also be set to `true`, see xref:native-and-ssl.adoc[Using SSL With Native Executables] for more details.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>配置属性允许指定公钥的外部或内部位置。该值可以是一个相对路径或一个URL。如果该值指向一个基于HTTPS的JWK集，那么为了让它在本地模式下工作， `quarkus.ssl.native` 属性也必须被设置为 `true` ，更多细节请参见 link:native-and-ssl.html[使用SSL与本地可执行程序] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Signature algorithm. Set it to `ES256` to support the Elliptic Curve signature algorithm.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>签名算法。将其设置为 `ES256` ，以支持椭圆曲线签名算法。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>mp.jwt.decrypt.key.location</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>mp.jwt.decrypt.key.location</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Config property allows for an external or internal location of Private Decryption Key to be specified.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>配置属性允许指定私人解密密钥的外部或内部位置。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>mp.jwt.verify.issuer</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>mp.jwt.verify.issuer</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Config property specifies the value of the `iss` (issuer) claim of the JWT that the server will accept as valid.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>配置属性指定了服务器将接受为有效的JWT的 `iss` （签发者）声明的值。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>mp.jwt.verify.audience</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>mp.jwt.verify.audience</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Comma separated list of the audiences that a token `aud` claim may contain.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>逗号分隔的列表，其中列出了一个令牌的 `aud` 声明可能包含的受众。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>mp.jwt.token.header</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>mp.jwt.token.header</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`Authorization`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`Authorization`</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Set this property if another header such as `Cookie` is used to pass the token.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果使用另一个header（如 `Cookie` ）来传递令牌，则设置此属性。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Name of the cookie containing a token. This property will be effective only if `mp.jwt.token.header` is set to `Cookie`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>包含令牌的cookie的名称。只有当 `mp.jwt.token.header` 被设置为 `Cookie` ，该属性才会有效。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Additional SmallRye JWT configuration</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>额外的SmallRye JWT配置</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>SmallRye JWT provides more properties which can be used to customize the token processing:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>SmallRye JWT提供了更多的属性，可以用来定制令牌的处理:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>smallrye.jwt.verify.key.location</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>smallrye.jwt.verify.key.location</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Location of the verification key which can point to both public and secret keys. Secret keys can only be in the JWK format. Note that 'mp.jwt.verify.publickey.location' will be ignored if this property is set.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>验证密钥的位置，可以指向公钥和秘钥。秘密密钥只能是JWK格式。注意，如果设置了这个属性，`mp.jwt.verify.publickey.location` 将被忽略。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>smallrye.jwt.verify.algorith</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>smallrye.jwt.verify.algorith</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Signature algorithm. This property should only be used for setting a required symmetric algorithm such as `HS256`. It is deprecated for setting asymmetric algorithms such as `ES256` - use 'mp.jwt.verify.publickey.algorithm' instead.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>签名算法。此属性只能用于设置所需的对称算法，如 `HS256` 。对于设置非对称算法，如已被弃用的 `ES256` - 请使用 `mp.jwt.verify.publickey.algorithm` 代替。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>smallrye.jwt.verify.key-format</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>smallrye.jwt.verify.key-format</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Set this property to a specific key format such as `PEM_KEY`, `PEM_CERTIFICATE`, `JWK` or `JWK_BASE64URL` to optimize the way the verification key is loaded.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>将此属性设置为特定的密钥格式，如 `PEM_KEY` , `PEM_CERTIFICATE` , `JWK` 或 `JWK_BASE64URL` ，以优化验证密钥的加载方式。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>smallrye.jwt.verify.relax-key-validation</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>smallrye.jwt.verify.relax-key-validation</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Relax the validation of the verification keys, setting this property to `true` will allow public RSA keys with the length less than 2048 bit.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>放宽密钥验证，将此属性设置为 `true` ，将允许长度小于2048比特的公共RSA密钥。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>smallrye.jwt.verify.certificate-thumbprint</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>smallrye.jwt.verify.certificate-thumbprint</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If this property is enabled then a signed token must contain either 'x5t' or 'x5t#S256' X509Certificate thumbprint headers. Verification keys can only be in JWK or PEM Certificate key formats in this case. JWK keys must have a 'x5c' (Base64-encoded X509Certificate) property set.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果此属性被启用，那么签名的令牌必须包含 `x5t` 或 `x5t#S256` X509Certificate的thumbprint headers。在这种情况下，验证密钥只能是JWK或PEM证书密钥格式。JWK密钥必须有一个 `x5c`（Base64编码的X509Certificate）属性设置。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>smallrye.jwt.token.header</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>smallrye.jwt.token.header</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Set this property if another header such as `Cookie` is used to pass the token. This property is deprecated - use 'mp.jwt.token.header'.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果使用另一个header，如 `Cookie` ，来传递令牌，则设置此属性。此属性已被废弃—请使用 `mp.jwt.token.header` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Name of the cookie containing a token. This property will be effective only if `smallrye.jwt.token.header` is set to `Cookie`. This property is deprecated - use 'mp.jwt.token.cookie`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>包含token的cookie的名称。该属性只有在 `smallrye.jwt.token.header` 被设置为 `Cookie` 时才有效。该属性已被废弃--请使用 `mp.jwt.token.cookie`。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>smallrye.jwt.always-check-authorization</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>smallrye.jwt.always-check-authorization</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Set this property to `true` for `Authorization` header be checked even if the `smallrye.jwt.token.header` is set to `Cookie` but no cookie with a `smallrye.jwt.token.cookie` name exists.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果将此属性设置为 `true` ，`Authorization` header也会被检查，即使 `smallrye.jwt.token.header` 被设置为 `Cookie` ，但又不存在名称为 `smallrye.jwt.token.cookie` 的cookie。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`Bearer`</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`Bearer`</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Comma-separated list containing an alternative single or multiple schemes, for example, `DPoP`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>逗号分隔的列表，其中包含一个可替代的单一或多个schemes，例如， `DPoP` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Key identifier. If it is set then the verification JWK key as well every JWT token must have a matching `kid` header.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>密钥标识符。如果它被设置，那么验证JWK密钥以及每个JWT标记必须有一个匹配的 `kid` header。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The maximum number of seconds that a JWT may be issued for use. Effectively, the difference between the expiration date of the JWT and the issued at date must not exceed this value. Setting this property to a non-positive value relaxes the requirement for the token to have a valid 'iat' (issued at) claim.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>JWT可能被发布使用的最大秒数。实际上，JWT的到期日和签发日期之间的差异不得超过这个值。将此属性设置为非正值，可以取消对令牌具有有效的 `iat`（签发日期）声明的要求。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If an application relies on `java.security.Principal` returning a name then a token must have a `upn` or `preferred_username` or `sub` claim set. Setting this property will result in SmallRye JWT throwing an exception if none of these claims is available for the application code to reliably deal with a non-null `Principal` name.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果一个应用程序依赖于 `java.security.Principal` ，返回一个名称，那么一个标记必须有一个 `upn` 、 `preferred_username` 或 `sub` 的声明集。如果应用程序代码没有这些要求来可靠地处理非空的 `Principal` 名称，设置此属性将导致SmallRye JWT抛出一个异常。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>smallrye.jwt.path.sub</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>smallrye.jwt.path.sub</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Path to the claim containing the subject name. It starts from the top level JSON object and can contain multiple segments where each segment represents a JSON object name only, example: `realms/subject`. This property can be used if a token has no 'sub' claim but has the subject set in a different claim. Use double quotes with the namespace qualified claims.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>包含subject名称的声明的路径。它从顶级的JSON对象开始，可以包含多个段，每个段只代表一个JSON对象名称，例如： `realms/subject` 。如果一个标记没有 `sub` 声明，但在一个不同的声明里设置了subject，则可以使用这个属性。在命名空间限定的声明上使用双引号。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>smallrye.jwt.claims.sub</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>smallrye.jwt.claims.sub</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This property can be used to set a default sub claim value when the current token has no standard or custom `sub` claim available. Effectively this property can be used to customize `java.security.Principal` name if no `upn` or `preferred_username` or `sub` claim is set.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>当当前令牌没有可用的标准或自定义 `sub` 声明时，此属性可用于设置默认的sub声明值。如果没有设置 `upn` 或 `preferred_username` 或 `sub` 声明，该属性可有效地用于自定义 `java.security.Principal` 名称。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>smallrye.jwt.path.group</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>smallrye.jwt.path.group</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Path to the claim containing the groups. It starts from the top level JSON object and can contain multiple segments where each segment represents a JSON object name only, example: `realm/groups`. This property can be used if a token has no 'groups' claim but has the groups set in a different claim. Use double quotes with the namespace qualified claims.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>到包含组的声明的路径。它从顶级的JSON对象开始，可以包含多个段，每个段只代表一个JSON对象的名称，例如： `realm/groups` 。如果一个标记没有 `groups` 的声明，但在一个不同的声明中设置了组，就可以使用这个属性。在命名空间限定的声明上使用双引号。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>smallrye.jwt.groups-separator</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>smallrye.jwt.groups-separator</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>' '</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>' '</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Separator for splitting a string which may contain multiple group values. It will only be used if the `smallrye.jwt.path.groups` property points to a custom claim whose value is a string. The default value is a single space because a standard OAuth2 `scope` claim may contain a space separated sequence.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>分隔符，用于分割一个可能包含多个组值的字符串。只有当 `smallrye.jwt.path.groups` 属性指向一个值为字符串的自定义声明时，它才会被使用。默认值是一个单一的空格，因为一个标准的OAuth2 `scope` 声明可能包含一个空格分隔的序列。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>smallrye.jwt.claims.group</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>smallrye.jwt.claims.group</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This property can be used to set a default groups claim value when the current token has no standard or custom groups claim available.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>当当前令牌没有可用的标准或自定义的组声明时，此属性可用于设置默认组声明值。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>JWK cache refresh interval in minutes. It will be ignored unless the `mp.jwt.verify.publickey.location` points to the HTTP or HTTPS URL based JWK set and no HTTP `Cache-Control` response header with a positive `max-age` parameter value is returned from a JWK HTTPS endpoint.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>JWK缓存刷新时间间隔，单位是分钟。它将被忽略，除非 `mp.jwt.verify.publickey.location` 指向基于HTTP或HTTPS URL的JWK设置，并且没有从JWK HTTPS端点返回具有正 `max-age` 参数值的HTTP `Cache-Control` 响应header。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Forced JWK cache refresh interval in minutes which is used to restrict the frequency of the forced refresh attempts which may happen when the token verification fails due to the cache having no JWK key with a `kid` property matching the current token's `kid` header. It will be ignored unless the `mp.jwt.verify.publickey.location` points to the HTTP or HTTPS URL based JWK set.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>强制刷新JWK缓存的时间间隔，以分钟为单位，用于限制强制刷新尝试的频率，这可能发生在令牌验证失败时，因为缓存中没有能与当前令牌带 `kid` 属性的JWK密钥，相匹配的 `kid` header。除非 `mp.jwt.verify.publickey.location` 指向基于HTTP或HTTPS URL的JWK集，否则它将被忽略。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Expiration grace in seconds. By default, an expired token will still be accepted if the current time is no more than 1 min after the token expiry time.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>过期时间，以秒为单位。默认情况下，如果当前时间不超过令牌过期时间1分钟，过期的令牌仍将被接受。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Comma separated list of the audiences that a token `aud` claim may contain. This property is deprecated - use `mp.jwt.verify.audiences`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>逗号分隔的列表，列出了令牌 `aud` 声明可能包含的受众。该属性已被废弃—请使用 `mp.jwt.verify.audiences` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Comma separated list of the claims that a token must contain.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>一个token必须包含逗号分隔的声明(claims)列表。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Config property allows for an external or internal location of Private Decryption Key to be specified. This property is deprecated - use 'mp.jwt.decrypt.key.location'.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>配置属性允许指定私人解密密钥的外部或内部位置。此属性已被废弃 - 请使用 `mp.jwt.decrypt.key.location` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Decryption algorithm.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>解密算法。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Decryption key supplied as a string.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>以字符串形式提供的解密密钥。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Decryption Key identifier. If it is set then the decryption JWK key as well every JWT token must have a matching `kid` header.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>解密密钥标识符。如果它被设置，那么解密JWK密钥以及每个JWT标记必须有一个匹配的 `kid` header。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Path to TLS trusted certificate which may need to be configured if the keys have to be fetched over `HTTPS`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果需要通过 `HTTPS` 获取密钥，则需要配置 TLS 信任证书的路径。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Trust all the hostnames. If the keys have to be fetched over `HTTPS` and this property is set to `true` then all the hostnames are trusted by default.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>信任所有的主机名。如果钥匙必须通过 `HTTPS` 获得，并且该属性被设置为 `true` ，那么所有的主机名都被默认信任。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Set of trusted hostnames. If the keys have to be fetched over `HTTPS` and `smallrye.jwt.client.tls.trust-all` is set to `false` then this property can be used to configure the trusted hostnames.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>受信任的主机名的集合。如果钥匙必须通过 `HTTPS` 获得，并且 `smallrye.jwt.client.tls.trust-all` 被设置为 `false` ，那么这个属性可以用来配置可信的主机名。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>HTTP proxy host.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>HTTP代理主机。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>HTTP proxy port.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>HTTP代理端口。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This property can be used to customize a keystore type if either `mp.jwt.verify.publickey.location` or mp.jwt.decrypt.key.location` points to a `KeyStore` file. If it is not set then the file name will be checked to determine the keystore type before defaulting to `JKS`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果 `mp.jwt.verify.publickey.location` 或 `mp.jwt.decrypt.key.location` 指向一个 `KeyStore` 文件，这个属性可以用来定制一个密钥库类型。如果没有设置，那么文件名将被检查以确定密钥库类型，默认为 `JKS` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This property can be used to customize a `KeyStore` provider if `mp.jwt.verify.publickey.location` or `mp.jwt.decrypt.key.location` points to a `KeyStore` file.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果 `mp.jwt.verify.publickey.location` 或 `mp.jwt.decrypt.key.location` 指向一个 `KeyStore` 文件，该属性可用于定制一个 `KeyStore` 提供者。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Keystore password. If `mp.jwt.verify.publickey.location` or `mp.jwt.decrypt.key.location` then this property has be set.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Keystore密码。如果有 `mp.jwt.verify.publickey.location` 或 `mp.jwt.decrypt.key.location` ，则此属性必须被设置。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This property has to be set to identify a public verification key which will be extracted from `KeyStore` from a matching certificate if `mp.jwt.verify.publickey.location` points to a `KeyStore` file.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这个属性必须被设置，以确定一个公共验证密钥，如果 `mp.jwt.verify.publickey.location` 指向 `KeyStore` 文件，该密钥将从所匹配的证书中的 `KeyStore` 中提取。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This property has to be set to identify a private decryption key if `mp.jwt.decrypt.key.location` points to a `KeyStore` file.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果 `mp.jwt.decrypt.key.location` 指向 `KeyStore` 文件，则必须将此属性设置为标识专用解密密钥。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This property may be set if a private decryption key's password in `KeyStore` is different to `smallrye.jwt.keystore.password` when `mp.jwt.decrypt.key.location` points to a `KeyStore` file.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果 `mp.jwt.decrypt.key.location` 指向 `KeyStore` 文件时，并且 `KeyStore` 中的专用解密密钥的密码与 `smallrye.jwt.keystore.password` 不同，则可以设置此属性。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
         <seg>References</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
         <seg>参考文献</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>link:https://download.eclipse.org/microprofile/microprofile-jwt-auth-1.2/microprofile-jwt-auth-spec-1.2.html[MP JWT 1.2 HTML]</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>link:https://download.eclipse.org/microprofile/microprofile-jwt-auth-1.2/microprofile-jwt-auth-spec-1.2.html[MP JWT 1.2 HTML]</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>link:https://download.eclipse.org/microprofile/microprofile-jwt-auth-1.2/microprofile-jwt-auth-spec-1.2.pdf[MP JWT 1.2 PDF]</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>link:https://download.eclipse.org/microprofile/microprofile-jwt-auth-1.2/microprofile-jwt-auth-spec-1.2.pdf[MP JWT 1.2 PDF]</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>link:https://github.com/smallrye/smallrye-jwt[SmallRye JWT]</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>link:https://github.com/smallrye/smallrye-jwt[SmallRye JWT]</seg>
       </tuv>
     </tu>
     <tu>
@@ -3660,14 +5292,6 @@ COPY --from=BUILD \
     </tu>
     <tu>
       <tuv xml:lang="en">
-        <seg>Prerequisites</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>先决条件</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
         <seg>Architecture</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
@@ -3676,42 +5300,10 @@ COPY --from=BUILD \
     </tu>
     <tu>
       <tuv xml:lang="en">
-        <seg>Solution</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>解决方案</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Clone the Git repository: `git clone {quickstarts-clone-url}`, or download an {quickstarts-archive-url}[archive].</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>克隆 Git 仓库: `git clone {quickstarts-clone-url}` ，或下载一个 {quickstarts-archive-url}[存档] 。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
         <seg>Bootstrapping the project</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
         <seg>创建项目</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>pom.xml</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>pom.xml</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>build.gradle</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>build.gradle</seg>
       </tuv>
     </tu>
     <tu>
@@ -4076,14 +5668,6 @@ COPY --from=BUILD \
     </tu>
     <tu>
       <tuv xml:lang="en">
-        <seg>First, we need a new project. Create a new project with the following command:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>首先，我们需要一个新的项目。使用以下命令创建一个新的项目:</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
         <seg>This command generates a Maven project, importing the Reactive Messaging and HTTP connector extensions.</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
@@ -4410,14 +5994,6 @@ mp.messaging.incoming.&lt;channelName&gt;.method=POST
     </tu>
     <tu>
       <tuv xml:lang="en">
-        <seg>Creating the Maven project</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>创建Maven项目</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
         <seg>This command generates a project and imports the `spring-boot-properties` extension.</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
@@ -4430,14 +6006,6 @@ mp.messaging.incoming.&lt;channelName&gt;.method=POST
       </tuv>
       <tuv xml:lang="zh_CN">
         <seg>如果你已经配置了你的Quarkus项目，你可以在项目的根目录下运行以下命令，并将 `spring-boot-properties` 扩展添加到你的项目中:</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>This will add the following to your build file:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>这会将以下内容添加到你的构建文件中:</seg>
       </tuv>
     </tu>
     <tu>
@@ -4510,14 +6078,6 @@ greeting.text = hello
     </tu>
     <tu>
       <tuv xml:lang="en">
-        <seg>Package and run the application</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>打包并运行该应用程序</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
         <seg>Run the application in dev mode with:</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
@@ -4542,26 +6102,10 @@ greeting.text = hello
     </tu>
     <tu>
       <tuv xml:lang="en">
-        <seg>As usual, the application can be packaged using:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>像往常一样，该应用程序能够使用以下方式进行打包:</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
         <seg>And executed using `java -jar target/quarkus-app/quarkus-run.jar`.</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
         <seg>并使用 `java -jar target/quarkus-app/quarkus-run.jar` 命令运行该应用程序。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>You can also generate the native executable with:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>你也可以通过以下命令生成本地可执行文件:</seg>
       </tuv>
     </tu>
     <tu>
@@ -13554,14 +15098,6 @@ Type: _int_</seg>
     </tu>
     <tu>
       <tuv xml:lang="en">
-        <seg>We recommend that you follow the instructions in the next sections and create the application step by step.  However, you can skip right to the completed example.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>我们建议您按照下面几节的说明，一步一步地创建应用程序。不过，您可以直接跳到已完成的例子。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
         <seg>The solution is located in the `opentelemetry-quickstart` {quickstarts-tree-url}/opentelemetry-quickstart[directory].</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
@@ -13582,14 +15118,6 @@ Type: _int_</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
         <seg>如果您已经配置了您的Quarkus项目，您可以通过在您的项目根目录下运行以下命令，将 `quarkus-opentelemetry-exporter-otlp` 扩展添加到您的项目中：</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Examine the JAX-RS resource</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>检查JAX-RS资源</seg>
       </tuv>
     </tu>
     <tu>
@@ -13662,14 +15190,6 @@ Type: _int_</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
         <seg>可选的gRPC消息头，通常用于认证</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Run the application</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>运行应用程序</seg>
       </tuv>
     </tu>
     <tu>
@@ -21284,14 +22804,6 @@ Type: _boolean_</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
         <seg>这也将在端口 `5005` 上监听调试器。如果你想在运行前等待调试器的连接，你可以在命令行中传递 `-Dsuspend` 。如果你根本不想要调试器，你可以使用 `-Ddebug=false` 。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Testing</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>测试</seg>
       </tuv>
     </tu>
     <tu>
@@ -29100,14 +30612,6 @@ Environment variable: `+++QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_HTTP_METHOD_
       </tuv>
       <tuv xml:lang="zh_CN">
         <seg>link:http://mongodb.github.io/mongo-java-driver/3.12/bson/pojos[POJO编解码器] 提供了一组注解，可以自定义POJO映射到MongoDB集合的方式，该编解码器由Quarkus自动初始化。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Using JWT RBAC</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>使用JWT RBAC</seg>
       </tuv>
     </tu>
     <tu>
