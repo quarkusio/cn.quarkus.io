@@ -18330,6 +18330,1146 @@ https://download.jboss.org/jbosstools/intellij/snapshots/intellij-quarkus/[Devel
     </tu>
     <tu>
       <tuv xml:lang="en">
+        <seg>Using OpenID Connect (OIDC) to Protect Service Applications using Bearer Token Authorization</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>用OpenID Connect（OIDC）来保护使用不记名令牌授权的服务应用</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This guide demonstrates how to use Quarkus OpenID Connect (OIDC) Extension to protect your JAX-RS applications using Bearer Token Authorization where Bearer Tokens are issued by OpenID Connect and OAuth 2.0 compliant Authorization Servers such as https://www.keycloak.org[Keycloak].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>本指南演示了如何使用Quarkus OpenID Connect (OIDC)扩展来保护你的JAX-RS应用程序，使用不记名令牌授权(Bearer Tokens)，其中不记名令牌是由OpenID Connect和OAuth 2.0兼容的授权服务器（如 link:https://www.keycloak.org[Keycloak] ）颁发的。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Bearer Token Authorization is the process of authorizing HTTP requests based on the existence and validity of a Bearer Token which provides valuable information to determine the subject of the call as well as whether an HTTP resource can be accessed.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>不记名令牌授权是根据不记名令牌的存在和有效性来授权HTTP请求的过程，不记名令牌提供了有价值的信息来确定呼叫的主体以及这个主体是否可以访问HTTP资源。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Please read the xref:security-openid-connect-web-authentication.adoc[Using OpenID Connect to Protect Web Applications] guide if you need to authenticate and authorize the users using OpenID Connect Authorization Code Flow.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你需要使用OpenID Connect授权码模式(Authorization Code Flow)来对用户进行认证和授权，请阅读 xref:security-openid-connect-web-authentication.adoc[使用OpenID Connect保护Web应用程序] 指南。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you use Keycloak and Bearer tokens then also see the xref:security-keycloak-authorization.adoc[Using Keycloak to Centralize Authorization] guide.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果使用 Keycloak 和 不记名(Bearer) 令牌，则另请参阅 xref:security-keycloak-authorization.adoc[使用 Keycloak 集中授权]指南。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Please read the xref:security-openid-connect-multitenancy.adoc[Using OpenID Connect Multi-Tenancy] guide how to support multiple tenants.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>请阅读 xref:security-openid-connect-multitenancy.adoc[使用 OpenID Connect 多租户] ，来了解如何支持多租户。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In this example, we build a very simple microservice which offers two endpoints:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在这个例子中，我们建立了一个非常简单的微服务，它提供了两个端点:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>These endpoints are protected and can only be accessed if a client is sending a bearer token along with the request, which must be valid (e.g.: signature, expiration and audience) and trusted by the microservice.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这些端点是受保护的，只有当客户端与请求一起发送一个不记名令牌时才能被访问，该令牌必须是有效的（例如：签名、是否过期和受众），并且是微服务信任的。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The bearer token is issued by a Keycloak Server and represents the subject to which the token was issued for. For being an OAuth 2.0 Authorization Server, the token also references the client acting on behalf of the user.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>不记名令牌是由Keycloak服务器颁发的，并代表令牌发放对象的主体。对于OAuth 2.0授权服务器来说，该令牌还引用了代表用户的客户端。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `/api/users/me` endpoint can be accessed by any user with a valid token. As a response, it returns a JSON document with details about the user where these details are obtained from the information carried on the token.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>端点 `/api/users/me` 可由任何拥有有效令牌的用户访问。作为响应，它返回一个JSON文档，其中包含关于用户的细节，这些细节是从令牌上携带的信息获得的。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `/api/admin` endpoint is protected with RBAC (Role-Based Access Control) where only users granted with the `admin` role can access. At this endpoint, we use the `@RolesAllowed` annotation to declaratively enforce the access constraint.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>端点 `/api/admin` 受到RBAC（基于角色的访问控制）的保护，只有被授予 `admin` 角色的用户可以访问。在这个端点，我们使用 `@RolesAllowed` 注解来声明性地执行访问限制。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The solution is located in the `security-openid-connect-quickstart` {quickstarts-tree-url}/security-openid-connect-quickstart[directory].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>该解决方案位于 `security-openid-connect-quickstart` {quickstarts-tree-url}/security-openid-connect-quickstart[目录]中。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This command generates a Maven project, importing the `oidc` extension which is an implementation of OIDC for Quarkus.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>该命令生成了一个Maven项目，导入了 `oidc` 扩展，这个扩展是Quarkus的OIDC实现。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you already have your Quarkus project configured, you can add the `oidc` extension to your project by running the following command in your project base directory:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你已经配置了你的Quarkus项目，你可以通过在你的项目基础目录下运行以下命令，将 `oidc` 扩展加入到你的项目中去：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Let's start by implementing the `/api/users/me` endpoint. As you can see from the source code below it is just a regular JAX-RS resource:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>让我们从实现 `/api/users/me` 端点开始。从下面的源代码可以看出，它只是一个普通的JAX-RS资源：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The source code for the `/api/admin` endpoint is also very simple. The main difference here is that we are using a `@RolesAllowed` annotation to make sure that only users granted with the `admin` role can access the endpoint:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>端点 `/api/admin` 的源代码也非常简单。这里的主要区别是，我们使用 `@RolesAllowed` 注解来确保只有被授予 `admin` 角色的用户才能访问该端点：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Injection of the `SecurityIdentity` is supported in both `@RequestScoped` and `@ApplicationScoped` contexts.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在 `@RequestScoped` 和 `@ApplicationScoped` 的上下文中都支持 `SecurityIdentity` 注入。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The OpenID Connect extension allows you to define the adapter configuration using the `application.properties` file which should be located at the `src/main/resources` directory.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>OpenID Connect扩展允许我们使用 `application.properties` 文件来定义适配器配置，该文件应位于 `src/main/resources` 目录下。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Example configuration:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>配置示例：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Adding a `%prod.` profile prefix to `quarkus.oidc.auth-server-url` ensures that `Dev Services for Keycloak` will launch a container for you when the application is run in a dev mode. See &lt;&lt;keycloak-dev-mode, Running the Application in Dev mode&gt;&gt; section below for more information.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在 `quarkus.oidc.auth-server-url` 上添加一个 `%prod.` profile 前缀，可以确保在应用程序以开发模式运行时， `Keycloak开发服务` 会为你启动一个容器。更多信息请参见下面的 link:#keycloak-dev-mode[在keycloak开发模式下运行应用程序] 部分。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Starting and Configuring the Keycloak Server</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>启动和配置Keycloak服务器</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Do not start the Keycloak server when you run the application in a dev mode - `Dev Services for Keycloak` will launch a container. See &lt;&lt;keycloak-dev-mode, Running the Application in Dev mode&gt;&gt; section below for more information. Make sure to put the {quickstarts-tree-url}/security-openid-connect-quickstart/config/quarkus-realm.json[realm configuration file] on the classpath (`target/classes` directory) so that it gets imported automatically when running in dev mode - unless you have already built a {quickstarts-tree-url}/security-openid-connect-quickstart[complete solution] in which case this realm file will be added to the classpath during the build.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>当你以开发模式运行应用程序时，不要启动Keycloak服务器 - `Keycloak开发模式` 将启动一个容器。更多信息请参见下面在 link:#keycloak-dev-mode[在keycloak开发模式下运行应用程序] 的部分。确保把{quickstarts-tree-url}/security-openid-connect-quickstart/config/quarkus-realm.json[境界配置文件]放在classpath（ `target/classes` 目录）上，以便在开发模式下运行时自动导入--除非你已经构建了{quickstarts-tree-url}/security-openid-connect-quickstart[完整解决方案]，这样的话，这个领域文件会在构建时被加入classpath。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To start a Keycloak Server you can use Docker and just run the following command:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>要启动Keycloak服务器，你可以使用Docker，只需运行以下命令：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>where `keycloak.version` should be set to `17.0.0` or higher.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>其中 `keycloak.version` 应该设置为 `17.0.0` 或更高。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You should be able to access your Keycloak Server at http://localhost:8180[localhost:8180].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你应该能够通过 http://localhost:8180[localhost:8180] 访问你的Keycloak服务器。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Log in as the `admin` user to access the Keycloak Administration Console. Username should be `admin` and password `admin`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>以 `admin` 用户身份登录，访问Keycloak管理控制台。用户名应该是 `admin` ，密码是 `admin` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Import the {quickstarts-tree-url}/security-openid-connect-quickstart/config/quarkus-realm.json[realm configuration file] to create a new realm. For more details, see the Keycloak documentation about how to https://www.keycloak.org/docs/latest/server_admin/index.html#_create-realm[create a new realm].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>导入 {quickstarts-tree-url}/security-openid-connect-quickstart/config/quarkus-realm.json[领域配置文件] 来创建一个新领域(realm)。更多细节，请参阅Keycloak文档中关于如何 https://www.keycloak.org/docs/latest/server_admin/index.html#_create-realm[创建一个新的领域] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you want to use the Keycloak Admin Client to configure your server from your application you need to include the either `quarkus-keycloak-admin-client` or the `quarkus-keycloak-admin-client-reactive` (if the application uses `quarkus-rest-client-reactive`) extension.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你想使用Keycloak管理客户端从你的应用程序配置你的服务器，你需要包括 `quarkus-keycloak-admin-client` 或 `quarkus-keycloak-admin-client-reactive` （如果应用程序使用 `quarkus-rest-client-reactive` ）扩展。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Running the Application in Dev mode</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在开发模式下运行应用程序</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>To run the application in a dev mode, use:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>要在开发模式下运行应用程序，请使用：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>xref:security-openid-connect-dev-services.adoc[Dev Services for Keycloak] will launch a Keycloak container and import a `quarkus-realm.json`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>link:security-openid-connect-dev-services.html[Keycloak的开发服务] 将启动一个Keycloak容器并导入一个 `quarkus-realm.json` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Open a xref:dev-ui.adoc[Dev UI] available at http://localhost:8080/q/dev[/q/dev] and click on a `Provider: Keycloak` link in an `OpenID Connect` `Dev UI` card.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>打开 link:http://localhost:8080/q/dev[/q/dev] 提供的 link:dev-ui.html[开发用户界面] ，点击 `OpenID Connect` `Dev UI` 卡中的一个 `Provider: Keycloak` 链接。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You will be asked to log in into a `Single Page Application` provided by `OpenID Connect Dev UI`:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你将被要求登录到由 `OpenID Connect Dev UI` 提供的 `Single Page Application` :</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Login as `alice` (password: `alice`) who has a `user` role</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>以 `alice` （密码： `alice` ）的身份登录，他的角色(role)是 `user`</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Logout and login as `admin` (password: `admin`) who has both `admin` and `user` roles</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>退出并以 `admin` （密码： `admin` ）的身份登录，他同时拥有 `admin` 和 `user` 的角色(roles)</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Running the Application in JVM mode</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在JVM模式下运行应用程序</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>When you're done playing with the `dev` mode" you can run it as a standard Java application.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>当你尝试了 `dev` 模式，你可以把它作为一个标准的Java应用程序运行。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>First compile it:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>首先编译它：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Running the Application in Native Mode</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在原生模式(native mode)下运行应用程序</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Compilation will take a bit longer, so this step is disabled by default; let's build again by enabling the `native` profile:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>编译会花一点时间，所以这一步默认是禁用的；让我们通过启用 `native` profile来再次构建：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>See &lt;&lt;keycloak-dev-mode, Running the Application in Dev mode&gt;&gt; section above about testing your application in a dev mode.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>关于在开发模式下测试你的应用程序，请参见上面 link:#keycloak-dev-mode[在keycloak开发模式下运行应用程序] 一节。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can test the application launched in JVM or Native modes with `curl`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你可以用命令 `curl` ，测试在JVM或原生Native模式下启动的应用程序。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The application is using bearer token authorization and the first thing to do is obtain an access token from the Keycloak Server in order to access the application resources:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>该应用程序使用不记名令牌授权，首先要做的是从Keycloak服务器获得一个访问令牌，以便访问应用程序资源：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The example above obtains an access token for user `alice`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>上面的例子为用户 `alice` ，获得了一个访问令牌。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Any user is allowed to access the `http://localhost:8080/api/users/me` endpoint which basically returns a JSON payload with details about the user.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>任何用户都被允许访问这个 `http://localhost:8080/api/users/me` 端点，该端点基本上返回一个包含用户详细信息的JSON有效载荷。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The `http://localhost:8080/api/admin` endpoint can only be accessed by users with the `admin` role. If you try to access this endpoint with the
+ previously issued access token, you should get a `403` response
+ from the server.
+</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>该 `http://localhost:8080/api/admin` 端点只能由具有 `admin` 角色的用户访问。如果你试图用先前发布的访问令牌访问这个端点，你应该会从服务器上得到一个 `403` 的响应。
+</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In order to access the admin endpoint you should obtain a token for the `admin` user:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>为了访问管理端点，你应该获得一个 `admin` 用户的令牌：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Please also see the &lt;&lt;integration-testing-keycloak-devservices, Dev Services for Keycloak&gt;&gt; section below about writing the integration tests which depend on `Dev Services for Keycloak`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>关于编写依赖 `Keycloak开发服务` 的集成测试，也请参见下面的 link:#integration-testing-keycloak-devservices[Keycloak开发服务] 部分。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Accessing JWT claims</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>访问JWT声明</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you need to access JWT token claims then you can inject `JsonWebToken`:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你需要访问JWT令牌声明，那么你要注入 `JsonWebToken` ：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Injection of `JsonWebToken` is supported in `@ApplicationScoped`, `@Singleton` and `@RequestScoped` scopes however the use of `@RequestScoped` is required if the individual claims are injected as simple types, please see xref:security-jwt.adoc#supported-injection-scopes[Support Injection Scopes for JsonWebToken and Claims] for more details.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在 `@ApplicationScoped` , `@Singleton` 和 `@RequestScoped` 范围上下文中支持注入 `JsonWebToken` ，但是如果单个声明被注入为简单类型，则需要使用 `@RequestScoped` ，更多细节请参见 link:security-jwt.html#supported-injection-scopes[JsonWebToken和声明所支持注入范围(Injection Scopes)] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>User Info</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>用户信息</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Set `quarkus.oidc.authentication.user-info-required=true` if a UserInfo JSON object from the OIDC userinfo endpoint has to be requested.  A request will be sent to the OpenID Provider UserInfo endpoint and an `io.quarkus.oidc.UserInfo` (a simple `javax.json.JsonObject` wrapper) object will be created.  `io.quarkus.oidc.UserInfo` can be either injected or accessed as a SecurityIdentity `userinfo` attribute.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果要从OIDC userinfo端点请求UserInfo JSON对象，那么要设置 `quarkus.oidc.authentication.user-info-required=true` 。一个请求将被发送到OpenID Provider UserInfo端点，并将创建一个 `io.quarkus.oidc.UserInfo` （一个简单的 `javax.json.JsonObject` 包装器）对象。 `io.quarkus.oidc.UserInfo` 可以被注入或作为SecurityIdentity `userinfo` 属性访问。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Configuration Metadata</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>配置元数据</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The current tenant's discovered link:https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata[OpenID Connect Configuration Metadata] is represented by `io.quarkus.oidc.OidcConfigurationMetadata` and can be either injected or accessed as a `SecurityIdentity` `configuration-metadata` attribute.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>当前租户发现的 link:https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata[OpenID Connect配置元数据] 由 `io.quarkus.oidc.OidcConfigurationMetadata` 表示，可以作为 `SecurityIdentity` `configuration-metadata` 属性注入或访问。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The default tenant's `OidcConfigurationMetadata` is injected if the endpoint is public.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果端点是公开的，则默认租户的 `OidcConfigurationMetadata` 会被注入。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Token Claims And SecurityIdentity Roles</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>令牌声明(Token Claims)和安全身份角色(SecurityIdentity Roles)</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>SecurityIdentity roles can be mapped from the verified JWT access tokens as follows:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>安全身份(SecurityIdentity)角色可以从经过验证的JWT访问令牌中映射出来，具体如下:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If `quarkus.oidc.roles.role-claim-path` property is set and matching array or string claims are found then the roles are extracted from these claims.  For example, `customroles`, `customroles/array`, `scope`, `"http://namespace-qualified-custom-claim"/roles`, `"http://namespace-qualified-roles"`, etc.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果 `quarkus.oidc.roles.role-claim-path` 属性被设置，并且找到匹配的数组或字符串声明，那么角色将从这些声明中提取。例如， `customroles` , `customroles/array` , `scope` , `"http://namespace-qualified-custom-claim"/roles` , `"http://namespace-qualified-roles"` , 等等。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If `groups` claim is available then its value is used</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果存在 `groups` 声明，则这个声明的值会被使用</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If `realm_access/roles` or `resource_access/client_id/roles` (where `client_id` is the value of the `quarkus.oidc.client-id` property) claim is available then its value is used.  This check supports the tokens issued by Keycloak</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果 `realm_access/roles` 或 `resource_access/client_id/roles` （其中 `client_id` 是 `quarkus.oidc.client-id` 属性的值）声明是存在的，那么它的值会被使用。该检查支持由Keycloak发行的令牌</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If the token is opaque (binary) then a `scope` property from the remote token introspection response will be used.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果令牌是不透明的（二进制），那么将使用来自远程令牌自省(token introspection)响应的 `scope` 属性。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If UserInfo is the source of the roles then set `quarkus.oidc.authentication.user-info-required=true` and `quarkus.oidc.roles.source=userinfo`, and if needed, `quarkus.oidc.roles.role-claim-path`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果使用UserInfo为角色的来源，那么要设置 `quarkus.oidc.authentication.user-info-required=true` 和 `quarkus.oidc.roles.source=userinfo` ，如果需要的话，设置 `quarkus.oidc.roles.role-claim-path` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Additionally, a custom `SecurityIdentityAugmentor` can also be used to add the roles as documented xref:security.adoc#security-identity-customization[here].</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>此外，一个自定义的 `SecurityIdentityAugmentor` ，也可以用来添加角色，文档请查阅 link:security.html#security-identity-customization[这里] 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Token Verification And Introspection</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>代币验证(Token Verification)和自省(Introspection)</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If the token is a JWT token then, by default, it will be verified with a `JsonWebKey` (JWK) key from a local `JsonWebKeySet` retrieved from the OpenID Connect Provider's JWK endpoint. The token's key identifier `kid` header value will be used to find the matching JWK key.  If no matching `JWK` is available locally then `JsonWebKeySet` will be refreshed by fetching the current key set from the JWK endpoint. The `JsonWebKeySet` refresh can be repeated only after the `quarkus.oidc.token.forced-jwk-refresh-interval` (default is 10 minutes) expires.  If no matching `JWK` is available after the refresh then the JWT token will be sent to the OpenID Connect Provider's token introspection endpoint.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果令牌是 JWT 令牌，则默认情况下，将使用从 OpenID Connect 提供程序的 JWK 端点检索到的本地 `JsonWebKeySet` 中的 `JsonWebKey`（JWK） 密钥对其进行验证。令牌的密钥标识符 `kid` 标头值( header value)将用于查找匹配的 JWK 密钥。 如果本地没有匹配的 `JWK` 可用，则 `JsonWebKeySet` 将通过从JWK端点获取当前密钥集来刷新。`JsonWebKeySet` 刷新只能在 `quarkus.oidc.token.forced-jwk-refresh-interval`（默认值为10分钟）过期后重复。 如果在刷新后没有匹配的“JWK”可用，则 JWT 令牌将发送到 OpenID Connect 提供程序的令牌自检终结点。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If the token is opaque (it can be a binary token or an encrypted JWT token) then it will always be sent to the OpenID Connect Provider's token introspection endpoint.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果令牌是不透明的（可以是二进制令牌或加密的JWT令牌），那么它将总是被发送到OpenID Connect提供者的令牌自省端点。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you work with JWT tokens only and expect that a matching `JsonWebKey` will always be available (possibly after a key set refresh) then you should disable the token introspection:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你只使用JWT令牌，并且期望一个匹配的 `JsonWebKey` ，那么你应该禁用令牌自省：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>However, there could be cases where JWT tokens must be verified via the introspection only. It can be forced by configuring an introspection endpoint address only, for example, in case of Keycloak you can do it like this:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>然而，在某些情况下，JWT令牌必须只通过自省来验证。它可以通过配置一个自省端点地址来强制进行，例如，在Keycloak的情况下，你可以这样做：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Note that `io.quarkus.oidc.TokenIntrospection` (a simple `javax.json.JsonObject` wrapper) object will be created and can be either injected or accessed as a SecurityIdentity `introspection` attribute if either JWT or opaque token has been successfully introspected.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>请注意， `io.quarkus.oidc.TokenIntrospection` （一个简单的 `javax.json.JsonObject` 包装器）对象将被创建，如果JWT或不透明令牌已被成功自省，可以被注入或作为SecurityIdentity `introspection` 属性访问。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>All opaque and sometimes JWT Bearer access tokens have to be remotely introspected. If `UserInfo` is also required then the same access token will be used to do a remote call to OpenID Connect Provider again. So, if `UserInfo` is required and the current access token is opaque then for every such token there will be 2 remote calls done - one to introspect it and one to get UserInfo with it, and if the token is JWT then usually only a single remote call will be needed - to get UserInfo with it.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>所有不透明的、有时是JWT不记名的访问令牌都必须进行远程自省。如果还需要 `UserInfo` ，那么相同的访问令牌将被用来再次远程调用OpenID Connect Provider。因此，如果需要 `UserInfo` ，并且当前的访问令牌是不透明的，那么对于每一个这样的令牌，将进行两次远程调用--一次是反省，一次是用它来获取UserInfo，如果令牌是JWT，那么通常只需要一次远程调用--用它来获取UserInfo。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The cost of making up to 2 remote calls per every incoming bearer or code flow access token can sometimes be problematic.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>每一个传入的不记名流(bearer flow)或授权码流(code flow)访问令牌要进行多达2次的远程呼叫，其开销有时会是个问题。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If it is the case in your production then it can be recommended that the token introspection and `UserInfo` data are cached for a short period of time, for example, for 3 or 5 minutes.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果在你的生产中有这种情况，那么可以建议将令牌自省和 `UserInfo` 数据缓存一小段时间，例如，3或5分钟。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`quarkus-oidc` provides `quarkus.oidc.TokenIntrospectionCache` and `quarkus.oidc.UserInfoCache` interfaces which can be used to implement `@ApplicationScoped` cache implementation which can be used to store and retrieve `quarkus.oidc.TokenIntrospection` and/or `quarkus.oidc.UserInfo` objects, for example:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`quarkus-oidc` 提供 `quarkus.oidc.TokenIntrospectionCache` 和 `quarkus.oidc.UserInfoCache` 接口，可用于实现 `@ApplicationScoped` 缓存实现，可用于存储和检索 `quarkus.oidc.TokenIntrospection` 和/或 `quarkus.oidc.UserInfo` 对象，例如：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Each OIDC tenant can either permit or deny storing its `quarkus.oidc.TokenIntrospection` and/or `quarkus.oidc.UserInfo` data with boolean `quarkus.oidc."tenant".allow-token-introspection-cache` and `quarkus.oidc."tenant".allow-user-info-cache` properties.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>每个OIDC租户可以允许或拒绝存储其 `quarkus.oidc.TokenIntrospection` 和/或 `quarkus.oidc.UserInfo` 数据，其属性为布尔值 `quarkus.oidc."tenant".allow-token-introspection-cache` 和 `quarkus.oidc."tenant".allow-user-info-cache` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Additionally, `quarkus-oidc` provides a simple default memory based token cache which implements both `quarkus.oidc.TokenIntrospectionCache` and `quarkus.oidc.UserInfoCache` interfaces.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>此外， `quarkus-oidc` 提供了一个简单的基于内存的默认令牌缓存，该缓存同时实现了 `quarkus.oidc.TokenIntrospectionCache` 和 `quarkus.oidc.UserInfoCache` 接口。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>It can be activated and configured as follows:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>它可以按以下方式激活和配置:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The default cache uses a token as a key and each entry can have `TokenIntrospection` and/or `UserInfo`. It will only keep up to a `max-size` number of entries. If the cache is full when a new entry is to be added then an attempt will be made to find a space for it by removing a single expired entry. Additionally, the cleanup timer, if activated, will periodically check for the expired entries and remove them.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>默认的缓存使用一个令牌作为密钥，每个条目可以有 `TokenIntrospection` 和/或 `UserInfo` 。它只保留最多数量的条目 `max-size` 。如果要添加一个新的条目时，缓存已经满了，那么将试图通过删除一个过期的条目来为它找到一个空间。此外，清理计时器，如果被激活，将定期检查过期的条目并将其删除。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Please experiment with the default cache implementation or register a custom one.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>请尝试使用默认的缓存实现或注册一个自定义的缓存。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Once the bearer JWT token's signature has been verified and its `expires at` (`exp`) claim has been checked, the `iss` (`issuer`) claim value is verified next.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>一旦无记名JWT令牌的签名被验证，其 `expires at` ( `exp` )声明会被检查，接下来也会验证 `iss` ( `issuer` )声明的值。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>By default, the `iss` claim value is compared to the `issuer` property which may have been discovered in the well-known provider configuration.  But if `quarkus.oidc.token.issuer` property is set then the `iss` claim value is compared to it instead.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>默认情况下， `iss` 声明的值会与 `issuer` 属性进行比较，该属性有可能会在众所周知的提供者配置中找到。但是，如果 `quarkus.oidc.token.issuer` 属性被设置，那么 `iss` 声明的值将与它进行比较。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In some cases, this `iss` claim verification may not work. For example, if the discovered `issuer` property contains an internal HTTP/IP address while the token `iss` claim value contains an external HTTP/IP address. Or when a discovered `issuer` property contains the template tenant variable but the token `iss` claim value has the complete tenant-specific issuer value.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在某些情况下，这种 `iss` 声明验证可能不起作用。例如，如果发现的 `issuer` 属性包含一个内部 HTTP/IP地址，而令牌 `iss` 声明值包含一个外部 HTTP/IP地址。或者当发现的 `issuer` 属性包含模板租户变量，但令牌 `iss` 声明值有完整的租户特定发行人(tenant-specific issuer )的值。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In such cases you may want to consider skipping the issuer verification by setting `quarkus.oidc.token.issuer=any`. Please note that it is not recommended and should be avoided unless no other options are available:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在这种情况下，你可能要考虑通过设置 `quarkus.oidc.token.issuer=any` ，来跳过发行人验证。请注意，不建议这样做，除非没有其他选择，否则应避免这样做：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you work with Keycloak and observe the issuer verification errors due to the different host addresses then configure Keycloak with a `KEYCLOAK_FRONTEND_URL` property to ensure the same host address is used.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你使用Keycloak，并观察到由于不同的主机地址导致发行人验证错误，那么用 `KEYCLOAK_FRONTEND_URL` 属性配置Keycloak，以确保使用相同的主机地址。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If the `iss` property is tenant specific in a multi-tenant deployment then you can use the `SecurityIdentity` `tenant-id` attribute to check the issuer is correct in the endpoint itself or the custom JAX-RS filter, for example:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果在多租户部署中， `iss` 属性是租户特定的，那么你可以使用 `SecurityIdentity` `tenant-id` 属性来检查端点本身或自定义 JAX-RS 过滤器中的签发者是否正确，例如：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Note it is also recommended to use `quarkus.oidc.token.audience` property to verify the token `aud` (`audience`) claim value.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>注意，建议使用 `quarkus.oidc.token.audience` 属性来验证令牌 `aud` ( `audience` )声明的值。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Single Page Applications</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>单页应用程序</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Single Page Application (SPA) typically uses `XMLHttpRequest`(XHR) and the JavaScript utility code provided by the OpenID Connect provider to acquire a bearer token and use it to access Quarkus `service` applications.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>单页应用程序（SPA）通常使用 `XMLHttpRequest` （XHR）和OpenID Connect提供商提供的Java Script实用程序代码来获取不记名令牌，并使用它来访问Quarkus `service` 应用程序。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>For example, here is how you can use `keycloak.js` to authenticate the users and refresh the expired tokens from the SPA:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>例如，以下是你如何使用 `keycloak.js` 来验证用户并从SPA中刷新过期的令牌：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Cross Origin Resource Sharing</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>跨域资源共享(CORS)</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you plan to consume your OpenID Connect `service` application from a Single Page Application running on a different domain, you will need to configure CORS (Cross-Origin Resource Sharing). Please read the xref:http-reference.adoc#cors-filter[HTTP CORS documentation] for more details.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你打算从运行在不同域的单页应用中使用你的OpenID Connect `service` 应用程序，你将需要配置CORS（跨源资源共享）。请阅读 link:http-reference.html#cors-filter[HTTP CORS文档] 以了解更多细节。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Provider Endpoint configuration</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>提供者端点配置</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>OIDC `service` application needs to know OpenID Connect provider's token, `JsonWebKey` (JWK) set and possibly `UserInfo` and introspection endpoint addresses.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>OIDC `service` 应用程序需要知道OpenID Connect提供者的令牌、 `JsonWebKey` (JWK)集以及可能的 `UserInfo` 和自省端点地址。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>By default, they are discovered by adding a `/.well-known/openid-configuration` path to the configured `quarkus.oidc.auth-server-url`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>默认情况下，它们是通过在配置的 `quarkus.oidc.auth-server-url` 中，添加一个 `/.well-known/openid-configuration` 路径来发现的。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Alternatively, if the discovery endpoint is not available, or if you would like to save on the discovery endpoint round-trip, you can disable the discovery and configure them with relative path values, for example:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>另外，如果发现端点不可用，或者你想节省发现端点的往返开销，你可以禁用发现，用相对路径值配置它们，比如说：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Please see xref:security-openid-connect-client-reference.adoc#token-propagation[Token Propagation] section about the Bearer access token propagation to the downstream services.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>关于承载访问令牌向下游服务的传播，请参见 link:security-openid-connect-client.html#token-propagation[令牌] 传播部分。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`quarkus.oidc.runtime.OidcProviderClient` is used when a remote request to an OpenID Connect Provider has to be done. If the bearer token has to be introspected then `OidcProviderClient` has to authenticate to the OpenID Connect Provider. Please see xref:security-openid-connect-web-authentication.adoc#oidc-provider-client-authentication[OidcProviderClient Authentication] for more information about all the supported authentication options.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>属性 `quarkus.oidc.runtime.OidcProviderClient` 是在需要对OpenID连接提供者进行远程请求时使用的。如果必须对不记名令牌进行检查，那么 ，必须对OpenID Connect Provider进行认证。请参阅 `OidcProviderClient` link:security-openid-connect-web-authentication.html#oidc-provider-client-authentication[OidcProviderClient 认证] 以了解更多关于所支持认证选项的信息。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Start by adding the following dependencies to your test project:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>首先在你的测试项目中添加以下依赖项：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Add the following dependencies to your test project:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在你的测试项目中添加以下依赖项：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Prepare the REST test endpoint, set `application.properties`, for example:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>准备好REST测试端点，设置 `application.properties` ，例如：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>and finally write the test code, for example:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>并最终写出测试代码，例如：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Note that the `quarkus-test-oidc-server` extension includes a signing RSA private key file in a `JSON Web Key` (`JWK`) format and points to it with a `smallrye.jwt.sign.key.location` configuration property. It allows to use a no argument `sign()` operation to sign the token.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>请注意， `quarkus-test-oidc-server` 扩展包括一个 `JSON Web Key` ( `JWK` ) 格式的签名 RSA 私钥文件，并通过 `smallrye.jwt.sign.key.location` 配置属性指向它。它允许使用一个无参数的 `sign()` 操作来签署令牌。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Testing your `quarkus-oidc` `service` application with `OidcWiremockTestResource` provides the best coverage as even the communication channel is tested against the Wiremock HTTP stubs.  `OidcWiremockTestResource` will be enhanced going forward to support more complex Bearer token test scenarios.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>用 `OidcWiremockTestResource` 测试你的 `quarkus-oidc` `service` 应用程序，可以提供最好的覆盖率，因为即使是通信通道也是针对Wiremock HTTP存根(stubs) 进行测试的。 `OidcWiremockTestResource` 将在未来得到加强，以支持更复杂的不记名令牌测试场景。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If there is an immediate need for a test to define Wiremock stubs not currently supported by `OidcWiremockTestResource` one can do so via a `WireMockServer` instance injected into the test class, for example:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果一个测试需要立即定义Wiremock存根(stubs)，而目前 `OidcWiremockTestResource` 不支持，可以通过注入测试类的 `WireMockServer` 实例来实现，例如:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`OidcWiremockTestResource` does not work with `@QuarkusIntegrationTest` against Docker containers, because the Wiremock server is running in the JVM running the test, which cannot be accessed from the Docker container running the Quarkus application.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`OidcWiremockTestResource` 不适用于针对Docker容器的 `@QuarkusIntegrationTest` ，因为Wiremock服务器在运行测试的JVM中运行，无法被在Docker容器中运行的Quarkus应用程序访问。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Dev Services for Keycloak</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>为Keycloak提供的开发服务</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Using xref:security-openid-connect-dev-services.adoc[Dev Services for Keycloak] is recommended for the integration testing against Keycloak.  `Dev Services for Keycloak` will launch and initialize a test container: it will create a `quarkus` realm, a `quarkus-app` client (`secret` secret) and add `alice` (`admin` and `user` roles) and `bob` (`user` role) users, where all of these properties can be customized.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>建议使用 link:security-openid-connect-dev-services.html[Keycloak开发服务] 进行针对Keycloak的集成测试。 `Keycloak开发服务` 将启动和初始化一个测试容器：它将创建一个 `quarkus` 领域，一个 `quarkus-app` 客户端（ `secret` 秘密）并添加 `alice` （ `admin` 和 `user` 角色）和 `bob` （ `user` 角色）用户，其中所有这些属性都可以被定制。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>First you need to add the following dependency:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>首先，你需要添加以下依赖关系：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>which provides a utility class `io.quarkus.test.keycloak.client.KeycloakTestClient` you can use in tests for acquiring the access tokens.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>其中提供了一个实用类 `io.quarkus.test.keycloak.client.KeycloakTestClient` ，你可以在测试中使用它来获取访问令牌。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Next prepare your `application.properties`. You can start with a completely empty `application.properties` as `Dev Services for Keycloak` will register `quarkus.oidc.auth-server-url` pointing to the running test container as well as `quarkus.oidc.client-id=quarkus-app` and `quarkus.oidc.credentials.secret=secret`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>接下来准备你的 `application.properties` 。你可以从一个完全空的 `application.properties` 开始，因为 `Keycloak开发服务` 将注册指向运行中的测试容器的 `quarkus.oidc.auth-server-url` ，以及 `quarkus.oidc.client-id=quarkus-app` 和 `quarkus.oidc.credentials.secret=secret` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>But if you already have all the required `quarkus-oidc` properties configured then you only need to associate `quarkus.oidc.auth-server-url` with the `prod` profile for `Dev Services for Keycloak`to start a container, for example:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>但是如果你已经配置了所需的 `quarkus-oidc` 属性，那么你只需要将 `quarkus.oidc.auth-server-url` 与 `Keycloak开发服务` 的 `prod` 配置文件联系起来，以启动一个容器，例如：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If a custom realm file has to be imported into Keycloak before running the tests then you can configure `Dev Services for Keycloak` as follows:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果在运行测试前必须将自定义领域文件导入Keycloak，那么你可以按以下方式配置 `Keycloak开发服务` ：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Finally, write your test which will be executed in JVM mode:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>最后编写你的测试，它将在JVM模式下执行：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>and in native mode:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在原生模式(native mode)下：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Please see xref:security-openid-connect-dev-services.adoc[Dev Services for Keycloak] for more information about the way it is initialized and configured.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>请参阅 link:security-openid-connect-dev-services.html[Keycloak开发服务] ，来了解更多关于它的初始化和配置方式的信息。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you need to do some integration testing against Keycloak then you are encouraged to do it with &lt;&lt;integration-testing-keycloak-devservices,Dev Services For Keycloak&gt;&gt;.  Use `KeycloakTestResourceLifecycleManager` for your tests only if there is a good reason not to use `Dev Services for Keycloak`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你需要对Keycloak做一些集成测试，那么我们鼓励你使用 link:#integration-testing-keycloak-devservices[Keycloak开发服务] 来做。只有在有充分理由不使用 `Keycloak开发服务` 的情况下，才使用 `KeycloakTestResourceLifecycleManager` 进行测试。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Start with adding the following dependency:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>首先要添加以下依赖关系：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>which provides `io.quarkus.test.keycloak.server.KeycloakTestResourceLifecycleManager` - an implementation of `io.quarkus.test.common.QuarkusTestResourceLifecycleManager` which starts a Keycloak container.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>它提供了 `io.quarkus.test.keycloak.server.KeycloakTestResourceLifecycleManager` - 一个 `io.quarkus.test.common.QuarkusTestResourceLifecycleManager` 的实现，用来启动一个Keycloak容器。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>And configure the Maven Surefire plugin as follows:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>并按以下方式配置Maven Surefire插件：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>(and similarly `maven.failsafe.plugin` when testing in native image).</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>(在原生image中测试时也是如此 `maven.failsafe.plugin` )。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`KeycloakTestResourceLifecycleManager` registers `alice` and `admin` users. The user `alice` has the `user` role only by default - it can be customized with a `keycloak.token.user-roles` system property. The user `admin` has the `user` and `admin` roles by default - it can be customized with a `keycloak.token.admin-roles` system property.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`KeycloakTestResourceLifecycleManager` 注册 `alice` 和 `admin` 用户。默认情况下，用户 `alice` 仅具有 `user` 角色 - 可以使用 `keycloak.token.user-roles` 系统属性对其进行自定义。默认情况下，用户 `admin` 具有 `用户` 和 `admin` 角色 - 可以使用 `keycloak.token.admin-roles` 系统属性对其进行自定义。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>By default, `KeycloakTestResourceLifecycleManager` uses HTTPS to initialize a Keycloak instance which can be disabled with `keycloak.use.https=false`.  Default realm name is `quarkus` and client id - `quarkus-service-app` - set `keycloak.realm` and `keycloak.service.client` system properties to customize the values if needed.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>默认情况下， `KeycloakTestResourceLifecycleManager` 使用HTTPS来初始化Keycloak实例，可以用 `keycloak.use.https=false` 来禁用。默认的领域(realm)名称是 `quarkus` ，客户端ID - `quarkus-service-app` - 如果需要，可以设置 `keycloak.realm` 和 `keycloak.service.client` 系统属性来定制数值。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can also use a local inlined public key for testing your `quarkus-oidc` `service` applications:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你也可以使用一个本地内嵌的公钥来测试你的 `quarkus-oidc` `service` 应用程序:</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>copy `privateKey.pem` from the `integration-tests/oidc-tenancy` in the `main` Quarkus repository and use a test code similar to the one in the `Wiremock` section above to generate JWT tokens. You can use your own test keys if preferred.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>从 `main` Quarkus资源库中的 `integration-tests/oidc-tenancy` 中复制 `privateKey.pem` ，并使用类似于上面 `Wiremock` 部分的测试代码来生成JWT令牌。如果愿意，你可以使用你自己的测试密钥。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This approach provides a more limited coverage compared to the Wiremock approach - for example, the remote communication code is not covered.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>与Wiremock方法相比，这种方法提供了更有限的覆盖范围--例如，远程通信代码没有被覆盖。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>You can use `@TestSecurity` and `@OidcSecurity` annotations for testing the `service` application endpoint code which depends on the injected `JsonWebToken` as well as `UserInfo` and `OidcConfigurationMetadata`.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>你可以使用 `@TestSecurity` 和 `@OidcSecurity` 注解来测试 `service` 应用程序端点代码，该代码依赖于注入的 `JsonWebToken` 以及 `UserInfo` 和 `OidcConfigurationMetadata` 。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Note that `@TestSecurity` annotation must always be used and its `user` property is returned as `JsonWebToken.getName()` and `roles` property - as `JsonWebToken.getGroups()`.  `@OidcSecurity` annotation is optional and can be used to set the additional token claims, as well as `UserInfo` and `OidcConfigurationMetadata` properties.  Additionally, if `quarkus.oidc.token.issuer` property is configured then it will be used as an `OidcConfigurationMetadata` `issuer` property value.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>请注意，必须始终使用 `@TestSecurity` 注解，其 `user` 属性将作为 `JsonWebToken.getName()` 和 `roles` 属性-作为 `JsonWebToken.getGroups()` 。 `@OidcSecurity` 注解是可选的，可用于设置额外的标记要求，以及 `UserInfo` 和 `OidcConfigurationMetadata` 属性。此外，如果配置了 `quarkus.oidc.token.issuer` 属性，那么它将被用作 `OidcConfigurationMetadata` `issuer` 属性的值。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you work with the opaque tokens then you can test them as follows:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你用不透明的令牌，那么你可以按以下方式测试它们：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Note that `@TestSecurity` `user` and `roles` attributes are available as `TokenIntrospection` `username` and `scope` properties and you can use `io.quarkus.test.security.oidc.TokenIntrospection` to add the additional introspection response properties such as an `email`, etc.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>请注意， `@TestSecurity` `user` 和 `roles` 属性可作为 `TokenIntrospection` `username` 和 `scope` 属性，你可以使用 `io.quarkus.test.security.oidc.TokenIntrospection` 来添加额外的自省响应属性，如 `email` ，等等。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Please enable `io.quarkus.oidc.runtime.OidcProvider` `TRACE` level logging to see more details about the token verification errors:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>请启用 `io.quarkus.oidc.runtime.OidcProvider` `TRACE` 级日志，以查看有关令牌验证错误的更多细节：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Please enable `io.quarkus.oidc.runtime.OidcRecorder` `TRACE` level logging to see more details about the OidcProvider client initialization errors:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>请启用 `io.quarkus.oidc.runtime.OidcRecorder` `TRACE` 级日志，以查看关于OidcProvider客户端初始化错误的更多细节：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>External and Internal Access to OpenID Connect Provider</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>外部和内部访问OpenID Connect的提供者</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Note that the OpenID Connect Provider externally accessible token and other endpoints may have different HTTP(S) URLs compared to the URLs auto-discovered or configured relative to `quarkus.oidc.auth-server-url` internal URL. For example, if your SPA acquires a token from an external token endpoint address and sends it to Quarkus as a Bearer token then an issuer verification failure may be reported by the endpoint.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>请注意，OpenID Connect Provider 外部可访问令牌和其他端点可能具有不同的 HTTP（S） URL，与相对于 `quarkus.oidc.auth-server-url` 内部 URL 自动发现或配置的 URL 相比。例如，如果您的 SPA 从外部令牌端点地址获取令牌并将其作为持有者令牌发送到 Quarkus，则端点可能会报告颁发者验证失败。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>In such cases, if you work with Keycloak then please start it with a `KEYCLOAK_FRONTEND_URL` system property set to the externally accessible base URL.  If you work with other Openid Connect providers then please check your provider's documentation.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>在这种情况下，如果你使用Keycloak，那么请用 `KEYCLOAK_FRONTEND_URL` 系统属性设置为外部可访问的基本URL来启动它。如果你使用其他Openid Connect提供商，那么请查看你的提供商的文档。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>How to use 'client-id' property</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如何使用 `client-id` 属性</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>`quarkus.oidc.client-id` property identifies an OpenID Connect Client which requested the current bearer token. It can be an SPA application running in a browser or a Quarkus `web-app` confidential client application propagating the access token to the Quarkus `service` application.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>`quarkus.oidc.client-id` 属性标识请求当前持有者令牌的 OpenID Connect Client。它可以是在浏览器中运行的SPA应用程序，也可以是Quarkus `web-app` 机密客户端应用程序，将访问令牌传播到Quarkus `service` 的应用程序。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This property is required if the `service` application is expected to introspect the tokens remotely - which is always the case for the opaque tokens.  This property is optional if the local Json Web Key token verification only is used.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果 `service` 应用程序被期望是远程自省令牌--对于不透明的令牌来说总是这样，那么这个属性是必需的。如果只使用本地Json Web Key令牌验证，那么该属性是可选的。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Nonetheless, setting this property is encouraged even if the endpoint does not require access to the remote introspection endpoint. The reasons behind it that `client-id`, if set, can be used to verify the token audience and will also be included in the logs when the token verification fails for the better traceability of the tokens issued to specific clients to be analyzed over a longer period of time.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>尽管如此，即使端点不需要访问远程自省端点，也鼓励设置该属性。其背后的原因是： `client-id` ，如果设置了这个属性，就可以用来验证令牌受众，当令牌验证失败时，也会包含在日志中，以便更好地追踪发放给特定客户的令牌，并在较长的时间内进行分析。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>For example, if your OpenID Connect provider sets a token audience then the following configuration pattern is recommended:</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>例如，如果你的OpenID Connect提供商设置了一个令牌受众，那么建议采用以下配置模式：</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If you set `quarkus.oidc.client-id` but your endpoint does not require remote access to one of OpenID Connect Provider endpoints (introspection, token acquisition, etc.) then do not set a client secret with the `quarkus.oidc.credentials` or similar properties as it will not be used.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果你设置了 `quarkus.oidc.client-id` ，但你的端点不需要远程访问OpenID Connect提供者的一个端点（自省、令牌获取等），那么就不要设置带有 `quarkus.oidc.credentials` 或类似属性的客户秘钥，因为它不会被使用。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Note Quarkus `web-app` applications always require `quarkus.oidc.client-id` property.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>注意Quarkus `web-app` 应用程序总是需要 `quarkus.oidc.client-id` 属性。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>xref:security-openid-connect-client-reference.adoc[OpenID Connect and OAuth2 Client and Filters Reference Guide]</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>link:security-openid-connect-client.html[Quarkus - 使用OpenID Connect，OAuth2客户端和过滤器的参考指南]</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
         <seg>Testing Your Application</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
@@ -23664,22 +24804,6 @@ Type: _boolean_</seg>
     </tu>
     <tu>
       <tuv xml:lang="en">
-        <seg>In this example, we build a very simple microservice which offers two endpoints:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>在该例子中，我们建立了一个非常简单的微服务并提供了两个节点：</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>These endpoints are protected and can only be accessed if a client is sending a bearer token along with the request, which must be valid (e.g.: signature, expiration and audience) and trusted by the microservice.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>这些节点是受保护的，只有当客户端将一个bearer token与请求一起发送时才能被访问，而且该token必须是有效的（例如：签名、过期时间和受众），并且要得到微服务的信任。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
         <seg>The bearer token is issued by a Keycloak Server and represents the subject to which the token was issued for.  For being an OAuth 2.0 Authorization Server, the token also references the client acting on behalf of the user.</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
@@ -23776,22 +24900,6 @@ Type: _boolean_</seg>
     </tu>
     <tu>
       <tuv xml:lang="en">
-        <seg>The OpenID Connect extension allows you to define the adapter configuration using the `application.properties` file which should be located at the `src/main/resources` directory.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>OpenID Connect扩展允许您使用 `application.properties` 来定义适配器配置，该文件应位于 `src/main/resources` 目录下。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Adding a `%prod.` profile prefix to `quarkus.oidc.auth-server-url` ensures that `Dev Services for Keycloak` will launch a container for you when the application is run in a dev mode. See &lt;&lt;keycloak-dev-mode, Running the Application in Dev mode&gt;&gt; section below for more information.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>在 `quarkus.oidc.auth-server-url` 上添加一个 `%prod.` profile前缀，可以确保 `Keycloak开发服务` 在应用程序以开发模式运行时为您启动一个容器。更多信息请参见下面的 " link:#keycloak-dev-mode[在开发模式下运行应用程序] "部分。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
         <seg>By default, applications using the `quarkus-oidc` extension are marked as a `service` type application (see `quarkus.oidc.application-type`). This extension also supports only `web-app` type applications but only if the access token returned as part of the authorization code grant response is marked as a source of roles: `quarkus.oidc.roles.source=accesstoken` (`web-app` type applications check ID token roles by default).</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
@@ -23800,34 +24908,10 @@ Type: _boolean_</seg>
     </tu>
     <tu>
       <tuv xml:lang="en">
-        <seg>Starting and Configuring the Keycloak Server</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>启动和配置Keycloak服务器</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
         <seg>Do not start the Keycloak server when you run the application in a dev mode - `Dev Services for Keycloak` will launch a container. See &lt;&lt;keycloak-dev-mode, Running the Application in Dev mode&gt;&gt; section below for more information.</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
         <seg>当您以开发模式运行应用程序时，请不要启动Keycloak服务器 - `Keycloak开发服务` 将启动一个容器。更多信息请参见下面在 link:#keycloak-dev-mode[开发模式下运行应用程序] 的部分。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>To start a Keycloak Server you can use Docker and just run the following command:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>要启动Keycloak服务器，您可以使用Docker服务，且只需运行以下命令：</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>where `keycloak.version` should be set to `17.0.0` or higher.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>其中 `keycloak.version` 应该设置为 `17.0.0` 或更高。</seg>
       </tuv>
     </tu>
     <tu>
@@ -23872,42 +24956,10 @@ Type: _boolean_</seg>
     </tu>
     <tu>
       <tuv xml:lang="en">
-        <seg>Running the Application in Dev mode</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>在开发模式下运行应用程序</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
         <seg>To run the application in dev mode, use:</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
         <seg>要在开发模式下运行应用程序，请使用：</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>xref:security-openid-connect-dev-services.adoc[Dev Services for Keycloak] will launch a Keycloak container and import a `quarkus-realm.json`.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>link:security-openid-connect-dev-services.html[Keycloak开发服务] 将启动一个Keycloak容器并导入一个 `quarkus-realm.json` 。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Open a xref:dev-ui.adoc[Dev UI] available at http://localhost:8080/q/dev[/q/dev] and click on a `Provider: Keycloak` link in an `OpenID Connect` `Dev UI` card.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>打开 link:http://localhost:8080/q/dev[/q/dev] 提供的 link:dev-ui.html[开发用户界面] ，点击 `OpenID Connect` `Dev UI` 卡片中的 `Provider: Keycloak` 链接。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>You will be asked to log in into a `Single Page Application` provided by `OpenID Connect Dev UI`:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>您将被要求登录到由 `OpenID Connect Dev UI` 提供的 `Single Page Application` ：</seg>
       </tuv>
     </tu>
     <tu>
@@ -23928,98 +24980,10 @@ Type: _boolean_</seg>
     </tu>
     <tu>
       <tuv xml:lang="en">
-        <seg>Running the Application in JVM mode</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>在JVM模式下运行应用程序</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>When you're done playing with the `dev` mode" you can run it as a standard Java application.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>当您尝试完毕 `开发` 模式后，您可以把它作为一个标准的Java应用程序运行。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>First compile it:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>首先编译它：</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Running the Application in Native Mode</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>在本地模式下运行应用程序</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Compilation will take a bit longer, so this step is disabled by default; let's build again by enabling the `native` profile:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>编译会花一点时间，所以这一步默认是禁用的；让我们通过启用 `native` profile来再次构建：</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>See &lt;&lt;keycloak-dev-mode, Running the Application in Dev mode&gt;&gt; section above about testing your application in a dev mode.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>关于在开发模式下测试您的应用程序，请参见上面 link:#keycloak-dev-mode[在开发模式下运行应用程序] 一节。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>You can test the application launched in JVM or Native modes with `curl`.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>您可以用 `curl` 测试在JVM或Native模式下启动的应用程序。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>The application is using bearer token authorization and the first thing to do is obtain an access token from the Keycloak Server in order to access the application resources:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>该应用程序使用bearer token授权，首先要做的是从Keycloak服务器获得一个访问token，以便访问应用程序资源：</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>The example above obtains an access token for user `alice`.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>上面的命令为用户 `alice` 获取了一个访问token。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Any user is allowed to access the `http://localhost:8080/api/users/me` endpoint which basically returns a JSON payload with details about the user.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>任何用户都被允许访问 `&lt;a href="http://localhost:8080/api/users/me" class="bare"&gt;http://localhost:8080/api/users/me&lt;/a&gt;` 节点，该节点会返回一个包含用户详细信息的JSON payload。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
         <seg>The `http://localhost:8080/api/admin` endpoint can only be accessed by users with the `admin` role.  If you try to access this endpoint with the previously issued access token, you should get a `403` response from the server.</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
         <seg>`&lt;a href="http://localhost:8080/api/admin" class="bare"&gt;http://localhost:8080/api/admin&lt;/a&gt;` 节点只能由具有 `admin` 角色的用户访问。如果您试图用先前发放的access token访问这个节点，您将会得到一个 `403` 的响应。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>In order to access the admin endpoint you should obtain a token for the `admin` user:</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>为了访问管理节点，您需要获得一个 `admin` 用户的token：</seg>
       </tuv>
     </tu>
     <tu>
