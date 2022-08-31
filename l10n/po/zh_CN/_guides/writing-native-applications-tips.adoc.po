@@ -515,8 +515,9 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/writing-native-applications-tips.adoc:308
+#, fuzzy
 msgid "Another common source of errors is when the image heap taken by GraalVM contains a `Random`/`SplittableRandom` instance:"
-msgstr ""
+msgstr "另一个常见的错误来源是，当GraalVM采取的图像堆包含一个 `Random` / `SplittableRandom` 实例。"
 
 #. type: delimited block -
 #: upstream/_guides/writing-native-applications-tips.adoc:312
@@ -526,13 +527,15 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/writing-native-applications-tips.adoc:316
+#, fuzzy
 msgid "Which is more often than not caused by Quarkus initializing at build time a class with a static `Random`/`SplittableRandom` field, causing this particular instance to be tentatively included in the image heap."
-msgstr ""
+msgstr "这往往是由于Quarkus在构建时初始化了一个带有静态 `Random` / `SplittableRandom` 字段的类，导致这个特定的实例被暂时纳入图像堆中。"
 
 #. type: delimited block =
 #: upstream/_guides/writing-native-applications-tips.adoc:320
+#, fuzzy
 msgid "You can find detailed information about this `Random`/`SplittableRandom` issue in https://foivos.zakkak.net/tutorials/working-with-randoms-native-images/[this blog post]."
-msgstr ""
+msgstr "你可以在 link:https://foivos.zakkak.net/tutorials/working-with-randoms-native-images/[这篇博文] 中找到关于这个 `Random` / `SplittableRandom` 问题的详细信息。"
 
 #. type: Plain text
 #: upstream/_guides/writing-native-applications-tips.adoc:324
@@ -602,60 +605,69 @@ msgstr "解决这个问题需要添加 `-H:DynamicProxyConfigurationResources=<c
 
 #. type: Title ===
 #: upstream/_guides/writing-native-applications-tips.adoc:365
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "Modularity Benefits"
-msgstr ""
+msgstr "模块化的好处"
 
 #. type: Plain text
 #: upstream/_guides/writing-native-applications-tips.adoc:371
+#, fuzzy
 msgid "During native executable build time GraalVM analyses the application's call tree and generates a code-set that includes all the code it needs.  Having a modular codebase is key to avoiding problems with unused or optional parts of your application, while at the same time reducing both native executable build times and size.  In this section you will learn about the details behind the benefits of modularity for native applications."
-msgstr ""
+msgstr "在本地可执行文件的构建过程中，GraalVM会分析应用程序的调用树，并生成一个包含所有需要的代码的代码集。拥有一个模块化的代码集是避免应用程序中未使用或可选部分出现问题的关键，同时也可以减少本地可执行文件的构建时间和大小。在本节中，你将了解到本地应用程序模块化的好处背后的细节。"
 
 #. type: Plain text
 #: upstream/_guides/writing-native-applications-tips.adoc:385
+#, fuzzy
 msgid "When code is not modular enough, generated native executables can end up with more code than what the user needs.  If a feature is not used and the code gets compiled into the native executable, this is a waste of native compilation time and memory usage, as well as native executable disk space and starting heap size.  Even more problems arise when third party libraries or specialized API subsystems are used which cause native compilation or runtime errors, and their use is not modularised enough.  A recent problem can be found in the JAXB library, which is capable of deserializing XML files containing images using Java’s AWT APIs.  The vast majority of Quarkus XML users don’t need to deserialize images, so there shouldn’t be a need for users applications to include Java AWT code, unless they specifically configure Quarkus to add the JAXB AWT code to the native executable.  However, because JAXB code that uses AWT is in the same jar as the rest of the XML parsing code, achieving this separation was rather complex and required the use of Java bytecode substitutions to get around it.  These substitutions are hard to maintain and can easily break, hence they should be one's last resort."
-msgstr ""
+msgstr "当代码不够模块化时，生成的本地可执行文件最终可能包含比用户需要的更多的代码。如果不使用某个功能，代码被编译到本地可执行文件中，这就浪费了本地编译时间和内存使用量，以及本地可执行文件的磁盘空间和起始堆大小。当使用第三方库或专门的API子系统导致本地编译或运行时错误，而它们的使用又没有足够的模块化时，甚至会出现更多的问题。最近的一个问题可以在JAXB库中找到，它能够使用Java的AWT APIs反序列化包含图像的XML文件。绝大多数Quarkus XML用户不需要反序列化图像，所以用户的应用程序应该不需要包括Java AWT代码，除非他们特别配置Quarkus将JAXB AWT代码添加到本地可执行文件中。然而，由于使用AWT的JAXB代码与其他的XML解析代码在同一个jar中，实现这种分离是相当复杂的，需要使用Java字节码替换来解决这个问题。这些替换很难维护，而且很容易损坏，因此它们应该是最后的手段。"
 
 #. type: Plain text
 #: upstream/_guides/writing-native-applications-tips.adoc:390
+#, fuzzy
 msgid "A modular codebase is the best way to avoid these kind of issues.  Taking the JAXB/AWT problem above, if the JAXB code that dealt with images was in a separate module or jar (e.g. `jaxb-images`), then Quarkus could choose not to include that module unless the user specifically requested the need to serialize/deserialize XML files containing images at build time."
-msgstr ""
+msgstr "一个模块化的代码库是避免这类问题的最好方法。以上面的JAXB/AWT问题为例，如果处理图片的JAXB代码是在一个单独的模块或jar中（例如 `jaxb-images` ），那么Quarkus可以选择不包括这个模块，除非用户特别要求在构建时需要序列化/反序列化包含图片的XML文件。"
 
 #. type: Plain text
 #: upstream/_guides/writing-native-applications-tips.adoc:393
+#, fuzzy
 msgid "Another benefit of modular applications is that they can reduce the code-set that will need to get into the native executable.  The smaller the code-set, the faster the native executable builds will be and the smaller the native executable produced."
-msgstr ""
+msgstr "模块化应用程序的另一个好处是，它们可以减少需要进入本地可执行文件的代码集。代码集越小，本地可执行文件的构建就越快，产生的本地可执行文件就越小。"
 
 #. type: delimited block =
 #: upstream/_guides/writing-native-applications-tips.adoc:399
+#, fuzzy
 msgid "The key takeaway point here is the following: Keeping optional features, particularly those that depend on third party libraries or API subsystems with a big footprint, in separate modules is the best solution."
-msgstr ""
+msgstr "这里的关键启发点是以下几点。将可选的功能，特别是那些依赖第三方库或API子系统的大面积的功能，放在独立的模块中是最好的解决方案。"
 
 #. type: Plain text
 #: upstream/_guides/writing-native-applications-tips.adoc:408
+#, fuzzy
 msgid "How do I know if my application suffers from similar problems? Aside from a deep study of the application, finding usages of https://maven.apache.org/guides/introduction/introduction-to-optional-and-excludes-dependencies.html[Maven optional dependencies] is a clear indicator that your application might suffer from similar problems.  These type of dependencies should be avoided, and instead code that interacts with optional dependencies should be moved into separate modules."
-msgstr ""
+msgstr "我如何知道我的应用程序是否存在类似问题？除了对应用程序进行深入研究外，发现使用 link:https://maven.apache.org/guides/introduction/introduction-to-optional-and-excludes-dependencies.html[Maven的可选依赖] 是一个明显的指标，说明您的应用程序可能存在类似问题。应避免使用这类依赖，而应将与可选依赖交互的代码移至独立模块。"
 
 #. type: Title ===
 #: upstream/_guides/writing-native-applications-tips.adoc:410
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "Enforcing Singletons"
-msgstr ""
+msgstr "强制执行单子"
 
 #. type: Plain text
 #: upstream/_guides/writing-native-applications-tips.adoc:417
+#, fuzzy
 msgid "As already explained in the <<delay-class-init-in-your-app, delay class initialization>> section, Quarkus marks all code to be initialized at build time by default.  This means that, unless marked otherwise, static variables will be assigned at build time, and static blocks will be executed at build time too."
-msgstr ""
+msgstr "正如在 link:#delay-class-init-in-your-app[延迟类初始化] 部分所解释的，Quarkus默认将所有代码在构建时进行初始化。这意味着，除非另有标记，静态变量将在构建时被分配，静态块也将在构建时执行。"
 
 #. type: Plain text
 #: upstream/_guides/writing-native-applications-tips.adoc:422
+#, fuzzy
 msgid "This can cause values in Java programs that would normally vary from one run to another, to always return a constant value.  E.g. a static field that is assigned the value of `System.currentTimeMillis()` will always return the same value when executed as a Quarkus native executable."
-msgstr ""
+msgstr "这可以使Java程序中的值在不同的运行中通常是不同的，而总是返回一个常量值。例如，一个被赋值为 `System.currentTimeMillis()` 的静态字段，在作为Quarkus本地可执行文件执行时，总是返回相同的值。"
 
 #. type: Plain text
 #: upstream/_guides/writing-native-applications-tips.adoc:425
+#, fuzzy
 msgid "Singletons that rely on static variable initialization will suffer similar problems.  For example, imagine you have a singleton based around static initialization along with a REST endpoint to query it:"
-msgstr ""
+msgstr "依靠静态变量初始化的单子也会遭遇类似的问题。例如，设想你有一个基于静态初始化的单子，并有一个REST端点来查询它。"
 
 #. type: delimited block -
 #: upstream/_guides/writing-native-applications-tips.adoc:430
@@ -699,8 +711,9 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/writing-native-applications-tips.adoc:450
+#, fuzzy
 msgid "When the `singletons/static` endpoint is queried, it will always return the same value, even after the application is restarted:"
-msgstr ""
+msgstr "当 `singletons/static` 端点被查询时，它将始终返回相同的值，即使在应用程序被重新启动之后。"
 
 #. type: delimited block -
 #: upstream/_guides/writing-native-applications-tips.adoc:455
@@ -717,14 +730,14 @@ msgstr ""
 #: upstream/_guides/writing-native-applications-tips.adoc:507
 #: upstream/_guides/writing-native-applications-tips.adoc:553
 #, fuzzy, no-wrap
-#| msgid "Tips for writing native applications"
 msgid "### Restart the native application ###\n"
 msgstr "编写原生应用程序的提示"
 
 #. type: Plain text
 #: upstream/_guides/writing-native-applications-tips.adoc:466
+#, fuzzy
 msgid "Singletons that rely on `enum` classes are also affected by the same issue:"
-msgstr ""
+msgstr "依赖于 `enum` 类的单子也会受到同样的影响。"
 
 #. type: delimited block -
 #: upstream/_guides/writing-native-applications-tips.adoc:478
@@ -774,8 +787,9 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/writing-native-applications-tips.adoc:497
+#, fuzzy
 msgid "When the `singletons/enum` endpoint is queried, it will always return the same value, even after the application is restarted:"
-msgstr ""
+msgstr "当 `singletons/enum` 端点被查询时，它将始终返回相同的值，即使在应用程序被重新启动之后。"
 
 #. type: delimited block -
 #: upstream/_guides/writing-native-applications-tips.adoc:502
@@ -789,8 +803,9 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/writing-native-applications-tips.adoc:513
+#, fuzzy
 msgid "One way to fix it is to build singletons using CDI's `@Singleton` annotation:"
-msgstr ""
+msgstr "解决这个问题的一个方法是使用CDI的 `@Singleton` 注释来构建单子。"
 
 #. type: delimited block -
 #: upstream/_guides/writing-native-applications-tips.adoc:521
@@ -824,8 +839,9 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/writing-native-applications-tips.adoc:543
+#, fuzzy
 msgid "After each restart, querying `singletons/cdi` will return a different value, just like it would in JVM mode:"
-msgstr ""
+msgstr "每次重启后，查询 `singletons/cdi` ，将返回一个不同的值，就像在JVM模式下一样。"
 
 #. type: delimited block -
 #: upstream/_guides/writing-native-applications-tips.adoc:548
@@ -846,14 +862,15 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/writing-native-applications-tips.adoc:563
+#, fuzzy
 msgid "An alternative way to enforce a singleton while relying static fields, or enums, is to <<delay-class-init-in-your-app,delay its class initialization until run time>>.  The nice advantage of CDI-based singletons is that your class initialization is not constrained, so you can freely decide whether it should be build-time or run-time initialized, depending on your use case."
-msgstr ""
+msgstr "在依赖静态字段或枚举的同时执行单子的另一种方法是 link:#delay-class-init-in-your-app[将其类的初始化推迟到运行时] 。基于CDI的单子的好处是，你的类的初始化不受限制，所以你可以根据你的用例，自由地决定它应该在构建时还是运行时初始化。"
 
 #. type: Title ===
 #: upstream/_guides/writing-native-applications-tips.adoc:564
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "Beware of common Java API overrides"
-msgstr ""
+msgstr "谨防常见的Java API重写"
 
 #. type: Plain text
 #: upstream/_guides/writing-native-applications-tips.adoc:574
