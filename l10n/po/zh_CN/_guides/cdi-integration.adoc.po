@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2022-06-29 15:31+0000\n"
+"POT-Creation-Date: 2022-09-28 11:12+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -971,25 +971,63 @@ msgid ""
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/cdi-integration.adoc:482
+#: upstream/_guides/cdi-integration.adoc:481
+#, fuzzy, no-wrap
+msgid "Use Case - Additional Stereotypes"
+msgstr "用例 - 额外的限定词"
+
+#. type: Plain text
+#: upstream/_guides/cdi-integration.adoc:486
+#, fuzzy
+msgid "It is sometimes useful to register an existing annotation that is not annotated with `@javax.enterprise.inject.Stereotype` as a CDI stereotype.  This is similar to what CDI achieves through `BeforeBeanDiscovery#addStereotype()`.  We are going to use `StereotypeRegistrarBuildItem` to get it done."
+msgstr "有时，将一个没有用 `@javax.inject.Qualifier` 注释的现有注解注册为CDI限定符可能是有用的。这类似于CDI通过 `BeforeBeanDiscovery#addQualifier()` 来实现的。我们将使用 `QualifierRegistrarBuildItem` 来完成它。"
+
+#. type: Block title
+#: upstream/_guides/cdi-integration.adoc:487
+#, fuzzy, no-wrap
+msgid "`StereotypeRegistrarBuildItem` Example"
+msgstr " `QualifierRegistrarBuildItem` 例子"
+
+#. type: delimited block -
+#: upstream/_guides/cdi-integration.adoc:499
+#, no-wrap
+msgid ""
+"@BuildStep\n"
+"StereotypeRegistrarBuildItem addStereotypes() {\n"
+"    return new StereotypeRegistrarBuildItem(new StereotypeRegistrar() {\n"
+"        @Override\n"
+"        public Set<DotName> getAdditionalStereotypes() {\n"
+"            return Collections.singleton(DotName.createSimple(NotAStereotype.class.getName()));\n"
+"        }\n"
+"    });\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/cdi-integration.adoc:502
+msgid "If the newly registered stereotype annotation doesn't have the appropriate meta-annotations, such as scope or interceptor bindings, use an <<annotations_transformer_build_item,annotation transformation>> to add them."
+msgstr ""
+
+#. type: Title ==
+#: upstream/_guides/cdi-integration.adoc:504
 #, fuzzy, no-wrap
 msgid "Use Case - Injection Point Transformation"
 msgstr "用例 - 注射点转换"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:487
+#: upstream/_guides/cdi-integration.adoc:509
 #, fuzzy
 msgid "Every now and then it is handy to be able to change the qualifiers of an injection point programmatically.  You can do just that with `InjectionPointTransformerBuildItem`.  The following sample shows how to apply transformation to injection points with type `Foo` that contain qualifier `MyQualifier`:"
 msgstr "每当这时，能够以编程方式改变注入点的限定词是很方便的。你可以用 `InjectionPointTransformerBuildItem` 做到这一点。下面的例子显示了如何对包含限定词 `MyQualifier` 的类型 `Foo` 的注入点进行转换。"
 
 #. type: Block title
-#: upstream/_guides/cdi-integration.adoc:488
+#: upstream/_guides/cdi-integration.adoc:510
 #, fuzzy, no-wrap
 msgid "`InjectionPointTransformerBuildItem` Example"
 msgstr " `InjectionPointTransformerBuildItem` 例子"
 
 #. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:494
+#: upstream/_guides/cdi-integration.adoc:516
 #, no-wrap
 msgid ""
 "@BuildStep\n"
@@ -998,7 +1036,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:498
+#: upstream/_guides/cdi-integration.adoc:520
 #, no-wrap
 msgid ""
 "        public boolean appliesTo(Type requiredType) {\n"
@@ -1007,7 +1045,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:510
+#: upstream/_guides/cdi-integration.adoc:532
 #, no-wrap
 msgid ""
 "        public void transform(TransformationContext context) {\n"
@@ -1024,31 +1062,31 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:513
+#: upstream/_guides/cdi-integration.adoc:535
 #, fuzzy
 msgid "In theory, you can use <<annotations_transformer_build_item,an `AnnotationsTransformer`>> to achieve the same goal. However, there are few differences that make `InjectionPointsTransformer` more suitable for this particular task: (1) annotation transformers are applied to all classes during bean discovery, whereas `InjectionPointsTransformer` is only applied to discovered injection points after bean discovery; (2) with `InjectionPointsTransformer` you don't need to handle various types of injection points (field, parameters of initializer methods, etc.)."
 msgstr "从理论上讲，你可以使用 link:#annotations_transformer_build_item[`AnnotationsTransformer`] 来实现同样的目标。然而，有一些区别使得 `InjectionPointsTransformer` 更适合这项特殊的任务：（1）注解转换器在Bean发现过程中应用于所有的类，而 `InjectionPointsTransformer` 只在Bean发现后应用于发现的注入点；（2）使用 `InjectionPointsTransformer` ，你不需要处理各种类型的注入点（场、初始化方法的参数等）。"
 
 #. type: Title ==
-#: upstream/_guides/cdi-integration.adoc:514
+#: upstream/_guides/cdi-integration.adoc:536
 #, fuzzy, no-wrap
 msgid "Use Case - Resource Annotations and Injection"
 msgstr "用例 - 资源注释和注入"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:518
+#: upstream/_guides/cdi-integration.adoc:540
 #, fuzzy
 msgid "The `ResourceAnnotationBuildItem` can be used to specify resource annotations that make it possible to resolve non-CDI injection points, such as Jakarta EE resources.  An integrator must also provide a corresponding `io.quarkus.arc.ResourceReferenceProvider` service provider implementation."
 msgstr " `ResourceAnnotationBuildItem` 可用于指定资源注解，使其能够解决非 CDI 注入点，如 Jakarta EE 资源。一个集成商还必须提供相应的 `io.quarkus.arc.ResourceReferenceProvider` 服务提供者的实现。"
 
 #. type: Block title
-#: upstream/_guides/cdi-integration.adoc:519
+#: upstream/_guides/cdi-integration.adoc:541
 #, fuzzy, no-wrap
 msgid "`ResourceAnnotationBuildItem` Example"
 msgstr " `ResourceAnnotationBuildItem` 例子"
 
 #. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:528
+#: upstream/_guides/cdi-integration.adoc:550
 #, no-wrap
 msgid ""
 "@BuildStep\n"
@@ -1060,197 +1098,197 @@ msgid ""
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/cdi-integration.adoc:531
+#: upstream/_guides/cdi-integration.adoc:553
 #, fuzzy, no-wrap
 msgid "Available Build Time Metadata"
 msgstr "可用的构建时间元数据"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:535
+#: upstream/_guides/cdi-integration.adoc:557
 #, fuzzy
 msgid "Any of the above extensions that operates with `BuildExtension.BuildContext` can leverage certain build time metadata that are generated during build.  The built-in keys located in `io.quarkus.arc.processor.BuildExtension.Key` are:"
 msgstr "上述任何与 `BuildExtension.BuildContext` 一起操作的扩展都可以利用在构建过程中产生的某些构建时间元数据。位于 `io.quarkus.arc.processor.BuildExtension.Key` 中的内置键是。"
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:536
+#: upstream/_guides/cdi-integration.adoc:558
 #, fuzzy, no-wrap
 msgid "ANNOTATION_STORE"
 msgstr "注解商店"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:537
+#: upstream/_guides/cdi-integration.adoc:559
 #, fuzzy
 msgid "Contains an `AnnotationStore` that keeps information about all `AnnotationTarget` annotations after application of annotation transformers"
 msgstr "包含一个 `AnnotationStore` ，在应用注解变换器后保持所有 `AnnotationTarget` 注解的信息。"
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:537
+#: upstream/_guides/cdi-integration.adoc:559
 #, fuzzy, no-wrap
 msgid "INJECTION_POINTS"
 msgstr "注射点"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:538
+#: upstream/_guides/cdi-integration.adoc:560
 #, fuzzy
 msgid "`Collection<InjectionPointInfo>` containing all injection points"
 msgstr " `Collection<InjectionPointInfo>` 包含所有的注射点"
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:538
+#: upstream/_guides/cdi-integration.adoc:560
 #, fuzzy, no-wrap
 msgid "BEANS"
 msgstr "豆类"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:539
+#: upstream/_guides/cdi-integration.adoc:561
 #, fuzzy
 msgid "`Collection<BeanInfo>` containing all beans"
 msgstr " `Collection<BeanInfo>` 包含所有的豆子"
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:539
+#: upstream/_guides/cdi-integration.adoc:561
 #, fuzzy, no-wrap
 msgid "REMOVED_BEANS"
 msgstr "移除的豆类"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:540
+#: upstream/_guides/cdi-integration.adoc:562
 #, fuzzy
 msgid "`Collection<BeanInfo>` containing all the removed beans; see <<cdi-reference.adoc#remove_unused_beans,Removing unused beans>> for more information"
 msgstr " `Collection<BeanInfo>` 包含所有被移除的Bean；更多信息见 link:cdi-reference.html#remove_unused_beans[移除未使用的Bean]"
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:540
+#: upstream/_guides/cdi-integration.adoc:562
 #, fuzzy, no-wrap
 msgid "OBSERVERS"
 msgstr "观察者"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:541
+#: upstream/_guides/cdi-integration.adoc:563
 #, fuzzy
 msgid "`Collection<ObserverInfo>` containing all observers"
 msgstr " `Collection<ObserverInfo>` 包含所有观察员"
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:541
+#: upstream/_guides/cdi-integration.adoc:563
 #, fuzzy, no-wrap
 msgid "SCOPES"
 msgstr "证券交易所"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:542
+#: upstream/_guides/cdi-integration.adoc:564
 #, fuzzy
 msgid "`Collection<ScopeInfo>` containing all scopes, including custom ones"
 msgstr " `Collection<ScopeInfo>` 包含所有的作用域，包括自定义的作用域"
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:542
+#: upstream/_guides/cdi-integration.adoc:564
 #, fuzzy, no-wrap
 msgid "QUALIFIERS"
 msgstr "资格审查员"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:543
+#: upstream/_guides/cdi-integration.adoc:565
 #, fuzzy
 msgid "`Map<DotName, ClassInfo>` containing all qualifiers"
 msgstr " `Map<DotName, ClassInfo>` 包含所有限定词"
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:543
+#: upstream/_guides/cdi-integration.adoc:565
 #, fuzzy, no-wrap
 msgid "INTERCEPTOR_BINDINGS"
 msgstr "拦截器_绑定"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:544
+#: upstream/_guides/cdi-integration.adoc:566
 #, fuzzy
 msgid "`Map<DotName, ClassInfo>` containing all interceptor bindings"
 msgstr " `Map<DotName, ClassInfo>` 包含所有拦截器的绑定"
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:544
+#: upstream/_guides/cdi-integration.adoc:566
 #, fuzzy, no-wrap
 msgid "STEREOTYPES"
 msgstr "遗传因子"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:545
+#: upstream/_guides/cdi-integration.adoc:567
 #, fuzzy
 msgid "`Map<DotName, StereotypeInfo>` containing all stereotypes"
 msgstr " `Map<DotName, StereotypeInfo>` 包含所有定型的"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:550
+#: upstream/_guides/cdi-integration.adoc:572
 #, fuzzy
 msgid "To get hold of these, simply query the extension context object for given key.  Note that these metadata are made available as build proceeds which means that extensions can only leverage metadata that were built before the extensions are invoked.  If your extension attempts to retrieve metadata that wasn't yet produced, `null` will be returned.  Here is a summary of which extensions can access which metadata:"
 msgstr "要掌握这些，只需查询给定键的扩展上下文对象。注意，这些元数据是随着构建的进行而提供的，这意味着扩展只能利用在扩展被调用之前构建的元数据。如果你的扩展试图检索尚未生成的元数据， `null` ，将被返回。下面是一个关于哪些扩展可以访问哪些元数据的总结。"
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:551
+#: upstream/_guides/cdi-integration.adoc:573
 #, fuzzy, no-wrap
 msgid "AnnotationsTransformer"
 msgstr "注释性转化器"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:552
+#: upstream/_guides/cdi-integration.adoc:574
 #, fuzzy
 msgid "Shouldn't rely on any metadata as it could be used at any time in any phase of the bootstrap"
 msgstr "不应该依赖任何元数据，因为它可以在引导的任何阶段中随时使用。"
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:552
+#: upstream/_guides/cdi-integration.adoc:574
 #, fuzzy, no-wrap
 msgid "ContextRegistrar"
 msgstr "语境注册商（ContextRegistrar"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:553
-#: upstream/_guides/cdi-integration.adoc:554
-#: upstream/_guides/cdi-integration.adoc:555
+#: upstream/_guides/cdi-integration.adoc:575
+#: upstream/_guides/cdi-integration.adoc:576
+#: upstream/_guides/cdi-integration.adoc:577
 msgid "Has access to `ANNOTATION_STORE`, `QUALIFIERS`, `INTERCEPTOR_BINDINGS`, `STEREOTYPES`"
 msgstr ""
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:553
+#: upstream/_guides/cdi-integration.adoc:575
 #, no-wrap
 msgid "InjectionPointsTransformer"
 msgstr ""
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:554
+#: upstream/_guides/cdi-integration.adoc:576
 #, no-wrap
 msgid "ObserverTransformer"
 msgstr ""
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:555
+#: upstream/_guides/cdi-integration.adoc:577
 #, no-wrap
 msgid "BeanRegistrar"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:556
+#: upstream/_guides/cdi-integration.adoc:578
 msgid "Has access to `ANNOTATION_STORE`, `QUALIFIERS`, `INTERCEPTOR_BINDINGS`, `STEREOTYPES`, `BEANS` (class-based beans only), `OBSERVERS` (class-based observers only), `INJECTION_POINTS`"
 msgstr ""
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:556
+#: upstream/_guides/cdi-integration.adoc:578
 #, no-wrap
 msgid "ObserverRegistrar"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:557
+#: upstream/_guides/cdi-integration.adoc:579
 msgid "Has access to `ANNOTATION_STORE`, `QUALIFIERS`, `INTERCEPTOR_BINDINGS`, `STEREOTYPES`, `BEANS`, `OBSERVERS` (class-based observers only), `INJECTION_POINTS`"
 msgstr ""
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:557
+#: upstream/_guides/cdi-integration.adoc:579
 #, no-wrap
 msgid "BeanDeploymentValidator"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:557
+#: upstream/_guides/cdi-integration.adoc:579
 msgid "Has access to all build metadata"
 msgstr ""
