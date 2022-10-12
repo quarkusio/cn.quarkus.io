@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2022-06-29 15:30+0000\n"
+"POT-Creation-Date: 2022-10-12 17:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -124,8 +124,8 @@ msgstr "现在打开主要的 link:http://localhost:8080/q/dev[Dev UI页面] ，
 #: upstream/_guides/security-openid-connect-dev-services.adoc:129
 #: upstream/_guides/security-openid-connect-dev-services.adoc:151
 #: upstream/_guides/security-openid-connect-dev-services.adoc:162
-#: upstream/_guides/security-openid-connect-dev-services.adoc:221
-#: upstream/_guides/security-openid-connect-dev-services.adoc:236
+#: upstream/_guides/security-openid-connect-dev-services.adoc:232
+#: upstream/_guides/security-openid-connect-dev-services.adoc:247
 #, fuzzy, no-wrap
 msgid "Dev"
 msgstr "拓展"
@@ -449,62 +449,81 @@ msgstr ""
 msgid "It will ensure that all Dev UI options described in <<develop-service-applications, Developing OpenID Connect Service Applications>> will be available when your `web-app` application is run in dev mode. The limitation of this approach is that both access and ID tokens returned with the code flow and acquired with Dev UI will be sent to the endpoint as HTTP `Bearer` tokens - which will not work well if your endpoint requires the injection of `IdToken`.  However, it will work as expected if your `web-app` application only uses the access token, for example, as a source of roles or to get `UserInfo`, even if it is assumed to be a `service` application in dev mode."
 msgstr "它将确保当你的 `web-app` 应用程序在开发模式下运行时，《 link:#develop-service-applications[开发OpenID Connect服务应用程序] 》中描述的所有Dev UI选项都可用。这种方法的局限性在于，通过代码流返回的访问令牌和通过Dev UI获取的ID令牌都将作为HTTP `Bearer` 令牌发送到端点--如果你的端点需要注入 `IdToken` ，这将不能很好地工作。然而，如果你的 `web-app` 应用程序只使用访问令牌，例如，作为角色的来源或获取 `UserInfo` ，即使它被假定为devmode中的 `service` 应用程序，它也能按预期工作。"
 
+#. type: Plain text
+#: upstream/_guides/security-openid-connect-dev-services.adoc:181
+msgid "Even a better option is to use a `hybrid` application type in devmode:"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/security-openid-connect-dev-services.adoc:187
+#, no-wrap
+msgid ""
+"%prod.quarkus.oidc.application-type=web-app\n"
+"%test.quarkus.oidc.application-type=web-app\n"
+"%dev.quarkus.oidc.application-type=hybrid\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/security-openid-connect-dev-services.adoc:190
+msgid "It will ensure that if you access the application from the browser in dev mode, without using OIDC DevUI, then Quarkus OIDC will also perform the authorization code flow as in the production mode. But OIDC DevUI will also be more useful because `hybrid` applications can accept the bearer access tokens as well."
+msgstr ""
+
 #. type: Title ===
-#: upstream/_guides/security-openid-connect-dev-services.adoc:180
+#: upstream/_guides/security-openid-connect-dev-services.adoc:191
 #, fuzzy, no-wrap
 msgid "Running the tests"
 msgstr "运行测试"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:183
+#: upstream/_guides/security-openid-connect-dev-services.adoc:194
 #, fuzzy
 msgid "You can run the tests against a Keycloak container started in a test mode in a xref:continuous-testing.adoc[Continuous Testing] mode."
 msgstr "你可以在 link:continuous-testing.html[持续测试] 模式下针对以测试模式启动的Keycloak容器运行测试。"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:186
+#: upstream/_guides/security-openid-connect-dev-services.adoc:197
 #, fuzzy
 msgid "It is also recommended to run the integration tests against Keycloak using `Dev Services for Keycloak`.  Please see xref:security-openid-connect.adoc#integration-testing-keycloak-devservices[Testing OpenID Connect Service Applications with Dev Services] and xref:security-openid-connect-web-authentication.adoc#integration-testing-keycloak-devservices[Testing OpenID Connect WebApp Applications with Dev Services] for more information."
 msgstr "也建议使用 `Dev Services for Keycloak` ，针对Keycloak运行集成测试。更多信息请参见 link:security-openid-connect.html#integration-testing-keycloak-devservices[使用开发服务测试OpenID Connect服务应用] 和 link:security-openid-connect-web-authentication.html#integration-testing-keycloak-devservices[使用开发服务测试OpenID Connect WebApp应用] 。"
 
 #. type: Title ===
-#: upstream/_guides/security-openid-connect-dev-services.adoc:188
+#: upstream/_guides/security-openid-connect-dev-services.adoc:199
 #, fuzzy, no-wrap
 msgid "Keycloak Initialization"
 msgstr "Keycloak初始化"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:192
+#: upstream/_guides/security-openid-connect-dev-services.adoc:203
 #, fuzzy
 msgid "The `quay.io/keycloak/keycloak:17.0.0` image which contains a Keycloak distribution powered by Quarkus is used to start a container by default.  `quarkus.keycloak.devservices.image-name` can be used to change the Keycloak image name. For example, set it to `quay.io/keycloak/keycloak:17.0.0-legacy` to use a Keycloak distribution powered by WildFly."
 msgstr " `quay.io/keycloak/keycloak:17.0.0` 镜像包含一个由Quarkus支持的Keycloak发行版，默认用于启动一个容器。 `quarkus.keycloak.devservices.image-name` ，可以用来改变Keycloak镜像的名称。例如，将其设置为 `quay.io/keycloak/keycloak:17.0.0-legacy` ，以使用由WildFly提供的Keycloak发行版。"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:194
+#: upstream/_guides/security-openid-connect-dev-services.adoc:205
 #, fuzzy
 msgid "`Dev Services for Keycloak` will initialize a launched Keycloak server next."
 msgstr " `Dev Services for Keycloak` 接下来将初始化一个启动的Keycloak服务器。"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:196
+#: upstream/_guides/security-openid-connect-dev-services.adoc:207
 #, fuzzy
 msgid "By default, the `quarkus`, `quarkus-app` client with a `secret` password, `alice` and `bob` users (with the passwords matching the names), and `user` and `admin` roles are created, with `alice` given both `admin` and `user` roles and `bob` - the `user` role."
 msgstr "默认情况下， `quarkus` ， `quarkus-app` 客户端有一个 `secret` 的密码， `alice` 和 `bob` 用户（密码与名字一致），以及 `user` 和 `admin` 角色被创建， `alice` 同时被赋予 `admin` 和 `user` 角色， `bob` - `user` 的角色。"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:198
+#: upstream/_guides/security-openid-connect-dev-services.adoc:209
 #, fuzzy
 msgid "Usernames, secrets and their roles can be customized with `quarkus.keycloak.devservices.users` (the map which contains usernames and secrets) and `quarkus.keycloak.devservices.roles` (the map which contains usernames and comma separated role values)."
 msgstr "可以通过 `quarkus.keycloak.devservices.users` （包含用户名和秘密的地图）和 `quarkus.keycloak.devservices.roles` （包含用户名和逗号分隔的角色值的地图）来定制用户名、秘密和他们的角色。"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:200
+#: upstream/_guides/security-openid-connect-dev-services.adoc:211
 #, fuzzy
 msgid "For example:"
 msgstr "比如说。"
 
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect-dev-services.adoc:207
+#: upstream/_guides/security-openid-connect-dev-services.adoc:218
 #, no-wrap
 msgid ""
 "%dev.quarkus.keycloak.devservices.users.duke=dukePassword\n"
@@ -514,133 +533,133 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:210
+#: upstream/_guides/security-openid-connect-dev-services.adoc:221
 #, fuzzy
 msgid "This configuration creates two users:"
 msgstr "这个配置创建了两个用户。"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:211
+#: upstream/_guides/security-openid-connect-dev-services.adoc:222
 #, fuzzy
 msgid "`duke` with a `dukePassword` password and a `reader` role"
 msgstr " `duke` 有一个 的密码和一个 的角色 `dukePassword` `reader` "
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:212
+#: upstream/_guides/security-openid-connect-dev-services.adoc:223
 #, fuzzy
 msgid "`john` with a `johnPassword` password and `reader` and `writer` roles"
 msgstr " `john` 有一个 的密码和 和 的角色。 `johnPassword` `reader` `writer` "
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:214
+#: upstream/_guides/security-openid-connect-dev-services.adoc:225
 #, fuzzy
 msgid "`quarkus.oidc.client-id` and `quarkus.oidc.credentials.secret` can be used to customize the client id and secret."
 msgstr " `quarkus.oidc.client-id` 和 ，可以用来定制客户的ID和秘密。 `quarkus.oidc.credentials.secret` "
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:216
+#: upstream/_guides/security-openid-connect-dev-services.adoc:227
 #, fuzzy
 msgid "However, it is likely your Keycloak configuration may be more complex and require setting more properties."
 msgstr "然而，你的Keycloak配置可能更复杂，需要设置更多的属性。"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:218
+#: upstream/_guides/security-openid-connect-dev-services.adoc:229
 #, fuzzy
 msgid "This is why `quarkus.keycloak.devservices.realm-path` is always checked first before trying to initialize Keycloak with the default or configured realm, client, user and roles properties. If the realm file exists on the file system or classpath then only this realm will be used to initialize Keycloak."
 msgstr "这就是为什么在尝试用默认或配置的境界、客户端、用户和角色属性初始化Keycloak之前，总是先检查 `quarkus.keycloak.devservices.realm-path` 。如果境界文件存在于文件系统或classpath上，那么只有这个境界将被用来初始化Keycloak。"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:220
+#: upstream/_guides/security-openid-connect-dev-services.adoc:231
 #, fuzzy
 msgid "Also, the Keycloak page offers an option to `Sign In To Keycloak To Configure Realms` using a `Keycloak Admin` option in the right top corner:"
 msgstr " `Sign In To Keycloak To Configure Realms` 另外，Keycloak页面提供了一个选项，即使用右上角的 `Keycloak Admin` 。"
 
 #. type: Target for macro image
-#: upstream/_guides/security-openid-connect-dev-services.adoc:221
+#: upstream/_guides/security-openid-connect-dev-services.adoc:232
 #, no-wrap
 msgid "dev-ui-keycloak-admin.png"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:224
+#: upstream/_guides/security-openid-connect-dev-services.adoc:235
 #, fuzzy
 msgid "Sign in to Keycloak as `admin:admin` in order to further customize the realm properties, create or import a new realm, export the realm."
 msgstr "以 `admin:admin` 登录Keycloak，以便进一步定制境界属性，创建或导入一个新的境界，导出境界。"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:226
+#: upstream/_guides/security-openid-connect-dev-services.adoc:237
 #, fuzzy
 msgid "Note that even if you initialize Keycloak from a realm file, it is still needed to set `quarkus.keycloak.devservices.users` property if a `password` grant is used to acquire the tokens to test the OIDC `service` applications."
 msgstr "注意，即使你从境界文件初始化Keycloak，如果使用 `password` grant来获取令牌以测试OIDC `service` 应用程序，仍然需要设置 `quarkus.keycloak.devservices.users` 属性。"
 
 #. type: Title ==
-#: upstream/_guides/security-openid-connect-dev-services.adoc:227
+#: upstream/_guides/security-openid-connect-dev-services.adoc:238
 #, fuzzy, no-wrap
 msgid "Disable Dev Services for Keycloak"
 msgstr "禁用Keycloak的开发服务"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:230
+#: upstream/_guides/security-openid-connect-dev-services.adoc:241
 #, fuzzy
 msgid "`Dev Services For Keycloak` will not be activated if either `quarkus.oidc.auth-server-url` is already initialized or the default OIDC tenant is disabled with `quarkus.oidc.tenant.enabled=false`, irrespectively of whether you work with Keycloak or not."
 msgstr " `Dev Services For Keycloak` 如果 已经被初始化，或者默认的OIDC租户被 禁用，无论你是否使用Keycloak工作，都不会被激活。 `quarkus.oidc.auth-server-url` `quarkus.oidc.tenant.enabled=false` "
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:232
+#: upstream/_guides/security-openid-connect-dev-services.adoc:243
 #, fuzzy
 msgid "If you prefer not to have a `Dev Services for Keycloak` container started or do not work with Keycloak then you can also disable this feature with `quarkus.keycloak.devservices.enabled=false` - it will only be necessary if you expect to start `quarkus:dev` without `quarkus.oidc.auth-server-url`."
 msgstr "如果你不希望启动 `Dev Services for Keycloak` 容器，或者不与Keycloak合作，那么你也可以通过 `quarkus.keycloak.devservices.enabled=false` 禁用这个功能--只有当你期望在没有 `quarkus.oidc.auth-server-url` 的情况下启动 `quarkus:dev` ，才有必要。"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:235
+#: upstream/_guides/security-openid-connect-dev-services.adoc:246
 #, fuzzy
 msgid "The main Dev UI page will include an empty `OpenID Connect Card` when `Dev Services for Keycloak` is disabled and the `quarkus.oidc.auth-server-url` property has not been initialized:"
 msgstr "当 `Dev Services for Keycloak` 被禁用且 `quarkus.oidc.auth-server-url` 属性未被初始化时，主开发用户界面页面将包括一个空的 `OpenID Connect Card` 。"
 
 #. type: Target for macro image
-#: upstream/_guides/security-openid-connect-dev-services.adoc:236
+#: upstream/_guides/security-openid-connect-dev-services.adoc:247
 #, no-wrap
 msgid "dev-ui-oidc-card.png"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:239
+#: upstream/_guides/security-openid-connect-dev-services.adoc:250
 #, fuzzy
 msgid "If `quarkus.oidc.auth-server-url` is already set then a generic OpenID Connect Dev Console which can be used with all OpenID Connect providers may be activated, please see <<dev-ui-all-oidc-providers,Dev UI for all OpenID Connect Providers>> for more information."
 msgstr "如果 `quarkus.oidc.auth-server-url` ，那么可以激活一个通用的OpenID Connect Dev Console，它可以用于所有的OpenID Connect提供商，更多信息请参见 link:#dev-ui-all-oidc-providers[所有OpenID Connect提供商的Dev UI] 。"
 
 #. type: Title ==
-#: upstream/_guides/security-openid-connect-dev-services.adoc:241
+#: upstream/_guides/security-openid-connect-dev-services.adoc:252
 #, fuzzy, no-wrap
 msgid "Dev UI for all OpenID Connect Providers"
 msgstr "所有OpenID连接供应商的开发用户界面"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:244
+#: upstream/_guides/security-openid-connect-dev-services.adoc:255
 #, fuzzy
 msgid "If `quarkus.oidc.auth-server-url` points to an already started OpenID Connect provider (which can be Keycloak or other provider), `quarkus.oidc.auth-server-url` is set to `service` (which is a default value) and at least `quarkus.oidc.client-id` is set then `Dev UI for all OpenID Connect Providers` will be activated."
 msgstr "如果 `quarkus.oidc.auth-server-url` 指向一个已经启动的OpenID连接提供者（可以是Keycloak或其他提供者）， `quarkus.oidc.auth-server-url` 被设置为 `service` （这是一个默认值），并且至少 `quarkus.oidc.client-id` 被设置，那么 `Dev UI for all OpenID Connect Providers` 将被激活。"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:246
+#: upstream/_guides/security-openid-connect-dev-services.adoc:257
 #, fuzzy
 msgid "Setting `quarkus.oidc.credentials.secret` will mostly likely be required for Keycloak and other providers for the authorization code flow initiated from Dev UI to complete, unless the client identified with `quarkus.oidc.client-id` is configured as a public client in your OpenID Connect provider's administration console."
 msgstr "对于Keycloak和其他供应商来说，设置 `quarkus.oidc.credentials.secret` ，以完成从Dev UI发起的授权代码流，除非在你的OpenID Connect供应商的管理控制台中，用 `quarkus.oidc.client-id` 识别的客户端被配置为公共客户端。"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:248
+#: upstream/_guides/security-openid-connect-dev-services.adoc:259
 #, fuzzy
 msgid "Run:"
 msgstr "运行。"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:252
+#: upstream/_guides/security-openid-connect-dev-services.adoc:263
 #, fuzzy
 msgid "And you will see the following message:"
 msgstr "然后你会看到以下信息。"
 
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect-dev-services.adoc:258
+#: upstream/_guides/security-openid-connect-dev-services.adoc:269
 #, no-wrap
 msgid ""
 "...\n"
@@ -649,60 +668,60 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:261
+#: upstream/_guides/security-openid-connect-dev-services.adoc:272
 #, fuzzy
 msgid "If the provider metadata discovery has been successful then, after you open the main link:http://localhost:8080/q/dev[Dev UI page], you will see the `OpenID Connect Card` page linking to `Dev Console`:"
 msgstr "如果提供者元数据发现成功，那么，在你打开主要的 link:http://localhost:8080/q/dev[Dev UI页面] 后，你将看到 `OpenID Connect Card` 页面，链接到 `Dev Console` 。"
 
 #. type: Named 'alt' AttributeList argument for macro 'image'
-#: upstream/_guides/security-openid-connect-dev-services.adoc:262
+#: upstream/_guides/security-openid-connect-dev-services.adoc:273
 #, fuzzy, no-wrap
 msgid "Generic"
 msgstr "通用型"
 
 #. type: Target for macro image
-#: upstream/_guides/security-openid-connect-dev-services.adoc:262
+#: upstream/_guides/security-openid-connect-dev-services.adoc:273
 #, no-wrap
 msgid "dev-ui-oidc-devconsole-card.png"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:265
+#: upstream/_guides/security-openid-connect-dev-services.adoc:276
 #, fuzzy
 msgid "Follow the link, and you will be able to log in to your provider, get the tokens and test the application. The experience will be the same as described in the <<keycloak-authorization-code-grant,Authorization Code Grant for Keycloak>> section, where `Dev Services for Keycloak` container has been started, especially if you work with Keycloak."
 msgstr "按照这个链接，你就可以登录到你的提供者，获得令牌并测试应用程序。体验将与 link:#keycloak-authorization-code-grant[Keycloak的授权码授予] 部分所描述的一样， `Dev Services for Keycloak` 容器已经启动，特别是如果你与Keycloak一起工作（也请注意该部分的一个 `redirect_uri` 说明）。"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:267
+#: upstream/_guides/security-openid-connect-dev-services.adoc:278
 msgid "You will most likely need to configure your OpenId Connect provider to support redirecting back to the `Dev Console`. Add `http://localhost:8080/q/dev/io.quarkus.quarkus-oidc/provider` as one of the supported redirect and logout URLs."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:269
+#: upstream/_guides/security-openid-connect-dev-services.adoc:280
 #, fuzzy
 msgid "If you work with other providers then a Dev UI experience described in the <<keycloak-authorization-code-grant,Authorization Code Grant for Keycloak>> section might differ slightly. For example, an access token may not be in a JWT format, so it won't be possible to show its internal content, though all providers should return an ID Token as JWT."
 msgstr "如果你与其他供应商合作，那么在 link:#keycloak-authorization-code-grant[Keycloak的授权代码授予] 部分所描述的Dev UI体验可能略有不同。例如，访问令牌可能不是JWT格式，所以不可能显示它的内部内容，尽管所有供应商都应该返回一个ID令牌作为JWT。"
 
 #. type: delimited block =
-#: upstream/_guides/security-openid-connect-dev-services.adoc:273
+#: upstream/_guides/security-openid-connect-dev-services.adoc:284
 #, fuzzy
 msgid "The current access token is used by default to test the service with `Swagger UI` or `GrapghQL UI`. If the provider (other than Keycloak) returns a binary access token then it will be used with `Swagger UI` or `GrapghQL UI` only if this provider has a token introspection endpoint otherwise an `IdToken` which is always in a JWT format will be passed to `Swagger UI` or `GrapghQL UI`. In such cases you can verify with the manual Dev UI test that `401` will always be returned for the current binary access token. Also note that using `IdToken` as a fallback with either of these UIs is only possible with the authorization code flow."
 msgstr "当前的访问令牌默认使用 `Swagger UI` 或 `GrapghQL UI` 来测试服务。如果提供者（除Keycloak外）返回一个二进制访问令牌，那么它将与 `Swagger UI` 或 `GrapghQL UI` 一起使用，只有当该提供者有一个令牌自省端点，否则一个总是JWT格式的 `IdToken` 将被传递给 `Swagger UI` 或 `GrapghQL UI` 。在这种情况下，你可以通过手动Dev UI测试验证 `401` 将总是返回当前二进制访问令牌。还要注意的是，使用 `IdToken` 作为这些UI的回退，只有在授权代码流中才有可能。"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:276
+#: upstream/_guides/security-openid-connect-dev-services.adoc:287
 #, fuzzy
 msgid "Some providers such as `Auth0` do not support a standard RP initiated logout so the provider specific logout properties will have to be configured for a logout option be visible, please see xref:security-openid-connect-web-authentication.adoc#user-initiated-logout[OpenID Connect User-Initiated Logout] for more information."
 msgstr "一些供应商，如 `Auth0` ，不支持标准的RP发起的注销，因此必须确认供应商特定的注销属性，才能看到注销选项，请参见 link:security-openid-connect-web-authentication.html#user-initiated-logout[OpenID Connect用户发起的注销] 以了解更多信息。"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:278
+#: upstream/_guides/security-openid-connect-dev-services.adoc:289
 #, fuzzy
 msgid "Similarly, if you'd like to use a `password` or `client_credentials` grant for Dev UI to acquire the tokens then you may have to configure some extra provider specific properties, for example:"
 msgstr "同样，如果你想使用Dev UI的 `password` 或 `client_credentials` 授予来获取令牌，那么你可能必须配置一些额外的提供者特定属性，例如。"
 
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect-dev-services.adoc:283
+#: upstream/_guides/security-openid-connect-dev-services.adoc:294
 #, no-wrap
 msgid ""
 "quarkus.oidc.devui.grant.type=password\n"
@@ -710,43 +729,43 @@ msgid ""
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/security-openid-connect-dev-services.adoc:285
+#: upstream/_guides/security-openid-connect-dev-services.adoc:296
 #, fuzzy, no-wrap
 msgid "Dev Services and UI Support for other OpenID Connect Providers"
 msgstr "对其他OpenID连接供应商的开发服务和UI支持"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:288
+#: upstream/_guides/security-openid-connect-dev-services.adoc:299
 #, fuzzy
 msgid "Your custom extension would need to extend `quarkus-oidc` and add the dependencies required to support your provider to the extension's `deployment` module only."
 msgstr "你的自定义扩展将需要扩展 `quarkus-oidc` ，并将支持你的提供者所需的依赖性仅添加到扩展的 `deployment` 模块中。"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:290
+#: upstream/_guides/security-openid-connect-dev-services.adoc:301
 #, fuzzy
 msgid "The build step dealing with the `Dev Services` should additionally register two runtime properties into the \"io.quarkus.quarkus-oidc\" namespace: `oidcProviderName` (for example, `Google`) and `oidcProviderUrlBase` (for example: `mycompany.devservices-google`) for the `OpenID Connect Card` to link to the Dev UI page representing your provider, for example:"
 msgstr "处理 `Dev Services` 的构建步骤应该额外注册两个运行时属性到 \"io.quarkus.quarkus-oidc \"命名空间： `oidcProviderName` （例如： `Google` ）和 `oidcProviderUrlBase` （例如： `mycompany.devservices-google` ），以便将 `OpenID Connect Card` 链接到代表你的提供者的 Dev UI 页面，例如。"
 
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect-dev-services.adoc:294
+#: upstream/_guides/security-openid-connect-dev-services.adoc:305
 #, no-wrap
 msgid "package io.quarkus.oidc.okta.runtime;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect-dev-services.adoc:296
+#: upstream/_guides/security-openid-connect-dev-services.adoc:307
 #, no-wrap
 msgid "import java.util.function.Supplier;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect-dev-services.adoc:298
+#: upstream/_guides/security-openid-connect-dev-services.adoc:309
 #, no-wrap
 msgid "import io.quarkus.runtime.annotations.Recorder;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect-dev-services.adoc:302
+#: upstream/_guides/security-openid-connect-dev-services.adoc:313
 #, no-wrap
 msgid ""
 "// This simple recorder is the only code which will be located in the extension's `runtime` module\n"
@@ -755,7 +774,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect-dev-services.adoc:305
+#: upstream/_guides/security-openid-connect-dev-services.adoc:316
 #, no-wrap
 msgid ""
 "    public Supplier<String> getProviderName() {\n"
@@ -763,7 +782,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect-dev-services.adoc:312
+#: upstream/_guides/security-openid-connect-dev-services.adoc:323
 #, no-wrap
 msgid ""
 "            @Override\n"
@@ -775,7 +794,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect-dev-services.adoc:315
+#: upstream/_guides/security-openid-connect-dev-services.adoc:326
 #, no-wrap
 msgid ""
 "    public Supplier<String> getProviderUrlBase() {\n"
@@ -783,7 +802,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect-dev-services.adoc:323
+#: upstream/_guides/security-openid-connect-dev-services.adoc:334
 #, no-wrap
 msgid ""
 "            @Override\n"
@@ -796,25 +815,25 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect-dev-services.adoc:326
+#: upstream/_guides/security-openid-connect-dev-services.adoc:337
 #, no-wrap
 msgid "package io.quarkus.oidc.okta.deployment.devservices;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect-dev-services.adoc:328
+#: upstream/_guides/security-openid-connect-dev-services.adoc:339
 #, no-wrap
 msgid "import static io.quarkus.deployment.annotations.ExecutionTime.RUNTIME_INIT;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect-dev-services.adoc:330
+#: upstream/_guides/security-openid-connect-dev-services.adoc:341
 #, no-wrap
 msgid "import java.util.Optional;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect-dev-services.adoc:339
+#: upstream/_guides/security-openid-connect-dev-services.adoc:350
 #, no-wrap
 msgid ""
 "import io.quarkus.deployment.IsDevelopment;\n"
@@ -828,13 +847,13 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect-dev-services.adoc:341
+#: upstream/_guides/security-openid-connect-dev-services.adoc:352
 #, no-wrap
 msgid "public class OktaDevConsoleProcessor {\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-openid-connect-dev-services.adoc:355
+#: upstream/_guides/security-openid-connect-dev-services.adoc:366
 #, no-wrap
 msgid ""
 "    @BuildStep(onlyIf = IsDevelopment.class)\n"
@@ -853,66 +872,66 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:359
+#: upstream/_guides/security-openid-connect-dev-services.adoc:370
 #, fuzzy
 msgid "Additionally, the extension should produce a `io.quarkus.oidc.deployment.devservices.OidcProviderBuildItem` to disable the default `Dev Services for Keycloak`, instead of the users having to type `quarkus.keycloak.devservices.enabled=false`."
 msgstr "此外，扩展应该产生一个 `io.quarkus.oidc.deployment.devservices.OidcProviderBuildItem` ，以禁用默认的 `Dev Services for Keycloak` ，而不是让用户输入 `quarkus.keycloak.devservices.enabled=false` 。"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:361
+#: upstream/_guides/security-openid-connect-dev-services.adoc:372
 #, fuzzy
 msgid "Please follow the xref:dev-ui.adoc[Dev UI] tutorial as well as check the `extensions/oidc/deployment` sources for more ideas."
 msgstr "请按照 link:dev-ui.html[Dev UI] 教程，以及查看 `extensions/oidc/deployment` ，以获得更多的想法。"
 
 #. type: Title ==
-#: upstream/_guides/security-openid-connect-dev-services.adoc:362
+#: upstream/_guides/security-openid-connect-dev-services.adoc:373
 #, fuzzy, no-wrap
 msgid "Non Application Root Path Considerations"
 msgstr "非应用根路径的考虑"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:365
+#: upstream/_guides/security-openid-connect-dev-services.adoc:376
 #, fuzzy
 msgid "This document refers to the `http://localhost:8080/q/dev` Dev UI URL in several places where `q` is a default non application root path. If you customize `quarkus.http.root-path` and/or `quarkus.http.non-application-root-path` properties then replace `q` accordingly, please see https://quarkus.io/blog/path-resolution-in-quarkus/[Path Resolution in Quarkus] for more information."
 msgstr "本文件中提到了 `<a href=\"http://localhost:8080/q/dev\" class=\"bare\">http://localhost:8080/q/dev</a>` Dev UI URL，其中 `q` 是一个默认的非应用程序根路径。如果你自定义了 `quarkus.http.root-path` 和/或 `quarkus.http.non-application-root-path` 的属性，那么就相应地替换掉 `q` ，更多信息请参见 link:https://quarkus.io/blog/path-resolution-in-quarkus/[Quarkus的路径解析] 。"
 
 #. type: Title ==
-#: upstream/_guides/security-openid-connect-dev-services.adoc:366
+#: upstream/_guides/security-openid-connect-dev-services.adoc:377
 #, fuzzy, no-wrap
 msgid "References"
 msgstr "参考文献"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:369
+#: upstream/_guides/security-openid-connect-dev-services.adoc:380
 #, fuzzy
 msgid "xref:dev-ui.adoc[Dev UI]"
 msgstr "link:dev-ui.html[开发用户界面]"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:370
+#: upstream/_guides/security-openid-connect-dev-services.adoc:381
 #, fuzzy
 msgid "https://www.keycloak.org/documentation.html[Keycloak Documentation]"
 msgstr "link:https://www.keycloak.org/documentation.html[Keycloak文档]"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:371
+#: upstream/_guides/security-openid-connect-dev-services.adoc:382
 #, fuzzy
 msgid "https://openid.net/connect/[OpenID Connect]"
 msgstr "link:https://openid.net/connect/[OpenID连接]"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:372
+#: upstream/_guides/security-openid-connect-dev-services.adoc:383
 #, fuzzy
 msgid "xref:security-openid-connect.adoc[Quarkus - Using OpenID Connect to Protect Service Applications using Bearer Token Authorization]"
 msgstr "link:security-openid-connect.html[Quarkus - 使用OpenID连接来保护使用承载令牌授权的服务应用]"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:373
+#: upstream/_guides/security-openid-connect-dev-services.adoc:384
 #, fuzzy
 msgid "xref:security-openid-connect-web-authentication.adoc[Quarkus - Using OpenID Connect to Protect Web Applications using Authorization Code Flow]"
 msgstr "link:security-openid-connect-web-authentication.html[Quarkus - 使用OpenID连接，利用授权代码流保护Web应用程序]"
 
 #. type: Plain text
-#: upstream/_guides/security-openid-connect-dev-services.adoc:373
+#: upstream/_guides/security-openid-connect-dev-services.adoc:384
 msgid "xref:security.adoc[Quarkus Security]"
 msgstr ""
