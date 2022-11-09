@@ -33,13 +33,15 @@ msgstr "本指南是《 link:building-native-image.html[构建本地可执行文
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:20
+#, fuzzy
 msgid "<<native-memory-management,Native Memory Management>>"
-msgstr ""
+msgstr "link:#native-memory-management[本地内存管理]"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:21
+#, fuzzy
 msgid "<<inspecting-and-debugging,Inspecting and Debugging Native Executables>>"
-msgstr ""
+msgstr "link:#inspecting-and-debugging[检查和调试本地可执行文件]"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:22
@@ -49,67 +51,75 @@ msgstr "常见问题"
 
 #. type: Title ==
 #: upstream/_guides/native-reference.adoc:24
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "Native Memory Management"
-msgstr ""
+msgstr "本地内存管理"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:29
+#, fuzzy
 msgid "Memory management for Quarkus native executables is enabled by GraalVM’s SubstrateVM runtime system.  The memory management component in GraalVM is explained in detail link:https://www.graalvm.org/{graalvm-version}/reference-manual/native-image/optimizations-and-performance/MemoryManagement[here].  This guide complements the information available in the GraalVM website with further observations particularly relevant to Quarkus applications."
-msgstr ""
+msgstr "Quarkus本地可执行文件的内存管理由GraalVM的SubstrateVM运行时系统启用。GraalVM中的内存管理组件在 link:https://www.graalvm.org/{graalvm-version}/reference-manual/native-image/optimizations-and-performance/MemoryManagement[这里] 有详细解释。本指南补充了GraalVM网站上的信息，特别是与Quarkus应用程序相关的进一步观察。"
 
 #. type: Title ===
 #: upstream/_guides/native-reference.adoc:30
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "Garbage Collectors"
-msgstr ""
+msgstr "垃圾收集器"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:32
+#, fuzzy
 msgid "The garbage collectors available for Quarkus users are currently Serial GC and Epsilon GC."
-msgstr ""
+msgstr "目前Quarkus用户可用的垃圾收集器是Serial GC和Epsilon GC。"
 
 #. type: Title ====
 #: upstream/_guides/native-reference.adoc:33
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "Serial GC"
-msgstr ""
+msgstr "串行GC"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:37
+#, fuzzy
 msgid "Serial GC, the default option in GraalVM and Quarkus, is a single-threaded non-concurrent GC, just like HotSpot’s Serial GC.  The implementation in GraalVM however is different from the HotSpot one, and there can be significant differences in the runtime behavior."
-msgstr ""
+msgstr "串行GC是GraalVM和Quarkus的默认选项，是一个单线程的非并发GC，就像HotSpot的串行GC。然而，GraalVM中的实现与HotSpot中的实现不同，在运行时的行为上会有很大的差异。"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:48
+#, fuzzy
 msgid "One of the key differences between HotSpot’s Serial GC and GraalVM’s Serial GC is the way they perform full GC cycles.  In HotSpot the algorithm used is mark-sweep-compact whereas in GraalVM it is mark-copy.  Both need to traverse all live objects, but in mark-copy this traversal is also used to copy live objects to a secondary space or semi-space.  As objects are copied from one semi-space to another they’re also compacted.  In mark-sweep-compact, the compacting requires a second pass on the live objects.  This makes full GCs in mark-copy more time efficient (in terms of time spent in each GC cycle) than mark-sweep-compact.  The tradeoff mark-copy makes in order to make individual full GC cycles shorter is space.  The use of semi-spaces means that for an application to maintain the same GC performance that mark-sweep achieves (in terms of allocated MB per second), it requires double the amount of memory."
-msgstr ""
+msgstr "HotSpot的串行GC和GraalVM的串行GC之间的关键区别之一是它们执行完整GC循环的方式。在HotSpot中，使用的算法是mark-sweep-compact，而在GraalVM中是mark-copy。两者都需要遍历所有活着的对象，但在mark-copy中，这种遍历也被用来将活着的对象复制到一个二级空间或半空间。当对象从一个半空间被复制到另一个半空间时，它们也被压缩了。在mark-sweep-compact中，压缩需要对活的对象进行第二次处理。这使得mark-copy中的完全GC比mark-sweep-compact更省时（就每个GC周期花费的时间而言）。为了使单个完整的GC周期更短，mark-copy做出的权衡是空间。半空间的使用意味着，对于一个应用程序来说，要保持mark-sweep所达到的相同的GC性能（以每秒分配的MB计算），它需要两倍的内存量。"
 
 #. type: Title =====
 #: upstream/_guides/native-reference.adoc:49
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "GC Collection Policy"
-msgstr ""
+msgstr "采集政策"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:52
+#, fuzzy
 msgid "GraalVM's Serial GC implementation offers a choice between two different collection policies, the default is called \"adaptive\" and the alternative is called \"space/time\"."
-msgstr ""
+msgstr "GraalVM的串行GC实现提供了两种不同的收集策略的选择，默认的是 \"自适应\"，另一种是 \"空间/时间\"。"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:56
+#, fuzzy
 msgid "The “adaptive” collection policy is based on HotSpot's ParallelGC adaptive size policy.  The main difference with HotSpot is GraalVM's focus on memory footprint.  This means that GraalVM’s adaptive GC policy tries to aggressively trigger GCs in order to keep memory consumption down."
-msgstr ""
+msgstr "\"自适应 \"收集策略是基于HotSpot的ParallelGC自适应大小策略。与HotSpot的主要区别在于GraalVM对内存占用的关注。这意味着GraalVM的自适应GC策略试图积极地触发GC，以减少内存消耗。"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:64
+#, fuzzy
 msgid "Up to version 2.13, Quarkus used the “space/time” GC collection policy by default, but starting with version 2.14, it switched to using the “adaptive” policy instead.  The reason why Quarkus initially chose to use \"space/time\" is because at that time it had considerable performance improvements over \"adaptive\".  Recent performance experiments, however, indicate that the \"space/time\" policy can result in worse out-of-the-box experience compared to the \"space/time\" policy, while at the same time the benefits it used to offer have diminished considerably after improvements made to the \"adaptive\" policy.  As a result, the \"adaptive\" policy appears to be the best option for most, if not all, Quarkus applications.  Full details on this switch can be read in link:https://github.com/quarkusio/quarkus/issues/28267[this issue]."
-msgstr ""
+msgstr "到2.13版本为止，Quarkus默认使用 \"空间/时间 \"的GC收集策略。GC收集策略，但从2.14版开始，它转而使用 \"自适应 \"策略。Quarkus最初选择使用 \"space/time \"的原因是在当时它比 \"adaptive \"有相当大的性能改进。然而，最近的性能实验表明，与 \"空间/时间 \"策略相比，\"空间/时间 \"策略可能导致更差的开箱即用体验，同时，在对 \"自适应 \"策略进行改进后，它曾经提供的好处也大大减少了。因此，\"自适应 \"策略似乎是大多数（如果不是全部）Quarkus应用程序的最佳选择。关于这一转换的全部细节可在 link:https://github.com/quarkusio/quarkus/issues/28267[本期] 中阅读。"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:67
+#, fuzzy
 msgid "It is still possible to change the GC collection policy using GraalVM’s `-H:InitialCollectionPolicy` flag.  Switching to the \"space/time\" policy can be done by passing the following via command line:"
-msgstr ""
+msgstr "仍然可以使用GraalVM的 `-H:InitialCollectionPolicy` 标志来改变GC收集策略。切换到 \"空间/时间 \"策略，可以通过命令行传递以下内容来完成。"
 
 #. type: delimited block -
 #: upstream/_guides/native-reference.adoc:71
@@ -119,8 +129,9 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:74
+#, fuzzy
 msgid "Or adding this to the `application.properties` file:"
-msgstr ""
+msgstr "或将此添加到 `application.properties` 文件中。"
 
 #. type: delimited block -
 #: upstream/_guides/native-reference.adoc:78
@@ -130,19 +141,21 @@ msgstr ""
 
 #. type: delimited block =
 #: upstream/_guides/native-reference.adoc:84
+#, fuzzy
 msgid "Escaping the `$` character is required to configure the \"space/time\" GC collection policy if passing via command line in Bash.  Other command line environments might have similar requirements."
-msgstr ""
+msgstr "如果在Bash中通过命令行传递，在配置 \"空间/时间 \"GC收集策略时需要转义 `$` 字符。其他命令行环境可能有类似的要求。"
 
 #. type: Title ====
 #: upstream/_guides/native-reference.adoc:86
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "Epsilon GC"
-msgstr ""
+msgstr "怡思乐GC"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:90
+#, fuzzy
 msgid "Epsilon GC is a no-op garbage collector which does not do any memory reclamation.  From a Quarkus perspective, some of the most relevant use cases for this garbage collector are extremely short-lived jobs, e.g. serverless functions.  To build Quarkus native with epsilon GC, pass the following argument at build time:"
-msgstr ""
+msgstr "Epsilon GC是一个无操作的垃圾收集器，不做任何内存回收。从Quarkus的角度来看，这种垃圾收集器的一些最相关的用例是时间极短的作业，例如无服务器函数。要用epsilon GC构建Quarkus native，在构建时要传递以下参数。"
 
 #. type: delimited block -
 #: upstream/_guides/native-reference.adoc:94
@@ -152,25 +165,27 @@ msgstr ""
 
 #. type: Title ===
 #: upstream/_guides/native-reference.adoc:96
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "Memory Management Options"
-msgstr ""
+msgstr "内存管理选项"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:100
+#, fuzzy
 msgid "Options to control maximum heap size, young space and other typical use cases found in the JVM can be found in https://www.graalvm.org/{graalvm-version}/reference-manual/native-image/optimizations-and-performance/MemoryManagement[the GraalVM memory management guide].  Setting the maximum heap size, either as a percentage or an explicit value, is generally recommended."
-msgstr ""
+msgstr "控制最大堆大小、年轻空间和其他在JVM中发现的典型使用情况的选项可以在 link:https://www.graalvm.org/{graalvm-version}/reference-manual/native-image/optimizations-and-performance/MemoryManagement[GraalVM内存管理指南] 中找到。通常建议将最大堆大小设置为百分比或明确的数值。"
 
 #. type: Title ===
 #: upstream/_guides/native-reference.adoc:102
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "GC Logging"
-msgstr ""
+msgstr "GC记录"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:105
+#, fuzzy
 msgid "Multiple options exist to print information about garbage collection cycles, depending on the level of detail required.  The minimum detail is provided `-XX:+PrintGC`, which prints a message for each GC cycle that occurs:"
-msgstr ""
+msgstr "在打印垃圾收集周期的信息方面存在多种选择，取决于所需的详细程度。最小的细节是提供 `-XX:+PrintGC` ，它为每个发生的GC周期打印一条信息。"
 
 #. type: delimited block -
 #: upstream/_guides/native-reference.adoc:112
@@ -184,8 +199,9 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:117
+#, fuzzy
 msgid "When you combine this option with `-XX:+VerboseGC` you still get a message per GC cycle, but it contains extra information.  Also, adding this option shows the sizing decisions made by the GC algorithm at startup:"
-msgstr ""
+msgstr "当你把这个选项和 `-XX:+VerboseGC` ，你仍然会在每个GC周期得到一条信息，但它包含了额外的信息。另外，添加这个选项可以显示GC算法在启动时做出的大小决定。"
 
 #. type: delimited block -
 #: upstream/_guides/native-reference.adoc:136
