@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2022-11-09 13:20+0000\n"
+"POT-Creation-Date: 2022-11-16 17:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,277 +32,295 @@ msgid "This document explains the Quarkus class loading architecture. It is inte
 msgstr "这份文件解释了Quarkus的类加载架构。它是为那些想确切了解Quarkus工作方式的扩展作者和高级用户准备的。"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:19
+#: upstream/_guides/class-loading-reference.adoc:16
 #, fuzzy
-msgid "The Quarkus class loading architecture is slightly different depending on the mode that the application is run in. When running a production application everything is loaded in the system ClassLoader, so it is a completely flat class path. This also applies to native image mode which does not really support multiple ClassLoaders, and is based on a normal production Quarkus application."
-msgstr "Quarkus的类加载架构根据应用程序的运行模式而略有不同。当运行一个生产型的应用程序时，所有的东西都在系统的ClassLoader中加载，所以它是一个完全扁平的类路径。这也适用于本地图像模式，它并不真正支持多个ClassLoader，而是基于正常的生产型Quarkus应用程序。"
+msgid "The Quarkus class loading architecture is slightly different depending on the mode that the application is run in."
+msgstr "Quarkus的类加载架构根据应用程序的运行模式而略有不同。"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:22
+#: upstream/_guides/class-loading-reference.adoc:20
 #, fuzzy
-msgid "For all other use cases (e.g. tests, dev mode, and building the application) Quarkus uses the class loading architecture outlined here."
+msgid "When running a production application using the `fast-jar` package type (which is the default), almost all dependencies are loaded via the `io.quarkus.bootstrap.runner.RunnerClassLoader` which indexes class at build time, while a small set of dependencies is loaded from the system ClassLoader."
+msgstr "当使用 `fast-jar` 包类型（这是默认的）运行生产应用程序时，几乎所有的依赖都是通过 `io.quarkus.bootstrap.runner.RunnerClassLoader` ，它在构建时索引类，而一小部分依赖则是从系统ClassLoader加载的。"
+
+#. type: Plain text
+#: upstream/_guides/class-loading-reference.adoc:23
+#, fuzzy
+msgid "When running a production application using the `legacy-jar` package type everything is loaded in the system ClassLoader, so it is a completely flat classpath."
+msgstr "当使用 `legacy-jar` 包类型运行一个生产应用程序时，所有东西都在系统的ClassLoader中加载，所以它是一个完全扁平的classpath。"
+
+#. type: Plain text
+#: upstream/_guides/class-loading-reference.adoc:25
+#, fuzzy
+msgid "The flat classpath strategy is also used for GraalVM native images, since GraalVM does not really support multiple ClassLoaders."
+msgstr "平坦的classpath策略也被用于GraalVM的本地镜像，因为GraalVM并不真正支持多个ClassLoaders。"
+
+#. type: Plain text
+#: upstream/_guides/class-loading-reference.adoc:28
+#, fuzzy
+msgid "For all other use cases (e.g. tests, dev mode, and building the application) Quarkus uses the class loading architecture outlined in following section."
 msgstr "对于所有其他用例（如测试、开发模式和构建应用程序），Quarkus使用这里概述的类加载架构。"
 
 #. type: Title ==
-#: upstream/_guides/class-loading-reference.adoc:24
+#: upstream/_guides/class-loading-reference.adoc:30
 #, fuzzy, no-wrap
 msgid "Bootstrapping Quarkus"
 msgstr "引导Quarkus"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:30
+#: upstream/_guides/class-loading-reference.adoc:36
 #, fuzzy
 msgid "All Quarkus applications are created by the QuarkusBootstrap class in the `independent-projects/bootstrap` module. This class is used to resolve all the relevant dependencies (both deployment and runtime) that are needed for the Quarkus application. The end result of this process is a `CuratedApplication`, which contains all the class loading information for the application."
 msgstr "所有Quarkus应用程序都是由 `independent-projects/bootstrap` 模块中的QuarkusBootstrap类创建的。这个类被用来解决Quarkus应用程序所需的所有相关依赖（包括部署和运行时）。这个过程的最终结果是一个 `CuratedApplication` ，它包含了应用程序的所有类加载信息。"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:34
+#: upstream/_guides/class-loading-reference.adoc:40
 #, fuzzy
 msgid "The `CuratedApplication` can then be used to create an `AugmentAction` instance, which can create production application and start/restart runtime ones. This application instance exists within an isolated ClassLoader, it is not necessary to have any of the Quarkus deployment classes on the class path as the curate process will resolve them for you."
 msgstr " `CuratedApplication` ，然后可以用来创建一个 `AugmentAction` 实例，它可以创建生产应用和启动/重启运行时的。这个应用实例存在于一个孤立的ClassLoader中，它不需要在类的路径上有任何Quarkus部署类，因为curate过程会为你解决这些问题。"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:36
+#: upstream/_guides/class-loading-reference.adoc:42
 #, fuzzy
 msgid "This bootstrap process should be the same no matter how Quarkus is launched, just with different parameters passed in."
 msgstr "无论Quarkus是如何启动的，这个启动过程都应该是一样的，只是传递的参数不同。"
 
 #. type: Title ===
-#: upstream/_guides/class-loading-reference.adoc:37
+#: upstream/_guides/class-loading-reference.adoc:43
 #, fuzzy, no-wrap
 msgid "Current Run Modes"
 msgstr "目前的运行模式"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:40
+#: upstream/_guides/class-loading-reference.adoc:46
 #, fuzzy
 msgid "At the moment we have the following use cases for bootstrapping Quarkus:"
 msgstr "目前，我们有以下启动Quarkus的用例。"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:42
+#: upstream/_guides/class-loading-reference.adoc:48
 #, fuzzy
 msgid "Maven creating production application"
 msgstr "Maven创建生产应用"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:43
+#: upstream/_guides/class-loading-reference.adoc:49
 #, fuzzy
 msgid "Maven dev mode"
 msgstr "Maven开发模式"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:44
+#: upstream/_guides/class-loading-reference.adoc:50
 #, fuzzy
 msgid "Gradle creating a production application"
 msgstr "Gradle创建一个生产应用程序"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:45
+#: upstream/_guides/class-loading-reference.adoc:51
 #, fuzzy
 msgid "Gradle dev mode"
 msgstr "Gradle开发模式"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:46
+#: upstream/_guides/class-loading-reference.adoc:52
 #, fuzzy
 msgid "QuarkusTest (Maven, Gradle and IDE)"
 msgstr "QuarkusTest（Maven、Gradle和IDE）。"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:47
+#: upstream/_guides/class-loading-reference.adoc:53
 #, fuzzy
 msgid "QuarkusUnitTest (Maven, Gradle and IDE)"
 msgstr "QuarkusUnitTest (Maven, Gradle and IDE)"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:48
+#: upstream/_guides/class-loading-reference.adoc:54
 #, fuzzy
 msgid "QuarkusDevModeTest (Maven, Gradle and IDE)"
 msgstr "QuarkusDevModeTest（Maven、Gradle和IDE）。"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:49
+#: upstream/_guides/class-loading-reference.adoc:55
 #, fuzzy
 msgid "Arquillian Adaptor"
 msgstr "阿基里安适应器"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:51
+#: upstream/_guides/class-loading-reference.adoc:57
 #, fuzzy
 msgid "One of the goals of this refactor is to have all these different run modes boot Quarkus in fundamentally the same way."
 msgstr "这次重构的目标之一是让所有这些不同的运行模式以基本相同的方式启动Quarkus。"
 
 #. type: Title ===
-#: upstream/_guides/class-loading-reference.adoc:52
+#: upstream/_guides/class-loading-reference.adoc:58
 #, fuzzy, no-wrap
 msgid "Notes on Transformer Safety"
 msgstr "变压器安全须知"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:58
+#: upstream/_guides/class-loading-reference.adoc:64
 #, fuzzy
 msgid "A ClassLoader is said to be 'transformer safe' if it is safe to load classes in the class loader before the transformers are ready. Once a class has been loaded it cannot be changed, so if a class is loaded before the transformers have been prepared this will prevent the transformation from working. Loading classes in a transformer safe ClassLoader will not prevent the transformation, as the loaded class is not used at runtime."
 msgstr "如果在转化器准备好之前在类加载器中加载类是安全的，那么一个类加载器就被称为 \"转化器安全\"。一旦一个类被加载，它就不能被改变，所以如果一个类在转化器准备好之前被加载，这将阻止转化的进行。在转化器安全的ClassLoader中加载类将不会阻止转化，因为加载的类在运行时不被使用。"
 
 #. type: Title ==
-#: upstream/_guides/class-loading-reference.adoc:59
+#: upstream/_guides/class-loading-reference.adoc:65
 #, fuzzy, no-wrap
 msgid "ClassLoader Implementations"
 msgstr "类加载器的实现"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:62
+#: upstream/_guides/class-loading-reference.adoc:68
 #, fuzzy
 msgid "Quarkus has the following ClassLoaders:"
 msgstr "Quarkus有以下ClassLoaders。"
 
 #. type: Labeled list
-#: upstream/_guides/class-loading-reference.adoc:63
+#: upstream/_guides/class-loading-reference.adoc:69
 #, fuzzy, no-wrap
 msgid "Base ClassLoader"
 msgstr "基础类加载器"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:67
+#: upstream/_guides/class-loading-reference.adoc:73
 #, fuzzy
 msgid "This is usually the normal JVM System ClassLoader. In some environments such as Maven it may be different. This ClassLoader is used to load the bootstrap classes, and other ClassLoader instances will delegate the loading of JDK classes to it."
 msgstr "这通常是普通的JVM系统ClassLoader。在某些环境下，如Maven，它可能会有所不同。该ClassLoader用于加载引导类，其他ClassLoader实例会将JDK类的加载工作委托给它。"
 
 #. type: Labeled list
-#: upstream/_guides/class-loading-reference.adoc:68
+#: upstream/_guides/class-loading-reference.adoc:74
 #, fuzzy, no-wrap
 msgid "Augment ClassLoader"
 msgstr "增强ClassLoader"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:74
+#: upstream/_guides/class-loading-reference.adoc:80
 #, fuzzy
 msgid "This loads all the `-deployment` artifacts and their dependencies, as well as other user dependencies. It does not load the application root or any hot deployed code. This ClassLoader is persistent, even if the application restarts it will remain (which is why it cannot load application classes that may be hot deployed). Its parent is the base ClassLoader, and it is transformer safe."
 msgstr "这将加载所有的 `-deployment` artifacts和它们的依赖，以及其他用户的依赖。它不会加载应用程序根或任何热部署的代码。这个ClassLoader是持久的，即使应用程序重新启动，它也会保留（这就是为什么它不能加载可能被热部署的应用程序类）。它的父级是基础ClassLoader，它是转化器安全的。"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:78
+#: upstream/_guides/class-loading-reference.adoc:84
 #, fuzzy
 msgid "At present this can be configured to delegate to the Base ClassLoader, however the plan is for this option to go away and always have this as an isolated ClassLoader. Making this an isolated ClassLoader is complicated as it means that all the builder classes are isolated, which means that use cases that want to customise the build chains are slightly more complex."
 msgstr "目前，这可以被配置为委托给Base ClassLoader，然而计划是让这个选项消失，并始终将其作为一个孤立的ClassLoader。把它变成一个孤立的ClassLoader是很复杂的，因为它意味着所有的构建器类都是孤立的，这意味着想要定制构建链的用例要稍微复杂一些。"
 
 #. type: Labeled list
-#: upstream/_guides/class-loading-reference.adoc:79
+#: upstream/_guides/class-loading-reference.adoc:85
 #, fuzzy, no-wrap
 msgid "Deployment ClassLoader"
 msgstr "部署类加载器"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:82
+#: upstream/_guides/class-loading-reference.adoc:88
 #, fuzzy
 msgid "This can load all application classes. Its parent is the Augment ClassLoader, so it can also load all deployment classes."
 msgstr "它可以加载所有的应用程序类，它的父级是Augment ClassLoader，所以它也可以加载所有的部署类。"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:85
+#: upstream/_guides/class-loading-reference.adoc:91
 #, fuzzy
 msgid "This ClassLoader is non-persistent, it will be re-created when the application is started, and is isolated. This ClassLoader is the context ClassLoader that is used when running the build steps. It is also transformer safe."
 msgstr "这个ClassLoader是非持久的，它将在应用程序启动时被重新创建，并且是隔离的。这个ClassLoader是运行构建步骤时使用的上下文ClassLoader。它也是转化器安全的。"
 
 #. type: Labeled list
-#: upstream/_guides/class-loading-reference.adoc:86
+#: upstream/_guides/class-loading-reference.adoc:92
 #, fuzzy, no-wrap
 msgid "Base Runtime ClassLoader"
 msgstr "基础运行时类加载器"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:92
+#: upstream/_guides/class-loading-reference.adoc:98
 #, fuzzy
 msgid "This loads all the runtime extension dependencies, as well as other user dependencies (note that this may include duplicate copies of classes also loaded by the Augment ClassLoader). It does not load the application root or any hot deployed code. This ClassLoader is persistent, even if the application restarts it will remain (which is why it cannot load application classes that may be hot deployed). Its parent is the base ClassLoader."
 msgstr "这将加载所有的运行时扩展依赖，以及其他用户依赖（注意，这可能包括Augment ClassLoader加载的类的重复副本）。它不会加载应用程序根或任何热部署代码。这个ClassLoader是持久的，即使应用程序重新启动，它也会保留（这就是为什么它不能加载可能被热部署的应用程序类）。它的父级是基础ClassLoader。"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:99
+#: upstream/_guides/class-loading-reference.adoc:105
 #, fuzzy
 msgid "This loads code that is not hot-reloadable, but it does support transformation (although once the class is loaded this transformation is no longer possible). This means that only transformers registered in the first application start will take effect, however as these transformers are expected to be idempotent this should not cause problems. An example of the sort of transformation that might be required here is a Panache entity packaged in an external jar. This class needs to be transformed to have its static methods implemented, however this transformation only happens once, so restarts use the copy of the class that was created on the first start."
 msgstr "这样加载的代码是不可热加载的，但它确实支持转换（尽管一旦类被加载，这种转换就不再可能了）。这意味着只有在第一次启动应用程序时注册的变换器才会生效，但是由于这些变换器被期望是空闲的，这应该不会造成问题。这里可能需要转换的一个例子是一个打包在外部jar中的Panache实体。这个类需要被转换以实现其静态方法，然而这种转换只发生一次，所以重新启动时使用第一次启动时创建的类的副本。"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:103
+#: upstream/_guides/class-loading-reference.adoc:109
 #, fuzzy
 msgid "This ClassLoader is isolated from the Augment and Deployment ClassLoaders. This means that it is not possible to set values in a static field in the deployment side, and expect to read it at runtime. This allows dev and test applications to behave more like a production application (production applications are isolated in that they run in a whole new JVM)."
 msgstr "这个ClassLoader与Augment和Deployment ClassLoaders是隔离的。这意味着不可能在部署方的静态字段中设置数值，并期望在运行时读取它。这允许开发和测试应用程序的行为更像一个生产应用程序（生产应用程序是隔离的，因为它们在一个全新的JVM中运行）。"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:106
+#: upstream/_guides/class-loading-reference.adoc:112
 #, fuzzy
 msgid "This also means that the runtime version can be linked against a different set of dependencies, e.g. the hibernate version used at deployment time might want to include ByteBuddy, while the version used at runtime does not."
 msgstr "这也意味着运行时的版本可以与不同的依赖关系链接，例如，部署时使用的hibernate版本可能要包括ByteBuddy，而运行时使用的版本则不包括。"
 
 #. type: Labeled list
-#: upstream/_guides/class-loading-reference.adoc:107
+#: upstream/_guides/class-loading-reference.adoc:113
 #, fuzzy, no-wrap
 msgid "Runtime Class Loader"
 msgstr "运行时类加载器"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:111
+#: upstream/_guides/class-loading-reference.adoc:117
 #, fuzzy
 msgid "This ClassLoader is used to load the application classes and other hot deployable resources. Its parent is the base runtime ClassLoader, and it is recreated when the application is restarted."
 msgstr "这个ClassLoader被用来加载应用程序的类和其他可部署的热资源。它的父级是基本的运行时ClassLoader，当应用程序被重新启动时，它会被重新创建。"
 
 #. type: Title ==
-#: upstream/_guides/class-loading-reference.adoc:113
+#: upstream/_guides/class-loading-reference.adoc:119
 #, fuzzy, no-wrap
 msgid "Isolated ClassLoaders"
 msgstr "孤立的类加载器"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:117
+#: upstream/_guides/class-loading-reference.adoc:123
 #, fuzzy
 msgid "The runtime ClassLoader is always isolated. This means that it will have its own copies of almost every class from the resolved dependency list. The exception to this are:"
 msgstr "运行时的ClassLoader总是孤立的。这意味着它将拥有已解决的依赖列表中几乎所有类的自己的副本。这方面的例外是。"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:119
+#: upstream/_guides/class-loading-reference.adoc:125
 #, fuzzy
 msgid "JDK classes"
 msgstr "JDK类"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:120
+#: upstream/_guides/class-loading-reference.adoc:126
 #, fuzzy
 msgid "Classes from artifacts that extensions have marked as parent first (more on this later)."
 msgstr "来自扩展部分首先标记为父类的工件的类（后面会有更多介绍）。"
 
 #. type: Title ===
-#: upstream/_guides/class-loading-reference.adoc:121
+#: upstream/_guides/class-loading-reference.adoc:127
 #, fuzzy, no-wrap
 msgid "Parent First Dependencies"
 msgstr "母体第一依赖关系"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:126
+#: upstream/_guides/class-loading-reference.adoc:132
 #, fuzzy
 msgid "There are some classes that should not be loaded in an isolated manner, but that should always be loaded by the system ClassLoader (or whatever ClassLoader is responsible for bootstrapping Quarkus). Most extensions do not need to worry about this, however there are a few cases where this is necessary:"
 msgstr "有一些类不应该被单独加载，而应该总是被系统的ClassLoader（或者负责引导Quarkus的任何ClassLoader）加载。大多数扩展都不需要担心这个问题，但是在少数情况下这是必要的。"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:128
+#: upstream/_guides/class-loading-reference.adoc:134
 #, fuzzy
 msgid "Some logging related classes, as logging must be loaded by the system ClassLoader"
 msgstr "一些与日志相关的类，因为日志必须由系统ClassLoader加载。"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:129
+#: upstream/_guides/class-loading-reference.adoc:135
 #, fuzzy
 msgid "Quarkus bootstrap itself"
 msgstr "夸库斯启动本身"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:133
+#: upstream/_guides/class-loading-reference.adoc:139
 #, fuzzy
 msgid "If this is required it can be configured in the `quarkus-extension-maven-plugin`. Note that if you mark a dependency as parent first then all of its dependencies must also be parent first, or a `LinkageError` can occur."
 msgstr "如果需要这样做，可以在 `quarkus-bootstrap-maven-plugin` 。 注意，如果你把一个依赖关系标记为父级，那么它的所有依赖关系也必须是父级的，否则会发生 `LinkageError` 。"
 
 #. type: delimited block -
-#: upstream/_guides/class-loading-reference.adoc:149
+#: upstream/_guides/class-loading-reference.adoc:155
 #, no-wrap
 msgid ""
 "<plugin>\n"
@@ -321,19 +339,19 @@ msgid ""
 msgstr ""
 
 #. type: Title ===
-#: upstream/_guides/class-loading-reference.adoc:151
+#: upstream/_guides/class-loading-reference.adoc:157
 #, fuzzy, no-wrap
 msgid "Banned Dependencies"
 msgstr "被禁止的依赖性"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:159
+#: upstream/_guides/class-loading-reference.adoc:165
 #, fuzzy
 msgid "There are some dependencies that we can be sure we do not want. This generally happens when a dependency has had a name change (e.g. smallrye-config changing groups from `org.smallrye` to `org.smallrye.config`, the `javax` -> `jakarta` rename).  This can cause problems, as if these artifacts end up in the dependency tree out of date classes can be loaded that are not compatible with Quarkus. To deal with this, extensions can specify artifacts that should never be loaded. This is done by modifying the `quarkus-extension-maven-plugin` config in the pom (which generates the `quarkus-extension.properties` file). Simply add an `excludedArtifacts` section as shown below:"
 msgstr "有一些依赖关系是我们可以确定不需要的。这通常发生在一个依赖关系的名称发生变化的时候（例如 smallrye-config 将组从 `org.smallrye` 改为 `org.smallrye.config` ， `javax` → `jakarta` 重命名）。这可能会导致问题，因为如果这些工件最终出现在依赖关系树中，就会加载与Quarkus不兼容的类。为了解决这个问题，扩展可以指定不应该被加载的工件。这可以通过修改pom中的 `quarkus-bootstrap-maven-plugin` 配置来实现（该配置会生成 `quarkus-extension.properties` 文件）。简单地添加一个 `excludedArtifacts` 部分，如下所示。"
 
 #. type: delimited block -
-#: upstream/_guides/class-loading-reference.adoc:172
+#: upstream/_guides/class-loading-reference.adoc:178
 #, no-wrap
 msgid ""
 "<plugin>\n"
@@ -349,71 +367,71 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:176
+#: upstream/_guides/class-loading-reference.adoc:182
 #, fuzzy
 msgid "This should only be done if the extension depends on a newer version of these artifacts. If the extension does not bring in a replacement artifact as a dependency then classes the application needs might end up missing."
 msgstr "只有当扩展依赖于这些工件的较新版本时才可以这样做。如果扩展没有将替换的工件作为依赖，那么应用程序需要的类可能会丢失。"
 
 #. type: Title ==
-#: upstream/_guides/class-loading-reference.adoc:177
+#: upstream/_guides/class-loading-reference.adoc:183
 #, fuzzy, no-wrap
 msgid "Configuring Class Loading"
 msgstr "配置类的加载"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:182
+#: upstream/_guides/class-loading-reference.adoc:188
 #, fuzzy
 msgid "It is possible to configure some aspects of class loading in dev and test mode. This can be done using `application.properties`.  Note that class loading config is different to normal config, in that it does not use the standard Quarkus config mechanisms (as it is needed too early), so only supports `application.properties`. The following options are supported."
 msgstr "可以在开发和测试模式下配置类加载的某些方面。这可以用 `application.properties` 来完成。请注意，类加载配置与普通配置不同，因为它不使用标准的Quarkus配置机制（因为它需要的时间太早），所以只支持 `application.properties` 。支持以下选项。"
 
 #. type: Title ==
-#: upstream/_guides/class-loading-reference.adoc:186
+#: upstream/_guides/class-loading-reference.adoc:192
 #, fuzzy, no-wrap
 msgid "Hiding/Removing classes and resources from dependencies"
 msgstr "从依赖关系中隐藏/删除类和资源"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:190
+#: upstream/_guides/class-loading-reference.adoc:196
 #, fuzzy
 msgid "It is possible to hide/remove classes and resources from dependencies. This is an advanced option, but it can be useful at times. This is done via the `quarkus.class-loading.removed-resources` config key, for example:"
 msgstr "可以从依赖关系中隐藏/删除类和资源。这是一个高级选项，但它有时会很有用。例如，这可以通过 `quarkus.class-loading.removed-resources` 配置键来完成。"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:192
+#: upstream/_guides/class-loading-reference.adoc:198
 #, fuzzy
 msgid "`quarkus.class-loading.removed-resources.\"io.quarkus\\:quarkus-integration-test-shared-library\"=io/quarkus/it/shared/RemovedResource.class`"
 msgstr " `quarkus.class-loading.removed-resources.\"io.quarkus\\:quarkus-integration-test-shared-library\"=io/quarkus/it/shared/RemovedResource.class` "
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:194
+#: upstream/_guides/class-loading-reference.adoc:200
 #, fuzzy
 msgid "This will remove the `RemovedResource.class` file from the `io.quarkus:quarkus-integration-test-shared-library` artifact."
 msgstr "这将从 `io.quarkus:quarkus-integration-test-shared-library` 工件中删除 `RemovedResource.class` 文件。"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:197
+#: upstream/_guides/class-loading-reference.adoc:203
 #, fuzzy
 msgid "Even though this option is a class loading option it will also affect the generated application, so when the application is created removed resources will not be accessible."
 msgstr "尽管这个选项是一个类加载选项，但它也会影响到生成的应用程序，所以当应用程序被创建时，被移除的资源将无法被访问。"
 
 #. type: Title ==
-#: upstream/_guides/class-loading-reference.adoc:198
+#: upstream/_guides/class-loading-reference.adoc:204
 #, fuzzy, no-wrap
 msgid "Reading Class Bytecode"
 msgstr "读取类的字节码"
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:202
+#: upstream/_guides/class-loading-reference.adoc:208
 msgid "It is important to use the correct `ClassLoader`. The recommended approach is to get it by calling the `Thread.currentThread().getContextClassLoader()` method."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/class-loading-reference.adoc:204
+#: upstream/_guides/class-loading-reference.adoc:210
 msgid "Example:"
 msgstr "例如："
 
 #. type: delimited block -
-#: upstream/_guides/class-loading-reference.adoc:216
+#: upstream/_guides/class-loading-reference.adoc:222
 #, no-wrap
 msgid ""
 "@BuildStep\n"
@@ -427,17 +445,5 @@ msgid ""
 msgstr ""
 
 #, fuzzy
-#~ msgid "The Quarkus class loading architecture is slightly different depending on the mode that the application is run in."
-#~ msgstr "Quarkus的类加载架构根据应用程序的运行模式而略有不同。"
-
-#, fuzzy
-#~ msgid "When running a production application using the `fast-jar` package type (which is the default), almost all dependencies are loaded via the `io.quarkus.bootstrap.runner.RunnerClassLoader` which indexes class at build time, while a small set of dependencies is loaded from the system ClassLoader."
-#~ msgstr "当使用 `fast-jar` 包类型（这是默认的）运行生产应用程序时，几乎所有的依赖都是通过 `io.quarkus.bootstrap.runner.RunnerClassLoader` ，它在构建时索引类，而一小部分依赖则是从系统ClassLoader加载的。"
-
-#, fuzzy
-#~ msgid "When running a production application using the `legacy-jar` package type everything is loaded in the system ClassLoader, so it is a completely flat classpath."
-#~ msgstr "当使用 `legacy-jar` 包类型运行一个生产应用程序时，所有东西都在系统的ClassLoader中加载，所以它是一个完全扁平的classpath。"
-
-#, fuzzy
-#~ msgid "The flat classpath strategy is also used for GraalVM native images, since GraalVM does not really support multiple ClassLoaders."
-#~ msgstr "平坦的classpath策略也被用于GraalVM的本地镜像，因为GraalVM并不真正支持多个ClassLoaders。"
+#~ msgid "The Quarkus class loading architecture is slightly different depending on the mode that the application is run in. When running a production application everything is loaded in the system ClassLoader, so it is a completely flat class path. This also applies to native image mode which does not really support multiple ClassLoaders, and is based on a normal production Quarkus application."
+#~ msgstr "Quarkus的类加载架构根据应用程序的运行模式而略有不同。当运行一个生产型的应用程序时，所有的东西都在系统的ClassLoader中加载，所以它是一个完全扁平的类路径。这也适用于本地图像模式，它并不真正支持多个ClassLoader，而是基于正常的生产型Quarkus应用程序。"
