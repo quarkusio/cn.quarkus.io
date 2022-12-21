@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2022-10-19 16:08+0000\n"
+"POT-Creation-Date: 2022-12-21 17:12+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -226,7 +226,7 @@ msgstr "还要注意 `findAll` 方法的特殊返回类型。 link:https://docs.
 #. type: Plain text
 #: upstream/_guides/cassandra.adoc:123
 #, fuzzy
-msgid "Finally, let's create the Mapper interface:"
+msgid "Finally, let's create a Mapper interface:"
 msgstr "最后，让我们创建一个Mapper接口。"
 
 #. type: delimited block -
@@ -243,23 +243,157 @@ msgstr ""
 #. type: Plain text
 #: upstream/_guides/cassandra.adoc:136
 #, fuzzy
-msgid "The `@Mapper` annotation is yet another annotation recognized by the DataStax Object Mapper. A mapper is responsible for constructing instances of DAOs – in this case, out mapper is constructing an instance of our only DAO, `FruitDao`."
+msgid "The `@Mapper` annotation is yet another annotation recognized by the DataStax Object Mapper. A mapper is responsible for constructing DAO instances – in this case, out mapper is constructing an instance of our only DAO, `FruitDao`."
 msgstr " `@Mapper` 注解是 DataStax Object Mapper 认可的另一个注解。映射器负责构造DAO的实例--在这种情况下，映射器正在构造我们唯一的DAO的实例， `FruitDao` 。"
 
+#. type: Plain text
+#: upstream/_guides/cassandra.adoc:140
+msgid "Think of the mapper interface as a factory for DAO beans. If you intend to construct and inject a specific DAO bean in your own code, then you first must add a `@DaoFactory` method for it in a `@Mapper` interface."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/cassandra.adoc:142
+msgid "`@DaoFactory` method names are irrelevant."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/cassandra.adoc:144
+msgid "`@DaoFactory` methods should return beans of the following types:"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/cassandra.adoc:146
+#, fuzzy
+msgid "Any `@Dao`-annotated interface, e.g. `FruitDao`;"
+msgstr "你的项目中所有 `@Mapper` -注释的接口。"
+
+#. type: Plain text
+#: upstream/_guides/cassandra.adoc:147
+msgid "A `CompletationStage` of any `@Dao`-annotated interface, e.g. `CompletionStage<FruitDao>`."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/cassandra.adoc:148
+msgid "A `Uni` of any `@Dao`-annotated interface, e.g. `Uni<FruitDao>`."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/cassandra.adoc:151
+msgid "`Uni` is a type from the Mutiny library, which is the reactive programming library used by Quarkus. This will be explained in more detail in the \"Reactive Programming\" section below."
+msgstr ""
+
 #. type: Title ==
-#: upstream/_guides/cassandra.adoc:137
+#: upstream/_guides/cassandra.adoc:152
+#, no-wrap
+msgid "Generating the DAO and mapper implementations"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/cassandra.adoc:156
+msgid "As you probably guessed already, we are not going to implement the interfaces above. Instead, the Object Mapper will generate such implementations for us."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/cassandra.adoc:158
+msgid "The Object Mapper is composed of 2 pieces:"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/cassandra.adoc:161
+msgid "A (compile-time) annotation processor that scans the classpath for classes annotated with `@Mapper`, `@Dao` or `@Entity`, and generates code and CQL queries for them; and"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/cassandra.adoc:162
+msgid "A runtime module that contains the logic to execute the generated queries."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/cassandra.adoc:164
+msgid "Therefore, enabling the Object Mapper requires two steps:"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/cassandra.adoc:167
+msgid "Declare the `cassandra-quarkus-mapper-processor` annotation processor. With Maven, this is done by modifying the compiler plugin configuration in the project's `pom.xml` file as follows:"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/cassandra.adoc:185
+#, no-wrap
+msgid ""
+"<plugin>\n"
+"  <artifactId>maven-compiler-plugin</artifactId>\n"
+"  <version>3.10.1</version>\n"
+"  <configuration>\n"
+"    <source>${java.version}</source>\n"
+"    <target>${java.version}</target>\n"
+"    <annotationProcessorPaths>\n"
+"      <path>\n"
+"        <groupId>com.datastax.oss.quarkus</groupId>\n"
+"        <artifactId>cassandra-quarkus-mapper-processor</artifactId>\n"
+"        <version>${cassandra-quarkus.version}</version>\n"
+"      </path>\n"
+"    </annotationProcessorPaths>\n"
+"  </configuration>\n"
+"</plugin>\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/cassandra.adoc:188
+msgid "With Gradle, this is done by adding the following line to the `build.gradle` file:"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/cassandra.adoc:192
+#, no-wrap
+msgid "annotationProcessor \"com.datastax.oss.quarkus:cassandra-quarkus-mapper-processor:${cassandra-quarkus.version}\"\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/cassandra.adoc:200
+msgid "Verify that you are enabling the right annotation processor! The Cassandra driver ships with its Object Mapper annotation processor, called `java-driver-mapper-processor`. But the Cassandra Quarkus extension also ships with its own annotation processor: `cassandra-quarkus-mapper-processor`, which has more capabilities than the driver's. This annotation processor is the only one suitable for use in a Quarkus application, so check that this is the one in use. Also, never use both annotation processors together."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/cassandra.adoc:204
+msgid "Declare the `java-driver-mapper-runtime` dependency in compile scope in the project's `pom.xml` file as follows:"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/cassandra.adoc:211
+#, no-wrap
+msgid ""
+"<dependency>\n"
+"  <groupId>com.datastax.oss</groupId>\n"
+"  <artifactId>java-driver-mapper-runtime</artifactId>\n"
+"</dependency>\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/cassandra.adoc:214
+msgid "Although this module is called \"runtime\", it must be declared in compile scope."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/cassandra.adoc:219
+msgid "If your project is correctly set up, you should now be able to compile it without errors, and you should see the generated code in the `target/generated-sources/annotations` directory (if you are using Maven). It's not required to get familiar with the generated code though, as it is mostly internal machinery to interact with the database."
+msgstr ""
+
+#. type: Title ==
+#: upstream/_guides/cassandra.adoc:220
 #, fuzzy, no-wrap
-msgid "Creating a Service & JSON REST Endpoint"
+msgid "Creating a service & JSON REST endpoint"
 msgstr "创建一个服务和JSON REST端点"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:141
+#: upstream/_guides/cassandra.adoc:224
 #, fuzzy
 msgid "Now let's create a `FruitService` that will be the business layer of our application and store/load the fruits from the Cassandra database."
 msgstr "现在让我们创建一个 `FruitService` ，它将是我们应用程序的业务层，并从Cassandra数据库存储/加载水果。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:146
+#: upstream/_guides/cassandra.adoc:229
 #, no-wrap
 msgid ""
 "@ApplicationScoped\n"
@@ -267,13 +401,13 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:148
+#: upstream/_guides/cassandra.adoc:231
 #, no-wrap
 msgid "  @Inject FruitDao dao;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:152
+#: upstream/_guides/cassandra.adoc:235
 #, no-wrap
 msgid ""
 "  public void save(Fruit fruit) {\n"
@@ -282,7 +416,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:157
+#: upstream/_guides/cassandra.adoc:240
 #, no-wrap
 msgid ""
 "  public List<Fruit> getAll() {\n"
@@ -292,49 +426,58 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:161
+#: upstream/_guides/cassandra.adoc:244
 #, fuzzy
-msgid "Note how the service is being injected a `FruitDao` instance. This DAO instance is injected automatically."
+msgid "Note how the service is being injected a `FruitDao` instance. This DAO instance is injected automatically, thanks to the generated implementations."
 msgstr "注意服务是如何被注入一个 `FruitDao` 实例的。这个DAO实例是自动注入的。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:164
+#: upstream/_guides/cassandra.adoc:247
 #, fuzzy
 msgid "The Cassandra Quarkus extension allows you to inject any of the following beans in your own components:"
 msgstr "Cassandra Quarkus扩展允许你在自己的组件中注入以下任何一个bean。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:166
+#: upstream/_guides/cassandra.adoc:249
 #, fuzzy
 msgid "All `@Mapper`-annotated interfaces in your project."
 msgstr "你的项目中所有 `@Mapper` -注释的接口。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:168
-#, fuzzy
-msgid "All `@Dao`-annotated interfaces in your project, as long as they are produced by a corresponding `@DaoFactory`-annotated method declared in a mapper interface from your project."
-msgstr "你项目中所有 `@Dao` -注释的接口，只要它们是由你项目中的映射器接口中声明的相应 `@DaoFactory` -注释的方法产生的。"
+#: upstream/_guides/cassandra.adoc:250
+msgid "You can also inject a `CompletionStage` or `Uni` of any `@Mapper`-annotated interface."
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:173
+#: upstream/_guides/cassandra.adoc:251
+msgid "Any bean returned by a `@DaoFactory` method (see above for possible bean types)."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/cassandra.adoc:256
 #, fuzzy
 msgid "The link:https://javadoc.io/doc/com.datastax.oss.quarkus/cassandra-quarkus-client/latest/com/datastax/oss/quarkus/runtime/api/session/QuarkusCqlSession.html[`QuarkusCqlSession`] bean: this application-scoped, singleton bean is your main entry point to the Cassandra client; it is a specialized Cassandra driver session instance with a few methods tailored especially for Quarkus. Read its javadocs carefully!"
 msgstr "的 link:https://javadoc.io/doc/com.datastax.oss.quarkus/cassandra-quarkus-client/latest/com/datastax/oss/quarkus/runtime/api/session/QuarkusCqlSession.html[`QuarkusCqlSession`] Bean：这个应用范围的单子Bean是你进入Cassandra客户端的主要入口；它是一个专门的Cassandra驱动会话实例，有几个特别为Quarkus定制的方法。请仔细阅读它的javadocs!"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:176
+#: upstream/_guides/cassandra.adoc:257
+msgid "You can also inject `CompletationStage<QuarkusCqlSession>` or `Uni<QuarkusCqlSession>`."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/cassandra.adoc:260
 #, fuzzy
 msgid "In our example, both `FruitMapper` and `FruitDao` could be injected anywhere. We chose to inject `FruitDao` in `FruitService`."
 msgstr "在我们的例子中， `FruitMapper` 和 `FruitDao` 都可以被注入到任何地方。我们选择在 `FruitService` 中注入 `FruitDao` 。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:178
+#: upstream/_guides/cassandra.adoc:262
 #, fuzzy
 msgid "The last missing piece is the REST API that will expose GET and POST methods:"
 msgstr "最后缺少的部分是REST API，它将暴露GET和POST方法。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:185
+#: upstream/_guides/cassandra.adoc:269
 #, no-wrap
 msgid ""
 "@Path(\"/fruits\")\n"
@@ -344,13 +487,13 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:187
+#: upstream/_guides/cassandra.adoc:271
 #, no-wrap
 msgid "  @Inject FruitService fruitService;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:192
+#: upstream/_guides/cassandra.adoc:276
 #, no-wrap
 msgid ""
 "  @GET\n"
@@ -360,7 +503,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:197
+#: upstream/_guides/cassandra.adoc:281
 #, no-wrap
 msgid ""
 "  @POST\n"
@@ -370,7 +513,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:201 upstream/_guides/cassandra.adoc:503
+#: upstream/_guides/cassandra.adoc:285 upstream/_guides/cassandra.adoc:587
 #, no-wrap
 msgid ""
 "  private FruitDto convertToDto(Fruit fruit) {\n"
@@ -379,7 +522,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:206 upstream/_guides/cassandra.adoc:508
+#: upstream/_guides/cassandra.adoc:290 upstream/_guides/cassandra.adoc:592
 #, no-wrap
 msgid ""
 "  private Fruit convertFromDto(FruitDto fruitDto) {\n"
@@ -389,25 +532,25 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:209
+#: upstream/_guides/cassandra.adoc:293
 #, fuzzy
 msgid "Notice how `FruitResource` is being injected a `FruitService` instance automatically."
 msgstr "注意到 `FruitResource` 是如何被自动注入一个 `FruitService` 实例的。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:215
+#: upstream/_guides/cassandra.adoc:299
 #, fuzzy
 msgid "It is generally not recommended using the same entity object between the REST API and the data access layer. These layers should indeed be decoupled and use distinct APIs in order to allow each API to evolve independently of the other. This is the reason why our REST API is using a different object: the `FruitDto` class – the word DTO stands for \"Data Transfer Object\". This DTO object will be automatically converted to and from JSON in HTTP messages:"
 msgstr "通常不建议在REST API和数据访问层之间使用同一个实体对象。这些层确实应该被解耦，并使用不同的API，以允许每个API独立于其他API而发展。这就是为什么我们的REST API要使用一个不同的对象： `FruitDto` 类--DTO这个词代表 \"数据传输对象\"。这个DTO对象将在HTTP消息中自动转换为JSON，或从JSON中转换。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:219
+#: upstream/_guides/cassandra.adoc:303
 #, no-wrap
 msgid "public class FruitDto {\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:222
+#: upstream/_guides/cassandra.adoc:306
 #, no-wrap
 msgid ""
 "  private String name;\n"
@@ -415,13 +558,13 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:224
+#: upstream/_guides/cassandra.adoc:308
 #, no-wrap
 msgid "  public FruitDto() {}\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:231
+#: upstream/_guides/cassandra.adoc:315
 #, no-wrap
 msgid ""
 "  public FruitDto(String name, String description) {\n"
@@ -433,13 +576,13 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:236
+#: upstream/_guides/cassandra.adoc:320
 #, fuzzy
 msgid "The translation to and from JSON is done automatically by the Quarkus RESTEasy Reactive extension, which is included in this guide's pom.xml file. If you want to add it manually to your application, add the below snippet to your application's ppm.xml file:"
 msgstr "与JSON的转换是由Quarkus RESTEasy Reactive扩展自动完成的，它包含在本指南的pom.xml文件中。如果你想手动将其添加到你的应用程序中，请将下面的片段添加到你的应用程序的ppm.xml文件中。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:247
+#: upstream/_guides/cassandra.adoc:331
 #, no-wrap
 msgid ""
 "<dependency>\n"
@@ -448,54 +591,54 @@ msgid ""
 "</dependency>\n"
 "<dependency>\n"
 "  <groupId>io.quarkus</groupId>\n"
-"  <artifactId>quarkus-resteasy-jackson</artifactId>\n"
+"  <artifactId>quarkus-resteasy-reactive-jackson</artifactId>\n"
 "</dependency>\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:251
+#: upstream/_guides/cassandra.adoc:335
 #, fuzzy
 msgid "DTO classes used by the JSON serialization layer are required to have a default no-arg constructor."
 msgstr "由JSON序列化层使用的DTO类被要求有一个默认的无参数构造函数。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:255
+#: upstream/_guides/cassandra.adoc:339
 #, fuzzy
 msgid "The conversion from DTO to JSON is handled automatically for us, but we still must convert from `Fruit` to `FruitDto` and vice versa. This must be done manually, which is why we have two conversion methods declared in `FruitResource`: `convertToDto` and `convertFromDto`."
 msgstr "从DTO到JSON的转换是自动为我们处理的，但我们仍然必须从 `Fruit` 到 `FruitDto` ，反之亦然。这必须手动完成，这就是为什么我们在 `FruitResource` 中声明了两个转换方法： `convertToDto` 和 `convertFromDto` 。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:259
+#: upstream/_guides/cassandra.adoc:343
 #, fuzzy
 msgid "In our example, `Fruit` and `FruitDto` are very similar, so you might wonder why not use `Fruit` everywhere. In real life cases though, it's not uncommon to see DTOs and entities having very different structures."
 msgstr "在我们的例子中， `Fruit` 和 `FruitDto` 是非常相似的，所以你可能会想为什么不在所有地方都使用 `Fruit` 。不过在现实生活中，DTO和实体的结构非常不同的情况并不少见。"
 
 #. type: Title ==
-#: upstream/_guides/cassandra.adoc:260
+#: upstream/_guides/cassandra.adoc:344
 #, fuzzy, no-wrap
 msgid "Connecting to the Cassandra Database"
 msgstr "连接到Cassandra数据库"
 
 #. type: Title ===
-#: upstream/_guides/cassandra.adoc:262
+#: upstream/_guides/cassandra.adoc:346
 #, fuzzy, no-wrap
 msgid "Connecting to Apache Cassandra or DataStax Enterprise (DSE)"
 msgstr "连接到Apache Cassandra或DataStax Enterprise（DSE）。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:266
+#: upstream/_guides/cassandra.adoc:350
 #, fuzzy
 msgid "The main properties to configure are: `contact-points`, to access the Cassandra database; `local-datacenter`, which is required by the driver; and – optionally – the keyspace to bind to."
 msgstr "需要配置的主要属性是。 `contact-points` ，用于访问Cassandra数据库； `local-datacenter` ，这是驱动程序所要求的；以及--可选的--要绑定的密钥空间。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:268
+#: upstream/_guides/cassandra.adoc:352
 #, fuzzy
 msgid "A sample configuration should look like this:"
 msgstr "一个配置样本应该是这样的。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:274
+#: upstream/_guides/cassandra.adoc:358
 #, no-wrap
 msgid ""
 "quarkus.cassandra.contact-points={cassandra_ip}:9042\n"
@@ -504,13 +647,13 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:278
+#: upstream/_guides/cassandra.adoc:362
 #, fuzzy
 msgid "In this example, we are using a single instance running on localhost, and the keyspace containing our data is `k1`:"
 msgstr "在这个例子中，我们使用一个运行在localhost上的单一实例，包含我们数据的钥匙空间是 `k1` 。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:284
+#: upstream/_guides/cassandra.adoc:368
 #, no-wrap
 msgid ""
 "quarkus.cassandra.contact-points=127.0.0.1:9042\n"
@@ -519,13 +662,13 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:288
+#: upstream/_guides/cassandra.adoc:372
 #, fuzzy
 msgid "If your cluster requires plain text authentication, you must also provide two more settings: `username` and `password`."
 msgstr "如果你的集群需要纯文本认证，你还必须提供另外两个设置： `username` 和 `password` 。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:293
+#: upstream/_guides/cassandra.adoc:377
 #, no-wrap
 msgid ""
 "quarkus.cassandra.auth.username=john\n"
@@ -533,31 +676,31 @@ msgid ""
 msgstr ""
 
 #. type: Title ===
-#: upstream/_guides/cassandra.adoc:295
+#: upstream/_guides/cassandra.adoc:379
 #, fuzzy, no-wrap
 msgid "Connecting to a DataStax Astra Cloud Database"
 msgstr "连接到DataStax Astra云数据库"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:301
+#: upstream/_guides/cassandra.adoc:385
 #, fuzzy
 msgid "When connecting to link:https://astra.datastax.com[DataStax Astra], instead of providing a contact point and a datacenter, you should provide a so-called _secure connect bundle_, which should point to a valid path to an Astra secure connect bundle file. You can download your secure connect bundle from the Astra web console."
 msgstr "当连接到 link:https://astra.datastax.com[DataStax Astra] 时，你应该提供一个所谓的 _安全连接包_ ，而不是提供一个联络点和一个数据中心，它应该指向一个Astra安全连接包文件的有效路径。你可以从Astra网络控制台下载你的安全连接包。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:304
+#: upstream/_guides/cassandra.adoc:388
 #, fuzzy
 msgid "You will also need to provide a username and password, since authentication is always required on Astra clusters."
 msgstr "你还需要提供一个用户名和密码，因为Astra集群上总是需要认证。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:306
+#: upstream/_guides/cassandra.adoc:390
 #, fuzzy
 msgid "A sample configuration for DataStax Astra should look like this:"
 msgstr "DataStax Astra的样本配置应该是这样的。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:313
+#: upstream/_guides/cassandra.adoc:397
 #, no-wrap
 msgid ""
 "quarkus.cassandra.cloud.secure-connect-bundle=/path/to/secure-connect-bundle.zip\n"
@@ -567,67 +710,67 @@ msgid ""
 msgstr ""
 
 #. type: Title ===
-#: upstream/_guides/cassandra.adoc:315
+#: upstream/_guides/cassandra.adoc:399
 #, fuzzy, no-wrap
 msgid "Advanced Driver Configuration"
 msgstr "高级驱动程序配置"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:322
+#: upstream/_guides/cassandra.adoc:406
 #, fuzzy
 msgid "You can configure other Java driver settings using `application.conf` or `application.json` files.  They need to be located in the classpath of your application. All settings will be passed automatically to the underlying driver configuration mechanism. Settings defined in `application.properties` with the `quarkus.cassandra` prefix will have priority over settings defined in `application.conf` or `application.json`."
 msgstr "你可以使用 `application.conf` 或 `application.json` 文件来配置其他的Java驱动设置。它们需要位于你的应用程序的classpath中。所有的设置将被自动传递给底层驱动配置机制。在 `application.properties` 中定义的带有 `quarkus.cassandra` 前缀的设置将优先于在 `application.conf` 或 `application.json` 中定义的设置。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:326
+#: upstream/_guides/cassandra.adoc:410
 #, fuzzy
 msgid "To see the full list of settings, please refer to the link:https://docs.datastax.com/en/developer/java-driver/latest/manual/core/configuration/reference/[driver settings reference]."
 msgstr "要查看完整的设置清单，请参考 link:https://docs.datastax.com/en/developer/java-driver/latest/manual/core/configuration/reference/[驱动程序设置参考] 。"
 
 #. type: Title ==
-#: upstream/_guides/cassandra.adoc:327
+#: upstream/_guides/cassandra.adoc:411
 #, fuzzy, no-wrap
 msgid "Running a Local Cassandra Database"
 msgstr "运行本地卡桑德拉数据库"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:331
+#: upstream/_guides/cassandra.adoc:415
 #, fuzzy
 msgid "By default, the Cassandra client is configured to access a local Cassandra database on port 9042 (the default Cassandra port)."
 msgstr "默认情况下，Cassandra客户端被配置为在9042端口（默认的Cassandra端口）访问本地Cassandra数据库。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:334
+#: upstream/_guides/cassandra.adoc:418
 #, fuzzy
 msgid "Make sure that the setting `quarkus.cassandra.local-datacenter` matches the datacenter of your Cassandra cluster."
 msgstr "请确保设置 `quarkus.cassandra.local-datacenter` ，与你的Cassandra集群的数据中心相匹配。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:337
+#: upstream/_guides/cassandra.adoc:421
 #, fuzzy
 msgid "If you don't know the name of your local datacenter, this value can be found by running the following CQL query: `SELECT data_center FROM system.local`."
 msgstr "如果你不知道你的本地数据中心的名称，这个值可以通过运行以下CQL查询找到： `SELECT data_center FROM system.local` 。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:340
+#: upstream/_guides/cassandra.adoc:424
 #, fuzzy
 msgid "If you want to use Docker to run a Cassandra database, you can use the following command to launch one in the background:"
 msgstr "如果你想使用Docker来运行Cassandra数据库，你可以使用以下命令在后台启动一个数据库。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:344
+#: upstream/_guides/cassandra.adoc:428
 #, no-wrap
 msgid "docker run --name local-cassandra-instance -p 9042:9042 -d cassandra\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:348
+#: upstream/_guides/cassandra.adoc:432
 #, fuzzy
 msgid "Next you need to create the keyspace and table that will be used by your application. If you are using Docker, run the following commands:"
 msgstr "接下来你需要创建将被你的应用程序使用的钥匙空间和表。如果你使用的是Docker，运行以下命令。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:353
+#: upstream/_guides/cassandra.adoc:437
 #, no-wrap
 msgid ""
 "docker exec -it local-cassandra-instance cqlsh -e \"CREATE KEYSPACE IF NOT EXISTS k1 WITH replication = {'class':'SimpleStrategy', 'replication_factor':1}\"\n"
@@ -635,55 +778,55 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:356
+#: upstream/_guides/cassandra.adoc:440
 #, fuzzy
 msgid "You can also use the CQLSH utility to interactively interrogate your database:"
 msgstr "你也可以使用CQLSH工具来交互地询问你的数据库。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:360
+#: upstream/_guides/cassandra.adoc:444
 #, no-wrap
 msgid "docker exec -it local-cassandra-instance cqlsh\n"
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/cassandra.adoc:362
+#: upstream/_guides/cassandra.adoc:446
 #, fuzzy, no-wrap
 msgid "Testing the REST API"
 msgstr "测试REST API"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:365
+#: upstream/_guides/cassandra.adoc:449
 #, fuzzy
 msgid "In the project root directory:"
 msgstr "在项目根目录下。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:367
+#: upstream/_guides/cassandra.adoc:451
 #, fuzzy
 msgid "Run `mvn clean package` and then `java -jar ./target/cassandra-quarkus-quickstart-*-runner.jar` to start the application;"
 msgstr "运行 `mvn clean package` ，然后 `java -jar ./target/cassandra-quarkus-quickstart-*-runner.jar` ，启动应用程序。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:368
+#: upstream/_guides/cassandra.adoc:452
 #, fuzzy
 msgid "Or better yet, run the application in dev mode: `mvn clean quarkus:dev`."
 msgstr "或者更好的是，在开发模式下运行应用程序： `mvn clean quarkus:dev` 。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:370
+#: upstream/_guides/cassandra.adoc:454
 #, fuzzy
 msgid "Now you can use curl commands to interact with the underlying REST API."
 msgstr "现在你可以使用curl命令与底层的REST API进行交互。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:372
+#: upstream/_guides/cassandra.adoc:456
 #, fuzzy
 msgid "To create a fruit:"
 msgstr "要创造一种水果。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:379
+#: upstream/_guides/cassandra.adoc:463
 #, no-wrap
 msgid ""
 "curl --header \"Content-Type: application/json\" \\\n"
@@ -693,91 +836,91 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:382
+#: upstream/_guides/cassandra.adoc:466
 #, fuzzy
 msgid "To retrieve fruits:"
 msgstr "捞取水果。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:386
+#: upstream/_guides/cassandra.adoc:470
 #, no-wrap
 msgid "curl -X GET http://localhost:8080/fruits\n"
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/cassandra.adoc:388
+#: upstream/_guides/cassandra.adoc:472
 #, fuzzy, no-wrap
 msgid "Creating a Frontend"
 msgstr "创建一个前台"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:391
+#: upstream/_guides/cassandra.adoc:475
 #, fuzzy
 msgid "Now let's add a simple web page to interact with our `FruitResource`."
 msgstr "现在让我们添加一个简单的网页来与我们的 `FruitResource` 。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:395
+#: upstream/_guides/cassandra.adoc:479
 #, fuzzy
 msgid "Quarkus automatically serves static resources located under the `META-INF/resources` directory. In the `src/main/resources/META-INF/resources` directory, add a `fruits.html` file with the contents from link:src/main/resources/META-INF/resources/fruits.html[this file] in it."
 msgstr "Quarkus自动提供位于 `META-INF/resources` 目录下的静态资源。在 `src/main/resources/META-INF/resources` 目录中，添加一个 `fruits.html` 文件，其中包含 link:src/main/resources/META-INF/resources/fruits.html[该文件] 的内容。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:397
+#: upstream/_guides/cassandra.adoc:481
 #, fuzzy
 msgid "You can now interact with your REST service:"
 msgstr "现在你可以与你的REST服务进行交互。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:399 upstream/_guides/cassandra.adoc:554
+#: upstream/_guides/cassandra.adoc:483 upstream/_guides/cassandra.adoc:638
 #, fuzzy
 msgid "If you haven't done yet, start your application with `mvn clean quarkus:dev`;"
 msgstr "如果你还没有做，请用 `mvn clean quarkus:dev` 开始你的申请。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:400
+#: upstream/_guides/cassandra.adoc:484
 #, fuzzy
 msgid "Point your browser to `http://localhost:8080/fruits.html`;"
 msgstr "将您的浏览器指向 `<a href=\"http://localhost:8080/fruits.html\" class=\"bare\">http://localhost:8080/fruits.html</a>` ;"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:401 upstream/_guides/cassandra.adoc:556
+#: upstream/_guides/cassandra.adoc:485 upstream/_guides/cassandra.adoc:640
 #, fuzzy
 msgid "Add new fruits to the list via the form."
 msgstr "通过表格添加新的水果到列表中。"
 
 #. type: Title ==
-#: upstream/_guides/cassandra.adoc:403
+#: upstream/_guides/cassandra.adoc:487
 #, fuzzy, no-wrap
 msgid "Reactive Programming with the Cassandra Client"
 msgstr "使用Cassandra客户端的反应式编程"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:409
+#: upstream/_guides/cassandra.adoc:493
 #, fuzzy
 msgid "The link:https://javadoc.io/doc/com.datastax.oss.quarkus/cassandra-quarkus-client/latest/com/datastax/oss/quarkus/runtime/api/session/QuarkusCqlSession.html[`QuarkusCqlSession` interface] gives you access to a series of reactive methods that integrate seamlessly with Quarkus and its reactive framework, Mutiny."
 msgstr "link:https://javadoc.io/doc/com.datastax.oss.quarkus/cassandra-quarkus-client/latest/com/datastax/oss/quarkus/runtime/api/session/QuarkusCqlSession.html[`QuarkusCqlSession`] 接口让你可以访问一系列的反应式方法，这些方法与Quarkus及其反应式框架Mutiny无缝集成。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:411
+#: upstream/_guides/cassandra.adoc:495
 #, fuzzy
 msgid "If you are not familiar with Mutiny, please check xref:mutiny-primer.adoc[Mutiny - an intuitive reactive programming library]."
 msgstr "如果你不熟悉Mutiny，请查看 link:mutiny-primer.html[Mutiny - 一个直观的反应式编程库] 。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:413
+#: upstream/_guides/cassandra.adoc:497
 #, fuzzy
 msgid "Let's rewrite our application using reactive programming with Mutiny."
 msgstr "让我们用Mutiny的反应式编程来重写我们的应用程序。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:415
+#: upstream/_guides/cassandra.adoc:499
 #, fuzzy
 msgid "First, let's declare another DAO interface that works in a reactive way:"
 msgstr "首先，让我们来声明另一个以反应式方式工作的DAO接口。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:420
+#: upstream/_guides/cassandra.adoc:504
 #, no-wrap
 msgid ""
 "@Dao\n"
@@ -785,7 +928,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:423
+#: upstream/_guides/cassandra.adoc:507
 #, no-wrap
 msgid ""
 "  @Update\n"
@@ -793,7 +936,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:427
+#: upstream/_guides/cassandra.adoc:511
 #, no-wrap
 msgid ""
 "  @Select\n"
@@ -802,31 +945,31 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:434
+#: upstream/_guides/cassandra.adoc:518
 #, fuzzy
 msgid "Note the usage of `MutinyMappedReactiveResultSet` - it is a specialized `Mutiny` type converted from the original `Publisher` returned by the driver, which also exposes a few extra methods, e.g. to obtain the query execution info. If you don't need anything in that interface, you can also simply declare your method to return `Multi`: `Multi<Fruit> findAll()`,"
 msgstr "请注意 `MutinyMappedReactiveResultSet` 的用法--它是由驱动程序返回的原始 `Publisher` 转换而来的专门的 `Mutiny` 类型，它还暴露了一些额外的方法，例如获取查询执行信息。如果你不需要该接口中的任何东西，你也可以简单地声明你的方法返回 `Multi` ： `Multi<Fruit> findAll()` 。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:437
+#: upstream/_guides/cassandra.adoc:521
 #, fuzzy
 msgid "Similarly, the method `updateAsync` returns a `Uni` - it is automatically converted from the original result set returned by the driver."
 msgstr "同样，方法 `updateAsync` ，返回一个 `Uni` --它是由驱动程序返回的原始结果集自动转换的。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:445
+#: upstream/_guides/cassandra.adoc:529
 #, fuzzy
 msgid "The Cassandra driver uses the Reactive Streams `Publisher` API for reactive calls. The Quarkus framework however uses Mutiny. Because of that, the `CqlQuarkusSession` interface transparently converts the `Publisher` instances returned by the driver into the reactive type `Multi`.  `CqlQuarkusSession` is also capable of converting a `Publisher` into a `Uni` – in this case, the publisher is expected to emit at most one row, then complete. This is suitable for write queries (they return no rows), or for read queries guaranteed to return one row at most (count queries, for example)."
 msgstr "Cassandra驱动使用Reactive Streams `Publisher` API进行反应性调用。然而Quarkus框架使用Mutiny。因为， `CqlQuarkusSession` 接口可以透明地将驱动程序返回的 `Publisher` 实例转换为反应式类型 `Multi` 。 `CqlQuarkusSession` 也能够将 `Publisher` 转换为 `Uni` - 在这种情况下，预计发布者最多发出一条记录，然后完成。这适用于写查询（它们不返回任何行），或保证最多返回一行的读查询（例如，计数查询）。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:447
+#: upstream/_guides/cassandra.adoc:531
 #, fuzzy
 msgid "Next, we need to adapt the `FruitMapper` to construct a `ReactiveFruitDao` instance:"
 msgstr "接下来，我们需要调整 `FruitMapper` ，构建一个 `ReactiveFruitDao` 的实例。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:453
+#: upstream/_guides/cassandra.adoc:537
 #, no-wrap
 msgid ""
 "@Mapper\n"
@@ -835,7 +978,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:457
+#: upstream/_guides/cassandra.adoc:541
 #, no-wrap
 msgid ""
 "  @DaoFactory\n"
@@ -844,13 +987,13 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:461
+#: upstream/_guides/cassandra.adoc:545
 #, fuzzy
 msgid "Now, we can create a `ReactiveFruitService` that leverages our reactive DAO:"
 msgstr "现在，我们可以创建一个 `ReactiveFruitService` ，利用我们的反应式DAO。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:466
+#: upstream/_guides/cassandra.adoc:550
 #, no-wrap
 msgid ""
 "@ApplicationScoped\n"
@@ -858,13 +1001,13 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:468
+#: upstream/_guides/cassandra.adoc:552
 #, no-wrap
 msgid "  @Inject ReactiveFruitDao fruitDao;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:472
+#: upstream/_guides/cassandra.adoc:556
 #, no-wrap
 msgid ""
 "  public Uni<Void> add(Fruit fruit) {\n"
@@ -873,7 +1016,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:477
+#: upstream/_guides/cassandra.adoc:561
 #, no-wrap
 msgid ""
 "  public Multi<Fruit> getAll() {\n"
@@ -883,13 +1026,13 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:480
+#: upstream/_guides/cassandra.adoc:564
 #, fuzzy
 msgid "Finally, we can create a `ReactiveFruitResource`:"
 msgstr "最后，我们可以创建一个 `ReactiveFruitResource` 。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:487
+#: upstream/_guides/cassandra.adoc:571
 #, no-wrap
 msgid ""
 "@Path(\"/reactive-fruits\")\n"
@@ -899,13 +1042,13 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:489
+#: upstream/_guides/cassandra.adoc:573
 #, no-wrap
 msgid "  @Inject ReactiveFruitService service;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:494
+#: upstream/_guides/cassandra.adoc:578
 #, no-wrap
 msgid ""
 "  @GET\n"
@@ -915,7 +1058,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:499
+#: upstream/_guides/cassandra.adoc:583
 #, no-wrap
 msgid ""
 "  @POST\n"
@@ -925,49 +1068,49 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:513
+#: upstream/_guides/cassandra.adoc:597
 #, fuzzy
 msgid "The above resource is exposing a new endpoint, `reactive-fruits`. Its capabilities are identical to the ones that we created before with `FruitResource`, but everything is handled in a reactive fashion, without any blocking operation."
 msgstr "上述资源公开了一个新的端点， `reactive-fruits` 。它的功能与我们之前用 `FruitResource` 创建的功能相同，但一切都以反应式方式处理，没有任何阻塞操作。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:517
+#: upstream/_guides/cassandra.adoc:601
 #, fuzzy
 msgid "The `getAll()` method above returns `Multi`, and the `add()` method returns `Uni`. These types are the same Mutiny types that we met before; they are automatically recognized by the Quarkus reactive REST API, so we don't need to convert them into JSON ourselves."
 msgstr "上面的 `getAll()` 方法返回 `Multi` ，而 `add()` 方法返回 `Uni` 。这些类型与我们之前遇到的Mutiny类型相同；它们被Quarkus反应式REST API自动识别，所以我们不需要自己把它们转换为JSON。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:519
+#: upstream/_guides/cassandra.adoc:603
 #, fuzzy
 msgid "RESTEasy Reactive natively supports the Mutiny reactive types e.g. `Uni` and `Multi`."
 msgstr "RESTEasy Reactive原生支持Mutiny的反应类型，例如 `Uni` 和 `Multi` 。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:522
+#: upstream/_guides/cassandra.adoc:606
 #, fuzzy
 msgid "This dependency is already included in this guide's pom.xml, but if you are starting a new project from scratch, make sure to include it."
 msgstr "这个依赖已经包含在本指南的pom.xml中，但如果你要从头开始一个新项目，请确保包含它。"
 
 #. type: Title ==
-#: upstream/_guides/cassandra.adoc:523
+#: upstream/_guides/cassandra.adoc:607
 #, fuzzy, no-wrap
 msgid "Testing the Reactive REST API"
 msgstr "测试反应式REST API"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:527
+#: upstream/_guides/cassandra.adoc:611
 #, fuzzy
 msgid "Run the application in dev mode as explained above, then you can use curl commands to interact with the underlying REST API."
 msgstr "如上所述，在开发模式下运行应用程序，然后你可以使用curl命令与底层REST API进行交互。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:529
+#: upstream/_guides/cassandra.adoc:613
 #, fuzzy
 msgid "To create a fruit using the reactive REST endpoint:"
 msgstr "要使用反应式REST端点创建一个水果。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:536
+#: upstream/_guides/cassandra.adoc:620
 #, no-wrap
 msgid ""
 "curl --header \"Content-Type: application/json\" \\\n"
@@ -977,55 +1120,55 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:539
+#: upstream/_guides/cassandra.adoc:623
 #, fuzzy
 msgid "To retrieve fruits with the reactive REST endpoint:"
 msgstr "要用反应式REST端点检索水果。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:543
+#: upstream/_guides/cassandra.adoc:627
 #, no-wrap
 msgid "curl -X GET http://localhost:8080/reactive-fruits\n"
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/cassandra.adoc:545
+#: upstream/_guides/cassandra.adoc:629
 #, fuzzy, no-wrap
 msgid "Creating a Reactive Frontend"
 msgstr "创建一个反应式的前端"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:550
+#: upstream/_guides/cassandra.adoc:634
 #, fuzzy
 msgid "Now let's add a simple web page to interact with our `ReactiveFruitResource`. In the `src/main/resources/META-INF/resources` directory, add a `reactive-fruits.html` file with the contents from link:src/main/resources/META-INF/resources/reactive-fruits.html[this file] in it."
 msgstr "现在让我们添加一个简单的网页来与我们的 `ReactiveFruitResource` 。在 `src/main/resources/META-INF/resources` 目录中，添加一个 `reactive-fruits.html` 文件，其中包含 link:src/main/resources/META-INF/resources/reactive-fruits.html[该文件] 的内容。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:552
+#: upstream/_guides/cassandra.adoc:636
 #, fuzzy
 msgid "You can now interact with your reactive REST service:"
 msgstr "现在你可以与你的反应式REST服务进行交互。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:555
+#: upstream/_guides/cassandra.adoc:639
 #, fuzzy
 msgid "Point your browser to `http://localhost:8080/reactive-fruits.html`;"
 msgstr "将您的浏览器指向 `<a href=\"http://localhost:8080/reactive-fruits.html\" class=\"bare\">http://localhost:8080/reactive-fruits.html</a>` ;"
 
 #. type: Title ==
-#: upstream/_guides/cassandra.adoc:557
+#: upstream/_guides/cassandra.adoc:641
 #, fuzzy, no-wrap
 msgid "Health Checks"
 msgstr "健康检查"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:563
+#: upstream/_guides/cassandra.adoc:647
 #, fuzzy
 msgid "If you are using the Quarkus SmallRye Health extension, then the Cassandra client will automatically add a readiness health check to validate the connection to the Cassandra cluster. This extension is already included in this guide's pom.xml, but if you need to include it manually in your application, add the following:"
 msgstr "如果你使用Quarkus SmallRye Health扩展，那么Cassandra客户端将自动添加就绪健康检查以验证与Cassandra集群的连接。这个扩展已经包含在本指南的pom.xml中，但如果你需要在你的应用程序中手动包含它，请添加以下内容。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:570
+#: upstream/_guides/cassandra.adoc:654
 #, no-wrap
 msgid ""
 "<dependency>\n"
@@ -1035,19 +1178,19 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:574
+#: upstream/_guides/cassandra.adoc:658
 #, fuzzy
 msgid "When health checks are available, you can access the `/health/ready` endpoint of your application and have information about the connection validation status."
 msgstr "当健康检查可用时，你可以访问你的应用程序的 `/health/ready` 端点，并拥有关于连接验证状态的信息。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:577
+#: upstream/_guides/cassandra.adoc:661
 #, fuzzy
 msgid "Running in dev mode with `mvn clean quarkus:dev`, if you point your browser to http://localhost:8080/health/ready you should see an output similar to the following one:"
 msgstr "在开发模式下运行 `mvn clean quarkus:dev` ，如果你把你的浏览器指向 http://localhost:8080/health/ready ，你应该看到类似于以下的输出。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:596
+#: upstream/_guides/cassandra.adoc:680
 #, no-wrap
 msgid ""
 "{\n"
@@ -1069,49 +1212,49 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:601
+#: upstream/_guides/cassandra.adoc:685
 #, fuzzy
 msgid "If you need health checks globally enabled in your application, but don't want to activate Cassandra health checks, you can disable Cassandra health checks by setting the `quarkus.cassandra.health.enabled` property to `false` in your `application.properties`."
 msgstr " `application.properties` 如果你需要在你的应用程序中全局启用健康检查，但不想激活Cassandra健康检查，你可以通过在你的 `quarkus.cassandra.health.enabled` 属性设置为 `false` ，来禁用Cassandra健康检查。"
 
 #. type: Title ==
-#: upstream/_guides/cassandra.adoc:602
+#: upstream/_guides/cassandra.adoc:686
 #, fuzzy, no-wrap
 msgid "Metrics"
 msgstr "度量衡"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:606
+#: upstream/_guides/cassandra.adoc:690
 #, fuzzy
 msgid "The Cassandra Quarkus client can provide metrics about the Cassandra session and about individual Cassandra nodes. It supports both Micrometer and MicroProfile."
 msgstr "Cassandra Quarkus客户端可以提供关于Cassandra会话和单个Cassandra节点的指标。它同时支持Micrometer和MicroProfile。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:609
+#: upstream/_guides/cassandra.adoc:693
 #, fuzzy
 msgid "The first step to enable metrics is to add a few additional dependencies depending on the metrics framework you plan to use."
 msgstr "启用度量衡的第一步是根据你计划使用的度量衡框架，添加一些额外的依赖项。"
 
 #. type: Title ===
-#: upstream/_guides/cassandra.adoc:610
+#: upstream/_guides/cassandra.adoc:694
 #, fuzzy, no-wrap
 msgid "Enabling Metrics with Micrometer"
 msgstr "用Micrometer实现指标化"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:613
+#: upstream/_guides/cassandra.adoc:697
 #, fuzzy
 msgid "Micrometer is the recommended metrics framework in Quarkus applications."
 msgstr "Micrometer是Quarkus应用中推荐的度量框架。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:615
+#: upstream/_guides/cassandra.adoc:699
 #, fuzzy
 msgid "To enable Micrometer metrics in your application, you need to add the following to your pom.xml."
 msgstr "为了在你的应用程序中启用Micrometer度量，你需要在你的pom.xml中添加以下内容。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:626
+#: upstream/_guides/cassandra.adoc:710
 #, no-wrap
 msgid ""
 "<dependency>\n"
@@ -1125,25 +1268,25 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:629
+#: upstream/_guides/cassandra.adoc:713
 #, fuzzy
 msgid "This guide uses Micrometer, so the above dependencies are already included in this guide's pom.xml."
 msgstr "本指南使用Micrometer，所以上述依赖已经包含在本指南的pom.xml中。"
 
 #. type: Title ===
-#: upstream/_guides/cassandra.adoc:630
+#: upstream/_guides/cassandra.adoc:714
 #, fuzzy, no-wrap
 msgid "Enabling Metrics with MicroProfile Metrics"
 msgstr "用MicroProfile度量标准启用度量标准"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:633
+#: upstream/_guides/cassandra.adoc:717
 #, fuzzy
 msgid "Remove any dependency to Micrometer from your pom.xml, then add the following ones instead:"
 msgstr "从你的pom.xml中删除任何对Micrometer的依赖，然后添加以下内容。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:644
+#: upstream/_guides/cassandra.adoc:728
 #, no-wrap
 msgid ""
 "<dependency>\n"
@@ -1157,91 +1300,91 @@ msgid ""
 msgstr ""
 
 #. type: Title ===
-#: upstream/_guides/cassandra.adoc:646
+#: upstream/_guides/cassandra.adoc:730
 #, fuzzy, no-wrap
 msgid "Enabling Cassandra Metrics"
 msgstr "启用Cassandra度量衡"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:651
+#: upstream/_guides/cassandra.adoc:735
 #, fuzzy
 msgid "Even when metrics are enabled in your application, the Cassandra client will not report any metrics, unless you opt in for this feature. So your next step is to enable Cassandra metrics in your `application.properties` file."
 msgstr "即使在你的应用程序中启用了度量，Cassandra 客户端也不会报告任何度量，除非你选择使用这个功能。所以你的下一步是在你的 `application.properties` 文件中启用 Cassandra 度量。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:655
+#: upstream/_guides/cassandra.adoc:739
 #, no-wrap
 msgid "quarkus.cassandra.metrics.enabled=true\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:658
+#: upstream/_guides/cassandra.adoc:742
 #, fuzzy
 msgid "That's it!"
 msgstr "就这样吧!"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:662
+#: upstream/_guides/cassandra.adoc:746
 #, fuzzy
 msgid "The final (and optional) step is to customize which specific Cassandra metrics you would like the Cassandra client to track. Several metrics can be tracked; if you skip this step, a default set of useful metrics will be automatically tracked."
 msgstr "最后一步（也是可选的）是自定义你希望 Cassandra 客户端跟踪哪些特定的 Cassandra 指标。可以跟踪几个指标；如果你跳过这一步，一组默认的有用指标将被自动跟踪。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:668
+#: upstream/_guides/cassandra.adoc:752
 #, fuzzy
 msgid "For the full list of available metric names, please refer to the link:https://docs.datastax.com/en/developer/java-driver/latest/manual/core/configuration/reference/[driver settings reference] page; search for the `advanced.metrics` section.  Also, Cassandra driver metrics are covered in detail in the https://docs.datastax.com/en/developer/java-driver/latest/manual/core/metrics/[driver manual]."
 msgstr "关于可用度量名称的完整列表，请参考 link:https://docs.datastax.com/en/developer/java-driver/latest/manual/core/configuration/reference/[驱动设置参考] 页；搜索 `advanced.metrics` 部分。另外，Cassandra驱动指标在 link:https://docs.datastax.com/en/developer/java-driver/latest/manual/core/metrics/[驱动手册] 中也有详细介绍。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:670
+#: upstream/_guides/cassandra.adoc:754
 #, fuzzy
 msgid "If you do wish to customize which metrics to track, you should use the following properties:"
 msgstr "如果你确实希望自定义追踪哪些指标，你应该使用以下属性。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:673
+#: upstream/_guides/cassandra.adoc:757
 #, fuzzy
 msgid "`quarkus.cassandra.metrics.session.enabled` should contain the session-level metrics to enable (metrics that are global to the session)."
 msgstr " `quarkus.cassandra.metrics.session.enabled` 应该包含要启用的会话级指标（对会话来说是全局的指标）。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:675
+#: upstream/_guides/cassandra.adoc:759
 #, fuzzy
 msgid "`quarkus.cassandra.metrics.node.enabled` should contain the node-level metrics to enable (metrics for which each node contacted by the Cassandra client gets its own metric value)."
 msgstr " `quarkus.cassandra.metrics.node.enabled` 应包含要启用的节点级度量（Cassandra 客户端接触的每个节点都会得到自己的度量值的度量）。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:677
+#: upstream/_guides/cassandra.adoc:761
 #, fuzzy
 msgid "Both properties accept a comma-separated list of valid metric names."
 msgstr "这两个属性都接受一个以逗号分隔的有效度量衡名称列表。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:679
+#: upstream/_guides/cassandra.adoc:763
 #, fuzzy
 msgid "For example, let's assume that you wish to enable the following three Cassandra metrics:"
 msgstr "例如，让我们假设你希望启用以下三个Cassandra度量。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:681
+#: upstream/_guides/cassandra.adoc:765
 #, fuzzy
 msgid "Session-level: `session.connected-nodes` and `session.bytes-sent`;"
 msgstr "会议级别： `session.connected-nodes` 和 `session.bytes-sent` 。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:682
+#: upstream/_guides/cassandra.adoc:766
 #, fuzzy
 msgid "Node-level: `node.pool.open-connections`."
 msgstr "节点级： `node.pool.open-connections` 。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:684
+#: upstream/_guides/cassandra.adoc:768
 #, fuzzy
 msgid "Then you should add the following settings to your `application.properties`:"
 msgstr "然后，你应该将以下设置添加到你的 `application.properties` 。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:690
+#: upstream/_guides/cassandra.adoc:774
 #, no-wrap
 msgid ""
 "quarkus.cassandra.metrics.enabled=true\n"
@@ -1250,130 +1393,134 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:694
+#: upstream/_guides/cassandra.adoc:778
 #, fuzzy
 msgid "This guide's `application.properties` file has already many metrics enabled; you can use its metrics list as a good starting point for exposing useful Cassandra metrics in your application."
 msgstr "本指南的 `application.properties` 文件已经启用了许多指标；你可以把它的指标列表作为在你的应用程序中公开有用的 Cassandra 指标的良好起点。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:697
+#: upstream/_guides/cassandra.adoc:781
 #, fuzzy
 msgid "When metrics are properly enabled, metric reports for all enabled metrics are available at the `/metrics` REST endpoint of your application."
 msgstr "当指标被正确启用时，所有被启用的指标的指标报告都可以在你的应用程序的 `/metrics` REST端点得到。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:701
+#: upstream/_guides/cassandra.adoc:785
 #, fuzzy
 msgid "Running in dev mode with `mvn clean quarkus:dev`, if you point your browser to `http://localhost:8080/metrics` you should see a list of metrics; search for metrics whose names contain `cassandra`."
 msgstr "在开发模式下运行 `mvn clean quarkus:dev` ，如果你把你的浏览器指向 `<a href=\"http://localhost:8080/metrics\" class=\"bare\">http://localhost:8080/metrics</a>` 你应该看到一个指标列表；搜索名称中包含 `cassandra` 的指标。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:705
+#: upstream/_guides/cassandra.adoc:789
 #, fuzzy
 msgid "For Cassandra metrics to show up, the Cassandra client needs to be initialized and connected; if you are using lazy initialization (see below), you won't see any Cassandra metrics until your application actually connects and hits the database for the first time."
 msgstr "为了让Cassandra指标显示出来，Cassandra客户端需要被初始化和连接；如果你使用懒惰初始化（见下文），在你的应用程序实际连接并首次点击数据库之前，你不会看到任何Cassandra指标。"
 
 #. type: Title ==
-#: upstream/_guides/cassandra.adoc:706
+#: upstream/_guides/cassandra.adoc:790
 #, fuzzy, no-wrap
 msgid "Running in native mode"
 msgstr "在本地模式下运行"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:710
+#: upstream/_guides/cassandra.adoc:794
 #, fuzzy
 msgid "If you installed GraalVM, you can link:https://quarkus.io/guides/building-native-image[build a native image] using:"
 msgstr "如果你安装了GraalVM，你可以用以下方法 link:https://quarkus.io/guides/building-native-image[构建一个本地镜像] 。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:714
+#: upstream/_guides/cassandra.adoc:798
 #, no-wrap
 msgid "mvn clean package -Dnative\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:718
+#: upstream/_guides/cassandra.adoc:802
 #, fuzzy
 msgid "Beware that native compilation can take a significant amount of time! Once the compilation is done, you can run the native executable as follows:"
 msgstr "请注意，本地编译可能需要大量的时间!编译完成后，你可以按以下方式运行本地可执行文件。"
 
 #. type: delimited block -
-#: upstream/_guides/cassandra.adoc:722
+#: upstream/_guides/cassandra.adoc:806
 #, no-wrap
 msgid "./target/cassandra-quarkus-quickstart-*-runner\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:725
+#: upstream/_guides/cassandra.adoc:809
 #, fuzzy
 msgid "You can then point your browser to `http://localhost:8080/fruits.html` and use your application."
 msgstr "然后你可以将你的浏览器指向 `<a href=\"http://localhost:8080/fruits.html\" class=\"bare\">http://localhost:8080/fruits.html</a>` 并使用你的应用程序。"
 
 #. type: Title ==
-#: upstream/_guides/cassandra.adoc:726
+#: upstream/_guides/cassandra.adoc:810
 #, fuzzy, no-wrap
-msgid "Eager vs Lazy Initialization"
+msgid "Choosing between eager and lazy initialization"
 msgstr "渴望与懒惰的初始化"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:729
+#: upstream/_guides/cassandra.adoc:813
 #, fuzzy
-msgid "This extension allows you to inject either:"
+msgid "As explained above, this extension allows you to inject many types of beans:"
 msgstr "这个扩展允许你注入任何一种。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:731
+#: upstream/_guides/cassandra.adoc:815
 #, fuzzy
-msgid "a `QuarkusCqlSession` bean;"
+msgid "A simple bean like `QuarkusCqlSession` or `FruitDao`;"
 msgstr "a `QuarkusCqlSession` 豆子。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:732
+#: upstream/_guides/cassandra.adoc:817
 #, fuzzy
-msgid "or the asynchronous version of this bean, that is, `CompletionStage<QuarkusCqlSession>`;"
+msgid "The asynchronous version of that bean, for example `CompletionStage<QuarkusCqlSession>` or `CompletionStage<FruitDao>;"
 msgstr "或该bean的异步版本，即 `CompletionStage<QuarkusCqlSession>` 。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:733
+#: upstream/_guides/cassandra.adoc:818
 #, fuzzy
-msgid "or the reactive version of this bean, that is, `Uni<QuarkusCqlSession>`."
+msgid "The reactive version of that bean, for example `Uni<QuarkusCqlSession>` or `Uni<FruitDao>`."
 msgstr "或这个bean的反应式版本，即： `Uni<QuarkusCqlSession>` 。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:737
+#: upstream/_guides/cassandra.adoc:823
 #, fuzzy
-msgid "The most straightforward approach is obviously to inject `QuarkusCqlSession` directly. This should work just fine for most applications; however, the `QuarkusCqlSession` bean needs to be initialized before it can be used, and this process is blocking."
+msgid "The most straightforward approach is obviously to inject the bean directly. This should work just fine for most applications. However, the `QuarkusCqlSession` bean, and all DAO beans that depend on it, might take some time to initialize before they can be used for the first time, and this process is blocking."
 msgstr "最直接的方法显然是直接注入 `QuarkusCqlSession` 。这对大多数应用程序来说应该是很好的；然而，在使用 `QuarkusCqlSession` bean之前需要对其进行初始化，而这个过程是阻塞的。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:744
+#: upstream/_guides/cassandra.adoc:830
 #, fuzzy
 msgid "Fortunately, it is possible to control when the initialization should happen: the `quarkus.cassandra.init.eager-init` parameter determines if the `QuarkusCqlSession` bean should be initialized on its first access (lazy) or when the application is starting (eager). The default value of this parameter is `false`, meaning the init process is lazy: the `QuarkusCqlSession` bean will be initialized lazily on its first access – for example, when there is a first REST request that needs to interact with the Cassandra database."
 msgstr "幸运的是，可以控制初始化发生的时间： `quarkus.cassandra.init.eager-init` 参数决定了 `QuarkusCqlSession` Bean是在其第一次访问时被初始化（懒惰）还是在应用程序启动时被初始化（急切）。这个参数的默认值是 `false` ，意味着初始化过程是懒惰的： `QuarkusCqlSession` Bean将在其第一次访问时被懒惰地初始化--例如，当有第一个REST请求需要与Cassandra数据库交互时。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:751
+#: upstream/_guides/cassandra.adoc:837
 #, fuzzy
-msgid "Using lazy initialization speeds up your application startup time, and avoids startup failures if the Cassandra database is not available. However, it could also prove dangerous if your code is fully asynchronous, e.g. if you are using https://quarkus.io/guides/reactive-routes[reactive routes]: indeed, the lazy initialization could accidentally happen on a thread that is not allowed to block, such as a Vert.x event loop thread. Therefore, setting `quarkus.cassandra.init.eager-init` to `false` and injecting `QuarkusCqlSession` should be avoided in these contexts."
+msgid "Using lazy initialization speeds up your application startup time, and avoids startup failures if the Cassandra database is not available. However, it could also prove dangerous if your code is fully non-blocking, for example if it uses https://quarkus.io/guides/reactive-routes[reactive routes]. Indeed, the lazy initialization could accidentally happen on a thread that is not allowed to block, such as a Vert.x event loop thread. Therefore, setting `quarkus.cassandra.init.eager-init` to `false` and injecting `QuarkusCqlSession` should be avoided in these contexts."
 msgstr "使用懒惰初始化可以加快应用程序的启动时间，并避免在Cassandra数据库不可用时出现启动失败。然而，如果你的代码是完全异步的，例如，如果你使用 link:https://quarkus.io/guides/reactive-routes[反应式路由] ，它也可能被证明是危险的：事实上，懒惰初始化可能意外地发生在一个不允许阻塞的线程上，例如Vert.x事件循环线程。因此，在这些情况下，应该避免将 `quarkus.cassandra.init.eager-init` 设置为 `false` ，并注入 `QuarkusCqlSession` 。"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:757
-msgid "If you want to use Vert.x (or any other reactive framework) and keep the lazy initialization behavior, you should instead inject only `CompletionStage<QuarkusCqlSession>` or `Uni<QuarkusCqlSession>`. When injecting these beans, the initialization process will be triggered lazily, but it will happen in the background, in a non-blocking way, leveraging the Vert.x event loop. This way you don't risk blocking the Vert.x thread."
+#: upstream/_guides/cassandra.adoc:843
+msgid "If you want to use Vert.x (or any other non-blocking framework) and keep the lazy initialization behavior, you should instead inject only a `CompletionStage` or a `Uni` of the desired bean. When injecting these beans, the initialization process will be triggered lazily, but it will happen in the background, in a non-blocking way, leveraging the Vert.x event loop. This way you don't risk blocking the Vert.x thread."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:762
-msgid "Alternatively, you can set `quarkus.cassandra.init.eager-init` to true: in this case the session bean will be initialized eagerly during application startup, on the Quarkus main thread. This would eliminate any risk of blocking a Vert.x thread, at the cost of making your startup time (much)  longer."
+#: upstream/_guides/cassandra.adoc:848
+msgid "Alternatively, you can set `quarkus.cassandra.init.eager-init` to true: in this case the session bean and all DAO beans will be initialized eagerly during application startup, on the Quarkus main thread. This would eliminate any risk of blocking a Vert.x thread, at the cost of making your startup time (much) longer."
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/cassandra.adoc:763
+#: upstream/_guides/cassandra.adoc:849
 #, no-wrap
 msgid "Conclusion"
 msgstr "解决方案"
 
 #. type: Plain text
-#: upstream/_guides/cassandra.adoc:767
+#: upstream/_guides/cassandra.adoc:853
 msgid "Accessing a Cassandra database from a client application is easy with Quarkus and the Cassandra extension, which provides configuration and native support for the DataStax Java driver for Apache Cassandra."
 msgstr ""
+
+#, fuzzy
+#~ msgid "All `@Dao`-annotated interfaces in your project, as long as they are produced by a corresponding `@DaoFactory`-annotated method declared in a mapper interface from your project."
+#~ msgstr "你项目中所有 `@Dao` -注释的接口，只要它们是由你项目中的映射器接口中声明的相应 `@DaoFactory` -注释的方法产生的。"
