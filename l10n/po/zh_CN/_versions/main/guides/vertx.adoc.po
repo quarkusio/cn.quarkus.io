@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2022-10-14 03:07+0000\n"
+"POT-Creation-Date: 2023-01-12 02:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -584,6 +584,7 @@ msgstr "将以下方法添加到 `VertxResource` 类中:"
 #. type: delimited block -
 #: upstream/_versions/main/guides/vertx.adoc:291
 #: upstream/_versions/main/guides/vertx.adoc:372
+#: upstream/_versions/main/guides/vertx.adoc:436
 msgid "[source, java]"
 msgstr ""
 
@@ -859,20 +860,54 @@ msgstr "该响应表明，除了英文页面，维基百科上还有关于 Quark
 #. type: Title ==
 #: upstream/_versions/main/guides/vertx.adoc:428
 #, no-wrap
+msgid "Executing Asynchronous Code From a Blocking Thread"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/vertx.adoc:434
+msgid "Sometimes it's necessary to execute an asynchronous code from a blocking thread.  Specifically, to execute the code on a Vert.x thread with an isolated/duplicated Vert.x context.  A typical example is an asynchronous code that needs to leverage the Hibernate Reactive API during application startup.  Quarkus provides the `VertxContextSupport#subscribeAndAwait()` method which subscribes to the supplied `io.smallrye.mutiny.Uni` on a Vert.x duplicated context, then blocks the current thread and waits for the result."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/vertx.adoc:442
+#, no-wrap
+msgid ""
+"void onStart(@Observes StartupEvent event, Mutiny.SessionFactory sf) {\n"
+"   VertxContextSupport.subscribeAndAwait(() -> {\n"
+"      sf.withTransaction(session -> session.persist(new Person())); \n"
+"   });\n"
+"}\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/vertx.adoc:445
+#, no-wrap
+msgid "NOTE: If it's necessary, the CDI request context is activated during execution of the asynchronous code.\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/vertx.adoc:447
+#, no-wrap
+msgid "CAUTION: `VertxContextSupport#subscribeAndAwait()` must not be called on an event loop!\n"
+msgstr ""
+
+#. type: Title ==
+#: upstream/_versions/main/guides/vertx.adoc:449
+#, no-wrap
 msgid "Going further"
 msgstr "进一步探索"
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/vertx.adoc:433
+#: upstream/_versions/main/guides/vertx.adoc:454
 msgid "This guide introduced how you can use Vert.x APIs from a Quarkus application.  It's just a brief overview.  If you want to know more, check the xref:vertx-reference.adoc[reference guide about Vert.x in Quarkus]."
 msgstr "本指南介绍了如何在 Quarkus 应用程序中使用 Vert.x API。这只是一个简短的概述。如果你想了解更多信息，请查看 xref:vertx-reference.adoc[Quarkus 中有关 Vert.x 的参考指南]。"
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/vertx.adoc:437
+#: upstream/_versions/main/guides/vertx.adoc:458
 msgid "As we have seen, the event bus is the connecting tissue of Vert.x applications.  Quarkus integrates it so different beans can interact with asynchronous messages.  This part is covered in the xref:reactive-event-bus.adoc[event bus documentation]."
 msgstr "正如我们所见，事件总线是 Vert.x 应用程序之间的连接桥梁。 Quarkus 集成了它，因此不同的bean之间能够以异步消息的方式进行交互。这部分内容包含在 xref:reactive-event-bus.adoc[事件总线文档] 中。"
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/vertx.adoc:438
+#: upstream/_versions/main/guides/vertx.adoc:459
 msgid "Learn how to implement highly performant, low-overhead database applications on Quarkus with the xref:reactive-sql-clients.adoc[Reactive SQL Clients]."
 msgstr "了解如何使用 xref:reactive-sql-clients.adoc[响应式SQL客户端] 在 Quarkus 上实现高性能、低开销的数据库应用程序。"
