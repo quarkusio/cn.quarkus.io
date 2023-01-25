@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-12-14 18:03+0000\n"
+"POT-Creation-Date: 2023-01-25 16:14+0000\n"
 "PO-Revision-Date: 2022-06-06 00:44+0800\n"
 "Last-Translator: Zheng Feng <zh.feng@gmail.com>\n"
 "Language-Team: \n"
@@ -99,7 +99,7 @@ msgstr "定义你的事务边界的最简单的方法是在你的入口方法上
 
 #. type: delimited block -
 #: upstream/_guides/transaction.adoc:52 upstream/_guides/transaction.adoc:100
-#: upstream/_guides/transaction.adoc:254
+#: upstream/_guides/transaction.adoc:259
 #, no-wrap
 msgid ""
 "@ApplicationScoped\n"
@@ -349,20 +349,23 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/transaction.adoc:182
+#: upstream/_guides/transaction.adoc:185
 #, no-wrap
 msgid ""
-"    public void lambdaExample() {\n"
-"        QuarkusTransaction.run(() -> {\n"
+"    public void runnerExample() {\n"
+"        QuarkusTransaction.requiringNew().run(() -> {\n"
+"            //do work\n"
+"        });\n"
+"        QuarkusTransaction.joiningExisting().run(() -> {\n"
 "            //do work\n"
 "        });\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/transaction.adoc:198
+#: upstream/_guides/transaction.adoc:200
 #, no-wrap
 msgid ""
-"        int result = QuarkusTransaction.call(QuarkusTransaction.runOptions()\n"
+"        int result = QuarkusTransaction.requiringNew()\n"
 "                .timeout(10)\n"
 "                .exceptionHandler((throwable) -> {\n"
 "                    if (throwable instanceof SomeException) {\n"
@@ -370,86 +373,99 @@ msgid ""
 "                    }\n"
 "                    return RunOptions.ExceptionResult.ROLLBACK;\n"
 "                })\n"
-"                .semantic(RunOptions.Semantic.REQUIRE_NEW), () -> {\n"
-"            //do work\n"
-"            return 0;\n"
-"        });\n"
+"                .call(() -> {\n"
+"                    //do work\n"
+"                    return 0;\n"
+"                });\n"
 "    }\n"
 "}\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/transaction.adoc:205
-msgid "The above example shows a few different ways the API can be used. The first method simply calls begin, does some work and commits it.  This created transaction is tied to the CDI request scope, so if it is still active when the request scope is destroyed then it will be automatically rolled back. This removes the need to explicitly catch exceptions and call `rollback`, and acts as a safety net against inadvertent transaction leaks, however it does mean that this can only be used when the request scope is active. The second example in the method calls begin with a timeout option, and then rolls back the transaction."
-msgstr "上面的例子显示了几种不同的API使用方法。第一个方法是简单地调用begin，做一些工作并提交。这个创建的事务是与CDI请求范围相联系的，所以如果它在请求范围被破坏时仍处于活动状态，那么它将被自动回滚。这样就不需要明确地捕捉异常和调用 `rollback` ，并作为一个安全措施来防止无意中的事务泄露，然而这也意味着这只能在请求范围处于活动状态时使用。方法调用中的第二个例子以一个超时选项开始，然后回滚事务。"
+#: upstream/_guides/transaction.adoc:203
+msgid "The above example shows a few different ways the API can be used."
+msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/transaction.adoc:209
-msgid "The second example shows the use of lambda scoped transactions, the first just runs a `Runnable` within a transaction, the second, runs `Callable` with some specific options. In particular the `exceptionHandler` method can be used to control if the transaction is rolled back or not on exception, and the `semantic` method controls the behaviour if an existing transaction is already started."
+#, fuzzy
+#| msgid "The above example shows a few different ways the API can be used. The first method simply calls begin, does some work and commits it.  This created transaction is tied to the CDI request scope, so if it is still active when the request scope is destroyed then it will be automatically rolled back. This removes the need to explicitly catch exceptions and call `rollback`, and acts as a safety net against inadvertent transaction leaks, however it does mean that this can only be used when the request scope is active. The second example in the method calls begin with a timeout option, and then rolls back the transaction."
+msgid "The first method simply calls begin, does some work and commits it.  This created transaction is tied to the CDI request scope, so if it is still active when the request scope is destroyed then it will be automatically rolled back. This removes the need to explicitly catch exceptions and call `rollback`, and acts as a safety net against inadvertent transaction leaks, however it does mean that this can only be used when the request scope is active. The second example in the method calls begin with a timeout option, and then rolls back the transaction."
+msgstr "上面的例子显示了几种不同的API使用方法。第一个方法是简单地调用begin，做一些工作并提交。这个创建的事务是与CDI请求范围相联系的，所以如果它在请求范围被破坏时仍处于活动状态，那么它将被自动回滚。这样就不需要明确地捕捉异常和调用 `rollback` ，并作为一个安全措施来防止无意中的事务泄露，然而这也意味着这只能在请求范围处于活动状态时使用。方法调用中的第二个例子以一个超时选项开始，然后回滚事务。"
+
+#. type: Plain text
+#: upstream/_guides/transaction.adoc:215
+#, fuzzy
+#| msgid "The second example shows the use of lambda scoped transactions, the first just runs a `Runnable` within a transaction, the second, runs `Callable` with some specific options. In particular the `exceptionHandler` method can be used to control if the transaction is rolled back or not on exception, and the `semantic` method controls the behaviour if an existing transaction is already started."
+msgid "The second method shows the use of lambda scoped transactions with `QuarkusTransaction.runner(...)`; the first example just runs a `Runnable` within a new transaction, the second does the same but joining the existing transaction (if any), and the third calls a `Callable` with some specific options.  In particular the `exceptionHandler` method can be used to control if the transaction is rolled back or not on exception."
 msgstr "第二个例子展示了lambda范围内事务的使用，第一个例子只是在一个事务中运行 `Runnable` ，第二个例子，运行 `Callable` ，并带有一些特定的选项。特别是 `exceptionHandler` 方法可以用来控制事务是否在异常情况下回滚，而 `semantic` 方法可以控制现有事务已经开始时的行为。"
 
 #. type: Plain text
-#: upstream/_guides/transaction.adoc:211
+#: upstream/_guides/transaction.adoc:217
 msgid "The following semantics are supported:"
 msgstr "支持以下语义："
 
 #. type: Labeled list
-#: upstream/_guides/transaction.adoc:213
+#: upstream/_guides/transaction.adoc:219
 #, no-wrap
-msgid "DISALLOW_EXISTING"
-msgstr "DISALLOW_EXISTING"
+msgid "`QuarkusTransaction.disallowingExisting()`/`DISALLOW_EXISTING`"
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/transaction.adoc:217
+#: upstream/_guides/transaction.adoc:223
 msgid "If a transaction is already associated with the current thread a `QuarkusTransactionException` will be thrown, otherwise a new transaction is started, and follows all the normal lifecycle rules."
 msgstr "如果一个事务已经与当前线程相关联，将抛出一个 `QuarkusTransactionException` ，否则将启动一个新的事务，并遵循所有正常的生命周期规则。"
 
 #. type: Labeled list
-#: upstream/_guides/transaction.adoc:218
+#: upstream/_guides/transaction.adoc:224
 #, no-wrap
-msgid "JOIN_EXISTING"
-msgstr "JOIN_EXISTING"
+msgid "`QuarkusTransaction.joiningExisting()`/`JOIN_EXISTING`"
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/transaction.adoc:227
+#: upstream/_guides/transaction.adoc:233
 msgid "If no transaction is active then a new transaction will be started, and committed when the method ends.  If an exception is thrown the exception handler registered by `#exceptionHandler(Function)` will be called to decide if the TX should be committed or rolled back.  If an existing transaction is active then the method is run in the context of the existing transaction. If an exception is thrown the exception handler will be called, however a result of `ExceptionResult#ROLLBACK` will result in the TX marked as rollback only, while a result of `ExceptionResult#COMMIT` will result in no action being taken."
 msgstr "如果没有活动的事务，那么一个新的事务将被启动，并在方法结束时提交。如果一个异常被抛出，由 `#exceptionHandler(Function)` 注册的异常处理程序将被调用，以决定TX是否应该被提交或回滚。如果一个现有的事务处于活动状态，那么该方法将在现有事务的背景下运行。如果抛出一个异常，将调用异常处理程序，但是 `ExceptionResult#ROLLBACK` 的结果将导致TX被标记为回滚，而 `ExceptionResult#COMMIT` 的结果将导致不采取任何行动。"
 
 #. type: Labeled list
-#: upstream/_guides/transaction.adoc:228
+#: upstream/_guides/transaction.adoc:234
 #, no-wrap
-msgid "REQUIRE_NEW"
-msgstr "REQUIRE_NEW"
+msgid "`QuarkusTransaction.requiringNew()`/`REQUIRE_NEW`"
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/transaction.adoc:235
-msgid "This is the default semantic.  If an existing transaction is already associated with the current thread then the transaction is suspended, and resumed once the current transaction is complete.  A new transaction is started after the existing transaction is suspended, and follows all the normal lifecycle rules."
+#: upstream/_guides/transaction.adoc:240
+#, fuzzy
+#| msgid "This is the default semantic.  If an existing transaction is already associated with the current thread then the transaction is suspended, and resumed once the current transaction is complete.  A new transaction is started after the existing transaction is suspended, and follows all the normal lifecycle rules."
+msgid "If an existing transaction is already associated with the current thread then the transaction is suspended, then a new transaction is started which follows all the normal lifecycle rules, and when it's complete the original transaction is resumed.  Otherwise, a new transaction is started, and follows all the normal lifecycle rules."
 msgstr "这是默认的语义。如果一个现有的事务已经与当前线程相关联，那么该事务将被暂停，并在当前事务完成后恢复。一个新的事务在现有事务被暂停后开始，并遵循所有正常的生命周期规则。"
 
 #. type: Labeled list
-#: upstream/_guides/transaction.adoc:236
+#: upstream/_guides/transaction.adoc:241
 #, no-wrap
-msgid "SUSPEND_EXISTING"
-msgstr "SUSPEND_EXISTING"
+msgid "`QuarkusTransaction.suspendingExisting()`/`SUSPEND_EXISTING`"
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/transaction.adoc:243
-msgid "If no transaction is active then this semantic is basically a no-op.  If a transaction is active then it is suspended, and resumed after the task is run.  The exception handler will never be consulted when this semantic is in use, specifying both an exception handler and this semantic is considered an error.  This semantic allows for code to easily be run outside the scope of a transaction."
+#: upstream/_guides/transaction.adoc:248
+#, fuzzy
+#| msgid "If no transaction is active then this semantic is basically a no-op.  If a transaction is active then it is suspended, and resumed after the task is run.  The exception handler will never be consulted when this semantic is in use, specifying both an exception handler and this semantic is considered an error.  This semantic allows for code to easily be run outside the scope of a transaction."
+msgid "If no transaction is active then these semantics are basically a no-op.  If a transaction is active then it is suspended, and resumed after the task is run.  The exception handler will never be consulted when these semantics are in use, specifying both an exception handler and these semantics are considered an error.  These semantics allows for code to easily be run outside the scope of a transaction."
 msgstr "如果没有事务处于活动状态，那么这个语义基本上就是一个无用功。如果一个事务处于活动状态，那么它就会被暂停，并在任务运行之后恢复。在使用这种语义的时候，将永远不会查询异常处理程序，同时指定异常处理程序和这种语义被认为是一个错误。这种语义允许在事务的范围之外轻松地运行代码。"
 
 #. type: Title ===
-#: upstream/_guides/transaction.adoc:246
+#: upstream/_guides/transaction.adoc:251
 #, no-wrap
 msgid "Legacy API approach"
 msgstr "传统的API方法"
 
 #. type: Plain text
-#: upstream/_guides/transaction.adoc:249
+#: upstream/_guides/transaction.adoc:254
 msgid "The less easy way is to inject a `UserTransaction` and use the various transaction demarcation methods."
 msgstr "不太容易的方法是注入一个 `UserTransaction` ，并使用各种事务处理方法。"
 
 #. type: delimited block -
-#: upstream/_guides/transaction.adoc:258
+#: upstream/_guides/transaction.adoc:263
 #, no-wrap
 msgid ""
 "    @Inject ChildDAO childDAO;\n"
@@ -458,7 +474,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/transaction.adoc:273
+#: upstream/_guides/transaction.adoc:278
 #, no-wrap
 msgid ""
 "    public void getAGiftFromSanta(Child child, String giftDescription) {\n"
@@ -478,70 +494,70 @@ msgid ""
 msgstr ""
 
 #. type: delimited block =
-#: upstream/_guides/transaction.adoc:278
+#: upstream/_guides/transaction.adoc:283
 msgid "You cannot use `UserTransaction` in a method having a transaction started by a `@Transactional` call."
 msgstr "你不能在一个由 `@Transactional` 控制事务启动的方法中使用 `UserTransaction` 。"
 
 #. type: Title ==
-#: upstream/_guides/transaction.adoc:280
+#: upstream/_guides/transaction.adoc:285
 #, no-wrap
 msgid "Configuring the transaction timeout"
 msgstr "配置事务超时"
 
 #. type: Plain text
-#: upstream/_guides/transaction.adoc:282
+#: upstream/_guides/transaction.adoc:287
 msgid "You can configure the default transaction timeout, the timeout that applies to all transactions managed by the transaction manager, via the property `quarkus.transaction-manager.default-transaction-timeout`, specified as a duration."
 msgstr "你可以通过属性 `quarkus.transaction-manager.default-transaction-timeout` 来配置默认的事务超时，即适用于由事务管理器管理的所有事务的超时，指定为一个持续时间。"
 
 #. type: Plain text
-#: upstream/_guides/transaction.adoc:286
+#: upstream/_guides/transaction.adoc:291
 msgid "The default value is 60 seconds."
 msgstr "默认值是60秒。"
 
 #. type: Title ==
-#: upstream/_guides/transaction.adoc:287
+#: upstream/_guides/transaction.adoc:292
 #, no-wrap
 msgid "Configuring transaction node name identifier"
 msgstr "配置事务节点名称标识符"
 
 #. type: Plain text
-#: upstream/_guides/transaction.adoc:291
+#: upstream/_guides/transaction.adoc:296
 msgid "Narayana, as the underlying transaction manager, has a concept of a unique node identifier.  This is important if you consider using XA transactions that involve multiple resources."
 msgstr "Narayana作为底层事务管理器，有一个唯一节点标识符的概念。如果你考虑使用涉及多个资源的XA事务，这就很重要了。"
 
 #. type: Plain text
-#: upstream/_guides/transaction.adoc:297
+#: upstream/_guides/transaction.adoc:302
 msgid "The node name identifier plays a crucial part in the identification of a transaction.  The node name identifier is forged into the transaction id when the transaction is created.  Based on the node name identifier, the transaction manager is capable of recognizing the XA transaction counterparts created in database or JMS broker. The identifier makes possible for the transaction manager to roll back the transaction counterparts during recovery."
 msgstr "节点名称标识符在交易的识别中起着至关重要的作用。当交易被创建时，节点名称标识符被做为成交易ID的一部分。基于节点名称标识符，事务管理器能够识别在数据库或JMS代理中创建的XA事务对应物。该标识符使事务管理器有可能在恢复期间回滚事务对应方。"
 
 #. type: Plain text
-#: upstream/_guides/transaction.adoc:300
+#: upstream/_guides/transaction.adoc:305
 msgid "The node name identifier needs to be unique per transaction manager deployment.  And the node identifier needs to be stable over the transaction manager restarts."
 msgstr "节点名称标识符需要在每个事务管理器部署中是唯一的。而且节点标识符需要在事务管理器重新启动时保持不变。"
 
 #. type: Plain text
-#: upstream/_guides/transaction.adoc:302
+#: upstream/_guides/transaction.adoc:307
 msgid "The node name identifier may be configured via the property `quarkus.transaction-manager.node-name`."
 msgstr "节点名称标识符可以通过属性 `quarkus.transaction-manager.node-name` 进行配置。"
 
 #. type: Title ==
-#: upstream/_guides/transaction.adoc:304
+#: upstream/_guides/transaction.adoc:309
 #, no-wrap
 msgid "Using `@TransactionScoped` to bind CDI beans to the transaction lifecycle"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/transaction.adoc:308
+#: upstream/_guides/transaction.adoc:313
 msgid "You can define beans that live for as long as a transaction, and through CDI lifecycle events perform actions when a transaction starts and ends."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/transaction.adoc:310
+#: upstream/_guides/transaction.adoc:315
 msgid "Just assign the transaction xref:cdi.adoc#bean-scope[scope] to such beans using the `@TransactionScoped` annotation:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/transaction.adoc:315
+#: upstream/_guides/transaction.adoc:320
 #, no-wrap
 msgid ""
 "@TransactionScoped\n"
@@ -549,7 +565,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/transaction.adoc:319
+#: upstream/_guides/transaction.adoc:324
 #, no-wrap
 msgid ""
 "    // The bean's state is bound to a specific transaction,\n"
@@ -558,7 +574,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/transaction.adoc:324
+#: upstream/_guides/transaction.adoc:329
 #, no-wrap
 msgid ""
 "    @PostConstruct\n"
@@ -568,7 +584,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/transaction.adoc:330
+#: upstream/_guides/transaction.adoc:335
 #, no-wrap
 msgid ""
 "    @PreDestroy\n"
@@ -579,12 +595,12 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/transaction.adoc:335
+#: upstream/_guides/transaction.adoc:340
 msgid "Alternatively, if you don't necessarily need to hold state during the transaction, and just want to react to transaction start/end events, you can simply declare event listeners in a differently scoped bean:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/transaction.adoc:340
+#: upstream/_guides/transaction.adoc:345
 #, no-wrap
 msgid ""
 "@ApplicationScoped\n"
@@ -592,7 +608,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/transaction.adoc:344
+#: upstream/_guides/transaction.adoc:349
 #, no-wrap
 msgid ""
 "    void onBeginTransaction(@Observes @Initialized(TransactionScoped.class) Object event) {\n"
@@ -601,7 +617,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/transaction.adoc:348
+#: upstream/_guides/transaction.adoc:353
 #, no-wrap
 msgid ""
 "    void onBeforeEndTransaction(@Observes @BeforeDestroyed(TransactionScoped.class) Object event) {\n"
@@ -610,7 +626,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/transaction.adoc:353
+#: upstream/_guides/transaction.adoc:358
 #, no-wrap
 msgid ""
 "    void onAfterEndTransaction(@Observes @Destroyed(TransactionScoped.class) Object event) {\n"
@@ -620,74 +636,86 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/transaction.adoc:356
+#: upstream/_guides/transaction.adoc:361
 msgid "The `event` object represents the transaction ID, and defines `toString()`/`equals()`/`hashCode()` accordingly."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/transaction.adoc:359
+#: upstream/_guides/transaction.adoc:364
 msgid "In listener methods, you can access more information about the transaction in progress by accessing the `TransactionManager`, which is a CDI bean and can be ``@Inject``ed."
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/transaction.adoc:360
+#: upstream/_guides/transaction.adoc:365
 #, no-wrap
 msgid "Why always having a transaction manager?"
 msgstr "为什么总是有一个事务处理器？"
 
 #. type: Labeled list
-#: upstream/_guides/transaction.adoc:362
+#: upstream/_guides/transaction.adoc:367
 #, no-wrap
 msgid "Does it work everywhere I want to?"
 msgstr "它能在我希望的所有地方工作吗？"
 
 #. type: Plain text
-#: upstream/_guides/transaction.adoc:369
+#: upstream/_guides/transaction.adoc:374
 msgid "Yep, it works in your Quarkus application, in your IDE, in your tests, because all of these are Quarkus applications.  JTA has some bad press for some people.  I don't know why.  Let's just say that this is not your grandpa's JTA implementation.  What we have is perfectly embeddable and lean."
 msgstr "是的，它在你的Quarkus应用程序中，在你的IDE中，在你的测试中都可以使用，因为这些都是Quarkus应用程序。JTA对一些人来说有一些不好的影响。我不知道为什么。我们只能说，这不是老旧的JTA实现。我们所拥有的是完美的可嵌入的和精简的实现。"
 
 #. type: Labeled list
-#: upstream/_guides/transaction.adoc:370
+#: upstream/_guides/transaction.adoc:375
 #, no-wrap
 msgid "Does it do 2 Phase Commit and slow down my app?"
 msgstr "两阶段提交是否会减慢了我的应用程序？"
 
 #. type: Plain text
-#: upstream/_guides/transaction.adoc:374
+#: upstream/_guides/transaction.adoc:379
 msgid "No, this is an old folk tale.  Let's assume it essentially comes for free and let you scale to more complex cases involving several datasources as needed."
 msgstr "不，这是一个古老的民间故事。让我们假设它基本上是免费的，让你根据需要扩展到涉及几个数据源的更复杂的情况。"
 
 #. type: Labeled list
-#: upstream/_guides/transaction.adoc:375
+#: upstream/_guides/transaction.adoc:380
 #, no-wrap
 msgid "I don't need transaction when I do read only operations, it's faster."
 msgstr "当我做只读操作时，就不需要事务，这样会更快"
 
 #. type: Plain text
-#: upstream/_guides/transaction.adoc:387
+#: upstream/_guides/transaction.adoc:392
 #, fuzzy
 msgid "Wrong. + First off, just disable the transaction by marking your transaction boundary with `@Transactional(NOT_SUPPORTED)` (or `NEVER` or `SUPPORTS` depending on the semantic you want). + Second, it's again fairy tale that not using transaction is faster.  The answer is, it depends on your DB and how many SQL SELECTs you are making.  No transaction means the DB does have a single operation transaction context anyway. + Third, when you do several SELECTs, it's better to wrap them in a single transaction because they will all be consistent with one another.  Say your DB represents your car dashboard, you can see the number of kilometers remaining and the fuel gauge level.  By reading it in one transaction, they will be consistent.  If you read one and the other from two different transactions, then they can be inconsistent.  It can be more dramatic if you read data related to rights and access management for example."
 msgstr "错误。 + 首先，只要用 `@Transactional(NOT_SUPPORTED)` （或 `NEVER` 或 `SUPPORTS` ，取决于你想要的语义）标记你的事务边界，就可以禁用事务。 + 其次，不使用事务会更快，这又是另一个故事。答案是，这取决于你的数据库和你正在进行的SQL SELECT的数量。不使用事务意味着无论如何，数据库确实有一个单一的操作事务环境。 + 第三，当你做几个SELECT时，最好把它们包在一个事务中，因为它们都会保持一致性。假设你的数据库代表你的汽车仪表盘，你可以看到剩余的公里数和油表水平。通过在一个事务中读取它，它们将是一致的。如果你从两个不同的事务中读取一个和另一个，那么它们可能是不一致的。再例如，如果你读取与权限和访问管理有关的数据，结果可能会更加戏剧化。"
 
 #. type: Labeled list
-#: upstream/_guides/transaction.adoc:388
+#: upstream/_guides/transaction.adoc:393
 #, no-wrap
 msgid "Why do you prefer JTA vs Hibernate's transaction management API"
 msgstr "为什么相对Hibernate 的事务管理 API你更推荐JTA"
 
 #. type: Plain text
-#: upstream/_guides/transaction.adoc:392
+#: upstream/_guides/transaction.adoc:397
 msgid "Managing the transactions manually via `entityManager.getTransaction().begin()` and friends lead to a butt ugly code with tons of try catch finally that people get wrong.  Transactions are also about JMS and other database access, so one API makes more sense."
 msgstr "通过 `entityManager.getTransaction().begin()` 和手动管理事务会导致一段丑陋的代码，最终人们会出错。 事务也与 JMS 和其他数据库访问有关，因此一个 API 更有意义。"
 
 #. type: Labeled list
-#: upstream/_guides/transaction.adoc:393
+#: upstream/_guides/transaction.adoc:398
 #, no-wrap
 msgid "It's a mess because I don't know if my JPA persistence unit is using `JTA` or `Resource-level` Transaction"
 msgstr "当不知道JPA persistence unit 使用的是“JTA”还是“Resource-level”事务，这可能会造成混乱"
 
 #. type: Plain text
-#: upstream/_guides/transaction.adoc:398
+#: upstream/_guides/transaction.adoc:403
 #, fuzzy
 msgid "It's not a mess in Quarkus :)  Resource-level was introduced to support JPA in a non managed environment.  But Quarkus is both lean and a managed environment, so we can safely always assume we are in JTA mode.  The end result is that the difficulties of running Hibernate ORM + CDI + a transaction manager in Java SE mode are solved by Quarkus."
 msgstr "在 Quarkus 中不会引起混乱 :) 引入资源级是为了在非托管环境中支持 JPA。 但是 Quarkus 既是精益环境又是托管环境，因此我们始终可以安全地假设我们处于 JTA 模式。 最终的结果是，Quarkus 解决了在 Java SE 模式下运行 Hibernate ORM + CDI + 事务管理器的困难。"
+
+#~ msgid "DISALLOW_EXISTING"
+#~ msgstr "DISALLOW_EXISTING"
+
+#~ msgid "JOIN_EXISTING"
+#~ msgstr "JOIN_EXISTING"
+
+#~ msgid "REQUIRE_NEW"
+#~ msgstr "REQUIRE_NEW"
+
+#~ msgid "SUSPEND_EXISTING"
+#~ msgstr "SUSPEND_EXISTING"
