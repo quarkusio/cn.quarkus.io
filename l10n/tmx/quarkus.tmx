@@ -20269,22 +20269,6 @@ Type: _boolean_</seg>
     </tu>
     <tu>
       <tuv xml:lang="en">
-        <seg>The above example shows a few different ways the API can be used. The first method simply calls begin, does some work and commits it.  This created transaction is tied to the CDI request scope, so if it is still active when the request scope is destroyed then it will be automatically rolled back. This removes the need to explicitly catch exceptions and call `rollback`, and acts as a safety net against inadvertent transaction leaks, however it does mean that this can only be used when the request scope is active. The second example in the method calls begin with a timeout option, and then rolls back the transaction.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>上面的例子显示了几种不同的API使用方法。第一个方法是简单地调用begin，做一些工作并提交。这个创建的事务是与CDI请求范围相联系的，所以如果它在请求范围被破坏时仍处于活动状态，那么它将被自动回滚。这样就不需要明确地捕捉异常和调用 `rollback` ，并作为一个安全措施来防止无意中的事务泄露，然而这也意味着这只能在请求范围处于活动状态时使用。方法调用中的第二个例子以一个超时选项开始，然后回滚事务。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>The second example shows the use of lambda scoped transactions, the first just runs a `Runnable` within a transaction, the second, runs `Callable` with some specific options. In particular the `exceptionHandler` method can be used to control if the transaction is rolled back or not on exception, and the `semantic` method controls the behaviour if an existing transaction is already started.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>第二个例子展示了lambda范围内事务的使用，第一个例子只是在一个事务中运行 `Runnable` ，第二个例子，运行 `Callable` ，并带有一些特定的选项。特别是 `exceptionHandler` 方法可以用来控制事务是否在异常情况下回滚，而 `semantic` 方法可以控制现有事务已经开始时的行为。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
         <seg>The following semantics are supported:</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
@@ -20305,22 +20289,6 @@ Type: _boolean_</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
         <seg>如果没有活动的事务，那么一个新的事务将被启动，并在方法结束时提交。如果一个异常被抛出，由 `#exceptionHandler(Function)` 注册的异常处理程序将被调用，以决定TX是否应该被提交或回滚。如果一个现有的事务处于活动状态，那么该方法将在现有事务的背景下运行。如果抛出一个异常，将调用异常处理程序，但是 `ExceptionResult#ROLLBACK` 的结果将导致TX被标记为回滚，而 `ExceptionResult#COMMIT` 的结果将导致不采取任何行动。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>This is the default semantic.  If an existing transaction is already associated with the current thread then the transaction is suspended, and resumed once the current transaction is complete.  A new transaction is started after the existing transaction is suspended, and follows all the normal lifecycle rules.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>这是默认的语义。如果一个现有的事务已经与当前线程相关联，那么该事务将被暂停，并在当前事务完成后恢复。一个新的事务在现有事务被暂停后开始，并遵循所有正常的生命周期规则。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>If no transaction is active then this semantic is basically a no-op.  If a transaction is active then it is suspended, and resumed after the task is run.  The exception handler will never be consulted when this semantic is in use, specifying both an exception handler and this semantic is considered an error.  This semantic allows for code to easily be run outside the scope of a transaction.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>如果没有事务处于活动状态，那么这个语义基本上就是一个无用功。如果一个事务处于活动状态，那么它就会被暂停，并在任务运行之后恢复。在使用这种语义的时候，将永远不会查询异常处理程序，同时指定异常处理程序和这种语义被认为是一个错误。这种语义允许在事务的范围之外轻松地运行代码。</seg>
       </tuv>
     </tu>
     <tu>
@@ -26272,30 +26240,6 @@ Type: _boolean_</seg>
     </tu>
     <tu>
       <tuv xml:lang="en">
-        <seg>Dev Services for Kafka supports https://redpanda.com[Redpanda] and https://strimzi.io[Strimzi] (in https://github.com/apache/kafka/blob/trunk/config/kraft/README.md[Kraft] mode).</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>Kafka开发服务支持 link:https://redpanda.com[Redpanda] 和 link:https://strimzi.io[Strimzi] （在 link:https://github.com/apache/kafka/blob/trunk/config/kraft/README.md[Kraft] 模式下）。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Redpanda is a Kafka compatible event streaming platform.  Because it provides a faster startup time dev services defaults to `vectorized/redpanda` images.  You can select any version from https://hub.docker.com/r/vectorized/redpanda.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>Redpanda是一个兼容Kafka的事件流平台。因为它在dev服务默的 `vectorized/redpanda` 镜像中提供了更快的启动时间。您可以从 https://hub.docker.com/r/vectorized/redpanda  中选择任何版本。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
-        <seg>Strimzi provides container images and Operators for running Apache Kafka on Kubernetes.  While Strimzi is optimized for Kubernetes, the images work perfectly in classic container environments.  Strimzi container images run "genuine" Kafka broker on JVM, which is slower to start.</seg>
-      </tuv>
-      <tuv xml:lang="zh_CN">
-        <seg>Strimzi为在Kubernetes上运行Apache Kafka提供了容器镜像和Operator。虽然Strimzi针对Kubernetes进行了优化，但这些镜像在经典的容器环境中也能完美运行。Strimzi容器镜像在JVM上运行 "真实的 "Kafka broker，其启动速度较慢。</seg>
-      </tuv>
-    </tu>
-    <tu>
-      <tuv xml:lang="en">
         <seg>For Strimzi, you can select any image with a Kafka version which has Kraft support (2.8.1 and higher) from https://quay.io/repository/strimzi-test-container/test-container?tab=tags</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
@@ -29714,6 +29658,38 @@ mp.messaging.incoming.&lt;channelName&gt;.method=POST
     </tu>
     <tu>
       <tuv xml:lang="en">
+        <seg>The above example shows a few different ways the API can be used. The first method simply calls begin, does some work and commits it.  This created transaction is tied to the CDI request scope, so if it is still active when the request scope is destroyed then it will be automatically rolled back. This removes the need to explicitly catch exceptions and call `rollback`, and acts as a safety net against inadvertent transaction leaks, however it does mean that this can only be used when the request scope is active. The second example in the method calls begin with a timeout option, and then rolls back the transaction.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>上面的例子显示了几种不同的API使用方法。第一个方法是简单地调用begin，做一些工作并提交。这个创建的事务是与CDI请求范围相联系的，所以如果它在请求范围被破坏时仍处于活动状态，那么它将被自动回滚。这样就不需要明确地捕捉异常和调用 `rollback` ，并作为一个安全措施来防止无意中的事务泄露，然而这也意味着这只能在请求范围处于活动状态时使用。方法调用中的第二个例子以一个超时选项开始，然后回滚事务。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>The second example shows the use of lambda scoped transactions, the first just runs a `Runnable` within a transaction, the second, runs `Callable` with some specific options. In particular the `exceptionHandler` method can be used to control if the transaction is rolled back or not on exception, and the `semantic` method controls the behaviour if an existing transaction is already started.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>第二个例子展示了lambda范围内事务的使用，第一个例子只是在一个事务中运行 `Runnable` ，第二个例子，运行 `Callable` ，并带有一些特定的选项。特别是 `exceptionHandler` 方法可以用来控制事务是否在异常情况下回滚，而 `semantic` 方法可以控制现有事务已经开始时的行为。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>This is the default semantic.  If an existing transaction is already associated with the current thread then the transaction is suspended, and resumed once the current transaction is complete.  A new transaction is started after the existing transaction is suspended, and follows all the normal lifecycle rules.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>这是默认的语义。如果一个现有的事务已经与当前线程相关联，那么该事务将被暂停，并在当前事务完成后恢复。一个新的事务在现有事务被暂停后开始，并遵循所有正常的生命周期规则。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>If no transaction is active then this semantic is basically a no-op.  If a transaction is active then it is suspended, and resumed after the task is run.  The exception handler will never be consulted when this semantic is in use, specifying both an exception handler and this semantic is considered an error.  This semantic allows for code to easily be run outside the scope of a transaction.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>如果没有事务处于活动状态，那么这个语义基本上就是一个无用功。如果一个事务处于活动状态，那么它就会被暂停，并在任务运行之后恢复。在使用这种语义的时候，将永远不会查询异常处理程序，同时指定异常处理程序和这种语义被认为是一个错误。这种语义允许在事务的范围之外轻松地运行代码。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
         <seg>If a `client.id` is not provided, it is generated as `kafka-consumer-[channel][-index]`.</seg>
       </tuv>
       <tuv xml:lang="zh_CN">
@@ -29804,6 +29780,30 @@ COPY --from=BUILD \
       </tuv>
       <tuv xml:lang="zh_CN">
         <seg>如果微镜像不符合你的要求，你可以使用 https://catalog.redhat.com/software/containers/ubi8/ubi-minimal/5c359a62bed8bd75a2c3fba8[UBI- Minimal]。这是一个更大的镜像，但包含了更多实用程序 且更接近于完整的 Linux 发行版。通常，它包含一个包管理器 (`microdnf`)，因此你可以利用它更方便地安装软件包。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Dev Services for Kafka supports https://redpanda.com[Redpanda] and https://strimzi.io[Strimzi] (in https://github.com/apache/kafka/blob/trunk/config/kraft/README.md[Kraft] mode).</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Kafka开发服务支持 link:https://redpanda.com[Redpanda] 和 link:https://strimzi.io[Strimzi] （在 link:https://github.com/apache/kafka/blob/trunk/config/kraft/README.md[Kraft] 模式下）。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Redpanda is a Kafka compatible event streaming platform.  Because it provides a faster startup time dev services defaults to `vectorized/redpanda` images.  You can select any version from https://hub.docker.com/r/vectorized/redpanda.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Redpanda是一个兼容Kafka的事件流平台。因为它在dev服务默的 `vectorized/redpanda` 镜像中提供了更快的启动时间。您可以从 https://hub.docker.com/r/vectorized/redpanda  中选择任何版本。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en">
+        <seg>Strimzi provides container images and Operators for running Apache Kafka on Kubernetes.  While Strimzi is optimized for Kubernetes, the images work perfectly in classic container environments.  Strimzi container images run "genuine" Kafka broker on JVM, which is slower to start.</seg>
+      </tuv>
+      <tuv xml:lang="zh_CN">
+        <seg>Strimzi为在Kubernetes上运行Apache Kafka提供了容器镜像和Operator。虽然Strimzi针对Kubernetes进行了优化，但这些镜像在经典的容器环境中也能完美运行。Strimzi容器镜像在JVM上运行 "真实的 "Kafka broker，其启动速度较慢。</seg>
       </tuv>
     </tu>
     <tu>
