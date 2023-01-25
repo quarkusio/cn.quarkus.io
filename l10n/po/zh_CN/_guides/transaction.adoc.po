@@ -383,20 +383,19 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/transaction.adoc:203
+#, fuzzy
 msgid "The above example shows a few different ways the API can be used."
-msgstr ""
+msgstr "上面的例子显示了可以使用API的几种不同方式。"
 
 #. type: Plain text
 #: upstream/_guides/transaction.adoc:209
 #, fuzzy
-#| msgid "The above example shows a few different ways the API can be used. The first method simply calls begin, does some work and commits it.  This created transaction is tied to the CDI request scope, so if it is still active when the request scope is destroyed then it will be automatically rolled back. This removes the need to explicitly catch exceptions and call `rollback`, and acts as a safety net against inadvertent transaction leaks, however it does mean that this can only be used when the request scope is active. The second example in the method calls begin with a timeout option, and then rolls back the transaction."
 msgid "The first method simply calls begin, does some work and commits it.  This created transaction is tied to the CDI request scope, so if it is still active when the request scope is destroyed then it will be automatically rolled back. This removes the need to explicitly catch exceptions and call `rollback`, and acts as a safety net against inadvertent transaction leaks, however it does mean that this can only be used when the request scope is active. The second example in the method calls begin with a timeout option, and then rolls back the transaction."
 msgstr "上面的例子显示了几种不同的API使用方法。第一个方法是简单地调用begin，做一些工作并提交。这个创建的事务是与CDI请求范围相联系的，所以如果它在请求范围被破坏时仍处于活动状态，那么它将被自动回滚。这样就不需要明确地捕捉异常和调用 `rollback` ，并作为一个安全措施来防止无意中的事务泄露，然而这也意味着这只能在请求范围处于活动状态时使用。方法调用中的第二个例子以一个超时选项开始，然后回滚事务。"
 
 #. type: Plain text
 #: upstream/_guides/transaction.adoc:215
 #, fuzzy
-#| msgid "The second example shows the use of lambda scoped transactions, the first just runs a `Runnable` within a transaction, the second, runs `Callable` with some specific options. In particular the `exceptionHandler` method can be used to control if the transaction is rolled back or not on exception, and the `semantic` method controls the behaviour if an existing transaction is already started."
 msgid "The second method shows the use of lambda scoped transactions with `QuarkusTransaction.runner(...)`; the first example just runs a `Runnable` within a new transaction, the second does the same but joining the existing transaction (if any), and the third calls a `Callable` with some specific options.  In particular the `exceptionHandler` method can be used to control if the transaction is rolled back or not on exception."
 msgstr "第二个例子展示了lambda范围内事务的使用，第一个例子只是在一个事务中运行 `Runnable` ，第二个例子，运行 `Callable` ，并带有一些特定的选项。特别是 `exceptionHandler` 方法可以用来控制事务是否在异常情况下回滚，而 `semantic` 方法可以控制现有事务已经开始时的行为。"
 
@@ -407,9 +406,9 @@ msgstr "支持以下语义："
 
 #. type: Labeled list
 #: upstream/_guides/transaction.adoc:219
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "`QuarkusTransaction.disallowingExisting()`/`DISALLOW_EXISTING`"
-msgstr ""
+msgstr " `QuarkusTransaction.disallowingExisting()` / `DISALLOW_EXISTING` "
 
 #. type: Plain text
 #: upstream/_guides/transaction.adoc:223
@@ -418,9 +417,9 @@ msgstr "如果一个事务已经与当前线程相关联，将抛出一个 `Quar
 
 #. type: Labeled list
 #: upstream/_guides/transaction.adoc:224
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "`QuarkusTransaction.joiningExisting()`/`JOIN_EXISTING`"
-msgstr ""
+msgstr " `QuarkusTransaction.joiningExisting()` / `JOIN_EXISTING` "
 
 #. type: Plain text
 #: upstream/_guides/transaction.adoc:233
@@ -429,27 +428,25 @@ msgstr "如果没有活动的事务，那么一个新的事务将被启动，并
 
 #. type: Labeled list
 #: upstream/_guides/transaction.adoc:234
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "`QuarkusTransaction.requiringNew()`/`REQUIRE_NEW`"
-msgstr ""
+msgstr " `QuarkusTransaction.requiringNew()` / `REQUIRE_NEW` "
 
 #. type: Plain text
 #: upstream/_guides/transaction.adoc:240
 #, fuzzy
-#| msgid "This is the default semantic.  If an existing transaction is already associated with the current thread then the transaction is suspended, and resumed once the current transaction is complete.  A new transaction is started after the existing transaction is suspended, and follows all the normal lifecycle rules."
 msgid "If an existing transaction is already associated with the current thread then the transaction is suspended, then a new transaction is started which follows all the normal lifecycle rules, and when it's complete the original transaction is resumed.  Otherwise, a new transaction is started, and follows all the normal lifecycle rules."
 msgstr "这是默认的语义。如果一个现有的事务已经与当前线程相关联，那么该事务将被暂停，并在当前事务完成后恢复。一个新的事务在现有事务被暂停后开始，并遵循所有正常的生命周期规则。"
 
 #. type: Labeled list
 #: upstream/_guides/transaction.adoc:241
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "`QuarkusTransaction.suspendingExisting()`/`SUSPEND_EXISTING`"
-msgstr ""
+msgstr " `QuarkusTransaction.suspendingExisting()` / `SUSPEND_EXISTING` "
 
 #. type: Plain text
 #: upstream/_guides/transaction.adoc:248
 #, fuzzy
-#| msgid "If no transaction is active then this semantic is basically a no-op.  If a transaction is active then it is suspended, and resumed after the task is run.  The exception handler will never be consulted when this semantic is in use, specifying both an exception handler and this semantic is considered an error.  This semantic allows for code to easily be run outside the scope of a transaction."
 msgid "If no transaction is active then these semantics are basically a no-op.  If a transaction is active then it is suspended, and resumed after the task is run.  The exception handler will never be consulted when these semantics are in use, specifying both an exception handler and these semantics are considered an error.  These semantics allows for code to easily be run outside the scope of a transaction."
 msgstr "如果没有事务处于活动状态，那么这个语义基本上就是一个无用功。如果一个事务处于活动状态，那么它就会被暂停，并在任务运行之后恢复。在使用这种语义的时候，将永远不会查询异常处理程序，同时指定异常处理程序和这种语义被认为是一个错误。这种语义允许在事务的范围之外轻松地运行代码。"
 
@@ -542,19 +539,21 @@ msgstr "节点名称标识符可以通过属性 `quarkus.transaction-manager.nod
 
 #. type: Title ==
 #: upstream/_guides/transaction.adoc:309
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "Using `@TransactionScoped` to bind CDI beans to the transaction lifecycle"
-msgstr ""
+msgstr "使用 `@TransactionScoped` ，将CDI Bean与交易生命周期绑定起来"
 
 #. type: Plain text
 #: upstream/_guides/transaction.adoc:313
+#, fuzzy
 msgid "You can define beans that live for as long as a transaction, and through CDI lifecycle events perform actions when a transaction starts and ends."
-msgstr ""
+msgstr "你可以定义与事务一样长的Bean，并通过CDI生命周期事件在事务开始和结束时执行动作。"
 
 #. type: Plain text
 #: upstream/_guides/transaction.adoc:315
+#, fuzzy
 msgid "Just assign the transaction xref:cdi.adoc#bean-scope[scope] to such beans using the `@TransactionScoped` annotation:"
-msgstr ""
+msgstr "只需使用 `@TransactionScoped` 注解将事务 link:cdi.html#bean-scope[范围] 分配给这类Bean。"
 
 #. type: delimited block -
 #: upstream/_guides/transaction.adoc:320
@@ -596,8 +595,9 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/transaction.adoc:340
+#, fuzzy
 msgid "Alternatively, if you don't necessarily need to hold state during the transaction, and just want to react to transaction start/end events, you can simply declare event listeners in a differently scoped bean:"
-msgstr ""
+msgstr "另外，如果你不一定需要在事务期间保持状态，而只是想对事务开始/结束事件做出反应，你可以简单地在不同范围的Bean中声明事件监听器。"
 
 #. type: delimited block -
 #: upstream/_guides/transaction.adoc:345
