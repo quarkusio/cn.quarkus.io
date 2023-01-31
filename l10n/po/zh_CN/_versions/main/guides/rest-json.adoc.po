@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2022-10-14 03:07+0000\n"
+"POT-Creation-Date: 2023-01-31 02:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -194,8 +194,8 @@ msgstr "首先，让我们创建 `Fruit` 实体类，如下所示："
 #. type: delimited block -
 #: upstream/_versions/main/guides/rest-json.adoc:113
 #: upstream/_versions/main/guides/rest-json.adoc:136
-#: upstream/_versions/main/guides/rest-json.adoc:396
-#: upstream/_versions/main/guides/rest-json.adoc:419
+#: upstream/_versions/main/guides/rest-json.adoc:395
+#: upstream/_versions/main/guides/rest-json.adoc:418
 #, no-wrap
 msgid "package org.acme.rest.json;\n"
 msgstr ""
@@ -208,7 +208,7 @@ msgstr ""
 
 #. type: delimited block -
 #: upstream/_versions/main/guides/rest-json.adoc:118
-#: upstream/_versions/main/guides/rest-json.adoc:401
+#: upstream/_versions/main/guides/rest-json.adoc:400
 #, no-wrap
 msgid ""
 "    public String name;\n"
@@ -410,41 +410,35 @@ msgid "Users can even provide their own `ObjectMapper` bean if they so choose.  
 msgstr "如果用户选择的话，他们甚至可以提供自己的 `ObjectMapper` bean。如果这样做，在产生 `ObjectMapper` 的CDI生产者中，手动注入和应用所有 `io.quarkus.jackson.ObjectMapperCustomizer` Bean是非常重要的。如果不这样做，就会阻止各种扩展所提供的Jackson特定的自定义功能被应用。"
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:235
+#: upstream/_versions/main/guides/rest-json.adoc:238
 #, no-wrap
 msgid ""
 "import com.fasterxml.jackson.databind.ObjectMapper;\n"
+"import io.quarkus.arc.All;\n"
 "import io.quarkus.jackson.ObjectMapperCustomizer;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:239
-#, no-wrap
-msgid ""
-"import javax.enterprise.inject.Instance;\n"
-"import javax.enterprise.inject.Produces;\n"
+"import java.util.List;\n"
 "import javax.inject.Singleton;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:241
+#: upstream/_versions/main/guides/rest-json.adoc:240
 #, no-wrap
 msgid "public class CustomObjectMapper {\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:247
+#: upstream/_versions/main/guides/rest-json.adoc:246
 #, no-wrap
 msgid ""
 "    // Replaces the CDI producer for ObjectMapper built into Quarkus\n"
 "    @Singleton\n"
 "    @Produces\n"
-"    ObjectMapper objectMapper(Instance<ObjectMapperCustomizer> customizers) {\n"
+"    ObjectMapper objectMapper(@All List<ObjectMapperCustomizer> customizers) {\n"
 "        ObjectMapper mapper = myObjectMapper(); // Custom `ObjectMapper`\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:252
+#: upstream/_versions/main/guides/rest-json.adoc:251
 #, no-wrap
 msgid ""
 "        // Apply all ObjectMapperCustomizer beans (incl. Quarkus)\n"
@@ -454,7 +448,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:256
+#: upstream/_versions/main/guides/rest-json.adoc:255
 #, no-wrap
 msgid ""
 "        return mapper;\n"
@@ -463,39 +457,39 @@ msgid ""
 msgstr ""
 
 #. type: Title =====
-#: upstream/_versions/main/guides/rest-json.adoc:258
+#: upstream/_versions/main/guides/rest-json.adoc:257
 #, no-wrap
 msgid "Mixin support"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:263
+#: upstream/_versions/main/guides/rest-json.adoc:262
 msgid "Quarkus automates the registration of Jackson's Mixin support, via the `io.quarkus.jackson.JacksonMixin` annotation.  This annotation can be placed on classes that are meant to be used as Jackson mixins while the classes they are meant to customize are defined as the value of the annotation."
 msgstr ""
 
 #. type: Title ====
-#: upstream/_versions/main/guides/rest-json.adoc:264
+#: upstream/_versions/main/guides/rest-json.adoc:263
 #, no-wrap
 msgid "JSON-B"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:267
+#: upstream/_versions/main/guides/rest-json.adoc:266
 msgid "As stated above, Quarkus provides the option of using JSON-B instead of Jackson via the use of the `quarkus-resteasy-jsonb` extension."
 msgstr "如上所述，Quarkus通过使用 `quarkus-resteasy-jsonb` 扩展提供了使用JSON-B而不是Jackson的选项。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:269
+#: upstream/_versions/main/guides/rest-json.adoc:268
 msgid "Following the same approach as described in the previous section, JSON-B can be configured using a `io.quarkus.jsonb.JsonbConfigCustomizer` bean."
 msgstr "按照上一节所述的相同方法，JSON-B可以使用 `io.quarkus.jsonb.JsonbConfigCustomizer` bean进行配置。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:271
+#: upstream/_versions/main/guides/rest-json.adoc:270
 msgid "If for example a custom serializer named `FooSerializer` for type `com.example.Foo` needs to be registered with JSON-B, the addition of a bean like the following would suffice:"
 msgstr "例如，如果需要使用 JSON-B 注册类型为 `com.example.Foo` 的名为 `FooSerializer` 的自定义序列化程序，则添加如下所示的 bean 就足够了："
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:278
+#: upstream/_versions/main/guides/rest-json.adoc:277
 #, no-wrap
 msgid ""
 "import io.quarkus.jsonb.JsonbConfigCustomizer;\n"
@@ -505,7 +499,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:281
+#: upstream/_versions/main/guides/rest-json.adoc:280
 #, no-wrap
 msgid ""
 "@Singleton\n"
@@ -513,7 +507,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:286
+#: upstream/_versions/main/guides/rest-json.adoc:285
 #, no-wrap
 msgid ""
 "    public void customize(JsonbConfig config) {\n"
@@ -523,18 +517,18 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:291
+#: upstream/_versions/main/guides/rest-json.adoc:290
 msgid "A more advanced option would be to directly provide a bean of `javax.json.bind.JsonbConfig` (with a `Dependent` scope) or in the extreme case to provide a bean of type `javax.json.bind.Jsonb` (with a `Singleton` scope).  If the latter approach is leveraged it is very important to manually inject and apply all `io.quarkus.jsonb.JsonbConfigCustomizer` beans in the CDI producer that produces `javax.json.bind.Jsonb`.  Failure to do so will prevent JSON-B specific customizations provided by various extensions from being applied."
 msgstr "一个更高级的选择是直接提供一个 `javax.json.bind.JsonbConfig` 的bean（具有 `Dependent` 范围），或者在极端情况下，提供一个 `javax.json.bind.Jsonb` 的bean（具有 `Singleton` 范围）。如果采用后一种方法，那么在产成 `javax.json.bind.Jsonb` 的CDI生产者中手动注入和应用所有 `io.quarkus.jsonb.JsonbConfigCustomizer` Bean是非常重要的。如果不这样做，就会阻止由各种扩展提供的JSON-B特定的自定义功能被应用。"
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:295
+#: upstream/_versions/main/guides/rest-json.adoc:294
 #, no-wrap
 msgid "import io.quarkus.jsonb.JsonbConfigCustomizer;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:299
+#: upstream/_versions/main/guides/rest-json.adoc:298
 #, no-wrap
 msgid ""
 "import javax.enterprise.context.Dependent;\n"
@@ -543,13 +537,13 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:301
+#: upstream/_versions/main/guides/rest-json.adoc:300
 #, no-wrap
 msgid "public class CustomJsonbConfig {\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:306
+#: upstream/_versions/main/guides/rest-json.adoc:305
 #, no-wrap
 msgid ""
 "    // Replaces the CDI producer for JsonbConfig built into Quarkus\n"
@@ -559,7 +553,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:311
+#: upstream/_versions/main/guides/rest-json.adoc:310
 #, no-wrap
 msgid ""
 "        // Apply all JsonbConfigCustomizer beans (incl. Quarkus)\n"
@@ -569,7 +563,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:315
+#: upstream/_versions/main/guides/rest-json.adoc:314
 #, no-wrap
 msgid ""
 "        return config;\n"
@@ -578,80 +572,80 @@ msgid ""
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/rest-json.adoc:318
+#: upstream/_versions/main/guides/rest-json.adoc:317
 #, no-wrap
 msgid "Creating a frontend"
 msgstr "创建一个网页"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:323
+#: upstream/_versions/main/guides/rest-json.adoc:322
 msgid "Now let's add a simple web page to interact with our `FruitResource`.  Quarkus automatically serves static resources located under the `META-INF/resources` directory.  In the `src/main/resources/META-INF/resources` directory, add a `fruits.html` file with the content from this {quickstarts-blob-url}/rest-json-quickstart/src/main/resources/META-INF/resources/fruits.html[fruits.html] file in it."
 msgstr "现在让我们添加一个简单的网页来与我们的 `FruitResource` 进行交互。Quarkus自动提供位于 `META-INF/resources` 目录下的静态资源。在 `src/main/resources/META-INF/resources` 目录中，添加一个 `fruits.html` 文件，其中包含这个{quickstarts-blob-url}/rest-json-quickstart/src/main/resources/META-INF/resources/fruits.html[fruits.html] 文件的内容。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:325
+#: upstream/_versions/main/guides/rest-json.adoc:324
 msgid "You can now interact with your REST service:"
 msgstr "现在你可以与你的REST服务进行交互："
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:329
+#: upstream/_versions/main/guides/rest-json.adoc:328
 msgid "start Quarkus with:"
 msgstr "启动Quarkus："
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:332
+#: upstream/_versions/main/guides/rest-json.adoc:331
 msgid "open a browser to `http://localhost:8080/fruits.html`"
 msgstr "打开浏览器访问 `<a href=\"http://localhost:8080/fruits.html\" class=\"bare\">http://localhost:8080/fruits.html</a>` "
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:333
+#: upstream/_versions/main/guides/rest-json.adoc:332
 msgid "add new fruits to the list via the form"
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/rest-json.adoc:336
+#: upstream/_versions/main/guides/rest-json.adoc:335
 #, no-wrap
 msgid "Building a native executable"
 msgstr "构建一个本地可执行文件"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:339
+#: upstream/_versions/main/guides/rest-json.adoc:338
 msgid "You can build a native executable with the usual command:"
 msgstr "你可以使用常用命令构建本机可执行文件："
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:343
+#: upstream/_versions/main/guides/rest-json.adoc:342
 msgid "Running it is as simple as executing `./target/rest-json-quickstart-1.0.0-SNAPSHOT-runner`."
 msgstr "运行它就像执行 `./target/rest-json-quickstart-1.0.0-SNAPSHOT-runner` 一样简单。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:345
+#: upstream/_versions/main/guides/rest-json.adoc:344
 msgid "You can then point your browser to `http://localhost:8080/fruits.html` and use your application."
 msgstr "然后你可以使用的浏览器访问 `<a href=\"http://localhost:8080/fruits.html\" class=\"bare\">http://localhost:8080/fruits.html</a>` 来使用你的应用程序。"
 
 #. type: Title ==
-#: upstream/_versions/main/guides/rest-json.adoc:346
+#: upstream/_versions/main/guides/rest-json.adoc:345
 #, no-wrap
 msgid "About serialization"
 msgstr "关于序列化"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:349
+#: upstream/_versions/main/guides/rest-json.adoc:348
 msgid "JSON serialization libraries use Java reflection to get the properties of an object and serialize them."
 msgstr "JSON序列化库使用Java反射来获取一个对象的属性并将其序列化。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:353
+#: upstream/_versions/main/guides/rest-json.adoc:352
 msgid "When using native executables with GraalVM, all classes that will be used with reflection need to be registered.  The good news is that Quarkus does that work for you most of the time.  So far, we haven't registered any class, not even `Fruit`, for reflection usage and everything is working fine."
 msgstr "当使用GraalVM的本地可执行文件时，需要注册所有将与反射一起使用的类。好消息是，Quarkus在大多数时候都会为你做这项工作。到目前为止，我们还没有注册任何类，甚至没有注册 `Fruit` ，并且一切正常。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:356
+#: upstream/_versions/main/guides/rest-json.adoc:355
 msgid "Quarkus performs some magic when it is capable of inferring the serialized types from the REST methods.  When you have the following REST method, Quarkus determines that `Fruit` will be serialized:"
 msgstr "当Quarkus能够从REST方法中推断出序列化的类型时，它会发挥一些作用。当你有以下的REST方法时，Quarkus确定 `Fruit` 将被序列化："
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:363
+#: upstream/_versions/main/guides/rest-json.adoc:362
 #, no-wrap
 msgid ""
 "@GET\n"
@@ -661,32 +655,32 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:367
+#: upstream/_versions/main/guides/rest-json.adoc:366
 msgid "Quarkus does that for you automatically by analyzing the REST methods at build time and that's why we didn't need any reflection registration in the first part of this guide."
 msgstr "Quarkus通过在构建时分析REST方法自动为你执行此操，这就是为什么我们在本指南的第一部分不需要任何反射注册。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:370
+#: upstream/_versions/main/guides/rest-json.adoc:369
 msgid "Another common pattern in the JAX-RS world is to use the `Response` object.  `Response` comes with some nice perks:"
 msgstr "JAX-RS世界中另一个常见的模式是使用 `Response` 对象。 `Response` 有一些很好的好处："
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:372
+#: upstream/_versions/main/guides/rest-json.adoc:371
 msgid "you can return different entity types depending on what happens in your method (a `Legume` or an `Error` for instance);"
 msgstr "你可以根据你的方法中发生的情况，返回不同的实体类型（例如， `Legume` 或 `Error` ）。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:373
+#: upstream/_versions/main/guides/rest-json.adoc:372
 msgid "you can set the attributes of the `Response` (the status comes to mind in the case of an error)."
 msgstr "你可以设置 `Response` 的属性（在出现错误的情况下，会想到状态）。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:375
+#: upstream/_versions/main/guides/rest-json.adoc:374
 msgid "Your REST method then looks like this:"
 msgstr "你的 REST 方法如下所示："
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:382
+#: upstream/_versions/main/guides/rest-json.adoc:381
 #, no-wrap
 msgid ""
 "@GET\n"
@@ -696,34 +690,34 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:386
+#: upstream/_versions/main/guides/rest-json.adoc:385
 msgid "It is not possible for Quarkus to determine at build time the type included in the `Response` as the information is not available.  In this case, Quarkus won't be able to automatically register for reflection the required classes."
 msgstr "Quarkus不可能在构建时确定 `Response` 中包含的类型，因为该信息不可用。在这种情况下，Quarkus将无法自动注册反映所需的类。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:388
+#: upstream/_versions/main/guides/rest-json.adoc:387
 msgid "This leads us to our next section."
 msgstr "这将我们引向下一节。"
 
 #. type: Title ==
-#: upstream/_versions/main/guides/rest-json.adoc:389
+#: upstream/_versions/main/guides/rest-json.adoc:388
 #, no-wrap
 msgid "Using Response"
 msgstr "使用Response"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:392
+#: upstream/_versions/main/guides/rest-json.adoc:391
 msgid "Let's create the `Legume` class which will be serialized as JSON, following the same model as for our `Fruit` class:"
 msgstr "让我们创建一个将被序列化为 JSON 的 `Legume` 类，遵循与我们的 `Fruit` 类相同的模型："
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:398
+#: upstream/_versions/main/guides/rest-json.adoc:397
 #, no-wrap
 msgid "public class Legume {\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:404
+#: upstream/_versions/main/guides/rest-json.adoc:403
 #, no-wrap
 msgid ""
 "    public Legume() {\n"
@@ -731,7 +725,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:410
+#: upstream/_versions/main/guides/rest-json.adoc:409
 #, no-wrap
 msgid ""
 "    public Legume(String name, String description) {\n"
@@ -742,17 +736,17 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:413
+#: upstream/_versions/main/guides/rest-json.adoc:412
 msgid "Now let's create a `LegumeResource` REST service with only one method which returns the list of legumes."
 msgstr "现在让我们创建一个 `LegumeResource` REST服务，它只有一个返回legumes类列表的方法。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:415
+#: upstream/_versions/main/guides/rest-json.adoc:414
 msgid "This method returns a `Response` and not a list of `Legume`."
 msgstr "该方法返回一个 `Response` ，而不是一个 `Legume` 列表。"
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:423
+#: upstream/_versions/main/guides/rest-json.adoc:422
 #, no-wrap
 msgid ""
 "import java.util.Collections;\n"
@@ -761,7 +755,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:427
+#: upstream/_versions/main/guides/rest-json.adoc:426
 #, no-wrap
 msgid ""
 "import javax.ws.rs.GET;\n"
@@ -770,7 +764,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:430
+#: upstream/_versions/main/guides/rest-json.adoc:429
 #, no-wrap
 msgid ""
 "@Path(\"/legumes\")\n"
@@ -778,13 +772,13 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:432
+#: upstream/_versions/main/guides/rest-json.adoc:431
 #, no-wrap
 msgid "    private Set<Legume> legumes = Collections.synchronizedSet(new LinkedHashSet<>());\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:437
+#: upstream/_versions/main/guides/rest-json.adoc:436
 #, no-wrap
 msgid ""
 "    public LegumeResource() {\n"
@@ -794,7 +788,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:443
+#: upstream/_versions/main/guides/rest-json.adoc:442
 #, no-wrap
 msgid ""
 "    @GET\n"
@@ -805,72 +799,72 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:448
+#: upstream/_versions/main/guides/rest-json.adoc:447
 msgid "Now let's add a simple web page to display our list of legumes.  In the `src/main/resources/META-INF/resources` directory, add a `legumes.html` file with the content from this {quickstarts-blob-url}/rest-json-quickstart/src/main/resources/META-INF/resources/legumes.html[legumes.html] file in it."
 msgstr "现在让我们添加一个简单的网页来显示我们的legumes列表。在 `src/main/resources/META-INF/resources` 目录中，添加一个 `legumes.html` 文件，其中包含这个{quickstarts-blob-url}/rest-json-quickstart/src/main/resources/META-INF/resources/legumes.html[legumes.html] 文件的内容。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:450
+#: upstream/_versions/main/guides/rest-json.adoc:449
 #, fuzzy
 msgid "Open a browser to http://localhost:8080/legumes.html, and you will see our list of legumes."
 msgstr "然后你可以使用的浏览器访问 `<a href=\"http://localhost:8080/fruits.html\" class=\"bare\">http://localhost:8080/fruits.html</a>` 来使用你的应用程序。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:452
+#: upstream/_versions/main/guides/rest-json.adoc:451
 msgid "The interesting part starts when running the application as a native executable:"
 msgstr "有趣的部分是在将应用程序作为本机可执行文件运行时开始的："
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:456
-#: upstream/_versions/main/guides/rest-json.adoc:495
+#: upstream/_versions/main/guides/rest-json.adoc:455
+#: upstream/_versions/main/guides/rest-json.adoc:494
 msgid "create the native executable with:"
 msgstr "创建本地可执行文件。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:459
-#: upstream/_versions/main/guides/rest-json.adoc:498
+#: upstream/_versions/main/guides/rest-json.adoc:458
+#: upstream/_versions/main/guides/rest-json.adoc:497
 msgid "execute it with `./target/rest-json-quickstart-1.0.0-SNAPSHOT-runner`"
 msgstr "用以下方式执行它 `./target/rest-json-quickstart-1.0.0-SNAPSHOT-runner` "
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:460
-#: upstream/_versions/main/guides/rest-json.adoc:499
+#: upstream/_versions/main/guides/rest-json.adoc:459
+#: upstream/_versions/main/guides/rest-json.adoc:498
 msgid "open a browser and go to http://localhost:8080/legumes.html"
 msgstr "打开浏览器，访问 http://localhost:8080/legumes.html "
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:464
+#: upstream/_versions/main/guides/rest-json.adoc:463
 msgid "No legumes there."
 msgstr "那里没有legumes。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:467
+#: upstream/_versions/main/guides/rest-json.adoc:466
 msgid "As mentioned above, the issue is that Quarkus was not able to determine the `Legume` class will require some reflection by analyzing the REST endpoints.  The JSON serialization library tries to get the list of fields of `Legume` and gets an empty list, so it does not serialize the fields' data."
 msgstr ""
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/rest-json.adoc:472
+#: upstream/_versions/main/guides/rest-json.adoc:471
 msgid "At the moment, when JSON-B or Jackson tries to get the list of fields of a class, if the class is not registered for reflection, no exception will be thrown.  GraalVM will simply return an empty list of fields."
 msgstr "目前，当JSON-B或Jackson尝试获取一个类的字段列表时，如果该类没有注册反射，则不会抛出异常。GraalVM将简单地返回一个空的字段列表。"
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/rest-json.adoc:474
+#: upstream/_versions/main/guides/rest-json.adoc:473
 msgid "Hopefully, this will change in the future and make the error more obvious."
 msgstr "希望这在将来会有所改变，使错误更加明显。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:477
+#: upstream/_versions/main/guides/rest-json.adoc:476
 msgid "We can register `Legume` for reflection manually by adding the `@RegisterForReflection` annotation on our `Legume` class:"
 msgstr "我们可以通过在我们的 `Legume` 类上添加 `@RegisterForReflection` 注解来手动注册 `Legume` 进行反射："
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:480
+#: upstream/_versions/main/guides/rest-json.adoc:479
 #, no-wrap
 msgid "import io.quarkus.runtime.annotations.RegisterForReflection;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:485
+#: upstream/_versions/main/guides/rest-json.adoc:484
 #, no-wrap
 msgid ""
 "@RegisterForReflection\n"
@@ -880,48 +874,48 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:488
+#: upstream/_versions/main/guides/rest-json.adoc:487
 msgid "The `@RegisterForReflection` annotation instructs Quarkus to keep the class and its members during the native compilation. More details about the `@RegisterForReflection` annotation can be found on the xref:writing-native-applications-tips.adoc#registerForReflection[native application tips] page."
 msgstr "`@RegisterForReflection` 注解用于指导Quarkus在native编译过程中保留该类和其成员。关于 `@RegisterForReflection` 注解的更多细节可以在 link:writing-native-applications-tips.html#registerForReflection[native应用程序提示] 页面找到。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:490
+#: upstream/_versions/main/guides/rest-json.adoc:489
 msgid "Let's do that and follow the same steps as before:"
 msgstr "让我们这样做，并遵循与之前相同的步骤："
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:494
+#: upstream/_versions/main/guides/rest-json.adoc:493
 msgid "hit `Ctrl+C` to stop the application"
 msgstr "点击 `Ctrl+C` ，停止应用程序。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:503
+#: upstream/_versions/main/guides/rest-json.adoc:502
 msgid "This time, you can see our list of legumes."
 msgstr "这一次，你可以看到我们的legumes列表。"
 
 #. type: Title ==
-#: upstream/_versions/main/guides/rest-json.adoc:505
+#: upstream/_versions/main/guides/rest-json.adoc:504
 #, no-wrap
 msgid "Being reactive"
 msgstr "响应式"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:509
+#: upstream/_versions/main/guides/rest-json.adoc:508
 msgid "You can return _reactive types_ to handle asynchronous processing.  Quarkus recommends the usage of https://smallrye.io/smallrye-mutiny[Mutiny] to write reactive and asynchronous code."
 msgstr "你可以返回 _响应式类型_ 来处理异步处理。Quarkus推荐使用 link:https://smallrye.io/smallrye-mutiny[Mutiny] 来编写响应式和异步代码。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:511
+#: upstream/_versions/main/guides/rest-json.adoc:510
 msgid "RESTEasy Reactive is naturally integrated with Mutiny."
 msgstr "RESTEasy Reactive与Mutiny集成。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:513
+#: upstream/_versions/main/guides/rest-json.adoc:512
 msgid "Your endpoints can return `Uni` or `Multi` instances:"
 msgstr "你的节点可以返回 `Uni` 或 `Multi` 实例。"
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:522
+#: upstream/_versions/main/guides/rest-json.adoc:521
 #, no-wrap
 msgid ""
 "@GET\n"
@@ -932,7 +926,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/rest-json.adoc:527
+#: upstream/_versions/main/guides/rest-json.adoc:526
 #, no-wrap
 msgid ""
 "@GET\n"
@@ -942,37 +936,37 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:531
+#: upstream/_versions/main/guides/rest-json.adoc:530
 msgid "Use `Uni` when you have a single result.  Use `Multi` when you have multiple items that may be emitted asynchronously."
 msgstr "当你有一个单一的结果时，使用 `Uni` 。当你有多个可能被异步发射的项目时，使用 `Multi` 。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:533
+#: upstream/_versions/main/guides/rest-json.adoc:532
 msgid "You can use `Uni` and `Response` to return asynchronous HTTP responses: `Uni<Response>`."
 msgstr "您可以使用 `Uni` 和 `Response` 返回异步 HTTP 响应：`Uni<Response>`。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:535
+#: upstream/_versions/main/guides/rest-json.adoc:534
 msgid "More details about Mutiny can be found in xref:mutiny-primer.adoc[Mutiny - an intuitive reactive programming library]."
 msgstr "有关 Mutiny 的更多详细信息，请参见外部参考：xref:mutiny-primer.adoc[Mutiny - 一个直观的响应式编程库]。"
 
 #. type: Title ==
-#: upstream/_versions/main/guides/rest-json.adoc:536
+#: upstream/_versions/main/guides/rest-json.adoc:535
 #, no-wrap
 msgid "Conclusion"
 msgstr "解决方案"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:539
+#: upstream/_versions/main/guides/rest-json.adoc:538
 msgid "Creating JSON REST services with Quarkus is easy as it relies on proven and well known technologies."
 msgstr "使用 Quarkus 创建 JSON REST 服务很容易，因为它依赖于经过验证且众所周知的技术。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:541
+#: upstream/_versions/main/guides/rest-json.adoc:540
 msgid "As usual, Quarkus further simplifies things under the hood when running your application as a native executable."
 msgstr "像往常一样，当您将应用程序作为本机可执行文件运行时，Quarkus 进一步简化了内部工作。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/rest-json.adoc:542
+#: upstream/_versions/main/guides/rest-json.adoc:541
 msgid "There is only one thing to remember: if you use `Response` and Quarkus can't determine the beans that are serialized, you need to annotate them with `@RegisterForReflection`."
 msgstr "只有一件事要记住：如果您使用 `Response` 并且 Quarkus 无法确定被序列化的 bean，则需要使用 `@RegisterForReflection` 注解它们。"
