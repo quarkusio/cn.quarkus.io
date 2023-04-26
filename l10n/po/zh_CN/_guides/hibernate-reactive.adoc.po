@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2022-12-14 18:04+0000\n"
+"POT-Creation-Date: 2023-04-26 15:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -258,7 +258,7 @@ msgstr "不支持使用标准的 `persistence.xml` 配置文件来配置 Hiberna
 #. type: Plain text
 #: upstream/_guides/hibernate-reactive.adoc:106
 #, fuzzy
-msgid "Please, see section <<hr-configuration-properties, Hibernate Reactive configuration properties>> for the list of properties you can set in `{config-file}`."
+msgid "See section xref:hr-configuration-properties[Hibernate Reactive configuration properties] for the list of properties you can set in `{config-file}`."
 msgstr "请参阅 link:#hr-configuration-properties[Hibernate Reactive配置属性] 一节，以了解你可以在 `{config-file}` 中设置的属性列表。"
 
 #. type: Plain text
@@ -472,62 +472,54 @@ msgstr "这将注入默认持久化单元的 `Mutiny.SessionFactory` 。"
 
 #. type: Plain text
 #: upstream/_guides/hibernate-reactive.adoc:212
-#, fuzzy
-msgid "You can also inject an instance of `Uni<Mutiny.Session>` using the exact same mechanism:"
-msgstr "你也可以使用完全相同的机制注入一个 `Uni<Mutiny.Session>` 的实例。"
-
-#. type: delimited block -
-#: upstream/_guides/hibernate-reactive.adoc:217
-#, no-wrap
-msgid ""
-"@Inject\n"
-"Uni<Mutiny.Session> session;\n"
+msgid "Prior to Quarkus 3.0 it was also possible to inject a `@RequestScoped` bean for `Mutiny.Session`. However, the lifecycle of a reactive session does not fit the lifecycle of the CDI request context. Therefore, this bean is removed in Quarkus 3.0."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_guides/hibernate-reactive.adoc:219
+#: upstream/_guides/hibernate-reactive.adoc:214
 #, no-wrap
 msgid "Testing"
 msgstr "测试"
 
 #. type: Plain text
-#: upstream/_guides/hibernate-reactive.adoc:222
+#: upstream/_guides/hibernate-reactive.adoc:217
 #, fuzzy
 msgid "Using Hibernate Reactive in a `@QuarkusTest` is slightly more involved than using Hibernate ORM due to the asynchronous nature of the APIs and the fact that all operations need to run on a Vert.x Event Loop."
 msgstr "在 `@QuarkusTest` 中使用Hibernate Reactive比使用Hibernate ORM要稍微复杂一些，因为API的异步性以及所有操作都需要在Vert.x Event Loop上运行。"
 
 #. type: Plain text
-#: upstream/_guides/hibernate-reactive.adoc:224
+#: upstream/_guides/hibernate-reactive.adoc:219
 #, fuzzy
 msgid "Two components are necessary to write these tests:"
 msgstr "编写这些测试需要两个组成部分。"
 
 #. type: Plain text
-#: upstream/_guides/hibernate-reactive.adoc:226
+#: upstream/_guides/hibernate-reactive.adoc:221
 #, fuzzy
 msgid "The use of `@io.quarkus.test.vertx.RunOnVertxContext` or `@io.quarkus.test.TestReactiveTransaction` on the test methods"
 msgstr "在测试方法上使用 `@io.quarkus.test.vertx.RunOnVertxContext` 或 `@io.quarkus.test.TestReactiveTransaction` "
 
 #. type: Plain text
-#: upstream/_guides/hibernate-reactive.adoc:227
+#: upstream/_guides/hibernate-reactive.adoc:222
 #, fuzzy
 msgid "The use of `io.quarkus.test.vertx.UniAsserter` as a test method parameter."
 msgstr "使用 `io.quarkus.test.vertx.UniAsserter` 作为测试方法的参数。"
 
 #. type: Plain text
-#: upstream/_guides/hibernate-reactive.adoc:229
+#: upstream/_guides/hibernate-reactive.adoc:224
 #, fuzzy
 msgid "These classes are provided by the `quarkus-test-vertx` dependency."
 msgstr "这些类是由 `quarkus-test-vertx` 依赖性提供的。"
 
 #. type: Plain text
-#: upstream/_guides/hibernate-reactive.adoc:231
+#: upstream/_guides/hibernate-reactive.adoc:226
 #, fuzzy
 msgid "A very simple example usage looks like:"
 msgstr "一个非常简单的使用例子看起来像。"
 
 #. type: delimited block -
-#: upstream/_guides/hibernate-reactive.adoc:236
+#: upstream/_guides/hibernate-reactive.adoc:231
+#: upstream/_guides/hibernate-reactive.adoc:256
 #, no-wrap
 msgid ""
 "@QuarkusTest\n"
@@ -535,7 +527,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/hibernate-reactive.adoc:239
+#: upstream/_guides/hibernate-reactive.adoc:234
 #, no-wrap
 msgid ""
 "    @Inject\n"
@@ -543,7 +535,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/hibernate-reactive.adoc:247
+#: upstream/_guides/hibernate-reactive.adoc:242
 #, no-wrap
 msgid ""
 "    @Test\n"
@@ -556,70 +548,99 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/hibernate-reactive.adoc:249
+#: upstream/_guides/hibernate-reactive.adoc:244
 #, no-wrap
 msgid "}\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/hibernate-reactive.adoc:252
+#: upstream/_guides/hibernate-reactive.adoc:247
 #, fuzzy
 msgid "See the Javadoc of `UniAsserter` for a full description of the various methods that can be used for creating assertions."
 msgstr "关于可用于创建断言的各种方法的完整描述，见 `UniAsserter` 的Javadoc。"
 
+#. type: delimited block =
+#: upstream/_guides/hibernate-reactive.adoc:251
+msgid "You can also extend the `io.quarkus.test.vertx.UniAsserterInterceptor` to wrap the injected `UniAsserter` and customize the default behavior. For example, the interceptor can be used to execute the assert methods within a separate database transaction.:"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/hibernate-reactive.adoc:271
+#, no-wrap
+msgid ""
+"   @Test\n"
+"   @RunOnVertxContext\n"
+"   public void testEntity(UniAsserter asserter) {\n"
+"      asserter = new UniAsserterInterceptor(asserter) {\n"
+"         @Override\n"
+"         protected <T> Supplier<Uni<T>> transformUni(Supplier<Uni<T>> uniSupplier) {\n"
+"            return () -> Panache.withTransaction(uniSupplier);\n"
+"         }\n"
+"      };\n"
+"      asserter.execute(() -> new MyEntity().persist());\n"
+"      asserter.assertEquals(() -> MyEntity.count(), 1l);\n"
+"      asserter.execute(() -> MyEntity.deleteAll());\n"
+"   }\n"
+"}\n"
+msgstr ""
+
 #. type: Title ==
-#: upstream/_guides/hibernate-reactive.adoc:254
+#: upstream/_guides/hibernate-reactive.adoc:275
 #, fuzzy, no-wrap
 msgid "Limitations and other things you should know"
 msgstr "限制和其他你应该知道的事情"
 
-#. type: Plain text
-#: upstream/_guides/hibernate-reactive.adoc:258
+#. type: delimited block =
+#: upstream/_guides/hibernate-reactive.adoc:279
 #, fuzzy
 msgid "Quarkus does not modify the libraries it uses; this rule applies to Hibernate Reactive as well: when using this extension you will mostly have the same experience as using the original library."
 msgstr "Quarkus不会修改它所使用的库；这个规则也适用于Hibernate Reactive：当使用这个扩展时，你大多会有和使用原始库一样的体验。"
 
-#. type: Plain text
-#: upstream/_guides/hibernate-reactive.adoc:262
+#. type: delimited block =
+#: upstream/_guides/hibernate-reactive.adoc:283
 #, fuzzy
 msgid "But while they share the same code, Quarkus does configure some components automatically and inject custom implementations for some extension points; this should be transparent and useful but if you're an expert of Hibernate Reactive you might want to know what is being done."
 msgstr "但是，虽然它们共享相同的代码，Quarkus确实自动配置了一些组件，并为一些扩展点注入了自定义的实现；这应该是透明和有用的，但如果你是Hibernate Reactive的专家，你可能想知道正在做什么。"
 
-#. type: Plain text
-#: upstream/_guides/hibernate-reactive.adoc:264
+#. type: delimited block =
+#: upstream/_guides/hibernate-reactive.adoc:285
 #, fuzzy
 msgid "Here's a list of things to pay attention when using Hibernate Reactive in Quarkus:"
 msgstr "这里列出了在Quarkus中使用Hibernate Reactive时需要注意的事项。"
 
-#. type: Plain text
-#: upstream/_guides/hibernate-reactive.adoc:266
+#. type: delimited block =
+#: upstream/_guides/hibernate-reactive.adoc:287
 #, fuzzy
 msgid "it's not possible to configure multiple persistence units at the moment"
 msgstr "目前不可能配置多个持久化单元"
 
-#. type: Plain text
-#: upstream/_guides/hibernate-reactive.adoc:267
+#. type: delimited block =
+#: upstream/_guides/hibernate-reactive.adoc:288
 #, fuzzy
 msgid "it's not configurable via a `persistence.xml` file"
 msgstr "它不能通过 `persistence.xml` 文件进行配置。"
 
-#. type: Plain text
-#: upstream/_guides/hibernate-reactive.adoc:268
+#. type: delimited block =
+#: upstream/_guides/hibernate-reactive.adoc:289
 msgid "integration with the Envers extension is not supported"
 msgstr ""
 
-#. type: Plain text
-#: upstream/_guides/hibernate-reactive.adoc:269
-msgid "transaction demarcation cannot be done using `javax.transaction.Transactional`"
+#. type: delimited block =
+#: upstream/_guides/hibernate-reactive.adoc:290
+msgid "transaction demarcation cannot be done using `jakarta.transaction.Transactional`"
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/hibernate-reactive.adoc:270
+#: upstream/_guides/hibernate-reactive.adoc:291
 #, no-wrap
 msgid "Simplifying Hibernate Reactive with Panache"
 msgstr ""
 
-#. type: Plain text
-#: upstream/_guides/hibernate-reactive.adoc:274
+#. type: delimited block =
+#: upstream/_guides/hibernate-reactive.adoc:295
 msgid "The xref:hibernate-reactive-panache.adoc[Hibernate Reactive with Panache] extension facilitates the usage of Hibernate Reactive by providing active record style entities (and repositories) and focuses on making your entities trivial and fun to write in Quarkus."
 msgstr ""
+
+#, fuzzy
+#~ msgid "You can also inject an instance of `Uni<Mutiny.Session>` using the exact same mechanism:"
+#~ msgstr "你也可以使用完全相同的机制注入一个 `Uni<Mutiny.Session>` 的实例。"

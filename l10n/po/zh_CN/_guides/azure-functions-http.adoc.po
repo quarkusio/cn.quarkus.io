@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2022-10-19 16:07+0000\n"
+"POT-Creation-Date: 2023-04-26 15:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,19 +22,19 @@ msgstr ""
 #. type: Title =
 #: upstream/_guides/azure-functions-http.adoc:6
 #, fuzzy, no-wrap
-msgid "Azure Functions (Serverless) with RESTEasy Reactive, Undertow, or Reactive Routes"
+msgid "Azure Functions with RESTEasy Reactive, Undertow, or Reactive Routes"
 msgstr "使用RESTEasy Reactive、Undertow或Reactive Routes的Azure Functions（Serverless）。"
 
 #. type: Plain text
 #: upstream/_guides/azure-functions-http.adoc:14
 #, fuzzy
-msgid "The `quarkus-azure-functions-http` extension allows you to write microservices with RESTEasy Reactive (JAX-RS), Undertow (servlet), Reactive Routes, or xref:funqy-http.adoc[Funqy HTTP] and make these microservices deployable to the Azure Functions runtime."
+msgid "The `quarkus-azure-functions-http` extension allows you to write microservices with RESTEasy Reactive (our Jakarta REST implementation), Undertow (servlet), Reactive Routes, or xref:funqy-http.adoc[Funqy HTTP] and make these microservices deployable to the Azure Functions runtime."
 msgstr " `quarkus-azure-functions-http` 扩展允许你用RESTEasy Reactive（JAX-RS）、Undertow（servlet）、Reactive Routes或 link:funqy-http.html[Funqy HTTP] 编写微服务，并使这些微服务可部署到Azure Functions运行时。"
 
 #. type: Plain text
 #: upstream/_guides/azure-functions-http.adoc:16
 #, fuzzy
-msgid "One azure function deployment can represent any number of JAX-RS, servlet, Reactive Routes, or xref:funqy-http.adoc[Funqy HTTP] endpoints."
+msgid "One azure function deployment can represent any number of Jakarta REST, servlet, Reactive Routes, or xref:funqy-http.adoc[Funqy HTTP] endpoints."
 msgstr "一个azure函数部署可以代表任何数量的JAX-RS、servlet、Reactive Routes或 link:funqy-http.html[Funqy HTTP] 端点。"
 
 #. type: Plain text
@@ -57,21 +57,25 @@ msgstr "link:https://azure.microsoft.com[一个Azure账户] 。免费账户可�
 
 #. type: Plain text
 #: upstream/_guides/azure-functions-http.adoc:26
+msgid "https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local#v2[Azure Functions Core Tools] version 4.x"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/azure-functions-http.adoc:27
 #, fuzzy
 msgid "https://docs.microsoft.com/en-us/cli/azure/install-azure-cli[Azure CLI Installed]"
 msgstr "link:https://docs.microsoft.com/en-us/cli/azure/install-azure-cli[安装了Azure CLI]"
 
 #. type: Title ==
-#: upstream/_guides/azure-functions-http.adoc:27
+#: upstream/_guides/azure-functions-http.adoc:28
 #, fuzzy, no-wrap
 msgid "Solution"
 msgstr "解决方案"
 
 #. type: Plain text
 #: upstream/_guides/azure-functions-http.adoc:32
-#, fuzzy
-msgid "This guide walks you through running a Maven Archetype to generate a sample project that contains three http endpoints written with JAX-RS APIs, Servlet APIs, Reactive Routes, or xref:funqy-http.adoc[Funqy HTTP] APIs.  After building, you will then be able to deploy to Azure."
-msgstr "本指南指导你运行Maven Archetype，生成一个样本项目，其中包含三个用JAX-RS APIs、Servlet APIs、Reactive Routes或 link:funqy-http.html[Funqy HTTP] APIs编写的http端点。构建完成后，你就可以将其部署到Azure。"
+msgid "This guide walks you through running a maven project that can deploy a Resteasy Reactive endpoint to Azure Functions.  While only Jakarta REST is provided as an example, you can easily replace it with the HTTP framework of your choice."
+msgstr ""
 
 #. type: Title ==
 #: upstream/_guides/azure-functions-http.adoc:33
@@ -81,163 +85,131 @@ msgstr "创建Maven部署项目"
 
 #. type: Plain text
 #: upstream/_guides/azure-functions-http.adoc:36
-#, fuzzy
-msgid "Create the Azure Maven project for your Quarkus application using our Maven Archetype."
-msgstr "使用我们的Maven Archetype为你的Quarkus应用程序创建Azure Maven项目。"
-
-#. type: delimited block -
-#: upstream/_guides/azure-functions-http.adoc:44
-#, no-wrap
-msgid ""
-"mvn archetype:generate \\\n"
-"    -DarchetypeGroupId=io.quarkus \\\n"
-"    -DarchetypeArtifactId=quarkus-azure-functions-http-archetype \\\n"
-"    -DarchetypeVersion={quarkus-version}\n"
+msgid "You can download the example code from Quarkus's application generator at https://code.quarkus.io/d?e=azure-functions-http&cn=code.quarkus.io[this link]."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/azure-functions-http.adoc:47
-#, fuzzy
-msgid "Running this command will run maven in interactive mode and it will ask you to fill in some build properties:"
-msgstr "运行该命令将在交互式模式下运行maven，它将要求你填写一些构建属性。"
+#: upstream/_guides/azure-functions-http.adoc:38
+msgid "You can also generate this example with the Quarkus CLI:"
+msgstr ""
 
-#. type: Plain text
-#: upstream/_guides/azure-functions-http.adoc:49
-#, fuzzy
-msgid "`groupId` - The maven groupId of this generated project.  Type in `org.acme`."
-msgstr " `groupId` - 该生成项目的maven groupId。键入 。 `org.acme` "
-
-#. type: Plain text
-#: upstream/_guides/azure-functions-http.adoc:50
-#, fuzzy
-msgid "`artifactId` - The maven artifactId of this generated project. Type in `quarkus-demo`"
-msgstr " `artifactId` - 该生成项目的maven artifactId。类型为 `quarkus-demo` "
-
-#. type: Plain text
-#: upstream/_guides/azure-functions-http.adoc:51
-#, fuzzy
-msgid "`version` - Version of this generated project."
-msgstr " `version` - 该生成项目的版本。"
-
-#. type: Plain text
-#: upstream/_guides/azure-functions-http.adoc:52
-#, fuzzy
-msgid "`package` - defaults to `groupId`"
-msgstr " `package` - 默认为 `groupId` "
-
-#. type: Plain text
-#: upstream/_guides/azure-functions-http.adoc:53
-#, fuzzy
-msgid "`appName` - Use the default value.  This is the application name in Azure.  It must be a unique subdomain name under `*.azurewebsites.net`. Otherwise, deploying to Azure will fail."
-msgstr " `appName` - 使用默认值。这是Azure中的应用程序名称。它必须是 下的一个唯一的子域名称。否则部署到Azure会失败。 `*.azurewebsites.net` "
-
-#. type: Plain text
-#: upstream/_guides/azure-functions-http.adoc:54
-#, fuzzy
-msgid "`appRegion` - Defaults to `westus`.  Dependent on your azure region."
-msgstr " `appRegion` - 默认为 。取决于你的azure区域。 `westus` "
-
-#. type: Plain text
-#: upstream/_guides/azure-functions-http.adoc:55
-#, fuzzy
-msgid "`function` - Use the default which is `quarkus`.  Name of your azure function. Can be anything you want."
-msgstr " `function` - 使用默认值，即 。你的azure函数的名称。可以是任何你想要的。 `quarkus` "
-
-#. type: Plain text
-#: upstream/_guides/azure-functions-http.adoc:56
-#, fuzzy
-msgid "`resourceGroup` - Use the default value.  Any value is fine though."
-msgstr " `resourceGroup` - 使用默认值。不过任何数值都可以。"
-
-#. type: Plain text
-#: upstream/_guides/azure-functions-http.adoc:58
-#, fuzzy
-msgid "The values above are defined as properties in the generated `pom.xml` file."
-msgstr "上述数值在生成的 `pom.xml` 文件中被定义为属性。"
+#. type: delimited block -
+#: upstream/_guides/azure-functions-http.adoc:42
+#, no-wrap
+msgid "quarkus create app --extension=quarkus-azure-functions-http\n"
+msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/azure-functions-http.adoc:59
+#: upstream/_guides/azure-functions-http.adoc:44
 #, fuzzy, no-wrap
 msgid "Login to Azure"
 msgstr "登录到Azure"
 
 #. type: Plain text
-#: upstream/_guides/azure-functions-http.adoc:62
+#: upstream/_guides/azure-functions-http.adoc:47
 #, fuzzy
 msgid "If you don't log in to Azure you won't be able to deploy."
 msgstr "如果你没有登录到Azure，你就无法部署。"
 
 #. type: delimited block -
-#: upstream/_guides/azure-functions-http.adoc:66
+#: upstream/_guides/azure-functions-http.adoc:51
 #, no-wrap
 msgid "az login\n"
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/azure-functions-http.adoc:68
-#, fuzzy, no-wrap
-msgid "Build and Deploy to Azure"
-msgstr "构建和部署到Azure"
-
-#. type: Plain text
-#: upstream/_guides/azure-functions-http.adoc:73
-#, fuzzy
-msgid "The `pom.xml` you generated in the previous step pulls in the `azure-functions-maven-plugin`.  Running maven install generates config files and a staging directory required by the `azure-functions-maven-plugin`.  Here's how to execute it."
-msgstr "你在上一步生成的 `pom.xml` ，拉入了 `azure-functions-maven-plugin` 。运行maven install会生成配置文件和 `azure-functions-maven-plugin` 所需的暂存目录。下面是执行方法。"
-
-#. type: delimited block -
-#: upstream/_guides/azure-functions-http.adoc:77
+#: upstream/_guides/azure-functions-http.adoc:53
 #, no-wrap
-msgid "./mvnw clean install azure-functions:deploy\n"
+msgid "Quarkus dev mode"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/azure-functions-http.adoc:81
-#, fuzzy
-msgid "If you haven't already created your function up at azure, then build an uber-jar, package it, create the function at Azure, and deploy it."
-msgstr "如果你还没有在Azure上创建你的函数，将建立一个uber-jar，将其打包，在Azure上创建函数，并将其部署。"
+#: upstream/_guides/azure-functions-http.adoc:56
+msgid "Quarkus dev mode works by just running your application as a HTTP endpoint."
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/azure-functions-http.adoc:60
+#, no-wrap
+msgid "./mvnw clean package quarkus:dev\n"
+msgstr ""
+
+#. type: Title ==
+#: upstream/_guides/azure-functions-http.adoc:64
+#, no-wrap
+msgid "Run locally in Azure Functions simulated environment"
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/azure-functions-http.adoc:83
+#: upstream/_guides/azure-functions-http.adoc:68
+msgid "If you want to try your app with a simulated local Azure Functions environment, you can use this command"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/azure-functions-http.adoc:72
+#, no-wrap
+msgid "./mvnw clean package azure-functions:run\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/azure-functions-http.adoc:76
+msgid "Note that you must have the https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local#v2[Azure Functions Core Tools] installed for this to work!"
+msgstr ""
+
+#. type: Title ==
+#: upstream/_guides/azure-functions-http.adoc:77
+#, fuzzy, no-wrap
+msgid "Deploy to Azure"
+msgstr "构建和部署到Azure"
+
+#. type: Plain text
+#: upstream/_guides/azure-functions-http.adoc:82
+#, fuzzy
+msgid "The `pom.xml` you generated in the previous step pulls in the `azure-functions-maven-plugin`.  Running maven package generates config files and a staging directory required by the `azure-functions-maven-plugin`.  Here's how to execute it."
+msgstr "你在上一步生成的 `pom.xml` ，拉入了 `azure-functions-maven-plugin` 。运行maven install会生成配置文件和 `azure-functions-maven-plugin` 所需的暂存目录。下面是执行方法。"
+
+#. type: delimited block -
+#: upstream/_guides/azure-functions-http.adoc:86
+#, no-wrap
+msgid "./mvnw clean package azure-functions:deploy\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/azure-functions-http.adoc:89
 #, fuzzy
 msgid "If deployment is a success, the azure plugin will tell you the base URL to access your function."
 msgstr "如果部署成功，azure插件将告诉你访问你的函数的基本URL。"
 
 #. type: Plain text
-#: upstream/_guides/azure-functions-http.adoc:85
+#: upstream/_guides/azure-functions-http.adoc:91
 #, fuzzy
 msgid "i.e."
 msgstr "即"
 
 #. type: delimited block -
-#: upstream/_guides/azure-functions-http.adoc:88
+#: upstream/_guides/azure-functions-http.adoc:95
 #, no-wrap
-msgid "Successfully deployed the artifact to https://quarkus-demo-123451234.azurewebsites.net\n"
+msgid ""
+"[INFO] HTTP Trigger Urls:\n"
+"[INFO] \t QuarkusHttp : https://{appName}.azurewebsites.net/api/{*path}\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/azure-functions-http.adoc:91
+#: upstream/_guides/azure-functions-http.adoc:98
 #, fuzzy
 msgid "The URL to access the service would be"
 msgstr "访问该服务的URL将是"
 
 #. type: Plain text
-#: upstream/_guides/azure-functions-http.adoc:96
-#, fuzzy
-msgid "https://{appName}.azurewebsites.net/api/hello https://{appName}.azurewebsites.net/api/servlet/hello https://{appName}.azurewebsites.net/api/vertx/hello https://{appName}.azurewebsites.net/api/funqyHello"
-msgstr " https://{appName}.azurewebsites.net/api/hello   https://{appName}.azurewebsites.net/api/servlet/hello   https://{appName}.azurewebsites.net/api/vertx/hello https://{appName}.azurewebsites.net/api/ https://{appName}.azurewebsites.net/api/funqyHello "
+#: upstream/_guides/azure-functions-http.adoc:100
+msgid "https://{appName}.azurewebsites.net/api/hello"
+msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/azure-functions-http.adoc:97
+#: upstream/_guides/azure-functions-http.adoc:101
 #, fuzzy, no-wrap
 msgid "Extension maven dependencies"
 msgstr "延伸maven的依赖性"
-
-#. type: Plain text
-#: upstream/_guides/azure-functions-http.adoc:102
-#, fuzzy
-msgid "The sample project includes the RESTEasy Reactive, Undertow, Reactive Routes, xref:funqy-http.adoc[Funqy HTTP] extensions.  If you are only using one of those APIs (i.e. jax-rs only), respectively remove the maven dependency `quarkus-resteasy-reactive`, `quarkus-undertow`, `quarkus-funqy-http`, and/or `quarkus-reactive-routes`."
-msgstr "该示例项目包括RESTEasy Reactive、Undertow、Reactive Routes、 link:funqy-http.html[Funqy HTTP] 扩展。如果您只使用其中一个API（即只使用jax-rs），请分别删除maven依赖项 `quarkus-resteasy-reactive` 、 `quarkus-undertow` 、 `quarkus-funqy-http` ，和/或 `quarkus-reactive-routes` 。"
 
 #. type: Plain text
 #: upstream/_guides/azure-functions-http.adoc:105
@@ -254,29 +226,76 @@ msgstr "Azure 部署描述符"
 #. type: Plain text
 #: upstream/_guides/azure-functions-http.adoc:110
 #, fuzzy
-msgid "Templates for Azure Functions deployment descriptors (`host.json`, `function.json`) are within the `azure-config` directory.  Edit them as you need to.  Rerun the build when you are ready."
+msgid "Templates for Azure Functions deployment descriptors (`host.json`, `function.json`) are within base Edit them as you need to.  Rerun the build when you are ready."
 msgstr "Azure Functions部署描述符的模板( `host.json` , `function.json` )在 `azure-config` 目录下。你可以根据需要编辑它们。准备好后再重新运行构建。"
 
-#. type: Plain text
-#: upstream/_guides/azure-functions-http.adoc:113
-#, no-wrap
-msgid ""
-"*NOTE*: If you change the `function.json` `path` attribute or if you add a `routePrefix`,\n"
-"your jax-rs endpoints won't route correctly.  See <<config-azure-paths>> for more information.\n"
-msgstr ""
-
 #. type: Title ==
-#: upstream/_guides/azure-functions-http.adoc:116
+#: upstream/_guides/azure-functions-http.adoc:112
 #, no-wrap
 msgid "Configuring Root Paths"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/azure-functions-http.adoc:121
-msgid "The default route prefix for an Azure Function is `/api`.  All of your JAX-RS, Servlet, Reactive Routes, and xref:funqy-http.adoc[Funqy HTTP] endpoints must explicitly take this into account.  In the generated project this is handled by the `quarkus.http.root-path` switch in `application.properties`"
+#: upstream/_guides/azure-functions-http.adoc:117
+msgid "The default route prefix for an Azure Function is `/api`.  All of your Jakarta REST, Servlet, Reactive Routes, and xref:funqy-http.adoc[Funqy HTTP] endpoints must explicitly take this into account.  In the generated project this is handled by the `quarkus.http.root-path` switch in `application.properties`"
 msgstr ""
 
-#. type: Plain text
-#: upstream/_guides/azure-functions-http.adoc:124
-msgid "If you modify the `path` or add a `routePrefix` within the `azure-config/function.json` deployment descriptor, your code or configuration must also reflect any prefixes you specify for your path."
-msgstr ""
+#, fuzzy
+#~ msgid "This guide walks you through running a Maven Archetype to generate a sample project that contains three http endpoints written with JAX-RS APIs, Servlet APIs, Reactive Routes, or xref:funqy-http.adoc[Funqy HTTP] APIs.  After building, you will then be able to deploy to Azure."
+#~ msgstr "本指南指导你运行Maven Archetype，生成一个样本项目，其中包含三个用JAX-RS APIs、Servlet APIs、Reactive Routes或 link:funqy-http.html[Funqy HTTP] APIs编写的http端点。构建完成后，你就可以将其部署到Azure。"
+
+#, fuzzy
+#~ msgid "Create the Azure Maven project for your Quarkus application using our Maven Archetype."
+#~ msgstr "使用我们的Maven Archetype为你的Quarkus应用程序创建Azure Maven项目。"
+
+#, fuzzy
+#~ msgid "Running this command will run maven in interactive mode and it will ask you to fill in some build properties:"
+#~ msgstr "运行该命令将在交互式模式下运行maven，它将要求你填写一些构建属性。"
+
+#, fuzzy
+#~ msgid "`groupId` - The maven groupId of this generated project.  Type in `org.acme`."
+#~ msgstr " `groupId` - 该生成项目的maven groupId。键入 。 `org.acme` "
+
+#, fuzzy
+#~ msgid "`artifactId` - The maven artifactId of this generated project. Type in `quarkus-demo`"
+#~ msgstr " `artifactId` - 该生成项目的maven artifactId。类型为 `quarkus-demo` "
+
+#, fuzzy
+#~ msgid "`version` - Version of this generated project."
+#~ msgstr " `version` - 该生成项目的版本。"
+
+#, fuzzy
+#~ msgid "`package` - defaults to `groupId`"
+#~ msgstr " `package` - 默认为 `groupId` "
+
+#, fuzzy
+#~ msgid "`appName` - Use the default value.  This is the application name in Azure.  It must be a unique subdomain name under `*.azurewebsites.net`. Otherwise, deploying to Azure will fail."
+#~ msgstr " `appName` - 使用默认值。这是Azure中的应用程序名称。它必须是 下的一个唯一的子域名称。否则部署到Azure会失败。 `*.azurewebsites.net` "
+
+#, fuzzy
+#~ msgid "`appRegion` - Defaults to `westus`.  Dependent on your azure region."
+#~ msgstr " `appRegion` - 默认为 。取决于你的azure区域。 `westus` "
+
+#, fuzzy
+#~ msgid "`function` - Use the default which is `quarkus`.  Name of your azure function. Can be anything you want."
+#~ msgstr " `function` - 使用默认值，即 。你的azure函数的名称。可以是任何你想要的。 `quarkus` "
+
+#, fuzzy
+#~ msgid "`resourceGroup` - Use the default value.  Any value is fine though."
+#~ msgstr " `resourceGroup` - 使用默认值。不过任何数值都可以。"
+
+#, fuzzy
+#~ msgid "The values above are defined as properties in the generated `pom.xml` file."
+#~ msgstr "上述数值在生成的 `pom.xml` 文件中被定义为属性。"
+
+#, fuzzy
+#~ msgid "If you haven't already created your function up at azure, then build an uber-jar, package it, create the function at Azure, and deploy it."
+#~ msgstr "如果你还没有在Azure上创建你的函数，将建立一个uber-jar，将其打包，在Azure上创建函数，并将其部署。"
+
+#, fuzzy
+#~ msgid "https://{appName}.azurewebsites.net/api/hello https://{appName}.azurewebsites.net/api/servlet/hello https://{appName}.azurewebsites.net/api/vertx/hello https://{appName}.azurewebsites.net/api/funqyHello"
+#~ msgstr " https://{appName}.azurewebsites.net/api/hello   https://{appName}.azurewebsites.net/api/servlet/hello   https://{appName}.azurewebsites.net/api/vertx/hello https://{appName}.azurewebsites.net/api/ https://{appName}.azurewebsites.net/api/funqyHello "
+
+#, fuzzy
+#~ msgid "The sample project includes the RESTEasy Reactive, Undertow, Reactive Routes, xref:funqy-http.adoc[Funqy HTTP] extensions.  If you are only using one of those APIs (i.e. jax-rs only), respectively remove the maven dependency `quarkus-resteasy-reactive`, `quarkus-undertow`, `quarkus-funqy-http`, and/or `quarkus-reactive-routes`."
+#~ msgstr "该示例项目包括RESTEasy Reactive、Undertow、Reactive Routes、 link:funqy-http.html[Funqy HTTP] 扩展。如果您只使用其中一个API（即只使用jax-rs），请分别删除maven依赖项 `quarkus-resteasy-reactive` 、 `quarkus-undertow` 、 `quarkus-funqy-http` ，和/或 `quarkus-reactive-routes` 。"
