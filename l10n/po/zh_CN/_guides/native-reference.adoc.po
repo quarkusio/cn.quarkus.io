@@ -255,60 +255,69 @@ msgstr ""
 
 #. type: Title ===
 #: upstream/_guides/native-reference.adoc:158
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "Resident Set Size (RSS)"
-msgstr ""
+msgstr "驻地集尺寸（RSS）"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:165
+#, fuzzy
 msgid "As described in the xref:performance-measure.adoc[Measuring Performance guide], the footprint of Quarkus applications is measured using the resident set size (RSS).  This is also applicable to native applications, but the runtime engine that manages the footprint in this case is built in the native executable itself rather than the JVM."
-msgstr ""
+msgstr "正如 link:performance-measure.html[衡量性能指南] 中所描述的，Quarkus应用程序的足迹是用常驻集大小（RSS）来衡量的。这也适用于本地应用程序，但在这种情况下，管理足迹的运行时引擎是建立在本地可执行文件本身而不是JVM中。"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:170
+#, fuzzy
 msgid "The reporting techniques specified in the xref:performance-measure.adoc[Measuring Performance guide] are applicable to native applications too, but what causes the RSS to be higher or lower is specific to how the generated native executables work."
-msgstr ""
+msgstr "link:performance-measure.html[衡量性能指南] 中规定的报告技术也适用于本地应用程序，但导致RSS升高或降低的原因是特定于生成的本地可执行文件的工作方式。"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:173
+#, fuzzy
 msgid "When the RSS is higher in one native version of the application versus another, the following checks should be carried out first:"
-msgstr ""
+msgstr "当RSS在一个本地版本的应用程序与另一个版本的应用程序中更高时，应首先进行以下检查："
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:177
+#, fuzzy
 msgid "Check the xref:native-reports[native build time reports] and see if there are big discrepancies in the number of used packages, used classes or used methods.  A bigger universe will result in bigger memory footprint."
-msgstr ""
+msgstr "检查 link:#native-reports[本地构建时间报告] ，看看在使用的包、使用的类或使用的方法的数量上是否有很大差异。一个更大的宇宙将导致更大的内存占用。"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:182
+#, fuzzy
 msgid "Check the size of the binary for differences.  Using `readelf` you can observe the size of different sections and compare them.  The `.text` section where code lives, and the `.svm_heap` section where heap produced at build time lives, are particularly interesting."
-msgstr ""
+msgstr "检查二进制的大小是否有差异。使用 `readelf` ，你可以观察不同部分的大小并进行比较。代码所在的 `.text` 部分，以及构建时产生的堆所在的 `.svm_heap` 部分，特别有趣。"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:183
+#, fuzzy
 msgid "Generate xref:heap-dumps[heap dumps] and inspect them with tools such as VisualVM or Eclipse MAT."
-msgstr ""
+msgstr "生成 link:#heap-dumps[堆转储] 并使用VisualVM或Eclipse MAT等工具进行检查。"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:191
+#, fuzzy
 msgid "Often profiling, instrumenting or tracing applications is the best way to figure out how things work.  In the case of RSS and native applications, the techniques that Brendan Gregg explains in the https://www.brendangregg.com/FlameGraphs/memoryflamegraphs.html[\"Memory Leak (and Growth) Flame Graphs\"] guide are particularly useful.  This section will apply the information in that article to show how to use `perf` and https://github.com/iovisor/bcc[bcc/eBPF] to understand what causes Quarkus native executables to consume memory on startup."
-msgstr ""
+msgstr "通常情况下，剖析、检测或追踪应用程序是弄清事情如何运作的最好方法。就RSS和本地应用程序而言，Brendan Gregg在 link:https://www.brendangregg.com/FlameGraphs/memoryflamegraphs.html[\"内存泄漏（和增长）火焰图 \"] 指南中解释的技术特别有用。本节将应用那篇文章中的信息来展示如何使用 `perf` 和 link:https://github.com/iovisor/bcc[bcc/eBPF] 来了解是什么导致Quarkus本地可执行文件在启动时消耗内存。"
 
 #. type: Title ====
 #: upstream/_guides/native-reference.adoc:193
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "Perf"
-msgstr ""
+msgstr "灌胶"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:198
+#, fuzzy
 msgid "`perf` works in older Linux systems, whereas eBPF requires a newer Linux kernel.  The overhead of `perf` is higher than eBPF, but it can understand stack traces generated with DWARF debug symbols, which eBPF can't."
-msgstr ""
+msgstr " `perf` 在旧的Linux系统中工作，而eBPF需要一个较新的Linux内核。 的开销比eBPF高，但它能理解用DWARF调试符号产生的堆栈痕迹，而eBPF不能。 `perf` "
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:205
+#, fuzzy
 msgid "In the context of GraalVM, DWARF stack traces contain more detail and are easier to understand than those generated with frame pointers.  As first step, build a Quarkus native executable with debug info enabled and a couple of extra flags.  One flag to disable optimizations, and another to avoid inlined methods being omitted from the stack traces.  These two flags have been added to obtain stack traces that contain as much information as possible."
-msgstr ""
+msgstr "在GraalVM的背景下，DWARF堆栈跟踪包含更多的细节，比用帧指针生成的堆栈跟踪更容易理解。作为第一步，建立一个Quarkus本地可执行文件，并启用调试信息和一些额外的标志。一个标志是禁用优化，另一个标志是避免堆栈跟踪中省略内联方法。添加这两个标志是为了获得包含尽可能多信息的堆栈跟踪。"
 
 #. type: delimited block -
 #: upstream/_guides/native-reference.adoc:211
@@ -321,13 +330,15 @@ msgstr ""
 
 #. type: delimited block =
 #: upstream/_guides/native-reference.adoc:224
+#, fuzzy
 msgid "Disabling optimizations makes it easier to learn how to use `perf` and get as detailed stack traces as possible, because it shows more info about what gets called where.  However, doing so might lead to more allocations happening which would not happen if optimizations would have been applied.  In other words, passing in `-O0` will change the allocation pattens for many applications, because it disables optimizations such as escape analysis or dead code elimination.  To properly assess the allocations made by an application deployed in production, run with default optimizations (`-O2`).  With default optimizations the stack traces obtained with `perf` maybe be harder to decipher."
-msgstr ""
+msgstr "禁用优化使我们更容易学习如何使用 `perf` ，并获得尽可能详细的堆栈跟踪，因为它显示了更多关于什么地方被调用的信息。然而，这样做可能会导致更多的分配发生，而如果应用了优化就不会发生。换句话说，传入 `-O0` ，将改变许多应用程序的分配模式，因为它禁用了诸如转义分析或死代码消除的优化。为了正确评估部署在生产中的应用程序所做的分配，请使用默认优化（ `-O2` ）运行。在默认优化下，用 `perf` 获得的堆栈痕迹可能更难解读。"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:227
+#, fuzzy
 msgid "Let's measure how much RSS a Quarkus native executable takes on startup on this particular environment:"
-msgstr ""
+msgstr "让我们测量一下Quarkus本地可执行文件在这个特定环境下启动时需要多少RSS："
 
 #. type: delimited block -
 #: upstream/_guides/native-reference.adoc:233
@@ -340,8 +351,9 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:252
+#, fuzzy
 msgid "How come this Quarkus native executable consumes ~35MB RSS on startup? To get an understanding of this number, this section will use `perf` to trace calls to `syscalls:sys_enter_mmap`.  Assuming the default https://www.graalvm.org/{graalvm-version}/reference-manual/native-image/MemoryManagement/#serial-garbage-collector[Serial Garbage Collector] is in use, this system call is particularly interesting for native executables generated by GraalVM's `native-image` because of how it allocates heap.  In native executables generated by GraalVM's `native-image`, the heap is allocated using either aligned or unaligned heap chunks.  All non-array objects get allocated in thread local aligned chunks.  Each of these are 1MB in size by default.  For arrays, if they are bigger than 1/8 of the aligned chunk size, they will be allocated in unaligned heap chunks which have a size dependant on the object itself.  The very first time a thread allocates an object or small array, it will request an aligned heap chunk that it will use exclusively until it has run out of space in that chunk, in which case it will request another aligned heap chunk.  So by tracing these system calls, the code paths that end up requesting new aligned or unaligned heap chunks will be recorded.  Next, run the Quarkus native executable through `perf record` tracing the `mmap` system call:"
-msgstr ""
+msgstr "为什么这个Quarkus本地可执行文件在启动时要消耗~35MB的RSS？为了了解这个数字，本节将使用 `perf` 来追踪对 `syscalls:sys_enter_mmap` 的调用。假设使用的是默认的 link:https://www.graalvm.org/{graalvm-version}/reference-manual/native-image/MemoryManagement/#serial-garbage-collector[串行垃圾收集器] ，这个系统调用对于由GraalVM?的 `native-image` 生成的本地可执行文件特别有趣，因为它是如何分配堆的。在由GraalVM的 `native-image` 生成的本地可执行文件中，堆是使用对齐或未对齐的堆块分配的。所有非数组对象都被分配到线程本地的对齐块中。默认情况下，每个对象的大小为1MB。对于数组，如果它们大于对齐块大小的1/8，它们将被分配到无对齐堆块中，其大小取决于对象本身。当线程第一次分配一个对象或小数组时，它将请求一个对齐的堆块，它将专门使用这个堆块，直到它的空间用完，在这种情况下它将请求另一个对齐的堆块。因此，通过追踪这些系统调用，最终请求新的对齐或无对齐堆块的代码路径将被记录下来。接下来，通过 `perf record` 追踪 `mmap` 系统调用，运行Quarkus本地可执行文件："
 
 #. type: delimited block -
 #: upstream/_guides/native-reference.adoc:256
@@ -351,13 +363,15 @@ msgstr ""
 
 #. type: delimited block =
 #: upstream/_guides/native-reference.adoc:263
+#, fuzzy
 msgid "The size of the aligned heap chunks can be changed during native build time.  A custom value (in number of bytes) can be passed via the `-H:AlignedHeapChunkSize` flag.  One caveat is that this value needs to be multiple of 4096 (4KB)."
-msgstr ""
+msgstr "对齐的堆块的大小可以在本地构建时改变。可以通过 `-H:AlignedHeapChunkSize` 标志传递一个自定义值（字节数）。有一点需要注意的是，这个值必须是4096（4KB）的倍数。"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:266
+#, fuzzy
 msgid "Once the startup completes, stop the process and generate the stacks:"
-msgstr ""
+msgstr "一旦启动完成，停止进程并生成堆栈："
 
 #. type: delimited block -
 #: upstream/_guides/native-reference.adoc:270
@@ -367,8 +381,9 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:275
+#, fuzzy
 msgid "As a final step, generate a https://github.com/brendangregg/FlameGraph[flamegraph] with the generated stacks:"
-msgstr ""
+msgstr "作为最后一步，用生成的堆栈生成一个 link:https://github.com/brendangregg/FlameGraph[火焰图] ："
 
 #. type: delimited block -
 #: upstream/_guides/native-reference.adoc:281
@@ -381,8 +396,9 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:284
+#, fuzzy
 msgid "The flamegraph should look similar to this:"
-msgstr ""
+msgstr "火焰图应该与此相似："
 
 #. type: Positional ($1) AttributeList argument for macro 'image'
 #: upstream/_guides/native-reference.adoc:285
@@ -398,18 +414,21 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:288
+#, fuzzy
 msgid "There are several things of interest to notice there:"
-msgstr ""
+msgstr "那里有几件值得注意的事情："
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:293
+#, fuzzy
 msgid "First, the stack traces that contain method calls to `com.oracle.svm.core.genscavenge.ThreadLocalAllocation` are related to aligned or unaligned heap chunk allocations explained above.  As noted earlier, for the majority of allocations these chunks will be 1MB by default, so they're interesting because each allocated chunk has a considerable effect on the RSS consumption."
-msgstr ""
+msgstr "首先，包含对 `com.oracle.svm.core.genscavenge.ThreadLocalAllocation` 的方法调用的堆栈痕迹与上面解释的对齐或不对齐的堆块分配有关。如前所述，对于大多数分配，这些块默认为1MB，所以它们很有趣，因为每个分配的块对RSS的消耗有相当大的影响。"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:301
+#, fuzzy
 msgid "Second, of the thread allocation stacks, the ones under `start_thread` are particularly revealing.  In this environment, taking into account the `-Xmx` value passed in, Quarkus creates 12 event loop threads.  Aside from those, there are 6 extra threads.  The names of all those 18 threads exceed 16 characters.  This can be observed via the `ps` command:"
-msgstr ""
+msgstr "其次，在线程分配栈中， `start_thread` 下的线程分配栈尤其具有启示意义。在这种环境下，考虑到传入的 `-Xmx` 值，Quarkus创建了12个事件循环线程。除了这些之外，还有6个额外的线程。所有这些18个线程的名称都超过了16个字符。这可以通过 `ps` 命令来观察："
 
 #. type: delimited block -
 #: upstream/_guides/native-reference.adoc:323
@@ -438,8 +457,9 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:332
+#, fuzzy
 msgid "The very first allocation that all these threads do is taking the thread name and trimming it so that it can fall within the character limit enforced by kernels.  For each of those allocations, there are 2 `mmap` calls, one to reserve the memory and the other to commit it.  When recording `syscalls:sys_enter_mmap` system call, the `perf` implementation tracks calls to `__GI___mmap64`.  But this glibc `__GI___mmap64` implementation makes another call into `__GI___mmap64`:"
-msgstr ""
+msgstr "所有这些线程所做的第一个分配是采取线程名称，并对其进行修剪，使其能够落在内核强制执行的字符限制之内。对于每一个分配，都有2个 `mmap` ，一个用于保留内存，另一个用于提交。在记录 `syscalls:sys_enter_mmap` 系统调用时， `perf` 实现跟踪对 `_GI_ _mmap64` .但这个glibc `_GI_ _mmap64` 的实现则是另一个调用到 `_GI_ _mmap64` :"
 
 #. type: delimited block -
 #: upstream/_guides/native-reference.adoc:362
@@ -476,49 +496,57 @@ msgstr ""
 
 #. type: delimited block =
 #: upstream/_guides/native-reference.adoc:368
+#, fuzzy
 msgid "Setting `set scheduler-locking step` when the Quarkus native executable is running through `gdb` makes it easier to debug multi-threaded applications.  It optimizes for single-stepping by stopping other threads from \"seizing the prompt\" by preempting the current thread is being stepped through."
-msgstr ""
+msgstr "当Quarkus本地可执行文件通过 `gdb` 运行时，设置 `set scheduler-locking step` ，使其更容易调试多线程的应用程序。它通过阻止其他线程抢占当前线程的 \"提示 \"来优化单线程的运行。"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:372
+#, fuzzy
 msgid "This is how the above flamegraph shows a total of 72 calls to `__GI___mmap64` for the thread name abbreviation stack trace, given that Quarkus native executable runs 18 threads."
-msgstr ""
+msgstr "这就是上面的火焰图如何显示出总共有72次对 `_GI_ _mmap64` 为线程名称缩写的堆栈跟踪，考虑到Quarkus本地可执行程序运行18个线程。"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:382
+#, fuzzy
 msgid "A third, and final observation, is that if you capture the `syscalls:sys_enter_munmmap` event, you might observe that some allocations also result in calls to `munmap`.  When calculating the size to reserve, the requested size to allocate can be rounded up to the page size.  The maintain alignment, 1MB in case of aligned chunks or 1 byte for unaligned chunks, some of the reserved memory might be unreserved.  That is where these `munmap` calls would come from."
-msgstr ""
+msgstr "第三个，也是最后一个观察，如果你捕捉到 `syscalls:sys_enter_munmmap` 事件，你可能会观察到一些分配也会导致对 `munmap` 的调用。当计算保留的大小时，要求分配的大小可以四舍五入到页的大小上。保持对齐，如果是对齐的块，则为1MB，如果是不对齐的块，则为1字节，一些保留的内存可能是未保留的。这就是这些 `munmap` 调用的来源。"
 
 #. type: delimited block =
 #: upstream/_guides/native-reference.adoc:391
+#, fuzzy
 msgid "Just by looking at the flamegraph and counting the number of `mmap` calls that originate in thread local allocations, an approximate estimation can be made on the RSS a Quarkus native executable uses on startup.  This estimation can't be fully precise because for unaligned heap chunks, the stack trace doesn't record the size of the chunk.  Also, if the additional build args are removed, inlining optimizations might obscure the type of array allocation chunk requested, so it might not be possible to decipher if the allocation is for an aligned or unaligned chunk."
-msgstr ""
+msgstr "仅仅通过查看flamegraph和计算源自线程本地分配的 `mmap` 调用的数量，就可以对Quarkus本地可执行文件在启动时使用的RSS进行大致的估计。这种估计并不完全精确，因为对于未对齐的堆块，堆栈跟踪并不记录该堆块的大小。另外，如果删除了额外的构建参数，内联优化可能会掩盖请求的数组分配块的类型，所以可能无法破解分配是用于对齐的还是无对齐的块。"
 
 #. type: Title ====
 #: upstream/_guides/native-reference.adoc:394
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "bcc/eBPF"
-msgstr ""
+msgstr "bcc/eBPF"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:404
+#, fuzzy
 msgid "A version of https://github.com/iovisor/bcc[bcc]/ https://ebpf.io/[eBPF] that can do stack traces is only available from Linux kernel 4.8 onwards.  It can do in-kernel summaries, which makes it more efficient and has lower overhead.  Unfortunately it doesn't understand DWARF debug symbols, so the information obtained might be harder to read and contain less detail."
-msgstr ""
+msgstr "可以做堆栈跟踪的 link:https://github.com/iovisor/bcc[bcc/] link:https://ebpf.io/[eBPF] 版本只在Linux内核4.8以后可用。它可以做内核内的总结，这使得它更有效，开销更低。不幸的是，它不理解DWARF调试符号，所以得到的信息可能更难读，包含的细节更少。"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:413
+#, fuzzy
 msgid "bcc/eBPF is very extensible so it's easier to tailor make scripts to track specific metrics.  The `bcc` project contains a `stackcount` program that can be used to count stack traces in similar way to what `perf` did in the previous section.  But in some cases, it might be more useful to have other metrics other than number of calls to a system call.  `malloc` is one such example.  The number of `malloc` calls is not so important, but rather the size of the allocations.  So rather than having a flamegraph showing sample counts, a flamegraph can be generated that shows bytes allocated."
-msgstr ""
+msgstr "bcc/eBPF具有很强的扩展性，所以更容易定制脚本来跟踪特定的指标。 `bcc` 项目包含一个 `stackcount` 程序，可以用来计算堆栈痕迹，其方式与上一节中的 `perf` 类似。但是在某些情况下，除了对系统调用的次数之外，其他的指标可能更有用。 `malloc` 就是这样一个例子。 `malloc` 调用的数量并不那么重要，重要的是分配的大小。因此，与其让火焰图显示样本数，不如生成一个显示分配字节数的火焰图。"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:417
+#, fuzzy
 msgid "Aside from `mmap`, `malloc` system calls are also present in native executables generated by GraalVM.  Let's put bcc/eBPF in action to generate a flamegraph of bytes allocated using `malloc`."
-msgstr ""
+msgstr "除了 `mmap` ， `malloc` ，系统调用也出现在GraalVM生成的本地可执行文件中。让我们把bcc/eBPF付诸行动，生成一个使用 `malloc` 分配的字节的火焰图。"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:422
+#, fuzzy
 msgid "To do this, first re-generate a Quarkus native executable removing debug info, which bcc/eBPF does not understand, and instead use frame pointer with local symbols to get the stack traces:"
-msgstr ""
+msgstr "要做到这一点，首先重新生成一个Quarkus本地可执行文件，去掉bcc/eBPF不理解的调试信息，而使用带有本地符号的帧指针来获得堆栈痕迹："
 
 #. type: delimited block -
 #: upstream/_guides/native-reference.adoc:427
@@ -530,8 +558,9 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:437
+#, fuzzy
 msgid "The link:mallocstacks.py[mallocstacks.py] bcc/eBPF script will be used to capture the `malloc` stacktraces with their allocated size.  This script, and other typical bcc/eBPF scripts (e.g. `stackcount`), need to be given a process ID (PID).  This makes a bit tricky when you want to trace startup, but you can use `gdb` (even if you haven't enabled debug info)  to get around this obstacle because it allows you to stop the application at the first instruction.  Let's start by running the native executable via `gdb`:"
-msgstr ""
+msgstr "link:mallocstacks.py[mallocstacks.py] bcc/eBPF脚本将被用来捕获 `malloc` 堆栈轨迹及其分配的大小。这个脚本，以及其他典型的bcc/eBPF脚本（例如： `stackcount` ），需要被赋予一个进程ID（PID）。当你想追踪启动时，这就有点麻烦了，但是你可以使用 `gdb` （即使你没有启用调试信息）来绕过这个障碍，因为它允许你在第一条指令时停止应用程序。让我们先通过 `gdb` 来运行本地可执行程序："
 
 #. type: delimited block -
 #: upstream/_guides/native-reference.adoc:443
@@ -544,8 +573,9 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:446
+#, fuzzy
 msgid "`starti` is a `gdb` command that sets a temporary breakpoint at the very first instruction of the program's execution."
-msgstr ""
+msgstr " `starti` 是一条 ，在程序执行的第一条指令上设置一个临时断点。 `gdb` "
 
 #. type: delimited block -
 #: upstream/_guides/native-reference.adoc:453
@@ -559,8 +589,9 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:458
+#, fuzzy
 msgid "Next invoke the bcc/eBPF script giving it the PID of the Quarkus process, so that it can track the `malloc` calls, capture stack traces and dump them to a file for post-processing:"
-msgstr ""
+msgstr "接下来调用bcc/eBPF脚本，给它提供Quarkus进程的PID，这样它就可以跟踪 `malloc` ，捕获堆栈痕迹，并将其转储到一个文件中进行后处理："
 
 #. type: delimited block -
 #: upstream/_guides/native-reference.adoc:462
@@ -570,8 +601,9 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:465
+#, fuzzy
 msgid "Then go back to the `gdb` shell and instruct it to continue the startup procedure after hitting the first instruction:"
-msgstr ""
+msgstr "然后回到 `gdb` shell，指示它在点击第一个指令后继续启动程序："
 
 #. type: delimited block -
 #: upstream/_guides/native-reference.adoc:482
@@ -595,13 +627,15 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:486
+#, fuzzy
 msgid "Once the startup has complete, press `Ctrl-C` on the `stackcount` shell."
-msgstr ""
+msgstr "一旦启动完成，在 `stackcount` shell上按 `Ctrl-C` 。"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:490
+#, fuzzy
 msgid "Then process the stacks file as a flamegraph.  Note that the stacks generated by this script are already collapsed, so the flamegraph can be generated just like this:"
-msgstr ""
+msgstr "然后将堆栈文件作为火焰图来处理。注意，这个脚本生成的堆栈已经被折叠了，所以火焰图可以像这样生成："
 
 #. type: delimited block -
 #: upstream/_guides/native-reference.adoc:494
@@ -611,14 +645,15 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:497
+#, fuzzy
 msgid "The flamegraph produced should look something like this:"
-msgstr ""
+msgstr "产生的火焰图应该看起来像这样："
 
 #. type: Positional ($1) AttributeList argument for macro 'image'
 #: upstream/_guides/native-reference.adoc:498
-#, no-wrap
+#, fuzzy, no-wrap
 msgid "malloc bytes flamegraph"
-msgstr ""
+msgstr "malloc bytes flamegraph"
 
 #. type: Target for macro image
 #: upstream/_guides/native-reference.adoc:498
@@ -628,13 +663,15 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:505
+#, fuzzy
 msgid "This shows that most of the memory requested using `malloc` comes from epoll in Java NIO, but the overall amount allocated via `malloc` is barely 268KB.  This amount of 274,269 bytes can be observed by hoovering on top of `all` at the bottom of flamegraph (you might need to ask the browser to open the flamegraph in a different tab or window to observe this).  This is very small compared with the amount allocated for the heap with `mmap`."
-msgstr ""
+msgstr "这表明，使用 `malloc` 申请的大部分内存来自Java NIO中的epoll，但通过 `malloc` 分配的总体数量几乎没有268KB。这个274,269字节的数量可以通过在flamegraph底部的 `all` 上面观察到（你可能需要要求浏览器在不同的标签或窗口中打开flamegraph来观察这个）。这与用 `mmap` 分配给堆的数量相比是非常小的。"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:508
+#, fuzzy
 msgid "Finally, just a brief mention about other bcc/eBPF commands, and how to transform them into flamegraphs."
-msgstr ""
+msgstr "最后，只是简单提一下其他bcc/eBPF命令，以及如何将它们转化为火焰图。"
 
 #. type: delimited block -
 #: upstream/_guides/native-reference.adoc:513
@@ -670,8 +707,9 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:526
+#, fuzzy
 msgid "Stacks produced by `stackcount` need to be collapsed before they can be transformed into flamegraphs.  For example:"
-msgstr ""
+msgstr "由 `stackcount` 产生的堆栈在转化为火焰图之前需要进行折叠。比如说："
 
 #. type: delimited block -
 #: upstream/_guides/native-reference.adoc:531
@@ -2827,8 +2865,9 @@ msgstr "我在构建本地可执行文件时得到一个 `OutOfMemoryError` (OOM
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:1899
+#, fuzzy
 msgid "When building a native executable Quarkus requires all classes being referenced by the code, no matter if they are build-time or run-time initialized, to be present in the classpath.  This way it ensures that there will be no crashes at runtime due to potential `NoClassDefFoundError` exceptions.  To achieve this it makes use of GraalVM's `--link-at-build-time` parameter:"
-msgstr ""
+msgstr "当构建本地可执行文件时，Quarkus要求所有被代码引用的类，无论它们是构建时还是运行时初始化的，都必须存在于classpath中。这样，它就能确保在运行时不会因为潜在的 `NoClassDefFoundError` 异常而崩溃。为了实现这一点，它利用了GraalVM的 `--link-at-build-time` 参数："
 
 #. type: delimited block -
 #: upstream/_guides/native-reference.adoc:1905
@@ -2841,48 +2880,57 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:1909
+#, fuzzy
 msgid "This, however, may result in an `AnalysisError\\$ParsingError` due to an `UnresolvedElementException` at build time.  This is often caused because the application references a class from an https://maven.apache.org/guides/introduction/introduction-to-optional-and-excludes-dependencies.html#optional-dependencies[optional dependency]."
-msgstr ""
+msgstr "然而，这可能会导致 `AnalysisError\\$ParsingError` ，原因是在构建时出现了 `UnresolvedElementException` 。这通常是因为应用程序引用了一个来自 link:https://maven.apache.org/guides/introduction/introduction-to-optional-and-excludes-dependencies.html#optional-dependencies[可选依赖关系的] 类。"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:1911
+#, fuzzy
 msgid "If you have access to the source code responsible for the reference to the missing dependency and can alter it, you should consider one of the following:"
-msgstr ""
+msgstr "如果你可以访问负责引用缺失依赖关系的源代码，并且可以改变它，你应该考虑以下方法之一："
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:1913
+#, fuzzy
 msgid "Remove the reference if it's not actually necessary."
-msgstr ""
+msgstr "如果实际上没有必要，就把参考文献删除。"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:1914
+#, fuzzy
 msgid "Move the affected code in a sub-module and make the dependency non-optional (as is the best practice)."
-msgstr ""
+msgstr "将受影响的代码移到一个子模块中，并使依赖性成为非选择性的（这也是最佳做法）。"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:1915
+#, fuzzy
 msgid "Make the dependency non-optional."
-msgstr ""
+msgstr "使依赖性成为非选择性的。"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:1917
+#, fuzzy
 msgid "In the unfortunate case where the reference causing the issue is made by a 3rd party library, that you cannot modify, you should consider one of the following:"
-msgstr ""
+msgstr "在不幸的情况下，如果导致该问题的引用是由第三方库提供的，而你又无法修改，你应该考虑以下情况："
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:1919
+#, fuzzy
 msgid "Use a class/method substitution to remove the said reference."
-msgstr ""
+msgstr "使用类/方法替换来删除上述引用。"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:1920
+#, fuzzy
 msgid "Add the optional dependency as a non-optional dependency of your project."
-msgstr ""
+msgstr "将可选的依赖关系作为你的项目的非可选依赖关系。"
 
 #. type: Plain text
 #: upstream/_guides/native-reference.adoc:1924
+#, fuzzy
 msgid "Note that although option (1) is the best choice performance wise, as it minimizes the applications footprint,it might not be trivial to implement.  To make matters worse, it's also not easy to maintain as it is tightly coupled to the 3rd party library implementation.  Option (2) is a straight forward alternative to work around the issue, but comes at the cost of including possibly never invoked code in the resulting native executable."
-msgstr ""
+msgstr "请注意，尽管选项（1）在性能上是最好的选择，因为它最大限度地减少了应用程序的占用空间，但它可能不容易实现。更糟糕的是，它也不容易维护，因为它与第三方库的实现紧密相连。选项（2）是解决这个问题的一个直接的选择，但代价是在产生的本地可执行文件中包括可能从未调用过的代码。"
 
 #. type: Title ===
 #: upstream/_guides/native-reference.adoc:1925
