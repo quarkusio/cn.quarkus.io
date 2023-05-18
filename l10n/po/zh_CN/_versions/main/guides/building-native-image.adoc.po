@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2023-05-16 02:30+0000\n"
+"POT-Creation-Date: 2023-05-18 02:28+0000\n"
 "PO-Revision-Date: 2022-05-31 09:24+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -42,7 +42,7 @@ msgstr "将原生可执行文件打包到一个容器中"
 
 #. type: Title ==
 #: upstream/_versions/main/guides/building-native-image.adoc:16
-#: upstream/_versions/main/guides/building-native-image.adoc:818
+#: upstream/_versions/main/guides/building-native-image.adoc:819
 #, no-wrap
 msgid "Debugging native executable"
 msgstr "调试原生可执行文件"
@@ -1235,98 +1235,99 @@ msgid "`-Dquarkus.native.container-build=true` will produce an additional text f
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/building-native-image.adoc:795
+#: upstream/_versions/main/guides/building-native-image.adoc:796
 #, no-wrap
 msgid ""
 "cd target/native-sources\n"
 "docker run \\\n"
 "  -it \\\n"
+"  --user $(id -ur):$(id -gr) \\\n"
 "  --rm \\\n"
-"  --v $(pwd):/work \\# <1>\n"
+"  -v $(pwd):/work \\# <1>\n"
 "  -w /work \\# <2>\n"
-"  --entrypoint bin/sh \\\n"
+"  --entrypoint /bin/sh \\\n"
 "  $(cat native-builder.image) \\# <3>\n"
 "  -c \"native-image $(cat native-image.args) -J-Xmx4g\"# <4>\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/building-native-image.adoc:798
+#: upstream/_versions/main/guides/building-native-image.adoc:799
 msgid "Mount the host's directory `target/native-image` to the container's `/work`. Thus, the generated binary will also be written to this directory."
 msgstr "将主机的目录 `target/native-image` 挂载到容器的 `/work` 。因此，生成的二进制文件也将被写入这个目录。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/building-native-image.adoc:799
+#: upstream/_versions/main/guides/building-native-image.adoc:800
 msgid "Switch the working directory to `/work`, which we have mounted in <1>."
 msgstr "将工作目录切换到 `/work` ，我们已经在<1>中挂载了这个目录。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/building-native-image.adoc:800
+#: upstream/_versions/main/guides/building-native-image.adoc:801
 msgid "Use the docker image from the file `native-builder.image`."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/building-native-image.adoc:801
+#: upstream/_versions/main/guides/building-native-image.adoc:802
 msgid "Call `native-image` with the content of file `native-image.args` as arguments. We also supply an additional argument to limit the process's maximum memory to 4 Gigabytes (this may vary depending on the project being built and the machine building it)."
 msgstr "以文件 `native-image.args` 的内容为参数调用 `native-image` 。我们还提供了一个额外的参数，将进程的最大内存限制在4G字节（这可能取决于正在构建的项目和构建它的机器）。"
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/building-native-image.adoc:806
+#: upstream/_versions/main/guides/building-native-image.adoc:807
 msgid "If you are running on a Windows machine, please keep in mind that the binary was created within a Linux docker container.  Hence, the binary will not be executable on the host Windows machine."
 msgstr "如果你是在Windows机器上运行，请记住，二进制文件是在Linux docker容器中创建的。因此，二进制文件在Windows主机上是无法执行的。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/building-native-image.adoc:809
+#: upstream/_versions/main/guides/building-native-image.adoc:810
 msgid "A high level overview of what the various steps of a CI/CD pipeline would look is the following:"
 msgstr "以下是对CI/CD管道的各个步骤的高度概述："
 
 #. type: Plain text
-#: upstream/_versions/main/guides/building-native-image.adoc:811
+#: upstream/_versions/main/guides/building-native-image.adoc:812
 msgid "Register the output of the step executing `./mvnw ...` command (i.e. directory `target/native-image`) as a build artifact,"
 msgstr "将执行 `./mvnw …​` 命令的步骤的输出（即目录 `target/native-image` ）注册为构建工件，"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/building-native-image.adoc:812
+#: upstream/_versions/main/guides/building-native-image.adoc:813
 msgid "Require this artifact in the step executing the `native-image ...` command, and"
 msgstr "在执行 `native-image …​` 命令的步骤中需要这个工件，并且"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/building-native-image.adoc:813
+#: upstream/_versions/main/guides/building-native-image.adoc:814
 msgid "Register the output of the step executing the `native-image ...` command (i.e. files matching `target/*runner`) as build artifact."
 msgstr "将执行 `native-image …​` 命令的步骤的输出（即匹配 `target/*runner` 的文件）注册为构建工件。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/building-native-image.adoc:815
+#: upstream/_versions/main/guides/building-native-image.adoc:816
 msgid "The environment executing step `1` only needs Java and Maven (or Gradle) installed, while the environment executing step `3` only needs a GraalVM installation (including the `native-image` feature)."
 msgstr "执行步骤 `1` 的环境只需要安装Java和Maven（或Gradle），而执行步骤 `3` 的环境只需要安装GralVM（包括 `native-image` 功能）。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/building-native-image.adoc:817
+#: upstream/_versions/main/guides/building-native-image.adoc:818
 msgid "Depending on what the final desired output of the CI/CD pipeline is, the generated binary might then be used to create a container image."
 msgstr "根据CI/CD管道的最终期望输出，生成的二进制文件可能被用来创建一个容器镜像。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/building-native-image.adoc:822
+#: upstream/_versions/main/guides/building-native-image.adoc:823
 msgid "Native executables can be debugged using tools such as `gdb`.  For this to be possible native executables need to be generated with debug symbols."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/building-native-image.adoc:826
+#: upstream/_versions/main/guides/building-native-image.adoc:827
 msgid "Debug symbol generation is only supported on Linux.  Windows support is still under development, while macOS is not supported."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/building-native-image.adoc:830
+#: upstream/_versions/main/guides/building-native-image.adoc:831
 msgid "To generate debug symbols, add `-Dquarkus.native.debug.enabled=true` flag when generating the native executable.  You will find the debug symbols for the native executable in a `.debug` file next to the native executable."
 msgstr "要生成调试符号，在生成原生可执行文件时添加 `-Dquarkus.native.debug.enabled=true` 标志。你将在原生可执行文件旁边的 `.debug` 文件中找到原生可执行文件的调试符号。"
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/building-native-image.adoc:835
+#: upstream/_versions/main/guides/building-native-image.adoc:836
 #, fuzzy
 msgid "The generation of the `.debug` file depends on `objcopy`.  As a result, when using a local GraalVM installation on common Linux distributions you will need to install the `binutils` package:"
 msgstr "`.debug` 文件的生成取决于 `objcopy` 。在常见的Linux发行版上，你将需要安装 `binutils` 包："
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/building-native-image.adoc:842
+#: upstream/_versions/main/guides/building-native-image.adoc:843
 #, no-wrap
 msgid ""
 "# dnf (rpm-based)\n"
@@ -1336,230 +1337,230 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/building-native-image.adoc:845
+#: upstream/_versions/main/guides/building-native-image.adoc:846
 msgid "When `objcopy` is not available debug symbols are embedded in the executable."
 msgstr "当被嵌入到可执行文件中的 `objcopy` 调试符号不可用时。"
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/building-native-image.adoc:853
+#: upstream/_versions/main/guides/building-native-image.adoc:854
 msgid "Aside from debug symbols, setting `-Dquarkus.native.debug.enabled=true` flag generates a cache of source files for any JDK runtime classes, GraalVM classes and application classes resolved during native executable generation.  This source cache is useful for native debugging tools, to establish the link between the symbols and matching source code.  It provides a convenient way of making just the necessary sources available to the debugger/IDE when debugging a native executable."
 msgstr "除了调试符号外，设置 `-Dquarkus.native.debug.enabled=true` 标志会生成一个源文件缓存，用于生成原生可执行文件时解决的任何JDK运行时类、GraalVM类和应用程序类。这个源码缓存对原生调试工具很有用，可以在符号和匹配的源代码之间建立联系。在调试本原生执行文件时，它提供了一种方便的方法，使调试器/IDE仅能获得必要的源文件。"
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/building-native-image.adoc:859
+#: upstream/_versions/main/guides/building-native-image.adoc:860
 msgid "Sources for third party jar dependencies, including Quarkus source code, are not added to the source cache by default.  To include those, make sure you invoke `mvn dependency:sources` first.  This step is required in order to pull the sources for these dependencies, and get them included in the source cache."
 msgstr "第三方jar依赖的源，包括Quarkus源代码，默认情况下不会被添加到源缓存中。要包括这些，请确保你先调用 `mvn dependency:sources` 。这一步是必须的，以便拉出这些依赖的源代码，并将其包含在源代码缓存中。"
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/building-native-image.adoc:861
+#: upstream/_versions/main/guides/building-native-image.adoc:862
 msgid "The source cache is located in the `target/sources` folder."
 msgstr "源缓存位于 `target/sources` 文件夹中。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/building-native-image.adoc:865
+#: upstream/_versions/main/guides/building-native-image.adoc:866
 msgid "If running `gdb` from a different directory than `target`, then the sources can be loaded by running:"
 msgstr "如果从与 `target` 不同的目录下运行 `gdb` ，那么可以通过运行源代码加载："
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/building-native-image.adoc:869
+#: upstream/_versions/main/guides/building-native-image.adoc:870
 #, no-wrap
 msgid "directory path/to/target\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/building-native-image.adoc:872
+#: upstream/_versions/main/guides/building-native-image.adoc:873
 msgid "in the `gdb` prompt."
 msgstr "在 `gdb` 提示中。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/building-native-image.adoc:874
+#: upstream/_versions/main/guides/building-native-image.adoc:875
 msgid "Or start `gdb` with:"
 msgstr "或这样运行 `gdb` 命令："
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/building-native-image.adoc:878
+#: upstream/_versions/main/guides/building-native-image.adoc:879
 #, no-wrap
 msgid "gdb -ex 'directory path/to/target' path/to/target/{project.name}-{project.version}-runner\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/building-native-image.adoc:881
+#: upstream/_versions/main/guides/building-native-image.adoc:882
 msgid "e.g.,"
 msgstr "比如："
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/building-native-image.adoc:884
+#: upstream/_versions/main/guides/building-native-image.adoc:885
 #, no-wrap
 msgid "gdb -ex 'directory ./target' ./target/getting-started-1.0.0-SNAPSHOT-runner\n"
 msgstr ""
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/building-native-image.adoc:888
+#: upstream/_versions/main/guides/building-native-image.adoc:889
 msgid "For a more detailed guide about debugging native images please refer to the xref:native-reference.adoc[Native Reference Guide]."
 msgstr "关于调试原生镜像的更详细指南，请参考 xref:native-reference.adoc[原生参考指南] 。"
 
 #. type: Title ==
-#: upstream/_versions/main/guides/building-native-image.adoc:889
+#: upstream/_versions/main/guides/building-native-image.adoc:890
 #, fuzzy, no-wrap
 msgid "Using Monitoring Options"
 msgstr "使用容器-镜像扩展"
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/building-native-image.adoc:894
+#: upstream/_versions/main/guides/building-native-image.adoc:895
 msgid "Monitoring options such as JDK flight recorder, jvmstat, heap dumps, and remote JMX (experimental in Mandrel 23)  can be added to the native executable build. Simply supply a comma separated list of the monitoring options you wish to include at build time."
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/building-native-image.adoc:897
+#: upstream/_versions/main/guides/building-native-image.adoc:898
 #, no-wrap
 msgid "-Dquarkus.native.monitoring=<comma separated list of options>\n"
 msgstr ""
 
 #. type: Table
-#: upstream/_versions/main/guides/building-native-image.adoc:900
+#: upstream/_versions/main/guides/building-native-image.adoc:901
 #, no-wrap
 msgid "Monitoring Option"
 msgstr ""
 
 #. type: Table
-#: upstream/_versions/main/guides/building-native-image.adoc:900
+#: upstream/_versions/main/guides/building-native-image.adoc:901
 #, no-wrap
 msgid "Description"
 msgstr "描述"
 
 #. type: Table
-#: upstream/_versions/main/guides/building-native-image.adoc:902
+#: upstream/_versions/main/guides/building-native-image.adoc:903
 #, no-wrap
 msgid "Availability As Of"
 msgstr ""
 
 #. type: Table
-#: upstream/_versions/main/guides/building-native-image.adoc:903
+#: upstream/_versions/main/guides/building-native-image.adoc:904
 #, no-wrap
 msgid "jfr"
 msgstr ""
 
 #. type: Table
-#: upstream/_versions/main/guides/building-native-image.adoc:904
+#: upstream/_versions/main/guides/building-native-image.adoc:905
 #, no-wrap
 msgid "Include JDK Flight Recorder support"
 msgstr ""
 
 #. type: Table
-#: upstream/_versions/main/guides/building-native-image.adoc:906
+#: upstream/_versions/main/guides/building-native-image.adoc:907
 #, no-wrap
 msgid "GraalVM CE 21.3 Mandrel 21.3"
 msgstr ""
 
 #. type: Table
-#: upstream/_versions/main/guides/building-native-image.adoc:907
+#: upstream/_versions/main/guides/building-native-image.adoc:908
 #, no-wrap
 msgid "jvmstat"
 msgstr ""
 
 #. type: Table
-#: upstream/_versions/main/guides/building-native-image.adoc:908
+#: upstream/_versions/main/guides/building-native-image.adoc:909
 #, no-wrap
 msgid "Adds jvmstat support"
 msgstr ""
 
 #. type: Table
-#: upstream/_versions/main/guides/building-native-image.adoc:910
-#: upstream/_versions/main/guides/building-native-image.adoc:914
-#: upstream/_versions/main/guides/building-native-image.adoc:925
+#: upstream/_versions/main/guides/building-native-image.adoc:911
+#: upstream/_versions/main/guides/building-native-image.adoc:915
+#: upstream/_versions/main/guides/building-native-image.adoc:926
 #, no-wrap
 msgid "GraalVM 22.3 Mandrel 22.3"
 msgstr ""
 
 #. type: Table
-#: upstream/_versions/main/guides/building-native-image.adoc:911
+#: upstream/_versions/main/guides/building-native-image.adoc:912
 #, no-wrap
 msgid "heapdump"
 msgstr ""
 
 #. type: Table
-#: upstream/_versions/main/guides/building-native-image.adoc:912
+#: upstream/_versions/main/guides/building-native-image.adoc:913
 #, no-wrap
 msgid "Adds support for generating heap dumps"
 msgstr ""
 
 #. type: Table
-#: upstream/_versions/main/guides/building-native-image.adoc:915
+#: upstream/_versions/main/guides/building-native-image.adoc:916
 #, no-wrap
 msgid "jmxclient"
 msgstr ""
 
 #. type: Table
-#: upstream/_versions/main/guides/building-native-image.adoc:916
+#: upstream/_versions/main/guides/building-native-image.adoc:917
 #, no-wrap
 msgid "Adds support for connections to JMX servers."
 msgstr ""
 
 #. type: Table
-#: upstream/_versions/main/guides/building-native-image.adoc:918
-#: upstream/_versions/main/guides/building-native-image.adoc:922
+#: upstream/_versions/main/guides/building-native-image.adoc:919
+#: upstream/_versions/main/guides/building-native-image.adoc:923
 #, no-wrap
 msgid "GraalVM for JDK 17/20 Mandrel 23.0"
 msgstr ""
 
 #. type: Table
-#: upstream/_versions/main/guides/building-native-image.adoc:919
+#: upstream/_versions/main/guides/building-native-image.adoc:920
 #, no-wrap
 msgid "jmxserver"
 msgstr ""
 
 #. type: Table
-#: upstream/_versions/main/guides/building-native-image.adoc:920
+#: upstream/_versions/main/guides/building-native-image.adoc:921
 #, no-wrap
 msgid "Adds support for accepting connections from JMX clients."
 msgstr ""
 
 #. type: Table
-#: upstream/_versions/main/guides/building-native-image.adoc:923
+#: upstream/_versions/main/guides/building-native-image.adoc:924
 #, no-wrap
 msgid "all"
 msgstr ""
 
 #. type: Table
-#: upstream/_versions/main/guides/building-native-image.adoc:924
+#: upstream/_versions/main/guides/building-native-image.adoc:925
 #, no-wrap
 msgid "Adds all monitoring options."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/building-native-image.adoc:928
+#: upstream/_versions/main/guides/building-native-image.adoc:929
 msgid "Please see the Quarkus Native Reference Guide for more detailed information on these monitoring options."
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/building-native-image.adoc:930
+#: upstream/_versions/main/guides/building-native-image.adoc:931
 #, no-wrap
 msgid "Configuring the Native Executable"
 msgstr "配置原生可执行文件"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/building-native-image.adoc:934
+#: upstream/_versions/main/guides/building-native-image.adoc:935
 msgid "There are a lot of different configuration options that can affect how the native executable is generated.  These are provided in `application.properties` the same as any other config property."
 msgstr "有很多不同的配置选项可以影响原生可执行文件的生成方式。这些都是在 `application.properties` ，与其他配置属性相同。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/building-native-image.adoc:936
+#: upstream/_versions/main/guides/building-native-image.adoc:937
 msgid "The properties are shown below:"
 msgstr "这些属性显示如下："
 
 #. type: Title ==
-#: upstream/_versions/main/guides/building-native-image.adoc:939
+#: upstream/_versions/main/guides/building-native-image.adoc:940
 #, no-wrap
 msgid "What's next?"
 msgstr "下一步做什么？"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/building-native-image.adoc:944
+#: upstream/_versions/main/guides/building-native-image.adoc:945
 msgid "This guide covered the creation of a native (binary) executable for your application.  It provides an application exhibiting a swift startup time and consuming less memory.  However, there is much more."
 msgstr "本指南介绍了如何为应用程序创建原生(二进制)可执行文件。它提供了一个具备快速启动时间和消耗更少内存的应用程序。然而，还有更多。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/building-native-image.adoc:945
+#: upstream/_versions/main/guides/building-native-image.adoc:946
 msgid "We recommend continuing the journey with the xref:deploying-to-kubernetes.adoc[deployment to Kubernetes and OpenShift]."
 msgstr "我们建议继续阅读 xref:deploying-to-kubernetes.adoc[部署到Kubernetes和OpenShift]。"
 
