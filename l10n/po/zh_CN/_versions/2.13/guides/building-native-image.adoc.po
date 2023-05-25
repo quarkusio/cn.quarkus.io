@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2023-01-19 17:12+0000\n"
+"POT-Creation-Date: 2023-05-25 18:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -621,7 +621,9 @@ msgstr "使用Mandrel构建需要额外传递一个自定义的构建器镜像�
 
 #. type: Plain text
 #: upstream/_versions/2.13/guides/building-native-image.adoc:413
-msgid "Please note that the above command points to a floating tag.  It is highly recommended to use the floating tag, so that your builder image remains up-to-date and secure.  If you absolutely must, you may hard-code to a specific tag (see https://quay.io/repository/quarkus/ubi-quarkus-mandrel?tab=tags[here] for available tags), but be aware that you won't get security updates that way and it's unsupported."
+#, fuzzy
+#| msgid "Please note that the above command points to a floating tag.  It is highly recommended to use the floating tag, so that your builder image remains up-to-date and secure.  If you absolutely must, you may hard-code to a specific tag (see https://quay.io/repository/quarkus/ubi-quarkus-mandrel?tab=tags[here] for available tags), but be aware that you won't get security updates that way and it's unsupported."
+msgid "Please note that the above command points to a floating tag.  It is highly recommended to use the floating tag, so that your builder image remains up-to-date and secure.  If you absolutely must, you may hard-code to a specific tag (see https://quay.io/repository/quarkus/ubi-quarkus-mandrel-builder-image?tab=tags[here] for available tags), but be aware that you won't get security updates that way and it's unsupported."
 msgstr "请注意，上述命令指向的是一个浮动标签。我们强烈建议你使用浮动标签，这样你的构建器镜像就能保持最新和安全。如果你一定要硬编码到一个特定的标签（参见 https://quay.io/repository/quarkus/ubi-quarkus-mandrel?tab=tags[这里] 的可用标签），但要注意，你不会得到安全更新，而且这不被支持。"
 
 #. type: Title ==
@@ -707,7 +709,7 @@ msgstr "产生的可执行文件将是一个64位的Linux可执行文件，所�
 #: upstream/_versions/2.13/guides/building-native-image.adoc:464
 #, no-wrap
 msgid ""
-"FROM quay.io/quarkus/quarkus-micro-image:1.0\n"
+"FROM quay.io/quarkus/quarkus-micro-image:2.0\n"
 "WORKDIR /work/\n"
 "COPY target/*-runner /work/application\n"
 "RUN chmod 775 /work\n"
@@ -843,7 +845,7 @@ msgstr "用Maven构建的Docker文件例子："
 #, no-wrap
 msgid ""
 "## Stage 1 : build with maven builder image with native capabilities\n"
-"FROM quay.io/quarkus/ubi-quarkus-native-image:{graalvm-flavor} AS build\n"
+"FROM quay.io/quarkus/ubi-quarkus-graalvmce-builder-image:{graalvm-flavor} AS build\n"
 "COPY --chown=quarkus:quarkus mvnw /code/mvnw\n"
 "COPY --chown=quarkus:quarkus .mvn /code/.mvn\n"
 "COPY --chown=quarkus:quarkus pom.xml /code/\n"
@@ -859,7 +861,7 @@ msgstr ""
 #, no-wrap
 msgid ""
 "## Stage 2 : create the docker final image\n"
-"FROM quay.io/quarkus/quarkus-micro-image:1.0\n"
+"FROM quay.io/quarkus/quarkus-micro-image:2.0\n"
 "WORKDIR /work/\n"
 "COPY --from=build /code/target/*-runner /work/application\n"
 msgstr ""
@@ -910,7 +912,7 @@ msgstr "用Gradle构建的Docker文件例子："
 #, no-wrap
 msgid ""
 "## Stage 1 : build with maven builder image with native capabilities\n"
-"FROM quay.io/quarkus/ubi-quarkus-native-image:{graalvm-flavor} AS build\n"
+"FROM quay.io/quarkus/ubi-quarkus-graalvmce-builder-image:{graalvm-flavor} AS build\n"
 "USER root\n"
 "RUN microdnf install findutils\n"
 "COPY --chown=quarkus:quarkus gradlew /code/gradlew\n"
@@ -929,7 +931,7 @@ msgstr ""
 #, no-wrap
 msgid ""
 "## Stage 2 : create the docker final image\n"
-"FROM quay.io/quarkus/quarkus-micro-image:1.0\n"
+"FROM quay.io/quarkus/quarkus-micro-image:2.0\n"
 "WORKDIR /work/\n"
 "COPY --from=build /code/build/*-runner /work/application\n"
 "RUN chmod 775 /work\n"
@@ -971,7 +973,7 @@ msgstr "更多信息请参见 xref:native-and-ssl.adoc#working-with-containers[�
 #. type: delimited block =
 #: upstream/_versions/2.13/guides/building-native-image.adoc:621
 #, fuzzy
-msgid "To use Mandrel instead of GraalVM CE, update the `FROM` clause to: `FROM quay.io/quarkus/ubi-quarkus-mandrel-builder-image:{mandrel-flavor} AS build`."
+msgid "To use Mandrel instead of GraalVM CE, update the `FROM` clause to: `FROM quay.io/quarkus/ubi-quarkus-mandrel-builder-image-builder-image:{mandrel-flavor} AS build`."
 msgstr "要使用Mandrel而不是GraalVM CE，请将 `FROM` 子句更新为: `FROM quay.io/quarkus/ubi-quarkus-mandrel:$TAG AS build` 。 `$TAG` 可以在 https://quay.io/repository/quarkus/ubi-quarkus-mandrel?tab=tags[Quarkus Mandrel镜像标签页]上找到。"
 
 #. type: delimited block =
@@ -1004,7 +1006,7 @@ msgstr "Quarkus提供了一个无发行版的基础镜像，可以用于你的 `
 #: upstream/_versions/2.13/guides/building-native-image.adoc:642
 #, no-wrap
 msgid ""
-"FROM quay.io/quarkus/quarkus-distroless-image:1.0\n"
+"FROM quay.io/quarkus/quarkus-distroless-image:2.0\n"
 "COPY target/*-runner /application\n"
 msgstr ""
 
@@ -1018,7 +1020,9 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_versions/2.13/guides/building-native-image.adoc:652
-msgid "Quarkus provides the `quay.io/quarkus/quarkus-distroless-image:1.0` image.  It contains the required packages to run a native executable and is only **9Mb**.  Just add your application on top of this image, and you will get a tiny container image."
+#, fuzzy
+#| msgid "Quarkus provides the `quay.io/quarkus/quarkus-distroless-image:1.0` image.  It contains the required packages to run a native executable and is only **9Mb**.  Just add your application on top of this image, and you will get a tiny container image."
+msgid "Quarkus provides the `quay.io/quarkus/quarkus-distroless-image:2.0` image.  It contains the required packages to run a native executable and is only **9Mb**.  Just add your application on top of this image, and you will get a tiny container image."
 msgstr "Quarkus提供了 `quay.io/quarkus/quarkus-distroless-image:1.0` 镜像。它包含了运行原生可执行文件所需的软件包，并且只有 *9Mb* 。只要在这个镜像上添加你的应用程序，你就会得到一个很小的容器镜像。"
 
 #. type: Plain text
@@ -1052,7 +1056,7 @@ msgstr "以下是基于 `scratch` 镜像，使用Dockerfile多阶段构建镜像
 #, no-wrap
 msgid ""
 "## Stage 1 : build with maven builder image with native capabilities\n"
-"FROM quay.io/quarkus/ubi-quarkus-native-image:{graalvm-flavor} AS build\n"
+"FROM quay.io/quarkus/ubi-quarkus-graalvmce-builder-image:{graalvm-flavor} AS build\n"
 "USER root\n"
 "RUN microdnf install make gcc\n"
 "COPY --chown=quarkus:quarkus mvnw /code/mvnw\n"
@@ -1171,7 +1175,7 @@ msgid ""
 "  --v $(pwd):/work <1>\n"
 "  -w /work <2>\n"
 "  --entrypoint bin/sh \\\n"
-"  quay.io/quarkus/ubi-quarkus-native-image:{graalvm-flavor} \\ <3>\n"
+"  quay.io/quarkus/ubi-quarkus-graalvmce-builder-image:{graalvm-flavor} \\ <3>\n"
 "  -c \"native-image $(cat native-image.args) -J-Xmx4g\" <4>\n"
 msgstr ""
 
@@ -1187,7 +1191,9 @@ msgstr "将工作目录切换到 `/work` ，我们已经在<1>中挂载了这个
 
 #. type: Plain text
 #: upstream/_versions/2.13/guides/building-native-image.adoc:757
-msgid "Use the `quay.io/quarkus/ubi-quarkus-native-image:{graalvm-flavor}` docker image introduced in <<#multistage-docker,Using a multi-stage Docker build>> to build the native image."
+#, fuzzy
+#| msgid "Use the `quay.io/quarkus/ubi-quarkus-native-image:{graalvm-flavor}` docker image introduced in <<#multistage-docker,Using a multi-stage Docker build>> to build the native image."
+msgid "Use the `quay.io/quarkus/ubi-quarkus-graalvmce-builder-image:{graalvm-flavor}` docker image introduced in <<#multistage-docker,Using a multi-stage Docker build>> to build the native image."
 msgstr "使用 <<#multistage-docker,Using a multi-stage Docker build>> 中介绍的 `quay.io/quarkus/ubi-quarkus-native-image:{graalvm-flavor}` docker镜像来构建原生镜像。"
 
 #. type: Plain text
