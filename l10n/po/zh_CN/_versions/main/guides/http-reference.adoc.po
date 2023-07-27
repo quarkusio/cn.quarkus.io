@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2023-07-20 02:20+0000\n"
+"POT-Creation-Date: 2023-07-27 02:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,7 +66,7 @@ msgstr ""
 #. type: Block title
 #: upstream/_versions/main/guides/http-reference.adoc:39
 #: upstream/_versions/main/guides/http-reference.adoc:59
-#: upstream/_versions/main/guides/http-reference.adoc:510
+#: upstream/_versions/main/guides/http-reference.adoc:531
 #, no-wrap
 msgid "pom.xml"
 msgstr "pom.xml"
@@ -85,7 +85,7 @@ msgstr ""
 #. type: Block title
 #: upstream/_versions/main/guides/http-reference.adoc:49
 #: upstream/_versions/main/guides/http-reference.adoc:68
-#: upstream/_versions/main/guides/http-reference.adoc:519
+#: upstream/_versions/main/guides/http-reference.adoc:540
 #, no-wrap
 msgid "build.gradle"
 msgstr "build.gradle"
@@ -1210,50 +1210,98 @@ msgid "Use `quarkus.http.access-log.exclude-pattern=/some/path/.*` to exclude al
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/http-reference.adoc:447
+#: upstream/_versions/main/guides/http-reference.adoc:445
+#, no-wrap
+msgid "Arbitrary customizations"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/http-reference.adoc:449
+msgid "Quarkus allows users to arbitrarily customize the options of HTTP servers started by Quarkus via the use of `io.quarkus.vertx.http.HttpServerOptionsCustomizer`.  For example, if the HTTP port needs to be set programmatically, then the following code could be used:"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/http-reference.adoc:454
+#, no-wrap
+msgid ""
+"import jakarta.inject.Singleton;\n"
+"import io.quarkus.vertx.http.HttpServerOptionsCustomizer;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/http-reference.adoc:457
+#, no-wrap
+msgid ""
+"@Singleton <1>\n"
+"public static class MyCustomizer implements HttpServerOptionsCustomizer {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/http-reference.adoc:463
+#, no-wrap
+msgid ""
+"    @Override\n"
+"    public void customizeHttpServer(HttpServerOptions options) { <2>\n"
+"        options.setPort(9998);\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/http-reference.adoc:465
+msgid "By making the class a managed bean, Quarkus will take the customizer into account when it starts the Vert.x servers"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/http-reference.adoc:466
+msgid "In this case, we only care about customizing the HTTP server, so we just override the `customizeHttpServer` method, but users should be aware that `HttpServerOptionsCustomizer` allows configuring the HTTPS and Domain Socket servers as well"
+msgstr ""
+
+#. type: Title ==
+#: upstream/_versions/main/guides/http-reference.adoc:468
 #, no-wrap
 msgid "Running behind a reverse proxy"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/http-reference.adoc:453
+#: upstream/_versions/main/guides/http-reference.adoc:474
 msgid "Quarkus could be accessed through proxies that additionally generate headers (e.g. `X-Forwarded-Host`) to keep information from the client-facing side of the proxy servers that is altered or lost when they are involved.  In those scenarios, Quarkus can be configured to automatically update information like protocol, host, port and URI reflecting the values in these headers."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/http-reference.adoc:456
+#: upstream/_versions/main/guides/http-reference.adoc:477
 msgid "Activating this feature leaves the server exposed to several security issues (i.e. information spoofing).  Consider activate it only when running behind a reverse proxy."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/http-reference.adoc:458
+#: upstream/_versions/main/guides/http-reference.adoc:479
 msgid "To set up this feature, please include the following lines in `src/main/resources/application.properties`:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/http-reference.adoc:461
+#: upstream/_versions/main/guides/http-reference.adoc:482
 #, no-wrap
 msgid "quarkus.http.proxy.proxy-address-forwarding=true\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/http-reference.adoc:464
+#: upstream/_versions/main/guides/http-reference.adoc:485
 msgid "To consider only de-facto standard header (`Forwarded` header), please include the following lines in `src/main/resources/application.properties`:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/http-reference.adoc:467
+#: upstream/_versions/main/guides/http-reference.adoc:488
 #, no-wrap
 msgid "quarkus.http.proxy.allow-forwarded=true\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/http-reference.adoc:470
+#: upstream/_versions/main/guides/http-reference.adoc:491
 msgid "To consider only non-standard headers, please include the following lines instead in `src/main/resources/application.properties`:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/http-reference.adoc:478
+#: upstream/_versions/main/guides/http-reference.adoc:499
 #, no-wrap
 msgid ""
 "quarkus.http.proxy.proxy-address-forwarding=true\n"
@@ -1264,63 +1312,63 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/http-reference.adoc:480
+#: upstream/_versions/main/guides/http-reference.adoc:501
 msgid "Configure trusted proxy with the IP address `127.0.0.1`. Request headers from any other address are going to be ignored."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/http-reference.adoc:482
+#: upstream/_versions/main/guides/http-reference.adoc:503
 msgid "Both configurations related to standard and non-standard headers can be combined, although the standard headers configuration will have precedence. However, combining them has security implications as clients can forge requests with a forwarded header that is not overwritten by the proxy. Therefore, proxies should strip unexpected `X-Forwarded` or `X-Forwarded-*` headers from the client."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/http-reference.adoc:484
+#: upstream/_versions/main/guides/http-reference.adoc:505
 msgid "Supported forwarding address headers are:"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/http-reference.adoc:486
+#: upstream/_versions/main/guides/http-reference.adoc:507
 msgid "`Forwarded`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/http-reference.adoc:487
+#: upstream/_versions/main/guides/http-reference.adoc:508
 msgid "`X-Forwarded-Proto`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/http-reference.adoc:488
+#: upstream/_versions/main/guides/http-reference.adoc:509
 msgid "`X-Forwarded-Host`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/http-reference.adoc:489
+#: upstream/_versions/main/guides/http-reference.adoc:510
 msgid "`X-Forwarded-Port`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/http-reference.adoc:490
+#: upstream/_versions/main/guides/http-reference.adoc:511
 msgid "`X-Forwarded-Ssl`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/http-reference.adoc:491
+#: upstream/_versions/main/guides/http-reference.adoc:512
 msgid "`X-Forwarded-Prefix`"
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/http-reference.adoc:493
+#: upstream/_versions/main/guides/http-reference.adoc:514
 #, no-wrap
 msgid "SameSite cookies"
 msgstr "SameSite cookies"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/http-reference.adoc:496
+#: upstream/_versions/main/guides/http-reference.adoc:517
 msgid "One can easily add a https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite[SameSite] cookie property to any of the cookies set by a Quarkus endpoint by listing a cookie name and a `SameSite` attribute, for example:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/http-reference.adoc:501
+#: upstream/_versions/main/guides/http-reference.adoc:522
 #, no-wrap
 msgid ""
 "quarkus.http.same-site-cookie.jwt.value=Lax\n"
@@ -1328,23 +1376,23 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/http-reference.adoc:504
+#: upstream/_versions/main/guides/http-reference.adoc:525
 msgid "Given this configuration, the `jwt` cookie will have a `SameSite=Lax` attribute and the `session` cookie will have a `SameSite=Strict` attribute."
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/http-reference.adoc:505
+#: upstream/_versions/main/guides/http-reference.adoc:526
 #, no-wrap
 msgid "Servlet Config"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/http-reference.adoc:508
+#: upstream/_versions/main/guides/http-reference.adoc:529
 msgid "To use Servlet you need to explicitly include `quarkus-undertow`:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/http-reference.adoc:516
+#: upstream/_versions/main/guides/http-reference.adoc:537
 #, no-wrap
 msgid ""
 "<dependency>\n"
@@ -1354,29 +1402,29 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/http-reference.adoc:522
+#: upstream/_versions/main/guides/http-reference.adoc:543
 #, no-wrap
 msgid "implementation(\"io.quarkus:quarkus-undertow\")\n"
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/http-reference.adoc:524
+#: upstream/_versions/main/guides/http-reference.adoc:545
 #, no-wrap
 msgid "undertow-handlers.conf"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/http-reference.adoc:529
+#: upstream/_versions/main/guides/http-reference.adoc:550
 msgid "You can make use of the Undertow predicate language using an `undertow-handlers.conf` file. This file should be placed in the `META-INF` directory of your application jar. This file contains handlers defined using the link:https://undertow.io/undertow-docs/undertow-docs-2.0.0/index.html#predicates-attributes-and-handlers[Undertow predicate language]."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/http-reference.adoc:530
+#: upstream/_versions/main/guides/http-reference.adoc:551
 #, no-wrap
 msgid "web.xml"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/http-reference.adoc:532
+#: upstream/_versions/main/guides/http-reference.adoc:553
 msgid "If you are using a `web.xml` file as your configuration file, you can place it in the `src/main/resources/META-INF` directory."
 msgstr ""
