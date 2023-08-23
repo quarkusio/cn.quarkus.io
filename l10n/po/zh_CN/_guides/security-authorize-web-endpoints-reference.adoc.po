@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2023-07-05 14:21+0000\n"
+"POT-Creation-Date: 2023-08-23 11:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -571,14 +571,14 @@ msgstr "标的物显示资源的例子"
 
 #. type: delimited block -
 #: upstream/_guides/security-authorize-web-endpoints-reference.adoc:261
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:340
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:341
 #, no-wrap
 msgid "import java.security.Principal;\n"
 msgstr ""
 
 #. type: delimited block -
 #: upstream/_guides/security-authorize-web-endpoints-reference.adoc:269
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:348
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:349
 #, no-wrap
 msgid ""
 "import jakarta.annotation.security.DenyAll;\n"
@@ -592,7 +592,7 @@ msgstr ""
 
 #. type: delimited block -
 #: upstream/_guides/security-authorize-web-endpoints-reference.adoc:272
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:351
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:352
 #, no-wrap
 msgid ""
 "@Path(\"subject\")\n"
@@ -747,7 +747,7 @@ msgid "Example of a property expressions usage in the `@RolesAllowed` annotation
 msgstr " `@RolesAllowed` 注释中的属性表达式用法示例"
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:335
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:336
 #, no-wrap
 msgid ""
 "admin=Administrator\n"
@@ -755,33 +755,54 @@ msgid ""
 "tester.role=Tester\n"
 "%prod.secured=User\n"
 "%dev.secured=**\n"
+"all-roles=Administrator,Software,Tester,User\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:360
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:359
 #, no-wrap
 msgid ""
 "    @GET\n"
 "    @Path(\"admin\")\n"
 "    @RolesAllowed(\"${admin}\") <1>\n"
 "    public String getSubjectSecuredAdmin(@Context SecurityContext sec) {\n"
-"        Principal user = sec.getUserPrincipal();\n"
-"        String name = user != null ? user.getName() : \"anonymous\";\n"
-"        return name;\n"
+"        return getUsername(sec);\n"
 "    }\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:369
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:366
 #, no-wrap
 msgid ""
 "    @GET\n"
 "    @Path(\"software-tester\")\n"
 "    @RolesAllowed(\"${tester.group}-${tester.role}\") <2>\n"
 "    public String getSubjectSoftwareTester(@Context SecurityContext sec) {\n"
-"        Principal user = sec.getUserPrincipal();\n"
-"        String name = user != null ? user.getName() : \"anonymous\";\n"
-"        return name;\n"
+"        return getUsername(sec);\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:373
+#, no-wrap
+msgid ""
+"    @GET\n"
+"    @Path(\"user\")\n"
+"    @RolesAllowed(\"${customer:User}\") <3>\n"
+"    public String getSubjectUser(@Context SecurityContext sec) {\n"
+"        return getUsername(sec);\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:380
+#, no-wrap
+msgid ""
+"    @GET\n"
+"    @Path(\"secured\")\n"
+"    @RolesAllowed(\"${secured}\") <4>\n"
+"    public String getSubjectSecured(@Context SecurityContext sec) {\n"
+"        return getUsername(sec);\n"
 "    }\n"
 msgstr ""
 
@@ -790,17 +811,18 @@ msgstr ""
 #, no-wrap
 msgid ""
 "    @GET\n"
-"    @Path(\"user\")\n"
-"    @RolesAllowed(\"${customer:User}\") <3>\n"
-"    public String getSubjectUser(@Context SecurityContext sec) {\n"
-"        Principal user = sec.getUserPrincipal();\n"
-"        String name = user != null ? user.getName() : \"anonymous\";\n"
-"        return name;\n"
+"    @Path(\"list\")\n"
+"    @RolesAllowed(\"${all-roles}\") <5>\n"
+"    public String getSubjectList(@Context SecurityContext sec) {\n"
+"        return getUsername(sec);\n"
 "    }\n"
-"    @GET\n"
-"    @Path(\"secured\")\n"
-"    @RolesAllowed(\"${secured}\") <4>\n"
-"    public String getSubjectSecured(@Context SecurityContext sec) {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:394
+#, no-wrap
+msgid ""
+"    private String getUsername(SecurityContext sec) {\n"
 "        Principal user = sec.getUserPrincipal();\n"
 "        String name = user != null ? user.getName() : \"anonymous\";\n"
 "        return name;\n"
@@ -809,55 +831,60 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:389
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:396
 #, fuzzy
 msgid "The `@RolesAllowed` annotation value is set to the value of `Administrator`."
 msgstr " `@RolesAllowed` 注释值被设置为 `Administrator` 的值。"
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:391
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:398
 #, fuzzy
 msgid "This `/subject/software-tester` endpoint requires an authenticated user that has been granted the role of \"Software-Tester\".  It is possible to use multiple expressions in the role definition."
 msgstr "这个 `/subject/software-tester` 端点需要一个已被授予 \"软件-测试者 \"角色的认证用户。在角色定义中可以使用多个表达式。"
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:392
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:399
 #, fuzzy
 msgid "This `/subject/user` endpoint requires an authenticated user that has been granted the role \"User\" through the use of the `@RolesAllowed(\"${customer:User}\")` annotation because we did not set the configuration property `customer`."
 msgstr "这个 `/subject/user` 端点需要一个经过认证的用户，该用户通过使用 `@RolesAllowed(\"${customer:User}\")` 注释被授予角色 \"用户\"，因为我们没有设置配置属性 `customer` 。"
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:394
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:401
 #, fuzzy
 msgid "In production, this `/subject/secured` endpoint requires an authenticated user with the `User` role.  In development mode, it allows any authenticated user."
 msgstr "这个 `/subject/secured` 端点需要一个在生产中被授予角色的认证用户 `User` ，但在开发模式下允许任何认证用户。"
 
+#. type: Plain text
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:402
+msgid "Property expression `all-roles` will be treated as a collection type `List`, therefore the endpoint will be accessible for roles `Administrator`, `Software`, `Tester` and `User`."
+msgstr ""
+
 #. type: Title ===
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:395
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:403
 #, fuzzy, no-wrap
 msgid "Permission annotation"
 msgstr "使用注释的授权"
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:399
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:407
 #, fuzzy
 msgid "Quarkus also provides the `io.quarkus.security.PermissionsAllowed` annotation, which authorizes any authenticated user with the given permission to access the resource.  This annotation is an extension of the common security annotations and checks the permissions granted to a `SecurityIdentity` instance."
 msgstr "Quarkus还提供了 `io.quarkus.security.PermissionsAllowed` 注释，该注释将允许任何具有给定权限的认证用户访问该资源。该注解是普通安全注解的扩展，检查授予 `SecurityIdentity` 的权限。"
 
 #. type: Block title
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:400
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:408
 #, fuzzy, no-wrap
 msgid "Example of endpoints secured with the `@PermissionsAllowed` annotation"
 msgstr " `@RolesAllowed` 注释中的属性表达式用法示例"
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:405
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:413
 #, no-wrap
 msgid "package org.acme.crud;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:412
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:420
 #, no-wrap
 msgid ""
 "import io.quarkus.arc.Arc;\n"
@@ -869,13 +896,13 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:414
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:422
 #, no-wrap
 msgid "import io.quarkus.security.PermissionsAllowed;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:419
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:427
 #, no-wrap
 msgid ""
 "import java.security.BasicPermission;\n"
@@ -885,7 +912,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:422
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:430
 #, no-wrap
 msgid ""
 "@Path(\"/crud\")\n"
@@ -893,7 +920,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:430
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:438
 #, no-wrap
 msgid ""
 "    @PermissionsAllowed(\"create\") <1>\n"
@@ -906,7 +933,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:437
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:445
 #, no-wrap
 msgid ""
 "    @PermissionsAllowed(value = {\"create\", \"update\"}, inclusive=true) <2>\n"
@@ -918,7 +945,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:444
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:452
 #, no-wrap
 msgid ""
 "    @PermissionsAllowed({\"see:detail\", \"see:all\", \"read\"}) <3>\n"
@@ -930,7 +957,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:452
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:460
 #, no-wrap
 msgid ""
 "    @PermissionsAllowed(value = \"list\", permission = CustomPermission.class) <4>\n"
@@ -943,13 +970,13 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:454
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:462
 #, no-wrap
 msgid "    public static class CustomPermission extends BasicPermission {\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:458
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:466
 #, no-wrap
 msgid ""
 "        public CustomPermission(String name) {\n"
@@ -958,7 +985,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:468
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:476
 #, no-wrap
 msgid ""
 "        @Override\n"
@@ -973,55 +1000,55 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:470
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:478
 #, fuzzy
 msgid "The resource method `createOrUpdate` is only accessible for a user with both `create` and `update` permissions."
 msgstr "资源方法 `createOrUpdate` ，只有同时拥有 `create` 和 `update` 权限的用户才能访问。"
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:473
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:481
 #, fuzzy
 msgid "By default, at least one of the permissions specified through one annotation instance is required.  You can require all permissions by setting `inclusive=true`.  Both resource methods `createOrUpdate` have equal authorization requirements."
 msgstr "默认情况下，通过一个注解实例指定的权限中至少有一个是需要的。你可以通过设置 `inclusive=true` ，要求所有的权限。两种资源方法 `createOrUpdate` ，具有同等的授权要求。"
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:474
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:482
 #, fuzzy
 msgid "Access is granted to `getItem` if `SecurityIdentity` has either `read` permission or `see` permission and one of the `all` or `detail` actions."
 msgstr "如果 `SecurityIdentity` 有 `read` 权限或 `see` 权限和一个行动 ( `all` , `detail` )，则允许访问 `getItem` 。"
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:476
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:484
 #, fuzzy
 msgid "You can use your preferred `java.security.Permission` implementation.  By default, string-based permission is performed by `io.quarkus.security.StringPermission`."
 msgstr "你可以使用你选择的任何 `java.security.Permission` 实现。默认情况下，基于字符串的权限是由 `io.quarkus.security.StringPermission` 。"
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:477
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:485
 #, fuzzy
 msgid "Permissions are not beans, therefore the only way to obtain bean instances is programmatically by using `Arc.container()`."
 msgstr "权限不是Bean，因此获得Bean实例的唯一方法是通过 `Arc.container()` 。"
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:479
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:487
 #, fuzzy
 msgid "If you plan to use the `@PermissionsAllowed` on the IO thread, review the information in xref:security-proactive-authentication.adoc[Proactive Authentication]."
 msgstr "如果你计划在IO线程上使用 `@PermissionsAllowed` ，请查看 link:security-proactive-authentication-concept.html[主动认证] 中的信息。"
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:482
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:490
 #, fuzzy
 msgid "`@PermissionsAllowed` is not repeatable on the class level due to a limitation with Quarkus interceptors.  For more information, see the xref:cdi-reference.adoc#repeatable-interceptor-bindings[Repeatable interceptor bindings] section of the Quarkus \"CDI reference\" guide."
 msgstr "由于Quarkus拦截器的限制， `@PermissionsAllowed` ，在类级上是不可重复的。请在CDI参考文献中的 link:cdi-reference.html#repeatable-interceptor-bindings[可重复拦截器绑定] 部分找到有说服力的解释。"
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:485
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:493
 #, fuzzy
 msgid "The easiest way to add permissions to a role-enabled `SecurityIdentity` instance is to map roles to permissions.  Use xref:authorization-using-configuration[Authorization using configuration] to grant the required `SecurityIdentity` permissions for `CRUDResource` endpoints to authenticated requests, as outlined in the following example:"
 msgstr "只要 `SecurityIdentity` 包含角色，向 `SecurityIdentity` 添加权限最简单的方法是创建一个角色到权限的映射。 link:#authorization-using-configuration[] `SecurityIdentity` 基于HTTP角色的策略 link:#authorization-using-configuration[] 可以用来将 `CRUDResource` 端点所需的权限授予像这样经过验证的请求："
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:492
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:500
 #, no-wrap
 msgid ""
 "quarkus.http.auth.policy.role-policy1.permissions.user=see:all                                      <1>\n"
@@ -1031,7 +1058,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:497
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:505
 #, no-wrap
 msgid ""
 "quarkus.http.auth.policy.role-policy2.permissions.user=list\n"
@@ -1041,44 +1068,44 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:500
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:508
 #, fuzzy
 msgid "Add the permission `see` and the action `all` to the `SecurityIdentity` instance of the `user` role.  Similarly, for the `@PermissionsAllowed` annotation, `io.quarkus.security.StringPermission` is used by default."
 msgstr "添加权限 `see` 与行动 `all` 到持有角色 `user` 的 `SecurityIdentity` 。与 `@PermissionsAllowed` 注释类似， `io.quarkus.security.StringPermission` 被默认使用。"
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:501
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:509
 #, fuzzy
 msgid "Permissions `create`, `update`, and `read` are mapped to the role `admin`."
 msgstr "权限 `create` , `update` 和 `read` 被映射到角色 `admin` 。"
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:503
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:511
 #, fuzzy
 msgid "The role policy `role-policy1` allows only authenticated requests to access `/crud/modify` and `/crud/id` sub-paths.  For more information about the path-matching algorithm, see xref:matching-multiple-paths[Matching multiple paths: longest path wins] later in this guide."
 msgstr "角色策略 `role-policy1` 只允许经过认证的请求访问 `/crud/modify` 和 `/crud/id` 子路径。关于路径匹配算法的更多信息，请参见本指南的 link:#matching-multiple-paths[多路径匹配] 部分。"
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:506
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:514
 #, fuzzy
 msgid "You can also specify a custom implementation of the `java.security.Permission` class.  Your custom class must define exactly one constructor that accepts the permission name and optionally some actions, for example, `String` array.  In this scenario, the permission `list` is added to the `SecurityIdentity` instance as `new CustomPermission(\"list\")`."
 msgstr "你也可以指定你自己的 `java.security.Permission` 类的实现。你提供的类必须准确地定义一个构造函数, 接受权限名称和可选的动作(作为 `String` 数组).这里, 权限 `list` 将被添加到 `SecurityIdentity` 作为 `new CustomPermission(\"list\")` 。"
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:510
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:518
 #, fuzzy
 msgid "You can also create a custom `java.security.Permission` class with additional constructor parameters.  These additional parameters get matched with arguments of the method annotated with the `@PermissionsAllowed` annotation.  Later, Quarkus instantiates your custom permission with actual arguments, with which the method annotated with the `@PermissionsAllowed` has been invoked."
 msgstr "你也可以创建一个带有额外构造参数的自定义 `java.security.Permission` 。这些额外的参数将与用 `@PermissionsAllowed` 注释的方法的参数相匹配。稍后，Quarkus将用实际的参数实例化你的自定义Permission，用它来调用被注解为 `@PermissionsAllowed` 的方法。"
 
 #. type: Block title
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:511
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:519
 #, fuzzy, no-wrap
 msgid "Example of a custom `java.security.Permission` class that accepts additional arguments"
 msgstr "接受额外参数的自定义 `java.security.Permission` 的例子"
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:518
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:638
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:526
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:646
 #, no-wrap
 msgid ""
 "import java.security.Permission;\n"
@@ -1087,13 +1114,13 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:520
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:528
 #, no-wrap
 msgid "public class LibraryPermission extends Permission {\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:523
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:531
 #, no-wrap
 msgid ""
 "    private final Set<String> actions;\n"
@@ -1101,7 +1128,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:529
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:537
 #, no-wrap
 msgid ""
 "    public LibraryPermission(String libraryName, String[] actions, Library library) { <1>\n"
@@ -1112,7 +1139,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:541
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:549
 #, no-wrap
 msgid ""
 "    @Override\n"
@@ -1129,43 +1156,43 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:543
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:551
 #, no-wrap
 msgid "    ...\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:545
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:553
 #, no-wrap
 msgid "    public static abstract class Library {\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:547
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:555
 #, no-wrap
 msgid "        protected String description;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:549
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:557
 #, no-wrap
 msgid "        abstract boolean isParentLibraryOf(Library library);\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:551
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:559
 #, no-wrap
 msgid "    }\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:553
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:561
 #, no-wrap
 msgid "    public static class MediaLibrary extends Library {\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:559
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:567
 #, no-wrap
 msgid ""
 "        @Override\n"
@@ -1176,7 +1203,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:564
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:572
 #, no-wrap
 msgid ""
 "    public static class TvLibrary extends MediaLibrary {\n"
@@ -1186,24 +1213,24 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:569
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:577
 #, fuzzy
 msgid "There must be exactly one constructor of a custom `Permission` class.  The first parameter is always considered to be a permission name and must be of type `String`.  Quarkus can optionally pass permission actions to the constructor.  For this to happen, declare the second parameter as `String[]`."
 msgstr "一个自定义的 `Permission` 类必须有一个构造函数, 同时第一个参数总是被认为是一个权限名称(必须是 `String` )。可选的是, Quarkus可以将权限动作传递给构造函数。只要把第二个参数声明为 `String[]` 。"
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:571
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:579
 #, fuzzy
 msgid "The `LibraryPermission` class permits access to the current or parent library if `SecurityIdentity` is allowed to perform one of the required actions, for example, `read`, `write`, or `list`."
 msgstr " `LibraryPermission` 允许访问一个库，如果 `SecurityIdentity` 被允许在同一个库或父库上执行一个必要的动作（如 `read` , `write` , `list` ）。让我们看看它是如何使用的："
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:573
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:581
 msgid "The following example shows how the `LibraryPermission` class can be used:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:578
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:586
 #, no-wrap
 msgid ""
 "import io.quarkus.security.PermissionsAllowed;\n"
@@ -1211,7 +1238,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:581
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:589
 #, no-wrap
 msgid ""
 "@ApplicationScoped\n"
@@ -1219,7 +1246,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:587
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:595
 #, no-wrap
 msgid ""
 "    @PermissionsAllowed(value = \"tv:write\", permission = LibraryPermission.class) <1>\n"
@@ -1230,7 +1257,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:594
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:602
 #, no-wrap
 msgid ""
 "    @PermissionsAllowed(value = \"tv:write\", permission = LibraryPermission.class, params = \"library\") <2>\n"
@@ -1242,34 +1269,34 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:596
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:627
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:646
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:709
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:604
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:635
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:654
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:717
 #, no-wrap
 msgid "}\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:599
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:607
 #, fuzzy
 msgid "The formal parameter `update` is identified as the first `Library` parameter and gets passed to the `LibraryPermission` class.  However, the `LibraryPermission` must be instantiated each time the `updateLibrary` method is invoked."
 msgstr "正式参数 `update` 被确定为第一个 `Library` 参数，并传递给 `LibraryPermission` 。然而这个选项是有代价的，因为每次调用 `updateLibrary` 方法时，都必须实例化 `LibraryPermission` 。"
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:601
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:609
 #, fuzzy
 msgid "Here, the first `Library` parameter is `migrate`, therefore the `library` parameter gets marked explicitly through `PermissionsAllowed#params`.  The permission constructor and the annotated method must have the parameter `library` set, otherwise, validation fails."
 msgstr "这里，第一个 `Library` 参数是 `migrate` ，因此我们通过 `PermissionsAllowed#params` 明确标记了 `library` 参数。请注意，Permission构造函数和注释方法都必须有参数 `library` ，否则验证会失败。"
 
 #. type: Block title
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:602
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:610
 #, fuzzy, no-wrap
 msgid "Example of a resource secured with the `LibraryPermission`"
 msgstr " `@RolesAllowed` 注释中的属性表达式用法示例"
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:608
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:616
 #, no-wrap
 msgid ""
 "@Path(\"/library\")\n"
@@ -1277,7 +1304,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:611
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:619
 #, no-wrap
 msgid ""
 "    @Inject\n"
@@ -1285,7 +1312,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:618
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:626
 #, no-wrap
 msgid ""
 "    @PermissionsAllowed(value = \"tv:write\", permission = LibraryPermission.class)\n"
@@ -1297,7 +1324,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:625
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:633
 #, no-wrap
 msgid ""
 "    @PUT\n"
@@ -1309,25 +1336,25 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:630
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:638
 #, fuzzy
 msgid "Similarly to the `CRUDResource` example, the following example shows how you can grant a user with the `admin` role permissions to update `MediaLibrary`:"
 msgstr "与 `CRUDResource` 的例子类似，我们可以使用权限到角色的映射，授予拥有角色 `admin` 的用户更新 `MediaLibrary` 的权利："
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:634
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:642
 #, no-wrap
 msgid "package org.acme.library;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:640
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:648
 #, no-wrap
 msgid "public class MediaLibraryPermission extends LibraryPermission {\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:644
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:652
 #, no-wrap
 msgid ""
 "    public MediaLibraryPermission(String libraryName, String[] actions) {\n"
@@ -1336,13 +1363,13 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:648
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:656
 #, fuzzy
 msgid "We want to pass the `MediaLibrary` instance to the `LibraryPermission` constructor."
 msgstr "我们想把 `MediaLibrary` 实例传递给 `LibraryPermission` 构造函数。"
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:655
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:663
 #, no-wrap
 msgid ""
 "quarkus.http.auth.policy.role-policy3.permissions.admin=media-library:list,media-library:read,media-library:write   <1>\n"
@@ -1352,25 +1379,25 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:659
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:667
 #, fuzzy
 msgid "Grants the permission `media-library`, which permits `read`, `write`, and `list` actions.  Because `MediaLibrary` is the `TvLibrary` class parent, a user with the `admin` role is also permitted to modify `TvLibrary`."
 msgstr "授予权限 `media-library` ，允许执行动作 `read` , `write` 和 `list` 。考虑到 `MediaLibrary` 是 `TvLibrary` 类的父类，我们知道管理员也将被允许修改电视库。"
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:663
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:671
 #, fuzzy
 msgid "The examples provided so far use role-to-permission mapping.  You can also add permissions to the `SecurityIdentity` instance programmatically.  In the following example, xref:security-customization.adoc#security-identity-customization[`SecurityIdentity` is customized] to add the same permission that was previously granted with the HTTP role-based policy."
 msgstr "上面所有的例子都是利用了角色到权限的映射，但是你也可以通过编程的方式向 `SecurityIdentity` 添加权限。在下面的例子中，我们使用 link:security-customization.html#security-identity-customization[安全身份定制] 来添加与之前基于HTTP角色策略授予的相同权限。"
 
 #. type: Block title
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:664
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:672
 #, fuzzy, no-wrap
 msgid "Example of adding the `LibraryPermission` programmatically to `SecurityIdentity`"
 msgstr "以编程方式添加 `LibraryPermission` 的例子。 `SecurityIdentity` "
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:670
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:678
 #, no-wrap
 msgid ""
 "import java.security.Permission;\n"
@@ -1378,13 +1405,13 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:672
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:680
 #, no-wrap
 msgid "import jakarta.enterprise.context.ApplicationScoped;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:678
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:686
 #, no-wrap
 msgid ""
 "import io.quarkus.security.identity.AuthenticationRequestContext;\n"
@@ -1395,7 +1422,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:681
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:689
 #, no-wrap
 msgid ""
 "@ApplicationScoped\n"
@@ -1403,7 +1430,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:689
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:697
 #, no-wrap
 msgid ""
 "    @Override\n"
@@ -1416,7 +1443,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:693
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:701
 #, no-wrap
 msgid ""
 "    private boolean isNotAdmin(SecurityIdentity identity) {\n"
@@ -1425,7 +1452,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:707
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:715
 #, no-wrap
 msgid ""
 "    SecurityIdentity build(SecurityIdentity identity) {\n"
@@ -1444,54 +1471,54 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:712
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:720
 #, fuzzy
 msgid "The permission `media-library` that was created can perform `read`, `write`, and `list` actions.  Because `MediaLibrary` is the `TvLibrary` class parent, a user with the `admin` role is also permitted to modify `TvLibrary`."
 msgstr "授予权限 `media-library` ，允许执行动作 `read` , `write` 和 `list` 。考虑到 `MediaLibrary` 是 `TvLibrary` 类的父类，我们知道管理员也将被允许修改电视库。"
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:713
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:721
 #, fuzzy
 msgid "You can add a permission checker through `io.quarkus.security.runtime.QuarkusSecurityIdentity.Builder#addPermissionChecker`."
 msgstr "你可以通过 `io.quarkus.security.runtime.QuarkusSecurityIdentity.Builder#addPermissionChecker` ，添加一个权限检查器。"
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:715
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:723
 #, fuzzy
 msgid "Annotation permissions do not work with the custom xref:security-customization.adoc#jaxrs-security-context[Custom Jakarta REST SecurityContext] because there are no permissions in `jakarta.ws.rs.core.SecurityContext`."
 msgstr "注释权限与自定义的 link:security-customization.html#jaxrs-security-context[JAX-RS SecurityContext] 不起作用，因为在 `jakarta.ws.rs.core.SecurityContext` 。"
 
 #. type: Title ==
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:716
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:724
 #, no-wrap
 msgid "References"
 msgstr "参考文献"
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:719
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:727
 #, fuzzy
 msgid "xref:security-overview.adoc[Quarkus Security overview]"
 msgstr "link:security-overview-concept.html[Quarkus安全概述]"
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:720
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:728
 #, fuzzy
 msgid "xref:security-architecture.adoc[Quarkus Security architecture]"
 msgstr "link:security-architecture-concept.html[Quarkus安全架构]"
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:721
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:729
 #, fuzzy
 msgid "xref:security-authentication-mechanisms.adoc#other-supported-authentication-mechanisms[Authentication mechanisms in Quarkus]"
 msgstr "link:security-authentication-mechanisms-concept.html#other-supported-authentication-mechanisms[Quarkus的认证机制]"
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:722
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:730
 msgid "xref:security-basic-authentication.adoc[Basic authentication]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:722
+#: upstream/_guides/security-authorize-web-endpoints-reference.adoc:730
 msgid "xref:security-basic-authentication-tutorial.adoc[Secure a Quarkus application with Basic authentication and Jakarta Persistence]"
 msgstr ""
 

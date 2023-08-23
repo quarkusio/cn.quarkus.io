@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2023-07-05 14:22+0000\n"
+"POT-Creation-Date: 2023-08-23 11:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -565,18 +565,48 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/grpc-service-implementation.adoc:275
+msgid "It's also possible to annotate a producer method as a global interceptor:"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/grpc-service-implementation.adoc:279
+#, no-wrap
+msgid "import io.quarkus.grpc.GlobalInterceptor;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/grpc-service-implementation.adoc:281
+#, no-wrap
+msgid "import jakarta.enterprise.inject.Produces;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/grpc-service-implementation.adoc:289
+#, no-wrap
+msgid ""
+"public class MyProducer {\n"
+"    @GlobalInterceptor\n"
+"    @Produces\n"
+"    public MyInterceptor myInterceptor() {\n"
+"        return new MyInterceptor();\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/grpc-service-implementation.adoc:292
 #, fuzzy
 msgid "Check the https://grpc.github.io/grpc-java/javadoc/io/grpc/ServerInterceptor.html[ServerInterceptor JavaDoc] to properly implement your interceptor."
 msgstr "查看 link:https://grpc.github.io/grpc-java/javadoc/io/grpc/ServerInterceptor.html[ServerInterceptor JavaDoc] ，正确实现你的拦截器。"
 
 #. type: Plain text
-#: upstream/_guides/grpc-service-implementation.adoc:278
+#: upstream/_guides/grpc-service-implementation.adoc:295
 #, fuzzy
 msgid "To apply an interceptor to all exposed services, annotate it with `@io.quarkus.grpc.GlobalInterceptor`.  To apply an interceptor to a single service, register it on the service with `@io.quarkus.grpc.RegisterInterceptor`:"
 msgstr "要将一个拦截器应用于所有暴露的服务，用 `@io.quarkus.grpc.GlobalInterceptor` 来注释它。要将拦截器应用于单个服务，用 `@io.quarkus.grpc.RegisterInterceptor` 在服务上注册它。"
 
 #. type: delimited block -
-#: upstream/_guides/grpc-service-implementation.adoc:282
+#: upstream/_guides/grpc-service-implementation.adoc:299
 #, no-wrap
 msgid ""
 "import io.quarkus.grpc.GrpcService;\n"
@@ -584,7 +614,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/grpc-service-implementation.adoc:288
+#: upstream/_guides/grpc-service-implementation.adoc:305
 #, no-wrap
 msgid ""
 "@GrpcService\n"
@@ -595,13 +625,13 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/grpc-service-implementation.adoc:292
+#: upstream/_guides/grpc-service-implementation.adoc:309
 #, fuzzy
 msgid "When you have multiple server interceptors, you can order them by implementing the `jakarta.enterprise.inject.spi.Prioritized` interface. Please note that all the global interceptors are invoked before the service-specific interceptors."
 msgstr "当你有多个服务器拦截器时，你可以通过实现 `javax.enterprise.inject.spi.Prioritized` 接口对它们进行排序。请注意，所有全局拦截器都会在特定服务拦截器之前被调用。"
 
 #. type: delimited block -
-#: upstream/_guides/grpc-service-implementation.adoc:297
+#: upstream/_guides/grpc-service-implementation.adoc:314
 #, no-wrap
 msgid ""
 "@ApplicationScoped\n"
@@ -609,7 +639,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/grpc-service-implementation.adoc:303
+#: upstream/_guides/grpc-service-implementation.adoc:320
 #, no-wrap
 msgid ""
 "    @Override\n"
@@ -620,7 +650,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/grpc-service-implementation.adoc:309
+#: upstream/_guides/grpc-service-implementation.adoc:326
 #, no-wrap
 msgid ""
 "    @Override\n"
@@ -631,37 +661,37 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/grpc-service-implementation.adoc:313
+#: upstream/_guides/grpc-service-implementation.adoc:330
 #, fuzzy
 msgid "Interceptors with the highest priority are called first.  The default priority, used if the interceptor does not implement the `Prioritized` interface, is `0`."
 msgstr "优先级最高的拦截器会被首先调用。如果拦截器没有实现 `Prioritized` 接口，那么默认的优先级是 `0` 。"
 
 #. type: Title ==
-#: upstream/_guides/grpc-service-implementation.adoc:315
+#: upstream/_guides/grpc-service-implementation.adoc:332
 #, fuzzy, no-wrap
 msgid "Testing your services"
 msgstr "测试你的服务"
 
 #. type: Plain text
-#: upstream/_guides/grpc-service-implementation.adoc:319
+#: upstream/_guides/grpc-service-implementation.adoc:336
 #, fuzzy
 msgid "The easiest way to test a gRPC service is to use a gRPC client as described in xref:grpc-service-consumption.adoc[Consuming a gRPC Service]."
 msgstr "测试gRPC服务的最简单方法是使用gRPC客户端，如 link:grpc-service-consumption.html[Consuming a gRPC Service] 中所述。"
 
 #. type: Plain text
-#: upstream/_guides/grpc-service-implementation.adoc:323
+#: upstream/_guides/grpc-service-implementation.adoc:340
 #, fuzzy
 msgid "Please note that in the case of using a client to test an exposed service that does not use TLS, there is no need to provide any configuration. E.g. to test the `HelloService` defined above, one could create the following test:"
 msgstr "请注意，在使用客户端测试不使用TLS的暴露服务的情况下，不需要提供任何配置。例如，为了测试上面定义的 `HelloService` ，可以创建以下测试。"
 
 #. type: delimited block -
-#: upstream/_guides/grpc-service-implementation.adoc:327
+#: upstream/_guides/grpc-service-implementation.adoc:344
 #, no-wrap
 msgid "public class HelloServiceTest implements Greeter {\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/grpc-service-implementation.adoc:330
+#: upstream/_guides/grpc-service-implementation.adoc:347
 #, no-wrap
 msgid ""
 "    @GrpcClient\n"
@@ -669,7 +699,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/grpc-service-implementation.adoc:339
+#: upstream/_guides/grpc-service-implementation.adoc:356
 #, no-wrap
 msgid ""
 "    @Test\n"
@@ -683,25 +713,25 @@ msgid ""
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/grpc-service-implementation.adoc:341
+#: upstream/_guides/grpc-service-implementation.adoc:358
 #, fuzzy, no-wrap
 msgid "Trying out your services manually"
 msgstr "手动尝试你的服务"
 
 #. type: Plain text
-#: upstream/_guides/grpc-service-implementation.adoc:344
+#: upstream/_guides/grpc-service-implementation.adoc:361
 #, fuzzy
 msgid "In the dev mode, you can try out your gRPC services in the Quarkus Dev UI.  Just go to http://localhost:8080/q/dev-v1 and click on _Services_ under the gRPC tile."
 msgstr "在开发模式下，你可以在Quarkus Dev UI中试用你的gRPC服务。只要进入 http://localhost:8080/q/dev ，点击gRPC瓦片下的 _服务_ 。"
 
 #. type: Plain text
-#: upstream/_guides/grpc-service-implementation.adoc:346
+#: upstream/_guides/grpc-service-implementation.adoc:363
 #, fuzzy
 msgid "Please note that your application needs to expose the \"normal\" HTTP port for the Dev UI to be accessible. If your application does not expose any HTTP endpoints, you can create a dedicated profile with a dependency on `quarkus-vertx-http`:"
 msgstr "请注意，你的应用程序需要暴露 \"正常 \"的HTTP端口，以使Dev UI能够被访问。如果你的应用程序没有暴露任何HTTP端点，你可以创建一个依赖 `quarkus-vertx-http` 的专用配置文件。"
 
 #. type: delimited block -
-#: upstream/_guides/grpc-service-implementation.adoc:359
+#: upstream/_guides/grpc-service-implementation.adoc:376
 #, no-wrap
 msgid ""
 "    <profiles>\n"
@@ -718,19 +748,19 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/grpc-service-implementation.adoc:361
+#: upstream/_guides/grpc-service-implementation.adoc:378
 #, fuzzy
 msgid "Having it, you can run the dev mode with: `mvn quarkus:dev -Pdevelopment`."
 msgstr "有了它，你就可以在开发模式下运行。 `mvn quarkus:dev -Pdevelopment` ."
 
 #. type: Plain text
-#: upstream/_guides/grpc-service-implementation.adoc:363
+#: upstream/_guides/grpc-service-implementation.adoc:380
 #, fuzzy
 msgid "If you use Gradle, you can simply add a dependency for the `quarkusDev` task:"
 msgstr "如果你使用Gradle，你可以简单的为 `quarkusDev` 任务添加一个依赖关系。"
 
 #. type: delimited block -
-#: upstream/_guides/grpc-service-implementation.adoc:369
+#: upstream/_guides/grpc-service-implementation.adoc:386
 #, no-wrap
 msgid ""
 "dependencies {\n"
@@ -739,31 +769,31 @@ msgid ""
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/grpc-service-implementation.adoc:371
+#: upstream/_guides/grpc-service-implementation.adoc:388
 #, fuzzy, no-wrap
 msgid "gRPC Server metrics"
 msgstr "gRPC服务器度量"
 
 #. type: Title ===
-#: upstream/_guides/grpc-service-implementation.adoc:373
+#: upstream/_guides/grpc-service-implementation.adoc:390
 #, fuzzy, no-wrap
 msgid "Enabling metrics collection"
 msgstr "启用指标收集"
 
 #. type: Plain text
-#: upstream/_guides/grpc-service-implementation.adoc:377
+#: upstream/_guides/grpc-service-implementation.adoc:394
 #, fuzzy
 msgid "gRPC server metrics are automatically enabled when the application also uses the xref:telemetry-micrometer.adoc[`quarkus-micrometer`] extension.  Micrometer collects the metrics of all the gRPC services implemented by the application."
 msgstr "当应用程序也使用扩展时，gRPC服务器指标会自动启用。 link:micrometer.html[`quarkus-micrometer`] 扩展。Micrometer会收集应用程序实现的所有gRPC服务的度量。"
 
 #. type: Plain text
-#: upstream/_guides/grpc-service-implementation.adoc:379
+#: upstream/_guides/grpc-service-implementation.adoc:396
 #, fuzzy
 msgid "As an example, if you export the metrics to Prometheus, you will get:"
 msgstr "举例来说，如果你把指标导出到Prometheus，你会得到。"
 
 #. type: delimited block -
-#: upstream/_guides/grpc-service-implementation.adoc:395
+#: upstream/_guides/grpc-service-implementation.adoc:412
 #, no-wrap
 msgid ""
 "# HELP grpc_server_responses_sent_messages_total The total number of responses sent\n"
@@ -782,24 +812,35 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/grpc-service-implementation.adoc:398
+#: upstream/_guides/grpc-service-implementation.adoc:415
 #, fuzzy
 msgid "The service name, method and type can be found in the _tags_."
 msgstr "服务名称、方法和类型可以在 _标签_ 中找到。"
 
 #. type: Title ===
-#: upstream/_guides/grpc-service-implementation.adoc:399
+#: upstream/_guides/grpc-service-implementation.adoc:416
 #, fuzzy, no-wrap
 msgid "Disabling metrics collection"
 msgstr "禁用指标收集"
 
 #. type: Plain text
-#: upstream/_guides/grpc-service-implementation.adoc:402
+#: upstream/_guides/grpc-service-implementation.adoc:419
 msgid "To disable the gRPC server metrics when `quarkus-micrometer` is used, add the following property to the application configuration:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/grpc-service-implementation.adoc:406
+#: upstream/_guides/grpc-service-implementation.adoc:423
 #, no-wrap
 msgid "quarkus.micrometer.binder.grpc-server.enabled=false\n"
+msgstr ""
+
+#. type: Title ===
+#: upstream/_guides/grpc-service-implementation.adoc:425
+#, no-wrap
+msgid "Use virtual threads"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/grpc-service-implementation.adoc:427
+msgid "To use virtual threads in your gRPC service implementation, check the dedicated xref:./grpc-virtual-threads.adoc[guide]."
 msgstr ""
