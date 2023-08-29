@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2023-07-05 14:22+0000\n"
+"POT-Creation-Date: 2023-08-29 15:22+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -140,7 +140,7 @@ msgstr "然而，可以用下面显示的Gradle构建配置为你的测试使用
 #: upstream/_guides/gradle-tooling.adoc:428
 #: upstream/_guides/gradle-tooling.adoc:506
 #: upstream/_guides/gradle-tooling.adoc:595
-#: upstream/_guides/gradle-tooling.adoc:664
+#: upstream/_guides/gradle-tooling.adoc:689
 #, fuzzy, no-wrap
 msgid "Groovy DSL"
 msgstr "协作式DSL（Groovy DSL"
@@ -169,7 +169,7 @@ msgstr " `foo` 配置文件将被用于运行测试。"
 #: upstream/_guides/gradle-tooling.adoc:445
 #: upstream/_guides/gradle-tooling.adoc:519
 #: upstream/_guides/gradle-tooling.adoc:606
-#: upstream/_guides/gradle-tooling.adoc:685
+#: upstream/_guides/gradle-tooling.adoc:710
 #, fuzzy, no-wrap
 msgid "Kotlin DSL"
 msgstr "Kotlin DSL"
@@ -1067,7 +1067,7 @@ msgstr "通过 `quarkus` extensions的 `quarkusBuildProperties` ，进行配置�
 #, fuzzy, no-wrap
 msgid ""
 "quarkus {\n"
-"properties {\n"
+"quarkusBuildProperties {\n"
 "set(\"package.type\", \"uber-jar\")\n"
 "}\n"
 "}\n"
@@ -1103,26 +1103,68 @@ msgstr "Quarkus Gradle插件使用 \"标准 \"Quarkus机制来加载和解析配
 msgid "Use the `quarkusShowEffectiveConfig` task to show the effective configuration options used for a Quarkus build. If you specify the `--save-config-properties` command line option, the configuration properties are also store in the file `build/<final-name>.quarkus-build.properties`."
 msgstr "使用 `quarkusShowEffectiveConfig` 任务来显示Quarkus构建时使用的有效配置选项。如果你指定了 `--save-config-properties` 命令行选项，配置属性也会存储在文件 `build/<final-name>.quarkus-build.properties` 。"
 
-#. type: Title ==
+#. type: Title ===
 #: upstream/_guides/gradle-tooling.adoc:653
+#, no-wrap
+msgid "Gradle caching / task inputs"
+msgstr ""
+
+#. type: delimited block *
+#: upstream/_guides/gradle-tooling.adoc:659
+msgid "By default, system properties starting with `quarkus.` and environment variables, including those from `~/.env`, starting with `QUARKUS_`, are considered as inputs for the Gradle tasks. This means that only changes to those system properties or environment variables will cause Gradle's up-to-date to trigger a rebuild. Changes to other system properties or environment variables do not change Quarkus' Gradle task inputs and do not trigger an unnecessary rebuild."
+msgstr ""
+
+#. type: delimited block *
+#: upstream/_guides/gradle-tooling.adoc:663
+msgid "Configuration properties specified via `quarkus.quarkusBuildProperties` or via the Quarkus `application.*` configuration files are all considered as Gradle task inputs, in other words: every change in these files causes a rebuild."
+msgstr ""
+
+#. type: delimited block *
+#: upstream/_guides/gradle-tooling.adoc:667
+msgid "If your Quarkus build references system properties that do not start with `quarkus.` (or environment variables that do not start with `QUARKUS_`), you must reference those via the Quarkus build extension. For example, if your `application.properties` file references an environment variable like this:"
+msgstr ""
+
+#. type: delimited block *
+#: upstream/_guides/gradle-tooling.adoc:669
+#, no-wrap
+msgid "   greeting.message=${FOO_MESSAGE:Hello!}\n"
+msgstr ""
+
+#. type: delimited block *
+#: upstream/_guides/gradle-tooling.adoc:671
+msgid "it must be explicitly declared as \"caching relevant\":"
+msgstr ""
+
+#. type: delimited block *
+#: upstream/_guides/gradle-tooling.adoc:676
+#, no-wrap
+msgid ""
+"   quarkus {\n"
+"      cachingRelevantProperties.add(\"FOO_MESSAGE\")\n"
+"      // Note: `cachingRelevantProperties` accepts regular expressions\n"
+"   }\n"
+msgstr ""
+
+#. type: Title ==
+#: upstream/_guides/gradle-tooling.adoc:678
 #, fuzzy, no-wrap
 msgid "Build workers"
 msgstr "建造工人"
 
 #. type: delimited block *
-#: upstream/_guides/gradle-tooling.adoc:658
+#: upstream/_guides/gradle-tooling.adoc:683
 #, fuzzy
 msgid "Quarkus application builds are ran in isolated processes using Gradle's worker API. This includes the Quarkus application build and Quarkus code generation. This is necessary to properly pass the configuration from the `quarkus` extension and Gradle project properties to Quarkus' code generator / application builder."
 msgstr "Quarkus应用程序的构建是使用Gradle的worker API在孤立的进程中运行的。这包括Quarkus应用程序构建和Quarkus代码生成。这对于正确地将配置从 `quarkus` 扩展和Gradle项目属性传递给Quarkus的代码生成器/应用程序构建器是必要的。"
 
 #. type: delimited block *
-#: upstream/_guides/gradle-tooling.adoc:662
+#: upstream/_guides/gradle-tooling.adoc:687
 #, fuzzy
 msgid "The JVM settings of the processes performing the code generation and/or Quarkus build can be configured as follows.  See link:https://docs.gradle.org/current/javadoc/org/gradle/process/JavaForkOptions.html[JavaForkOptions] for details."
 msgstr "执行代码生成和/或Quarkus构建的进程的JVM设置可以被配置为如下。详见 link:https://docs.gradle.org/current/javadoc/org/gradle/process/JavaForkOptions.html[JavaForkOptions] 。"
 
 #. type: delimited block -
-#: upstream/_guides/gradle-tooling.adoc:672
+#: upstream/_guides/gradle-tooling.adoc:697
 #, no-wrap
 msgid ""
 "plugins {\n"
@@ -1132,8 +1174,8 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/gradle-tooling.adoc:681
-#: upstream/_guides/gradle-tooling.adoc:702
+#: upstream/_guides/gradle-tooling.adoc:706
+#: upstream/_guides/gradle-tooling.adoc:727
 #, no-wrap
 msgid ""
 "quarkus {\n"
@@ -1147,7 +1189,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/gradle-tooling.adoc:693
+#: upstream/_guides/gradle-tooling.adoc:718
 #, no-wrap
 msgid ""
 "plugins {\n"
@@ -1157,79 +1199,79 @@ msgid ""
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/gradle-tooling.adoc:706
+#: upstream/_guides/gradle-tooling.adoc:731
 #, fuzzy, no-wrap
 msgid "Cached build artifacts"
 msgstr "缓存的构建工件"
 
 #. type: delimited block *
-#: upstream/_guides/gradle-tooling.adoc:711
+#: upstream/_guides/gradle-tooling.adoc:736
 #, fuzzy
 msgid "link:https://docs.gradle.org/current/userguide/build_cache.html[Gradle's build cache] is a very efficient mechanism to improve the overall build runtime, by reusing previously generated outputs (see link:https://docs.gradle.org/current/userguide/incremental_build.html[Incremental build] for technical details)."
 msgstr "link:https://docs.gradle.org/current/userguide/build_cache.html[Gradle的构建缓存] 是一种非常有效的机制，通过重复使用以前生成的输出，来改善整个构建的运行时间（技术细节见 link:https://docs.gradle.org/current/userguide/incremental_build.html[增量构建] ）。"
 
 #. type: delimited block *
-#: upstream/_guides/gradle-tooling.adoc:717
+#: upstream/_guides/gradle-tooling.adoc:742
 #, fuzzy
 msgid "The Quarkus plugin leverages the Gradle mechanisms of up-to-date checks and the build cache. The build cache can be local or local _plus_ a remote cache server or, if configured in CI environments, remote in the sense of retrieving and storing the whole cache as an artifact, for example using link:https://github.com/gradle/gradle-build-action[Gradle's GitHub action] or directly/manually GitHub's link:https://github.com/actions/cache[GitHub's cache action]."
 msgstr "Quarkus插件利用了Gradle的最新检查和构建缓存机制。构建缓存可以是本地的，也可以是本地 _加_ 远程缓存服务器的，或者，如果在CI环境中配置的话，可以是远程的，即把整个缓存作为一个工件来检索和存储，例如使用 link:https://github.com/gradle/gradle-build-action[Gradle的GitHub动作] 或者直接/手动使用GitHub的 link:https://github.com/actions/cache[缓存动作] 。"
 
 #. type: delimited block *
-#: upstream/_guides/gradle-tooling.adoc:720
+#: upstream/_guides/gradle-tooling.adoc:745
 #, fuzzy
 msgid "The Quarkus Gradle plugin cares about _what_ is cached _in which environment_ (CI or local development). Big artifacts like uber-jars and native binaries are not cached in CI, but are cached in local development environments."
 msgstr "Quarkus Gradle插件关心 _哪些东西_ 被缓存 _在哪个环境_ （CI或本地开发）。像uber-jars和本地二进制文件这样的大型工件不会被缓存在CI中，而是被缓存在本地开发环境中。"
 
 #. type: delimited block *
-#: upstream/_guides/gradle-tooling.adoc:722
+#: upstream/_guides/gradle-tooling.adoc:747
 #, fuzzy
 msgid "The Quarkus Gradle plugin detects a _CI environment_, if the `CI` environment variable is present."
 msgstr "如果 `CI` 环境变量存在，Quarkus Gradle插件会检测 _CI环境_ 。"
 
 #. type: delimited block *
-#: upstream/_guides/gradle-tooling.adoc:725
+#: upstream/_guides/gradle-tooling.adoc:750
 #, fuzzy
 msgid "How the various Quarkus package types are cached in non-CI and CI environments is described in the following table.  Note that even if a task's output is not _cached_, the _up-to-date_ checks still apply."
 msgstr "在非CI和CI环境中，各种Quarkus包类型是如何被缓存的，在下表中有描述。注意，即使一个任务的输出没有被 _缓存_ ， _最新的_ 检查仍然适用。"
 
 #. type: delimited block *
-#: upstream/_guides/gradle-tooling.adoc:729
+#: upstream/_guides/gradle-tooling.adoc:754
 #, fuzzy
 msgid "The Quarkus application build is split across three tasks. The `quarkusBuild` taskl is responsible to _provide_ a built Quarkus application. The tasks `quarkusDependenciesBuild` and `quarkusAppPartsBuild` are considered internal tasks (may change at any time w/o prior notice). See below for details."
 msgstr "Quarkus应用程序的构建被分成三个任务。 `quarkusBuild` 任务l负责 _提供_ 一个构建的Quarkus应用程序。 `quarkusDependenciesBuild` 和 `quarkusAppPartsBuild` 任务被认为是内部任务（可以在任何时候改变，不需要事先通知）。详情见下文。"
 
 #. type: Table
-#: upstream/_guides/gradle-tooling.adoc:732
+#: upstream/_guides/gradle-tooling.adoc:757
 #, fuzzy, no-wrap
 msgid "Quarkus package typ"
 msgstr "Quarkus软件包类型"
 
 #. type: Table
-#: upstream/_guides/gradle-tooling.adoc:732
+#: upstream/_guides/gradle-tooling.adoc:757
 #, fuzzy, no-wrap
 msgid "Note"
 msgstr "注意事项"
 
 #. type: Table
-#: upstream/_guides/gradle-tooling.adoc:732
+#: upstream/_guides/gradle-tooling.adoc:757
 #, fuzzy, no-wrap
 msgid "Caching (non-CI)"
 msgstr "缓存（非CI）"
 
 #. type: Table
-#: upstream/_guides/gradle-tooling.adoc:733
+#: upstream/_guides/gradle-tooling.adoc:758
 #, fuzzy, no-wrap
 msgid "Caching in CI"
 msgstr "CI中的缓存"
 
 #. type: Table
-#: upstream/_guides/gradle-tooling.adoc:734
+#: upstream/_guides/gradle-tooling.adoc:759
 #, fuzzy, no-wrap
 msgid "`fast-jar`, `jar`"
 msgstr " `fast-jar` , `jar` "
 
 #. type: Table
-#: upstream/_guides/gradle-tooling.adoc:743
+#: upstream/_guides/gradle-tooling.adoc:768
 #, fuzzy, no-wrap
 msgid ""
 "Dependency jars are stored unmodified as individual files in the `quarkus-app/lib/` directory.\n"
@@ -1244,23 +1286,23 @@ msgid ""
 msgstr "依赖性罐子作为单独的文件保存在 `quarkus-app/lib/` 目录中，未作任何修改。 `quarkus-app/` 目录下的所有其他文件都被生成。"
 
 #. type: Table
-#: upstream/_guides/gradle-tooling.adoc:744
-#: upstream/_guides/gradle-tooling.adoc:746
-#: upstream/_guides/gradle-tooling.adoc:751
-#: upstream/_guides/gradle-tooling.adoc:757
-#: upstream/_guides/gradle-tooling.adoc:759
+#: upstream/_guides/gradle-tooling.adoc:769
+#: upstream/_guides/gradle-tooling.adoc:771
+#: upstream/_guides/gradle-tooling.adoc:776
+#: upstream/_guides/gradle-tooling.adoc:782
+#: upstream/_guides/gradle-tooling.adoc:784
 #, fuzzy, no-wrap
 msgid "✅"
 msgstr "✅"
 
 #. type: Table
-#: upstream/_guides/gradle-tooling.adoc:747
+#: upstream/_guides/gradle-tooling.adoc:772
 #, fuzzy, no-wrap
 msgid "`mutable-jar`, `uber-jar`, `native`, `native-sources`"
 msgstr " `mutable-jar` , `uber-jar` , `native` 、 `native-sources` "
 
 #. type: Table
-#: upstream/_guides/gradle-tooling.adoc:750
+#: upstream/_guides/gradle-tooling.adoc:775
 #, fuzzy, no-wrap
 msgid ""
 "The `quarkusBuild` task is responsible for building the Quarkus application.\n"
@@ -1269,19 +1311,19 @@ msgid ""
 msgstr " `quarkusBuild` 任务负责建立Quarkus应用程序。"
 
 #. type: Table
-#: upstream/_guides/gradle-tooling.adoc:753
+#: upstream/_guides/gradle-tooling.adoc:778
 #, fuzzy, no-wrap
 msgid "❌"
 msgstr "❌"
 
 #. type: Table
-#: upstream/_guides/gradle-tooling.adoc:754
+#: upstream/_guides/gradle-tooling.adoc:779
 #, fuzzy, no-wrap
 msgid "`legacy-jar`, `legacy`"
 msgstr " `legacy-jar` , `legacy` "
 
 #. type: Table
-#: upstream/_guides/gradle-tooling.adoc:756
+#: upstream/_guides/gradle-tooling.adoc:781
 #, fuzzy, no-wrap
 msgid ""
 "`legacy-jar` builds work similar to `fast-jar` builds, except that the directory structure is different and the\n"
@@ -1289,42 +1331,42 @@ msgid ""
 msgstr " `legacy-jar` 构建的工作与 构建类似，只是目录结构不同， 文件被认为是生成的。 `fast-jar` `modified-*.jar` "
 
 #. type: Plain text
-#: upstream/_guides/gradle-tooling.adoc:768
+#: upstream/_guides/gradle-tooling.adoc:793
 #, fuzzy
 msgid "In a local development environment, the cost (think: time) of storing (and retrieving) even bigger cache artifacts is lower than the cost of re-building a Quarkus application. This means, that The Quarkus Gradle plugin allows caching even potentially big artifacts like uber-jars or native binaries in non-CI environments. In CI environments, which run builds against varying states of a code base (think: running CI against every commit on a main branch), adding each built (and big) artifact to the build cache would let the build cache become unnecessarily big, which becomes a problem for example in GitHub, where the total amount of cached artifacts is limited to 10 GB."
 msgstr "在本地开发环境中，存储（和检索）更大的缓存工件的成本（考虑：时间）低于重新构建Quarkus应用程序的成本。这意味着，Quarkus Gradle插件允许在非CI环境中缓存潜在的大工件，如uber-jars或本地二进制文件。在CI环境中，针对代码库的不同状态运行构建（想想看：针对主分支的每个提交运行CI），将每个构建的（和大的）工件添加到构建缓存中会让构建缓存变得不必要的大，这成为一个问题，例如在GitHub中，缓存的工件总量被限制在10GB。"
 
 #. type: delimited block =
-#: upstream/_guides/gradle-tooling.adoc:773
+#: upstream/_guides/gradle-tooling.adoc:798
 #, fuzzy
 msgid "Background information: There are two related mechanisms in Gradle at play to improve build performance:"
 msgstr "背景信息：在Gradle中，有两种相关的机制在发挥作用，以提高构建性能："
 
 #. type: delimited block =
-#: upstream/_guides/gradle-tooling.adoc:777
+#: upstream/_guides/gradle-tooling.adoc:802
 #, fuzzy
 msgid "Up-to-date checks allow a task's execution to be skipped, if the _inputs_ and _outputs_ of the tasks did not change.  For example, consider a Java compile tasks: if the library dependencies and the source files (the _inputs_) did not change and the compiled class files (the _outputs_) are still available, compilation can be skipped."
 msgstr "如果任务的 _输入_ 和 _输出_ 没有变化，最新的检查允许跳过任务的执行。例如，考虑一个Java编译任务：如果库的依赖性和源文件（ _输入_ ）没有改变，并且编译后的类文件（ _输出_ ）仍然可用，则可以跳过编译。"
 
 #. type: delimited block =
-#: upstream/_guides/gradle-tooling.adoc:779
+#: upstream/_guides/gradle-tooling.adoc:804
 #, fuzzy
 msgid "The build cache can store the outputs of (cacheable) tasks in the local build cache. The _output_ of a task can be restored from the cache."
 msgstr "构建缓存可以在本地构建缓存中存储（可缓存）任务的输出。一个任务的 _输出_ 可以从缓存中恢复。"
 
 #. type: delimited block =
-#: upstream/_guides/gradle-tooling.adoc:784
+#: upstream/_guides/gradle-tooling.adoc:809
 #, fuzzy
 msgid "The benefits of up-to-date checks and the interaction of the build cache come with the cost of modeling the _inputs_ and _outputs_. Inputs are not only files or directories, but also the Java version used during the build, the operating system, the working directory, configuration options, and so on. So everything that influences the output of a task action must be declared as an input of the task."
 msgstr "最新的检查和构建缓存的交互的好处是以建立 _输入_ 和 _输出_ 的模型为代价的。输入不仅是文件或目录，还包括构建过程中使用的Java版本、操作系统、工作目录、配置选项等等。所以所有影响任务动作输出的东西都必须被声明为任务的输入。"
 
 #. type: Title ==
-#: upstream/_guides/gradle-tooling.adoc:787
+#: upstream/_guides/gradle-tooling.adoc:812
 #, fuzzy, no-wrap
 msgid "Gradle configuration cache"
 msgstr "Gradle配置缓存"
 
 #. type: Plain text
-#: upstream/_guides/gradle-tooling.adoc:792
+#: upstream/_guides/gradle-tooling.adoc:817
 msgid "The Quarkus Gradle plugin works with builds that have the link:https://docs.gradle.org/current/userguide/configuration_cache.html[Gradle's configuration cache] enabled, but the configuration cache is disabled for the Quarkus tasks. This means, that the Quarkus plugin does not break such Gradle builds."
 msgstr ""
