@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2023-07-05 14:22+0000\n"
+"POT-Creation-Date: 2023-09-20 18:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,20 +34,13 @@ msgstr "link:https://owasp.org/www-community/attacks/csrf[跨站请求伪造（C
 #. type: Plain text
 #: upstream/_guides/security-csrf-prevention.adoc:13
 #, fuzzy
-msgid "Quarkus Security provides a CSRF prevention feature which implements a https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie[Double Submit Cookie technique]. This techninque requires that the CSRF token is never directly exposed to scripts executed on the client-side. In this extension, the CSRF token is:"
+msgid "Quarkus Security provides a CSRF prevention feature which implements https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie[Double Submit Cookie] and [CSRF Request Header] techniques."
 msgstr "Quarkus Security提供了一个CSRF预防功能，实现了 link:https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie[双重提交Cookie技术] 。这种技术要求CSRF令牌不能直接暴露给客户端执行的脚本。在这个扩展中，CSRF令牌是。"
 
 #. type: Plain text
-#: upstream/_guides/security-csrf-prevention.adoc:15
-#, fuzzy
-msgid "sent as `HTTPOnly` cookie to the client, and"
-msgstr "作为 `HTTPOnly` cookie 发送给客户，并且"
-
-#. type: Plain text
 #: upstream/_guides/security-csrf-prevention.adoc:16
-#, fuzzy
-msgid "directly embedded in a hidden form input of server-side rendered forms, which are transmitted to and used by the client."
-msgstr "直接嵌入到服务器端渲染的表单的隐藏表单输入中，被传送到客户端并被客户端使用。"
+msgid "`Double Submit Cookie` technique requires that the CSRF token sent as `HTTPOnly`, optionally signed, cookie to the client, and directly embedded in a hidden form input of server-side rendered HTML forms, or submitted as a request header value."
+msgstr ""
 
 #. type: Plain text
 #: upstream/_guides/security-csrf-prevention.adoc:18
@@ -164,8 +157,8 @@ msgstr "现在让我们创建一个资源类，它返回一个HTML表单并处�
 
 #. type: delimited block -
 #: upstream/_guides/security-csrf-prevention.adoc:82
-#: upstream/_guides/security-csrf-prevention.adoc:147
-#: upstream/_guides/security-csrf-prevention.adoc:234
+#: upstream/_guides/security-csrf-prevention.adoc:181
+#: upstream/_guides/security-csrf-prevention.adoc:269
 #, no-wrap
 msgid "package io.quarkus.it.csrf;\n"
 msgstr ""
@@ -186,8 +179,8 @@ msgstr ""
 
 #. type: delimited block -
 #: upstream/_guides/security-csrf-prevention.adoc:94
-#: upstream/_guides/security-csrf-prevention.adoc:160
-#: upstream/_guides/security-csrf-prevention.adoc:249
+#: upstream/_guides/security-csrf-prevention.adoc:194
+#: upstream/_guides/security-csrf-prevention.adoc:284
 #, no-wrap
 msgid ""
 "import io.quarkus.qute.Template;\n"
@@ -196,8 +189,8 @@ msgstr ""
 
 #. type: delimited block -
 #: upstream/_guides/security-csrf-prevention.adoc:97
-#: upstream/_guides/security-csrf-prevention.adoc:163
-#: upstream/_guides/security-csrf-prevention.adoc:252
+#: upstream/_guides/security-csrf-prevention.adoc:197
+#: upstream/_guides/security-csrf-prevention.adoc:287
 #, no-wrap
 msgid ""
 "@Path(\"/service\")\n"
@@ -296,18 +289,81 @@ msgstr ""
 
 #. type: Title ==
 #: upstream/_guides/security-csrf-prevention.adoc:140
+#, no-wrap
+msgid "CSRF Request Header"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/security-csrf-prevention.adoc:143
+msgid "If HTML `form` tags are not used and you need to pass CSRF token as a header, then inject the header name and token, for example, into HTMX:"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/security-csrf-prevention.adoc:148
+#, no-wrap
+msgid ""
+"<body hx-headers='{\"{inject:csrf.headerName}\":\"{inject:csrf.token}\"}'> <1>\n"
+"</body>\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/security-csrf-prevention.adoc:150
+#, fuzzy
+msgid "This expression is used to inject a CSRF token header and token. This token will be verified by the CSRF filter against a CSRF cookie."
+msgstr "这个表达式用于向隐藏的表单字段注入一个CSRF令牌。这个令牌将由CSRF过滤器根据CSRF cookie进行验证。"
+
+#. type: Plain text
+#: upstream/_guides/security-csrf-prevention.adoc:152
+msgid "Default header name is `X-CSRF-TOKEN`, you can customize it with `quarkus.csrf-reactive.token-header-name`, for example:"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/security-csrf-prevention.adoc:156
+#, no-wrap
+msgid "quarkus.csrf-reactive.token-header-name=CUSTOM-X-CSRF-TOKEN\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/security-csrf-prevention.adoc:159
+msgid "If you need to access the CSRF cookie from JavaScript in order to pass its value as a header, use `{inject:csrf.cookieName}` and `{inject:csrf.headerName}` to inject the cookie name which has to be read as a CSRF header value and allow accessing this cookie:"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/security-csrf-prevention.adoc:163
+#, no-wrap
+msgid "quarkus.csrf-reactive.cookie-http-only=false\n"
+msgstr ""
+
+#. type: Title ==
+#: upstream/_guides/security-csrf-prevention.adoc:165
+#, no-wrap
+msgid "Cross-origin resource sharing"
+msgstr ""
+
+#. type: delimited block =
+#: upstream/_guides/security-csrf-prevention.adoc:170
+msgid "If you would like to enforce CSRF prevention in a Cross-origin environment, please avoid supporting all Origins."
+msgstr ""
+
+#. type: delimited block =
+#: upstream/_guides/security-csrf-prevention.adoc:172
+msgid "Restrict supported Origins to trusted Origins only, see xref:http-reference.adoc#cors-filter[Cross-origin resource sharing] for more information."
+msgstr ""
+
+#. type: Title ==
+#: upstream/_guides/security-csrf-prevention.adoc:174
 #, fuzzy, no-wrap
 msgid "Restrict CSRF token verification"
 msgstr "限制CSRF令牌验证"
 
 #. type: Plain text
-#: upstream/_guides/security-csrf-prevention.adoc:143
+#: upstream/_guides/security-csrf-prevention.adoc:177
 #, fuzzy
 msgid "Your Jakarta REST endpoint may accept not only HTTP POST requests with `application/x-www-form-urlencoded` or `multipart/form-data` payloads but also payloads with other media types, either on the same or different URL paths, and therefore you would like to avoid verifying the CSRF token in such cases, for example:"
 msgstr "您的 JAX-RS 端点不仅可能接受带有 `application/x-www-form-urlencoded` 或 `multipart/form-data` 有效载荷的 HTTP POST 请求，还可能接受带有其他媒体类型的有效载荷，无论是在相同还是不同的 URL 路径上，因此您希望在这种情况下避免验证 CSRF 令牌，比如说。"
 
 #. type: delimited block -
-#: upstream/_guides/security-csrf-prevention.adoc:157
+#: upstream/_guides/security-csrf-prevention.adoc:191
 #, no-wrap
 msgid ""
 "import jakarta.inject.Inject;\n"
@@ -322,8 +378,8 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-csrf-prevention.adoc:166
-#: upstream/_guides/security-csrf-prevention.adoc:255
+#: upstream/_guides/security-csrf-prevention.adoc:200
+#: upstream/_guides/security-csrf-prevention.adoc:290
 #, no-wrap
 msgid ""
 "    @Inject\n"
@@ -331,7 +387,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-csrf-prevention.adoc:173
+#: upstream/_guides/security-csrf-prevention.adoc:207
 #, no-wrap
 msgid ""
 "    @GET\n"
@@ -343,7 +399,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-csrf-prevention.adoc:182
+#: upstream/_guides/security-csrf-prevention.adoc:216
 #, no-wrap
 msgid ""
 "    <1>\n"
@@ -357,7 +413,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-csrf-prevention.adoc:191
+#: upstream/_guides/security-csrf-prevention.adoc:225
 #, no-wrap
 msgid ""
 "    <2>\n"
@@ -371,7 +427,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-csrf-prevention.adoc:200
+#: upstream/_guides/security-csrf-prevention.adoc:234
 #, no-wrap
 msgid ""
 "    <3>\n"
@@ -385,7 +441,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-csrf-prevention.adoc:211
+#: upstream/_guides/security-csrf-prevention.adoc:245
 #, no-wrap
 msgid ""
 "    public static class User {\n"
@@ -401,30 +457,30 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/security-csrf-prevention.adoc:213
+#: upstream/_guides/security-csrf-prevention.adoc:247
 #, fuzzy
 msgid "POST form request to `/user`, CSRF token verification is enforced by the CSRF filter"
 msgstr "POST表单请求到 `/user` ，CSRF令牌验证由CSRF过滤器强制执行。"
 
 #. type: Plain text
-#: upstream/_guides/security-csrf-prevention.adoc:214
+#: upstream/_guides/security-csrf-prevention.adoc:248
 #, fuzzy
 msgid "POST json request to `/user`, CSRF token verification is not needed"
 msgstr "POST json请求到 `/user` ，不需要CSRF令牌验证。"
 
 #. type: Plain text
-#: upstream/_guides/security-csrf-prevention.adoc:215
+#: upstream/_guides/security-csrf-prevention.adoc:249
 #, fuzzy
 msgid "POST json request to `/users`, CSRF token verification is not needed"
 msgstr "POST json请求到 `/users` ，不需要CSRF令牌验证。"
 
 #. type: Plain text
-#: upstream/_guides/security-csrf-prevention.adoc:217
+#: upstream/_guides/security-csrf-prevention.adoc:251
 msgid "As you can see a CSRF token verification will be required at the `/service/user` path accepting the `application/x-www-form-urlencoded` payload, but `User` JSON representation posted to both `/service/user` and `/service/users` method will have no CSRF token and therefore the token verification has to be skipped in these cases by restricting it to the specific `/service/user` request path but also allowing not only `application/x-www-form-urlencoded` on this path:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-csrf-prevention.adoc:222
+#: upstream/_guides/security-csrf-prevention.adoc:256
 #, no-wrap
 msgid ""
 "# Verify CSRF token only for the `/service/user` path, ignore other paths such as `/service/users`\n"
@@ -432,26 +488,27 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-csrf-prevention.adoc:225
+#: upstream/_guides/security-csrf-prevention.adoc:260
 #, no-wrap
 msgid ""
 "# If `/service/user` path accepts not only `application/x-www-form-urlencoded` payloads but also other ones such as JSON then allow them\n"
+"# Setting this property is not necessary when the token is submitted as a header value\n"
 "quarkus.csrf-reactive.require-form-url-encoded=false\n"
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/security-csrf-prevention.adoc:227
+#: upstream/_guides/security-csrf-prevention.adoc:262
 #, no-wrap
 msgid "Verify CSRF token in the application code"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/security-csrf-prevention.adoc:230
+#: upstream/_guides/security-csrf-prevention.adoc:265
 msgid "If you prefer to compare the CSRF form field and cookie values in the application code then you can do it as follows:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-csrf-prevention.adoc:246
+#: upstream/_guides/security-csrf-prevention.adoc:281
 #, no-wrap
 msgid ""
 "import jakarta.inject.Inject;\n"
@@ -468,7 +525,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-csrf-prevention.adoc:262
+#: upstream/_guides/security-csrf-prevention.adoc:297
 #, no-wrap
 msgid ""
 "    @GET\n"
@@ -480,7 +537,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/security-csrf-prevention.adoc:274
+#: upstream/_guides/security-csrf-prevention.adoc:309
 #, no-wrap
 msgid ""
 "    @POST\n"
@@ -497,56 +554,69 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/security-csrf-prevention.adoc:276
+#: upstream/_guides/security-csrf-prevention.adoc:311
 #, fuzzy
 msgid "Compare the CSRF form field and cookie values and fail with HTTP status `400` if they don't match."
 msgstr "比较CSRF表单字段和cookie值，如果不匹配，则以HTTP状态 `400` ，失败。"
 
 #. type: Plain text
-#: upstream/_guides/security-csrf-prevention.adoc:278
+#: upstream/_guides/security-csrf-prevention.adoc:313
 #, fuzzy
 msgid "Also disable the token verification in the filter:"
 msgstr "同时禁用过滤器中的令牌验证。"
 
 #. type: delimited block -
-#: upstream/_guides/security-csrf-prevention.adoc:282
+#: upstream/_guides/security-csrf-prevention.adoc:317
 #, no-wrap
 msgid "quarkus.csrf-reactive.verify-token=false\n"
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/security-csrf-prevention.adoc:285
+#: upstream/_guides/security-csrf-prevention.adoc:320
 #, no-wrap
 msgid "Configuration Reference"
 msgstr "配置参考"
 
 #. type: Title ==
-#: upstream/_guides/security-csrf-prevention.adoc:289
+#: upstream/_guides/security-csrf-prevention.adoc:324
 #, no-wrap
 msgid "References"
 msgstr "参考文献"
 
 #. type: Plain text
-#: upstream/_guides/security-csrf-prevention.adoc:292
+#: upstream/_guides/security-csrf-prevention.adoc:327
 #, fuzzy
 msgid "https://owasp.org/www-community/attacks/csrf[OWASP Cross-Site Request Forgery]"
 msgstr "link:https://owasp.org/www-community/attacks/csrf[OWASP跨站请求伪造术]"
 
 #. type: Plain text
-#: upstream/_guides/security-csrf-prevention.adoc:293
+#: upstream/_guides/security-csrf-prevention.adoc:328
 #, fuzzy
 msgid "xref:resteasy-reactive.adoc[RESTEasy Reactive]"
 msgstr "link:resteasy-reactive.html[RESTEasy反应性]"
 
 #. type: Plain text
-#: upstream/_guides/security-csrf-prevention.adoc:294
+#: upstream/_guides/security-csrf-prevention.adoc:329
 msgid "xref:qute-reference.adoc[Qute Reference]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/security-csrf-prevention.adoc:294
+#: upstream/_guides/security-csrf-prevention.adoc:330
+msgid "xref:http-reference.adoc#cors-filter[Cross-origin resource sharing]"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_guides/security-csrf-prevention.adoc:330
 msgid "xref:security-overview.adoc[Quarkus Security overview]"
 msgstr ""
+
+#, fuzzy
+#~ msgid "sent as `HTTPOnly` cookie to the client, and"
+#~ msgstr "作为 `HTTPOnly` cookie 发送给客户，并且"
+
+#, fuzzy
+#~ msgid "directly embedded in a hidden form input of server-side rendered forms, which are transmitted to and used by the client."
+#~ msgstr "直接嵌入到服务器端渲染的表单的隐藏表单输入中，被传送到客户端并被客户端使用。"
 
 #, fuzzy
 #~ msgid "Note that the CSRF filter has to read the input stream in order to verify the token and then re-create the stream for the application code to read it as well. The filter performs this work on an event loop thread so for small form payloads, such as the one shown in the example above, it will have negligible performance side-effects. However if you deal with large form payloads then it is recommended to compare the CSRF form field and cookie values in the application code:"
