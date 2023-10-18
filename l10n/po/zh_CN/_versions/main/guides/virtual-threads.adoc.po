@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2023-10-17 02:13+0000\n"
+"POT-Creation-Date: 2023-10-18 02:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -511,7 +511,8 @@ msgstr ""
 
 #. type: delimited block -
 #: upstream/_versions/main/guides/virtual-threads.adoc:266
-#: upstream/_versions/main/guides/virtual-threads.adoc:513
+#: upstream/_versions/main/guides/virtual-threads.adoc:489
+#: upstream/_versions/main/guides/virtual-threads.adoc:557
 #, no-wrap
 msgid "}\n"
 msgstr ""
@@ -900,26 +901,120 @@ msgstr ""
 #. type: Title ==
 #: upstream/_versions/main/guides/virtual-threads.adoc:447
 #, no-wrap
+msgid "Inject the virtual thread executor"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/virtual-threads.adoc:451
+msgid "In order to run tasks on virtual threads Quarkus manages an internal `ThreadPerTaskExecutor`.  In rare instances where you'd need to access this executor directly you can inject it using the `@VirtualThreads` CDI qualifier:"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/virtual-threads.adoc:453
+msgid "Injecting the Virtual Thread ExecutorService is experimental and may change in future versions."
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/virtual-threads.adoc:457
+#, no-wrap
+msgid "package org.acme;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/virtual-threads.adoc:459
+#, no-wrap
+msgid "import org.acme.fortune.repository.FortuneRepository;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/virtual-threads.adoc:461
+#, no-wrap
+msgid "import java.util.concurrent.ExecutorService;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/virtual-threads.adoc:465
+#, no-wrap
+msgid ""
+"import jakarta.enterprise.event.Observes;\n"
+"import jakarta.inject.Inject;\n"
+"import jakarta.transaction.Transactional;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/virtual-threads.adoc:469
+#, no-wrap
+msgid ""
+"import io.quarkus.logging.Log;\n"
+"import io.quarkus.runtime.StartupEvent;\n"
+"import io.quarkus.virtual.threads.VirtualThreads;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/virtual-threads.adoc:471
+#, no-wrap
+msgid "public class MyApplication {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/virtual-threads.adoc:474
+#, no-wrap
+msgid ""
+"    @Inject\n"
+"    FortuneRepository repository;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/virtual-threads.adoc:478
+#, no-wrap
+msgid ""
+"    @Inject\n"
+"    @VirtualThreads\n"
+"    ExecutorService vThreads;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/virtual-threads.adoc:482
+#, no-wrap
+msgid ""
+"    void onEvent(@Observes StartupEvent event) {\n"
+"        vThreads.execute(this::findAll);\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/virtual-threads.adoc:487
+#, no-wrap
+msgid ""
+"    @Transactional\n"
+"    void findAll() {\n"
+"        Log.info(repository.findAllBlocking());\n"
+"    }\n"
+msgstr ""
+
+#. type: Title ==
+#: upstream/_versions/main/guides/virtual-threads.adoc:491
+#, no-wrap
 msgid "Testing virtual thread applications"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/virtual-threads.adoc:452
+#: upstream/_versions/main/guides/virtual-threads.adoc:496
 msgid "As mentioned above, virtual threads have a few limitations that can drastically affect your application performance and memory usage.  The _junit5-virtual-threads_ extension provides a way to detect pinned carrier threads while running your tests.  Thus, you can eliminate one of the most prominent limitations or be aware of the problem."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/virtual-threads.adoc:454
+#: upstream/_versions/main/guides/virtual-threads.adoc:498
 msgid "To enable this detection:"
 msgstr ""
 
 #. type: Bullet: '1) '
-#: upstream/_versions/main/guides/virtual-threads.adoc:456
+#: upstream/_versions/main/guides/virtual-threads.adoc:500
 msgid "Add the `junit5-virtual-threads` dependency to your project:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/virtual-threads.adoc:463
+#: upstream/_versions/main/guides/virtual-threads.adoc:507
 #, no-wrap
 msgid ""
 "<dependency>\n"
@@ -930,12 +1025,12 @@ msgid ""
 msgstr ""
 
 #. type: Bullet: '2) '
-#: upstream/_versions/main/guides/virtual-threads.adoc:466
+#: upstream/_versions/main/guides/virtual-threads.adoc:510
 msgid "In your test case, add the `io.quarkus.test.junit5.virtual.VirtualThreadUnit` and `io.quarkus.test.junit.virtual.ShouldNotPin` annotations:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/virtual-threads.adoc:475
+#: upstream/_versions/main/guides/virtual-threads.adoc:519
 #, no-wrap
 msgid ""
 "@QuarkusTest\n"
@@ -948,22 +1043,22 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/virtual-threads.adoc:479
+#: upstream/_versions/main/guides/virtual-threads.adoc:523
 msgid "When you run your test (remember to use Java 21+), Quarkus detects pinned carrier threads.  When it happens, the test fails."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/virtual-threads.adoc:481
+#: upstream/_versions/main/guides/virtual-threads.adoc:525
 msgid "The `@ShouldNotPin` can also be used on methods directly."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/virtual-threads.adoc:484
+#: upstream/_versions/main/guides/virtual-threads.adoc:528
 msgid "The _junit5-virtual-threads_ also provides a `@ShouldPin` annotation for cases where pinning is unavoidable.  The following snippet demonstrates the `@ShouldPin` annotation usage and the possibility to inject a `ThreadPinnedEvents` instance in your test to verify when the carrier thread was pinned manually."
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/virtual-threads.adoc:489
+#: upstream/_versions/main/guides/virtual-threads.adoc:533
 #, no-wrap
 msgid ""
 "@VirtualThreadUnit // Use the extension\n"
@@ -971,13 +1066,13 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/virtual-threads.adoc:491
+#: upstream/_versions/main/guides/virtual-threads.adoc:535
 #, no-wrap
 msgid "    CodeUnderTest codeUnderTest = new CodeUnderTest();\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/virtual-threads.adoc:497
+#: upstream/_versions/main/guides/virtual-threads.adoc:541
 #, no-wrap
 msgid ""
 "    @Test\n"
@@ -988,7 +1083,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/virtual-threads.adoc:503
+#: upstream/_versions/main/guides/virtual-threads.adoc:547
 #, no-wrap
 msgid ""
 "    @Test\n"
@@ -999,7 +1094,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/virtual-threads.adoc:511
+#: upstream/_versions/main/guides/virtual-threads.adoc:555
 #, no-wrap
 msgid ""
 "    @Test\n"
@@ -1012,12 +1107,12 @@ msgid ""
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/virtual-threads.adoc:515
+#: upstream/_versions/main/guides/virtual-threads.adoc:559
 #, no-wrap
 msgid "Additional references"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/virtual-threads.adoc:517
+#: upstream/_versions/main/guides/virtual-threads.adoc:561
 msgid "https://dl.acm.org/doi/10.1145/3583678.3596895[Considerations for integrating virtual threads in a Java framework: a Quarkus example in a resource-constrained environment]"
 msgstr ""
