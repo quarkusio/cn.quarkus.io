@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2023-08-02 18:23+0000\n"
+"POT-Creation-Date: 2023-10-25 13:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,145 +26,183 @@ msgid "Getting Started to SmallRye Reactive Messaging with RabbitMQ"
 msgstr "开始使用RabbitMQ的SmallRye反应式消息传递"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:11
+#: upstream/_guides/rabbitmq.adoc:14
 #, fuzzy
 msgid "This guide demonstrates how your Quarkus application can utilize SmallRye Reactive Messaging to interact with RabbitMQ."
 msgstr "本指南演示了您的 Quarkus 应用程序如何利用 SmallRye Reactive Messaging 来与 RabbitMQ 进行交互。"
 
 #. type: Title ==
-#: upstream/_guides/rabbitmq.adoc:14
+#: upstream/_guides/rabbitmq.adoc:17
 #, fuzzy, no-wrap
 msgid "Prerequisites"
 msgstr "先决条件"
 
 #. type: Title ==
-#: upstream/_guides/rabbitmq.adoc:19
+#: upstream/_guides/rabbitmq.adoc:22
 #, fuzzy, no-wrap
 msgid "Architecture"
 msgstr "建筑学"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:24
+#: upstream/_guides/rabbitmq.adoc:27
 #, fuzzy
 msgid "In this guide, we are going to develop two applications communicating with a RabbitMQ broker.  The first application sends a _quote request_ to the RabbitMQ _quote requests_ exchange and consumes messages from the _quote_ queue.  The second application receives the _quote request_ and sends a _quote_ back."
 msgstr "在本指南中，我们将开发两个与 RabbitMQ 代理通信的应用程序。第一个应用程序向 RabbitMQ _报价请求_ 交易所发送一个 _报价请求_ ，并从 _报价_ 队列中消费消息。第二个应用程序接收 _报价请求_ 并发送一个 _报价_ 回来。"
 
 #. type: Named 'alt' AttributeList argument for macro 'image'
-#: upstream/_guides/rabbitmq.adoc:25
+#: upstream/_guides/rabbitmq.adoc:28
 #, fuzzy, no-wrap
 msgid "Architecture,"
 msgstr "建筑。"
 
 #. type: Target for macro image
-#: upstream/_guides/rabbitmq.adoc:25
+#: upstream/_guides/rabbitmq.adoc:28
 #, no-wrap
 msgid "amqp-qs-architecture.png"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:30
+#: upstream/_guides/rabbitmq.adoc:33
 #, fuzzy
 msgid "The first application, the `producer`, will let the user request some quotes over an HTTP endpoint.  For each quote request, a random identifier is generated and returned to the user, to put the quote request on _pending_.  At the same time the generated request id is sent to the `quote-requests` exchange."
 msgstr "第一个应用程序， `producer` ，将让用户通过一个HTTP端点请求一些报价。对于每一个报价请求，都会生成一个随机的标识符并返回给用户，以使报价请求处于 _等待_ 状态。同时，生成的请求ID被发送到 `quote-requests` 交易所。"
 
 #. type: Named 'alt' AttributeList argument for macro 'image'
-#: upstream/_guides/rabbitmq.adoc:31
+#: upstream/_guides/rabbitmq.adoc:34
 #, fuzzy, no-wrap
 msgid "Producer"
 msgstr "制作人"
 
 #. type: Target for macro image
-#: upstream/_guides/rabbitmq.adoc:31
+#: upstream/_guides/rabbitmq.adoc:34
 #, no-wrap
 msgid "amqp-qs-app-screenshot.png"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:34
+#: upstream/_guides/rabbitmq.adoc:37
 #, fuzzy
 msgid "The second application, the `processor`, in turn, will read from the `quote-requests` queue put a random price to the quote, and send it to an exchange named `quotes`."
 msgstr "第二个应用程序， `processor` ，反过来，将从 `quote-requests` 队列中读取将一个随机价格放到报价中，并将其发送到一个名为 `quotes` 的交易所。"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:37
+#: upstream/_guides/rabbitmq.adoc:40
 #, fuzzy
 msgid "Lastly, the `producer` will read the quotes and send them to the browser using server-sent events.  The user will therefore see the quote price updated from _pending_ to the received price in real-time."
 msgstr "最后， `producer` 将读取报价并使用服务器发送的事件将其发送到浏览器。因此，用户将看到报价从 _待定_ 价格实时更新到收到的价格。"
 
 #. type: Title ==
-#: upstream/_guides/rabbitmq.adoc:38
+#: upstream/_guides/rabbitmq.adoc:41
 #, fuzzy, no-wrap
 msgid "Solution"
 msgstr "解决方案"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:42
+#: upstream/_guides/rabbitmq.adoc:45
 #, fuzzy
 msgid "We recommend that you follow the instructions in the next sections and create applications step by step.  However, you can go right to the completed example."
 msgstr "我们建议你按照下面几节的说明，一步一步地创建应用程序。然而，你可以直接进入已完成的例子。"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:44
+#: upstream/_guides/rabbitmq.adoc:47
 #, fuzzy
 msgid "Clone the Git repository: `git clone {quickstarts-clone-url}`, or download an {quickstarts-archive-url}[archive]."
 msgstr "克隆 Git 仓库。 `git clone {quickstarts-clone-url}` ，或者下载一个 {quickstarts-archive-url}[存档] 。"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:46
+#: upstream/_guides/rabbitmq.adoc:49
 #, fuzzy
 msgid "The solution is located in the `rabbitmq-quickstart` link:{quickstarts-tree-url}/rabbitmq-quickstart[directory]."
 msgstr "该解决方案位于 `rabbitmq-quickstart` {quickstarts-tree-url}/rabbitmq-quickstart[目录]中。"
 
 #. type: Title ==
-#: upstream/_guides/rabbitmq.adoc:47
+#: upstream/_guides/rabbitmq.adoc:50
 #, fuzzy, no-wrap
 msgid "Creating the Maven Project"
 msgstr "创建Maven项目"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:50
+#: upstream/_guides/rabbitmq.adoc:53
 #, fuzzy
 msgid "First, we need to create two projects: the _producer_ and the _processor_."
 msgstr "首先，我们需要创建两个项目： _生产者_ 和 _处理器_ 。"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:52
+#: upstream/_guides/rabbitmq.adoc:55
 #, fuzzy
 msgid "To create the _producer_ project, in a terminal run:"
 msgstr "要创建 _生产者_ 项目，在终端运行。"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:59
+#: upstream/_guides/rabbitmq.adoc:62
 #, fuzzy
 msgid "This command creates the project structure and select the two Quarkus extensions we will be using:"
 msgstr "这个命令创建了项目结构，并选择了我们将要使用的两个Quarkus扩展。"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:61
+#: upstream/_guides/rabbitmq.adoc:64
 #, fuzzy
 msgid "The Reactive Messaging RabbitMQ connector"
 msgstr "Reactive Messaging RabbitMQ连接器"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:62
+#: upstream/_guides/rabbitmq.adoc:65
 #, fuzzy
-msgid "RESTEasy Reactive and it's Jackson support to handle JSON payloads"
+msgid "RESTEasy Reactive and its Jackson support to handle JSON payloads"
 msgstr "RESTEasy Reactive和它的杰克逊支持处理JSON有效载荷"
 
-#. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:64
+#. type: delimited block =
+#: upstream/_guides/rabbitmq.adoc:70
+msgid "If you already have your Quarkus project configured, you can add the `smallrye-reactive-messaging-rabbitmq` extension to your project by running the following command in your project base directory:"
+msgstr ""
+
+#. type: delimited block =
+#: upstream/_guides/rabbitmq.adoc:75
+msgid "This will add the following to your `pom.xml`:"
+msgstr ""
+
+#. type: Block title
+#: upstream/_guides/rabbitmq.adoc:77
+#, no-wrap
+msgid "pom.xml"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/rabbitmq.adoc:83
+#, no-wrap
+msgid ""
+"<dependency>\n"
+"    <groupId>io.quarkus</groupId>\n"
+"    <artifactId>quarkus-smallrye-reactive-messaging-rabbitmq</artifactId>\n"
+"</dependency>\n"
+msgstr ""
+
+#. type: Block title
+#: upstream/_guides/rabbitmq.adoc:86
+#, no-wrap
+msgid "build.gradle"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_guides/rabbitmq.adoc:89
+#, no-wrap
+msgid "implementation(\"io.quarkus:quarkus-smallrye-reactive-messaging-rabbitmq\")\n"
+msgstr ""
+
+#. type: delimited block =
+#: upstream/_guides/rabbitmq.adoc:93
 #, fuzzy
 msgid "To create the _processor_ project, from the same directory, run:"
 msgstr "要创建 _处理器_ 项目，在同一目录下，运行。"
 
-#. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:71
+#. type: delimited block =
+#: upstream/_guides/rabbitmq.adoc:100
 #, fuzzy
 msgid "At that point you should have the following structure:"
 msgstr "在这一点上，你应该有以下结构。"
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:97
+#: upstream/_guides/rabbitmq.adoc:126
 #, no-wrap
 msgid ""
 ".\n"
@@ -193,37 +231,37 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:100
+#: upstream/_guides/rabbitmq.adoc:129
 #, fuzzy
 msgid "Open the two projects in your favorite IDE."
 msgstr "在你喜欢的IDE中打开这两个项目。"
 
 #. type: Title ==
-#: upstream/_guides/rabbitmq.adoc:101
+#: upstream/_guides/rabbitmq.adoc:130
 #, fuzzy, no-wrap
 msgid "The Quote object"
 msgstr "报价对象"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:106
+#: upstream/_guides/rabbitmq.adoc:135
 #, fuzzy
 msgid "The `Quote` class will be used in both `producer` and `processor` projects.  For the sake of simplicity we will duplicate the class.  In both projects, create the `src/main/java/org/acme/rabbitmq/model/Quote.java` file, with the following content:"
 msgstr " `Quote` 类将在 `producer` 和 `processor` 两个项目中使用。为了简单起见，我们将重复这个类。在两个项目中，创建 `src/main/java/org/acme/rabbitmq/model/Quote.java` 文件，内容如下。"
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:110
+#: upstream/_guides/rabbitmq.adoc:139
 #, no-wrap
 msgid "package org.acme.rabbitmq.model;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:112
+#: upstream/_guides/rabbitmq.adoc:141
 #, no-wrap
 msgid "import io.quarkus.runtime.annotations.RegisterForReflection;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:115
+#: upstream/_guides/rabbitmq.adoc:144
 #, no-wrap
 msgid ""
 "@RegisterForReflection\n"
@@ -231,7 +269,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:118
+#: upstream/_guides/rabbitmq.adoc:147
 #, no-wrap
 msgid ""
 "    public String id;\n"
@@ -239,7 +277,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:123
+#: upstream/_guides/rabbitmq.adoc:152
 #, no-wrap
 msgid ""
 "    /**\n"
@@ -249,7 +287,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:128
+#: upstream/_guides/rabbitmq.adoc:157
 #, no-wrap
 msgid ""
 "    public Quote(String id, int price) {\n"
@@ -259,7 +297,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:137
+#: upstream/_guides/rabbitmq.adoc:166
 #, no-wrap
 msgid ""
 "    @Override\n"
@@ -273,55 +311,55 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:141
+#: upstream/_guides/rabbitmq.adoc:170
 #, fuzzy
 msgid "JSON representation of `Quote` objects will be used in messages sent to the RabbitMQ queues and also in the server-sent events sent to browser clients."
 msgstr " `Quote` 对象的 JSON 表示将用于发送到 RabbitMQ 队列的消息中，也用于发送到浏览器客户端的服务器发送的事件。"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:143
+#: upstream/_guides/rabbitmq.adoc:172
 #, fuzzy
 msgid "Quarkus has built-in capabilities to deal with JSON RabbitMQ messages."
 msgstr "Quarkus具有处理JSON RabbitMQ消息的内置功能。"
 
 #. type: Block title
-#: upstream/_guides/rabbitmq.adoc:145
+#: upstream/_guides/rabbitmq.adoc:174
 #, fuzzy, no-wrap
 msgid "@RegisterForReflection"
 msgstr "@RegisterForReflection"
 
 #. type: delimited block =
-#: upstream/_guides/rabbitmq.adoc:150
+#: upstream/_guides/rabbitmq.adoc:179
 #, fuzzy
 msgid "The `@RegisterForReflection` annotation instructs Quarkus to include the class (including fields and methods) when building the native executable.  This will be useful later when we run the applications as native executables inside containers.  Without, the native compilation would remove the fields and methods during the dead-code elimination phase."
 msgstr " `@RegisterForReflection` 注释指示Quarkus在构建本地可执行文件时包含该类（包括字段和方法）。这在以后我们在容器内作为本地可执行文件运行应用程序时将会很有用。如果没有，本地编译会在消除死代码阶段删除这些字段和方法。"
 
 #. type: Title ==
-#: upstream/_guides/rabbitmq.adoc:152
+#: upstream/_guides/rabbitmq.adoc:181
 #, fuzzy, no-wrap
 msgid "Sending quote request"
 msgstr "发出报价请求"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:155
+#: upstream/_guides/rabbitmq.adoc:184
 #, fuzzy
 msgid "Inside the `producer` project locate the generated `src/main/java/org/acme/rabbitmq/producer/QuotesResource.java` file, and update the content to be:"
 msgstr "在 `producer` 项目中找到生成的 `src/main/java/org/acme/rabbitmq/producer/QuotesResource.java` 文件，并将其内容更新为。"
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:159
+#: upstream/_guides/rabbitmq.adoc:188
 #, no-wrap
 msgid "package org.acme.rabbitmq.producer;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:161
+#: upstream/_guides/rabbitmq.adoc:190
 #, no-wrap
 msgid "import java.util.UUID;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:167
+#: upstream/_guides/rabbitmq.adoc:196
 #, no-wrap
 msgid ""
 "import jakarta.ws.rs.GET;\n"
@@ -332,7 +370,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:171
+#: upstream/_guides/rabbitmq.adoc:200
 #, no-wrap
 msgid ""
 "import org.acme.rabbitmq.model.Quote;\n"
@@ -341,13 +379,13 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:173
+#: upstream/_guides/rabbitmq.adoc:202
 #, no-wrap
 msgid "import io.smallrye.mutiny.Multi;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:176
+#: upstream/_guides/rabbitmq.adoc:205
 #, no-wrap
 msgid ""
 "@Path(\"/quotes\")\n"
@@ -355,13 +393,13 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:178
+#: upstream/_guides/rabbitmq.adoc:207
 #, no-wrap
 msgid "    @Channel(\"quote-requests\") Emitter<String> quoteRequestEmitter; // <1>\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:192
+#: upstream/_guides/rabbitmq.adoc:221
 #, no-wrap
 msgid ""
 "    /**\n"
@@ -380,25 +418,25 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:194
+#: upstream/_guides/rabbitmq.adoc:223
 #, fuzzy
 msgid "Inject a Reactive Messaging `Emitter` to send messages to the `quote-requests` channel."
 msgstr "注入一个Reactive Messaging `Emitter` ，向 `quote-requests` 通道发送消息。"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:195
+#: upstream/_guides/rabbitmq.adoc:224
 #, fuzzy
 msgid "On a post request, generate a random UUID and send it to the RabbitMQ queue using the emitter."
 msgstr "在一个post请求中，生成一个随机UUID并使用发射器将其发送到RabbitMQ队列。"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:198
+#: upstream/_guides/rabbitmq.adoc:227
 #, fuzzy
 msgid "This channel is mapped to a RabbitMQ exchange using the configuration we will add to the `application.properties` file.  Open the `src/main/resource/application.properties` file and add:"
 msgstr "该通道使用我们将添加到 `application.properties` 文件中的配置被映射到 RabbitMQ 交换。打开 `src/main/resource/application.properties` 文件并添加。"
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:204
+#: upstream/_guides/rabbitmq.adoc:233
 #, no-wrap
 msgid ""
 "# Configure the outgoing RabbitMQ exchange `quote-requests`\n"
@@ -407,43 +445,43 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:208
+#: upstream/_guides/rabbitmq.adoc:237
 #, fuzzy
 msgid "All we need to specify is the `smallrye-rabbitmq` connector.  By default, reactive messaging maps the channel name `quote-requests` to the same RabbitMQ exchange name."
 msgstr "我们所需要指定的是 `smallrye-rabbitmq` 连接器。默认情况下，反应式消息传递将通道名称 `quote-requests` 映射到相同的 RabbitMQ 交换名称。"
 
 #. type: Title ==
-#: upstream/_guides/rabbitmq.adoc:209
+#: upstream/_guides/rabbitmq.adoc:238
 #, fuzzy, no-wrap
 msgid "Processing quote requests"
 msgstr "处理报价请求"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:213
+#: upstream/_guides/rabbitmq.adoc:242
 #, fuzzy
 msgid "Now let's consume the quote request and give out a price.  Inside the `processor` project, locate the `src/main/java/org/acme/rabbitmq/processor/QuoteProcessor.java` file and add the following:"
 msgstr "现在让我们来消费报价请求并给出一个价格。在 `processor` 项目中，找到 `src/main/java/org/acme/rabbitmq/processor/QuoteProcessor.java` 文件并添加以下内容。"
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:217
+#: upstream/_guides/rabbitmq.adoc:246
 #, no-wrap
 msgid "package org.acme.rabbitmq.processor;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:219
+#: upstream/_guides/rabbitmq.adoc:248
 #, no-wrap
 msgid "import java.util.Random;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:221
+#: upstream/_guides/rabbitmq.adoc:250
 #, no-wrap
 msgid "import jakarta.enterprise.context.ApplicationScoped;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:225
+#: upstream/_guides/rabbitmq.adoc:254
 #, no-wrap
 msgid ""
 "import org.acme.rabbitmq.model.Quote;\n"
@@ -452,13 +490,13 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:227
+#: upstream/_guides/rabbitmq.adoc:256
 #, no-wrap
 msgid "import io.smallrye.reactive.messaging.annotations.Blocking;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:234
+#: upstream/_guides/rabbitmq.adoc:263
 #, no-wrap
 msgid ""
 "/**\n"
@@ -470,13 +508,13 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:236
+#: upstream/_guides/rabbitmq.adoc:265
 #, no-wrap
 msgid "    private Random random = new Random();\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:246
+#: upstream/_guides/rabbitmq.adoc:275
 #, no-wrap
 msgid ""
 "    @Incoming(\"requests\")       // <1>\n"
@@ -491,37 +529,37 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:248
+#: upstream/_guides/rabbitmq.adoc:277
 #, fuzzy
 msgid "Indicates that the method consumes the items from the `requests` channel"
 msgstr "表示该方法从 `requests` 通道消耗项目。"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:249
+#: upstream/_guides/rabbitmq.adoc:278
 #, fuzzy
 msgid "Indicates that the objects returned by the method are sent to the `quotes` channel"
 msgstr "表示方法返回的对象被发送到 `quotes` channel。"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:250
+#: upstream/_guides/rabbitmq.adoc:279
 #, fuzzy
 msgid "Indicates that the processing is _blocking_ and cannot be run on the caller thread."
 msgstr "表示该处理是 _阻塞的_ ，不能在调用者线程上运行。"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:252
+#: upstream/_guides/rabbitmq.adoc:281
 #, fuzzy
 msgid "The `process` method is called for every RabbitMQ message from the `quote-requests` queue, and will send a `Quote` object to the `quotes` exchange."
 msgstr " `process` 方法为来自 `quote-requests` 队列的每条 RabbitMQ 消息被调用，并将发送一个 `Quote` 对象到 `quotes` 交换机。"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:255
+#: upstream/_guides/rabbitmq.adoc:284
 #, fuzzy
 msgid "As with the previous example we need to configure the connectors in the `application.properties` file.  Open the `src/main/resources/application.properties` file and add:"
 msgstr "与前面的例子一样，我们需要在 `application.properties` 文件中配置连接器。打开 `src/main/resources/application.properties` 文件并添加。"
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:262
+#: upstream/_guides/rabbitmq.adoc:291
 #, no-wrap
 msgid ""
 "# Configure the incoming RabbitMQ queue `quote-requests`\n"
@@ -531,7 +569,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:266
+#: upstream/_guides/rabbitmq.adoc:295
 #, no-wrap
 msgid ""
 "# Configure the outgoing RabbitMQ exchange `quotes`\n"
@@ -540,49 +578,49 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:270
+#: upstream/_guides/rabbitmq.adoc:299
 #, fuzzy
 msgid "Note that in this case we have one incoming and one outgoing connector configuration, each one distinctly named.  The configuration keys are structured as follows:"
 msgstr "请注意，在这种情况下，我们有一个传入和一个传出的连接器配置，每个都有明确的名称。配置键的结构如下。"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:272
+#: upstream/_guides/rabbitmq.adoc:301
 #, fuzzy
 msgid "`mp.messaging.[outgoing|incoming].{channel-name}.property=value`"
 msgstr " `mp.messaging.[outgoing|incoming].{channel-name}.property=value` "
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:274
+#: upstream/_guides/rabbitmq.adoc:303
 #, fuzzy
 msgid "The `channel-name` segment must match the value set in the `@Incoming` and `@Outgoing` annotation:"
 msgstr " `channel-name` 段必须与 `@Incoming` 和 `@Outgoing` 注释中设定的值相匹配。"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:276
+#: upstream/_guides/rabbitmq.adoc:305
 #, fuzzy
 msgid "`quote-requests` -> RabbitMQ queue from which we read the quote requests"
 msgstr " `quote-requests` → RabbitMQ队列，我们从中读取报价请求"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:277
+#: upstream/_guides/rabbitmq.adoc:306
 #, fuzzy
 msgid "`quotes` -> RabbitMQ exchange in which we write the quotes"
 msgstr " `quotes` → RabbitMQ 交易所，我们在其中写入报价"
 
 #. type: Title ==
-#: upstream/_guides/rabbitmq.adoc:278
+#: upstream/_guides/rabbitmq.adoc:307
 #, fuzzy, no-wrap
 msgid "Receiving quotes"
 msgstr "接收报价"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:282
+#: upstream/_guides/rabbitmq.adoc:311
 #, fuzzy
 msgid "Back to our `producer` project.  Let's modify the `QuotesResource` to consume quotes, bind it to an HTTP endpoint to send events to clients:"
 msgstr "回到我们的 `producer` 项目。让我们修改 `QuotesResource` ，以消耗报价，将其绑定到一个HTTP端点，向客户发送事件。"
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:287
+#: upstream/_guides/rabbitmq.adoc:316
 #, no-wrap
 msgid ""
 "import io.smallrye.mutiny.Multi;\n"
@@ -590,13 +628,13 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:289
+#: upstream/_guides/rabbitmq.adoc:318
 #, no-wrap
 msgid "@Channel(\"quotes\") Multi<Quote> quotes;     // <1>\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:298
+#: upstream/_guides/rabbitmq.adoc:327
 #, no-wrap
 msgid ""
 "/**\n"
@@ -610,31 +648,31 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:300
+#: upstream/_guides/rabbitmq.adoc:329
 #, fuzzy
 msgid "Injects the `quotes` channel using the `@Channel` qualifier"
 msgstr "使用 `@Channel` 修饰语注入 `quotes` 通道。"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:301
+#: upstream/_guides/rabbitmq.adoc:330
 #, fuzzy
 msgid "Indicates that the content is sent using `Server Sent Events`"
 msgstr "表示内容是用 `Server Sent Events` "
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:302
+#: upstream/_guides/rabbitmq.adoc:331
 #, fuzzy
 msgid "Returns the stream (_Reactive Stream_)"
 msgstr "返回流 _（Reactive Stream_ ）。"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:305
+#: upstream/_guides/rabbitmq.adoc:334
 #, fuzzy
 msgid "Again we need to configure the incoming `quotes` channel inside `producer` project.  Add the following inside `application.properties` file:"
 msgstr "我们再次需要在 `producer` 项目中配置传入的 `quotes` 通道。在 `application.properties` 文件中添加以下内容。"
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:310
+#: upstream/_guides/rabbitmq.adoc:339
 #, no-wrap
 msgid ""
 "# Configure the outgoing `quote-requests` queue\n"
@@ -642,7 +680,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:313
+#: upstream/_guides/rabbitmq.adoc:342
 #, no-wrap
 msgid ""
 "# Configure the incoming `quotes` queue\n"
@@ -650,31 +688,31 @@ msgid ""
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/rabbitmq.adoc:315
+#: upstream/_guides/rabbitmq.adoc:344
 #, fuzzy, no-wrap
 msgid "The HTML page"
 msgstr "HTML页面"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:318
+#: upstream/_guides/rabbitmq.adoc:347
 #, fuzzy
 msgid "Final touch, the HTML page reading the converted prices using SSE."
 msgstr "最后一点，HTML页面使用SSE读取转换后的价格。"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:320
+#: upstream/_guides/rabbitmq.adoc:349
 #, fuzzy
 msgid "Create inside the `producer` project `src/main/resources/META-INF/resources/quotes.html` file, with the following content:"
 msgstr "在 `producer` 项目内创建 `src/main/resources/META-INF/resources/quotes.html` 文件，内容如下。"
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:324
+#: upstream/_guides/rabbitmq.adoc:353
 #, no-wrap
 msgid "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <title>Quotes</title>\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:360
+#: upstream/_guides/rabbitmq.adoc:389
 #, no-wrap
 msgid ""
 "    <link rel=\"stylesheet\" type=\"text/css\"\n"
@@ -715,79 +753,79 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:364
+#: upstream/_guides/rabbitmq.adoc:393
 #, fuzzy
 msgid "Nothing spectacular here.  On each received quote, it updates the page."
 msgstr "这里没有什么了不起的。在每次收到的报价中，它都会更新页面。"
 
 #. type: Title ==
-#: upstream/_guides/rabbitmq.adoc:365
+#: upstream/_guides/rabbitmq.adoc:394
 #, fuzzy, no-wrap
 msgid "Get it running"
 msgstr "让它运行"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:368
+#: upstream/_guides/rabbitmq.adoc:397
 #, fuzzy
 msgid "You just need to run both applications using:"
 msgstr "你只需要使用运行这两个应用程序。"
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:372
+#: upstream/_guides/rabbitmq.adoc:401
 #, no-wrap
 msgid "> mvn -f rabbitmq-quickstart-producer quarkus:dev\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:375
+#: upstream/_guides/rabbitmq.adoc:404
 #, fuzzy
 msgid "And, in a separate terminal:"
 msgstr "而且，在一个单独的终端。"
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:379
+#: upstream/_guides/rabbitmq.adoc:408
 #, no-wrap
 msgid "> mvn -f rabbitmq-quickstart-processor quarkus:dev\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:383
+#: upstream/_guides/rabbitmq.adoc:412
 #, fuzzy
 msgid "Quarkus starts a RabbitMQ broker automatically, configures the application and shares the broker instance between different applications.  See xref:rabbitmq-dev-services.adoc[Dev Services for RabbitMQ] for more details."
 msgstr "Quarkus 自动启动 RabbitMQ 代理，配置应用程序并在不同的应用程序之间共享代理实例。有关详细信息，请参阅 link:rabbitmq-dev-services.html[RabbitMQ 的 Dev 服务] 。"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:386
+#: upstream/_guides/rabbitmq.adoc:415
 #, fuzzy
 msgid "Open `http://localhost:8080/quotes.html` in your browser and request some quotes by clicking the button."
 msgstr "打开 `<a href=\"http://localhost:8080/quotes.html\" class=\"bare\">http://localhost:8080/quotes.html</a>` 在你的浏览器中，通过点击按钮要求一些报价。"
 
 #. type: Title ==
-#: upstream/_guides/rabbitmq.adoc:387
+#: upstream/_guides/rabbitmq.adoc:416
 #, fuzzy, no-wrap
 msgid "Running in JVM or Native mode"
 msgstr "在JVM或本地模式下运行"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:391
+#: upstream/_guides/rabbitmq.adoc:420
 #, fuzzy
 msgid "When not running in dev or test mode, you will need to start your RabbitMQ broker.  You can follow the instructions from the https://hub.docker.com/_/rabbitmq[RabbitMQ Docker website] or create a `docker-compose.yaml` file with the following content:"
 msgstr "在不以开发或测试模式运行时，您将需要启动您的 RabbitMQ 代理。您可以按照 link:https://hub.docker.com/_/rabbitmq[RabbitMQ Docker 网站] 的说明进行操作，或者创建一个具有以下内容的 `docker-compose.yaml` 文件。"
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:395
+#: upstream/_guides/rabbitmq.adoc:424
 #, no-wrap
 msgid "version: '2'\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:397
+#: upstream/_guides/rabbitmq.adoc:426
 #, no-wrap
 msgid "services:\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:404
+#: upstream/_guides/rabbitmq.adoc:433
 #, no-wrap
 msgid ""
 "  rabbit:\n"
@@ -799,7 +837,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:417
+#: upstream/_guides/rabbitmq.adoc:446
 #, no-wrap
 msgid ""
 "  producer:\n"
@@ -817,7 +855,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:428
+#: upstream/_guides/rabbitmq.adoc:457
 #, no-wrap
 msgid ""
 "  processor:\n"
@@ -833,7 +871,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:432
+#: upstream/_guides/rabbitmq.adoc:461
 #, no-wrap
 msgid ""
 "networks:\n"
@@ -842,19 +880,19 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:436
+#: upstream/_guides/rabbitmq.adoc:465
 #, fuzzy
 msgid "Note how the RabbitMQ broker location is configured.  The `rabbitmq-host` and `rabbitmq-port` (`AMQP_HOST` and `AMQP_PORT` environment variables) properties configure location."
 msgstr "注意 RabbitMQ 代理的位置是如何配置的。 `rabbitmq-host` 和 `rabbitmq-port` ( `AMQP_HOST` 和 `AMQP_PORT` 环境变量) 属性配置了位置。"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:439
+#: upstream/_guides/rabbitmq.adoc:468
 #, fuzzy
 msgid "First, make sure you stopped the applications, and build both applications in JVM mode with:"
 msgstr "首先，确保你停止了应用程序，并在JVM模式下构建两个应用程序。"
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:444
+#: upstream/_guides/rabbitmq.adoc:473
 #, no-wrap
 msgid ""
 "> mvn -f rabbitmq-quickstart-producer clean package\n"
@@ -862,18 +900,18 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:448
+#: upstream/_guides/rabbitmq.adoc:477
 #, fuzzy
 msgid "Once packaged, run `docker compose up --build`.  The UI is exposed on http://localhost:8080/quotes.html"
 msgstr "一旦打包完毕，运行 `docker compose up --build` 。UI暴露在 http://localhost:8080/quotes.html "
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:450
+#: upstream/_guides/rabbitmq.adoc:479
 msgid "To run your applications as native, first we need to build the native executables:"
 msgstr "要以本地方式运行你的应用程序，我们首先需要构建本地可执行文件："
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:455
+#: upstream/_guides/rabbitmq.adoc:484
 #, no-wrap
 msgid ""
 "> mvn -f rabbitmq-quickstart-producer package -Dnative  -Dquarkus.native.container-build=true\n"
@@ -881,12 +919,12 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:459
+#: upstream/_guides/rabbitmq.adoc:488
 msgid "The `-Dquarkus.native.container-build=true` instructs Quarkus to build Linux 64bits native executables, who can run inside containers.  Then, run the system using:"
 msgstr "`-Dquarkus.native.container-build=true` 指示Quarkus构建可以在容器中运行的64位Linux本地可执行文件。然后，使用以下命令运行系统："
 
 #. type: delimited block -
-#: upstream/_guides/rabbitmq.adoc:464
+#: upstream/_guides/rabbitmq.adoc:493
 #, no-wrap
 msgid ""
 "> export QUARKUS_MODE=native\n"
@@ -894,22 +932,22 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:467
+#: upstream/_guides/rabbitmq.adoc:496
 msgid "As before, the UI is exposed on http://localhost:8080/quotes.html"
 msgstr "与之前一样，UI也是在 http://localhost:8080/quotes.html"
 
 #. type: Title ==
-#: upstream/_guides/rabbitmq.adoc:468
+#: upstream/_guides/rabbitmq.adoc:497
 #, no-wrap
 msgid "Going further"
 msgstr "进一步探索"
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:472
+#: upstream/_guides/rabbitmq.adoc:501
 msgid "This guide has shown how you can interact with RabbitMQ using Quarkus.  It utilizes https://smallrye.io/smallrye-reactive-messaging[SmallRye Reactive Messaging] to build data streaming applications."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/rabbitmq.adoc:474
+#: upstream/_guides/rabbitmq.adoc:503
 msgid "If you did the Kafka, you have realized that it's the same code.  The only difference is the connector configuration and the JSON mapping."
 msgstr ""
