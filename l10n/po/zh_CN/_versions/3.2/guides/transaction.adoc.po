@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2023-08-28 16:20+0000\n"
+"POT-Creation-Date: 2023-11-08 17:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,39 +21,50 @@ msgstr ""
 #. https://github.com/quarkusio/quarkus/tree/main/docs/src/main/asciidoc
 #. type: Title =
 #: upstream/_versions/3.2/guides/transaction.adoc:6
-#, no-wrap
-msgid "Using Transactions in Quarkus"
+#, fuzzy, no-wrap
+#| msgid "Using Transactions in Quarkus"
+msgid "Using transactions in Quarkus"
 msgstr "在Quarkus中使用事务"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:15
-msgid "Quarkus comes with a Transaction Manager and uses it to coordinate and expose transactions to your applications.  Each extension dealing with persistence will integrate with it for you.  And you will explicitly interact with transactions via CDI.  This guide will walk you through all that."
-msgstr "Quarkus自带一个事务管理器，并使用它来协调和暴露事务给你的应用程序。每个处理持久性的扩展都会与它集成。而且你将通过CDI明确地与事务进行交互。本指南将指导你完成这一切。"
+#: upstream/_versions/3.2/guides/transaction.adoc:14
+msgid "The `quarkus-narayana-jta` extension provides a Transaction Manager that coordinates and expose transactions to your applications as described in the link: https://jakarta.ee/specifications/transactions/[Jakarta Transactions] specification, formerly known as Java Transaction API (JTA)."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/3.2/guides/transaction.adoc:16
+msgid "When discussing Quarkus transactions, this guide refers to Jakarta Transactions transaction style and uses only the term _transaction_ to address them."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/3.2/guides/transaction.adoc:19
+msgid "Also, Quarkus does not support distributed transactions.  This means that models that propagate transaction context, such as link:https://download.oracle.com/otndocs/jcp/7309-jts-1.0-spec-oth-JSpec/[Java Transaction Service] (JTS), REST-AT, WS-Atomic Transaction, and others, are not supported by the `narayana-jta` extension."
+msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/3.2/guides/transaction.adoc:16
+#: upstream/_versions/3.2/guides/transaction.adoc:20
 #, no-wrap
 msgid "Setting it up"
 msgstr "设置它"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:20
+#: upstream/_versions/3.2/guides/transaction.adoc:24
 msgid "You don't need to worry about setting it up most of the time as extensions needing it will simply add it as a dependency.  Hibernate ORM for example will include the transaction manager and set it up properly."
 msgstr "在大多数情况下，你不需要担心设置它，因为需要它的扩展会简单地把它作为一个依赖项加入。例如，Hibernate ORM将包括事务管理器并对其进行正确设置。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:23
+#: upstream/_versions/3.2/guides/transaction.adoc:27
 msgid "You might need to add it as a dependency explicitly if you are using transactions directly without Hibernate ORM for example.  Add the following to your build file:"
 msgstr "如果你不使用Hibernate ORM而直接使用事务，你可能需要明确地将其作为一个依赖项加入，例如。在你的构建文件中添加以下内容："
 
 #. type: Block title
-#: upstream/_versions/3.2/guides/transaction.adoc:25
+#: upstream/_versions/3.2/guides/transaction.adoc:29
 #, no-wrap
 msgid "pom.xml"
 msgstr "pom.xml"
 
 #. type: delimited block -
-#: upstream/_versions/3.2/guides/transaction.adoc:31
+#: upstream/_versions/3.2/guides/transaction.adoc:35
 #, no-wrap
 msgid ""
 "<dependency>\n"
@@ -63,43 +74,43 @@ msgid ""
 msgstr ""
 
 #. type: Block title
-#: upstream/_versions/3.2/guides/transaction.adoc:34
+#: upstream/_versions/3.2/guides/transaction.adoc:38
 #, no-wrap
 msgid "build.gradle"
 msgstr "build.gradle"
 
 #. type: delimited block -
-#: upstream/_versions/3.2/guides/transaction.adoc:37
+#: upstream/_versions/3.2/guides/transaction.adoc:41
 #, no-wrap
 msgid "implementation(\"io.quarkus:quarkus-narayana-jta\")\n"
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/3.2/guides/transaction.adoc:39
+#: upstream/_versions/3.2/guides/transaction.adoc:43
 #, no-wrap
 msgid "Starting and stopping transactions: defining your boundaries"
 msgstr "开始和停止事务：确定你的事务边界"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:43
+#: upstream/_versions/3.2/guides/transaction.adoc:47
 msgid "You can define your transaction boundaries either declaratively with `@Transactional` or programmatically with `QuarkusTransaction`. You can also use the JTA `UserTransaction` API directly, however this is less user-friendly than `QuarkusTransaction`."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/3.2/guides/transaction.adoc:44
+#: upstream/_versions/3.2/guides/transaction.adoc:48
 #, no-wrap
 msgid "Declarative approach"
 msgstr "声明式方法"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:47
+#: upstream/_versions/3.2/guides/transaction.adoc:51
 msgid "The easiest way to define your transaction boundaries is to use the `@Transactional` annotation on your entry method (`jakarta.transaction.Transactional`)."
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/3.2/guides/transaction.adoc:52
-#: upstream/_versions/3.2/guides/transaction.adoc:100
-#: upstream/_versions/3.2/guides/transaction.adoc:259
+#: upstream/_versions/3.2/guides/transaction.adoc:56
+#: upstream/_versions/3.2/guides/transaction.adoc:104
+#: upstream/_versions/3.2/guides/transaction.adoc:263
 #, no-wrap
 msgid ""
 "@ApplicationScoped\n"
@@ -107,7 +118,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/3.2/guides/transaction.adoc:55
+#: upstream/_versions/3.2/guides/transaction.adoc:59
 #, no-wrap
 msgid ""
 "    @Inject ChildDAO childDAO;\n"
@@ -115,7 +126,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/3.2/guides/transaction.adoc:68
+#: upstream/_versions/3.2/guides/transaction.adoc:72
 #, no-wrap
 msgid ""
 "    @Transactional // <1>\n"
@@ -133,72 +144,72 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:71
+#: upstream/_versions/3.2/guides/transaction.adoc:75
 msgid "This annotation defines your transaction boundaries and will wrap this call within a transaction."
 msgstr "这个注解定义了你的事务边界，并将把这个调用包含在一个事务中。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:72
+#: upstream/_versions/3.2/guides/transaction.adoc:76
 msgid "A `RuntimeException` crossing the transaction boundaries will roll back the transaction."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:75
+#: upstream/_versions/3.2/guides/transaction.adoc:79
 msgid "`@Transactional` can be used to control transaction boundaries on any CDI bean at the method level or at the class level to ensure every method is transactional.  That includes REST endpoints."
 msgstr "`@Transactional` 可以用来在方法层或类层控制任何CDI bean的事务边界，以确保每个方法都是事务性的。这包括REST端点。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:77
+#: upstream/_versions/3.2/guides/transaction.adoc:81
 msgid "You can control whether and how the transaction is started with parameters on `@Transactional`:"
 msgstr "你可以通过 `@Transactional` 上的参数来控制是否以及如何启动事务："
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:79
+#: upstream/_versions/3.2/guides/transaction.adoc:83
 msgid "`@Transactional(REQUIRED)` (default): starts a transaction if none was started, stays with the existing one otherwise."
 msgstr "`@Transactional(REQUIRED)` (默认）：如果当前没有事务，则启动一个事务，否则保持现有的事务。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:80
+#: upstream/_versions/3.2/guides/transaction.adoc:84
 msgid "`@Transactional(REQUIRES_NEW)`: starts a transaction if none was started ; if an existing one was started, suspends it and starts a new one for the boundary of that method."
 msgstr "`@Transactional(REQUIRES_NEW)` ：如果当前没有事务，则启动一个事务；如果已经启动了一个事务，则暂停该事务，并从该方法的边界开始重新启动一个新事务。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:81
+#: upstream/_versions/3.2/guides/transaction.adoc:85
 msgid "`@Transactional(MANDATORY)`: fails if no transaction was started ; works within the existing transaction otherwise."
 msgstr "`@Transactional(MANDATORY)` ：如果没有启动任何事务，则失败；否则在现有事务中工作。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:82
+#: upstream/_versions/3.2/guides/transaction.adoc:86
 msgid "`@Transactional(SUPPORTS)`: if a transaction was started, joins it ; otherwise works with no transaction."
 msgstr "`@Transactional(SUPPORTS)` :如果一个事务已经开始，则加入它；否则在没有事务的情况下工作。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:83
+#: upstream/_versions/3.2/guides/transaction.adoc:87
 msgid "`@Transactional(NOT_SUPPORTED)`: if a transaction was started, suspends it and works with no transaction for the boundary of the method ; otherwise works with no transaction."
 msgstr "`@Transactional(NOT_SUPPORTED)` 暂停事务：如果一个事务已经开始，则暂停事务，并在方法的边界内不使用事务；否则不使用事务。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:84
+#: upstream/_versions/3.2/guides/transaction.adoc:88
 msgid "`@Transactional(NEVER)`: if a transaction was started, raises an exception ; otherwise works with no transaction."
 msgstr "`@Transactional(NEVER)` :如果一个事务被启动，引发一个异常；否则在没有事务的情况下工作。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:88
+#: upstream/_versions/3.2/guides/transaction.adoc:92
 msgid "`REQUIRED` or `NOT_SUPPORTED` are probably the most useful ones.  This is how you decide whether a method is to be running within or outside a transaction.  Make sure to check the JavaDoc for the precise semantic."
 msgstr "`REQUIRED` 或 `NOT_SUPPORTED` 可能是最有用的。它们决定一个方法是在事务内还是事务外运行。请确保查看JavaDoc以了解准确的语义。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:92
+#: upstream/_versions/3.2/guides/transaction.adoc:96
 msgid "The transaction context is propagated to all calls nested in the `@Transactional` method as you would expect (in this example `childDAO.addToGiftList()` and `santaDAO.addToSantaTodoList()`).  The transaction will commit unless a runtime exception crosses the method boundary.  You can override whether an exception forces the rollback or not by using `@Transactional(dontRollbackOn=SomeException.class)` (or `rollbackOn`)."
 msgstr "正如你所期望的那样，事务上下文被传播并嵌套在 `@Transactional` 方法中的所有调用（在这个例子中 `childDAO.addToGiftList()` 和 `santaDAO.addToSantaTodoList()` ）。除非有运行时异常穿越方法边界，否则事务将会提交。你可以通过使用 `@Transactional(dontRollbackOn=SomeException.class)` （或 `rollbackOn` ）来覆盖异常是否强制回滚。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:95
+#: upstream/_versions/3.2/guides/transaction.adoc:99
 msgid "You can also programmatically ask for a transaction to be marked for rollback.  Inject a `TransactionManager` for this."
 msgstr "你也可以使用编程方式要求一个事务被标记为回滚。为此需要注入 `TransactionManager` 。"
 
 #. type: delimited block -
-#: upstream/_versions/3.2/guides/transaction.adoc:104
+#: upstream/_versions/3.2/guides/transaction.adoc:108
 #, no-wrap
 msgid ""
 "    @Inject TransactionManager tm; // <1>\n"
@@ -207,7 +218,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/3.2/guides/transaction.adoc:117
+#: upstream/_versions/3.2/guides/transaction.adoc:121
 #, no-wrap
 msgid ""
 "    @Transactional\n"
@@ -225,95 +236,99 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:120
+#: upstream/_versions/3.2/guides/transaction.adoc:124
 msgid "Inject the `TransactionManager` to be able to activate `setRollbackOnly` semantic."
 msgstr "注入 `TransactionManager` ，能够激活 `setRollbackOnly` 语义。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:121
+#: upstream/_versions/3.2/guides/transaction.adoc:125
 msgid "Programmatically decide to set the transaction for rollback."
 msgstr "以编程方式决定将该事务设置为回滚。"
 
 #. type: Title ===
-#: upstream/_versions/3.2/guides/transaction.adoc:123
-#, no-wrap
-msgid "Transaction Configuration"
+#: upstream/_versions/3.2/guides/transaction.adoc:127
+#, fuzzy, no-wrap
+#| msgid "Transaction Configuration"
+msgid "Transaction configuration"
 msgstr "事务配置"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:126
+#: upstream/_versions/3.2/guides/transaction.adoc:130
 msgid "Advanced configuration of the transaction is possible with the use of the `@TransactionConfiguration` annotation that is set in addition to the standard `@Transactional` annotation on your entry method or at the class level."
 msgstr "除了在你的入口方法上或在类的层面上设置标准的 `@Transactional` 注解之外，事务的高级配置还可以通过使用 `@TransactionConfiguration` 注解来实现。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:128
+#: upstream/_versions/3.2/guides/transaction.adoc:132
 msgid "The `@TransactionConfiguration` annotation allows to set a timeout property, in seconds, that applies to transactions created within the annotated method."
 msgstr "`@TransactionConfiguration` 注解允许设置一个超时属性，以秒为单位，适用于在注解方法中创建的事务。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:131
+#: upstream/_versions/3.2/guides/transaction.adoc:135
 msgid "This annotation may only be placed on the top level method delineating the transaction.  Annotated nested methods once a transaction has started will throw an exception."
 msgstr "这个注释只能放在划定事务的顶层方法上。一旦事务开始，被注解的嵌套方法将抛出一个异常。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:134
+#: upstream/_versions/3.2/guides/transaction.adoc:138
 msgid "If defined on a class, it is equivalent to defining it on all the methods of the class marked with `@Transactional`.  The configuration defined on a method takes precedence over the configuration defined on a class."
 msgstr "如果在一个类上定义，就相当于在该类所有标有 `@Transactional` 的方法上定义了它。在方法上定义的配置优先于在类上定义的配置。"
 
 #. type: Title ===
-#: upstream/_versions/3.2/guides/transaction.adoc:135
+#: upstream/_versions/3.2/guides/transaction.adoc:139
 #, no-wrap
 msgid "Reactive extensions"
 msgstr "响应性扩展"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:138
+#: upstream/_versions/3.2/guides/transaction.adoc:142
 msgid "If your `@Transactional`-annotated method returns a reactive value, such as:"
 msgstr "如果你的 `@Transactional` -注释的方法返回一个响应性的值，例如："
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:140
+#: upstream/_versions/3.2/guides/transaction.adoc:144
 msgid "`CompletionStage` (from the JDK)"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:141
+#: upstream/_versions/3.2/guides/transaction.adoc:145
 msgid "`Publisher` (from Reactive-Streams)"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:142
-msgid "Any type which can be converted to one of the two previous types using Reactive Type Converters"
+#: upstream/_versions/3.2/guides/transaction.adoc:146
+#, fuzzy
+#| msgid "Any type which can be converted to one of the two previous types using Reactive Type Converters"
+msgid "Any type that can be converted to one of the two previous types using Reactive Type Converters"
 msgstr "任何可以使用响应式类型转换器转换为前两种类型之一的类型"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:147
+#: upstream/_versions/3.2/guides/transaction.adoc:151
 msgid "then the behaviour is a bit different, because the transaction will not be terminated until the returned reactive value is terminated. In effect, the returned reactive value will be listened to and if it terminates exceptionally the transaction will be marked for rollback, and will be committed or rolled-back only at termination of the reactive value."
 msgstr "那么行为就有点不同了，因为在返回的响应式值终止之前，事务不会被终止。实际上，返回的响应式值将被监听，如果它意外终止，事务将被标记为回滚，并且只有在响应式值终止时才会提交或回滚。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:150
+#: upstream/_versions/3.2/guides/transaction.adoc:154
 msgid "This allows your reactive methods to keep on working on the transaction asynchronously until their work is really done, and not just until the reactive method returns."
 msgstr "这允许你的响应式方法以异步方式继续在事务上工作，直到他们的工作真正完成，而不仅仅是当响应式方法返回时。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:153
+#: upstream/_versions/3.2/guides/transaction.adoc:157
 msgid "If you need to propagate your transaction context across your reactive pipeline, please see the xref:context-propagation.adoc[Context Propagation guide]."
 msgstr "如果你需要在你的响应式管道中传播你的事务上下文，请看 link:context-propagation.html[上下文传播指南] 。"
 
 #. type: Title ===
-#: upstream/_versions/3.2/guides/transaction.adoc:154
-#, no-wrap
-msgid "Programmatic Approach"
+#: upstream/_versions/3.2/guides/transaction.adoc:158
+#, fuzzy, no-wrap
+#| msgid "Programmatic Approach"
+msgid "Programmatic approach"
 msgstr "编程实现方法"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:159
+#: upstream/_versions/3.2/guides/transaction.adoc:163
 msgid "You can use static methods on `QuarkusTransaction` to define transaction boundaries. This provides two different options, a functional approach that allows you to run a lambda within the scope of a transaction, or by using explicit `begin`, `commit` and `rollback` methods."
 msgstr "你可以使用 `QuarkusTransaction` 上的静态方法来定义事务边界。这提供了两种不同的选择，一种是允许你在事务范围内运行lambda的函数式方法，或者通过使用显式的 `begin` 、 `commit` 和 `rollback` 方法。"
 
 #. type: delimited block -
-#: upstream/_versions/3.2/guides/transaction.adoc:164
+#: upstream/_versions/3.2/guides/transaction.adoc:168
 #, no-wrap
 msgid ""
 "import io.quarkus.narayana.jta.QuarkusTransaction;\n"
@@ -321,13 +336,13 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/3.2/guides/transaction.adoc:166
+#: upstream/_versions/3.2/guides/transaction.adoc:170
 #, no-wrap
 msgid "public class TransactionExample {\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/3.2/guides/transaction.adoc:171
+#: upstream/_versions/3.2/guides/transaction.adoc:175
 #, no-wrap
 msgid ""
 "    public void beginExample() {\n"
@@ -337,7 +352,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/3.2/guides/transaction.adoc:177
+#: upstream/_versions/3.2/guides/transaction.adoc:181
 #, no-wrap
 msgid ""
 "        QuarkusTransaction.begin(QuarkusTransaction.beginOptions()\n"
@@ -348,7 +363,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/3.2/guides/transaction.adoc:185
+#: upstream/_versions/3.2/guides/transaction.adoc:189
 #, no-wrap
 msgid ""
 "    public void runnerExample() {\n"
@@ -361,7 +376,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/3.2/guides/transaction.adoc:200
+#: upstream/_versions/3.2/guides/transaction.adoc:204
 #, no-wrap
 msgid ""
 "        int result = QuarkusTransaction.requiringNew()\n"
@@ -381,82 +396,82 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:203
+#: upstream/_versions/3.2/guides/transaction.adoc:207
 msgid "The above example shows a few different ways the API can be used."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:209
+#: upstream/_versions/3.2/guides/transaction.adoc:213
 msgid "The first method simply calls begin, does some work and commits it.  This created transaction is tied to the CDI request scope, so if it is still active when the request scope is destroyed then it will be automatically rolled back. This removes the need to explicitly catch exceptions and call `rollback`, and acts as a safety net against inadvertent transaction leaks, however it does mean that this can only be used when the request scope is active. The second example in the method calls begin with a timeout option, and then rolls back the transaction."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:215
+#: upstream/_versions/3.2/guides/transaction.adoc:219
 msgid "The second method shows the use of lambda scoped transactions with `QuarkusTransaction.runner(...)`; the first example just runs a `Runnable` within a new transaction, the second does the same but joining the existing transaction (if any), and the third calls a `Callable` with some specific options.  In particular the `exceptionHandler` method can be used to control if the transaction is rolled back or not on exception."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:217
+#: upstream/_versions/3.2/guides/transaction.adoc:221
 msgid "The following semantics are supported:"
 msgstr "支持以下语义："
 
 #. type: Labeled list
-#: upstream/_versions/3.2/guides/transaction.adoc:219
+#: upstream/_versions/3.2/guides/transaction.adoc:223
 #, no-wrap
 msgid "`QuarkusTransaction.disallowingExisting()`/`DISALLOW_EXISTING`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:223
+#: upstream/_versions/3.2/guides/transaction.adoc:227
 msgid "If a transaction is already associated with the current thread a `QuarkusTransactionException` will be thrown, otherwise a new transaction is started, and follows all the normal lifecycle rules."
 msgstr "如果一个事务已经与当前线程相关联，将抛出一个 `QuarkusTransactionException` ，否则将启动一个新的事务，并遵循所有正常的生命周期规则。"
 
 #. type: Labeled list
-#: upstream/_versions/3.2/guides/transaction.adoc:224
+#: upstream/_versions/3.2/guides/transaction.adoc:228
 #, no-wrap
 msgid "`QuarkusTransaction.joiningExisting()`/`JOIN_EXISTING`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:233
+#: upstream/_versions/3.2/guides/transaction.adoc:237
 msgid "If no transaction is active then a new transaction will be started, and committed when the method ends.  If an exception is thrown the exception handler registered by `#exceptionHandler(Function)` will be called to decide if the TX should be committed or rolled back.  If an existing transaction is active then the method is run in the context of the existing transaction. If an exception is thrown the exception handler will be called, however a result of `ExceptionResult#ROLLBACK` will result in the TX marked as rollback only, while a result of `ExceptionResult#COMMIT` will result in no action being taken."
 msgstr "如果没有活动的事务，那么一个新的事务将被启动，并在方法结束时提交。如果一个异常被抛出，由 `#exceptionHandler(Function)` 注册的异常处理程序将被调用，以决定TX是否应该被提交或回滚。如果一个现有的事务处于活动状态，那么该方法将在现有事务的背景下运行。如果抛出一个异常，将调用异常处理程序，但是 `ExceptionResult#ROLLBACK` 的结果将导致TX被标记为回滚，而 `ExceptionResult#COMMIT` 的结果将导致不采取任何行动。"
 
 #. type: Labeled list
-#: upstream/_versions/3.2/guides/transaction.adoc:234
+#: upstream/_versions/3.2/guides/transaction.adoc:238
 #, no-wrap
 msgid "`QuarkusTransaction.requiringNew()`/`REQUIRE_NEW`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:240
+#: upstream/_versions/3.2/guides/transaction.adoc:244
 msgid "If an existing transaction is already associated with the current thread then the transaction is suspended, then a new transaction is started which follows all the normal lifecycle rules, and when it's complete the original transaction is resumed.  Otherwise, a new transaction is started, and follows all the normal lifecycle rules."
 msgstr ""
 
 #. type: Labeled list
-#: upstream/_versions/3.2/guides/transaction.adoc:241
+#: upstream/_versions/3.2/guides/transaction.adoc:245
 #, no-wrap
 msgid "`QuarkusTransaction.suspendingExisting()`/`SUSPEND_EXISTING`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:248
+#: upstream/_versions/3.2/guides/transaction.adoc:252
 msgid "If no transaction is active then these semantics are basically a no-op.  If a transaction is active then it is suspended, and resumed after the task is run.  The exception handler will never be consulted when these semantics are in use, specifying both an exception handler and these semantics are considered an error.  These semantics allows for code to easily be run outside the scope of a transaction."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/3.2/guides/transaction.adoc:251
+#: upstream/_versions/3.2/guides/transaction.adoc:255
 #, no-wrap
 msgid "Legacy API approach"
 msgstr "传统的API方法"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:254
+#: upstream/_versions/3.2/guides/transaction.adoc:258
 msgid "The less easy way is to inject a `UserTransaction` and use the various transaction demarcation methods."
 msgstr "不太容易的方法是注入一个 `UserTransaction` ，并使用各种事务处理方法。"
 
 #. type: delimited block -
-#: upstream/_versions/3.2/guides/transaction.adoc:263
+#: upstream/_versions/3.2/guides/transaction.adoc:267
 #, no-wrap
 msgid ""
 "    @Inject ChildDAO childDAO;\n"
@@ -465,7 +480,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/3.2/guides/transaction.adoc:278
+#: upstream/_versions/3.2/guides/transaction.adoc:282
 #, no-wrap
 msgid ""
 "    public void getAGiftFromSanta(Child child, String giftDescription) {\n"
@@ -485,70 +500,70 @@ msgid ""
 msgstr ""
 
 #. type: delimited block =
-#: upstream/_versions/3.2/guides/transaction.adoc:283
+#: upstream/_versions/3.2/guides/transaction.adoc:287
 msgid "You cannot use `UserTransaction` in a method having a transaction started by a `@Transactional` call."
 msgstr "你不能在一个由 `@Transactional` 控制事务启动的方法中使用 `UserTransaction` 。"
 
 #. type: Title ==
-#: upstream/_versions/3.2/guides/transaction.adoc:285
+#: upstream/_versions/3.2/guides/transaction.adoc:289
 #, no-wrap
 msgid "Configuring the transaction timeout"
 msgstr "配置事务超时"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:287
+#: upstream/_versions/3.2/guides/transaction.adoc:291
 msgid "You can configure the default transaction timeout, the timeout that applies to all transactions managed by the transaction manager, via the property `quarkus.transaction-manager.default-transaction-timeout`, specified as a duration."
 msgstr "你可以通过属性 `quarkus.transaction-manager.default-transaction-timeout` 来配置默认的事务超时，即适用于由事务管理器管理的所有事务的超时，指定为一个持续时间。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:291
+#: upstream/_versions/3.2/guides/transaction.adoc:295
 msgid "The default value is 60 seconds."
 msgstr "默认值是60秒。"
 
 #. type: Title ==
-#: upstream/_versions/3.2/guides/transaction.adoc:292
+#: upstream/_versions/3.2/guides/transaction.adoc:296
 #, no-wrap
 msgid "Configuring transaction node name identifier"
 msgstr "配置事务节点名称标识符"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:296
+#: upstream/_versions/3.2/guides/transaction.adoc:300
 msgid "Narayana, as the underlying transaction manager, has a concept of a unique node identifier.  This is important if you consider using XA transactions that involve multiple resources."
 msgstr "Narayana作为底层事务管理器，有一个唯一节点标识符的概念。如果你考虑使用涉及多个资源的XA事务，这就很重要了。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:302
+#: upstream/_versions/3.2/guides/transaction.adoc:306
 msgid "The node name identifier plays a crucial part in the identification of a transaction.  The node name identifier is forged into the transaction id when the transaction is created.  Based on the node name identifier, the transaction manager is capable of recognizing the XA transaction counterparts created in database or JMS broker. The identifier makes possible for the transaction manager to roll back the transaction counterparts during recovery."
 msgstr "节点名称标识符在交易的识别中起着至关重要的作用。当交易被创建时，节点名称标识符被做为成交易ID的一部分。基于节点名称标识符，事务管理器能够识别在数据库或JMS代理中创建的XA事务对应物。该标识符使事务管理器有可能在恢复期间回滚事务对应方。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:305
+#: upstream/_versions/3.2/guides/transaction.adoc:309
 msgid "The node name identifier needs to be unique per transaction manager deployment.  And the node identifier needs to be stable over the transaction manager restarts."
 msgstr "节点名称标识符需要在每个事务管理器部署中是唯一的。而且节点标识符需要在事务管理器重新启动时保持不变。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:307
+#: upstream/_versions/3.2/guides/transaction.adoc:311
 msgid "The node name identifier may be configured via the property `quarkus.transaction-manager.node-name`."
 msgstr "节点名称标识符可以通过属性 `quarkus.transaction-manager.node-name` 进行配置。"
 
 #. type: Title ==
-#: upstream/_versions/3.2/guides/transaction.adoc:309
+#: upstream/_versions/3.2/guides/transaction.adoc:313
 #, no-wrap
 msgid "Using `@TransactionScoped` to bind CDI beans to the transaction lifecycle"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:313
+#: upstream/_versions/3.2/guides/transaction.adoc:317
 msgid "You can define beans that live for as long as a transaction, and through CDI lifecycle events perform actions when a transaction starts and ends."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:315
+#: upstream/_versions/3.2/guides/transaction.adoc:319
 msgid "Just assign the transaction xref:cdi.adoc#bean-scope[scope] to such beans using the `@TransactionScoped` annotation:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/3.2/guides/transaction.adoc:320
+#: upstream/_versions/3.2/guides/transaction.adoc:324
 #, no-wrap
 msgid ""
 "@TransactionScoped\n"
@@ -556,7 +571,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/3.2/guides/transaction.adoc:324
+#: upstream/_versions/3.2/guides/transaction.adoc:328
 #, no-wrap
 msgid ""
 "    // The bean's state is bound to a specific transaction,\n"
@@ -565,7 +580,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/3.2/guides/transaction.adoc:329
+#: upstream/_versions/3.2/guides/transaction.adoc:333
 #, no-wrap
 msgid ""
 "    @PostConstruct\n"
@@ -575,7 +590,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/3.2/guides/transaction.adoc:335
+#: upstream/_versions/3.2/guides/transaction.adoc:339
 #, no-wrap
 msgid ""
 "    @PreDestroy\n"
@@ -586,12 +601,12 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:340
+#: upstream/_versions/3.2/guides/transaction.adoc:344
 msgid "Alternatively, if you don't necessarily need to hold state during the transaction, and just want to react to transaction start/end events, you can simply declare event listeners in a differently scoped bean:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/3.2/guides/transaction.adoc:345
+#: upstream/_versions/3.2/guides/transaction.adoc:349
 #, no-wrap
 msgid ""
 "@ApplicationScoped\n"
@@ -599,7 +614,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/3.2/guides/transaction.adoc:349
+#: upstream/_versions/3.2/guides/transaction.adoc:353
 #, no-wrap
 msgid ""
 "    void onBeginTransaction(@Observes @Initialized(TransactionScoped.class) Object event) {\n"
@@ -608,7 +623,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/3.2/guides/transaction.adoc:353
+#: upstream/_versions/3.2/guides/transaction.adoc:357
 #, no-wrap
 msgid ""
 "    void onBeforeEndTransaction(@Observes @BeforeDestroyed(TransactionScoped.class) Object event) {\n"
@@ -617,7 +632,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/3.2/guides/transaction.adoc:358
+#: upstream/_versions/3.2/guides/transaction.adoc:362
 #, no-wrap
 msgid ""
 "    void onAfterEndTransaction(@Observes @Destroyed(TransactionScoped.class) Object event) {\n"
@@ -627,134 +642,173 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:361
+#: upstream/_versions/3.2/guides/transaction.adoc:365
 msgid "The `event` object represents the transaction ID, and defines `toString()`/`equals()`/`hashCode()` accordingly."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:364
+#: upstream/_versions/3.2/guides/transaction.adoc:368
 msgid "In listener methods, you can access more information about the transaction in progress by accessing the `TransactionManager`, which is a CDI bean and can be ``@Inject``ed."
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/3.2/guides/transaction.adoc:366
+#: upstream/_versions/3.2/guides/transaction.adoc:370
 #, no-wrap
 msgid "Configure storing of Quarkus transaction logs in a database"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:369
-msgid "In cloud environments where persistent storage is not available, such as when application containers are unable to use persistent volumes, you can configure the transaction management to store transaction logs in a database by using a JDBC datasource."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:371
-msgid "While there are several benefits to using a database to store transaction logs, you might notice a reduction in performance compared with using the file system to store the logs."
-msgstr ""
-
-#. type: Plain text
 #: upstream/_versions/3.2/guides/transaction.adoc:373
-msgid "Quarkus allows the following JDBC-specific configuration of the object store included in `quarkus.transacion-manager.object-store.<property>` properties, where <property> can be:"
+msgid "In cloud environments where persistent storage is not available, such as when application containers are unable to use persistent volumes, you can configure the transaction management to store transaction logs in a database by using a Java Database Connectivity (JDBC) datasource."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:376
-msgid "`type` (_string_): Configure this property to `jdbc` to enable usage of a Quarkus JDBC datasource for transaction logging.  The default value is `file-system`."
+#: upstream/_versions/3.2/guides/transaction.adoc:377
+msgid "However, in cloud-native apps, using a database to store transaction logs has additional requirements.  The `narayana-jta` extension, which manages these transactions, requires stable storage, a unique reusable node identifier, and a steady IP address to work correctly.  While the JDBC object store provides a stable storage, users must still plan how to meet the other two requirements."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:378
-msgid "`datasource` (_string_): Specify the name of the datasource for the transaction log storage.  If no value is provided for the `datasource` property, Quarkus uses the xref:datasource.adoc#configure-datasources[default datasource]."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:380
-msgid "`create-table` (_boolean_): When set to `true`, the transaction log table gets automatically created if it does not already exist.  The default value is `false`."
+#: upstream/_versions/3.2/guides/transaction.adoc:379
+msgid "Quarkus, after you evaluate whether using a database to store transaction logs is right for you, allows the following JDBC-specific configuration of the object store included in `quarkus.transaction-manager.object-store._<property>_` properties, where _<property>_ can be:"
 msgstr ""
 
 #. type: Plain text
 #: upstream/_versions/3.2/guides/transaction.adoc:382
+msgid "`type` (_string_): Configure this property to `jdbc` to enable usage of a Quarkus JDBC datasource for storing transaction logs.  The default value is `file-system`."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/3.2/guides/transaction.adoc:385
+msgid "`datasource` (_string_): Specify the name of the datasource for the transaction log storage.  If no value is provided for the `datasource` property, Quarkus uses the xref:datasource.adoc#configure-datasources[default datasource]."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/3.2/guides/transaction.adoc:388
+msgid "`create-table` (_boolean_): When set to `true`, the transaction log table gets automatically created if it does not already exist.  The default value is `false`."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/3.2/guides/transaction.adoc:391
 msgid "`drop-table` (_boolean_): When set to `true`, the tables are dropped on startup if they already exist.  The default value is `false`."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:384
+#: upstream/_versions/3.2/guides/transaction.adoc:394
 msgid "`table-prefix` (string): Specify the prefix for a related table name.  The default value is `quarkus_`."
 msgstr ""
 
+#. type: Plain text
+#: upstream/_versions/3.2/guides/transaction.adoc:396
+msgid "For more configuration information, see the *Narayana JTA - Transaction manager* section of the Quarkus xref:all-config.adoc[All configuration options] reference."
+msgstr ""
+
+#. type: Block title
+#: upstream/_versions/3.2/guides/transaction.adoc:397
+#, no-wrap
+msgid "Additional information:"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/3.2/guides/transaction.adoc:400
+msgid "Create the transaction log table during the initial setup by setting the `create-table` property to `true`."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/3.2/guides/transaction.adoc:402
+msgid "JDBC datasources and ActiveMQ Artemis allow the enlistment and automatically register the `XAResourceRecovery`."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/3.2/guides/transaction.adoc:404
+msgid "JDBC datasources is part of `quarkus-agroal`, and it needs to use `quarkus.datasource.jdbc.transactions=XA`."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/3.2/guides/transaction.adoc:405
+msgid "ActiveMQ Artemis is part of `quarkus-pooled-jms`, and it needs to use `quarkus.pooled-jms.transaction=XA`."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/3.2/guides/transaction.adoc:407
+msgid "To ensure data integrity in case of application crashes or failures, enable the transaction crash recovery with the `quarkus.transaction-manager.enable-recovery=true` configuration."
+msgstr ""
+
 #. type: delimited block =
-#: upstream/_versions/3.2/guides/transaction.adoc:388
+#: upstream/_versions/3.2/guides/transaction.adoc:411
 msgid "To work around the current known issue of link:https://issues.redhat.com/browse/AG-209[Agroal having a different view on running transaction checks], set the datasource transaction type for the datasource responsible for writing the transaction logs to `disabled`:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/3.2/guides/transaction.adoc:391
+#: upstream/_versions/3.2/guides/transaction.adoc:414
 #, no-wrap
 msgid "quarkus.datasource.TX_LOG.jdbc.transactions=disabled\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/transaction.adoc:394
+#: upstream/_versions/3.2/guides/transaction.adoc:417
 msgid "This example uses TX_LOG as the datasource name."
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/3.2/guides/transaction.adoc:397
+#: upstream/_versions/3.2/guides/transaction.adoc:419
 #, no-wrap
 msgid "Why always having a transaction manager?"
 msgstr "为什么总是有一个事务处理器？"
 
 #. type: Labeled list
-#: upstream/_versions/3.2/guides/transaction.adoc:399
+#: upstream/_versions/3.2/guides/transaction.adoc:421
 #, no-wrap
 msgid "Does it work everywhere I want to?"
 msgstr "它能在我希望的所有地方工作吗？"
 
 #. type: delimited block =
-#: upstream/_versions/3.2/guides/transaction.adoc:406
+#: upstream/_versions/3.2/guides/transaction.adoc:428
 msgid "Yep, it works in your Quarkus application, in your IDE, in your tests, because all of these are Quarkus applications.  JTA has some bad press for some people.  I don't know why.  Let's just say that this is not your grandpa's JTA implementation.  What we have is perfectly embeddable and lean."
 msgstr "是的，它在你的Quarkus应用程序中，在你的IDE中，在你的测试中都可以使用，因为这些都是Quarkus应用程序。JTA对一些人来说有一些不好的影响。我不知道为什么。我们只能说，这不是老旧的JTA实现。我们所拥有的是完美的可嵌入的和精简的实现。"
 
 #. type: Labeled list
-#: upstream/_versions/3.2/guides/transaction.adoc:407
+#: upstream/_versions/3.2/guides/transaction.adoc:429
 #, no-wrap
 msgid "Does it do 2 Phase Commit and slow down my app?"
 msgstr "两阶段提交是否会减慢了我的应用程序？"
 
 #. type: delimited block =
-#: upstream/_versions/3.2/guides/transaction.adoc:411
+#: upstream/_versions/3.2/guides/transaction.adoc:433
 msgid "No, this is an old folk tale.  Let's assume it essentially comes for free and let you scale to more complex cases involving several datasources as needed."
 msgstr "不，这是一个古老的民间故事。让我们假设它基本上是免费的，让你根据需要扩展到涉及几个数据源的更复杂的情况。"
 
 #. type: Labeled list
-#: upstream/_versions/3.2/guides/transaction.adoc:412
+#: upstream/_versions/3.2/guides/transaction.adoc:434
 #, no-wrap
 msgid "I don't need transaction when I do read only operations, it's faster."
 msgstr "当我做只读操作时，就不需要事务，这样会更快"
 
 #. type: delimited block =
-#: upstream/_versions/3.2/guides/transaction.adoc:424
+#: upstream/_versions/3.2/guides/transaction.adoc:446
 msgid "Wrong. + First off, just disable the transaction by marking your transaction boundary with `@Transactional(NOT_SUPPORTED)` (or `NEVER` or `SUPPORTS` depending on the semantic you want). + Second, it's again fairy tale that not using transaction is faster.  The answer is, it depends on your DB and how many SQL SELECTs you are making.  No transaction means the DB does have a single operation transaction context anyway. + Third, when you do several SELECTs, it's better to wrap them in a single transaction because they will all be consistent with one another.  Say your DB represents your car dashboard, you can see the number of kilometers remaining and the fuel gauge level.  By reading it in one transaction, they will be consistent.  If you read one and the other from two different transactions, then they can be inconsistent.  It can be more dramatic if you read data related to rights and access management for example."
 msgstr ""
 
 #. type: Labeled list
-#: upstream/_versions/3.2/guides/transaction.adoc:425
+#: upstream/_versions/3.2/guides/transaction.adoc:447
 #, no-wrap
 msgid "Why do you prefer JTA vs Hibernate's transaction management API"
 msgstr "为什么相对Hibernate 的事务管理 API你更推荐JTA"
 
 #. type: delimited block =
-#: upstream/_versions/3.2/guides/transaction.adoc:429
+#: upstream/_versions/3.2/guides/transaction.adoc:451
 msgid "Managing the transactions manually via `entityManager.getTransaction().begin()` and friends lead to a butt ugly code with tons of try catch finally that people get wrong.  Transactions are also about JMS and other database access, so one API makes more sense."
 msgstr "通过 `entityManager.getTransaction().begin()` 和手动管理事务会导致一段丑陋的代码，最终人们会出错。 事务也与 JMS 和其他数据库访问有关，因此一个 API 更有意义。"
 
 #. type: Labeled list
-#: upstream/_versions/3.2/guides/transaction.adoc:430
+#: upstream/_versions/3.2/guides/transaction.adoc:452
 #, no-wrap
 msgid "It's a mess because I don't know if my Jakarta Persistence persistence unit is using `JTA` or `Resource-level` Transaction"
 msgstr ""
 
 #. type: delimited block =
-#: upstream/_versions/3.2/guides/transaction.adoc:435
-msgid "It's not a mess in Quarkus :)  Resource-level was introduced to support Jakarta Persistence in a non managed environment.  But Quarkus is both lean and a managed environment, so we can safely always assume we are in JTA mode.  The end result is that the difficulties of running Hibernate ORM + CDI + a transaction manager in Java SE mode are solved by Quarkus."
+#: upstream/_versions/3.2/guides/transaction.adoc:457
+msgid "It's not a mess in Quarkus :)  Resource-level was introduced to support Jakarta Persistence in a non-managed environment.  But Quarkus is both lean and a managed environment, so we can safely always assume we are in JTA mode.  The end result is that the difficulties of running Hibernate ORM + CDI + a transaction manager in Java SE mode are solved by Quarkus."
 msgstr ""
+
+#~ msgid "Quarkus comes with a Transaction Manager and uses it to coordinate and expose transactions to your applications.  Each extension dealing with persistence will integrate with it for you.  And you will explicitly interact with transactions via CDI.  This guide will walk you through all that."
+#~ msgstr "Quarkus自带一个事务管理器，并使用它来协调和暴露事务给你的应用程序。每个处理持久性的扩展都会与它集成。而且你将通过CDI明确地与事务进行交互。本指南将指导你完成这一切。"
