@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2023-11-10 13:14+0000\n"
+"POT-Creation-Date: 2023-11-17 02:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -175,73 +175,92 @@ msgid "An indexed property `foo.bar[0]` or `foo.bar[0].baz`, replace each charac
 msgstr ""
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/config-reference.adoc:86
-msgid "In some situations, looking up the exact property name is impossible. For instance, when looking up a configuration that is part of a `Map`, and the property name contains a dynamic segment (the `Map` key). In this case, Quarkus relies upon each source’s list of property names. These must be converted back to their most likely dotted format for Environment Variables."
+#: upstream/_versions/main/guides/config-reference.adoc:84
+msgid "In some situations, looking up the exact property name is impossible. This is the case for configuration names that contain user defined path segments."
 msgstr ""
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/config-reference.adoc:90
-msgid "By default, the underscore `_` of an Environment Variable name always maps to a dot `.`. If the property name contains a dash or some other special character, that property name can be specified in another Config Source, with the expected dotted format. It will provide additional information to perform a two-way conversion and match the property names."
+#: upstream/_versions/main/guides/config-reference.adoc:88
+msgid "Applying the conversion rules for Environment Variables names, `quarkus.datasource.\"datasource-name\".jdbc.url` becomes `QUARKUS_DATASOURCE\\__DATASOURCE_NAME__JDBC_URL`. The configuration will work as expected if both properties are available in the Config system."
 msgstr ""
 
 #. type: delimited block =
 #: upstream/_versions/main/guides/config-reference.adoc:93
-msgid "To correctly lookup `Map` properties where `FOO_BAR_BAZ` is the property name and `BAR_BAZ` is the key, add `foo.bar-baz` in a source with an ordinal lower than the EnvConfigSource (`300`)."
+msgid "If only `QUARKUS_DATASOURCE\\__DATASOURCE_NAME__JDBC_URL` is present, the Config system needs to reconvert the configuration name to its most likely dotted format. This works fine for fixed configuration segments, but not for names that contain dynamic segments. In this case, Quarkus is unable to determine if `DATASOURCE_NAME` should be converted to `datasource.name` or `datasource-name` (or any other special character separator)."
+msgstr ""
+
+#. type: delimited block =
+#: upstream/_versions/main/guides/config-reference.adoc:97
+msgid "For this reason, such properties always require their dotted version name in another source (the value can be left empty) to disambiguate the Environment Variable name. It will provide additional information to perform a two-way conversion and match the property names together."
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/config-reference.adoc:102
+#, no-wrap
+msgid ""
+"# value can be left empty\n"
+"quarkus.datasource.\"datasource-name\".jdbc.url=\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/config-reference.adoc:107
+#, no-wrap
+msgid "EXPORT QUARKUS_DATASOURCE__DATASOURCE_NAME__JDBC_URL=jdbc:postgresql://localhost:5432/database\n"
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/config-reference.adoc:97
+#: upstream/_versions/main/guides/config-reference.adoc:113
 #, no-wrap
 msgid "`.env` file in the current working directory"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:100
-#: upstream/_versions/main/guides/config-reference.adoc:288
+#: upstream/_versions/main/guides/config-reference.adoc:116
+#: upstream/_versions/main/guides/config-reference.adoc:304
 msgid "..env"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:103
+#: upstream/_versions/main/guides/config-reference.adoc:119
 #, no-wrap
 msgid "QUARKUS_DATASOURCE_PASSWORD=youshallnotpass <1>\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:105
-msgid "The name `QUARKUS_DATASOURCE_PASSWORD` the same conversion rules used for xref:environment-variables[Environment variables]."
+#: upstream/_versions/main/guides/config-reference.adoc:121
+msgid "The name `QUARKUS_DATASOURCE_PASSWORD` follows the same conversion rules used for xref:environment-variables[Environment variables]."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:108
+#: upstream/_versions/main/guides/config-reference.adoc:124
 msgid "For `dev` mode, this file can be placed in the root of the project, but it is advised to **not** check it in to version control because it typically contains passwords, access tokens, API keys or other secrets."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:110
+#: upstream/_versions/main/guides/config-reference.adoc:126
 msgid "Environment variables in the `.env` file are not available via the `System.getenv(String)` API."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/config-reference.adoc:112
+#: upstream/_versions/main/guides/config-reference.adoc:128
 #, no-wrap
 msgid "Quarkus Application configuration file"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:120
+#: upstream/_versions/main/guides/config-reference.adoc:136
 msgid "The Quarkus Application configuration file is loaded from the classpath resources, for instance `src/main/resources/application.properties`, `src/test/resources/application.properties` or from a `jar` dependency that contains an `application.properties` entry. Each `application.properties` found is treated as a separate `ConfigSource` and follow the same rules as every other source (override per property). Additionally, the configuration file may also reside in `$PWD/config/application.properties`. The loading starts from the config folder and then classpath order (`application.properties` files in the application sources will have priority on the classloader loading order)."
 msgstr ""
 
 #. type: Block title
-#: upstream/_versions/main/guides/config-reference.adoc:121
+#: upstream/_versions/main/guides/config-reference.adoc:137
 #, no-wrap
 msgid "`application.properties`"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:126
-#: upstream/_versions/main/guides/config-reference.adoc:144
+#: upstream/_versions/main/guides/config-reference.adoc:142
+#: upstream/_versions/main/guides/config-reference.adoc:160
 #, no-wrap
 msgid ""
 "greeting.message=hello <1>\n"
@@ -249,94 +268,94 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:128
-#: upstream/_versions/main/guides/config-reference.adoc:146
+#: upstream/_versions/main/guides/config-reference.adoc:144
+#: upstream/_versions/main/guides/config-reference.adoc:162
 msgid "This is a user-defined configuration property."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:129
-#: upstream/_versions/main/guides/config-reference.adoc:147
+#: upstream/_versions/main/guides/config-reference.adoc:145
+#: upstream/_versions/main/guides/config-reference.adoc:163
 msgid "This is a configuration property consumed by the `quarkus-vertx-http` extension."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:133
+#: upstream/_versions/main/guides/config-reference.adoc:149
 msgid "The `config/application.properties` is also available in `dev` mode. The file needs to be placed inside the build tool output directory (`target` for Maven and `build/classes/java/main` for Gradle). Keep in mind however that any cleaning operation from the build tool like `mvn clean` or `gradle clean` will remove the `config` directory as well."
-msgstr ""
-
-#. type: Title ===
-#: upstream/_versions/main/guides/config-reference.adoc:135
-#, no-wrap
-msgid "MicroProfile Config configuration file"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:138
-msgid "The MicroProfile Config configuration file in `src/main/resources/META-INF/microprofile-config.properties`."
-msgstr ""
-
-#. type: Block title
-#: upstream/_versions/main/guides/config-reference.adoc:139
-#, no-wrap
-msgid "`microprofile-config.properties`"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:150
-msgid "It works in the exact same way as Quarkus Application configuration file `application.properties`. Recommendation is to use Quarkus `application.properties`."
 msgstr ""
 
 #. type: Title ===
 #: upstream/_versions/main/guides/config-reference.adoc:151
 #, no-wrap
-msgid "Additional Config Sources"
+msgid "MicroProfile Config configuration file"
 msgstr ""
 
 #. type: Plain text
 #: upstream/_versions/main/guides/config-reference.adoc:154
+msgid "The MicroProfile Config configuration file in `src/main/resources/META-INF/microprofile-config.properties`."
+msgstr ""
+
+#. type: Block title
+#: upstream/_versions/main/guides/config-reference.adoc:155
+#, no-wrap
+msgid "`microprofile-config.properties`"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/config-reference.adoc:166
+msgid "It works in the exact same way as Quarkus Application configuration file `application.properties`. Recommendation is to use Quarkus `application.properties`."
+msgstr ""
+
+#. type: Title ===
+#: upstream/_versions/main/guides/config-reference.adoc:167
+#, no-wrap
+msgid "Additional Config Sources"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/config-reference.adoc:170
 msgid "Quarkus provides additional extensions which cover other configuration formats and stores:"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:156
+#: upstream/_versions/main/guides/config-reference.adoc:172
 msgid "xref:config-yaml.adoc[YAML]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:157
+#: upstream/_versions/main/guides/config-reference.adoc:173
 msgid "xref:vault.adoc[HashiCorp Vault]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:158
+#: upstream/_versions/main/guides/config-reference.adoc:174
 msgid "xref:consul-config.adoc[Consul]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:159
+#: upstream/_versions/main/guides/config-reference.adoc:175
 msgid "xref:spring-cloud-config-client.adoc[Spring Cloud]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:161
+#: upstream/_versions/main/guides/config-reference.adoc:177
 msgid "It is also possible to create a xref:config-extending-support.adoc#custom-config-source[Custom Config Source]."
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/config-reference.adoc:162
+#: upstream/_versions/main/guides/config-reference.adoc:178
 #, no-wrap
 msgid "Inject"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:166
+#: upstream/_versions/main/guides/config-reference.adoc:182
 msgid "Quarkus uses https://microprofile.io/project/eclipse/microprofile-config[MicroProfile Config] annotations to inject the configuration properties in the application."
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:171
-#: upstream/_versions/main/guides/config-reference.adoc:181
+#: upstream/_versions/main/guides/config-reference.adoc:187
+#: upstream/_versions/main/guides/config-reference.adoc:197
 #, no-wrap
 msgid ""
 "@ConfigProperty(name = \"greeting.message\") <1>\n"
@@ -344,17 +363,17 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:174
+#: upstream/_versions/main/guides/config-reference.adoc:190
 msgid "You can use `@Inject @ConfigProperty` or just `@ConfigProperty`. The `@Inject` annotation is not necessary for members annotated with `@ConfigProperty`."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:176
+#: upstream/_versions/main/guides/config-reference.adoc:192
 msgid "If the application attempts to inject a configuration property that is not set, an error is thrown."
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:184
+#: upstream/_versions/main/guides/config-reference.adoc:200
 #, no-wrap
 msgid ""
 "@ConfigProperty(name = \"greeting.suffix\", defaultValue=\"!\") <2>\n"
@@ -362,7 +381,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:187
+#: upstream/_versions/main/guides/config-reference.adoc:203
 #, no-wrap
 msgid ""
 "@ConfigProperty(name = \"greeting.name\")\n"
@@ -370,88 +389,88 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:189
+#: upstream/_versions/main/guides/config-reference.adoc:205
 msgid "If you do not provide a value for this property, the application startup fails with `jakarta.enterprise.inject.spi.DeploymentException: No config value of type [class java.lang.String] exists for: greeting.message`."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:190
+#: upstream/_versions/main/guides/config-reference.adoc:206
 msgid "The default value is injected if the configuration does not provide a value for `greeting.suffix`."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:191
+#: upstream/_versions/main/guides/config-reference.adoc:207
 msgid "This property is optional - an empty `Optional` is injected if the configuration does not provide a value for `greeting.name`."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:193
+#: upstream/_versions/main/guides/config-reference.adoc:209
 msgid "Use xref:config-mappings.adoc#config-mappings[Config Mappings] to group similar configuration properties."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/config-reference.adoc:194
+#: upstream/_versions/main/guides/config-reference.adoc:210
 #, no-wrap
 msgid "Default Values"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:201
+#: upstream/_versions/main/guides/config-reference.adoc:217
 msgid "If a property is associated with a default value (by way of the `defaultValue` attribute), and no configuration value is supplied for the property, then rather than throwing a `jakarta.enterprise.inject.spi.DeploymentException`, the default value will be used. The `defaultValue` value is expressed as a `String`, and uses the same conversion mechanism used to process configuration values. Several Built-in Converters already exist for primitives, boxed primitives, and other classes; for example:"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:203
+#: upstream/_versions/main/guides/config-reference.adoc:219
 msgid "Primitives: `boolean`, `byte`, `short`, etc."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:204
+#: upstream/_versions/main/guides/config-reference.adoc:220
 msgid "Boxed primitives: `java.lang.Boolean`, `java.lang.Byte`, `java.lang.Short`, etc."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:205
+#: upstream/_versions/main/guides/config-reference.adoc:221
 msgid "Optional containers: `java.util.Optional`, `java.util.OptionalInt`, `java.util.OptionalLong`, and `java.util.OptionalDouble`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:206
+#: upstream/_versions/main/guides/config-reference.adoc:222
 msgid "Java `enum` types"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:207
+#: upstream/_versions/main/guides/config-reference.adoc:223
 msgid "JSR 310 `java.time.Duration`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:208
+#: upstream/_versions/main/guides/config-reference.adoc:224
 msgid "JDK networking `java.net.SocketAddress`, `java.net.InetAddress`, etc."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:211
+#: upstream/_versions/main/guides/config-reference.adoc:227
 msgid "As you might expect, these converters are `org.eclipse.microprofile.config.spi.Converter` implementations. Therefore, these converters comply with the Microprofile or custom implementation providers expression rules like:"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:213
+#: upstream/_versions/main/guides/config-reference.adoc:229
 msgid "Boolean values will be `true` in cases \"true\", \"1\", \"YES\", \"Y\" \"ON\". Otherwise, value will be interpreted as false"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:214
+#: upstream/_versions/main/guides/config-reference.adoc:230
 msgid "For float and double values the fractional digits must be separated by a dot `.`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:219
+#: upstream/_versions/main/guides/config-reference.adoc:235
 msgid "Note that when a combination of `Optional*` types and the `defaultValue` attribute are used, the defined `defaultValue` will still be used and if no value is given for the property, the `Optional*` will be present and populated with the converted default value. However, when the property is explicitly empty, the default value is not used and the `Optional` will be empty. Consider this example:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:224
+#: upstream/_versions/main/guides/config-reference.adoc:240
 #, no-wrap
 msgid ""
 "# missing value, optional property\n"
@@ -459,17 +478,17 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:229
+#: upstream/_versions/main/guides/config-reference.adoc:245
 msgid "In this case, since `greeting.name` was configured to be `Optional*` up above, the corresponding property value will be an empty `Optional` and execution will continue normally. This would be the case even if there was a default value configured: the default value is *not* used if the property is explicitly cleared in the configuration."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:231
+#: upstream/_versions/main/guides/config-reference.adoc:247
 msgid "On the other hand, this example:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:236
+#: upstream/_versions/main/guides/config-reference.adoc:252
 #, no-wrap
 msgid ""
 "# missing value, non-optional\n"
@@ -477,17 +496,17 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:240
+#: upstream/_versions/main/guides/config-reference.adoc:256
 msgid "will result in a `java.util.NoSuchElementException: SRCFG02004: Required property greeting.message not found` on startup and the default value will not be assigned."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:242
+#: upstream/_versions/main/guides/config-reference.adoc:258
 msgid "Below is an example of a Quarkus-supplied converter:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:247
+#: upstream/_versions/main/guides/config-reference.adoc:263
 #, no-wrap
 msgid ""
 "@ConfigProperty(name = \"server.address\", defaultValue = \"192.168.1.1\")\n"
@@ -495,18 +514,18 @@ msgid ""
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/config-reference.adoc:249
+#: upstream/_versions/main/guides/config-reference.adoc:265
 #, no-wrap
 msgid "Programmatically access"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:253
+#: upstream/_versions/main/guides/config-reference.adoc:269
 msgid "The `org.eclipse.microprofile.config.ConfigProvider.getConfig()` API allows to access the Config API programmatically.  This API is mostly useful in situations where CDI injection is not available."
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:258
+#: upstream/_versions/main/guides/config-reference.adoc:274
 #, no-wrap
 msgid ""
 "String databaseName = ConfigProvider.getConfig().getValue(\"database.name\", String.class);\n"
@@ -514,57 +533,57 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:262
+#: upstream/_versions/main/guides/config-reference.adoc:278
 msgid "Do not use `System.getProperty(String)` or `System.getEnv(String)` to retrieve configuration values. These APIs are not configuration aware and do not support the features described in this guide."
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/config-reference.adoc:264
+#: upstream/_versions/main/guides/config-reference.adoc:280
 #, no-wrap
 msgid "Profiles"
 msgstr "配置文件"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:268
+#: upstream/_versions/main/guides/config-reference.adoc:284
 msgid "We often need to configure our application differently depending on the target _environment_. For example, the local development environment may be different from the production environment."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:271
+#: upstream/_versions/main/guides/config-reference.adoc:287
 msgid "Configuration Profiles allow for multiple configurations in the same file or separate files and select between them via a profile name."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/config-reference.adoc:272
+#: upstream/_versions/main/guides/config-reference.adoc:288
 #, no-wrap
 msgid "Profile in the property name"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:275
+#: upstream/_versions/main/guides/config-reference.adoc:291
 msgid "To be able to set properties with the same name, each property needs to be prefixed with a percentage sign `%` followed by the profile name and a dot `.` in the syntax `%{profile-name}.config.name`:"
 msgstr ""
 
 #. type: Block title
-#: upstream/_versions/main/guides/config-reference.adoc:276
-#: upstream/_versions/main/guides/config-reference.adoc:296
-#: upstream/_versions/main/guides/config-reference.adoc:321
-#: upstream/_versions/main/guides/config-reference.adoc:340
-#: upstream/_versions/main/guides/config-reference.adoc:407
-#: upstream/_versions/main/guides/config-reference.adoc:431
-#: upstream/_versions/main/guides/config-reference.adoc:470
-#: upstream/_versions/main/guides/config-reference.adoc:481
-#: upstream/_versions/main/guides/config-reference.adoc:490
-#: upstream/_versions/main/guides/config-reference.adoc:514
-#: upstream/_versions/main/guides/config-reference.adoc:529
-#: upstream/_versions/main/guides/config-reference.adoc:571
-#: upstream/_versions/main/guides/config-reference.adoc:589
+#: upstream/_versions/main/guides/config-reference.adoc:292
+#: upstream/_versions/main/guides/config-reference.adoc:312
+#: upstream/_versions/main/guides/config-reference.adoc:337
+#: upstream/_versions/main/guides/config-reference.adoc:356
+#: upstream/_versions/main/guides/config-reference.adoc:423
+#: upstream/_versions/main/guides/config-reference.adoc:447
+#: upstream/_versions/main/guides/config-reference.adoc:486
+#: upstream/_versions/main/guides/config-reference.adoc:497
+#: upstream/_versions/main/guides/config-reference.adoc:506
+#: upstream/_versions/main/guides/config-reference.adoc:530
+#: upstream/_versions/main/guides/config-reference.adoc:545
+#: upstream/_versions/main/guides/config-reference.adoc:587
+#: upstream/_versions/main/guides/config-reference.adoc:605
 #, no-wrap
 msgid "application.properties"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:281
+#: upstream/_versions/main/guides/config-reference.adoc:297
 #, no-wrap
 msgid ""
 "quarkus.http.port=9090\n"
@@ -572,17 +591,17 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:284
+#: upstream/_versions/main/guides/config-reference.adoc:300
 msgid "The Quarkus HTTP port will be 9090. If the `dev` profile is active it will be 8181."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:286
+#: upstream/_versions/main/guides/config-reference.adoc:302
 msgid "Profiles in the `.env` file follow the syntax `_{PROFILE}_CONFIG_KEY=value`:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:292
+#: upstream/_versions/main/guides/config-reference.adoc:308
 #, no-wrap
 msgid ""
 "QUARKUS_HTTP_PORT=9090\n"
@@ -590,12 +609,12 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:295
+#: upstream/_versions/main/guides/config-reference.adoc:311
 msgid "If a profile does not define a value for a specific attribute, the _default_ (no profile) value is used:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:302
+#: upstream/_versions/main/guides/config-reference.adoc:318
 #, no-wrap
 msgid ""
 "bar=”hello”\n"
@@ -604,52 +623,52 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:307
+#: upstream/_versions/main/guides/config-reference.adoc:323
 msgid "With the `dev` profile enabled, the property `bar` has the value `hallo`, but the property `baz` has the value `bonjour`. If the `prod` profile is enabled, `bar` has the value `hello` (as there is no specific value for the `prod` profile), and `baz` the value `bonjour`."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/config-reference.adoc:308
+#: upstream/_versions/main/guides/config-reference.adoc:324
 #, no-wrap
 msgid "Default Profiles"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:311
+#: upstream/_versions/main/guides/config-reference.adoc:327
 msgid "By default, Quarkus provides three profiles, that activate automatically in certain conditions:"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:313
+#: upstream/_versions/main/guides/config-reference.adoc:329
 #, no-wrap
 msgid "*dev* - Activated when in development mode (i.e. `quarkus:dev`)\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:314
+#: upstream/_versions/main/guides/config-reference.adoc:330
 #, no-wrap
 msgid "*test* - Activated when running tests\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:315
+#: upstream/_versions/main/guides/config-reference.adoc:331
 #, no-wrap
 msgid "*prod* - The default profile when not running in development or test mode\n"
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/config-reference.adoc:316
+#: upstream/_versions/main/guides/config-reference.adoc:332
 #, no-wrap
 msgid "Custom Profiles"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:320
+#: upstream/_versions/main/guides/config-reference.adoc:336
 msgid "It is also possible to create additional profiles and activate them with the `quarkus.profile` configuration property. A single config property with the new profile name is the only requirement:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:326
+#: upstream/_versions/main/guides/config-reference.adoc:342
 #, no-wrap
 msgid ""
 "quarkus.http.port=9090\n"
@@ -657,28 +676,28 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:329
+#: upstream/_versions/main/guides/config-reference.adoc:345
 msgid "Setting `quarkus.profile` to `staging` will activate the `staging` profile."
 msgstr ""
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/config-reference.adoc:333
+#: upstream/_versions/main/guides/config-reference.adoc:349
 msgid "The `io.smallrye.config.SmallRyeConfig#getProfiles` API provides a way to retrieve the active profiles programmatically."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/config-reference.adoc:335
+#: upstream/_versions/main/guides/config-reference.adoc:351
 #, no-wrap
 msgid "Profile aware files"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:339
+#: upstream/_versions/main/guides/config-reference.adoc:355
 msgid "In this case, properties for a specific profile may reside in an `application-{profile}.properties` named file. The previous example may be expressed as:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:345
+#: upstream/_versions/main/guides/config-reference.adoc:361
 #, no-wrap
 msgid ""
 "quarkus.http.port=9090\n"
@@ -686,13 +705,13 @@ msgid ""
 msgstr ""
 
 #. type: Block title
-#: upstream/_versions/main/guides/config-reference.adoc:347
+#: upstream/_versions/main/guides/config-reference.adoc:363
 #, no-wrap
 msgid "application-staging.properties"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:352
+#: upstream/_versions/main/guides/config-reference.adoc:368
 #, no-wrap
 msgid ""
 "quarkus.http.port=9190\n"
@@ -700,38 +719,38 @@ msgid ""
 msgstr ""
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/config-reference.adoc:357
+#: upstream/_versions/main/guides/config-reference.adoc:373
 msgid "In this style, the configuration names in the profile aware file do not need to be prefixed with the profile name."
 msgstr ""
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/config-reference.adoc:359
+#: upstream/_versions/main/guides/config-reference.adoc:375
 msgid "Properties in the profile aware file have priority over profile aware properties defined in the main file."
 msgstr ""
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/config-reference.adoc:364
+#: upstream/_versions/main/guides/config-reference.adoc:380
 msgid "The profile aware file must be present in the exact same location as the main `application.properties` file."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/config-reference.adoc:366
+#: upstream/_versions/main/guides/config-reference.adoc:382
 #, no-wrap
 msgid "Parent Profile"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:370
+#: upstream/_versions/main/guides/config-reference.adoc:386
 msgid "A Parent Profile adds one level of hierarchy to the current profile. The configuration `quarkus.config.profile.parent` accepts a single profile name."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:373
+#: upstream/_versions/main/guides/config-reference.adoc:389
 msgid "When the Parent Profile is active, if a property cannot be found in the current active Profile, the config lookup fallbacks to the Parent Profile. Consider:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:378
+#: upstream/_versions/main/guides/config-reference.adoc:394
 #, no-wrap
 msgid ""
 "quarkus.profile=dev\n"
@@ -739,7 +758,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:381
+#: upstream/_versions/main/guides/config-reference.adoc:397
 #, no-wrap
 msgid ""
 "%common.quarkus.http.port=9090\n"
@@ -747,7 +766,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:384
+#: upstream/_versions/main/guides/config-reference.adoc:400
 #, no-wrap
 msgid ""
 "quarkus.http.port=8080\n"
@@ -755,61 +774,61 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:387
-#: upstream/_versions/main/guides/config-reference.adoc:422
-#: upstream/_versions/main/guides/config-reference.adoc:443
+#: upstream/_versions/main/guides/config-reference.adoc:403
+#: upstream/_versions/main/guides/config-reference.adoc:438
+#: upstream/_versions/main/guides/config-reference.adoc:459
 msgid "Then"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:389
+#: upstream/_versions/main/guides/config-reference.adoc:405
 msgid "The active profile is `dev`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:390
+#: upstream/_versions/main/guides/config-reference.adoc:406
 msgid "The parent profile is `common`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:391
+#: upstream/_versions/main/guides/config-reference.adoc:407
 msgid "`quarkus.http.port` is 9090"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:392
+#: upstream/_versions/main/guides/config-reference.adoc:408
 msgid "`quarkus.http.ssl-port` is 9443"
 msgstr ""
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/config-reference.adoc:397
+#: upstream/_versions/main/guides/config-reference.adoc:413
 msgid "Do not use Profile aware files to set `quarkus.config.profile.parent`. This will not work because the profile is required in advance to load the profile aware files."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/config-reference.adoc:399
+#: upstream/_versions/main/guides/config-reference.adoc:415
 #, fuzzy, no-wrap
 msgid "Multiple Profiles"
 msgstr "配置文件"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:403
+#: upstream/_versions/main/guides/config-reference.adoc:419
 msgid "Multiple Profiles may be active at the same time. The configuration `quarkus.profile` accepts a comma-separated list of profile names: `quarkus.profile=common,dev`. Both `common` and `dev` are separate profiles."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:406
+#: upstream/_versions/main/guides/config-reference.adoc:422
 msgid "When multiple profiles are active, the rules for profile configuration are the same. If two profiles define the same configuration, then the last listed profile has priority. Consider:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:411
+#: upstream/_versions/main/guides/config-reference.adoc:427
 #, no-wrap
 msgid "quarkus.profile=common,dev\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:415
+#: upstream/_versions/main/guides/config-reference.adoc:431
 #, no-wrap
 msgid ""
 "my.prop=1234\n"
@@ -818,7 +837,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:419
+#: upstream/_versions/main/guides/config-reference.adoc:435
 #, no-wrap
 msgid ""
 "%common.commom.prop=common\n"
@@ -827,38 +846,38 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:424
+#: upstream/_versions/main/guides/config-reference.adoc:440
 msgid "`common.prop` value is `common`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:425
+#: upstream/_versions/main/guides/config-reference.adoc:441
 msgid "`dev.prop` value is `dev`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:426
+#: upstream/_versions/main/guides/config-reference.adoc:442
 msgid "`my.prop` value is `5678`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:427
+#: upstream/_versions/main/guides/config-reference.adoc:443
 msgid "`test.prop` does not have a `value`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:430
+#: upstream/_versions/main/guides/config-reference.adoc:446
 msgid "It is also possible to define multiple profile properties, with a comma-separated list of profile names. If the same property name exists in multiple profile properties then, the property name with the most specific profile wins:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:435
+#: upstream/_versions/main/guides/config-reference.adoc:451
 #, no-wrap
 msgid "quarkus.profile=dev\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:438
+#: upstream/_versions/main/guides/config-reference.adoc:454
 #, no-wrap
 msgid ""
 "%prod,dev.my.prop=1234\n"
@@ -866,34 +885,34 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:440
+#: upstream/_versions/main/guides/config-reference.adoc:456
 #, no-wrap
 msgid "%prod,dev.another.prop=1234\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:445
+#: upstream/_versions/main/guides/config-reference.adoc:461
 msgid "`my.prop` value is 5678."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:446
+#: upstream/_versions/main/guides/config-reference.adoc:462
 msgid "`another.prop` value is 1234."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/config-reference.adoc:447
+#: upstream/_versions/main/guides/config-reference.adoc:463
 #, no-wrap
 msgid "Default Runtime Profile"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:450
+#: upstream/_versions/main/guides/config-reference.adoc:466
 msgid "The default Quarkus runtime profile is set to the profile used to build the application:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:455
+#: upstream/_versions/main/guides/config-reference.adoc:471
 #, no-wrap
 msgid ""
 "./mvnw package -Dnative -Dquarkus.profile=prod-aws\n"
@@ -901,33 +920,33 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:457
+#: upstream/_versions/main/guides/config-reference.adoc:473
 msgid "The command will run with the `prod-aws` profile. This can be overridden using the `quarkus.profile` configuration."
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/config-reference.adoc:459
+#: upstream/_versions/main/guides/config-reference.adoc:475
 #, no-wrap
 msgid "Property Expressions"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:463
+#: upstream/_versions/main/guides/config-reference.adoc:479
 msgid "Quarkus provides property expressions expansion on configuration values. An expression string is a mix of plain strings and expression segments, which are wrapped by the sequence `${ ... }`."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:467
+#: upstream/_versions/main/guides/config-reference.adoc:483
 msgid "These expressions are resolved when the property is read. So if the configuration property is build time the property expression will be resolved at build time. If the configuration property is overridable at runtime it will be resolved at runtime."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:469
+#: upstream/_versions/main/guides/config-reference.adoc:485
 msgid "Consider:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:475
+#: upstream/_versions/main/guides/config-reference.adoc:491
 #, no-wrap
 msgid ""
 "remote.host=quarkus.io\n"
@@ -935,17 +954,17 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:478
+#: upstream/_versions/main/guides/config-reference.adoc:494
 msgid "The resolved value of the `callable.url` property is `https://quarkus.io/`."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:480
+#: upstream/_versions/main/guides/config-reference.adoc:496
 msgid "Another example would be defining different database servers by profile:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:486
+#: upstream/_versions/main/guides/config-reference.adoc:502
 #, no-wrap
 msgid ""
 "%dev.quarkus.datasource.jdbc.url=jdbc:mysql://localhost:3306/mydatabase?useSSL=false\n"
@@ -953,12 +972,12 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:489
+#: upstream/_versions/main/guides/config-reference.adoc:505
 msgid "can be simplified to:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:495
+#: upstream/_versions/main/guides/config-reference.adoc:511
 #, no-wrap
 msgid ""
 "%dev.application.server=localhost\n"
@@ -966,54 +985,54 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:497
+#: upstream/_versions/main/guides/config-reference.adoc:513
 #, no-wrap
 msgid "quarkus.datasource.jdbc.url=jdbc:mysql://${application.server}:3306/mydatabase?useSSL=false\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:500
+#: upstream/_versions/main/guides/config-reference.adoc:516
 msgid "Additionally, the Expression Expansion engine supports the following segments:"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:502
+#: upstream/_versions/main/guides/config-reference.adoc:518
 msgid "`${expression:value}` - Provides a default value after the `:` if the expansion doesn't find a value."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:503
+#: upstream/_versions/main/guides/config-reference.adoc:519
 msgid "`${my.prop${compose}}` - Composed expressions. Inner expressions are resolved first."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:504
+#: upstream/_versions/main/guides/config-reference.adoc:520
 msgid "`${my.prop}${my.prop}` - Multiple expressions."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:506
+#: upstream/_versions/main/guides/config-reference.adoc:522
 msgid "If an expression cannot be expanded and no default is supplied a `NoSuchElementException` is thrown."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:509
+#: upstream/_versions/main/guides/config-reference.adoc:525
 msgid "Expressions lookups are performed in all config sources. The expression values and expansion values may reside in different config sources."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/config-reference.adoc:510
+#: upstream/_versions/main/guides/config-reference.adoc:526
 #, no-wrap
 msgid "With Environment Variables"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:513
+#: upstream/_versions/main/guides/config-reference.adoc:529
 msgid "Property Expressions also work with Environment Variables."
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:519
+#: upstream/_versions/main/guides/config-reference.adoc:535
 #, no-wrap
 msgid ""
 "remote.host=quarkus.io\n"
@@ -1021,29 +1040,29 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:523
+#: upstream/_versions/main/guides/config-reference.adoc:539
 msgid "This will expand the `HOST` environment variable and use the value of the property `remote.host` as the default value if `HOST` is not set."
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/config-reference.adoc:524
+#: upstream/_versions/main/guides/config-reference.adoc:540
 #, no-wrap
 msgid "Secret Keys Expressions"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:528
+#: upstream/_versions/main/guides/config-reference.adoc:544
 msgid "A secret configuration may be expressed as `${handler::value}`, where the `handler` is the name of a `io.smallrye.config.SecretKeysHandler` to decode or decrypt the `value`. Consider:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:533
+#: upstream/_versions/main/guides/config-reference.adoc:549
 #, no-wrap
 msgid "my.secret=${aes-gcm-nopadding::DJNrZ6LfpupFv6QbXyXhvzD8eVDnDa_kTliQBpuzTobDZxlg}\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:536
+#: upstream/_versions/main/guides/config-reference.adoc:552
 #, no-wrap
 msgid ""
 "# the encryption key required to decode the secret. It can be set in any source.\n"
@@ -1051,88 +1070,88 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:540
+#: upstream/_versions/main/guides/config-reference.adoc:556
 msgid "A lookup to `my.secret` will use the `SecretKeysHandler` name `aes-gcm-nopadding` to decode the value `DJNrZ6LfpupFv6QbXyXhvzD8eVDnDa_kTliQBpuzTobDZxlg`."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:543
+#: upstream/_versions/main/guides/config-reference.adoc:559
 msgid "For more information, please check SmallRye Config link:https://smallrye.io/smallrye-config/Main/config/secret-keys/[Secret Keys] documentation."
 msgstr ""
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/config-reference.adoc:548
+#: upstream/_versions/main/guides/config-reference.adoc:564
 msgid "SmallRye Config may provide handlers not fully supported by Quarkus. Currently, only `smallrye-config-crypto` is supported."
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/config-reference.adoc:550
+#: upstream/_versions/main/guides/config-reference.adoc:566
 #, no-wrap
 msgid "Accessing a generating UUID"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:555
+#: upstream/_versions/main/guides/config-reference.adoc:571
 msgid "The default config source from Quarkus provides a random UUID value.  It generates the UUID at startup time.  So, the value changes between startups, including reloads in dev mode."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:559
+#: upstream/_versions/main/guides/config-reference.adoc:575
 msgid "You can access the generated value using the `quarkus.uuid` property.  Use xref:property-expressions[expressions] to access it: `${quarkus.uuid}`.  For example, it can be useful to configure a Kafka client with a unique consumer group:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:563
+#: upstream/_versions/main/guides/config-reference.adoc:579
 #, no-wrap
 msgid "mp.messaging.incoming.prices.group.id=${quarkus.uuid}\n"
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/config-reference.adoc:565
+#: upstream/_versions/main/guides/config-reference.adoc:581
 #, no-wrap
 msgid "Clearing properties"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:570
+#: upstream/_versions/main/guides/config-reference.adoc:586
 msgid "Run time properties which are optional, and which have had values set at build time or which have a default value, may be explicitly cleared by assigning an empty string to the property. Note that this will _only_ affect runtime properties, and will _only_ work with properties whose values are not required."
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:575
+#: upstream/_versions/main/guides/config-reference.adoc:591
 #, no-wrap
 msgid "remote.host=quarkus.io\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:578
+#: upstream/_versions/main/guides/config-reference.adoc:594
 msgid "A lookup to `remote.host` with `-Dremote.host=` will throw an Exception, because the system property cleared the value."
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/config-reference.adoc:580
+#: upstream/_versions/main/guides/config-reference.adoc:596
 #, no-wrap
 msgid "Indexed Properties"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:584
+#: upstream/_versions/main/guides/config-reference.adoc:600
 msgid "A config value which contains unescaped commas may be converted to `Collection`. This works for simple cases, but it becomes cumbersome and limited for more advanced cases."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:588
+#: upstream/_versions/main/guides/config-reference.adoc:604
 msgid "Indexed Properties provide a way to use indexes in config property names to map specific elements in a `Collection` type. Since the indexed element is part of the property name and not contained in the value, this can also be used to map complex object types as `Collection` elements. Consider:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:593
+#: upstream/_versions/main/guides/config-reference.adoc:609
 #, no-wrap
 msgid "my.collection=dog,cat,turtle\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:597
+#: upstream/_versions/main/guides/config-reference.adoc:613
 #, no-wrap
 msgid ""
 "my.indexed.collection[0]=dog\n"
@@ -1141,176 +1160,176 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:600
+#: upstream/_versions/main/guides/config-reference.adoc:616
 msgid "The indexed property syntax uses the property name and square brackets `[ ] with an index in between."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:605
+#: upstream/_versions/main/guides/config-reference.adoc:621
 msgid "A call to `Config#getValues(\"my.collection\", String.class)`, will automatically create and convert a `List<String>` that contains the values `dog`, `cat` and `turtle`. A call to `Config#getValues(\"my.indexed.collection\", String.class)` returns the exact same result. If the same property name exists in both forms (regular and indexed), the regular value has priority."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:609
+#: upstream/_versions/main/guides/config-reference.adoc:625
 msgid "The indexed property is sorted by their index before being added to the target `Collection`. Any gaps contained in the indexes do not resolve to the target `Collection`, which means that the `Collection` result will store all values without any gaps."
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/config-reference.adoc:611
+#: upstream/_versions/main/guides/config-reference.adoc:627
 #, no-wrap
 msgid "Configuring Quarkus"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:616
+#: upstream/_versions/main/guides/config-reference.adoc:632
 msgid "Quarkus itself is configured via the same mechanism as your application. Quarkus reserves the `quarkus.` namespace for its own configuration. For example to configure the HTTP server port you can set `quarkus.http.port` in `application.properties`. All the Quarkus configuration properties are xref:all-config.adoc[documented and searchable]."
 msgstr ""
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/config-reference.adoc:621
+#: upstream/_versions/main/guides/config-reference.adoc:637
 msgid "As mentioned above, properties prefixed with `quarkus.` are effectively reserved for configuring Quarkus itself and its extensions. Therefore, the `quarkus.` prefix should **never** be used for application specific properties."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/config-reference.adoc:623
+#: upstream/_versions/main/guides/config-reference.adoc:639
 #, no-wrap
 msgid "Build Time configuration"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:628
+#: upstream/_versions/main/guides/config-reference.adoc:644
 msgid "Some Quarkus configurations only take effect during build time, meaning it is not possible to change them at runtime. These configurations are still available at runtime but as read-only and have no effect in Quarkus behaviour. A change to any of these configurations requires a rebuild of the application itself to reflect changes of such properties."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:630
+#: upstream/_versions/main/guides/config-reference.adoc:646
 msgid "The properties fixed at build time are marked with a lock icon (icon:lock[]) in the xref:all-config.adoc[list of all configuration options]."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:634
+#: upstream/_versions/main/guides/config-reference.adoc:650
 msgid "However, some extensions do define properties _overridable at runtime_. A simple example is the database URL, username and password which is only known specifically in your target environment, so they can be set and influence the application behaviour at runtime."
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/config-reference.adoc:635
+#: upstream/_versions/main/guides/config-reference.adoc:651
 #, no-wrap
 msgid "Change build time properties after your application has been published"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:638
+#: upstream/_versions/main/guides/config-reference.adoc:654
 msgid "If you are in the rare situation that you need to change the build time configuration after your application is built, then check out how xref:reaugmentation.adoc[re-augmentation] can be used to rebuild the augmentation output for a different build time configuration."
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/config-reference.adoc:639
+#: upstream/_versions/main/guides/config-reference.adoc:655
 #, no-wrap
 msgid "Tracking effective build time configuration used at build time"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:642
+#: upstream/_versions/main/guides/config-reference.adoc:658
 msgid "Given that configuration sources usually provide more options than actually used during the build, it might be useful to know which configuration options have actually been used during a Quarkus build process."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/config-reference.adoc:643
+#: upstream/_versions/main/guides/config-reference.adoc:659
 #, no-wrap
 msgid "Dumping build time configuration options read during the build"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:646
+#: upstream/_versions/main/guides/config-reference.adoc:662
 msgid "Setting `quarkus.config-tracking.enabled` to `true` will enable a configuration interceptor that will record every configuration option that was read during the build process along with their values. The resulting report will be stored in `${project.basedir}/.quarkus/quarkus-prod-config-dump` by default. The target file could be configured using the following options:"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:648
+#: upstream/_versions/main/guides/config-reference.adoc:664
 msgid "`quarkus.config-tracking.directory` - directory in which the configuration dump should be stored, the default is `${project.basedir}/.quarkus`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:649
+#: upstream/_versions/main/guides/config-reference.adoc:665
 msgid "`quarkus.config-tracking.file-prefix` - file name prefix, the default value is `quarkus`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:650
+#: upstream/_versions/main/guides/config-reference.adoc:666
 msgid "`quarkus.config-tracking.file-suffix` - file name suffix, the default value is `-config-dump`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:651
+#: upstream/_versions/main/guides/config-reference.adoc:667
 msgid "`quarkus.config-tracking.file` - path to a file in which the configuration dump should be stored. This option supersedes the `file-prefix` and `file-suffix` options. Also supersedes the value of `quarkus.config-tracking.directory`, unless the value is a relative path."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:653
+#: upstream/_versions/main/guides/config-reference.adoc:669
 msgid "The `prod` part of the `quarkus-prod-config-dump` file name refers to the Quarkus build mode, indicating that the dump was taken for the production build."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:655
+#: upstream/_versions/main/guides/config-reference.adoc:671
 msgid "The reason `${project.basedir}/.quarkus` directory was chosen as the default location was to make it easy to track build time configuration changes between builds and use that as an indicator to build output caching tools (such as https://maven.apache.org/extensions/maven-build-cache-extension/[Apache Maven Build Cache] and https://gradle.com/gradle-enterprise-solutions/build-cache/[Gradle Enterprise Build Cache]) whether the application binary has to be re-built."
 msgstr ""
 
 #. type: Title ====
-#: upstream/_versions/main/guides/config-reference.adoc:656
+#: upstream/_versions/main/guides/config-reference.adoc:672
 #, no-wrap
 msgid "Filtering configuration options"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:659
+#: upstream/_versions/main/guides/config-reference.adoc:675
 msgid "Configuration tracker could be instructed to exclude some of the options from the report by configuring `quarkus.config-tracking.exclude` with a comma-separated list of configuration option names that should be filtered out."
 msgstr ""
 
 #. type: Title ====
-#: upstream/_versions/main/guides/config-reference.adoc:660
+#: upstream/_versions/main/guides/config-reference.adoc:676
 #, no-wrap
 msgid "Path values"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:663
+#: upstream/_versions/main/guides/config-reference.adoc:679
 msgid "Configuration options with *absolute* path values that begin with a user home directory are, by default, transformed with Unix home directory alias '~' replacing the user home directory part and using `/` as a path element separator."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:665
+#: upstream/_versions/main/guides/config-reference.adoc:681
 msgid "This transformation can be disabled by setting `quarkus.config-tracking.use-user-home-alias-in-paths` to `false`."
 msgstr ""
 
 #. type: Title ====
-#: upstream/_versions/main/guides/config-reference.adoc:666
+#: upstream/_versions/main/guides/config-reference.adoc:682
 #, no-wrap
 msgid "Hashing recorded configuration values"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:669
+#: upstream/_versions/main/guides/config-reference.adoc:685
 msgid "Configuration values can be hashed using `SHA-512` algorithm before they are written to a file. Configuration option names whose values should be hashed can be configured in `quarkus.config-tracking.hash-options` as a comma separated list."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/config-reference.adoc:670
+#: upstream/_versions/main/guides/config-reference.adoc:686
 #, no-wrap
 msgid "Tracking build time configuration changes between builds"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:673
+#: upstream/_versions/main/guides/config-reference.adoc:689
 msgid "While `quarkus.config-tracking.enabled` enables effective build time configuration report generation, there is also a way to check whether the values stored in that report have changed before the next build of the project is launched."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:675
+#: upstream/_versions/main/guides/config-reference.adoc:691
 msgid "Maven projects could add the following goal to their `quarkus-maven-plugin` configuration:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:691
+#: upstream/_versions/main/guides/config-reference.adoc:707
 #, no-wrap
 msgid ""
 "      <plugin>\n"
@@ -1330,46 +1349,46 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:695
+#: upstream/_versions/main/guides/config-reference.adoc:711
 msgid "The `track-config-changes` goal looks for `${project.basedir}/.quarkus/quarkus-prod-config-dump` (file name and directory are configurable) and, if the file already exists, checks whether the values stored in the config dump have changed.  It will log the changed options and save the current values of each of the options present in `${project.basedir}/.quarkus/quarkus-prod-config-dump` in `${project.basedir}/target/quarkus-prod-config.check` (the target file name and location can be configured). If the build time configuration has not changed since the last build both `${project.basedir}/.quarkus/quarkus-prod-config-dump` and `${project.basedir}/.quarkus/quarkus-prod-config-dump` will be identical."
 msgstr ""
 
 #. type: Title ====
-#: upstream/_versions/main/guides/config-reference.adoc:696
+#: upstream/_versions/main/guides/config-reference.adoc:712
 #, no-wrap
 msgid "Dump current build configuration when the recorded configuration isn't found"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:700
+#: upstream/_versions/main/guides/config-reference.adoc:716
 msgid "By default, `track-config-changes` looks for the configuration recorded during previous build and does nothing if it's not found. Enabling `dumpCurrentWhenRecordedUnavailable` parameter will make it dump the current build configuration options taking into account `quarkus.config-tracking.*` configuration."
 msgstr ""
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/config-reference.adoc:706
+#: upstream/_versions/main/guides/config-reference.adoc:722
 msgid "Unlike the build configuration options recorded during the `quarkus:build` goal, configuration options saved by `quarkus:track-config-changes` with `dumpCurrentWhenRecordedUnavailable` enabled will include all the build configuration options exposed by a `org.eclipse.microprofile.config.Config` instance. Which means this report may include some build configuration options that will not be used by the Quarkus application build process but also may be missing some build configuration options since MicroProfile Config specification allows configuration sources not to expose all the property names they provide to users."
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/config-reference.adoc:708
+#: upstream/_versions/main/guides/config-reference.adoc:724
 #, no-wrap
 msgid "Config property values injected during static initialization phase"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:719
+#: upstream/_versions/main/guides/config-reference.adoc:735
 msgid "Quarkus collects the config property values injected in CDI beans during xref:writing-extensions.adoc#bootstrap-three-phases[static initialization phase].  The collected values are then compared with their runtime initialization counterparts and if a mismatch is detected the application startup fails.  How can it happen? For example, let's have a CDI bean `org.acme.MyBean`.  `MyBean` injects a `@ConfigProperty` of name `foo` and is initialized during the native build.  The config property does not exist during the native build and so the default value `bar` is used.  But later, when the application is started the property is defined with a system property: `-Dfoo=baz`.  This would lead to inconsistent state and unexpected behavior.  Therefore, Quarkus would fail in this situation by default."
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:723
-#: upstream/_versions/main/guides/config-reference.adoc:748
+#: upstream/_versions/main/guides/config-reference.adoc:739
+#: upstream/_versions/main/guides/config-reference.adoc:764
 #, no-wrap
 msgid "package org.acme;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:728
+#: upstream/_versions/main/guides/config-reference.adoc:744
 #, no-wrap
 msgid ""
 "import jakarta.enterprise.context.ApplicationScoped;\n"
@@ -1379,7 +1398,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:731
+#: upstream/_versions/main/guides/config-reference.adoc:747
 #, no-wrap
 msgid ""
 "@ApplicationScoped\n"
@@ -1387,7 +1406,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:734
+#: upstream/_versions/main/guides/config-reference.adoc:750
 #, no-wrap
 msgid ""
 "   @ConfigProperty(name = \"foo\", defaultValue = \"bar\") <1>\n"
@@ -1395,7 +1414,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:739
+#: upstream/_versions/main/guides/config-reference.adoc:755
 #, no-wrap
 msgid ""
 "    void onInit(@Observes @Initialized(ApplicationScoped.class) Object event) { <2>\n"
@@ -1405,22 +1424,22 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:741
+#: upstream/_versions/main/guides/config-reference.adoc:757
 msgid "The config property is injected when the bean is created and the value is fixed."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:742
+#: upstream/_versions/main/guides/config-reference.adoc:758
 msgid "In this particular case, the observer `@Initialized(ApplicationScoped.class)` caused the initialization of the bean. However, there are other possibilities. For example, some extensions initialize components during static initialization phase."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:744
+#: upstream/_versions/main/guides/config-reference.adoc:760
 msgid "You can annotate an injected field/parameter with `@io.quarkus.runtime.annotations.StaticInitSafe` to mark the injected configuration object as safe to be initialized during the static initialization phase."
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:754
+#: upstream/_versions/main/guides/config-reference.adoc:770
 #, no-wrap
 msgid ""
 "import jakarta.enterprise.context.ApplicationScoped;\n"
@@ -1431,7 +1450,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:757
+#: upstream/_versions/main/guides/config-reference.adoc:773
 #, no-wrap
 msgid ""
 "@ApplicationScoped\n"
@@ -1439,7 +1458,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:761
+#: upstream/_versions/main/guides/config-reference.adoc:777
 #, no-wrap
 msgid ""
 "   @StaticInitSafe <1>\n"
@@ -1448,7 +1467,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/config-reference.adoc:766
+#: upstream/_versions/main/guides/config-reference.adoc:782
 #, no-wrap
 msgid ""
 "    void onInit(@Observes @Initialized(ApplicationScoped.class) Object event) {\n"
@@ -1458,95 +1477,95 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:768
+#: upstream/_versions/main/guides/config-reference.adoc:784
 msgid "Instructs Quarkus not to fail if a mismatch is detected."
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/config-reference.adoc:771
+#: upstream/_versions/main/guides/config-reference.adoc:787
 #, no-wrap
 msgid "Additional Information"
 msgstr ""
 
 #.  Moved to Quarkiverse. There is a redirect to resolve the link
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:774
+#: upstream/_versions/main/guides/config-reference.adoc:790
 msgid "xref:config-yaml.adoc[YAML ConfigSource Extension]"
 msgstr ""
 
 #.  Moved to Quarkiverse. There is a redirect to resolve the link
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:776
+#: upstream/_versions/main/guides/config-reference.adoc:792
 msgid "xref:vault.adoc[HashiCorp Vault ConfigSource Extension]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:778
+#: upstream/_versions/main/guides/config-reference.adoc:794
 msgid "xref:consul-config.adoc[Consul ConfigSource Extension]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:779
+#: upstream/_versions/main/guides/config-reference.adoc:795
 msgid "xref:spring-cloud-config-client.adoc[Spring Cloud ConfigSource Extension]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:780
+#: upstream/_versions/main/guides/config-reference.adoc:796
 msgid "xref:config-mappings.adoc[Mapping configuration to objects]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:781
+#: upstream/_versions/main/guides/config-reference.adoc:797
 msgid "xref:config-extending-support.adoc[Extending configuration support]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:783
+#: upstream/_versions/main/guides/config-reference.adoc:799
 msgid "Quarkus relies on link:https://github.com/smallrye/smallrye-config/[SmallRye Config] and inherits its features:"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:785
+#: upstream/_versions/main/guides/config-reference.adoc:801
 msgid "link:https://smallrye.io/smallrye-config/Main/config-sources/custom/[Additional Config Sources]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:786
+#: upstream/_versions/main/guides/config-reference.adoc:802
 msgid "link:https://smallrye.io/smallrye-config/Main/config-sources/factories/[Config Source Factories]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:787
+#: upstream/_versions/main/guides/config-reference.adoc:803
 msgid "link:https://smallrye.io/smallrye-config/Main/converters/custom/[Additional Converters]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:788
+#: upstream/_versions/main/guides/config-reference.adoc:804
 msgid "link:https://smallrye.io/smallrye-config/Main/extensions/interceptors/[Interceptors]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:789
+#: upstream/_versions/main/guides/config-reference.adoc:805
 msgid "link:https://smallrye.io/smallrye-config/Main/extensions/relocate/[Relocate Configuration]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:790
+#: upstream/_versions/main/guides/config-reference.adoc:806
 msgid "link:https://smallrye.io/smallrye-config/Main/extensions/fallback/[Fallback Configuration]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:791
+#: upstream/_versions/main/guides/config-reference.adoc:807
 msgid "link:https://smallrye.io/smallrye-config/Main/config/secret-keys/[Secret Keys]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/config-reference.adoc:794
+#: upstream/_versions/main/guides/config-reference.adoc:810
 msgid "For more information, please check the link:https://smallrye.io/smallrye-config/Main[SmallRye Config documentation]."
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/config-reference.adoc:795
+#: upstream/_versions/main/guides/config-reference.adoc:811
 #, no-wrap
 msgid "Configuration Reference"
 msgstr "配置参考"
