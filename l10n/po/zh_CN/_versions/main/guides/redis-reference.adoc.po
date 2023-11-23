@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2023-10-12 02:10+0000\n"
+"POT-Creation-Date: 2023-11-23 02:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -442,45 +442,81 @@ msgstr ""
 msgid "The associated environment variable is `QUARKUS_REDIS_PASSWORD`, or `QUARKUS_REDIS_<NAME>_PASSWORD` for named clients."
 msgstr ""
 
-#. type: Title ==
+#. type: Title ===
 #: upstream/_versions/main/guides/redis-reference.adoc:224
+#, no-wrap
+msgid "Connection pooling"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/redis-reference.adoc:229
+msgid "Connections to Redis are always pooled.  By default, maximum number of connections in the pool is 6.  This can be configured using `quarkus.redis.max-pool-size`."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/redis-reference.adoc:233
+msgid "When the connection pool is depleted, attempts to obtain a connection are put into a queue.  By default, maximum number of attempts waiting in the queue to obtain a Redis connection is 24.  This can be configured using `quarkus.redis.max-pool-waiting`."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/redis-reference.adoc:237
+msgid "Executing certain commands modifies the server-side state and the behavior of the connection.  Such connections cannot be reused and when closed, they are not put back into the pool; instead, they are truly closed.  The commands that cause this behavior are:"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/redis-reference.adoc:239
+msgid "subscription commands (`SUBSCRIBE`, `UNSUBSCRIBE` etc.)"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/redis-reference.adoc:240
+msgid "`SELECT`"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/redis-reference.adoc:241
+msgid "`AUTH`"
+msgstr ""
+
+#. type: Title ==
+#: upstream/_versions/main/guides/redis-reference.adoc:242
 #, no-wrap
 msgid "Use Redis data sources"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:229
+#: upstream/_versions/main/guides/redis-reference.adoc:247
 msgid "Quarkus exposes a high-level API on top of Redis.  This API is type-safe and structured around the notion of _group_, inherited from the https://redis.io/commands/command-docs/[Redis command organization].  This API lets you execute Redis commands more conveniently and safely."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/redis-reference.adoc:230
+#: upstream/_versions/main/guides/redis-reference.adoc:248
 #, no-wrap
 msgid "Inject data sources"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:233
+#: upstream/_versions/main/guides/redis-reference.adoc:251
 msgid "For each configured Redis client, two Redis data sources are exposed:"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:236
+#: upstream/_versions/main/guides/redis-reference.adoc:254
 msgid "`io.quarkus.redis.datasource.RedisDataSource` - an imperative (blocking) Redis data source.  Each operation blocks until a response is received or a timeout is reached"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:237
+#: upstream/_versions/main/guides/redis-reference.adoc:255
 msgid "`io.quarkus.redis.datasource.ReactiveRedisDataSource` - a reactive Redis data source returning `Uni<X>` or `Multi<X>`."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:239
+#: upstream/_versions/main/guides/redis-reference.adoc:257
 msgid "If you configured the _default_ Redis client, you could inject the data sources using:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:244
+#: upstream/_versions/main/guides/redis-reference.adoc:262
 #, no-wrap
 msgid ""
 "@Inject RedisDataSource defaultRedisDataSource;\n"
@@ -488,12 +524,12 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:247
+#: upstream/_versions/main/guides/redis-reference.adoc:265
 msgid "If you configured a _named_ Redis client, you need to use the `io.quarkus.redis.RedisClientName` qualifier to select the right client:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:252
+#: upstream/_versions/main/guides/redis-reference.adoc:270
 #, no-wrap
 msgid ""
 "@RedisClientName(\"my-redis\") RedisDataSource myRedisDataSource;\n"
@@ -501,12 +537,12 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:255
+#: upstream/_versions/main/guides/redis-reference.adoc:273
 msgid "When using the _blocking_ variant, you can configure the default timeout with:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:260
+#: upstream/_versions/main/guides/redis-reference.adoc:278
 #, no-wrap
 msgid ""
 "quarkus.redis.timeout=5s\n"
@@ -514,150 +550,150 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:263
+#: upstream/_versions/main/guides/redis-reference.adoc:281
 msgid "The default timeout is configured to 10s."
 msgstr ""
 
 #. type: Block title
-#: upstream/_versions/main/guides/redis-reference.adoc:265
+#: upstream/_versions/main/guides/redis-reference.adoc:283
 #, no-wrap
 msgid "All about delegation"
 msgstr ""
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/redis-reference.adoc:269
+#: upstream/_versions/main/guides/redis-reference.adoc:287
 msgid "The blocking data source (`io.quarkus.redis.datasource.RedisDataSource`) is implemented on top of the reactive one (`io.quarkus.redis.datasource.ReactiveRedisDataSource`).  The `ReactiveRedisDataSource` is implemented on top of the `io.vertx.mutiny.redis.Redis` API."
 msgstr ""
 
 #. type: Title ====
-#: upstream/_versions/main/guides/redis-reference.adoc:271
+#: upstream/_versions/main/guides/redis-reference.adoc:289
 #, no-wrap
 msgid "Data Source groups"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:274
+#: upstream/_versions/main/guides/redis-reference.adoc:292
 msgid "As mentioned above, the API is divided into groups:"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:276
+#: upstream/_versions/main/guides/redis-reference.adoc:294
 msgid "bitmap - `.bitmap()`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:277
+#: upstream/_versions/main/guides/redis-reference.adoc:295
 msgid "key (generic) - `.key()`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:278
+#: upstream/_versions/main/guides/redis-reference.adoc:296
 msgid "geo - `.geo(memberType)`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:279
+#: upstream/_versions/main/guides/redis-reference.adoc:297
 msgid "hash - `.hash(`valueType)`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:280
+#: upstream/_versions/main/guides/redis-reference.adoc:298
 msgid "hyperloglog - `.hyperloglog(memberType)`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:281
+#: upstream/_versions/main/guides/redis-reference.adoc:299
 msgid "list - `.list(memberType)`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:282
+#: upstream/_versions/main/guides/redis-reference.adoc:300
 msgid "pubsub - `pubsub()`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:283
+#: upstream/_versions/main/guides/redis-reference.adoc:301
 msgid "set - `.set(memberType)`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:284
+#: upstream/_versions/main/guides/redis-reference.adoc:302
 msgid "sorted-set - `.sortedSet(memberType)`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:285
+#: upstream/_versions/main/guides/redis-reference.adoc:303
 msgid "string - `.value(valueType)`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:286
+#: upstream/_versions/main/guides/redis-reference.adoc:304
 msgid "stream - `.stream(`valueType`)"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:287
+#: upstream/_versions/main/guides/redis-reference.adoc:305
 msgid "transactions - `withTransaction`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:288
+#: upstream/_versions/main/guides/redis-reference.adoc:306
 msgid "json - `.json()` (requires the https://redis.com/modules/redis-json/[RedisJSON] module on the server side)"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:289
+#: upstream/_versions/main/guides/redis-reference.adoc:307
 msgid "bloom - `.bloom()` (requires the https://redis.com/modules/redis-bloom/[RedisBloom] module on the server side)"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:290
+#: upstream/_versions/main/guides/redis-reference.adoc:308
 msgid "cuckoo - `.cuckoo()` (requires the https://redis.com/modules/redis-bloom/[rRedisBloom] module on the server side, which also provides the cuckoo filter commands)"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:291
+#: upstream/_versions/main/guides/redis-reference.adoc:309
 msgid "count-min - `.countmin()` (requires the https://redis.com/modules/redis-bloom/[RedisBloom] module on the server side, which also provides the count-min filter commands)"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:292
+#: upstream/_versions/main/guides/redis-reference.adoc:310
 msgid "top-k - `.topk()` (requires the https://redis.com/modules/redis-bloom/[RedisBloom] module on the server side, which also provides the top-k filter commands)"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:295
+#: upstream/_versions/main/guides/redis-reference.adoc:313
 msgid "graph - `.graph()` (requires the https://redis.com/modules/redis-graph/[RedisGraph] module on the server side).  These commands are marked as experimental.  Also the module has been declared _end of life_ by https://redis.com/blog/redisgraph-eol/[Redis]."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:296
+#: upstream/_versions/main/guides/redis-reference.adoc:314
 msgid "search - `.search()` (requires the https://redis.com/modules/redis-search/[RedisSearch] module on the server side)."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:297
+#: upstream/_versions/main/guides/redis-reference.adoc:315
 msgid "auto-suggest - `.autosuggest()` (requires the https://redis.com/modules/redis-search/[RedisSearch] module on the server side)."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:298
+#: upstream/_versions/main/guides/redis-reference.adoc:316
 msgid "time-series - `.timeseries()` (requires the https://redis.com/modules/redis-timeseries/[Redis Time Series] module on the server side)."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:300
+#: upstream/_versions/main/guides/redis-reference.adoc:318
 msgid "These commands are marked as experimental, as we would need feedback before making them stable."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:303
+#: upstream/_versions/main/guides/redis-reference.adoc:321
 msgid "Each of these methods returns an object that lets you execute the commands related to the group.  The following snippet demonstrates how to use the _hash_ group:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:308
-#: upstream/_versions/main/guides/redis-reference.adoc:391
+#: upstream/_versions/main/guides/redis-reference.adoc:326
+#: upstream/_versions/main/guides/redis-reference.adoc:409
 #, no-wrap
 msgid ""
 "@ApplicationScoped\n"
@@ -665,20 +701,20 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:310
-#: upstream/_versions/main/guides/redis-reference.adoc:393
+#: upstream/_versions/main/guides/redis-reference.adoc:328
+#: upstream/_versions/main/guides/redis-reference.adoc:411
 #, no-wrap
 msgid "    private static final String MY_KEY = \"my-key\";\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:312
+#: upstream/_versions/main/guides/redis-reference.adoc:330
 #, no-wrap
 msgid "    private final HashCommands<String, String, Person> commands;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:316
+#: upstream/_versions/main/guides/redis-reference.adoc:334
 #, no-wrap
 msgid ""
 "    public MyRedisService(RedisDataSource ds) { // <1>\n"
@@ -687,7 +723,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:320
+#: upstream/_versions/main/guides/redis-reference.adoc:338
 #, no-wrap
 msgid ""
 "    public void set(String field, Person value) {\n"
@@ -696,7 +732,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:325
+#: upstream/_versions/main/guides/redis-reference.adoc:343
 #, no-wrap
 msgid ""
 "    public Person get(String field) {\n"
@@ -706,60 +742,60 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:328
+#: upstream/_versions/main/guides/redis-reference.adoc:346
 msgid "Inject the `RedisDataSource` in the constructor"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:330
+#: upstream/_versions/main/guides/redis-reference.adoc:348
 msgid "Creates the `HashCommands` object.  This object has three type parameters: the type of the key, the type of the field, and the type of the member"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:331
+#: upstream/_versions/main/guides/redis-reference.adoc:349
 msgid "Use the created `commands` to associate the field `field` with the value `value`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:332
+#: upstream/_versions/main/guides/redis-reference.adoc:350
 msgid "Use the created `commands` to retrieve the field `field` value."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/redis-reference.adoc:333
+#: upstream/_versions/main/guides/redis-reference.adoc:351
 #, no-wrap
 msgid "Serializing and Deserializing data"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:338
+#: upstream/_versions/main/guides/redis-reference.adoc:356
 msgid "The data source APIs handle the serialization and deserialization automatically.  By default, non-standard types are serialized into JSON and deserialized from JSON.  In this case, `quarkus-jackson` is used."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/redis-reference.adoc:339
+#: upstream/_versions/main/guides/redis-reference.adoc:357
 #, no-wrap
 msgid "Binary"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:342
+#: upstream/_versions/main/guides/redis-reference.adoc:360
 msgid "To store or retrieve binary data, use `byte[]`."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/redis-reference.adoc:343
+#: upstream/_versions/main/guides/redis-reference.adoc:361
 #, no-wrap
 msgid "Custom codec"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:346
+#: upstream/_versions/main/guides/redis-reference.adoc:364
 msgid "You can register custom codec by providing a CDI _bean_ implementing the `io.quarkus.redis.datasource.codecs.Codec` interface:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:351
+#: upstream/_versions/main/guides/redis-reference.adoc:369
 #, no-wrap
 msgid ""
 "import java.lang.reflect.Type;\n"
@@ -767,19 +803,19 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:353
+#: upstream/_versions/main/guides/redis-reference.adoc:371
 #, no-wrap
 msgid "import jakarta.enterprise.context.ApplicationScoped;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:355
+#: upstream/_versions/main/guides/redis-reference.adoc:373
 #, no-wrap
 msgid "import io.quarkus.redis.datasource.codecs.Codec;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:362
+#: upstream/_versions/main/guides/redis-reference.adoc:380
 #, no-wrap
 msgid ""
 "@ApplicationScoped\n"
@@ -791,7 +827,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:368
+#: upstream/_versions/main/guides/redis-reference.adoc:386
 #, no-wrap
 msgid ""
 "    @Override\n"
@@ -802,7 +838,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:376
+#: upstream/_versions/main/guides/redis-reference.adoc:394
 #, no-wrap
 msgid ""
 "    @Override\n"
@@ -815,29 +851,29 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:381
+#: upstream/_versions/main/guides/redis-reference.adoc:399
 msgid "The `canHandle` method is called to check if the codec can handle a specific type.  The parameter received in the `encode` method matches that type.  The object returned by the `decode` method must also match that type."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/redis-reference.adoc:382
+#: upstream/_versions/main/guides/redis-reference.adoc:400
 #, no-wrap
 msgid "Use type reference"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:386
+#: upstream/_versions/main/guides/redis-reference.adoc:404
 msgid "Each group can be configured with `Class`, or with `TypeReference` objects.  `TypeReference` are useful when dealing with Java generics:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:395
+#: upstream/_versions/main/guides/redis-reference.adoc:413
 #, no-wrap
 msgid "    private final HashCommands<String, String, List<Person>> commands;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:399
+#: upstream/_versions/main/guides/redis-reference.adoc:417
 #, no-wrap
 msgid ""
 "    public MyRedisService(RedisDataSource ds) {\n"
@@ -846,7 +882,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:403
+#: upstream/_versions/main/guides/redis-reference.adoc:421
 #, no-wrap
 msgid ""
 "    public void set(String field, List<Person> value) {\n"
@@ -855,7 +891,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:408
+#: upstream/_versions/main/guides/redis-reference.adoc:426
 #, no-wrap
 msgid ""
 "    public List<Person> get(String field) {\n"
@@ -865,34 +901,34 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:411
+#: upstream/_versions/main/guides/redis-reference.adoc:429
 msgid "You cannot use type references when using transaction. This is a known limitation."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/redis-reference.adoc:412
+#: upstream/_versions/main/guides/redis-reference.adoc:430
 #, no-wrap
 msgid "Manipulate cached and binary data with the `value` group"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:416
+#: upstream/_versions/main/guides/redis-reference.adoc:434
 msgid "The `value` group is used to manipulate https://redis.io/docs/manual/data-types/#strings[Redis Strings].  Thus, this group is not limited to Java Strings but can be used for integers (like a counter) or binary content (like images)."
 msgstr ""
 
 #. type: Title ====
-#: upstream/_versions/main/guides/redis-reference.adoc:417
+#: upstream/_versions/main/guides/redis-reference.adoc:435
 #, no-wrap
 msgid "Work with cached values"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:421
+#: upstream/_versions/main/guides/redis-reference.adoc:439
 msgid "You can use Redis as a cache using the `setex` command, which stores a given value to a given key for a given duration.  The following snippet shows how such a command can be used to store `BusinessObject` for 1 second."
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:426
+#: upstream/_versions/main/guides/redis-reference.adoc:444
 #, no-wrap
 msgid ""
 "@ApplicationScoped\n"
@@ -900,13 +936,13 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:428
+#: upstream/_versions/main/guides/redis-reference.adoc:446
 #, no-wrap
 msgid "    private final ValueCommands<String, BusinessObject> commands;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:432
+#: upstream/_versions/main/guides/redis-reference.adoc:450
 #, no-wrap
 msgid ""
 "    public MyRedisCache(RedisDataSource ds) {\n"
@@ -915,8 +951,8 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:436
-#: upstream/_versions/main/guides/redis-reference.adoc:597
+#: upstream/_versions/main/guides/redis-reference.adoc:454
+#: upstream/_versions/main/guides/redis-reference.adoc:615
 #, no-wrap
 msgid ""
 "    public BusinessObject get(String key) {\n"
@@ -925,7 +961,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:441
+#: upstream/_versions/main/guides/redis-reference.adoc:459
 #, no-wrap
 msgid ""
 "    public void set(String key, BusinessObject bo) {\n"
@@ -935,68 +971,68 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:444
+#: upstream/_versions/main/guides/redis-reference.adoc:462
 msgid "You can use the `setnx` method only to set the value if no value has been stored for the given key."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:446
+#: upstream/_versions/main/guides/redis-reference.adoc:464
 msgid "The `key` group provides more fine-grain control on expiration and ttl of each key."
 msgstr ""
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/redis-reference.adoc:450
+#: upstream/_versions/main/guides/redis-reference.adoc:468
 msgid "The `set` method can also receive a `SetArgs` argument that modify the behavior:"
 msgstr ""
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/redis-reference.adoc:452
+#: upstream/_versions/main/guides/redis-reference.adoc:470
 msgid "`ex(seconds)` - Set the specified expire time, in seconds."
 msgstr ""
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/redis-reference.adoc:453
+#: upstream/_versions/main/guides/redis-reference.adoc:471
 msgid "`px(milliseconds)` - Set the specified expire time, in milliseconds."
 msgstr ""
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/redis-reference.adoc:454
+#: upstream/_versions/main/guides/redis-reference.adoc:472
 msgid "`exat(timestamp-seconds)` - Set the specified Unix time at which the key will expire, in seconds."
 msgstr ""
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/redis-reference.adoc:455
+#: upstream/_versions/main/guides/redis-reference.adoc:473
 msgid "`pxat(timestamp-milliseconds)` - Set the specified Unix time at which the key will expire, in milliseconds."
 msgstr ""
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/redis-reference.adoc:456
+#: upstream/_versions/main/guides/redis-reference.adoc:474
 msgid "`nx()` - Only set the key if it does not already exist."
 msgstr ""
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/redis-reference.adoc:457
+#: upstream/_versions/main/guides/redis-reference.adoc:475
 msgid "`xx()` - Only set the key if it already exists."
 msgstr ""
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/redis-reference.adoc:458
+#: upstream/_versions/main/guides/redis-reference.adoc:476
 msgid "`keepttl()` - Retain the time to live associated with the key."
 msgstr ""
 
 #. type: Title ====
-#: upstream/_versions/main/guides/redis-reference.adoc:460
+#: upstream/_versions/main/guides/redis-reference.adoc:478
 #, no-wrap
 msgid "Store binary data"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:464
+#: upstream/_versions/main/guides/redis-reference.adoc:482
 msgid "Redis _strings_ can be used to store binary data, such as images.  In this case, we will use `byte[]` as value type:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:469
+#: upstream/_versions/main/guides/redis-reference.adoc:487
 #, no-wrap
 msgid ""
 "@ApplicationScoped\n"
@@ -1004,13 +1040,13 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:471
+#: upstream/_versions/main/guides/redis-reference.adoc:489
 #, no-wrap
 msgid "    private final ValueCommands<String, byte[]> commands;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:475
+#: upstream/_versions/main/guides/redis-reference.adoc:493
 #, no-wrap
 msgid ""
 "    public MyBinaryRepository(RedisDataSource ds) {\n"
@@ -1019,7 +1055,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:483
+#: upstream/_versions/main/guides/redis-reference.adoc:501
 #, no-wrap
 msgid ""
 "    public byte[] get(String key) {\n"
@@ -1032,7 +1068,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:487
+#: upstream/_versions/main/guides/redis-reference.adoc:505
 #, no-wrap
 msgid ""
 "    public void add(String key, byte[] bytes) {\n"
@@ -1041,7 +1077,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:492
+#: upstream/_versions/main/guides/redis-reference.adoc:510
 #, no-wrap
 msgid ""
 "    public void addIfAbsent(String key, byte[] bytes) {\n"
@@ -1051,18 +1087,18 @@ msgid ""
 msgstr ""
 
 #. type: Title ====
-#: upstream/_versions/main/guides/redis-reference.adoc:494
+#: upstream/_versions/main/guides/redis-reference.adoc:512
 #, no-wrap
 msgid "Store a counter"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:497
+#: upstream/_versions/main/guides/redis-reference.adoc:515
 msgid "You can store counters in Redis as demonstrated below:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:502
+#: upstream/_versions/main/guides/redis-reference.adoc:520
 #, no-wrap
 msgid ""
 "@ApplicationScoped\n"
@@ -1070,13 +1106,13 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:504
+#: upstream/_versions/main/guides/redis-reference.adoc:522
 #, no-wrap
 msgid "    private final ValueCommands<String, Long> commands;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:508
+#: upstream/_versions/main/guides/redis-reference.adoc:526
 #, no-wrap
 msgid ""
 "    public MyRedisCounter(RedisDataSource ds) {\n"
@@ -1085,7 +1121,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:516
+#: upstream/_versions/main/guides/redis-reference.adoc:534
 #, no-wrap
 msgid ""
 "    public long get(String key) {\n"
@@ -1098,7 +1134,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:520
+#: upstream/_versions/main/guides/redis-reference.adoc:538
 #, no-wrap
 msgid ""
 "    public void incr(String key) {\n"
@@ -1107,69 +1143,69 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:522
+#: upstream/_versions/main/guides/redis-reference.adoc:540
 #, no-wrap
 msgid "}\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:526
+#: upstream/_versions/main/guides/redis-reference.adoc:544
 msgid "Retrieve the commands.  This time we will manipulate `Long` values"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:528
+#: upstream/_versions/main/guides/redis-reference.adoc:546
 msgid "Retrieve the counter associated with the given `key`.  Return `0L` when no counter is stored."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:530
+#: upstream/_versions/main/guides/redis-reference.adoc:548
 msgid "Increment the value.  If there are no counter stored for the key, the `incr` command considers 0 as value (so `incr` sets the value to 1)."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:532
+#: upstream/_versions/main/guides/redis-reference.adoc:550
 msgid "There are other methods that can be useful to manipulate counters, such as:"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:534
+#: upstream/_versions/main/guides/redis-reference.adoc:552
 msgid "`incrby` - allows setting the increment value (positive or negative)"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:535
+#: upstream/_versions/main/guides/redis-reference.adoc:553
 msgid "`incrbyfloat` - allows setting the increment value as a float/ double (the stored value will be a double)"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:536
+#: upstream/_versions/main/guides/redis-reference.adoc:554
 msgid "`set` - to set an initial value if needed"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:537
+#: upstream/_versions/main/guides/redis-reference.adoc:555
 msgid "`decr` and `decrby` - allows decrementing the stored value"
 msgstr ""
 
 #. type: Title ====
-#: upstream/_versions/main/guides/redis-reference.adoc:538
+#: upstream/_versions/main/guides/redis-reference.adoc:556
 #, no-wrap
 msgid "Communicate with pub/sub"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:542
+#: upstream/_versions/main/guides/redis-reference.adoc:560
 msgid "Redis allows sending _messages_ to channels and listening for these messages.  These features are available from the `pubsub` group."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:544
+#: upstream/_versions/main/guides/redis-reference.adoc:562
 msgid "The following snippets shows how a _cache_ can emit a `Notification` after every `set`, and how a subscriber can receive the notification."
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:550
+#: upstream/_versions/main/guides/redis-reference.adoc:568
 #, no-wrap
 msgid ""
 "public static final class Notification {\n"
@@ -1178,19 +1214,19 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:552
+#: upstream/_versions/main/guides/redis-reference.adoc:570
 #, no-wrap
 msgid "    public Notification() {\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:554
+#: upstream/_versions/main/guides/redis-reference.adoc:572
 #, no-wrap
 msgid "    }\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:560
+#: upstream/_versions/main/guides/redis-reference.adoc:578
 #, no-wrap
 msgid ""
 "    public Notification(String key, BusinessObject bo) {\n"
@@ -1201,7 +1237,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:566
+#: upstream/_versions/main/guides/redis-reference.adoc:584
 #, no-wrap
 msgid ""
 "@ApplicationScoped\n"
@@ -1212,7 +1248,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:571
+#: upstream/_versions/main/guides/redis-reference.adoc:589
 #, no-wrap
 msgid ""
 "    public MySubscriber(RedisDataSource ds) {\n"
@@ -1222,7 +1258,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:576
+#: upstream/_versions/main/guides/redis-reference.adoc:594
 #, no-wrap
 msgid ""
 "    @Override\n"
@@ -1232,7 +1268,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:582
+#: upstream/_versions/main/guides/redis-reference.adoc:600
 #, no-wrap
 msgid ""
 "    @PreDestroy\n"
@@ -1243,7 +1279,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:585
+#: upstream/_versions/main/guides/redis-reference.adoc:603
 #, no-wrap
 msgid ""
 "@ApplicationScoped\n"
@@ -1251,7 +1287,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:588
+#: upstream/_versions/main/guides/redis-reference.adoc:606
 #, no-wrap
 msgid ""
 "    private final ValueCommands<String, BusinessObject> commands;\n"
@@ -1259,7 +1295,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:593
+#: upstream/_versions/main/guides/redis-reference.adoc:611
 #, no-wrap
 msgid ""
 "    public MyCache(RedisDataSource ds) {\n"
@@ -1269,7 +1305,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:603
+#: upstream/_versions/main/guides/redis-reference.adoc:621
 #, no-wrap
 msgid ""
 "    public void set(String key, BusinessObject bo) {\n"
@@ -1280,52 +1316,52 @@ msgid ""
 msgstr ""
 
 #. type: Title ====
-#: upstream/_versions/main/guides/redis-reference.adoc:605
+#: upstream/_versions/main/guides/redis-reference.adoc:623
 #, no-wrap
 msgid "Use Redis transactions"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:609
+#: upstream/_versions/main/guides/redis-reference.adoc:627
 msgid "Redis transactions are slightly different from relational database transactions.  Redis transactions are a batch of commands executed altogether."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:611
+#: upstream/_versions/main/guides/redis-reference.adoc:629
 msgid "A Redis transaction can _watch_ a set of keys, which would _discard_ the transaction is one of these keys are updated during the transaction execution."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:616
+#: upstream/_versions/main/guides/redis-reference.adoc:634
 msgid "Commands enqueued in a transaction are not executed before the whole transaction is executed.  It means that you cannot retrieve a result during the transaction.  Results are accumulated in a `TransactionResult` object you will access after the completion of the transaction.  This object contains whether the transaction succeeded or was discarded, and in the former case the result of each command (indexed by the command order)."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:620
+#: upstream/_versions/main/guides/redis-reference.adoc:638
 msgid "To start a transaction, you use the `withTransaction` method.  This method receives a `Consumer<TransactionalRedisDataSource>`, which follows the same API as the regular `RedisDataSource` except that the commands return `void` (`Uni<Void>` for the reactive variant).  When that consumer returns, the transaction is _executed_."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:622
+#: upstream/_versions/main/guides/redis-reference.adoc:640
 msgid "The following snippet shows how to create a transaction executing two related _writes_:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:626
+#: upstream/_versions/main/guides/redis-reference.adoc:644
 #, no-wrap
 msgid "@Inject RedisDataSource ds;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:628
 #: upstream/_versions/main/guides/redis-reference.adoc:646
-#: upstream/_versions/main/guides/redis-reference.adoc:727
+#: upstream/_versions/main/guides/redis-reference.adoc:664
+#: upstream/_versions/main/guides/redis-reference.adoc:745
 #, no-wrap
 msgid "// ...\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:634
+#: upstream/_versions/main/guides/redis-reference.adoc:652
 #, no-wrap
 msgid ""
 "TransactionResult result = ds.withTransaction(tx -> {\n"
@@ -1336,24 +1372,24 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:638
+#: upstream/_versions/main/guides/redis-reference.adoc:656
 msgid "The received `tx` object can also be used to _discard_ the transaction, using: `tx.discard();`.  The returned `TransactionResult` lets you retrieve the result of each command."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:640
+#: upstream/_versions/main/guides/redis-reference.adoc:658
 msgid "When using the reactive variant of the data source, the passed callback is a `Function<ReactiveTransactionalRedisDataSource, Uni<Void>>`:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:644
-#: upstream/_versions/main/guides/redis-reference.adoc:725
+#: upstream/_versions/main/guides/redis-reference.adoc:662
+#: upstream/_versions/main/guides/redis-reference.adoc:743
 #, no-wrap
 msgid "@Inject ReactiveRedisDataSource ds;\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:652
+#: upstream/_versions/main/guides/redis-reference.adoc:670
 #, no-wrap
 msgid ""
 "Uni<TransactionResult> result = ds.withTransaction(tx -> {\n"
@@ -1364,12 +1400,12 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:657
+#: upstream/_versions/main/guides/redis-reference.adoc:675
 msgid "Transaction execution can be conditioned by _keys_.  When a passed key gets modified during the execution of a transaction, the transaction is discarded.  The keys are passed as `String` as a second parameter to the `withTransaction` method:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:665
+#: upstream/_versions/main/guides/redis-reference.adoc:683
 #, no-wrap
 msgid ""
 "TransactionResult result = ds.withTransaction(tx -> {\n"
@@ -1380,29 +1416,29 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:668
+#: upstream/_versions/main/guides/redis-reference.adoc:686
 msgid "You cannot use the pub/sub feature from within a transaction."
 msgstr ""
 
 #. type: Title ====
-#: upstream/_versions/main/guides/redis-reference.adoc:669
+#: upstream/_versions/main/guides/redis-reference.adoc:687
 #, no-wrap
 msgid "Implement the optimistic locking pattern"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:673
+#: upstream/_versions/main/guides/redis-reference.adoc:691
 msgid "To use optimistic locking, you need to use a variant of the `withTransaction` method, allowing the execution of code before the transaction starts.  In other words, it will be executed as follows:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:677
+#: upstream/_versions/main/guides/redis-reference.adoc:695
 #, no-wrap
 msgid "WATCH key\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:681
+#: upstream/_versions/main/guides/redis-reference.adoc:699
 #, no-wrap
 msgid ""
 "// Pre-transaction block\n"
@@ -1411,7 +1447,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:685
+#: upstream/_versions/main/guides/redis-reference.adoc:703
 #, no-wrap
 msgid ""
 "MULTI\n"
@@ -1420,12 +1456,12 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:688
+#: upstream/_versions/main/guides/redis-reference.adoc:706
 msgid "For example, if you need to update a value in a hash only if the field exists, you will use the following API:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:704
+#: upstream/_versions/main/guides/redis-reference.adoc:722
 #, no-wrap
 msgid ""
 "OptimisticLockingTransactionResult<Boolean> result = blocking.withTransaction(ds -> {\n"
@@ -1444,76 +1480,76 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:710
+#: upstream/_versions/main/guides/redis-reference.adoc:728
 msgid "If one of the watched keys is touched before or during the execution of the pre-transaction or transactional blocks, the transaction is aborted.  The pre-transactional block produces a result that the transactional block can use.  This construct is necessary because, within a transaction, the commands do not produce a result.  Results can only be retrieved after the execution of the transaction."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:715
+#: upstream/_versions/main/guides/redis-reference.adoc:733
 msgid "The pre-transaction and transactional blocks are invoked on the same Redis connection.  Consequently, the pre-transaction block must use the passed data source to execute commands.  Thus, the commands are emitted from that connection.  These commands must not modify the watched keys."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:717
+#: upstream/_versions/main/guides/redis-reference.adoc:735
 msgid "The transaction is aborted if the pre-transaction block throws an exception (or produces a failure when using the reactive API)."
 msgstr ""
 
 #. type: Title ====
-#: upstream/_versions/main/guides/redis-reference.adoc:718
+#: upstream/_versions/main/guides/redis-reference.adoc:736
 #, fuzzy, no-wrap
 msgid "Execute custom commands"
 msgstr "如何使用自定义Redis命令"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:721
+#: upstream/_versions/main/guides/redis-reference.adoc:739
 msgid "To execute a custom command, or a command not supported by the API, use the following approach:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:729
+#: upstream/_versions/main/guides/redis-reference.adoc:747
 #, no-wrap
 msgid "Response response = ds.execute(\"my-command\", param1, param2, param3);\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:735
+#: upstream/_versions/main/guides/redis-reference.adoc:753
 msgid "The `execute` method sends the command to Redis and retrieves the `Response`.  The command name is passed as first parameters.  You can add an arbitrary number of **String** parameters to your command.  The result is wrapped into a `Response` object."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:737
+#: upstream/_versions/main/guides/redis-reference.adoc:755
 msgid "The reactive variant returns a `Uni<Response>`."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:739
+#: upstream/_versions/main/guides/redis-reference.adoc:757
 msgid "You can also execute custom command in a transaction."
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/redis-reference.adoc:740
+#: upstream/_versions/main/guides/redis-reference.adoc:758
 #, no-wrap
 msgid "Preload data into Redis"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:743
+#: upstream/_versions/main/guides/redis-reference.adoc:761
 msgid "On startup, you can configure the Redis client to preload data into the Redis database."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/redis-reference.adoc:744
+#: upstream/_versions/main/guides/redis-reference.adoc:762
 #, no-wrap
 msgid "Configure the load scripts"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:747
+#: upstream/_versions/main/guides/redis-reference.adoc:765
 msgid "Specify the _load script_ you want to load using:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:752
+#: upstream/_versions/main/guides/redis-reference.adoc:770
 #, no-wrap
 msgid ""
 "quarkus.redis.load-script=import.redis # import.redis is the default in dev mode, no-file is the default in production mode\n"
@@ -1521,34 +1557,34 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:755
+#: upstream/_versions/main/guides/redis-reference.adoc:773
 msgid "`load-script` is a build time property than cannot be overridden at runtime."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:758
+#: upstream/_versions/main/guides/redis-reference.adoc:776
 msgid "Note that each client can have a different script, even a list of scripts.  In the case of a list, the data is imported in the list order (for example, first `actors.redis`, then `movies.redis` for the `my-redis` client)."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/redis-reference.adoc:759
+#: upstream/_versions/main/guides/redis-reference.adoc:777
 #, no-wrap
 msgid "Write load scripts"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:762
+#: upstream/_versions/main/guides/redis-reference.adoc:780
 msgid "The `.redis` file follows a _one command per line_ format:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:766
+#: upstream/_versions/main/guides/redis-reference.adoc:784
 #, no-wrap
 msgid "# Line starting with # and -- are ignored, as well as empty lines\n"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:769
+#: upstream/_versions/main/guides/redis-reference.adoc:787
 #, no-wrap
 msgid ""
 "-- One command per line:\n"
@@ -1556,7 +1592,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:772
+#: upstream/_versions/main/guides/redis-reference.adoc:790
 #, no-wrap
 msgid ""
 "-- Parameters with spaces must be wrapped into single or double quotes\n"
@@ -1564,7 +1600,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:776
+#: upstream/_versions/main/guides/redis-reference.adoc:794
 #, no-wrap
 msgid ""
 "-- Parameters with double quotes must be wrapped into single quotes and the opposite\n"
@@ -1573,12 +1609,12 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:781
+#: upstream/_versions/main/guides/redis-reference.adoc:799
 msgid "Quarkus batches all the commands from a single file and sends all the commands.  The loading process fails if there is any error, but the previous instructions may have been executed.  To avoid that, you can wrap your command into a Redis _transaction_:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:790
+#: upstream/_versions/main/guides/redis-reference.adoc:808
 #, no-wrap
 msgid ""
 "-- Run inside a transaction\n"
@@ -1590,78 +1626,78 @@ msgid ""
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/redis-reference.adoc:792
+#: upstream/_versions/main/guides/redis-reference.adoc:810
 #, no-wrap
 msgid "Configure the pre-loading"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:797
+#: upstream/_versions/main/guides/redis-reference.adoc:815
 msgid "The data is loaded when the application starts.  By default, it drops the whole database before importing.  You can prevent this using `quarkus.redis.flush-before-load=false`."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:800
+#: upstream/_versions/main/guides/redis-reference.adoc:818
 msgid "Also, the import process only runs if the database is empty (no key).  You can force to import even if there is data using the `quarkus.redis.load-only-if-empty=false`"
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/redis-reference.adoc:801
+#: upstream/_versions/main/guides/redis-reference.adoc:819
 #, no-wrap
 msgid "Distinguish dev/test vs. prod when pre-loading"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:805
+#: upstream/_versions/main/guides/redis-reference.adoc:823
 msgid "As mentioned above, in dev and test modes, Quarkus tries to import data by looking for the `src/main/resources/import.redis`.  This behavior is disabled in _prod_ mode, and if you want to import even in production, add:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:809
+#: upstream/_versions/main/guides/redis-reference.adoc:827
 #, no-wrap
 msgid "%prod.quarkus.redis.load-script=import.redis\n"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:812
+#: upstream/_versions/main/guides/redis-reference.adoc:830
 msgid "Before importing in _prod_ mode, make sure you configured `quarkus.redis.flush-before-load` accordingly."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:814
+#: upstream/_versions/main/guides/redis-reference.adoc:832
 msgid "In dev mode, to reload the content of the `.redis` load scripts, you need to add: `%dev.quarkus.vertx.caching=false`"
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/redis-reference.adoc:815
+#: upstream/_versions/main/guides/redis-reference.adoc:833
 #, no-wrap
 msgid "Use the Vert.x redis client"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:819
+#: upstream/_versions/main/guides/redis-reference.adoc:837
 msgid "In addition to the high-level API, you can use the Vertx Redis clients directly in your code.  The documentation of the Vert.x Redis Client is available on the https://vertx.io/docs/vertx-redis-client/java/[Vert.x Web Site]."
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/redis-reference.adoc:820
+#: upstream/_versions/main/guides/redis-reference.adoc:838
 #, fuzzy, no-wrap
 #| msgid "Providing Redis Hosts Programmatically"
 msgid "Configure Redis hosts programmatically"
 msgstr "以编程方式设定Redis主机"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:824
+#: upstream/_versions/main/guides/redis-reference.adoc:842
 msgid "The `RedisHostsProvider` programmatically provides redis hosts.  This allows for configuration of properties like redis connection password coming from other sources."
 msgstr ""
 
 #. type: delimited block =
-#: upstream/_versions/main/guides/redis-reference.adoc:828
+#: upstream/_versions/main/guides/redis-reference.adoc:846
 msgid "This is useful as it removes the need to store sensitive data in application.properties."
 msgstr "这样可以避免在application.properties中存储敏感数据，很实用。"
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:842
+#: upstream/_versions/main/guides/redis-reference.adoc:860
 #, no-wrap
 msgid ""
 "@ApplicationScoped\n"
@@ -1677,29 +1713,29 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:845
+#: upstream/_versions/main/guides/redis-reference.adoc:863
 msgid "The host provider can be used to configure the redis client like shown below"
 msgstr "`RedisHostsProvider` 可用于配置Redis客户端，如下图所示："
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:849
+#: upstream/_versions/main/guides/redis-reference.adoc:867
 #, no-wrap
 msgid "quarkus.redis.hosts-provider-name=hosts-provider\n"
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/redis-reference.adoc:851
+#: upstream/_versions/main/guides/redis-reference.adoc:869
 #, fuzzy, no-wrap
 msgid "Customize the Redis options programmatically"
 msgstr "以编程方式设定Redis主机"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:855
+#: upstream/_versions/main/guides/redis-reference.adoc:873
 msgid "You can expose a bean implementing the `io.quarkus.redis.client.RedisOptionsCustomizer` interface to customize the Redis client options.  The bean is called for each configured Redis client:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:860
+#: upstream/_versions/main/guides/redis-reference.adoc:878
 #, no-wrap
 msgid ""
 "@ApplicationScoped\n"
@@ -1707,7 +1743,7 @@ msgid ""
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:871
+#: upstream/_versions/main/guides/redis-reference.adoc:889
 #, no-wrap
 msgid ""
 "    @Override\n"
@@ -1723,62 +1759,62 @@ msgid ""
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/redis-reference.adoc:873
+#: upstream/_versions/main/guides/redis-reference.adoc:891
 #, fuzzy, no-wrap
 #| msgid "Dev Services"
 msgid "Use the Redis Dev Services"
 msgstr "开发服务"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:876
+#: upstream/_versions/main/guides/redis-reference.adoc:894
 msgid "See xref:redis-dev-services.adoc[Redis Dev Service]."
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/redis-reference.adoc:877
+#: upstream/_versions/main/guides/redis-reference.adoc:895
 #, no-wrap
 msgid "Configure Redis observability"
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/redis-reference.adoc:879
+#: upstream/_versions/main/guides/redis-reference.adoc:897
 #, no-wrap
 msgid "Enable the health checks"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:882
+#: upstream/_versions/main/guides/redis-reference.adoc:900
 msgid "If you are using the `quarkus-smallrye-health` extension, `quarkus-redis` will automatically add a readiness health check to validate the connection to the Redis server."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:884
+#: upstream/_versions/main/guides/redis-reference.adoc:902
 msgid "So when you access the `/q/health/ready` endpoint of your application you will have information about the connection validation status."
 msgstr "因此，当你访问应用程序的 `/q/health/ready` 端点时，可获得有关于连接验证状态的信息。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:886
+#: upstream/_versions/main/guides/redis-reference.adoc:904
 msgid "This behavior can be disabled by setting the `quarkus.redis.health.enabled` property to `false` in your `application.properties`."
 msgstr "可以通过在 `application.properties` 中设置 `quarkus.redis.health.enabled` 属性为 `false` 来禁用这个连接健康检查。"
 
 #. type: Title ===
-#: upstream/_versions/main/guides/redis-reference.adoc:887
+#: upstream/_versions/main/guides/redis-reference.adoc:905
 #, no-wrap
 msgid "Enable metrics"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:891
+#: upstream/_versions/main/guides/redis-reference.adoc:909
 msgid "Redis client metrics are automatically enabled when the application also uses the xref:telemetry-micrometer.adoc[`quarkus-micrometer`] extension.  Micrometer collects the metrics of all the Redis clients implemented by the application."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:893
+#: upstream/_versions/main/guides/redis-reference.adoc:911
 msgid "As an example, if you export the metrics to Prometheus, you will get:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:941
+#: upstream/_versions/main/guides/redis-reference.adoc:959
 #, no-wrap
 msgid ""
 "# HELP redis_commands_duration_seconds The duration of the operations (commands of batches\n"
@@ -1829,34 +1865,34 @@ msgid ""
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:944
+#: upstream/_versions/main/guides/redis-reference.adoc:962
 msgid "The Redis client name can be found in the _tags_."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:946
+#: upstream/_versions/main/guides/redis-reference.adoc:964
 msgid "The metrics contain both the Redis connection pool metrics (`redis_pool_*`) and the metrics about the command execution (`redis_commands_*`) such as the number of command, successes, failures, and durations."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_versions/main/guides/redis-reference.adoc:947
+#: upstream/_versions/main/guides/redis-reference.adoc:965
 #, no-wrap
 msgid "Disable metrics"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/redis-reference.adoc:950
+#: upstream/_versions/main/guides/redis-reference.adoc:968
 msgid "To disable the Redis client metrics when `quarkus-micrometer` is used, add the following property to the application configuration:"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_versions/main/guides/redis-reference.adoc:954
+#: upstream/_versions/main/guides/redis-reference.adoc:972
 #, no-wrap
 msgid "quarkus.micrometer.binder.redis.enabled=false\n"
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/redis-reference.adoc:957
+#: upstream/_versions/main/guides/redis-reference.adoc:975
 #, fuzzy, no-wrap
 msgid "Configuration reference"
 msgstr "配置参考"

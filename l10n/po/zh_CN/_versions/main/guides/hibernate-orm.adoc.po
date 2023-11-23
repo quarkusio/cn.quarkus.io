@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2023-10-12 02:09+0000\n"
+"POT-Creation-Date: 2023-11-23 02:22+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2207,6 +2207,8 @@ msgstr ""
 #. type: Plain text
 #: upstream/_versions/main/guides/hibernate-orm.adoc:1202
 #: upstream/_versions/main/guides/hibernate-orm.adoc:1244
+#: upstream/_versions/main/guides/hibernate-orm.adoc:1284
+#: upstream/_versions/main/guides/hibernate-orm.adoc:1316
 msgid "For xref:multiple-persistence-units[named persistence units], use `@PersistenceUnitExtension(\"nameOfYourPU\")`"
 msgstr ""
 
@@ -2266,6 +2268,107 @@ msgid "Annotate the statement inspector implementation with the `@PersistenceUni
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/hibernate-orm.adoc:1244
+#: upstream/_versions/main/guides/hibernate-orm.adoc:1245
 msgid "Implement `org.hibernate.engine.jdbc.spi.StatementInspector`."
+msgstr ""
+
+#. type: Title ==
+#: upstream/_versions/main/guides/hibernate-orm.adoc:1247
+#, no-wrap
+msgid "Customizing JSON/XML serialization/deserialization"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/hibernate-orm.adoc:1252
+msgid "By default, Quarkus will try to automatically configure format mappers depending on available extensions.  Globally configured `ObjectMapper` (or `Jsonb`) will be used for serialization/deserialization operations when Jackson (or JSON-B) is available.  Jackson will take precedence if both Jackson and JSON-B are available at the same time."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/hibernate-orm.adoc:1255
+msgid "JSON and XML serialization/deserialization in Hibernate ORM can be customized by implementing a `org.hibernate.type.format.FormatMapper` and annotating the implementation with the appropriate qualifiers:"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/hibernate-orm.adoc:1270
+#, no-wrap
+msgid ""
+"@JsonFormat // <1>\n"
+"@PersistenceUnitExtension // <2>\n"
+"public class MyJsonFormatMapper implements FormatMapper { // <3>\n"
+"    @Override\n"
+"    public String inspect(String sql) {\n"
+"        // ...\n"
+"        return sql;\n"
+"    }\n"
+"    @Override\n"
+"    public <T> T fromString(CharSequence charSequence, JavaType<T> javaType, WrapperOptions wrapperOptions) {\n"
+"        // ...\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/hibernate-orm.adoc:1276
+#: upstream/_versions/main/guides/hibernate-orm.adoc:1308
+#, no-wrap
+msgid ""
+"    @Override\n"
+"    public <T> String toString(T value, JavaType<T> javaType, WrapperOptions wrapperOptions) {\n"
+"       // ...\n"
+"    }\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/hibernate-orm.adoc:1279
+msgid "Annotate the format mapper implementation with the `@JsonFormat` qualifier to tell Quarkus that this mapper is specific to JSON serialization/deserialization."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/hibernate-orm.adoc:1282
+#: upstream/_versions/main/guides/hibernate-orm.adoc:1314
+msgid "Annotate the format mapper implementation with the `@PersistenceUnitExtension` qualifier to tell Quarkus it should be used in the default persistence unit."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/hibernate-orm.adoc:1285
+#: upstream/_versions/main/guides/hibernate-orm.adoc:1317
+msgid "Implement `org.hibernate.type.format.FormatMapper`."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/hibernate-orm.adoc:1287
+msgid "In case of a custom XML format mapper, a different CDI qualifier must be applied:"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/hibernate-orm.adoc:1302
+#, no-wrap
+msgid ""
+"@XmlFormat // <1>\n"
+"@PersistenceUnitExtension // <2>\n"
+"public class MyJsonFormatMapper implements FormatMapper { // <3>\n"
+"    @Override\n"
+"    public String inspect(String sql) {\n"
+"        // ...\n"
+"        return sql;\n"
+"    }\n"
+"    @Override\n"
+"    public <T> T fromString(CharSequence charSequence, JavaType<T> javaType, WrapperOptions wrapperOptions) {\n"
+"        // ...\n"
+"    }\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/hibernate-orm.adoc:1311
+msgid "Annotate the format mapper implementation with the `@XmlFormat` qualifier to tell Quarkus that this mapper is specific to XML serialization/deserialization."
+msgstr ""
+
+#. type: delimited block =
+#: upstream/_versions/main/guides/hibernate-orm.adoc:1321
+msgid "Format mappers *must* have both `@PersistenceUnitExtension` and either `@JsonFormat` or `@XmlFormat` CDI qualifiers applied."
+msgstr ""
+
+#. type: delimited block =
+#: upstream/_versions/main/guides/hibernate-orm.adoc:1323
+msgid "Having multiple JSON (or XML) format mappers registered for the same persistence unit will result in an exception, because of the ambiguity."
 msgstr ""
