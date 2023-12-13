@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2023-11-25 02:20+0000\n"
+"POT-Creation-Date: 2023-12-13 02:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -515,7 +515,7 @@ msgstr ""
 
 #. type: Plain text
 #: upstream/_versions/main/guides/security-openid-connect-multitenancy.adoc:274
-msgid "However, using a static tenant resolution (configuring tenants in `application.properties` and resolving them with `TenantResolver`) prevents testing the endpoint with `Dev Services for Keycloak` since `Dev Services for Keycloak` has no knowledge of how the requests will be mapped to individual tenants and can not dynamically provide tenant-specific `quarkus.oidc.<tenant-id>.auth-server-url` values and therefore using `%prod` prefixes with the tenant-specific URLs in `application.properties` will not work in tests or devmode."
+msgid "However, using a static tenant resolution (configuring tenants in `application.properties` and resolving them with `TenantResolver`) prevents testing the endpoint with `Dev Services for Keycloak` since `Dev Services for Keycloak` has no knowledge of how the requests will be mapped to individual tenants and can not dynamically provide tenant-specific `quarkus.oidc.<tenant-id>.auth-server-url` values and therefore using `%prod` prefixes with the tenant-specific URLs in `application.properties` will not work in test or dev mode."
 msgstr ""
 
 #. type: delimited block =
@@ -1486,10 +1486,10 @@ msgid ""
 "        List<String> tenantIdQuery = context.queryParam(\"tenantId\");\n"
 "        if (!tenantIdQuery.isEmpty()) {\n"
 "            String tenantId = tenantIdQuery.get(0);\n"
-"            context.addCookie(Cookie.cookie(\"tenant\", tenantId));\n"
+"            context.response().addCookie(Cookie.cookie(\"tenant\", tenantId));\n"
 "            return tenantId;\n"
-"        } else if (context.cookieMap().containsKey(\"tenant\")) {\n"
-"            return context.getCookie(\"tenant\").getValue();\n"
+"        } else if (!context.request().cookies(\"tenant\").isEmpty()) {\n"
+"            return context.request().getCookie(\"tenant\").getValue();\n"
 "        }\n"
 msgstr ""
 
