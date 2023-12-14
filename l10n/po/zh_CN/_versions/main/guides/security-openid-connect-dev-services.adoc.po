@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2023-12-13 02:16+0000\n"
+"POT-Creation-Date: 2023-12-14 02:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -727,197 +727,46 @@ msgstr ""
 #. type: Title ==
 #: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:343
 #, no-wrap
-msgid "Dev Services and UI Support for other OpenID Connect Providers"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:346
-msgid "Your custom extension would need to extend `quarkus-oidc` and add the dependencies required to support your provider to the extension's `deployment` module only."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:348
-msgid "The build step dealing with the `Dev Services` should additionally register two runtime properties into the \"io.quarkus.quarkus-oidc\" namespace: `oidcProviderName` (for example, `Google`) and `oidcProviderUrlBase` (for example: `mycompany.devservices-google`) for the `OpenID Connect Card` to link to the Dev UI page representing your provider, for example:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:352
-#, no-wrap
-msgid "package io.quarkus.oidc.okta.runtime;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:354
-#, no-wrap
-msgid "import java.util.function.Supplier;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:356
-#, no-wrap
-msgid "import io.quarkus.runtime.annotations.Recorder;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:360
-#, no-wrap
-msgid ""
-"// This simple recorder is the only code which will be located in the extension's `runtime` module\n"
-"@Recorder\n"
-"public class OktaDevServicesRecorder {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:363
-#, no-wrap
-msgid ""
-"    public Supplier<String> getProviderName() {\n"
-"        return new Supplier<String>() {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:370
-#, no-wrap
-msgid ""
-"            @Override\n"
-"            public String get() {\n"
-"                return \"OKTA\";\n"
-"            }\n"
-"        };\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:373
-#, no-wrap
-msgid ""
-"    public Supplier<String> getProviderUrlBase() {\n"
-"        return new Supplier<String>() {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:381
-#, no-wrap
-msgid ""
-"            @Override\n"
-"            public String get() {\n"
-"                return \"io.quarkus\" + \".\" + \"quarkus-oidc-okta\";\n"
-"            }\n"
-"        };\n"
-"    }\n"
-"}\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:384
-#, no-wrap
-msgid "package io.quarkus.oidc.okta.deployment.devservices;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:386
-#, no-wrap
-msgid "import static io.quarkus.deployment.annotations.ExecutionTime.RUNTIME_INIT;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:388
-#, no-wrap
-msgid "import java.util.Optional;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:397
-#, no-wrap
-msgid ""
-"import io.quarkus.deployment.IsDevelopment;\n"
-"import io.quarkus.deployment.annotations.BuildProducer;\n"
-"import io.quarkus.deployment.annotations.BuildStep;\n"
-"import io.quarkus.deployment.annotations.Consume;\n"
-"import io.quarkus.deployment.annotations.Record;\n"
-"import io.quarkus.deployment.builditem.RuntimeConfigSetupCompleteBuildItem;\n"
-"import io.quarkus.devconsole.spi.DevConsoleRouteBuildItem;\n"
-"import io.quarkus.devconsole.spi.DevConsoleRuntimeTemplateInfoBuildItem;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:399
-#, no-wrap
-msgid "public class OktaDevConsoleProcessor {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:413
-#, no-wrap
-msgid ""
-"    @BuildStep(onlyIf = IsDevelopment.class)\n"
-"    @Record(value = RUNTIME_INIT)\n"
-"    public void setOidcProviderProperties(BuildProducer<DevConsoleRuntimeTemplateInfoBuildItem> provider,\n"
-"            OktaDevServicesRecorder recorder,\n"
-"            Optional<DevServicesConfigBuildItem> configProps) {\n"
-"        if (configProps.isPresent()) {\n"
-"            provider.produce(new DevConsoleRuntimeTemplateInfoBuildItem(\"io.quarkus\", \"quarkus-oidc\", \"oidcProviderName\",\n"
-"                    recorder.getProviderName()));\n"
-"            provider.produce(new DevConsoleRuntimeTemplateInfoBuildItem(\"io.quarkus\", \"quarkus-oidc\", \"oidcProviderUrlBase\",\n"
-"                    recorder.getProviderUrlBase()));\n"
-"        }\n"
-"    }\n"
-"}\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:417
-msgid "Additionally, the extension should produce a `io.quarkus.oidc.deployment.devservices.OidcProviderBuildItem` to disable the default `Dev Services for Keycloak`, instead of the users having to type `quarkus.keycloak.devservices.enabled=false`."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:419
-msgid "Please follow the xref:dev-ui.adoc[Dev UI] tutorial as well as check the `extensions/oidc/deployment` sources for more ideas."
-msgstr ""
-
-#. type: Title ==
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:420
-#, no-wrap
 msgid "Non Application Root Path Considerations"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:423
+#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:346
 msgid "This document refers to the `http://localhost:8080/q/dev-ui` Dev UI URL in several places where `q` is a default non application root path. If you customize `quarkus.http.root-path` and/or `quarkus.http.non-application-root-path` properties then replace `q` accordingly, please see https://quarkus.io/blog/path-resolution-in-quarkus/[Path Resolution in Quarkus] for more information."
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:424
+#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:347
 #, no-wrap
 msgid "References"
 msgstr "参考文献"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:427
+#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:350
 msgid "xref:dev-ui.adoc[Dev UI]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:428
+#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:351
 msgid "https://www.keycloak.org/documentation.html[Keycloak Documentation]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:429
+#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:352
 msgid "https://openid.net/connect/[OpenID Connect]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:430
+#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:353
 msgid "xref:security-oidc-bearer-token-authentication.adoc[OIDC Bearer token authentication]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:431
+#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:354
 msgid "xref:security-oidc-code-flow-authentication.adoc[OIDC code flow mechanism for protecting web applications]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:431
+#: upstream/_versions/main/guides/security-openid-connect-dev-services.adoc:354
 msgid "xref:security-overview.adoc[Quarkus Security overview]"
 msgstr ""
