@@ -36,7 +36,7 @@ msgid ""
 "Alternatively, if you want to use RabbitMQ with AMQP 1.0 you need to enable the AMQP 1.0 plugin in the RabbitMQ broker;\n"
 "check the https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/3.9/amqp/amqp.html#amqp-rabbitmq[connecting to RabbitMQ]\n"
 "documentation."
-msgstr ""
+msgstr "如果你想使用 RabbitMQ，你应该使用 xref:rabbitmq.adoc[SmallRye响应式消息RabbitMQ 扩展] 。另外，如果你想使用带有 AMQP 1.0的RabbitMQ ，你需要在 RabbitMQ 代理中启用 AMQP 1.0 插件；请查看 link:https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/3.9/amqp/amqp.html#amqp-rabbitmq[连接到 RabbitMQ] 文档。"
 
 #. type: Title ==
 #: _versions/2.16/guides/amqp.adoc
@@ -56,14 +56,14 @@ msgid ""
 "We will use https://activemq.apache.org/components/artemis/[Artemis], but you can use any AMQP 1.0 broker.\n"
 "The first application sends a _quote request_ to an AMQP queue and consumes messages from the _quote_ queue.\n"
 "The second application receives the _quote request_ and sends a _quote_ back."
-msgstr ""
+msgstr "在本指南中，我们将开发两个与AMQP代理进行通信的应用程序。我们将使用 link:https://activemq.apache.org/components/artemis/[Artemis] ，但你可以使用任何AMQP 1.0代理。第一个应用程序向AMQP队列发送一个 _quote request_ ，并消费 _quote_ queue 中的消息。第二个应用程序接收 _quote request_ ， 并发送一个 _quote_ back。"
 
 #: _versions/2.16/guides/amqp.adoc
 msgid ""
 "The first application, the `producer`, will let the user request some quotes over an HTTP endpoint.\n"
 "For each quote request, a random identifier is generated and returned to the user, to put the quote request on _pending_.\n"
 "At the same time the generated request id is sent over the `quote-requests` queue."
-msgstr ""
+msgstr "第一个应用程序 `producer` ，将让用户通过一个HTTP端点请求一些报价。对于每一个报价请求，都会生成一个随机标识符，并返回给用户，以便将报价请求放在 _pending_ 上。同时，生成的请求ID通过 `quote-requests` 队列被发送。"
 
 #. type: Plain text
 #: _versions/2.16/guides/amqp.adoc
@@ -74,7 +74,7 @@ msgstr "反过来，第二个应用程序 `processor` ，将读取 `quote-reques
 msgid ""
 "Lastly, the `producer` will read the quotes and send them to the browser using server-sent events.\n"
 "The user will therefore see the quote price updated from _pending_ to the received price in real-time."
-msgstr ""
+msgstr "最后， `producer` 将读取报价，并使用服务器发送事件将其发送给浏览器。因此，用户将实时看到报价从 _pending_ 更新为收到的价格。"
 
 #. type: Title ==
 #: _versions/2.16/guides/amqp.adoc
@@ -86,7 +86,7 @@ msgstr "解决方案"
 msgid ""
 "We recommend that you follow the instructions in the next sections and create applications step by step.\n"
 "However, you can go right to the completed example."
-msgstr ""
+msgstr "我们建议你按照下面章节中的说明，一步一步地创建应用程序。但是，你可以直接转到已完成的示例。"
 
 #. type: Plain text
 #: _versions/2.16/guides/amqp.adoc
@@ -155,13 +155,13 @@ msgid ""
 "The `Quote` class will be used in both `producer` and `processor` projects.\n"
 "For the sake of simplicity we will duplicate the class.\n"
 "In both projects, create the `src/main/java/org/acme/amqp/model/Quote.java` file, with the following content:"
-msgstr ""
+msgstr "`Quote` 类将用在 `producer` 和 `processor` 项目中。为了简单起见，我们将重复这个类。在两个项目中，创建 `src/main/java/org/acme/amqp/model/Quote.java` 文件，其内容如下："
 
 #: _versions/2.16/guides/amqp.adoc
 msgid ""
 "JSON representation of `Quote` objects will be used in messages sent to the AMQP queues\n"
 "and also in the server-sent events sent to browser clients."
-msgstr ""
+msgstr "`Quote` 对象的JSON表示将被用在发送给AMQP队列的消息中，也被用在发送给浏览器客户端的服务器发送事件中。"
 
 #. type: Plain text
 #: _versions/2.16/guides/amqp.adoc
@@ -179,7 +179,7 @@ msgid ""
 "The `@RegisterForReflection` annotation instructs Quarkus to include the class (including fields and methods) when building the native executable.\n"
 "This will be useful later when we run the applications as native executables inside containers.\n"
 "Without, the native compilation would remove the fields and methods during the dead-code elimination phase."
-msgstr ""
+msgstr "`@RegisterForReflection` 注释指示Quarkus在构建本地可执行文件时包含类（包括字段和方法）。这在以后我们在容器中作为本地可执行文件运行应用程序时将会很有用。如果没有这个注释，本地编译会在死代码清除阶段删除这些字段和方法。"
 
 #. type: Title ==
 #: _versions/2.16/guides/amqp.adoc
@@ -189,7 +189,7 @@ msgstr "发送报价请求"
 
 #: _versions/2.16/guides/amqp.adoc
 msgid "Inside the `producer` project locate the generated  `src/main/java/org/acme/amqp/producer/QuotesResource.java` file, and update the content to be:"
-msgstr ""
+msgstr "在 `producer` 项目中找到生成的 `src/main/java/org/acme/amqp/producer/QuotesResource.java` 文件，并将其内容更新为："
 
 #. type: Plain text
 #: _versions/2.16/guides/amqp.adoc
@@ -206,7 +206,7 @@ msgid ""
 "The `quote-requests` channel is going to be managed as a AMQP queue, as that's the only connector on the classpath.\n"
 "If not indicated otherwise, like in this example, Quarkus uses the channel name as AMQP queue name.\n"
 "So, in this example, the application sends messages to the `quote-requests` queue."
-msgstr ""
+msgstr "`quote-requests` 通道将被作为一个AMQP队列来管理，因为这是classpath上唯一的连接器。如果没有另行说明，如本例中所示，Quarkus将使用通道名称作为AMQP队列名称。因此，在本例中，应用程序将消息发送给 `quote-requests` 队列。"
 
 #. type: Plain text
 #: _versions/2.16/guides/amqp.adoc
@@ -223,7 +223,7 @@ msgstr "处理报价请求"
 msgid ""
 "Now let's consume the quote request and give out a price.\n"
 "Inside the `processor` project, locate the `src/main/java/org/acme/amqp/processor/QuoteProcessor.java` file and add the following:"
-msgstr ""
+msgstr "现在让我们来消费报价请求，并给出一个价格。在 `processor` 项目中，找到 `src/main/java/org/acme/amqp/processor/QuoteProcessor.java` 文件，并添加以下内容："
 
 #. type: Plain text
 #: _versions/2.16/guides/amqp.adoc
@@ -249,7 +249,7 @@ msgstr "`process` 方法被 `quote-requests` 队列中的每一个AMQP消息调�
 msgid ""
 "Because we want to consume messages from the `quotes-requests` queue into the `requests` channel, we need to configure this association.\n"
 "Open the `src/main/resources/application.properties` file and add:"
-msgstr ""
+msgstr "因为我们想把 `quotes-requests` 队列中的消息消费到 `requests` 通道中，因此我们需要配置这个关联。请打开 `src/main/resources/application.properties` 文件并添加："
 
 #. type: Plain text
 #: _versions/2.16/guides/amqp.adoc
@@ -276,7 +276,7 @@ msgstr "接收报价"
 msgid ""
 "Back to our `producer` project.\n"
 "Let's modify the `QuotesResource` to consume quotes, bind it to an HTTP endpoint to send events to clients:"
-msgstr ""
+msgstr "回到我们的 `producer` 项目。让我们修改 `QuotesResource` 来消费报价，将其绑定到一个HTTP端点，来向客户端发送事件："
 
 #. type: Plain text
 #: _versions/2.16/guides/amqp.adoc
@@ -313,7 +313,7 @@ msgstr "在 `producer` 项目中创建 `src/main/resources/META-INF/resources/qu
 msgid ""
 "Nothing spectacular here.\n"
 "On each received quote, it updates the page."
-msgstr ""
+msgstr "这里没有什么特别之处。对于每一个收到的报价，它都会更新页面。"
 
 #. type: Title ==
 #: _versions/2.16/guides/amqp.adoc
@@ -335,7 +335,7 @@ msgstr "并且，在另一台终端中："
 msgid ""
 "Quarkus starts a AMQP broker automatically, configures the application and shares the broker instance between different applications.\n"
 "See xref:amqp-dev-services.adoc[Dev Services for AMQP] for more details."
-msgstr ""
+msgstr "Quarkus会自动启动一个AMQP代理，配置应用程序，并在不同的应用程序之间共享代理实例。要了解更多的细节，请参阅 xref:amqp-dev-services.adoc[AMQP的开发服务] 。"
 
 #. type: Plain text
 #: _versions/2.16/guides/amqp.adoc
@@ -352,13 +352,13 @@ msgstr "在JVM或本地模式下运行"
 msgid ""
 "When not running in dev or test mode, you will need to start your AMQP broker.\n"
 "You can follow the instructions from the https://activemq.apache.org/components/artemis/documentation/latest/using-server.html[Apache ActiveMQ Artemis website] or create a `docker-compose.yaml` file with the following content:"
-msgstr ""
+msgstr "当不在开发或测试模式下运行时，你需要启动你的AMQP代理。你可以按照 link:https://activemq.apache.org/components/artemis/documentation/latest/using-server.html[Apache ActiveMQ Artemis网站]中的说明，或者使用以下内容创建一个 `docker-compose.yaml` 文件："
 
 #: _versions/2.16/guides/amqp.adoc
 msgid ""
 "Note how the AMQP broker location is configured.\n"
 "The `amqp.host` and `amqp.port` (`AMQP_HOST` and `AMQP_PORT` environment variables) properties configure location."
-msgstr ""
+msgstr "注意AMQP代理的位置是如何配置的。 `amqp.host` 和 `amqp.port` ( `AMQP_HOST` 和 `AMQP_PORT` 环境变量) 属性配置位置。"
 
 #. type: Plain text
 #: _versions/2.16/guides/amqp.adoc
@@ -369,7 +369,7 @@ msgstr "首先，确保你停止了应用程序，并在JVM模式下使用以下
 msgid ""
 "Once packaged, run `docker compose up --build`.\n"
 "The UI is exposed on http://localhost:8080/quotes.html"
-msgstr ""
+msgstr "一旦打包完成，请运行 `docker compose up --build` 。UI在 http://localhost:8080/quotes.html"
 
 #. type: Plain text
 #: _versions/2.16/guides/amqp.adoc
@@ -380,7 +380,7 @@ msgstr "要以本地方式运行你的应用程序，我们首先需要构建本
 msgid ""
 "The `-Dquarkus.native.container-build=true` instructs Quarkus to build Linux 64bits native executables, who can run inside containers.\n"
 "Then, run the system using:"
-msgstr ""
+msgstr "`-Dquarkus.native.container-build=true` 指示Quarkus构建可以在容器中运行的64位Linux本地可执行文件。然后，使用以下命令运行系统："
 
 #. type: Plain text
 #: _versions/2.16/guides/amqp.adoc
@@ -397,10 +397,10 @@ msgstr "进一步探索"
 msgid ""
 "This guide has shown how you can interact with AMQP 1.0 using Quarkus.\n"
 "It utilizes https://smallrye.io/smallrye-reactive-messaging[SmallRye Reactive Messaging] to build data streaming applications."
-msgstr ""
+msgstr "本指南展示了如何使用Quarkus与AMQP 1.0进行交互。它使用 link:https://smallrye.io/smallrye-reactive-messaging[SmallRye响应式消息]来构建数据流应用程序。"
 
 #: _versions/2.16/guides/amqp.adoc
 msgid ""
 "If you did the Kafka quickstart, you have realized that it's the same code.\n"
 "The only difference is the connector configuration and the JSON mapping."
-msgstr ""
+msgstr "如果你学过Kafka快速入门，你会意识到这是相同的代码。唯一的区别是连接器配置和JSON映射。"
