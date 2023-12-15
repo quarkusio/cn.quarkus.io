@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2023-10-12 02:10+0000\n"
+"POT-Creation-Date: 2023-12-15 02:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -159,6 +159,7 @@ msgstr ""
 #. type: delimited block -
 #: upstream/_versions/main/guides/security-customization.adoc:73
 #: upstream/_versions/main/guides/security-customization.adoc:135
+#: upstream/_versions/main/guides/security-customization.adoc:688
 #, no-wrap
 msgid "}\n"
 msgstr ""
@@ -1113,27 +1114,174 @@ msgid "This will allow you to propagate the identity throughout the reactive cal
 msgstr ""
 
 #. type: Title ==
-#: upstream/_versions/main/guides/security-customization.adoc:623
+#: upstream/_versions/main/guides/security-customization.adoc:624
+#, no-wrap
+msgid "Observe security events"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/security-customization.adoc:628
+msgid "Quarkus beans can use xref:cdi.adoc#events-and-observers[CDI observers] to consume authentication and authorization security events.  The observers can be either synchronous or asynchronous."
+msgstr ""
+
+#. type: Block title
+#: upstream/_versions/main/guides/security-customization.adoc:629
+#, no-wrap
+msgid "List of supported security events"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/security-customization.adoc:632
+msgid "`io.quarkus.security.spi.runtime.AuthenticationFailureEvent`"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/security-customization.adoc:633
+msgid "`io.quarkus.security.spi.runtime.AuthenticationSuccessEvent`"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/security-customization.adoc:634
+msgid "`io.quarkus.security.spi.runtime.AuthorizationFailureEvent`"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/security-customization.adoc:635
+msgid "`io.quarkus.security.spi.runtime.AuthorizationSuccessEvent`"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/security-customization.adoc:636
+msgid "`io.quarkus.oidc.SecurityEvent`"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/security-customization.adoc:641
+msgid "For more information about security events specific to the Quarkus OpenID Connect extension, please see the xref:security-oidc-code-flow-authentication.adoc#listen-to-authentication-events[Listening to important authentication events] section of the OIDC code flow mechanism for protecting web applications guide."
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/security-customization.adoc:645
+#, no-wrap
+msgid "package org.acme.security;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/security-customization.adoc:655
+#, no-wrap
+msgid ""
+"import io.quarkus.security.spi.runtime.AuthenticationFailureEvent;\n"
+"import io.quarkus.security.spi.runtime.AuthenticationSuccessEvent;\n"
+"import io.quarkus.security.spi.runtime.AuthorizationFailureEvent;\n"
+"import io.quarkus.security.spi.runtime.AuthorizationSuccessEvent;\n"
+"import io.quarkus.security.spi.runtime.SecurityEvent;\n"
+"import io.vertx.ext.web.RoutingContext;\n"
+"import jakarta.enterprise.event.Observes;\n"
+"import jakarta.enterprise.event.ObservesAsync;\n"
+"import org.jboss.logging.Logger;\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/security-customization.adoc:657
+#, no-wrap
+msgid "public class SecurityEventObserver {\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/security-customization.adoc:659
+#, no-wrap
+msgid "    private static final Logger LOG = Logger.getLogger(SecurityEventObserver.class.getName());\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/security-customization.adoc:663
+#, no-wrap
+msgid ""
+"    void observeAuthenticationSuccess(@ObservesAsync AuthenticationSuccessEvent event) {    <1>\n"
+"        LOG.debugf(\"User '%s' has authenticated successfully\", event.getSecurityIdentity().getPrincipal().getName());\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/security-customization.adoc:668
+#, no-wrap
+msgid ""
+"    void observeAuthenticationFailure(@ObservesAsync AuthenticationFailureEvent event) {\n"
+"        RoutingContext routingContext = (RoutingContext) event.getEventProperties().get(RoutingContext.class.getName());\n"
+"        LOG.debugf(\"Authentication failed, request path: '%s'\", routingContext.request().path());\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/security-customization.adoc:675
+#, no-wrap
+msgid ""
+"    void observeAuthorizationSuccess(@ObservesAsync AuthorizationSuccessEvent event) {\n"
+"        String principalName = getPrincipalName(event);\n"
+"        if (principalName != null) {\n"
+"            LOG.debugf(\"User '%s' has been authorized successfully\", event.getSecurityIdentity().getPrincipal().getName());\n"
+"        }\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/security-customization.adoc:679
+#, no-wrap
+msgid ""
+"    void observeAuthorizationFailure(@Observes AuthorizationFailureEvent event) {\n"
+"        LOG.debugf(event.getAuthorizationFailure(), \"User '%s' authorization failed\", event.getSecurityIdentity().getPrincipal().getName());\n"
+"    }\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/security-customization.adoc:686
+#, no-wrap
+msgid ""
+"    private static String getPrincipalName(SecurityEvent event) {   <2>\n"
+"        if (event.getSecurityIdentity() != null) {\n"
+"            return event.getSecurityIdentity().getPrincipal().getName();\n"
+"        }\n"
+"        return null;\n"
+"    }\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/security-customization.adoc:692
+msgid "This observer consumes all the `AuthenticationSuccessEvent` events asynchronously, which means that HTTP request processing will continue regardless on the event processing.  Depending on the application, that can be a lot of the `AuthenticationSuccessEvent` events.  For that reason, asynchronous processing can have positive effect on performance."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/security-customization.adoc:693
+msgid "Common code for all supported security event types is possible because they all implement the `io.quarkus.security.spi.runtime.SecurityEvent` interface."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/security-customization.adoc:695
+msgid "The gRPC extension currently does not support security events."
+msgstr ""
+
+#. type: Title ==
+#: upstream/_versions/main/guides/security-customization.adoc:696
 #, no-wrap
 msgid "References"
 msgstr "参考文献"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/security-customization.adoc:626
+#: upstream/_versions/main/guides/security-customization.adoc:699
 msgid "xref:security-overview.adoc[Quarkus Security overview]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/security-customization.adoc:627
+#: upstream/_versions/main/guides/security-customization.adoc:700
 msgid "xref:security-architecture.adoc[Quarkus Security architecture]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/security-customization.adoc:628
+#: upstream/_versions/main/guides/security-customization.adoc:701
 msgid "xref:security-authentication-mechanisms.adoc#other-supported-authentication-mechanisms[Authentication mechanisms in Quarkus]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_versions/main/guides/security-customization.adoc:628
+#: upstream/_versions/main/guides/security-customization.adoc:701
 msgid "xref:security-identity-providers.adoc[Identity providers]"
 msgstr ""
