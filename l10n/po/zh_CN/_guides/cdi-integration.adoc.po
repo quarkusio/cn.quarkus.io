@@ -11,7 +11,7 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,1436 +20,1073 @@ msgstr ""
 #. and pull requests should be submitted there:
 #. https://github.com/quarkusio/quarkus/tree/main/docs/src/main/asciidoc
 #. type: Title =
-#: upstream/_guides/cdi-integration.adoc:6
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "CDI Integration Guide"
 msgstr "CDI整合指南"
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:19
-msgid "ArC, the CDI container in Quarkus, is bootstrapped at build time.  To integrate with the container, https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0.html#spi_lite[CDI Build Compatible Extensions, window=\"_blank\"] can be used, as well as a Quarkus-specific extension API.  CDI Portable Extensions are not and cannot be supported.  This guide focuses on the Quarkus-specific extensions API."
+#: _guides/cdi-integration.adoc
+msgid ""
+"ArC, the CDI container in Quarkus, is bootstrapped at build time.\n"
+"To integrate with the container, https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0.html#spi_lite[CDI Build Compatible Extensions, window=\"_blank\"] can be used, as well as a Quarkus-specific extension API.\n"
+"CDI Portable Extensions are not and cannot be supported.\n"
+"This guide focuses on the Quarkus-specific extensions API."
+msgstr ""
+
+#: _guides/cdi-integration.adoc
+msgid ""
+"The container is bootstrapped in multiple phases.\n"
+"From a high level perspective these phases go as follows:"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:22
-#, fuzzy
-msgid "The container is bootstrapped in multiple phases.  From a high level perspective these phases go as follows:"
-msgstr "容器的启动分为多个阶段。从高层次的角度来看，这些阶段如下。"
-
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:24
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Initialization"
 msgstr "初始化"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:25
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Bean discovery"
 msgstr "豆类的发现"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:26
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Registration of synthetic components"
 msgstr "合成成分的注册"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:27
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Validation"
 msgstr "审定"
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:34
-#, fuzzy
-msgid "In the _initialization_ phase the preparatory work is being carried out and custom contexts are registered.  _Bean discovery_ is then the process where the container analyzes all application classes, identifies beans and wires them all together based on the provided metadata.  Subsequently, the extensions can register _synthetic components_.  Attributes of these components are fully controlled by the extensions, i.e. are not derived from an existing class.  Finally, the _deployment is validated_.  For example, the container validates every injection point in the application and fails the build if there is no bean that satisfies the given required type and qualifiers."
-msgstr "在 _初始化_ 阶段，准备工作正在进行，自定义上下文被注册。然后， _Bean discovery_ 是容器分析所有应用类的过程，识别Bean并根据提供的元数据将它们全部连接起来。随后，扩展可以注册 _合成组件_ 。这些组件的属性完全由扩展控制，即不从现有的类中派生。最后，对 _部署_ 进行验证。例如，容器会验证应用程序中的每个注入点，如果没有满足给定类型和限定条件的bean，则构建失败。"
+#: _guides/cdi-integration.adoc
+msgid ""
+"In the _initialization_ phase the preparatory work is being carried out and custom contexts are registered.\n"
+"_Bean discovery_ is then the process where the container analyzes all application classes, identifies beans and wires them all together based on the provided metadata.\n"
+"Subsequently, the extensions can register _synthetic components_.\n"
+"Attributes of these components are fully controlled by the extensions, i.e. are not derived from an existing class.\n"
+"Finally, the _deployment is validated_.\n"
+"For example, the container validates every injection point in the application and fails the build if there is no bean that satisfies the given required type and qualifiers."
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:36
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "You can see more information about the bootstrap by enabling additional logging. Simply run the Maven build with `-X` or `--debug` and grep the lines that contain `io.quarkus.arc`. In the xref:cdi-reference.adoc#dev-mode[development mode], you can use `quarkus.log.category.\"io.quarkus.arc.processor\".level=DEBUG` and two special endpoints are also registered automatically to provide some basic debug info in the JSON format."
 msgstr "你可以通过启用额外的日志记录看到更多关于bootstrap的信息。只需用 `-X` 或 `--debug` 来运行Maven构建，然后grep包含 `io.quarkus.arc` 的行。在 link:cdi-reference.html#dev-mode[开发模式] 下，你可以使用 `quarkus.log.category.\"io.quarkus.arc.processor\".level=DEBUG` ，两个特殊的端点也会自动注册，以JSON格式提供一些基本调试信息。"
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:39
-#, fuzzy
-msgid "Quarkus build steps can produce and consume various build items and hook into each phase.  In the following sections we will describe all the relevant build items and common scenarios."
-msgstr "Quarkus的构建步骤可以产生和消耗各种构建项目，并钩住每个阶段。在下面的章节中，我们将描述所有相关的构建项目和常见的场景。"
+#: _guides/cdi-integration.adoc
+msgid ""
+"Quarkus build steps can produce and consume various build items and hook into each phase.\n"
+"In the following sections we will describe all the relevant build items and common scenarios."
+msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/cdi-integration.adoc:40
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "Metadata Sources"
 msgstr "元数据来源"
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:47
-#, fuzzy
-msgid "Classes and annotations are the primary source of bean-level metadata.  The initial metadata are read from the _bean archive index_, an immutable https://github.com/wildfly/jandex[Jandex index, window=\"_blank\"] which is built from various sources during xref:cdi-reference.adoc#bean_discovery[bean discovery].  However, extensions can add, remove or transform the metadata at certain stages of the bootstrap.  Moreover, extensions can also register xref:synthetic_beans[synthetic components].  This is an important aspect to realize when integrating CDI components in Quarkus."
-msgstr "类和注解是Bean级元数据的主要来源。最初的元数据是从 _Bean archive index_ 中读取的，这是一个不可变的 link:https://github.com/wildfly/jandex[Jandex索引, target=\"_blank\"] ，它是在 link:cdi-reference.html#bean_discovery[Bean discovery] 期间从各种来源建立的。然而，扩展可以在引导的某些阶段添加、删除或转换元数据。此外，扩展也可以注册 link:#synthetic_beans[合成组件] 。这是在Quarkus中集成CDI组件时需要实现的一个重要方面。"
+#: _guides/cdi-integration.adoc
+msgid ""
+"Classes and annotations are the primary source of bean-level metadata.\n"
+"The initial metadata are read from the _bean archive index_, an immutable https://github.com/wildfly/jandex[Jandex index, window=\"_blank\"] which is built from various sources during xref:cdi-reference.adoc#bean_discovery[bean discovery].\n"
+"However, extensions can add, remove or transform the metadata at certain stages of the bootstrap.\n"
+"Moreover, extensions can also register xref:synthetic_beans[synthetic components].\n"
+"This is an important aspect to realize when integrating CDI components in Quarkus."
+msgstr ""
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:50
-#, fuzzy
-msgid "This way, extensions can turn classes, that would be otherwise ignored, into beans and vice versa.  For example, a class that declares a `@Scheduled` method is always registered as a bean even if it is not annotated with a bean defining annotation and would be normally ignored."
-msgstr "通过这种方式，扩展可以将原本被忽略的类变成Bean，反之亦然。例如，一个声明了 `@Scheduled` 方法的类总是被注册为Bean，即使它没有用Bean定义注解，通常会被忽略。"
+#: _guides/cdi-integration.adoc
+msgid ""
+"This way, extensions can turn classes, that would be otherwise ignored, into beans and vice versa.\n"
+"For example, a class that declares a `@Scheduled` method is always registered as a bean even if it is not annotated with a bean defining annotation and would be normally ignored."
+msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/cdi-integration.adoc:54
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "Use Case - My Class Is Not Recognized as a Bean"
 msgstr "用例 - 我的类不被识别为豆类"
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:60
-#, fuzzy
-msgid "An `UnsatisfiedResolutionException` indicates a problem during xref:cdi.adoc#typesafe_resolution[typesafe resolution].  Sometimes an injection point cannot be satisfied even if there is a class on the classpath that appears to be eligible for injection.  There are several reasons why a class is not recognized and also several ways to fix it.  In the first step we should identify the _reason_."
-msgstr " `UnsatisfiedResolutionException` 表示在 link:cdi.html#typesafe_resolution[类型安全解析] 过程中出现了问题。有时，即使在classpath上有一个似乎符合注入条件的类，也不能满足注入点。有几个原因导致一个类不能被识别，也有几个方法可以解决这个问题。在第一步中，我们应该找出 _原因_ 。"
+#: _guides/cdi-integration.adoc
+msgid ""
+"An `UnsatisfiedResolutionException` indicates a problem during xref:cdi.adoc#typesafe_resolution[typesafe resolution].\n"
+"Sometimes an injection point cannot be satisfied even if there is a class on the classpath that appears to be eligible for injection.\n"
+"There are several reasons why a class is not recognized and also several ways to fix it.\n"
+"In the first step we should identify the _reason_."
+msgstr ""
 
 #. type: Title ===
-#: upstream/_guides/cdi-integration.adoc:62
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "_Reason 1_: Class Is Not discovered"
 msgstr " _原因1_ ：上课时没有发现"
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:67
-#, fuzzy
-msgid "Quarkus has a xref:cdi-reference.adoc#bean_discovery[simplified discovery].  It might happen that the class is not part of the application index.  For example, classes from the _runtime module_ of a Quarkus extension are not indexed automatically."
-msgstr "Quarkus有一个 link:cdi-reference.html#bean_discovery[简化的发现] 。可能发生的情况是，该类不是应用程序索引的一部分。例如，来自Quarkus扩展的 _运行时模块_ 的类不会被自动索引。"
+#: _guides/cdi-integration.adoc
+msgid ""
+"Quarkus has a xref:cdi-reference.adoc#bean_discovery[simplified discovery].\n"
+"It might happen that the class is not part of the application index.\n"
+"For example, classes from the _runtime module_ of a Quarkus extension are not indexed automatically."
+msgstr ""
+
+#: _guides/cdi-integration.adoc
+msgid ""
+"_Solution_: Use the `AdditionalBeanBuildItem`.\n"
+"This build item can be used to specify one or more additional classes to be analyzed during the discovery.\n"
+"Additional bean classes are transparently added to the application index processed by the container."
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:71
-#, fuzzy
-msgid "_Solution_: Use the `AdditionalBeanBuildItem`.  This build item can be used to specify one or more additional classes to be analyzed during the discovery.  Additional bean classes are transparently added to the application index processed by the container."
-msgstr " _解决方案_ 。使用 `AdditionalBeanBuildItem` 。这个构建项可以用来指定一个或多个要在发现期间进行分析的额外类。额外的bean类被透明地添加到由容器处理的应用程序索引中。"
-
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:73
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "It is not possible to conditionally enable/disable additional beans via the `@IfBuildProfile`, `@UnlessBuildProfile`, `@IfBuildProperty` and `@UnlessBuildProperty` annotations as described in xref:cdi-reference.adoc#enable_build_profile[Enabling Beans for Quarkus Build Profile] and xref:cdi-reference.adoc#enable_build_properties[Enabling Beans for Quarkus Build Properties]. Extensions should inspect the configuration or the current profile and only produce an `AdditionalBeanBuildItem` if really needed."
 msgstr "不可能通过 link:cdi-reference.html#enable_build_profile[cdi-reference.html] 和 link:cdi-reference.html#enable_build_properties[cdi-reference.html] 中描述的 `@IfBuildProfile` , `@UnlessBuildProfile` , `@IfBuildProperty` 和 `@UnlessBuildProperty` 注解来有条件地启用/禁用额外的bean。扩展应该检查配置或当前的配置文件，只有在真正需要时才产生 `AdditionalBeanBuildItem` 。"
 
 #. type: Block title
-#: upstream/_guides/cdi-integration.adoc:74
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "`AdditionalBeanBuildItem` Example"
 msgstr " `AdditionalBeanBuildItem` 例子"
 
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:81
-#, no-wrap
-msgid ""
-"@BuildStep\n"
-"AdditionalBeanBuildItem additionalBeans() {\n"
-"     return new AdditionalBeanBuildItem(SmallRyeHealthReporter.class, HealthServlet.class)); <1>\n"
-"}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:83
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "`AdditionalBeanBuildItem.Builder` can be used for more complex use cases."
 msgstr " `AdditionalBeanBuildItem.Builder` 可用于更复杂的用例。"
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:88
-#, fuzzy
-msgid "Bean classes added via `AdditionalBeanBuildItem` are _removable_ by default.  If the container considers them xref:cdi-reference.adoc#remove_unused_beans[unused], they are just ignored.  However, you can use `AdditionalBeanBuildItem.Builder.setUnremovable()` method to instruct the container to never remove bean classes registered via this build item.  See also xref:cdi-reference.adoc#remove_unused_beans[Removing Unused Beans] and xref:unremovable_builditem[_Reason 3_: Class Was Discovered and Has a Bean Defining Annotation but Was Removed] for more details."
-msgstr "通过 `AdditionalBeanBuildItem` 添加的 Bean 类默认是 _可移动的_ 。如果容器认为它们 link:cdi-reference.html#remove_unused_beans[未被使用] ，它们就会被忽略。然而，你可以使用 `AdditionalBeanBuildItem.Builder.setUnremovable()` 方法来指示容器永远不要删除通过这个构建项注册的 Bean 类。详情请参见 link:cdi-reference.html#remove_unused_beans[删除未使用的] 豆类和 link:#unremovable_builditem[[unremovable_builditem]] 。"
+#: _guides/cdi-integration.adoc
+msgid ""
+"Bean classes added via `AdditionalBeanBuildItem` are _removable_ by default.\n"
+"If the container considers them xref:cdi-reference.adoc#remove_unused_beans[unused], they are just ignored.\n"
+"However, you can use `AdditionalBeanBuildItem.Builder.setUnremovable()` method to instruct the container to never remove bean classes registered via this build item.\n"
+"See also xref:cdi-reference.adoc#remove_unused_beans[Removing Unused Beans] and xref:unremovable_builditem[_Reason 3_: Class Was Discovered and Has a Bean Defining Annotation but Was Removed] for more details."
+msgstr ""
+
+#: _guides/cdi-integration.adoc
+msgid ""
+"It is aso possible to set the default scope via `AdditionalBeanBuildItem.Builder#setDefaultScope()`.\n"
+"The default scope is only used if there is no scope declared on the bean class."
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:91
-#, fuzzy
-msgid "It is aso possible to set the default scope via `AdditionalBeanBuildItem.Builder#setDefaultScope()`.  The default scope is only used if there is no scope declared on the bean class."
-msgstr "也可以通过 `AdditionalBeanBuildItem.Builder#setDefaultScope()` 来设置默认作用域。默认作用域只在Bean类上没有声明作用域时使用。"
-
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:93
-#: upstream/_guides/cdi-integration.adoc:135
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "If no default scope is specified the `@Dependent` pseudo-scope is used."
 msgstr "如果没有指定默认范围，则使用 `@Dependent` 伪范围。"
 
 #. type: Title ===
-#: upstream/_guides/cdi-integration.adoc:94
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "_Reason 2_: Class Is Discovered but Has No Bean Defining Annotation"
 msgstr "原因 _2_ ：类被发现了，但没有豆的定义注释"
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:99
-#, fuzzy
-msgid "In Quarkus, the application is represented by a single bean archive with the https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0.html#default_bean_discovery[bean discovery mode `annotated`, window=\"_blank\"].  Therefore, bean classes that don't have a https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0.html#bean_defining_annotations[bean defining annotation, window=\"_blank\"] are ignored.  Bean defining annotations are declared on the class-level and include scopes, stereotypes and `@Interceptor`."
-msgstr "在Quarkus中，应用程序由一个单一的Bean archive表示， link:https://jakarta.ee/specifications/cdi/2.0/cdi-spec-2.0.html#default_bean_discovery[Bean discovery模式为 `annotated` 。, target=\"_blank\"] 因此，没有 link:https://jakarta.ee/specifications/cdi/2.0/cdi-spec-2.0.html#bean_defining_annotations[Bean, target=\"_blank\"] 定义注解的Bean类会被忽略。Bean定义注解是在类级上声明的，包括作用域、定型和 `@Interceptor` 。"
+#: _guides/cdi-integration.adoc
+msgid ""
+"In Quarkus, the application is represented by a single bean archive with the https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0.html#default_bean_discovery[bean discovery mode `annotated`, window=\"_blank\"].\n"
+"Therefore, bean classes that don't have a https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0.html#bean_defining_annotations[bean defining annotation, window=\"_blank\"] are ignored.\n"
+"Bean defining annotations are declared on the class-level and include scopes, stereotypes and `@Interceptor`."
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:101
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "_Solution 1_: Use the `AutoAddScopeBuildItem`. This build item can be used to add a scope to a class that meets certain conditions."
 msgstr " _解决方案1_ ：使用 `AutoAddScopeBuildItem` 。这个构建项可以用来为满足某些条件的类添加一个范围。"
 
 #. type: Block title
-#: upstream/_guides/cdi-integration.adoc:102
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "`AutoAddScopeBuildItem` Example"
 msgstr " `AutoAddScopeBuildItem` 例子"
 
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:111
-#, no-wrap
-msgid ""
-"@BuildStep\n"
-"AutoAddScopeBuildItem autoAddScope() {\n"
-"   return AutoAddScopeBuildItem.builder().containsAnnotations(SCHEDULED_NAME, SCHEDULES_NAME) <1>\n"
-"      .defaultScope(BuiltinScope.SINGLETON) <2>\n"
-"      .build();\n"
-"}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:113
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Find all classes annotated with `@Scheduled`."
 msgstr "找到所有用 `@Scheduled` 注释的类。"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:114
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Add `@Singleton` as default scope. Classes already annotated with a scope are skipped automatically."
 msgstr "添加 `@Singleton` 作为默认作用域。已经用范围注释的类会被自动跳过。"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:116
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "_Solution 2_: If you need to process classes annotated with a specific annotation then it's possible to extend the set of bean defining annotations via the `BeanDefiningAnnotationBuildItem`."
 msgstr " _解决方案2_ ：如果你需要处理带有特定注解的类，那么可以通过 `BeanDefiningAnnotationBuildItem` ，扩展Bean定义的注解集。"
 
 #. type: Block title
-#: upstream/_guides/cdi-integration.adoc:117
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "`BeanDefiningAnnotationBuildItem` Example"
 msgstr " `BeanDefiningAnnotationBuildItem` 例子"
 
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:124
-#, no-wrap
-msgid ""
-"@BuildStep\n"
-"BeanDefiningAnnotationBuildItem additionalBeanDefiningAnnotation() {\n"
-"   return new BeanDefiningAnnotationBuildItem(Annotations.GRAPHQL_API); <1>\n"
-"}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:126
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Add `org.eclipse.microprofile.graphql.GraphQLApi` to the set of bean defining annotations."
 msgstr "将 `org.eclipse.microprofile.graphql.GraphQLApi` 添加到bean定义注释的集合中。"
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:130
-#, fuzzy
-msgid "Bean classes added via `BeanDefiningAnnotationBuildItem` are _not removable_ by default, i.e. the resulting beans must not be removed even if they are considered unused.  However, you can change the default behavior.  See also xref:cdi-reference.adoc#remove_unused_beans[Removing Unused Beans] and xref:unremovable_builditem[_Reason 3_: Class Was Discovered and Has a Bean Defining Annotation but Was Removed] for more details."
-msgstr "通过 `BeanDefiningAnnotationBuildItem` 添加的Bean类在默认情况下是 _不可删除_ 的，也就是说，产生的Bean即使被认为是未使用的，也不能被删除。然而，你可以改变默认行为。更多细节请参见 link:cdi-reference.html#remove_unused_beans[移除未使用的B] ean和 link:#unremovable_builditem[[unremovable_builditem]] 。"
+#: _guides/cdi-integration.adoc
+msgid ""
+"Bean classes added via `BeanDefiningAnnotationBuildItem` are _not removable_ by default, i.e. the resulting beans must not be removed even if they are considered unused.\n"
+"However, you can change the default behavior.\n"
+"See also xref:cdi-reference.adoc#remove_unused_beans[Removing Unused Beans] and xref:unremovable_builditem[_Reason 3_: Class Was Discovered and Has a Bean Defining Annotation but Was Removed] for more details."
+msgstr ""
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:133
-#, fuzzy
-msgid "It is also possible to specify the default scope.  The default scope is only used if there is no scope declared on the bean class."
-msgstr "也可以指定默认的作用域。默认作用域只在Bean类上没有声明作用域时使用。"
+#: _guides/cdi-integration.adoc
+msgid ""
+"It is also possible to specify the default scope.\n"
+"The default scope is only used if there is no scope declared on the bean class."
+msgstr ""
 
 #. type: Title ===
-#: upstream/_guides/cdi-integration.adoc:137
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "_Reason 3_: Class Was Discovered and Has a Bean Defining Annotation but Was Removed"
 msgstr " _原因3_ ：类被发现并有一个Bean定义的注释，但被删除了"
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:144
-#, fuzzy
-msgid "The container attempts to xref:cdi-reference.adoc#remove_unused_beans[remove all unused beans] during the build by default.  This optimization allows for _framework-level dead code elimination_.  In few special cases, it's not possible to correctly identify an unused bean.  In particular, Quarkus is not able to detect the usage of the `CDI.current()` static method yet.  Extensions can eliminate possible false positives by producing an `UnremovableBeanBuildItem`."
-msgstr "容器在构建过程中默认会尝试 link:cdi-reference.html#remove_unused_beans[删除所有未使用的Bean] 。这种优化可以 _消除框架级的死代码_ 。在少数特殊情况下，不可能正确识别未使用的Bean。特别是，Quarkus还不能检测到 `CDI.current()` 静态方法的使用。扩展可以通过产生一个 `UnremovableBeanBuildItem` .com来消除可能出现的误报。"
+#: _guides/cdi-integration.adoc
+msgid ""
+"The container attempts to xref:cdi-reference.adoc#remove_unused_beans[remove all unused beans] during the build by default.\n"
+"This optimization allows for _framework-level dead code elimination_.\n"
+"In few special cases, it's not possible to correctly identify an unused bean.\n"
+"In particular, Quarkus is not able to detect the usage of the `CDI.current()` static method yet.\n"
+"Extensions can eliminate possible false positives by producing an `UnremovableBeanBuildItem`."
+msgstr ""
 
 #. type: Block title
-#: upstream/_guides/cdi-integration.adoc:145
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "`UnremovableBeanBuildItem` Example"
 msgstr " `UnremovableBeanBuildItem` 例子"
 
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:152
-#, no-wrap
-msgid ""
-"@BuildStep\n"
-"UnremovableBeanBuildItem unremovableBeans() {\n"
-"   return UnremovableBeanBuildItem.targetWithAnnotation(STARTUP_NAME); <1>\n"
-"}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:154
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Make all classes annotated with `@Startup` unremovable."
 msgstr "使所有用 `@Startup` 注释的类都不能被移除。"
 
 #. type: Title ==
-#: upstream/_guides/cdi-integration.adoc:155
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "Use Case - My Annotation Is Not Recognized as a Qualifier or an Interceptor Binding"
 msgstr "用例 - 我的注释没有被识别为限定符或拦截器绑定"
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:159
-#, fuzzy
-msgid "It is likely that the annotation class is not part of the application index.  For example, classes from the _runtime module_ of a Quarkus extension are not indexed automatically."
-msgstr "很可能是注释类不是应用程序索引的一部分。例如，来自Quarkus扩展的 _运行时模块_ 的类不会被自动索引。"
+#: _guides/cdi-integration.adoc
+msgid ""
+"It is likely that the annotation class is not part of the application index.\n"
+"For example, classes from the _runtime module_ of a Quarkus extension are not indexed automatically."
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:161
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "_Solution_: Use the `AdditionalBeanBuildItem` as described in xref:additional_bean_build_item[_Reason 1_: Class Is Not discovered]."
 msgstr " _解决方案_ 。使用 link:#additional_bean_build_item[[additional_bean_build_item]] 中描述的 `AdditionalBeanBuildItem` 。"
 
 #. type: Title ==
-#: upstream/_guides/cdi-integration.adoc:163
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "Use Case - I Need To Transform Annotation Metadata"
 msgstr "用例 - 我需要转换元数据"
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:168
-#, fuzzy
-msgid "In some cases, it's useful to be able to modify the annotation metadata.  Quarkus provides a powerful alternative to https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0.html#process_annotated_type[`jakarta.enterprise.inject.spi.ProcessAnnotatedType`, window=\"_blank\"] and https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0.html#bce_enhancement[`jakarta.enterprise.inject.build.compatible.spi.Enhancement`, window=\"_blank\"].  With an `AnnotationsTransformerBuildItem` it's possible to override the annotations that exist on bean classes."
-msgstr "在某些情况下，能够修改元数据是很有用的。Quarkus提供了一个强大的替代方案，以替代 link:https://jakarta.ee/specifications/cdi/2.0/cdi-spec-2.0.html#process_annotated_type[`javax.enterprise.inject.spi.ProcessAnnotatedType`, target=\"_blank\"] .通过一个 `AnnotationsTransformerBuildItem` ，可以覆盖存在于Bean类上的注解。"
+#: _guides/cdi-integration.adoc
+msgid ""
+"In some cases, it's useful to be able to modify the annotation metadata.\n"
+"Quarkus provides a powerful alternative to https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0.html#process_annotated_type[`jakarta.enterprise.inject.spi.ProcessAnnotatedType`, window=\"_blank\"] and https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0.html#bce_enhancement[`jakarta.enterprise.inject.build.compatible.spi.Enhancement`, window=\"_blank\"].\n"
+"With an `AnnotationsTransformerBuildItem` it's possible to override the annotations that exist on bean classes."
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:170
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Keep in mind that annotation transformers must be produced _before_ the bean discovery starts."
 msgstr "请记住，注释转换器必须 _在_ Bean发现开始 _之前_ 产生。"
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:173
-#, fuzzy
-msgid "For example, you might want to add an interceptor binding to a specific bean class.  You can use a convenient builder-like API to create a transformer instance:"
-msgstr "例如，你可能想添加一个拦截器绑定到一个特定的bean类。下面是如何做到这一点的。"
+#: _guides/cdi-integration.adoc
+msgid ""
+"For example, you might want to add an interceptor binding to a specific bean class.\n"
+"You can use a convenient builder-like API to create a transformer instance:"
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:175
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Builder Example"
 msgstr " `CustomScopeBuildItem` 例子"
 
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:183
-#, no-wrap
-msgid ""
-"@BuildStep\n"
-"AnnotationsTransformerBuildItem transform() {\n"
-"   return new AnnotationsTransformerBuildItem(AnnotationsTransformer.appliedToClass() <1>\n"
-"        .whenClass(c -> c.name().toString().equals(\"org.acme.Bar\")) <2>\n"
-"        .thenTransform(t -> t.add(MyInterceptorBinding.class))); <3>\n"
-"}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:185
-#: upstream/_guides/cdi-integration.adoc:210
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "The transformer is only applied to classes."
 msgstr "转化器只适用于类。"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:186
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Only apply the transformation if the class name equals to `org.acme.Bar`."
 msgstr "只有当类的名称等于 `org.acme.Bar` ，才能应用转换。"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:187
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Add the `@MyInterceptorBinding` annotation."
 msgstr "添加 `@MyInterceptorBinding` 注释。"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:189
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "The example above can be rewritten with an anonymous class:"
 msgstr "上面的例子可以用一个匿名的类来重写："
 
 #. type: Block title
-#: upstream/_guides/cdi-integration.adoc:190
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "`AnnotationsTransformerBuildItem` Example"
 msgstr " `AnnotationsTransformerBuildItem` 例子"
 
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:196
-#, no-wrap
-msgid ""
-"@BuildStep\n"
-"AnnotationsTransformerBuildItem transform() {\n"
-"   return new AnnotationsTransformerBuildItem(new AnnotationsTransformer() {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:200
-#, no-wrap
-msgid ""
-"      public boolean appliesTo(org.jboss.jandex.AnnotationTarget.Kind kind) {\n"
-"         return kind == org.jboss.jandex.AnnotationTarget.Kind.CLASS; <1>\n"
-"      }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:208
-#, no-wrap
-msgid ""
-"      public void transform(TransformationContext context) {\n"
-"         if (context.getTarget().asClass().name().toString().equals(\"org.acme.Bar\")) {\n"
-"            context.transform().add(MyInterceptorBinding.class).done(); <2>\n"
-"         }\n"
-"      }\n"
-"    });\n"
-"}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:211
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "If the class name equals to `org.acme.Bar` then add `@MyInterceptorBinding`. Don't forget to invoke `Transformation#done()`."
 msgstr "如果类的名称等于 `org.acme.Bar` ，那么添加 `@MyInterceptorBinding` 。不要忘记调用 `Transformation#done()` 。"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:213
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Build steps can query the transformed annotations for a given annotation target via the `TransformedAnnotationsBuildItem`."
 msgstr "构建步骤可以通过 `TransformedAnnotationsBuildItem` ，为一个给定的注释目标查询转换后的注释。"
 
 #. type: Block title
-#: upstream/_guides/cdi-integration.adoc:214
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "`TransformedAnnotationsBuildItem` Example"
 msgstr " `TransformedAnnotationsBuildItem` 例子"
 
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:224
-#, no-wrap
-msgid ""
-"@BuildStep\n"
-"void queryAnnotations(TransformedAnnotationsBuildItem transformedAnnotations, BuildProducer<MyBuildItem> myBuildItem) {\n"
-"   ClassInfo myClazz = ...;\n"
-"   if (transformedAnnotations.getAnnotations(myClazz).isEmpty()) { <1>\n"
-"     myBuildItem.produce(new MyBuildItem());\n"
-"   }\n"
-"}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:226
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "`TransformedAnnotationsBuildItem.getAnnotations()` will return a possibly transformed set of annotations."
 msgstr " `TransformedAnnotationsBuildItem.getAnnotations()` 将返回一个可能经过转换的注释集。"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:228
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "There are other build items specialized in transformation: xref:additional_interceptor_bindings[Use Case - Additional Interceptor Bindings] and xref:injection_point_transformation[Use Case - Injection Point Transformation]."
 msgstr "还有其他专门用于转换的构建项。 link:#additional_interceptor_bindings[[additional_interceptor_bindings]] 和 link:#injection_point_transformation[[injection_point_transformation]] 。"
 
 #. type: Title ===
-#: upstream/_guides/cdi-integration.adoc:229
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "How to Enable Trace Logging for Annotation Transformers"
 msgstr "如何为注解转换器启用跟踪记录功能"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:232
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "You can set the `TRACE` level for the category `io.quarkus.arc.processor` and try to analyze the log output afterwards."
 msgstr "你可以为类别 `io.quarkus.arc.processor` ，设置 `TRACE` ，并在之后尝试分析日志输出。"
 
 #. type: Block title
-#: upstream/_guides/cdi-integration.adoc:233
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "`application.properties` Example"
 msgstr " `application.properties` 例子"
 
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:238
-#, no-wrap
-msgid ""
-"quarkus.log.category.\"io.quarkus.arc.processor\".min-level=TRACE <1>\n"
-"quarkus.log.category.\"io.quarkus.arc.processor\".level=TRACE\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:240
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "You also need to adjust the minimum log level for the relevant category."
 msgstr "你还需要调整相关类别的最小日志级别。"
 
 #. type: Title ==
-#: upstream/_guides/cdi-integration.adoc:242
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "Use Case - Inspect Beans, Observers and Injection Points"
 msgstr "用例 - 检查豆类、观察者和注入点"
 
 #. type: Title ===
-#: upstream/_guides/cdi-integration.adoc:244
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "_Solution 1_: `BeanDiscoveryFinishedBuildItem`"
 msgstr " _解决方案1_ 。 `BeanDiscoveryFinishedBuildItem` "
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:248
-#, fuzzy
-msgid "Consumers of `BeanDiscoveryFinishedBuildItem` can easily inspect all class-based beans, observers and injection points registered in the application.  However, synthetic beans and observers are _not included_ because this build item is produced _before_ the synthetic components are registered."
-msgstr " `BeanDiscoveryFinishedBuildItem` 的消费者可以轻松地检查应用程序中注册的所有基于类的Bean、观察者和注入点。然而，合成豆和观察者并 _不包括在内_ ，因为这个构建项是 _在_ 合成组件被注册 _之前_ 产生的。"
+#: _guides/cdi-integration.adoc
+msgid ""
+"Consumers of `BeanDiscoveryFinishedBuildItem` can easily inspect all class-based beans, observers and injection points registered in the application.\n"
+"However, synthetic beans and observers are _not included_ because this build item is produced _before_ the synthetic components are registered."
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:250
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Additionally, the bean resolver returned from `BeanDiscoveryFinishedBuildItem#getBeanResolver()` can be used to apply the type-safe resolution rules, e.g. to find out whether there is a bean that would satisfy certain combination of required type and qualifiers."
 msgstr "另外，从 `BeanDiscoveryFinishedBuildItem#getBeanResolver()` 返回的bean解析器可以用来应用类型安全的解析规则，例如，找出是否有一个bean可以满足所需类型和限定符的某些组合。"
 
 #. type: Block title
-#: upstream/_guides/cdi-integration.adoc:251
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "`BeanDiscoveryFinishedBuildItem` Example"
 msgstr " `BeanDiscoveryFinishedBuildItem` 例子"
 
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:259
-#, no-wrap
-msgid ""
-"@BuildStep\n"
-"void doSomethingWithNamedBeans(BeanDiscoveryFinishedBuildItem beanDiscovery, BuildProducer<NamedBeansBuildItem> namedBeans) {\n"
-"   List<BeanInfo> namedBeans = beanDiscovery.beanStream().withName().collect(toList())); <1>\n"
-"   namedBeans.produce(new NamedBeansBuildItem(namedBeans));\n"
-"}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:261
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "The resulting list will not contain `@Named` synthetic beans."
 msgstr "由此产生的列表将不包含 `@Named` 合成豆。"
 
 #. type: Title ===
-#: upstream/_guides/cdi-integration.adoc:262
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "_Solution 2_: `SynthesisFinishedBuildItem`"
 msgstr " _解决方案2_ 。 `SynthesisFinishedBuildItem` "
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:265
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Consumers of `SynthesisFinishedBuildItem` can easily inspect all beans, observers and injection points registered in the application. Synthetic beans and observers are included because this build item is produced _after_ the synthetic components are registered."
 msgstr " `SynthesisFinishedBuildItem` 的消费者可以很容易地检查在应用程序中注册的所有bean、observer和注入点。合成豆和观察者被包括在内，因为这个构建项是 _在_ 合成组件被注册 _后_ 产生的。"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:267
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Additionally, the bean resolver returned from `SynthesisFinishedBuildItem#getBeanResolver()` can be used to apply the type-safe resolution rules, e.g. to find out whether there is a bean that would satisfy certain combination of required type and qualifiers."
 msgstr "另外，从 `SynthesisFinishedBuildItem#getBeanResolver()` 返回的bean解析器可以用来应用类型安全的解析规则，例如，找出是否有一个bean可以满足所需类型和限定符的某些组合。"
 
 #. type: Block title
-#: upstream/_guides/cdi-integration.adoc:268
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "`SynthesisFinishedBuildItem` Example"
 msgstr " `SynthesisFinishedBuildItem` 例子"
 
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:276
-#, no-wrap
-msgid ""
-"@BuildStep\n"
-"void doSomethingWithNamedBeans(SynthesisFinishedBuildItem synthesisFinished, BuildProducer<NamedBeansBuildItem> namedBeans) {\n"
-"   List<BeanInfo> namedBeans = synthesisFinished.beanStream().withName().collect(toList())); <1>\n"
-"   namedBeans.produce(new NamedBeansBuildItem(namedBeans));\n"
-"}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:278
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "The resulting list will contain `@Named` synthetic beans."
 msgstr "由此产生的列表将包含 `@Named` 合成豆。"
 
 #. type: Title ==
-#: upstream/_guides/cdi-integration.adoc:280
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "Use Case - The Need for Synthetic Beans"
 msgstr "用例 - 合成豆的需求"
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:286
-#, fuzzy
-msgid "Sometimes it is practical to be able to register a _synthetic bean_.  Bean attributes of a synthetic bean are not derived from a Java class, method or field.  Instead, all the attributes are defined by an extension.  In regular CDI, this could be achieved using the https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0.html#after_bean_discovery[`AfterBeanDiscovery.addBean()`, window=\"_blank\"] and https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0.html#bce_synthesis[`SyntheticComponents.addBean()`] methods."
-msgstr "有时，能够注册一个 _合成Bean_ 是很实用的。合成Bean的属性不是来自于Java类、方法或字段。相反，所有的属性都是由一个扩展定义的。在常规的CDI中，这可以通过以下方式实现 link:https://jakarta.ee/specifications/cdi/2.0/cdi-spec-2.0.html#after_bean_discovery[`AfterBeanDiscovery.addBean()`, target=\"_blank\"] 方法来实现。"
+#: _guides/cdi-integration.adoc
+msgid ""
+"Sometimes it is practical to be able to register a _synthetic bean_.\n"
+"Bean attributes of a synthetic bean are not derived from a Java class, method or field.\n"
+"Instead, all the attributes are defined by an extension.\n"
+"In regular CDI, this could be achieved using the https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0.html#after_bean_discovery[`AfterBeanDiscovery.addBean()`, window=\"_blank\"] and https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0.html#bce_synthesis[`SyntheticComponents.addBean()`] methods."
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:288
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "_Solution_: If you need to register a synthetic bean then use the `SyntheticBeanBuildItem`."
 msgstr " _解决办法_ 。如果你需要注册一个合成豆，那么请使用 `SyntheticBeanBuildItem` 。"
 
 #. type: Block title
-#: upstream/_guides/cdi-integration.adoc:289
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "`SyntheticBeanBuildItem` Example 1"
 msgstr " `SyntheticBeanBuildItem` 例子1"
 
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:299
-#, no-wrap
-msgid ""
-"@BuildStep\n"
-"SyntheticBeanBuildItem syntheticBean() {\n"
-"   return SyntheticBeanBuildItem.configure(String.class)\n"
-"             .qualifiers(AnnotationInstance.builder(MyQualifier.class).build())\n"
-"             .creator(mc -> mc.returnValue(mc.load(\"foo\"))) <1>\n"
-"             .done();\n"
-"}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:301
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Generate the bytecode of the `jakarta.enterprise.context.spi.Contextual#create(CreationalContext<T>)` implementation."
 msgstr "生成 `javax.enterprise.context.spi.Contextual#create(CreationalContext<T>)` 实现的字节码。"
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:305
-#, fuzzy
-msgid "The output of a bean configurator is recorded as bytecode.  Therefore, there are some limitations in how a synthetic bean instance is created at runtime.  You can:"
-msgstr "bean配置器的输出被记录为字节码。因此，在运行时创建合成Bean实例的方式存在一些限制。你可以"
+#: _guides/cdi-integration.adoc
+msgid ""
+"The output of a bean configurator is recorded as bytecode.\n"
+"Therefore, there are some limitations in how a synthetic bean instance is created at runtime.\n"
+"You can:"
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:307
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Generate the bytecode of the `Contextual#create(CreationalContext<T>)` method directly via `ExtendedBeanConfigurator.creator(Consumer<MethodCreator>)`."
 msgstr "通过 `ExtendedBeanConfigurator.creator(Consumer<MethodCreator>)` ，直接生成 `Contextual#create(CreationalContext<T>)` 方法的字节码。"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:308
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Pass a subclass of `io.quarkus.arc.BeanCreator` via `ExtendedBeanConfigurator#creator(Class<? extends BeanCreator<U>>)`, and possibly specify some build-time parameters via `ExtendedBeanConfigurator#param()` and synthetic injection points via `ExtendedBeanConfigurator#addInjectionPoint()`."
 msgstr "通过 `ExtendedBeanConfigurator#creator(Class<? extends BeanCreator<U>>)` 传递一个 `io.quarkus.arc.BeanCreator` 实现类，并可能通过 `ExtendedBeanConfigurator#param()` 指定一些参数。"
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:309
-#, fuzzy
-msgid "Produce the runtime instance through a proxy returned from a xref:writing-extensions.adoc#bytecode-recording[`@Recorder` method] and set it via `ExtendedBeanConfigurator#runtimeValue(RuntimeValue<?>)`, `ExtendedBeanConfigurator#runtimeProxy(Object)`, `ExtendedBeanConfigurator#supplier(Supplier<?>)` or `ExtendedBeanConfigurator#createWith(Function<SyntheticCreationalContext<?>, <?>)`."
-msgstr "通过从 link:writing-extensions.html#bytecode-recording[`@Recorder`] 方法返回的代理产生运行时实例，并通过 `ExtendedBeanConfigurator#runtimeValue(RuntimeValue<?>)` 或 `ExtendedBeanConfigurator#supplier(Supplier<?>)` 设置它。"
+#: _guides/cdi-integration.adoc
+msgid "Produce the runtime instance through a proxy returned from a xref:writing-extensions.adoc#bytecode-recording[`@Recorder` method] and set it via `ExtendedBeanConfigurator#runtimeValue(RuntimeValue<?>)`, `ExtendedBeanConfigurator#runtimeProxy(Object)`,  `ExtendedBeanConfigurator#supplier(Supplier<?>)` or `ExtendedBeanConfigurator#createWith(Function<SyntheticCreationalContext<?>, <?>)`."
+msgstr ""
 
 #. type: Block title
-#: upstream/_guides/cdi-integration.adoc:310
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "`SyntheticBeanBuildItem` Example 2"
 msgstr " `SyntheticBeanBuildItem` 例2"
 
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:320
-#, no-wrap
-msgid ""
-"@BuildStep\n"
-"@Record(STATIC_INIT) <1>\n"
-"SyntheticBeanBuildItem syntheticBean(TestRecorder recorder) {\n"
-"   return SyntheticBeanBuildItem.configure(Foo.class).scope(Singleton.class)\n"
-"                .runtimeValue(recorder.createFoo()) <2>\n"
-"                .done();\n"
-"}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:322
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "By default, a synthetic bean is initialized during `STATIC_INIT`."
 msgstr "默认情况下，合成豆是在 `STATIC_INIT` 。"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:323
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "The bean instance is supplied by a value returned from a recorder method."
 msgstr "豆类实例是由一个记录器方法返回的值提供的。"
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:326
-#, fuzzy
-msgid "It is possible to mark a synthetic bean to be initialized during `RUNTIME_INIT`.  See the xref:writing-extensions.adoc#bootstrap-three-phases[Three Phases of Bootstrap and Quarkus Philosophy] for more information about the difference between `STATIC_INIT` and `RUNTIME_INIT`."
-msgstr "在 `RUNTIME_INIT` 过程中，可以标记一个合成Bean来初始化。关于 `STATIC_INIT` 和 `RUNTIME_INIT` 之间的区别，请参见 link:writing-extensions.html#bootstrap-three-phases[Bootstrap的三个阶段和Quarkus哲学] 。"
+#: _guides/cdi-integration.adoc
+msgid ""
+"It is possible to mark a synthetic bean to be initialized during `RUNTIME_INIT`.\n"
+"See the xref:writing-extensions.adoc#bootstrap-three-phases[Three Phases of Bootstrap and Quarkus Philosophy] for more information about the difference between `STATIC_INIT` and `RUNTIME_INIT`."
+msgstr ""
 
 #. type: Block title
-#: upstream/_guides/cdi-integration.adoc:327
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "`RUNTIME_INIT` `SyntheticBeanBuildItem` Example"
 msgstr " `RUNTIME_INIT` `SyntheticBeanBuildItem` 例子"
 
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:338
-#, no-wrap
-msgid ""
-"@BuildStep\n"
-"@Record(RUNTIME_INIT) <1>\n"
-"SyntheticBeanBuildItem syntheticBean(TestRecorder recorder) {\n"
-"   return SyntheticBeanBuildItem.configure(Foo.class).scope(Singleton.class)\n"
-"                .setRuntimeInit() <2>\n"
-"                .runtimeValue(recorder.createFoo())\n"
-"                .done();\n"
-"}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:340
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "The recorder must be executed in the `ExecutionTime.RUNTIME_INIT` phase."
 msgstr "记录器必须在 `ExecutionTime.RUNTIME_INIT` 阶段执行。"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:341
-#: upstream/_guides/cdi-integration.adoc:384
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "The bean instance is initialized during `RUNTIME_INIT`."
 msgstr "在 `RUNTIME_INIT` ，Bean实例被初始化。"
 
 #. type: delimited block =
-#: upstream/_guides/cdi-integration.adoc:345
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Synthetic beans initialized during `RUNTIME_INIT` must not be accessed during `STATIC_INIT`. `RUNTIME_INIT` build steps that access a runtime-init synthetic bean should consume the `SyntheticBeansRuntimeInitBuildItem`:"
 msgstr "在 `RUNTIME_INIT` 期间初始化的合成Bean不能在 `STATIC_INIT` 期间被访问。 `RUNTIME_INIT` 构建步骤访问运行时初始化的合成Bean应该消耗 `SyntheticBeansRuntimeInitBuildItem` 。"
 
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:354
-#, no-wrap
-msgid ""
-"@BuildStep\n"
-"@Record(RUNTIME_INIT)\n"
-"@Consume(SyntheticBeansRuntimeInitBuildItem.class) <1>\n"
-"void accessFoo(TestRecorder recorder) {\n"
-"   recorder.foo(); <2>\n"
-"}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:356
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "This build step must be executed after `syntheticBean()` completes."
 msgstr "这个构建步骤必须在 `syntheticBean()` 完成后执行。"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:357
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "This recorder method results in an invocation upon the `Foo` bean instance and thus we need to make sure that the build step is executed after all synthetic beans are initialized."
 msgstr "这个记录器方法会导致对 `Foo` bean实例的调用，因此我们需要确保在所有合成bean被初始化后执行构建步骤。"
 
 #. type: delimited block =
-#: upstream/_guides/cdi-integration.adoc:360
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "It is also possible to use the `BeanRegistrationPhaseBuildItem` to register a synthetic bean. However, we recommend extension authors to stick with `SyntheticBeanBuildItem` which is more idiomatic for Quarkus."
 msgstr "也可以使用 `BeanRegistrationPhaseBuildItem` 来注册一个合成豆。然而，我们建议扩展作者坚持使用 `SyntheticBeanBuildItem` ，这对Quarkus来说是更习惯的。"
 
 #. type: Title ===
-#: upstream/_guides/cdi-integration.adoc:361
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "Synthetic Injection Points"
 msgstr "合成的注射点"
 
-#. type: delimited block =
-#: upstream/_guides/cdi-integration.adoc:366
-#, fuzzy
-msgid "A synthetic bean may register a synthetic injection point via the `ExtendedBeanConfigurator#addInjectionPoint()` method.  This injection point is validated at build time and considered when xref:cdi-reference.adoc#remove_unused_beans[detecting unused beans].  The injected reference is accessible through the `SyntheticCreationalContext#getInjectedReference()` methods at runtime."
-msgstr "一个合成Bean可以通过 `ExtendedBeanConfigurator#addInjectionPoint()` 方法注册一个合成注入点。这个注入点在构建时被验证，并在 link:cdi-reference.html#remove_unused_beans[检测未使用的Bean] 时被考虑。注入的引用在运行时可以通过 `SyntheticCreationalContext#getInjectedReference()` 方法访问。"
+#: _guides/cdi-integration.adoc
+msgid ""
+"A synthetic bean may register a synthetic injection point via the `ExtendedBeanConfigurator#addInjectionPoint()` method.\n"
+"This injection point is validated at build time and considered when xref:cdi-reference.adoc#remove_unused_beans[detecting unused beans].\n"
+"The injected reference is accessible through the `SyntheticCreationalContext#getInjectedReference()` methods at runtime."
+msgstr ""
 
 #. type: Block title
-#: upstream/_guides/cdi-integration.adoc:367
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "Synthetic Injection Point - Build Step Example"
 msgstr " `SyntheticBeanBuildItem` 例子1"
 
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:372
-#, no-wrap
-msgid ""
-"import org.jboss.jandex.ClassType;\n"
-"import org.jboss.jandex.DotName;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:382
-#, no-wrap
-msgid ""
-"@BuildStep\n"
-"@Record(RUNTIME_INIT) <1>\n"
-"SyntheticBeanBuildItem syntheticBean(TestRecorder recorder) {\n"
-"   return SyntheticBeanBuildItem.configure(Foo.class)\n"
-"                .scope(Singleton.class)\n"
-"                .addInjectionPoint(ClassType.create(DotName.createSimple(Bar.class))) <2>\n"
-"                .createWith(recorder.createFoo()) <3>\n"
-"                .done();\n"
-"}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:385
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "A synthetic injection point with required type `Bar` was added; this is an equivalent of `@Inject Bar`."
 msgstr "增加了一个所需类型的合成注入点 `Bar` ；这相当于 `@Inject Bar` 。"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:386
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "The bean instance is created with a function returned from a recorder method."
 msgstr "豆类实例是由一个记录器方法返回的值提供的。"
 
 #. type: Block title
-#: upstream/_guides/cdi-integration.adoc:387
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "Synthetic Injection Point - Recorder Example"
 msgstr "合成注射点--记录器实例"
 
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:392
-#, no-wrap
-msgid ""
-"@Recorder\n"
-"public class TestRecorder {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:399
-#, no-wrap
-msgid ""
-"   public Function<SyntheticCreationalContext<Foo>, Foo> createFoo() {\n"
-"     return (context) -> {\n"
-"        return new Foo(context.getInjectedReference(Bar.class)); <1>\n"
-"     };\n"
-"   }\n"
-"}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:401
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Pass a contextual reference of `Bar` to the constructor of `Foo`."
 msgstr "将 `Bar` 的上下文引用传递给 `Foo` 的构造函数。"
 
 #. type: Title ==
-#: upstream/_guides/cdi-integration.adoc:403
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "Use Case - Synthetic Observers"
 msgstr "用例 - 合成观测器"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:406
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Similar to xref:synthetic_beans[synthetic beans], the attributes of a synthetic observer method are not derived from a Java method. Instead, all the attributes are defined by an extension."
 msgstr "与 link:#synthetic_beans[合成豆] 类似，合成观察者方法的属性不是从Java方法中派生出来的。相反，所有的属性都是由一个扩展定义的。"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:408
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "_Solution_: If you need to register a synthetic observer, use the `ObserverRegistrationPhaseBuildItem`."
 msgstr " _解决方案_ 。如果你需要注册一个合成观察者，请使用 `ObserverRegistrationPhaseBuildItem` 。"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:410
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "A build step that consumes the `ObserverRegistrationPhaseBuildItem` should always produce an `ObserverConfiguratorBuildItem` or at least inject a `BuildProducer` for this build item, otherwise it could be ignored or processed at the wrong time (e.g. after the correct CDI bootstrap phase)."
 msgstr "消耗 `ObserverRegistrationPhaseBuildItem` 的构建步骤应该总是产生一个 `ObserverConfiguratorBuildItem` ，或者至少为这个构建项目注入一个 `BuildProducer` ，否则它可能被忽略或者在错误的时间处理（比如在正确的CDI引导阶段之后）。"
 
 #. type: Block title
-#: upstream/_guides/cdi-integration.adoc:411
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "`ObserverRegistrationPhaseBuildItem` Example"
 msgstr " `ObserverRegistrationPhaseBuildItem` 例子"
 
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:427
-#, no-wrap
+#: _guides/cdi-integration.adoc
 msgid ""
-"@BuildStep\n"
-"void syntheticObserver(ObserverRegistrationPhaseBuildItem observerRegistrationPhase,\n"
-"            BuildProducer<MyBuildItem> myBuildItem,\n"
-"            BuildProducer<ObserverConfiguratorBuildItem> observerConfigurationRegistry) {\n"
-"   observerConfigurationRegistry.produce(new ObserverConfiguratorBuildItem(observerRegistrationPhase.getContext()\n"
-"       .configure()\n"
-"       .beanClass(DotName.createSimple(MyBuildStep.class.getName()))\n"
-"       .observedType(String.class)\n"
-"       .notify(mc -> {\n"
-"           // do some gizmo bytecode generation...\n"
-"       })));\n"
-"   myBuildItem.produce(new MyBuildItem());\n"
-"}\n"
+"The output of a `ObserverConfigurator` is recorded as bytecode.\n"
+"Therefore, there are some limitations in how a synthetic observer is invoked at runtime.\n"
+"Currently, you must generate the bytecode of the method body directly."
 msgstr ""
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:432
-#, fuzzy
-msgid "The output of a `ObserverConfigurator` is recorded as bytecode.  Therefore, there are some limitations in how a synthetic observer is invoked at runtime.  Currently, you must generate the bytecode of the method body directly."
-msgstr " `ObserverConfigurator` 的输出被记录为字节码。因此，在运行时调用合成观测器的方式有一些限制。目前，你必须直接生成方法体的字节码。"
-
 #. type: Title ==
-#: upstream/_guides/cdi-integration.adoc:434
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "Use Case - I Have a Generated Bean Class"
 msgstr "用例 - 我有一个生成的豆类"
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:438
-#, fuzzy
-msgid "No problem.  You can generate the bytecode of a bean class manually and then all you need to do is to produce a `GeneratedBeanBuildItem` instead of `GeneratedClassBuildItem`."
-msgstr "没问题。你可以手动生成一个bean类的字节码，然后你需要做的就是产生一个 `GeneratedBeanBuildItem` ，而不是 `GeneratedClassBuildItem` 。"
+#: _guides/cdi-integration.adoc
+msgid ""
+"No problem.\n"
+"You can generate the bytecode of a bean class manually and then all you need to do is to produce a `GeneratedBeanBuildItem` instead of `GeneratedClassBuildItem`."
+msgstr ""
 
 #. type: Block title
-#: upstream/_guides/cdi-integration.adoc:439
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "`GeneratedBeanBuildItem` Example"
 msgstr " `GeneratedBeanBuildItem` 例子"
 
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:451
-#, no-wrap
-msgid ""
-"@BuildStep\n"
-"void generatedBean(BuildProducer<GeneratedBeanBuildItem> generatedBeans) {\n"
-"    ClassOutput beansClassOutput = new GeneratedBeanGizmoAdaptor(generatedBeans); <1>\n"
-"    ClassCreator beanClassCreator = ClassCreator.builder().classOutput(beansClassOutput)\n"
-"                .className(\"org.acme.MyBean\")\n"
-"                .build();\n"
-"    beanClassCreator.addAnnotation(Singleton.class);\n"
-"    beanClassCreator.close(); <2>\n"
-"}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:453
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "`io.quarkus.arc.deployment.GeneratedBeanGizmoAdaptor` makes it easy to produce ``GeneratedBeanBuildItem``s from Gizmo constructs."
 msgstr " `io.quarkus.arc.deployment.GeneratedBeanGizmoAdaptor` 使得从Gizmo构造中产生 s变得容易。 `GeneratedBeanBuildItem` "
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:454
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "The resulting bean class is something like `public class @Singleton MyBean { }`."
 msgstr "由此产生的豆类是类似于 `public class @Singleton MyBean { }` 。"
 
 #. type: Title ==
-#: upstream/_guides/cdi-integration.adoc:455
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "Use Case - I Need to Validate the Deployment"
 msgstr "用例 - 我需要验证部署情况"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:458
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Sometimes extensions need to inspect the beans, observers and injection points, then perform additional validations and fail the build if something is wrong."
 msgstr "有时，扩展需要检查Bean、观察者和注入点，然后进行额外的验证，如果有问题，就会导致构建失败。"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:460
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "_Solution_: If an extension needs to validate the deployment it should use the `ValidationPhaseBuildItem`."
 msgstr " _解决方案_ 。如果一个扩展需要验证部署，它应该使用 `ValidationPhaseBuildItem` 。"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:462
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "A build step that consumes the `ValidationPhaseBuildItem` should always produce a `ValidationErrorBuildItem` or at least inject a `BuildProducer` for this build item, otherwise it could be ignored or processed at the wrong time (e.g. after the correct CDI bootstrap phase)."
 msgstr "消耗 `ValidationPhaseBuildItem` 的构建步骤应该总是产生一个 `ValidationErrorBuildItem` ，或者至少为这个构建项目注入一个 `BuildProducer` ，否则它可能被忽略或者在错误的时间处理（例如在正确的CDI引导阶段之后）。"
 
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:474
-#, no-wrap
-msgid ""
-"@BuildStep\n"
-"void validate(ValidationPhaseBuildItem validationPhase,\n"
-"            BuildProducer<MyBuildItem> myBuildItem,\n"
-"            BuildProducer<ValidationErrorBuildItem> errors) {\n"
-"   if (someCondition) {\n"
-"     errors.produce(new ValidationErrorBuildItem(new IllegalStateException()));\n"
-"     myBuildItem.produce(new MyBuildItem());\n"
-"   }\n"
-"}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:477
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "You can easily filter all registered beans via the convenient `BeanStream` returned from the `ValidationPhaseBuildItem.getContext().beans()` method."
 msgstr "你可以通过从 `ValidationPhaseBuildItem.getContext().beans()` 方法返回的方便的 `BeanStream` ，轻松地过滤所有注册的bean。"
 
 #. type: Title ==
-#: upstream/_guides/cdi-integration.adoc:479
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "Use Case - Register a Custom CDI Context"
 msgstr "用例 - 注册一个自定义CDI上下文"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:482
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Sometimes extensions need to extend the set of built-in CDI contexts."
 msgstr "有时扩展需要扩展内置的CDI上下文集。"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:484
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "_Solution_: If you need to register a custom context, use the `ContextRegistrationPhaseBuildItem`."
 msgstr " _解决办法_ 。如果你需要注册一个自定义上下文，请使用 `ContextRegistrationPhaseBuildItem` 。"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:486
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "A build step that consumes the `ContextRegistrationPhaseBuildItem` should always produce a `ContextConfiguratorBuildItem` or at least inject a `BuildProducer` for this build item, otherwise it could be ignored or processed at the wrong time (e.g. after the correct CDI bootstrap phase)."
 msgstr "消耗 `ContextRegistrationPhaseBuildItem` 的构建步骤应该总是产生一个 `ContextConfiguratorBuildItem` ，或者至少为这个构建项目注入一个 `BuildProducer` ，否则它可能被忽略或者在错误的时间处理（例如在正确的CDI引导阶段之后）。"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:488
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "`ContextRegistrationPhaseBuildItem` Example"
 msgstr " `ContextRegistrationPhaseBuildItem` 例子"
 
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:494
-#, no-wrap
-msgid ""
-"@BuildStep\n"
-"ContextConfiguratorBuildItem registerContext(ContextRegistrationPhaseBuildItem phase) {\n"
-"      return new ContextConfiguratorBuildItem(phase.getContext().configure(TransactionScoped.class).normal().contextClass(TransactionContext.class));\n"
-"}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:497
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Additionally, each extension that registers a custom CDI context via `ContextRegistrationPhaseBuildItem` should also produce the `CustomScopeBuildItem` in order to contribute the custom scope annotation name to the set of bean defining annotations."
 msgstr "此外，每个通过 `ContextRegistrationPhaseBuildItem` 注册自定义CDI上下文的扩展也应该产生 `CustomScopeBuildItem` ，以便将自定义范围注解名称贡献给Bean定义注解集。"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:499
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "`CustomScopeBuildItem` Example"
 msgstr " `CustomScopeBuildItem` 例子"
 
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:505
-#, no-wrap
-msgid ""
-"@BuildStep\n"
-"CustomScopeBuildItem customScope() {\n"
-"   return new CustomScopeBuildItem(DotName.createSimple(TransactionScoped.class.getName()));\n"
-"}\n"
-msgstr ""
-
 #. type: Title ===
-#: upstream/_guides/cdi-integration.adoc:507
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "What if I Need to Know All the Scopes Used in the Application?"
 msgstr "如果我需要知道应用程序中使用的所有作用域怎么办？"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:510
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "_Solution_: You can inject the `CustomScopeAnnotationsBuildItem` in a build step and use the convenient methods such as `CustomScopeAnnotationsBuildItem.isScopeDeclaredOn()`."
 msgstr " _解决方案_ 。你可以在构建步骤中注入 `CustomScopeAnnotationsBuildItem` ，并使用方便的方法，如 `CustomScopeAnnotationsBuildItem.isScopeDeclaredOn()` 。"
 
 #. type: Title ==
-#: upstream/_guides/cdi-integration.adoc:512
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "Use Case - Additional Interceptor Bindings"
 msgstr "用例 - 额外的拦截器绑定"
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:517
-#, fuzzy
-msgid "In rare cases it might be handy to programmatically register an existing annotation that is not annotated with `@jakarta.interceptor.InterceptorBinding` as an interceptor binding.  This is similar to what CDI achieves through `BeforeBeanDiscovery#addInterceptorBinding()`.  We are going to use `InterceptorBindingRegistrarBuildItem` to get it done."
-msgstr "在极少数情况下，以编程方式注册一个未被注解的现有注解 `@javax.interceptor.InterceptorBinding` ，作为拦截器绑定，可能会很方便。这类似于CDI通过 `BeforeBeanDiscovery#addInterceptorBinding()` 来实现的。我们将使用 `InterceptorBindingRegistrarBuildItem` 来完成它。"
+#: _guides/cdi-integration.adoc
+msgid ""
+"In rare cases it might be handy to programmatically register an existing annotation that is not annotated with `@jakarta.interceptor.InterceptorBinding` as an interceptor binding.\n"
+"This is similar to what CDI achieves through `BeforeBeanDiscovery#addInterceptorBinding()`.\n"
+"We are going to use `InterceptorBindingRegistrarBuildItem` to get it done."
+msgstr ""
 
 #. type: Block title
-#: upstream/_guides/cdi-integration.adoc:518
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "`InterceptorBindingRegistrarBuildItem` Example"
 msgstr " `InterceptorBindingRegistrarBuildItem` 例子"
 
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:530
-#, no-wrap
-msgid ""
-"@BuildStep\n"
-"InterceptorBindingRegistrarBuildItem addInterceptorBindings() {\n"
-"    return new InterceptorBindingRegistrarBuildItem(new InterceptorBindingRegistrar() {\n"
-"        @Override\n"
-"        public List<InterceptorBinding> getAdditionalBindings() {\n"
-"            return List.of(InterceptorBinding.of(NotAnInterceptorBinding.class));\n"
-"        }\n"
-"    });\n"
-"}\n"
-msgstr ""
-
 #. type: Title ==
-#: upstream/_guides/cdi-integration.adoc:532
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "Use Case - Additional Qualifiers"
 msgstr "用例 - 额外的限定词"
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:537
-#, fuzzy
-msgid "Sometimes it might be useful to register an existing annotation that is not annotated with `@jakarta.inject.Qualifier` as a CDI qualifier.  This is similar to what CDI achieves through `BeforeBeanDiscovery#addQualifier()`.  We are going to use `QualifierRegistrarBuildItem` to get it done."
-msgstr "有时，将一个没有用 `@javax.inject.Qualifier` 注释的现有注解注册为CDI限定符可能是有用的。这类似于CDI通过 `BeforeBeanDiscovery#addQualifier()` 来实现的。我们将使用 `QualifierRegistrarBuildItem` 来完成它。"
+#: _guides/cdi-integration.adoc
+msgid ""
+"Sometimes it might be useful to register an existing annotation that is not annotated with `@jakarta.inject.Qualifier` as a CDI qualifier.\n"
+"This is similar to what CDI achieves through `BeforeBeanDiscovery#addQualifier()`.\n"
+"We are going to use `QualifierRegistrarBuildItem` to get it done."
+msgstr ""
 
 #. type: Block title
-#: upstream/_guides/cdi-integration.adoc:538
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "`QualifierRegistrarBuildItem` Example"
 msgstr " `QualifierRegistrarBuildItem` 例子"
 
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:551
-#, no-wrap
-msgid ""
-"@BuildStep\n"
-"QualifierRegistrarBuildItem addQualifiers() {\n"
-"    return new QualifierRegistrarBuildItem(new QualifierRegistrar() {\n"
-"        @Override\n"
-"        public Map<DotName, Set<String>> getAdditionalQualifiers() {\n"
-"            return Collections.singletonMap(DotName.createSimple(NotAQualifier.class.getName()),\n"
-"                                        Collections.emptySet());\n"
-"        }\n"
-"    });\n"
-"}\n"
-msgstr ""
-
 #. type: Title ==
-#: upstream/_guides/cdi-integration.adoc:553
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "Use Case - Additional Stereotypes"
 msgstr "用例 - 额外的限定词"
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:558
-#, fuzzy
-msgid "It is sometimes useful to register an existing annotation that is not annotated with `@jakarta.enterprise.inject.Stereotype` as a CDI stereotype.  This is similar to what CDI achieves through `BeforeBeanDiscovery#addStereotype()`.  We are going to use `StereotypeRegistrarBuildItem` to get it done."
-msgstr "有时，将一个没有用 `@javax.inject.Qualifier` 注释的现有注解注册为CDI限定符可能是有用的。这类似于CDI通过 `BeforeBeanDiscovery#addQualifier()` 来实现的。我们将使用 `QualifierRegistrarBuildItem` 来完成它。"
+#: _guides/cdi-integration.adoc
+msgid ""
+"It is sometimes useful to register an existing annotation that is not annotated with `@jakarta.enterprise.inject.Stereotype` as a CDI stereotype.\n"
+"This is similar to what CDI achieves through `BeforeBeanDiscovery#addStereotype()`.\n"
+"We are going to use `StereotypeRegistrarBuildItem` to get it done."
+msgstr ""
 
 #. type: Block title
-#: upstream/_guides/cdi-integration.adoc:559
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "`StereotypeRegistrarBuildItem` Example"
 msgstr " `QualifierRegistrarBuildItem` 例子"
 
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:571
-#, no-wrap
-msgid ""
-"@BuildStep\n"
-"StereotypeRegistrarBuildItem addStereotypes() {\n"
-"    return new StereotypeRegistrarBuildItem(new StereotypeRegistrar() {\n"
-"        @Override\n"
-"        public Set<DotName> getAdditionalStereotypes() {\n"
-"            return Collections.singleton(DotName.createSimple(NotAStereotype.class.getName()));\n"
-"        }\n"
-"    });\n"
-"}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:574
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "If the newly registered stereotype annotation doesn't have the appropriate meta-annotations, such as scope or interceptor bindings, use an xref:annotations_transformer_build_item[annotation transformation] to add them."
 msgstr "如果新注册的定型注解没有适当的元注解，比如范围或拦截器绑定，请使用 link:#annotations_transformer_build_item[注解转换] 来添加它们。"
 
 #. type: Title ==
-#: upstream/_guides/cdi-integration.adoc:576
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "Use Case - Injection Point Transformation"
 msgstr "用例 - 注射点转换"
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:581
-#, fuzzy
-msgid "Every now and then it is handy to be able to change the qualifiers of an injection point programmatically.  You can do just that with `InjectionPointTransformerBuildItem`.  The following sample shows how to apply transformation to injection points with type `Foo` that contain qualifier `MyQualifier`:"
-msgstr "每当这时，能够以编程方式改变注入点的限定词是很方便的。你可以用 `InjectionPointTransformerBuildItem` 做到这一点。下面的例子显示了如何对包含限定词 `MyQualifier` 的类型 `Foo` 的注入点进行转换。"
+#: _guides/cdi-integration.adoc
+msgid ""
+"Every now and then it is handy to be able to change the qualifiers of an injection point programmatically.\n"
+"You can do just that with `InjectionPointTransformerBuildItem`.\n"
+"The following sample shows how to apply transformation to injection points with type `Foo` that contain qualifier `MyQualifier`:"
+msgstr ""
 
 #. type: Block title
-#: upstream/_guides/cdi-integration.adoc:582
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "`InjectionPointTransformerBuildItem` Example"
 msgstr " `InjectionPointTransformerBuildItem` 例子"
 
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:588
-#, no-wrap
-msgid ""
-"@BuildStep\n"
-"InjectionPointTransformerBuildItem transformer() {\n"
-"    return new InjectionPointTransformerBuildItem(new InjectionPointsTransformer() {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:592
-#, no-wrap
-msgid ""
-"        public boolean appliesTo(Type requiredType) {\n"
-"            return requiredType.name().equals(DotName.createSimple(Foo.class.getName()));\n"
-"        }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:604
-#, no-wrap
-msgid ""
-"        public void transform(TransformationContext context) {\n"
-"            if (context.getQualifiers().stream()\n"
-"                    .anyMatch(a -> a.name().equals(DotName.createSimple(MyQualifier.class.getName())))) {\n"
-"                context.transform()\n"
-"                        .removeAll()\n"
-"                        .add(DotName.createSimple(MyOtherQualifier.class.getName()))\n"
-"                        .done();\n"
-"            }\n"
-"        }\n"
-"    });\n"
-"}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:607
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "In theory, you can use xref:annotations_transformer_build_item[an `AnnotationsTransformer`] to achieve the same goal. However, there are few differences that make `InjectionPointsTransformer` more suitable for this particular task: (1) annotation transformers are applied to all classes during bean discovery, whereas `InjectionPointsTransformer` is only applied to discovered injection points after bean discovery; (2) with `InjectionPointsTransformer` you don't need to handle various types of injection points (field, parameters of initializer methods, etc.)."
 msgstr "从理论上讲，你可以使用 link:#annotations_transformer_build_item[`AnnotationsTransformer`] 来实现同样的目标。然而，有一些区别使得 `InjectionPointsTransformer` 更适合这项特殊的任务：（1）注解转换器在Bean发现过程中应用于所有的类，而 `InjectionPointsTransformer` 只在Bean发现后应用于发现的注入点；（2）使用 `InjectionPointsTransformer` ，你不需要处理各种类型的注入点（场、初始化方法的参数等）。"
 
 #. type: Title ==
-#: upstream/_guides/cdi-integration.adoc:608
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "Use Case - Resource Annotations and Injection"
 msgstr "用例 - 资源注释和注入"
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:612
-#, fuzzy
-msgid "The `ResourceAnnotationBuildItem` can be used to specify resource annotations that make it possible to resolve non-CDI injection points, such as Jakarta EE resources.  An integrator must also provide a corresponding `io.quarkus.arc.ResourceReferenceProvider` service provider implementation."
-msgstr " `ResourceAnnotationBuildItem` 可用于指定资源注解，使其能够解决非 CDI 注入点，如 Jakarta EE 资源。一个集成商还必须提供相应的 `io.quarkus.arc.ResourceReferenceProvider` 服务提供者的实现。"
+#: _guides/cdi-integration.adoc
+msgid ""
+"The `ResourceAnnotationBuildItem` can be used to specify resource annotations that make it possible to resolve non-CDI injection points, such as Jakarta EE resources.\n"
+"An integrator must also provide a corresponding `io.quarkus.arc.ResourceReferenceProvider` service provider implementation."
+msgstr ""
 
 #. type: Block title
-#: upstream/_guides/cdi-integration.adoc:613
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "`ResourceAnnotationBuildItem` Example"
 msgstr " `ResourceAnnotationBuildItem` 例子"
 
-#. type: delimited block -
-#: upstream/_guides/cdi-integration.adoc:622
-#, no-wrap
-msgid ""
-"@BuildStep\n"
-"void setupResourceInjection(BuildProducer<ResourceAnnotationBuildItem> resourceAnnotations, BuildProducer<GeneratedResourceBuildItem> resources) {\n"
-"    resources.produce(new GeneratedResourceBuildItem(\"META-INF/services/io.quarkus.arc.ResourceReferenceProvider\",\n"
-"        MyResourceReferenceProvider.class.getName().getBytes()));\n"
-"    resourceAnnotations.produce(new ResourceAnnotationBuildItem(DotName.createSimple(MyAnnotation.class.getName())));\n"
-"}\n"
-msgstr ""
-
 #. type: Title ==
-#: upstream/_guides/cdi-integration.adoc:625
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "Available Build Time Metadata"
 msgstr "可用的构建时间元数据"
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:629
-#, fuzzy
-msgid "Any of the above extensions that operates with `BuildExtension.BuildContext` can leverage certain build time metadata that are generated during build.  The built-in keys located in `io.quarkus.arc.processor.BuildExtension.Key` are:"
-msgstr "上述任何与 `BuildExtension.BuildContext` 一起操作的扩展都可以利用在构建过程中产生的某些构建时间元数据。位于 `io.quarkus.arc.processor.BuildExtension.Key` 中的内置键是。"
+#: _guides/cdi-integration.adoc
+msgid ""
+"Any of the above extensions that operates with `BuildExtension.BuildContext` can leverage certain build time metadata that are generated during build.\n"
+"The built-in keys located in `io.quarkus.arc.processor.BuildExtension.Key` are:"
+msgstr ""
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:630
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "ANNOTATION_STORE"
 msgstr "注解商店"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:631
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Contains an `AnnotationStore` that keeps information about all `AnnotationTarget` annotations after application of annotation transformers"
 msgstr "包含一个 `AnnotationStore` ，在应用注解变换器后保持所有 `AnnotationTarget` 注解的信息。"
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:631
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "INJECTION_POINTS"
 msgstr "注射点"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:632
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "`Collection<InjectionPointInfo>` containing all injection points"
 msgstr " `Collection<InjectionPointInfo>` 包含所有的注射点"
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:632
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "BEANS"
 msgstr "豆类"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:633
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "`Collection<BeanInfo>` containing all beans"
 msgstr " `Collection<BeanInfo>` 包含所有的豆子"
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:633
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "REMOVED_BEANS"
 msgstr "移除的豆类"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:634
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "`Collection<BeanInfo>` containing all the removed beans; see xref:cdi-reference.adoc#remove_unused_beans[Removing unused beans] for more information"
 msgstr " `Collection<BeanInfo>` 包含所有被移除的Bean；更多信息见 link:cdi-reference.html#remove_unused_beans[移除未使用的Bean]"
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:634
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "OBSERVERS"
 msgstr "观察者"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:635
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "`Collection<ObserverInfo>` containing all observers"
 msgstr " `Collection<ObserverInfo>` 包含所有观察员"
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:635
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "SCOPES"
 msgstr "证券交易所"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:636
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "`Collection<ScopeInfo>` containing all scopes, including custom ones"
 msgstr " `Collection<ScopeInfo>` 包含所有的作用域，包括自定义的作用域"
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:636
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "QUALIFIERS"
 msgstr "资格审查员"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:637
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "`Map<DotName, ClassInfo>` containing all qualifiers"
 msgstr " `Map<DotName, ClassInfo>` 包含所有限定词"
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:637
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "INTERCEPTOR_BINDINGS"
 msgstr "拦截器_绑定"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:638
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "`Map<DotName, ClassInfo>` containing all interceptor bindings"
 msgstr " `Map<DotName, ClassInfo>` 包含所有拦截器的绑定"
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:638
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "STEREOTYPES"
 msgstr "遗传因子"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:639
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "`Map<DotName, StereotypeInfo>` containing all stereotypes"
 msgstr " `Map<DotName, StereotypeInfo>` 包含所有定型的"
 
-#. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:644
-#, fuzzy
-msgid "To get hold of these, simply query the extension context object for given key.  Note that these metadata are made available as build proceeds which means that extensions can only leverage metadata that were built before the extensions are invoked.  If your extension attempts to retrieve metadata that wasn't yet produced, `null` will be returned.  Here is a summary of which extensions can access which metadata:"
-msgstr "要掌握这些，只需查询给定键的扩展上下文对象。注意，这些元数据是随着构建的进行而提供的，这意味着扩展只能利用在扩展被调用之前构建的元数据。如果你的扩展试图检索尚未生成的元数据， `null` ，将被返回。下面是一个关于哪些扩展可以访问哪些元数据的总结。"
+#: _guides/cdi-integration.adoc
+msgid ""
+"To get hold of these, simply query the extension context object for given key.\n"
+"Note that these metadata are made available as build proceeds which means that extensions can only leverage metadata that were built before the extensions are invoked.\n"
+"If your extension attempts to retrieve metadata that wasn't yet produced, `null` will be returned.\n"
+"Here is a summary of which extensions can access which metadata:"
+msgstr ""
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:645
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "AnnotationsTransformer"
 msgstr "注释性转化器"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:646
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Shouldn't rely on any metadata as it could be used at any time in any phase of the bootstrap"
 msgstr "不应该依赖任何元数据，因为它可以在引导的任何阶段中随时使用。"
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:646
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "ContextRegistrar"
 msgstr "语境注册商（ContextRegistrar"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:647
-#: upstream/_guides/cdi-integration.adoc:648
-#: upstream/_guides/cdi-integration.adoc:649
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Has access to `ANNOTATION_STORE`, `QUALIFIERS`, `INTERCEPTOR_BINDINGS`, `STEREOTYPES`"
 msgstr "可访问 `ANNOTATION_STORE` , `QUALIFIERS` , `INTERCEPTOR_BINDINGS` 。 `STEREOTYPES` "
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:647
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "InjectionPointsTransformer"
 msgstr "注射点变换器"
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:648
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "ObserverTransformer"
 msgstr "观察者变换器"
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:649
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "BeanRegistrar"
 msgstr "豆类注册商（BeanRegistrar"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:650
+#: _guides/cdi-integration.adoc
 #, fuzzy
 msgid "Has access to `ANNOTATION_STORE`, `QUALIFIERS`, `INTERCEPTOR_BINDINGS`, `STEREOTYPES`, `BEANS` (class-based beans only), `OBSERVERS` (class-based observers only), `INJECTION_POINTS`"
 msgstr "可以访问 `ANNOTATION_STORE` , `QUALIFIERS` , `INTERCEPTOR_BINDINGS` , `STEREOTYPES` , `BEANS` （仅基于类的豆子）， `OBSERVERS` （仅基于类的观察者）。 `INJECTION_POINTS` "
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:650
+#: _guides/cdi-integration.adoc
 #, fuzzy, no-wrap
 msgid "ObserverRegistrar"
 msgstr "观察员登记员"
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:651
+#: _guides/cdi-integration.adoc
 msgid "Has access to `ANNOTATION_STORE`, `QUALIFIERS`, `INTERCEPTOR_BINDINGS`, `STEREOTYPES`, `BEANS`, `OBSERVERS` (class-based observers only), `INJECTION_POINTS`"
 msgstr ""
 
 #. type: Labeled list
-#: upstream/_guides/cdi-integration.adoc:651
+#: _guides/cdi-integration.adoc
 #, no-wrap
 msgid "BeanDeploymentValidator"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/cdi-integration.adoc:651
+#: _guides/cdi-integration.adoc
 msgid "Has access to all build metadata"
 msgstr ""
-
-#, fuzzy
-#~ msgid "ArC, the CDI container, is bootstrapped at build time.  The downside of this approach is that CDI Portable Extensions cannot be supported.  Nevertheless, the functionality can be achieved using the Quarkus-specific extensions API."
-#~ msgstr "ArC，CDI容器，在构建时被引导。这种方法的缺点是不能支持CDI便携扩展。然而，这些功能可以使用Quarkus特定的扩展API来实现。"

@@ -11,400 +11,186 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#. type: YAML Front Matter: author
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:1
-#, fuzzy, no-wrap
-msgid "bennetelli"
-msgstr "本尼特利"
-
-#. type: YAML Front Matter: date
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:1
-#, fuzzy, no-wrap
-msgid "2022-01-13"
-msgstr "2022-01-13"
-
-#. type: YAML Front Matter: layout
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:1
-#, fuzzy, no-wrap
-msgid "post"
-msgstr "职位"
-
-#. type: YAML Front Matter: tags
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:1
-#, fuzzy, no-wrap
-msgid "extension cloudwatch"
-msgstr "扩展云观察"
-
 #. type: Title ==
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:1
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:9
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
 #, fuzzy, no-wrap
 msgid "Creating a Quarkus extension for AWS CloudWatch"
 msgstr "为AWS CloudWatch创建一个Quarkus扩展"
 
 #. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:12
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
 #, fuzzy
 msgid "We recently had the situation that we wanted to log our Quarkus application logs to AWS CloudWatch. Basically it takes some time but is not a big deal. Adding a CloudWatch dependency, creating a Log Handler and push the logs to CloudWatch via the provided AWS CloudWatch API. But what if you want to share it with others? Of course you could put it on GitHub as part of your project so others can copy and paste it, but that’s not the most elegant way to share code with others."
 msgstr "我们最近遇到了这样的情况，我们想把我们的Quarkus应用日志记录到AWS CloudWatch。基本上这需要一些时间，但不是什么大问题。添加一个CloudWatch的依赖关系，创建一个日志处理程序，通过提供的AWS CloudWatch API将日志推送到CloudWatch。但如果你想和别人分享呢？当然，你可以把它作为项目的一部分放在GitHub上，这样别人就可以复制和粘贴它，但这并不是与他人分享代码的最优雅的方式。"
 
-#. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:16
-#, fuzzy
-msgid "That’s why we implemented a Quarkus extension so others can use it more easily and don’t need to reinvent the wheel or need to copy paste things around.  How do I do that? Here the Quarkiverse Hub comes in. Quarkiverse is a GitHub organization where developers can host and share their extension with others. There are several benefits you get for free when hosting the extension in Quarkiverse instead of using the good old way of doing all the things on your own. By using Quarkiverse you don’t need to build the artifact, release it with the Sonatype Nexus Manager (or something similar) and distribute it on Maven Central and other repositories.  Quarkiverse comes with all these things so you can focus on implementing the extension itself. The following post describes what needs to be done to initialize, implement and share a CloudWatch Quarkus extension."
-msgstr "这就是为什么我们实现了Quarkus扩展，以便其他人可以更容易地使用它，不需要重新发明轮子或需要复制粘贴东西。我如何做到这一点呢？Quarkiverse Hub就在这里。Quarkiverse是一个GitHub组织，开发者可以在这里托管并与他人分享他们的扩展。在Quarkiverse托管扩展时，你可以免费获得一些好处，而不是用自己做所有事情的老方法。通过使用Quarkiverse，你不需要构建工件，用Sonatype Nexus Manager（或类似的东西）发布它，也不需要在Maven Central和其他资源库中发布它。Quarkiverse自带所有这些东西，所以你可以专注于实现扩展本身。下面的文章描述了初始化、实现和分享CloudWatch Quarkus扩展所需的工作。"
-
-#. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:19
-#, fuzzy
-msgid "If you want to use Quarkiverse to publish your extension on the Hub (which is what we recommend) and make use of all the advantages you get by using it, you simply need to open a new extension proposal issue in the quarkusio/quarkus GitHub organization. By doing this, most of the requirements are fulfilled already as there will be a template generated for you and you just have to implement your extension code. In case you are using an existing project as template, there are some requirements you need to take care of.  In order to automate extension releases and publication of docs, there are some rules that need to be followed for projects under the Quarkiverse organization:"
-msgstr "如果你想使用Quarkiverse在Hub上发布你的扩展（这也是我们的建议），并利用你通过使用它得到的所有优势，你只需要在quarkusio/quarkus GitHub组织中打开一个新的扩展建议问题。通过这样做，大部分的要求都已经满足了，因为会有一个模板为你生成，你只需要实现你的扩展代码。如果你使用一个现有的项目作为模板，有一些要求你需要照顾到。为了自动发布扩展和发布文档，Quarkiverse组织下的项目有一些规则需要遵循。"
-
-#. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:24
-#, fuzzy, no-wrap
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
 msgid ""
-"    • The extension repository should be named quarkus-<project>\n"
-"    • A Quarkiverse extension *MUST* belong to the io.quarkiverse.<project> groupId\n"
-"    • The root pom.xml *MUST* inherit from io.quarkiverse:quarkiverse-parent\n"
-"    • A Quarkiverse extension contains the following folders and files:\n"
-msgstr ""
-" 扩展库应该被命名为quarkus-<project>。  \n"
-" Quarkiverse 扩展 *必须* 属于 io.quarkiverse.<project> groupId。  \n"
-" 根 pom.xml *必须* 继承 io.quarkiverse:quarkiverse-parent。  \n"
-" 一个Quarkiverse扩展包含以下文件夹和文件。 "
-
-#. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:25
-#, fuzzy, no-wrap
-msgid "deployment\n"
-msgstr "部署"
-
-#. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:26
-#, fuzzy, no-wrap
-msgid "runtime\n"
-msgstr "运行时间"
-
-#. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:27
-#, fuzzy, no-wrap
-msgid "integration-test\n"
-msgstr "集成-测试"
-
-#. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:28
-#, fuzzy, no-wrap
-msgid "docs\n"
-msgstr "文档"
-
-#. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:29
-#, fuzzy, no-wrap
-msgid "pom.xml\n"
-msgstr "pom.xml"
-
-#. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:30
-#, fuzzy, no-wrap
-msgid "LICENSE\n"
-msgstr "许可证"
-
-#. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:31
-#, fuzzy, no-wrap
-msgid "README\n"
-msgstr "README"
-
-#. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:34
-#, fuzzy
-msgid "This article covers the runtime and deployment content only as the other things are optional, generated by the project template already or even important, but not the most important and pragmatic thing when you want to learn how a Quarkus extension can be created.  Let’s start with the deployment section. It contains classes needed for the initialization of the Quarkus extension. Without this initialization class, your extension won’t be identified when starting your Quarkus application."
-msgstr "本文只涉及运行时和部署内容，因为其他东西是可选的，由项目模板已经生成，甚至是重要的，但当你想学习如何创建Quarkus扩展时，这不是最重要和最实用的东西。让我们从部署部分开始。它包含了Quarkus扩展的初始化所需的类。如果没有这个初始化类，当启动你的Quarkus应用程序时，你的扩展将无法被识别。"
-
-#. type: delimited block -
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:38
-#, no-wrap
-msgid "class LoggingCloudwatchProcessor {\n"
+"That’s why we implemented a Quarkus extension so others can use it more easily and don’t need to reinvent the wheel or need to copy paste things around.\n"
+"How do I do that? Here the Quarkiverse Hub comes in. Quarkiverse is a GitHub organization where developers can host and share their extension with others. There are several benefits you get for free when hosting the extension in Quarkiverse instead of using the good old way of doing all the things on your own. By using Quarkiverse you don’t need to build the artifact, release it with the Sonatype Nexus Manager (or something similar) and distribute it on Maven Central and other repositories.\n"
+"Quarkiverse comes with all these things so you can focus on implementing the extension itself. The following post describes what needs to be done to initialize, implement and share a CloudWatch Quarkus extension."
 msgstr ""
 
-#. type: delimited block -
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:43
-#, no-wrap
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
 msgid ""
-"    @BuildStep\n"
-"    FeatureBuildItem feature() {\n"
-"        return new FeatureBuildItem(\"logging-cloudwatch\");\n"
-"    }\n"
+"If you want to use Quarkiverse to publish your extension on the Hub (which is what we recommend) and make use of all the advantages you get by using it, you simply need to open a new extension proposal issue in the quarkusio/quarkus GitHub organization. By doing this, most of the requirements are fulfilled already as there will be a template generated for you and you just have to implement your extension code. In case you are using an existing project as template, there are some requirements you need to take care of.\n"
+"In order to automate extension releases and publication of docs, there are some rules that need to be followed for projects under the Quarkiverse organization:"
 msgstr ""
 
-#. type: delimited block -
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:51
-#, no-wrap
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
+msgid "The extension repository should be named quarkus-<project>"
+msgstr ""
+
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
+msgid "A Quarkiverse extension *MUST* belong to the io.quarkiverse.<project> groupId"
+msgstr ""
+
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
+msgid "The root pom.xml *MUST* inherit from io.quarkiverse:quarkiverse-parent"
+msgstr ""
+
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
+msgid "A Quarkiverse extension contains the following folders and files:"
+msgstr ""
+
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
+msgid "deployment"
+msgstr ""
+
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
+msgid "runtime"
+msgstr ""
+
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
+msgid "integration-test"
+msgstr ""
+
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
+msgid "docs"
+msgstr ""
+
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
+msgid "pom.xml"
+msgstr ""
+
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
+msgid "LICENSE"
+msgstr ""
+
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
+msgid "README"
+msgstr ""
+
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
 msgid ""
-"    @BuildStep\n"
-"    @Record(ExecutionTime.RUNTIME_INIT)\n"
-"    LogHandlerBuildItem addCloudwatchLogHandler(final LoggingCloudWatchConfig config,\n"
-"            final LoggingCloudWatchHandlerValueFactory cloudWatchHandlerValueFactory) {\n"
-"        return new LogHandlerBuildItem(cloudWatchHandlerValueFactory.create(config));\n"
-"    }\n"
-"}\n"
+"This article covers the runtime and deployment content only as the other things are optional, generated by the project template already or even important, but not the most important and pragmatic thing when you want to learn how a Quarkus extension can be created.\n"
+"Let’s start with the deployment section. It contains classes needed for the initialization of the Quarkus extension. Without this initialization class, your extension won’t be identified when starting your Quarkus application."
+msgstr ""
+
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
+msgid ""
+"In the snippet above you can see a _feature()_ method which is annotated with _@BuildStep_ and returns a new FeatureBuildItem. It exposes the name of the feature (logging-cloudwatch) displayed in the log during application bootstrap.\n"
+"The second method _addCloudWatchHandler()_ initializes the extensions runtime configurations provided by the LoggingCloudWatchConfig and LoggingCloudWatchHandlerValueFactory class. Luckily there is a LogHandlerBuildItem provided, so we can overwrite the existing log handler by adding our own implementation. There are lots of other BuildItems provided so it’s definitely worth it, taking a look at it if you want to create your own extension. The parameter of this method is a config class which will be described in the following snippet."
+msgstr ""
+
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
+msgid ""
+"The _LoggingCloudWatchConfig_ is building the bridge between the extension itself and the Quarkus application which uses the extension. It’s combining the _application.properties entries_ in the Quarkus application with our extension. That means with this class you can define the properties available in the _application.properties_ file and make the extension configurable from the outside.\n"
+"The _@ConfigRoot_ defines the prefix of the property in the _application.properties_ and the _@ConfigItems_ is the postfix. One application.properties entry we are accepting with this class is log.cloudwatch.enabled for example."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:54
-#, fuzzy
-msgid "In the snippet above you can see a _feature()_ method which is annotated with _@BuildStep_ and returns a new FeatureBuildItem. It exposes the name of the feature (logging-cloudwatch) displayed in the log during application bootstrap.  The second method _addCloudWatchHandler()_ initializes the extensions runtime configurations provided by the LoggingCloudWatchConfig and LoggingCloudWatchHandlerValueFactory class. Luckily there is a LogHandlerBuildItem provided, so we can overwrite the existing log handler by adding our own implementation. There are lots of other BuildItems provided so it’s definitely worth it, taking a look at it if you want to create your own extension. The parameter of this method is a config class which will be described in the following snippet."
-msgstr "在上面的片段中，你可以看到一个 _Feature()_ 方法，它被 _@BuildStep_ 注解并返回一个新的FeatureBuildItem。它暴露了在应用程序启动过程中显示在日志中的功能名称（logging-cloudwatch）。第二个方法 _addCloudWatchHandler()_ 初始化了由LoggingCloudWatchConfig和LoggingCloudWatchHandlerValueFactory类提供的扩展运行时配置。幸运的是，有一个LogHandlerBuildItem提供，所以我们可以通过添加我们自己的实现来覆盖现有的日志处理器。还有很多其他的BuildItems提供，所以如果你想创建自己的扩展，绝对值得一看。这个方法的参数是一个配置类，将在下面的片段中描述。"
-
-#. type: delimited block -
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:59
-#, no-wrap
-msgid ""
-"@ConfigRoot(phase = ConfigPhase.RUN_TIME, name = \"log.cloudwatch\")\n"
-"public class LoggingCloudWatchConfig {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:62
-#, no-wrap
-msgid ""
-"    @ConfigItem(defaultValue = \"true\")\n"
-"    boolean enabled;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:65
-#, no-wrap
-msgid ""
-"    @ConfigItem\n"
-"    public String region;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:68
-#, no-wrap
-msgid ""
-"    // ...\n"
-"}\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:72
-#, fuzzy
-msgid "The _LoggingCloudWatchConfig_ is building the bridge between the extension itself and the Quarkus application which uses the extension. It’s combining the _application.properties entries_ in the Quarkus application with our extension. That means with this class you can define the properties available in the _application.properties_ file and make the extension configurable from the outside.  The _@ConfigRoot_ defines the prefix of the property in the _application.properties_ and the _@ConfigItems_ is the postfix. One application.properties entry we are accepting with this class is log.cloudwatch.enabled for example."
-msgstr " _LoggingCloudWatchConfig_ 在扩展本身和使用该扩展的Quarkus应用程序之间建立了桥梁。它将Quarkus应用程序中的 _application.properties条目_ 与我们的扩展相结合。这意味着通过这个类，你可以定义 _application.properties_ 文件中的属性，使扩展可以从外部配置。 _@ConfigRoot_ 定义了 _application.pro_ perties中属性的前缀， _@ConfigItems_ 是后缀。我们用这个类接受的一个application.properties条目是log.cloudwatch.enabled，例如。"
-
-#. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:74
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
 #, fuzzy
 msgid "Besides the _LoggingCloudWatchConfig_ there is another parameter of the _addCloudwatchLogHandler()_ method. It’s the corresponding factory class."
 msgstr "除了 _LoggingCloudWatchConfig_ ， _addCloudwatchLogHandler()_ 方法还有一个参数。它是相应的工厂类。"
 
-#. type: delimited block -
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:79
-#, no-wrap
-msgid ""
-"@Recorder\n"
-"public class LoggingCloudWatchHandlerValueFactory {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:84
-#, no-wrap
-msgid ""
-"    public RuntimeValue<Optional<Handler>> create(final LoggingCloudWatchConfig config) {\n"
-"        if (!config.enabled) {\n"
-"            return new RuntimeValue<>(Optional.empty());\n"
-"        }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:87
-#, no-wrap
-msgid ""
-"        AWSLogsClientBuilder clientBuilder = AWSLogsClientBuilder.standard();\n"
-"        clientBuilder.setCredentials(new CloudWatchCredentialsProvider(config));\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:89
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:93
-#, no-wrap
-msgid "        // …\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:91
-#, no-wrap
-msgid "        AWSLogs awsLogs = clientBuilder.build();\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:97
-#, no-wrap
-msgid ""
-"        LoggingCloudWatchHandler handler = new LoggingCloudWatchHandler(awsLogs, config.logGroup.get(),\n"
-"                config.logStreamName.get(), token);\n"
-"        // …\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:101
-#, no-wrap
-msgid ""
-"        return new RuntimeValue<>(Optional.of(handler));\n"
-"    }\n"
-"}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:104
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
 #, fuzzy
 msgid "The LoggingCloudWatchHandlerValueFactory is the glue between the actually business logic of the extension: dealing with application logs and putting these logs to AWS and the configurations of the _application.properties_ file mentioned before. As you can see in the _create()_ method, configuration entries are checked and used for initializing the CloudWatch connection."
 msgstr "LoggingCloudWatchHandlerValueFactory是扩展的实际业务逻辑之间的粘合剂：处理应用程序的日志并将这些日志放到AWS和前面提到的 _application.properties_ 文件的配置。正如你在 _create()_ 方法中看到的，配置项被检查并用于初始化CloudWatch连接。"
 
-#. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:107
-#, fuzzy
-msgid "Now that we have made the extension configurable for the extension users by adding _application.properties_ entries, exposing the extension name and providing the configurations to the handler class which creates the AWS CloudWatch objects needed to put log messages in AWS CloudWatch, we only need to add one missing piece.  The Log Handler itself. In the snippet above, in the _LoggingCloudWatchHandlerValueFactory_ we created it already and returned it as a RuntimeValue which we are using in the _LoggingCloudwatchProcessor_ class. That’s the call chain needed to overwrite the existing default log handler."
-msgstr "现在，我们已经通过添加 _application.properties_ 条目使扩展用户可以配置扩展，公开了扩展名称，并向处理程序类提供了配置，该处理程序创建了将日志信息放入AWS CloudWatch所需的AWS CloudWatch对象，我们只需要添加一个缺失的部分。日志处理程序本身。在上面的片段中，在 _LoggingCloudWatchHandlerValueFactory_ 中，我们已经创建了它，并将其作为RuntimeValue返回，我们在 _LoggingCloudwatchProcessor_ 类中使用。这就是覆盖现有默认日志处理器所需的调用链。"
-
-#. type: delimited block -
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:111
-#, no-wrap
-msgid "class LoggingCloudWatchHandler extends Handler {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:116
-#, no-wrap
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
 msgid ""
-"    private AWSLogs awsLogs;\n"
-"    private String logStreamName;\n"
-"    private String logGroupName;\n"
-"    private String sequenceToken;\n"
+"Now that we have made the extension configurable for the extension users by adding _application.properties_ entries, exposing the extension name and providing the configurations to the handler class which creates the AWS CloudWatch objects needed to put log messages in AWS CloudWatch, we only need to add one missing piece.\n"
+"The Log Handler itself. In the snippet above, in the _LoggingCloudWatchHandlerValueFactory_ we created it already and returned it as a RuntimeValue which we are using in the _LoggingCloudwatchProcessor_ class. That’s the call chain needed to overwrite the existing default log handler."
 msgstr ""
 
-#. type: delimited block -
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:118
-#, no-wrap
-msgid "    // ...\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:125
-#, no-wrap
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
 msgid ""
-"    LoggingCloudWatchHandler(AWSLogs awsLogs, String logGroup, String logStreamName, String token) {\n"
-"        this.logGroupName = logGroup;\n"
-"        this.awsLogs = awsLogs;\n"
-"        this.logStreamName = logStreamName;\n"
-"        this.sequenceToken = token;\n"
-"    }\n"
+"This log handler is a java.util.LogHandler which takes the LogRecord object as a parameter of the publish method which will be called when writing a log in an application. For example like log.info(“I Love Open Source!”);. If configured correctly, this log handler will be called when writing logs. As we want to put the log messages in AWS CloudWatch, we need to add the logic for doing it.\n"
+"Therefore we create an InputLogEvent and call _putLogEvents()_ which puts the log message to CloudWatch. That’s basically it."
 msgstr ""
-
-#. type: delimited block -
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:128
-#, no-wrap
-msgid ""
-"    @Override\n"
-"    public void publish(LogRecord record) {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:130
-#, no-wrap
-msgid "        // ...\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:137
-#, no-wrap
-msgid ""
-"        InputLogEvent logEvent = new InputLogEvent()\n"
-"                .withMessage(body)\n"
-"                .withTimestamp(System.currentTimeMillis());\n"
-"        awsLogs.putLogEvents(request);\n"
-"    }\n"
-"}\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:141
-#, fuzzy
-msgid "This log handler is a java.util.LogHandler which takes the LogRecord object as a parameter of the publish method which will be called when writing a log in an application. For example like log.info(“I Love Open Source!”);. If configured correctly, this log handler will be called when writing logs. As we want to put the log messages in AWS CloudWatch, we need to add the logic for doing it.  Therefore we create an InputLogEvent and call _putLogEvents()_ which puts the log message to CloudWatch. That’s basically it."
-msgstr "这个日志处理程序是一个java.util.LogHandler，它把LogRecord对象作为发布方法的参数，当在应用程序中写入日志时，将调用该方法。例如像log.info(\"I Love Open Source!\");。如果配置正确，这个日志处理程序将在写入日志时被调用。由于我们想把日志信息放在AWS CloudWatch中，我们需要添加这样做的逻辑。因此，我们创建一个InputLogEvent并调用 _putLogEvents()_ ，将日志信息放到CloudWatch中。基本上就是这样了。"
 
 #. type: delimited block =
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:145
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
 #, fuzzy
 msgid "The snippets in this article are a bit shortened, but basically that’s what the extension contains."
 msgstr "这篇文章中的片段有点简短，但基本上就是扩展的内容。"
 
-#. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:149
-#, fuzzy
-msgid "Let’s sum it up: There is a processor class which initializes the extension, a configuration class which is needed to make the extension configurable, a value factory class which takes these configurations and creates a AWS CloudWatch connection as well as a custom _LogHandler_ class which pushes each log message to CloudWatch."
-msgstr "让我们把它总结一下。有一个初始化扩展的处理器类，一个使扩展可配置的配置类，一个接受这些配置并创建AWS CloudWatch连接的值工厂类，以及一个将每个日志消息推送到CloudWatch的自定义 _LogHandler_ 类。"
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
+msgid ""
+"Let’s sum it up:\n"
+"There is a processor class which initializes the extension, a configuration class which is needed to make the extension configurable, a value factory class which takes these configurations and creates a AWS CloudWatch connection  as well as a custom _LogHandler_ class which pushes each log message to CloudWatch."
+msgstr ""
 
 #. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:151
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
 #, fuzzy
 msgid "After doing all these things, the only thing missing is releasing a version of the extension. This can be done by opening a Pull Request which updates the current-version and _next-version_ entry of the _project.yml_ file in the _.github_ folder. After merging this Pull Request, some GitHub Actions will be triggered which will bring your new version to Maven Central and finally others can use your extension as well :-)"
 msgstr "做完这些事情后，唯一缺少的就是发布扩展的版本。这可以通过打开一个Pull Request来实现，它可以更新 _.github_ 文件夹中 _project.yml_ 文件的当前版本和 _下一版本_ 条目。合并该拉动请求后，会触发一些GitHub动作，将你的新版本带到Maven中心，最后其他人也可以使用你的扩展 :-)"
 
 #. type: Title ==
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:152
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
 #, fuzzy, no-wrap
 msgid "Summary"
 msgstr "摘要"
 
-#. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:155
-#, fuzzy
-msgid "As you can see, creating, implementing and sharing Quarkus extensions with others is actually very easy. So if you have an idea of an extension which could be useful for the community, feel free to pitch your idea by creating a new extension proposal issue on the quarkusio/quarkus GitHub Issues section :-)"
-msgstr "正如你所看到的，创建、实施和与他人分享Quarkus扩展实际上是非常容易的。因此，如果你有一个对社区有用的扩展的想法，请随时在quarkusio/quarkus GitHub问题部分创建一个新的扩展建议问题来提出你的想法：-)"
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
+msgid ""
+"As you can see, creating, implementing and sharing Quarkus extensions with others is actually very easy. So if you have\n"
+"an idea of an extension which could be useful for the community, feel free to pitch your idea by creating a new extension proposal issue on the quarkusio/quarkus GitHub Issues section :-)"
+msgstr ""
 
 #. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:157
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
 #, fuzzy
 msgid "In case you have questions, suggestions or something else, please feel free to contact me on https://twitter.com/bennetelli[Twitter]."
 msgstr "如果你有问题、建议或其他东西，请随时在 link:https://twitter.com/bennetelli[Twitter] 上联系我。"
 
-#. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:160
-#, fuzzy
-msgid "Best regards, Bennet"
-msgstr "最好的问候，贝内特"
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
+msgid ""
+"Best regards,\n"
+"Bennet"
+msgstr ""
 
 #. type: Title ==
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:161
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
 #, fuzzy, no-wrap
 msgid "Links"
 msgstr "链接"
 
 #. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:163
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
 msgid "https://quarkus.io/blog/quarkiverse/"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:164
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
 msgid "https://github.com/quarkiverse"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:165
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
 msgid "https://github.com/quarkiverse/quarkus-logging-cloudwatch"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc:165
+#: _posts/2022-01-13-quarkus-aws-cloudwatch_extension.adoc
 msgid "https://quarkus.io/guides/writing-extensions#create-new-extension-modules-using-maven"
 msgstr ""

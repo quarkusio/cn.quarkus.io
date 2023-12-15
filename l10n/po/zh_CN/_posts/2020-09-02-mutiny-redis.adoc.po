@@ -11,349 +11,250 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#. type: YAML Front Matter: author
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:1
-#, fuzzy, no-wrap
-msgid "cescoffier"
-msgstr "鹤壁市"
-
-#. type: YAML Front Matter: date
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:1
-#, fuzzy, no-wrap
-msgid "2020-09-02"
-msgstr "2020-09-02"
-
-#. type: YAML Front Matter: layout
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:1
-#, fuzzy, no-wrap
-msgid "post"
-msgstr "职位"
-
-#. type: YAML Front Matter: synopsis
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:1
-#, fuzzy, no-wrap
-msgid "How to compose asynchronous actions with Mutiny"
-msgstr "如何用Mutiny编排异步行动"
-
-#. type: YAML Front Matter: tags
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:1
-#, fuzzy, no-wrap
-msgid "reactive mutiny redis"
-msgstr "反应性叛变Redis"
-
 #. type: YAML Front Matter: title
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:1
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy, no-wrap
 msgid "Using Redis with Mutiny - Composing asynchronous actions"
 msgstr "在Mutiny中使用Redis - 组成异步行动"
 
+#. type: YAML Front Matter: synopsis
+#: _posts/2020-09-02-mutiny-redis.adoc
+#, fuzzy, no-wrap
+msgid "How to compose asynchronous actions with Mutiny"
+msgstr "如何用Mutiny编排异步行动"
+
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:11
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "I got an interesting question from a user about Redis and Mutiny. While the problem was not specifically about Redis and could be applied to many other APIs, I found the context amusing."
 msgstr "我从一个用户那里得到了一个关于Redis和Mutiny的有趣问题。虽然这个问题并不是专门针对Redis的，也可以应用于其他许多API，但我发现这个问题的背景很有趣。"
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:13
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "Enrico, the user, wanted to do something like this:"
 msgstr "用户Enrico想做这样的事情。"
 
-#. type: delimited block -
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:20
-#, no-wrap
-msgid ""
-"1. get all keys from Redis\n"
-"2. for each key -> retrieve the associated object\n"
-"3. add this object to a JsonArray \n"
-"4. produce the JsonArray with all the objects\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:23
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "Enrico is using the Mutiny variant of the Vert.x Redis Client."
 msgstr "Enrico正在使用Vert.x Redis客户端的Mutiny变体。"
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:25
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "This client offers a few methods to help us with our problem:"
 msgstr "这个客户提供了一些方法来帮助我们解决这个问题。"
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:27
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "the `RedisClient.keys(pattern)` method returning `Uni<JsonArray>`. This array contains the list of keys matching a pattern passed to the `keys` method. To simplify this post, let's use: `keys(\"*\")` returning all the keys."
 msgstr " `RedisClient.keys(pattern)` 方法返回 `Uni<JsonArray>` 。这个数组包含了与传递给 `keys` 方法的模式相匹配的键的列表。为了简化这个帖子，让我们使用： `keys(\"*\")` ，返回所有的键。"
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:28
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "the `RedisClient.hgetall(key)` method returning a `Uni<JsonObject>`. This method retrieves the object associated with the passed key."
 msgstr " `RedisClient.hgetall(key)` 方法返回一个 `Uni<JsonObject>` 。该方法检索与所传递的键相关的对象。"
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:30
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "Both methods are asynchronous (they return `Uni`), and we need to call the second one for each retrieved key. In other words, we need to iterate over the set of keys, and for each key to invoke an asynchronous action. Finally, we want to collect the result of these asynchronous actions into a `JsonArray`."
 msgstr "这两个方法都是异步的（它们返回 `Uni` ），我们需要为每个检索到的键调用第二个方法。换句话说，我们需要遍历键的集合，并为每个键调用一个异步的动作。最后，我们要将这些异步操作的结果收集到一个 `JsonArray` 。"
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:32
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "Let's start with the beginning; we need the Redis Client instance:"
 msgstr "让我们从头开始；我们需要Redis客户端实例。"
 
-#. type: delimited block -
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:38
-#, no-wrap
-msgid ""
-"RedisClient redis = RedisClient.create(vertx, new JsonObject()\n"
-"     .put(\"port\", 6379)\n"
-"     .put(\"host\", \"localhost\"));\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:41
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "Note that in Quarkus, you should use the Redis extension directly, which exposes a similar API. Enrico wanted to use the Vert.x Redis Client directly."
 msgstr "注意，在Quarkus中，你应该直接使用Redis扩展，它暴露了一个类似的API。Enrico想直接使用Vert.x Redis客户端。"
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:43
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "Now that we have our client, let's retrieve the list of keys:"
 msgstr "现在我们有了客户端，让我们检索一下键的列表。"
 
-#. type: delimited block -
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:47
-#, no-wrap
-msgid "Uni<JsonArray> keys = redis.keys(\"*\")\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:50
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "That produces the `JsonArray`, but we want a stream of keys.  Again, it's an asynchronous method. The returned `Uni` receives the array when it's available. Once received (`onItem`), we can create a stream out of this array:"
 msgstr "这产生了 `JsonArray` ，但我们想要一个键的流。同样，这是一个异步方法。当数组可用时，返回的 `Uni` 接收数组。一旦收到( `onItem` )，我们可以从这个数组中创建一个流。"
 
-#. type: delimited block -
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:56
-#, no-wrap
-msgid ""
-"Multi<String> keys = redis.keys(\"*\")\n"
-"     .onItem().transformToMulti(array -> Multi.createFrom().iterable(array))\n"
-"     .onItem().castTo(String.class);\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:59
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "This snippet:"
 msgstr "这个片段。"
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:61
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "retrieves the `JsonArray` containing the keys"
 msgstr "检索包含键的 `JsonArray` "
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:62
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "creates a `Multi` streaming these keys, it's a `Multi<Object>` as a `JsonArray` is extending `Iterable<Object>`"
 msgstr "创建一个 `Multi` ，将这些键分流，它是一个 `Multi<Object>` ，因为一个 `JsonArray` ，是扩展的。 `Iterable<Object>` "
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:63
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "maps the items from this `Multi` to `String`"
 msgstr "将这个 `Multi` 中的项目映射到 `String` "
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:65
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "At this point, we have a stream of (String) keys. So, we are done with step 1."
 msgstr "在这一点上，我们有一个(String)键的流。所以，我们已经完成了第1步。"
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:67
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "Now, step 2: for each key, we want to retrieve the associated object."
 msgstr "现在，第二步：对于每个键，我们要检索相关的对象。"
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:69
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "So let's use the `hgetall` method:"
 msgstr "因此，让我们使用 `hgetall` 方法。"
 
-#. type: delimited block -
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:74
-#, no-wrap
-msgid ""
-"Multi<JsonObject> objects = keys\n"
-"  .onItem().transformToUniAndMerge(key -> redis.hgetall(key));\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:77
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "This snippet requires a bit of an explanation."
 msgstr "这个片段需要做一些解释。"
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:79
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "For each item of the stream `keys`, we call `hgetall`, which produces a `Uni<JsonObject>`."
 msgstr "对于数据流中的每一项 `keys` ，我们调用 `hgetall` ，从而产生一个 `Uni<JsonObject>` 。"
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:81
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "So, we want to transform our key into a Uni (*transformToUni*)."
 msgstr "所以，我们要把我们的键转化为Uni *（transformToUni* ）。"
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:83
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "When you have a stream of items and need to invoke an asynchronous action for each item, you must choose how you will merge the results. Mutiny provides two strategies:"
 msgstr "当你有一个项目流并需要为每个项目调用一个异步动作时，你必须选择如何合并结果。Mutiny提供了两种策略。"
 
-#. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:85
-#, fuzzy, no-wrap
-msgid "*merge -* as soon as the item produced by the `Uni` is received we send it downstream\n"
-msgstr " *合并 -* 一旦收到由 `Uni` 产生的项目，我们就把它送到下游去。"
+#: _posts/2020-09-02-mutiny-redis.adoc
+msgid "*merge -* as soon as the item produced by the `Uni` is received we send it downstream"
+msgstr ""
+
+#: _posts/2020-09-02-mutiny-redis.adoc
+msgid "*concatenate* - we preserve the order of the input stream to be sure that the items are sent downstream in the same order"
+msgstr ""
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:86
-#, fuzzy, no-wrap
-msgid "*concatenate* - we preserve the order of the input stream to be sure that the items are sent downstream in the same order\n"
-msgstr " *连接* --我们保留输入流的顺序，以确保项目以相同的顺序被发送到下游"
-
-#. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:88
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "Let's illustrate this. Imagine we have the keys `1`, `2`, `3` and to the stream `{1, 2, 3}`. Also, let's consider that in our Redis database, the key `1` is associated to `A`, `2` to `B` and `3` to `C`."
 msgstr "让我们来说明这一点。想象一下，我们有键 `1` , `2` , `3` 和到流 `{1, 2, 3}` 。另外，让我们考虑一下，在我们的Redis数据库中，键 `1` 与 `A` ， `2` 与 `B` ， `3` 与 `C` 。"
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:90
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "If you use the *merge* strategy, we are retrieving the associated objects in an undetermined order. We can end up with `{A, C, B}` or `{B, A, C}`. It depends on many factors, such as the latency, scheduling, load and so on. However, it also means we can retrieve all the associated objects concurrently and produce the resulting stream without taking care of the order."
 msgstr "如果你使用 *合并* 策略，我们是以不确定的顺序检索相关对象。我们最终可以得到 `{A, C, B}` 或 `{B, A, C}` 。这取决于许多因素，如延迟、调度、负载等等。然而，这也意味着我们可以同时检索所有相关的对象，并产生结果流，而不考虑顺序。"
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:92
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "If you use the *concatenate* strategy, it preserves the order from the input stream. So, it will always produce `{A, B, C}`. While it may be desirable, it may reduce the ability to retrieve the object concurrently, as Mutiny has to *wait* for all the retrieval of all the previous objects. For example, if Mutiny receives `C` first, it needs to wait for `A` and `B` before sending `C` downstream."
 msgstr "如果你使用 *连接* 策略，它将保留输入流的顺序。所以，它将总是产生 `{A, B, C}` 。虽然这可能是可取的，但它可能会降低并发检索对象的能力，因为Mutiny必须 *等待* 所有之前的对象的检索。例如，如果Mutiny先收到 `C` ，它需要等待 `A` 和 `B` ，然后再向下游发送 `C` 。"
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:94
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "In our context, let's not preserve the order and use the *merge* strategy. So we use `transformToUniAndMerge`."
 msgstr "在我们的环境中，让我们不保留顺序，使用 *合并* 策略。所以我们使用 `transformToUniAndMerge` 。"
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:96
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "If you run the code multiple times, you might see order changes in the resulting array."
 msgstr "如果你多次运行该代码，你可能会看到结果数组中的顺序变化。"
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:98
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "Ok, step 2 done. Let's focus on the final steps: accumulate the objects into a `JsonArray`, and produce a `Uni<JsonArray>`, containing all the objects. Mutiny provides methods to gather items from a stream into lists, maps, sets, but there is no built-in `JsonArray` support. Fortunately, Mutiny offers a method that you can use to collect items in any structure:"
 msgstr "好了，第二步完成了。让我们专注于最后的步骤：将对象累积到一个 `JsonArray` ，并产生一个 `Uni<JsonArray>` ，包含所有的对象。Mutiny提供了从流中收集项目到列表、地图、集合的方法，但是没有内置的 `JsonArray` 支持。幸运的是，Mutiny提供了一种方法，你可以用它来收集任何结构中的项目。"
 
-#. type: delimited block -
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:103
-#, no-wrap
-msgid ""
-"Uni<JsonArray> result = objects\n"
-"   .collectItems().in(() -> new JsonArray(), (arr, obj) -> arr.add(obj));\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:106
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "`collectItems().in` allows accumulating the items in your own structure. It takes two parameters: a supplier of the structure, called only once, and a bi-consumer taking the structure and the item to add, called for each item."
 msgstr " `collectItems().in` 允许在你自己的结构中积累项目。它需要两个参数：一个是结构的供应商，只被调用一次，另一个是获取结构和要添加的项目的双消费者，为每个项目调用。"
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:108
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "Here we go, we have everything to solve Enrico's question."
 msgstr "在这里，我们有一切可以解决恩里克的问题。"
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:110
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "The *all in one* code is the following:"
 msgstr " *一体化* 的代码如下。"
 
-#. type: delimited block -
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:122
-#, no-wrap
-msgid ""
-"Uni<JsonArray> result = \n"
-"  // Step 1 - retrieve the keys\n"
-"  redis.keys(\"*\") \n"
-"    .onItem().transformToMulti(keys -> Multi.createFrom().iterable(keys))\n"
-"    .onItem().castTo(String.class)\n"
-"  // Step 2 - retrieve the associated object for each key\n"
-"    .onItem().transformToUniAndMerge(key -> redis.hgetall(key))\n"
-"  // Step 3 and 4 - accumulate the retrieved object in a JsonArray\n"
-"    .collectItems().in(() -> new JsonArray(), (arr, obj) -> arr.add(obj));\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:125
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "In this snippet, there are a few interesting patterns:"
 msgstr "在这个片段中，有几个有趣的模式。"
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:127
+#: _posts/2020-09-02-mutiny-redis.adoc
 #, fuzzy
 msgid "When you have a collection, and you want to iterate on it with Mutiny, transform it into a `Multi`"
 msgstr "当你有一个集合，并且你想用Mutiny对它进行迭代时，把它转化为一个 `Multi` "
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:128
+#: _posts/2020-09-02-mutiny-redis.adoc
 msgid "When you execute asynchronous action for each item of a stream, think about *merge* vs. *concatenate.* Use the one that makes sense for you."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:129
+#: _posts/2020-09-02-mutiny-redis.adoc
 msgid "To accumulate items into a structure, use `collectItems`, it offers many methods to produce your structure of choice."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:131
+#: _posts/2020-09-02-mutiny-redis.adoc
 msgid "If you want to see this code in action, check this https://gist.github.com/cescoffier/e8c8a18897f9e5ca15f1378876a1bd93[gist]. You even can run it directly with JBang:"
 msgstr ""
 
-#. type: delimited block -
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:135
-#, no-wrap
-msgid "jbang https://gist.github.com/cescoffier/e8c8a18897f9e5ca15f1378876a1bd93\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:138
+#: _posts/2020-09-02-mutiny-redis.adoc
 msgid "You can replace *merge* with *concatenate* to see the difference."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_posts/2020-09-02-mutiny-redis.adoc:139
+#: _posts/2020-09-02-mutiny-redis.adoc
 msgid "Enjoy!"
 msgstr ""

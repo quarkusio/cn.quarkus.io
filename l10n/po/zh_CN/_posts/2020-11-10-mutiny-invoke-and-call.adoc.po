@@ -11,314 +11,240 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#. type: YAML Front Matter: author
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:1
-#, fuzzy, no-wrap
-msgid "cescoffier"
-msgstr "鹤壁市"
-
-#. type: YAML Front Matter: date
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:1
-#, fuzzy, no-wrap
-msgid "2020-11-10"
-msgstr "2020-11-10"
-
-#. type: YAML Front Matter: layout
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:1
-#, fuzzy, no-wrap
-msgid "post"
-msgstr "职位"
-
-#. type: YAML Front Matter: synopsis
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:1
-#, fuzzy, no-wrap
-msgid "How to observe events without touching the streams."
-msgstr "如何在不接触流的情况下观察事件。"
-
-#. type: YAML Front Matter: tags
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:1
-#, fuzzy, no-wrap
-msgid "reactive mutiny"
-msgstr "反应性叛变"
-
 #. type: YAML Front Matter: title
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:1
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 #, fuzzy, no-wrap
 msgid "Peeking at the streams"
 msgstr "窥视溪流"
 
-#. type: Plain text
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:15
-#, fuzzy
-msgid "Mutiny is an event-driven Reactive Programming library.  Like other reactive programming libraries, it uses streams as the primary construct.  These streams convey events, and your code processes these events.  Most of the time, your code is only interested in item and failure events.  But there are other kinds of events such as cancellation, request, completion, and so on."
-msgstr "Mutiny是一个事件驱动的反应式编程库。像其他反应式编程库一样，它使用流作为主要结构。这些流传达事件，而你的代码处理这些事件。大多数时候，你的代码只对项目和失败事件感兴趣。但也有其他种类的事件，如取消、请求、完成等。"
+#. type: YAML Front Matter: synopsis
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
+#, fuzzy, no-wrap
+msgid "How to observe events without touching the streams."
+msgstr "如何在不接触流的情况下观察事件。"
+
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
+msgid ""
+"Mutiny is an event-driven Reactive Programming library.\n"
+"Like other reactive programming libraries, it uses streams as the primary construct.\n"
+"These streams convey events, and your code processes these events.\n"
+"Most of the time, your code is only interested in item and failure events.\n"
+"But there are other kinds of events such as cancellation, request, completion, and so on."
+msgstr ""
 
 #. type: Plain text
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:17
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 #, fuzzy
 msgid "It's not rare that you need to look at these various events to understand better what's going on or implement specific side effects. For example, you may need to close a resource after a completion event or log a message on failure or cancellation."
 msgstr "你需要查看这些不同的事件以更好地了解正在发生的事情或实现特定的副作用，这种情况并不罕见。例如，你可能需要在一个完成事件后关闭一个资源，或者在失败或取消时记录一个消息。"
 
-#. type: Plain text
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:21
-#, fuzzy
-msgid "For each kind of event, there is an associated _group_ providing the methods to handle that specific event: `onItem()`, `onFailure()`, `onCompletion()` and so on.  These groups provide two methods to peek at the various events without impacting its distribution: `invoke` and `call`.  It does not transform the received event; it notifies you that something happened and let you react."
-msgstr "对于每一种事件，都有一个相关的 _组来_ 提供处理该特定事件的方法。 `onItem()` , `onFailure()` , `onCompletion()` 等等。这些组提供了两种方法来偷看各种事件，而不影响它的分布： `invoke` 和 `call` 。它不改变收到的事件；它通知你有事发生，让你做出反应。"
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
+msgid ""
+"For each kind of event, there is an associated _group_ providing the methods to handle that specific event: `onItem()`, `onFailure()`, `onCompletion()` and so on.\n"
+"These groups provide two methods to peek at the various events without impacting its distribution: `invoke` and `call`.\n"
+"It does not transform the received event; it notifies you that something happened and let you react."
+msgstr ""
 
 #. type: Title ==
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:22
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 #, fuzzy, no-wrap
 msgid "The invoke method"
 msgstr "调用方法"
 
-#. type: Plain text
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:26
-#, fuzzy
-msgid "The `invoke` method is synchronous and does not return anything.  Mutiny invokes the configured callback when the observed stream dispatches the event:"
-msgstr " `invoke` 方法是同步的，不返回任何东西。当观察到的流分派事件时，Mutiny会调用配置的回调。"
-
-#. type: delimited block -
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:33
-#, no-wrap
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 msgid ""
-"Uni<Integer> u = uni.onItem()\n"
-"    .invoke(i -> System.out.println(\"Received item: \" + i));    \n"
-"Multi<Integer> m = multi.onItem()\n"
-"    .invoke(i -> System.out.println(\"Received item: \" + i));\n"
+"The `invoke` method is synchronous and does not return anything.\n"
+"Mutiny invokes the configured callback when the observed stream dispatches the event:"
+msgstr ""
+
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
+msgid ""
+"As said above, `invoke` is synchronous.\n"
+"Mutiny invokes the callback and propagates the event downstream when the callback returns. It blocks the dispatching."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:37
-#, fuzzy
-msgid "As said above, `invoke` is synchronous.  Mutiny invokes the callback and propagates the event downstream when the callback returns. It blocks the dispatching."
-msgstr "如上所述， `invoke` 是同步的。Mutiny调用回调，并在回调返回时将事件传播到下游。它阻止了调度。"
-
-#. type: Plain text
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:39
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 #, fuzzy
 msgid "image:/assets/images/posts/mutiny-invoke-call/invoke.png[]"
 msgstr "image:/assets/images/posts/mutiny-invoke-call/invoke.png[alt=\"invoke\"]"
 
 #. type: Plain text
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:41
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 #, fuzzy
 msgid "Of course, we highly recommend you not to block."
 msgstr "当然，我们强烈建议你不要封锁。"
 
 #. type: Plain text
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:43
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 #, fuzzy
 msgid "The following snippets show how you can log the different types of events."
 msgstr "下面的片段显示了你如何记录不同类型的事件。"
 
-#. type: delimited block -
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:53
-#, no-wrap
-msgid ""
-"multi\n"
-"  .onSubscribe().invoke(() -> System.out.println(\"⬇️ Subscribed\"))\n"
-"  .onItem().invoke(i -> System.out.println(\"⬇️ Received item: \" + i))\n"
-"  .onFailure().invoke(f -> System.out.println(\"⬇️ Failed with \" + f))\n"
-"  .onCompletion().invoke(() -> System.out.println(\"⬇️ Completed\"))\n"
-"  .onCancellation().invoke(() -> System.out.println(\"⬆️ Cancelled\"))\n"
-"  .onRequest().invoke(l -> System.out.println(\"⬆️ Requested: \" + l))\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:56
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 #, fuzzy
 msgid "The arrows from the previous code snippet indicate if the event comes from the upstream (source) or downstream (consumer)."
 msgstr "前面的代码片断中的箭头表示事件来自上游（源）或下游（消费者）。"
 
-#. type: Plain text
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:59
-#, fuzzy
-msgid "The `invoke` method does not change the event, except in one case.  If the `invoke` callback throws an exception, the downstream does not get the actual event but get a failure event instead."
-msgstr " `invoke` 方法并不改变事件，除了一种情况。如果 `invoke` 回调抛出一个异常，下游不会得到实际的事件，而是得到一个失败事件。"
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
+msgid ""
+"The `invoke` method does not change the event, except in one case.\n"
+"If the `invoke` callback throws an exception, the downstream does not get the actual event but get a failure event instead."
+msgstr ""
 
 #. type: Plain text
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:61
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 #, fuzzy
 msgid "When observing the failure event, if the callback throws an exception, Mutiny propagates a `CompositeException` aggregating the original failure and the callback failure."
 msgstr "在观察失败事件时，如果回调抛出一个异常，Mutiny会传播一个 `CompositeException` ，将原始失败和回调失败聚集起来。"
 
 #. type: Title ==
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:62
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 #, fuzzy, no-wrap
 msgid "The call method"
 msgstr "呼叫方法"
 
 #. type: Plain text
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:65
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 #, fuzzy
 msgid "Unlike `invoke`, `call` is asynchronous, and the callback returns a `Uni<?>` object."
 msgstr "与 `invoke` 不同， `call` 是异步的，并且回调会返回一个 `Uni<?>` 对象。"
 
 #. type: Plain text
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:67
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 #, fuzzy
 msgid "`call` is often used when you need to implement asynchronous side-effects, such as closing resources."
 msgstr " `call` 通常在你需要实现异步的副作用时使用，比如关闭资源。"
 
 #. type: Plain text
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:69
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 #, fuzzy
 msgid "image:/assets/images/posts/mutiny-invoke-call/call.png[]"
 msgstr "image:/assets/images/posts/mutiny-invoke-call/call.png[alt=\"call\"]"
 
 #. type: Plain text
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:71
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 msgid "Mutiny does not dispatch the original event downstream until the Uni returned by the callback emits an item:"
 msgstr ""
 
-#. type: delimited block -
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:80
-#, no-wrap
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 msgid ""
-"multi\n"
-"    .onItem().call(i -> \n"
-"        Uni.createFrom().nullItem()\n"
-"            .onItem().delayIt().by(Duration.ofSeconds(1))\n"
-"    )\n"
-"----                \n"
+"As shown in the previous snippet, you can use this approach to delay items.\n"
+"But the primary use case is about completing asynchronous actions:"
 msgstr ""
 
-#. type: delimited block -
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:83
-#, no-wrap
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 msgid ""
-"As shown in the previous snippet, you can use this approach to delay items. \n"
-"But the primary use case is about completing asynchronous actions:\n"
+"Under the hood, Mutiny gets the `Uni` (by invoking the callback) and subscribes to it.\n"
+"It observes the item or failure event from that `Uni`.\n"
+"It discards the item value as only the emission matters in this case."
 msgstr ""
 
-#. type: delimited block -
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:85
-#, no-wrap
-msgid "[source, java]\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:88
-#, no-wrap
-msgid ""
-"multi\n"
-"    .onCompletion().call(() -> resource.close())\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:93
-#, no-wrap
-msgid ""
-"Under the hood, Mutiny gets the `Uni` (by invoking the callback) and subscribes to it. \n"
-"It observes the item or failure event from that `Uni`. \n"
-"It discards the item value as only the emission matters in this case.\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:95
-#, no-wrap
-msgid "If the callback throws an exception or the produced `Uni` produces a failure, Mutiny propagates that failure (or a `CompositeException`) downstream, replacing the original event. \n"
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
+msgid "If the callback throws an exception or the produced `Uni` produces a failure, Mutiny propagates that failure (or a `CompositeException`) downstream, replacing the original event."
 msgstr ""
 
 #. type: Title ==
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:96
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 #, no-wrap
 msgid "Summary"
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:99
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 msgid "The `invoke` and `call` methods are handy when you need to observe a stream without changing the transiting events."
 msgstr ""
 
-#. type: delimited block -
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:102
-msgid "Use `invoke` for implementing synchronous side-effects or logging events.  The asynchronous nature of `call` makes it perfect for implementing asynchronous side-effects, such as closing resources, flushing data, delay items, and so on."
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
+msgid ""
+"Use `invoke` for implementing synchronous side-effects or logging events.\n"
+"The asynchronous nature of `call` makes it perfect for implementing asynchronous side-effects, such as closing resources, flushing data, delay items, and so on."
 msgstr ""
 
 #. type: delimited block -
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:104
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 msgid "The following table highlights the key differences:"
 msgstr ""
 
 #. type: Table
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:107
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 #, no-wrap
 msgid "Method"
 msgstr ""
 
 #. type: Table
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:107
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 #, no-wrap
 msgid "`invoke`"
 msgstr ""
 
 #. type: Table
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:109
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 #, no-wrap
 msgid "`call`"
 msgstr ""
 
 #. type: Table
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:109
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 #, no-wrap
 msgid "Nature"
 msgstr ""
 
 #. type: Table
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:109
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 #, no-wrap
 msgid "synchronous"
 msgstr ""
 
 #. type: Table
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:111
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 #, no-wrap
 msgid "asynchronous"
 msgstr ""
 
 #. type: Table
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:111
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 #, no-wrap
 msgid "Return type"
 msgstr ""
 
 #. type: Table
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:111
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 #, no-wrap
 msgid "`void`"
 msgstr ""
 
 #. type: Table
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:113
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 #, no-wrap
 msgid "`Uni<?>`"
 msgstr ""
 
 #. type: Table
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:113
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 #, no-wrap
 msgid "Main Use cases"
 msgstr ""
 
 #. type: Table
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:113
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 #, no-wrap
 msgid "logging"
 msgstr ""
 
 #. type: Table
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:115
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 #, no-wrap
 msgid "closing resources, flushing data"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_posts/2020-11-10-mutiny-invoke-and-call.adoc:117
+#: _posts/2020-11-10-mutiny-invoke-and-call.adoc
 msgid "These methods are available for every kind of event in the associated group."
 msgstr ""

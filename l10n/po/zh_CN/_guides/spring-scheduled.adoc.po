@@ -10,7 +10,7 @@ msgstr ""
 "PO-Revision-Date: 2022-06-17 17:18+0800\n"
 "Last-Translator: stop <authabc@163.com>\n"
 "Language-Team: \n"
-"Language: zh\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,525 +20,314 @@ msgstr ""
 #. and pull requests should be submitted there:
 #. https://github.com/quarkusio/quarkus/tree/main/docs/src/main/asciidoc
 #. type: Title =
-#: upstream/_guides/spring-scheduled.adoc:6
+#: _guides/spring-scheduled.adoc
 #, no-wrap
 msgid "Quarkus Extension for Spring Scheduling API"
 msgstr "Quarkus对SpringSpring Scheduling API 的扩展"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:14
+#: _guides/spring-scheduled.adoc
 msgid "While users are encouraged to use xref:scheduler.adoc#standard-scheduling[regular Quarkus scheduler], Quarkus provides a compatibility layer for Spring Scheduled in the form of the `spring-scheduled` extension."
 msgstr "虽然我们鼓励用户使用 link:scheduler.html#standard-scheduling[常规 Quarkus调度器] ，但Quarkus以 `spring-scheduled` 扩展的形式为Spring Scheduled提供了一个兼容层。"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:16
+#: _guides/spring-scheduled.adoc
 msgid "This guide explains how a Quarkus application can leverage the well known Spring Scheduled annotation to configure and schedule tasks."
 msgstr "该指南解释了Quarkus应用程序如何利用众所周知的Spring Scheduled注解来配置和安排任务。"
 
 #. type: Title ==
-#: upstream/_guides/spring-scheduled.adoc:17
+#: _guides/spring-scheduled.adoc
 #, no-wrap
 msgid "Prerequisites"
 msgstr "先决条件"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:21
+#: _guides/spring-scheduled.adoc
 msgid "Some familiarity with the Spring Web extension"
 msgstr "对Spring Web扩展有一定的熟悉程度"
 
 #. type: Title ==
-#: upstream/_guides/spring-scheduled.adoc:22
+#: _guides/spring-scheduled.adoc
 #, no-wrap
 msgid "Solution"
 msgstr "解决方案"
 
-#. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:26
-msgid "We recommend that you follow the instructions in the next sections and create the application step by step.  However, you can go right to the completed example."
-msgstr "我们建议你按照下面几节的说明，一步一步地创建应用程序。然而，你可以直接转到已完成的示例。"
+#: _guides/spring-scheduled.adoc
+msgid ""
+"We recommend that you follow the instructions in the next sections and create the application step by step.\n"
+"However, you can go right to the completed example."
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:28
+#: _guides/spring-scheduled.adoc
 msgid "Clone the Git repository: `git clone {quickstarts-clone-url}`, or download an {quickstarts-archive-url}[archive]."
 msgstr "克隆 Git 仓库: `git clone {quickstarts-clone-url}` ，或者下载一个 {quickstarts-archive-url}[存档] 。"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:30
+#: _guides/spring-scheduled.adoc
 #, fuzzy
-#| msgid "The solution is located in the `spring-scheduled-quickstart` {quickstarts-tree-url}/spring-scheduled-quickstart[directory]."
 msgid "The solution is located in the `spring-scheduled-quickstart` link:{quickstarts-tree-url}/spring-scheduled-quickstart[directory]."
 msgstr "该解决方案位于 `spring-scheduled-quickstart` {quickstarts-tree-url}/spring-scheduled-quickstart[目录]中。"
 
 #. type: Title ==
-#: upstream/_guides/spring-scheduled.adoc:31
+#: _guides/spring-scheduled.adoc
 #, no-wrap
 msgid "Creating the Maven project"
 msgstr "创建Maven项目"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:34
+#: _guides/spring-scheduled.adoc
 msgid "First, we need a new project. Create a new project with the following command:"
 msgstr "首先，我们需要一个新项目。使用以下命令创建一个新项目:"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:40
+#: _guides/spring-scheduled.adoc
 msgid "This command generates a Maven project with the `spring-scheduled` extension."
 msgstr "该命令生成了一个包含 `spring-scheduled` 扩展项的Maven项目。"
 
-#. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:43
-msgid "If you already have your Quarkus project configured, you can add the `spring-scheduled` extension to your project by running the following command in your project base directory:"
-msgstr "如果你已经配置了你的Quarkus项目，你可以在你的项目根目录下运行以下命令，将 `spring-scheduled` 扩展添加到你的项目中:"
+#: _guides/spring-scheduled.adoc
+msgid ""
+"If you already have your Quarkus project configured, you can add the `spring-scheduled` extension\n"
+"to your project by running the following command in your project base directory:"
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:48
+#: _guides/spring-scheduled.adoc
 msgid "This will add the following to your build file:"
 msgstr "这将在你的构建文件中添加以下内容:"
 
 #. type: Block title
-#: upstream/_guides/spring-scheduled.adoc:50
+#: _guides/spring-scheduled.adoc
 #, no-wrap
 msgid "pom.xml"
 msgstr "pom.xml"
 
-#. type: delimited block -
-#: upstream/_guides/spring-scheduled.adoc:56
-#, no-wrap
-msgid ""
-"<dependency>\n"
-"    <groupId>io.quarkus</groupId>\n"
-"    <artifactId>quarkus-spring-scheduled</artifactId>\n"
-"</dependency>\n"
-msgstr ""
-
 #. type: Block title
-#: upstream/_guides/spring-scheduled.adoc:59
+#: _guides/spring-scheduled.adoc
 #, no-wrap
 msgid "build.gradle"
 msgstr "build.gradle"
 
-#. type: delimited block -
-#: upstream/_guides/spring-scheduled.adoc:62
-#, no-wrap
-msgid "implementation(\"io.quarkus:quarkus-spring-scheduled\")\n"
-msgstr ""
-
 #. type: Title ==
-#: upstream/_guides/spring-scheduled.adoc:64
+#: _guides/spring-scheduled.adoc
 #, no-wrap
 msgid "Creating a scheduled job"
 msgstr "创建一个计划作业"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:67
+#: _guides/spring-scheduled.adoc
 msgid "In the `org.acme.spring.scheduler` package, create the `CounterBean` class, with the following content:"
 msgstr "在 `org.acme.spring.scheduler` 包中，使用以下内容创建 `CounterBean` 类:"
 
-#. type: delimited block -
-#: upstream/_guides/spring-scheduled.adoc:71
-#: upstream/_guides/spring-scheduled.adoc:136
-#: upstream/_guides/spring-scheduled.adoc:165
-#, no-wrap
-msgid "package org.acme.spring.scheduler;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/spring-scheduled.adoc:73
-#, no-wrap
-msgid "import org.springframework.scheduling.annotation.Scheduled;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/spring-scheduled.adoc:76
-#, no-wrap
-msgid ""
-"import java.util.concurrent.atomic.AtomicInteger;\n"
-"import jakarta.enterprise.context.ApplicationScoped;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/spring-scheduled.adoc:79
-#, no-wrap
-msgid ""
-"@ApplicationScoped              // <1>\n"
-"public class CounterBean {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/spring-scheduled.adoc:81
-#, no-wrap
-msgid "    private AtomicInteger counter = new AtomicInteger();\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/spring-scheduled.adoc:85
-#, no-wrap
-msgid ""
-"    public int get() {   // <2>\n"
-"        return counter.get();\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/spring-scheduled.adoc:91
-#, no-wrap
-msgid ""
-"    @Scheduled(cron=\"*/5 * * * * ?\")   // <3>\n"
-"    void cronJob() {\n"
-"        counter.incrementAndGet();      //<4>\n"
-"        System.out.println(\"Cron expression hardcoded\");\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/spring-scheduled.adoc:97
-#, no-wrap
-msgid ""
-"    @Scheduled(cron = \"{cron.expr}\")   //<5>\n"
-"    void cronJobWithExpressionInConfig() {\n"
-"        counter.incrementAndGet();\n"
-"        System.out.println(\"Cron expression configured in application.properties\");\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/spring-scheduled.adoc:103
-#, no-wrap
-msgid ""
-"    @Scheduled(fixedRate = 1000)    //<6>\n"
-"    void jobAtFixedRate() {\n"
-"        counter.incrementAndGet();\n"
-"        System.out.println(\"Fixed Rate expression\");\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/spring-scheduled.adoc:110
-#, no-wrap
-msgid ""
-"    @Scheduled(fixedRateString = \"${fixedRate.expr}\")      //<7>\n"
-"    void jobAtFixedRateInConfig() {\n"
-"        counter.incrementAndGet();\n"
-"        System.out.println(\"Fixed Rate expression configured in application.properties\");\n"
-"    }\n"
-"}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:112
+#: _guides/spring-scheduled.adoc
 msgid "Declare the bean in the _application_ scope. Spring only detects @Scheduled annotations in beans."
 msgstr "以 _application_ scope声明该Bean。Spring只检测Bean上的@Scheduled注解。"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:113
+#: _guides/spring-scheduled.adoc
 msgid "The `get()` method allows retrieving the current value."
 msgstr "`get()` 方法允许检索当前值。"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:114
+#: _guides/spring-scheduled.adoc
 msgid "Use the Spring `@Scheduled` annotation with a cron-like expression to instruct Quarkus to schedule this method run.  In this example we're scheduling a task to be executed at 10:15am every day."
 msgstr "使用一个带有类似于cron表达式的Spring `@Scheduled` 注解来指示Quarkus安排这个方法的运行。在这个例子里，我们将会安排一个每天上午10:15都会被执行的任务。"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:115
+#: _guides/spring-scheduled.adoc
 msgid "The code is pretty straightforward. Every day at 10:15am, the counter is incremented."
 msgstr "代码非常简单明了。每天上午10点15分，计数器递增。"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:116
+#: _guides/spring-scheduled.adoc
 msgid "Define a job with a cron-like expression `cron.expr` which is configurable in `application.properties`."
 msgstr "在 `application.properties` 中使用类似于cron表达式的方式定义一个名为 `cron.expr` 的作业。"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:117
+#: _guides/spring-scheduled.adoc
 msgid "Define a method to be executed at a fixed interval of time. The period is expressed in milliseconds."
 msgstr "定义一个以固定时间间隔执行的方法。周期以毫秒表示。"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:118
+#: _guides/spring-scheduled.adoc
 msgid "Define a job to be executed at a fixed interval of time `fixedRate.expr` which is configurable in `application.properties`."
 msgstr "在 `application.properties` 中定义一个以固定时间间隔执行的 `fixedRate.expr` 作业。"
 
 #. type: Title ==
-#: upstream/_guides/spring-scheduled.adoc:119
+#: _guides/spring-scheduled.adoc
 #, no-wrap
 msgid "Updating the application configuration file"
 msgstr "更新该应用程序的配置文件"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:122
+#: _guides/spring-scheduled.adoc
 msgid "Edit the `application.properties` file and add the `cron.expr` and the `fixedRate.expr` configuration:"
 msgstr "编辑 `application.properties` 文件，添加 `cron.expr` 和 `fixedRate.expr` 配置:"
 
-#. type: delimited block -
-#: upstream/_guides/spring-scheduled.adoc:127
-#, no-wrap
-msgid ""
-"# The syntax used by Spring for cron expressions is the same as which is used by regular Quarkus scheduler.\n"
-"cron.expr=*/5 * * * * ?\n"
-"fixedRate.expr=1000\n"
-msgstr ""
-
 #. type: Title ==
-#: upstream/_guides/spring-scheduled.adoc:129
+#: _guides/spring-scheduled.adoc
 #, no-wrap
 msgid "Creating the resource and the test"
 msgstr "创建资源和测试"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:132
+#: _guides/spring-scheduled.adoc
 msgid "Create the `CountResource` class with the following content:"
 msgstr "创建包含以下内容的 `CountResource` 类:"
 
-#. type: delimited block -
-#: upstream/_guides/spring-scheduled.adoc:142
-#, no-wrap
-msgid ""
-"import jakarta.inject.Inject;\n"
-"import jakarta.ws.rs.GET;\n"
-"import jakarta.ws.rs.Path;\n"
-"import jakarta.ws.rs.Produces;\n"
-"import jakarta.ws.rs.core.MediaType;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/spring-scheduled.adoc:145
-#, no-wrap
-msgid ""
-"@Path(\"/count\")\n"
-"public class CountResource {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/spring-scheduled.adoc:148
-#, no-wrap
-msgid ""
-"    @Inject\n"
-"    CounterBean counter;    // <1>\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/spring-scheduled.adoc:156
-#, no-wrap
-msgid ""
-"    @GET\n"
-"    @Produces(MediaType.TEXT_PLAIN)\n"
-"    public String hello() {\n"
-"        return \"count: \" + counter.get();   // <2>\n"
-"    }\n"
-"}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:158
+#: _guides/spring-scheduled.adoc
 msgid "Inject the `CounterBean`"
 msgstr "注入 `CounterBean` "
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:159
+#: _guides/spring-scheduled.adoc
 msgid "Send back the current counter value"
 msgstr "返回当前计数器的值"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:161
+#: _guides/spring-scheduled.adoc
 msgid "We also need to update the tests. Edit the `CountResourceTest` class to match:"
 msgstr "此外，我们还需要更新测试。如下编辑 `CountResourceTest` 类:"
 
-#. type: delimited block -
-#: upstream/_guides/spring-scheduled.adoc:168
-#, no-wrap
-msgid ""
-"import static io.restassured.RestAssured.given;\n"
-"import static org.hamcrest.CoreMatchers.containsString;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/spring-scheduled.adoc:170
-#, no-wrap
-msgid "import org.junit.jupiter.api.Test;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/spring-scheduled.adoc:172
-#, no-wrap
-msgid "import io.quarkus.test.junit.QuarkusTest;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/spring-scheduled.adoc:175
-#, no-wrap
-msgid ""
-"@QuarkusTest\n"
-"public class CountResourceTest {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/spring-scheduled.adoc:184
-#, no-wrap
-msgid ""
-"    @Test\n"
-"    public void testHelloEndpoint() {\n"
-"        given()\n"
-"                .when().get(\"/count\")\n"
-"                .then()\n"
-"                .statusCode(200)\n"
-"                .body(containsString(\"count\"));  // <1>\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/spring-scheduled.adoc:186
-#, no-wrap
-msgid "}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:188
+#: _guides/spring-scheduled.adoc
 msgid "Ensure that the response contains `count`"
 msgstr "确保响应中包含 `count`"
 
 #. type: Title ==
-#: upstream/_guides/spring-scheduled.adoc:189
+#: _guides/spring-scheduled.adoc
 #, no-wrap
 msgid "Package and run the application"
 msgstr "打包并运行该应用程序"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:192
+#: _guides/spring-scheduled.adoc
 msgid "Run the application with:"
 msgstr "使用以下方式运行该应用程序:"
 
-#. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:197
-msgid "In another terminal, run `curl localhost:8080/count` to check the counter value.  After a few seconds, re-run `curl localhost:8080/count` to verify the counter has been incremented."
-msgstr "在另一个终端，运行 `curl localhost:8080/count` 检查计数器的值。几秒钟后，重新运行 `curl localhost:8080/count` ，以验证计数器已被递增。"
+#: _guides/spring-scheduled.adoc
+msgid ""
+"In another terminal, run `curl localhost:8080/count` to check the counter value.\n"
+"After a few seconds, re-run `curl localhost:8080/count` to verify the counter has been incremented."
+msgstr ""
+
+#: _guides/spring-scheduled.adoc
+msgid ""
+"Observe the console to verify that the following messages has been displayed:\n"
+"- `Cron expression hardcoded`\n"
+"- `Cron expression configured in application.properties`\n"
+"- `Fixed Rate expression`\n"
+"- `Fixed Rate expression configured in application.properties`\n"
+"These messages indicate that the executions of methods annotated with `@Scheduled` have been triggered."
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:199
-msgid "Observe the console to verify that the following messages has been displayed:"
-msgstr "观察控制台，检查是否显示了以下信息:"
-
-#. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:200
-msgid "`Cron expression hardcoded`"
-msgstr " `Cron expression hardcoded` "
-
-#. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:201
-msgid "`Cron expression configured in application.properties`"
-msgstr " `Cron expression configured in application.properties` "
-
-#. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:202
-msgid "`Fixed Rate expression`"
-msgstr " `Fixed Rate expression` "
-
-#. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:204
-msgid "`Fixed Rate expression configured in application.properties` These messages indicate that the executions of methods annotated with `@Scheduled` have been triggered."
-msgstr " `Fixed Rate expression configured in application.properties` 这些消息表明使用 `@Scheduled` 注解标注的方法执行都已经被触发了。"
-
-#. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:206
+#: _guides/spring-scheduled.adoc
 msgid "As usual, the application can be packaged using:"
 msgstr "像往常一样，可以使用以下方式打包该应用程序:"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:210
+#: _guides/spring-scheduled.adoc
 msgid "And executed using `java -jar target/quarkus-app/quarkus-run.jar`."
 msgstr "并使用 `java -jar target/quarkus-app/quarkus-run.jar` 命令执行。"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:212
+#: _guides/spring-scheduled.adoc
 msgid "You can also generate the native executable with:"
 msgstr "你也可以使用以下方式生成本地可执行文件:"
 
 #. type: Title ==
-#: upstream/_guides/spring-scheduled.adoc:215
+#: _guides/spring-scheduled.adoc
 #, no-wrap
 msgid "Using Property Expressions"
 msgstr "使用属性表达式"
 
-#. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:219
-msgid "Quarkus supports the use of property expressions in the `application.properties` file so to externalize the configuration of the tasks you should store the properties in the `application.properties` file and use the `fixedRateString`, `initialDelayString` params respectively."
-msgstr "Quarkus支持在 `application.properties` 文件中使用属性表达式，因此为了使任务的配置外部化，你应该在 `application.properties` 文件中，分别使用 `fixedRateString` , `initialDelayString` 参数存储属性。"
+#: _guides/spring-scheduled.adoc
+msgid ""
+"Quarkus supports the use of property expressions in the `application.properties` file so to externalize the configuration of the tasks you should store the properties in the `application.properties` file and use the\n"
+"`fixedRateString`, `initialDelayString` params respectively."
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:221
+#: _guides/spring-scheduled.adoc
 msgid "Note that this configuration is a build time configuration, the property expression will be resolved at build time."
 msgstr "注意，这个配置是构建时的配置，属性表达将在构建时被解析。"
 
 #. type: Title ==
-#: upstream/_guides/spring-scheduled.adoc:222
+#: _guides/spring-scheduled.adoc
 #, no-wrap
 msgid "Unsupported Spring Scheduled functionalities"
 msgstr "不支持的Spring Scheduled功能"
 
-#. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:226
-msgid "Quarkus currently only supports a subset of the functionalities that Spring @Scheduled provides with more features being planned.  Currently, the `fixedDelay` and `fixedDelayString` parameters are not supported, in other words, `@Scheduled` methods are always executed independently."
-msgstr "Quarkus目前只支持Spring @Scheduled所提供功能的一个子集，更多的功能正在计划当中。目前暂不支持 `fixedDelay` 和 `fixedDelayString` 参数，换句话说， `@Scheduled` 方法总是被独立地执行。"
+#: _guides/spring-scheduled.adoc
+msgid ""
+"Quarkus currently only supports a subset of the functionalities that Spring @Scheduled provides with more features being planned.\n"
+"Currently, the `fixedDelay` and `fixedDelayString` parameters are not supported, in other words, `@Scheduled` methods are always executed independently."
+msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/spring-scheduled.adoc:227
+#: _guides/spring-scheduled.adoc
 #, no-wrap
 msgid "Important Technical Note"
 msgstr "重要技术说明"
 
-#. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:233
-#, fuzzy
-msgid "Please note that the Spring support in Quarkus does not start a Spring Application Context nor are any Spring infrastructure classes run.  Spring classes and annotations are only used for reading metadata and / or are used as user code method return types or parameter types.  What that means for end users, is that adding arbitrary Spring libraries will not have any effect. Moreover, Spring infrastructure classes (like `org.springframework.beans.factory.config.BeanPostProcessor` for example) will not be executed."
-msgstr "请注意，Quarkus中的Spring支持并不会启动Spring应用上下文，也不会运行任何Spring基础结构类。Spring类和注解仅用于读取元数据和 / 或作为用户代码的方法返回类型或参数类型。对于最终用户来说，这意味着添加任意Spring库都不会对程序有任何影响。此外，Spring基础类（例如 `org.springframework.beans.factory.config.BeanPostProcessor` ）将不会被执行。"
+#: _guides/spring-scheduled.adoc
+msgid ""
+"Please note that the Spring support in Quarkus does not start a Spring Application Context nor are any Spring infrastructure classes run.\n"
+"Spring classes and annotations are only used for reading metadata and / or are used as user code method return types or parameter types.\n"
+"What that means for end users, is that adding arbitrary Spring libraries will not have any effect. Moreover, Spring infrastructure\n"
+"classes (like `org.springframework.beans.factory.config.BeanPostProcessor` for example) will not be executed."
+msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/spring-scheduled.adoc:235
+#: _guides/spring-scheduled.adoc
 #, no-wrap
 msgid "More Spring guides"
 msgstr "更多Spring指南"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:238
+#: _guides/spring-scheduled.adoc
 msgid "Quarkus has more Spring compatibility features. See the following guides for more details:"
 msgstr "Quarkus拥有更多的Spring兼容特性。获取更多细节请参阅以下指南:"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:240
+#: _guides/spring-scheduled.adoc
 msgid "xref:spring-di.adoc[Quarkus - Extension for Spring DI]"
 msgstr "link:spring-di.html[Quarkus - Spring DI 扩展]"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:241
+#: _guides/spring-scheduled.adoc
 msgid "xref:spring-web.adoc[Quarkus - Extension for Spring Web]"
 msgstr "link:spring-web.html[Quarkus - Spring Web 扩展]"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:242
+#: _guides/spring-scheduled.adoc
 msgid "xref:spring-data-jpa.adoc[Quarkus - Extension for Spring Data JPA]"
 msgstr "link:spring-data-jpa.html[Quarkus - Spring Data JPA 扩展]"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:243
+#: _guides/spring-scheduled.adoc
 msgid "xref:spring-data-rest.adoc[Quarkus - Extension for Spring Data REST]"
 msgstr "link:spring-data-rest.html[Quarkus - Spring Data REST 扩展]"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:244
+#: _guides/spring-scheduled.adoc
 msgid "xref:spring-cloud-config-client.adoc[Quarkus - Reading properties from Spring Cloud Config Server]"
 msgstr "xref:spring-cloud-config-client.adoc[Quarkus - 从Spring Cloud Config Server 中读取属性]"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:245
+#: _guides/spring-scheduled.adoc
 msgid "xref:spring-boot-properties.adoc[Quarkus - Extension for Spring Boot properties]"
 msgstr "xref:spring-boot-properties.adoc[Quarkus - Spring Boot 属性扩展]"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:246
+#: _guides/spring-scheduled.adoc
 msgid "xref:spring-cache.adoc[Quarkus - Extension for Spring Cache]"
 msgstr "xref:spring-cache.adoc[Quarkus - Spring Cache 扩展]"
 
 #. type: Plain text
-#: upstream/_guides/spring-scheduled.adoc:246
+#: _guides/spring-scheduled.adoc
 msgid "xref:spring-security.adoc[Quarkus - Extension for Spring Security]"
 msgstr "xref:spring-security.adoc[Quarkus - Spring Security 扩展]"

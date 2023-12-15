@@ -11,7 +11,7 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,982 +20,653 @@ msgstr ""
 #. and pull requests should be submitted there:
 #. https://github.com/quarkusio/quarkus/tree/main/docs/src/main/asciidoc
 #. type: Title =
-#: upstream/_guides/aws-lambda-http.adoc:6
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "AWS Lambda with RESTEasy Reactive, Undertow, or Reactive Routes"
 msgstr ""
 
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:18
-msgid "With Quarkus you can deploy your favorite Java HTTP frameworks as AWS Lambda's using either the https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api.html[AWS Gateway HTTP API] or https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-rest-api.html[AWS Gateway REST API].  This means that you can deploy your microservices written with RESTEasy Reactive (our Jakarta REST implementation), Undertow (servlet), Reactive Routes, xref:funqy-http.adoc[Funqy HTTP] or any other Quarkus HTTP framework as an AWS Lambda."
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"With Quarkus you can deploy your favorite Java HTTP frameworks as AWS Lambda's using either the https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api.html[AWS Gateway HTTP API]\n"
+"or https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-rest-api.html[AWS Gateway REST API].  This means that you can deploy your microservices written with RESTEasy Reactive (our Jakarta REST implementation),\n"
+"Undertow (servlet), Reactive Routes, xref:funqy-http.adoc[Funqy HTTP] or any other Quarkus HTTP framework as an AWS Lambda."
+msgstr ""
+
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"You can deploy your Lambda as a pure Java jar, or you can compile your project to a native image and deploy that for a smaller\n"
+"memory footprint and startup time.  Our integration also generates SAM deployment files that can be consumed by https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html[Amazon's SAM framework]."
+msgstr ""
+
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"Quarkus has a different extension for each Gateway API.  The HTTP Gateway API is implemented within the `quarkus-amazon-lambda-http` extension.\n"
+"The REST Gateway API is implemented within the `quarkus-amazon-lambda-rest` extension.  If you are confused on which Gateway product to use,\n"
+"Amazon has a https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-vs-rest.html[great guide] to help you navigate this decision."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:21
-msgid "You can deploy your Lambda as a pure Java jar, or you can compile your project to a native image and deploy that for a smaller memory footprint and startup time.  Our integration also generates SAM deployment files that can be consumed by https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html[Amazon's SAM framework]."
-msgstr "你可以将你的Lambda部署为一个纯Java jar，或者你可以将你的项目编译为一个原生镜像，并以较少的内存占用和启动时间来部署。我们的集成还可以生成SAM部署文件，这些文件可以被 link:https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html[亚马逊的SAM框架] 来使用。"
-
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:25
-msgid "Quarkus has a different extension for each Gateway API.  The HTTP Gateway API is implemented within the `quarkus-amazon-lambda-http` extension.  The REST Gateway API is implemented within the `quarkus-amazon-lambda-rest` extension.  If you are confused on which Gateway product to use, Amazon has a https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-vs-rest.html[great guide] to help you navigate this decision."
-msgstr "Quarkus对每个网关API都有一个不同的扩展。HTTP网关API是在 `quarkus-amazon-lambda-http` 扩展中实现的。REST网关API是在 `quarkus-amazon-lambda-rest` 扩展中实现的。如果你对使用哪种网关产品感到困惑，亚马逊有一个 link:https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-vs-rest.html[很好的指南] 来帮助你做这个决定。"
-
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:27
+#: _guides/aws-lambda-http.adoc
 msgid "Like most Quarkus extensions, the Quarkus AWS Lambda HTTP/REST extensions support Live Coding."
 msgstr "与大多数Quarkus扩展一样，Quarkus AWS Lambda HTTP/REST扩展支持实时编码。"
 
 #. type: Title ==
-#: upstream/_guides/aws-lambda-http.adoc:30
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "Prerequisites"
 msgstr "先决条件"
 
 #. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:35
+#: _guides/aws-lambda-http.adoc
 msgid "https://aws.amazon.com[An Amazon AWS account]"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:36
+#: _guides/aws-lambda-http.adoc
 msgid "https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html[AWS SAM CLI]"
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/aws-lambda-http.adoc:37
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "Getting Started"
 msgstr "入门指南"
 
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:41
-msgid "This guide walks you through generating an example Java project via a Maven archetype.  Later on, it walks through the structure of the project so you can adapt any existing projects you have to use AWS Lambda."
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"This guide walks you through generating an example Java project via a Maven archetype.  Later on, it walks through the structure\n"
+"of the project so you can adapt any existing projects you have to use AWS Lambda."
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/aws-lambda-http.adoc:42
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "Installing AWS bits"
 msgstr "安装AWS位"
 
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:46
-msgid "Installing all the AWS bits is probably the most difficult thing about this guide.  Make sure that you follow all the steps for installing AWS SAM CLI."
-msgstr "安装所有的AWS位可能是本指南中最困难的事情。请确保你遵循安装AWS SAM CLI的所有步骤。"
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"Installing all the AWS bits is probably the most difficult thing about this guide.  Make sure that you follow all the steps\n"
+"for installing AWS SAM CLI."
+msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/aws-lambda-http.adoc:47
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "Creating the Maven Deployment Project"
 msgstr "创建Maven部署项目"
 
 #. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:50
+#: _guides/aws-lambda-http.adoc
 msgid "Create the Quarkus AWS Lambda Maven project using our Maven Archetype."
 msgstr "使用我们的Maven 原型创建Quarkus AWS Lambda Maven项目。"
 
 #. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:52
+#: _guides/aws-lambda-http.adoc
 msgid "If you want to use the AWS Gateway HTTP API, generate your project with this script:"
 msgstr "如果你想使用AWS Gateway HTTP API，请用这个脚本生成你的项目："
 
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:58
-#, no-wrap
-msgid ""
-"mvn archetype:generate \\\n"
-"       -DarchetypeGroupId=io.quarkus \\\n"
-"       -DarchetypeArtifactId=quarkus-amazon-lambda-http-archetype \\\n"
-"       -DarchetypeVersion={quarkus-version}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:61
+#: _guides/aws-lambda-http.adoc
 msgid "If you want to use the AWS Gateway REST API, generate your project with this script:"
 msgstr "如果你想使用AWS Gateway REST API，请用这个脚本生成你的项目："
 
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:67
-#, no-wrap
-msgid ""
-"mvn archetype:generate \\\n"
-"       -DarchetypeGroupId=io.quarkus \\\n"
-"       -DarchetypeArtifactId=quarkus-amazon-lambda-rest-archetype \\\n"
-"       -DarchetypeVersion={quarkus-version}\n"
-msgstr ""
-
 #. type: Title ==
-#: upstream/_guides/aws-lambda-http.adoc:70
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "Build and Deploy"
 msgstr "构建和部署"
 
 #. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:73
+#: _guides/aws-lambda-http.adoc
 msgid "Build the project:"
 msgstr "构建项目。"
 
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:79
-msgid "This will compile the code and run the unit tests included within the generated project.  Unit testing is the same as any other Java project and does not require running on Amazon.  Quarkus dev mode is also available with this extension."
-msgstr "这将编译代码并运行生成的项目中包含的单元测试。单元测试和其他的Java项目一样，不需要运行在Amazon上。Quarkus开发模式也可以通过这个扩展来提供。"
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"This will compile the code and run the unit tests included within the generated project.\n"
+"Unit testing is the same as any other Java project and does not require running on Amazon.  Quarkus dev mode is also\n"
+"available with this extension."
+msgstr ""
 
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:82
-msgid "If you want to build a native executable, make sure you have GraalVM installed correctly and just add a `native` property to the build"
-msgstr "如果你想构建一个本地可执行文件，请确保你已经正确安装了GraalVM，并且只需向构建添加一个 `native` 属性"
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"If you want to build a native executable, make sure you have GraalVM installed correctly and just add a `native` property\n"
+"to the build"
+msgstr ""
 
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:88
-msgid "If you are building on a non-Linux system, you will need to also pass in a property instructing quarkus to use a Docker build as Amazon Lambda requires Linux binaries.  You can do this by passing `-Dquarkus.native.container-build=true` to your build command.  This requires you to have Docker installed locally, however."
-msgstr "如果你在非Linux系统上进行构建，你还需要传入一个属性，指示quarkus使用Docker构建，因为Amazon Lambda需要Linux二进制文件。你可以通过将 `-Dquarkus.native.container-build=true` 传给你的构建命令来实现。不过，这需要你在本地安装了Docker。"
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"If you are building on a non-Linux system, you will need to also pass in a property instructing quarkus to use a Docker build as Amazon\n"
+"Lambda requires Linux binaries.  You can do this by passing `-Dquarkus.native.container-build=true` to your build command.\n"
+"This requires you to have Docker installed locally, however."
+msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/aws-lambda-http.adoc:91
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "Extra Build Generated Files"
 msgstr "构建额外生成的文件"
 
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:95
-msgid "After you run the build, there are a few extra files generated by the Quarkus lambda extension you are using.  These files are in the build directory: `target/` for Maven, `build/` for Gradle."
-msgstr "运行构建后，你所使用的Quarkus lambda扩展会生成一些额外的文件。对于Maven，这些文件位于构建目录： `target/` 中，对于Gradle，则位于 `build/` 中。"
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"After you run the build, there are a few extra files generated by the Quarkus lambda extension you are using.  These files\n"
+"are in the build directory:  `target/` for Maven, `build/` for Gradle."
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:97
+#: _guides/aws-lambda-http.adoc
 msgid "`function.zip` - lambda deployment file"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:98
+#: _guides/aws-lambda-http.adoc
 msgid "`sam.jvm.yaml` - sam cli deployment script"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:99
+#: _guides/aws-lambda-http.adoc
 msgid "`sam.native.yaml` - sam cli deployment script for native"
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/aws-lambda-http.adoc:100
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "Live Coding and Simulating AWS Lambda Environment Locally"
 msgstr "实时编码和本地模拟AWS Lambda环境"
 
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:106
-msgid "In dev and test mode, Quarkus will start a mock AWS Lambda event server that will convert HTTP requests to the corresponding API Gateway event types and post them to the underlying Quarkus HTTP lambda environment for processing.  This simulates the AWS Lambda environment as much as possible locally without requiring tools like Docker and SAM CLI."
-msgstr "在开发和测试模式下，Quarkus会启动一个模拟的AWS Lambda事件服务器，该服务器将HTTP请求转换为相应的API Gateway事件类型，并将其发布到底层的Quarkus HTTP lambda环境进行处理。这尽可能在本地模拟AWS Lambda环境，而不需要Docker和SAM CLI等工具。"
-
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:110
-msgid "When using Quarkus Dev Mode just invoke HTTP requests on `http://localhost:8080` as you normally would when testing your REST endpoints.  This request will hit the Mock Event Server and will be converted to the API Gateway json message that is consumed by the Quarkus Lambda Poll loop."
-msgstr "当使用Quarkus开发模式时，只需对 `http://localhost:8080` 调用HTTP请求，就像通常测试REST端点时所做的那样。这个请求将访问模拟事件服务器，并将被转换为API Gateway json消息，被Quarkus Lambda Poll循环所消费。"
-
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:113
-msgid "For testing, Quarkus starts up a separate Mock Event server under port 8081.  The default port for Rest Assured is automatically set to 8081 by Quarkus, so you don't have to worry about setting this up."
-msgstr "为了测试，Quarkus在端口8081下启动了一个单独的模拟事件服务器。Rest Assured的默认端口被Quarkus自动设置为8081，所以你不必担心设置这个。"
-
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:118
-msgid "If you want to simulate more complex API Gateway events in your tests, then manually do an HTTP POST to `http://localhost:8080/\\_lambda_` (port 8081 in test mode) with the raw API Gateway json events.  These events will be placed directly on the Quarkus Lambda poll loop for processing.  Here's an example of that:"
-msgstr "如果你想在你的测试中模拟更复杂的API Gateway事件，那么请使用API Gateway json事件手动对 `http://localhost:8080/\\_lambda_` (测试模式下的8081端口)做一个HTTP POST。这些事件将被直接放在Quarkus Lambda轮询循环中进行处理。下面是一个例子："
-
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:123
-#, no-wrap
+#: _guides/aws-lambda-http.adoc
 msgid ""
-"import static io.restassured.RestAssured.given;\n"
-"import static org.hamcrest.CoreMatchers.equalTo;\n"
+"In dev and test mode, Quarkus will start a mock AWS Lambda event server\n"
+"that will convert HTTP requests to the corresponding API Gateway event types and post them to the underlying\n"
+"Quarkus HTTP lambda environment for processing.  This simulates the AWS Lambda environment\n"
+"as much as possible locally without requiring tools like Docker and SAM CLI."
 msgstr ""
 
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:125
-#: upstream/_guides/aws-lambda-http.adoc:478
-#: upstream/_guides/aws-lambda-http.adoc:519
-#, no-wrap
-msgid "import com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPEvent;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:127
-#, no-wrap
-msgid "import io.quarkus.test.junit.QuarkusTest;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:137
-#, no-wrap
+#: _guides/aws-lambda-http.adoc
 msgid ""
-"@QuarkusTest\n"
-"public class AmazonLambdaSimpleTestCase {\n"
-"    @Test\n"
-"    public void testJaxrsCognitoJWTSecurityContext() throws Exception {\n"
-"        APIGatewayV2HTTPEvent request = request(\"/security/username\");\n"
-"        request.getRequestContext().setAuthorizer(new APIGatewayV2HTTPEvent.RequestContext.Authorizer());\n"
-"        request.getRequestContext().getAuthorizer().setJwt(new APIGatewayV2HTTPEvent.RequestContext.Authorizer.JWT());\n"
-"        request.getRequestContext().getAuthorizer().getJwt().setClaims(new HashMap<>());\n"
-"        request.getRequestContext().getAuthorizer().getJwt().getClaims().put(\"cognito:username\", \"Bill\");\n"
+"When using Quarkus Dev Mode just invoke HTTP requests on `http://localhost:8080`\n"
+"as you normally would when testing your REST endpoints.  This request will hit the Mock Event Server and will\n"
+"be converted to the API Gateway json message that is consumed by the Quarkus Lambda Poll loop."
 msgstr ""
 
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:148
-#, no-wrap
+#: _guides/aws-lambda-http.adoc
 msgid ""
-"        given()\n"
-"                .contentType(\"application/json\")\n"
-"                .accept(\"application/json\")\n"
-"                .body(request)\n"
-"                .when()\n"
-"                .post(\"/_lambda_\")\n"
-"                .then()\n"
-"                .statusCode(200)\n"
-"                .body(\"body\", equalTo(\"Bill\"));\n"
-"    }\n"
+"For testing, Quarkus starts up a separate Mock Event server under port 8081.  The default port for Rest Assured is\n"
+"automatically set to 8081 by Quarkus, so you don't have to worry about setting this up."
+msgstr ""
+
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"If you want to simulate more complex\n"
+"API Gateway events in your tests, then manually do an HTTP POST to `http://localhost:8080/\\_lambda_` (port 8081 in test mode) with\n"
+"the raw API Gateway json events.  These events will be placed directly on the Quarkus Lambda poll loop\n"
+"for processing.  Here's an example of that:"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:151
+#: _guides/aws-lambda-http.adoc
 msgid "The above example simulates sending a Cognito principal with an HTTP request to your HTTP Lambda."
 msgstr "上面的例子模拟向你的HTTP Lambda发送一个带有HTTP请求的Cognito 主体。"
 
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:156
-msgid "If you want to hand code raw events for the AWS HTTP API, the AWS Lambda library has the request event type which is `com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPEvent` and the response event type of `com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPResponse`.  This corresponds to the `quarkus-amazon-lambda-http` extension and the AWS HTTP API."
-msgstr "如果你想为AWS HTTP API手工编码原始事件，AWS Lambda库有请求事件类型，是 `com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPEvent` ，响应事件类型是 `com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPResponse` 。这与 `quarkus-amazon-lambda-http` 扩展和AWS HTTP API相对应。"
-
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:160
-msgid "If you want to hand code raw events for the AWS REST API, Quarkus has its own implementation: `io.quarkus.amazon.lambda.http.model.AwsProxyRequest` and `io.quarkus.amazon.lambda.http.model.AwsProxyResponse`.  This corresponds to `quarkus-amazon-lambda-rest` extension and the AWS REST API."
-msgstr "如果你想为AWS REST API手工编码原始事件，Quarkus有自己的实现： `io.quarkus.amazon.lambda.http.model.AwsProxyRequest` 和 `io.quarkus.amazon.lambda.http.model.AwsProxyResponse` 。这与 `quarkus-amazon-lambda-rest` 扩展和AWS REST API相对应。"
-
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:163
-msgid "The mock event server is also started for `@QuarkusIntegrationTest` tests so will work with native binaries too.  All this provides similar functionality to the SAM CLI local testing, without the overhead of Docker."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:166
-msgid "Finally, if port 8080 or port 8081 is not available on your computer, you can modify the dev and test mode ports with application.properties"
-msgstr "最后，如果端口8080或端口8081在你的电脑上不可用，你可以使用application.properties修改开发和测试模式的端口"
-
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:171
-#, no-wrap
+#: _guides/aws-lambda-http.adoc
 msgid ""
-"quarkus.lambda.mock-event-server.dev-port=8082\n"
-"quarkus.lambda.mock-event-server.test-port=8083\n"
+"If you want to hand code raw events for the AWS HTTP API, the AWS Lambda library has the request event type which is\n"
+"`com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPEvent` and the response event type\n"
+"of `com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPResponse`.  This corresponds\n"
+"to the `quarkus-amazon-lambda-http` extension and the AWS HTTP API."
+msgstr ""
+
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"If you want to hand code raw events for the AWS REST API, Quarkus has its own implementation:  `io.quarkus.amazon.lambda.http.model.AwsProxyRequest`\n"
+"and `io.quarkus.amazon.lambda.http.model.AwsProxyResponse`.  This corresponds\n"
+"to `quarkus-amazon-lambda-rest` extension and the AWS REST API."
+msgstr ""
+
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"The mock event server is also started for `@QuarkusIntegrationTest` tests so will work\n"
+"with native binaries too.  All this provides similar functionality to the SAM CLI local testing, without the overhead of Docker."
+msgstr ""
+
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"Finally, if port 8080 or port 8081 is not available on your computer, you can modify the dev\n"
+"and test mode ports with application.properties"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:174
+#: _guides/aws-lambda-http.adoc
 msgid "A port value of zero will result in a randomly assigned port."
 msgstr "端口值为零将导致随机分配端口。"
 
 #. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:176
+#: _guides/aws-lambda-http.adoc
 msgid "To turn off the mock event server:"
 msgstr ""
 
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:179
-#, no-wrap
-msgid "quarkus.lambda.mock-event-server.enabled=false\n"
-msgstr ""
-
 #. type: Title ==
-#: upstream/_guides/aws-lambda-http.adoc:182
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "Simulate AWS Lambda Deployment with SAM CLI"
 msgstr ""
 
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:186
-msgid "The AWS SAM CLI allows you to run your lambda's locally on your laptop in a simulated Lambda environment.  This requires Docker to be installed.  After you have built your Maven project, execute this command:"
-msgstr "AWS SAM CLI允许你在模拟的Lambda环境中的笔记本电脑上，本地运行你的lambda。这需要安装Docker。在构建了Maven项目后，执行这个命令："
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"The AWS SAM CLI allows you to run your lambda's locally on your laptop in a simulated Lambda environment.  This requires Docker to be installed.\n"
+"After you have built your Maven project, execute this command:"
+msgstr ""
 
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:190
-#, no-wrap
-msgid "sam local start-api --template target/sam.jvm.yaml\n"
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"This will start a Docker container that mimics Amazon's Lambda's deployment environment. Once the environment\n"
+"is started you can invoke the example lambda in your browser by going to:"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:194
-msgid "This will start a Docker container that mimics Amazon's Lambda's deployment environment. Once the environment is started you can invoke the example lambda in your browser by going to:"
-msgstr "这将启动一个模仿亚马逊的Lambda部署环境的Docker容器。一旦环境启动了，你就可以在你的浏览器中调用lambda示例，方法是去："
-
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:196
+#: _guides/aws-lambda-http.adoc
 msgid "http://127.0.0.1:3000/hello"
 msgstr "http://127.0.0.1:3000/hello"
 
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:199
-msgid "In the console you'll see startup messages from the lambda.  This particular deployment starts a JVM and loads your lambda as pure Java."
-msgstr "在控制台，你会看到lambda的启动信息。这个特定的部署启动了一个JVM，并将你的lambda作为纯Java加载。"
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"In the console you'll see startup messages from the lambda.  This particular deployment starts a JVM and loads your\n"
+"lambda as pure Java."
+msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/aws-lambda-http.adoc:201
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "Deploy to AWS"
 msgstr "部署到AWS"
 
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:206
-#, no-wrap
-msgid "sam deploy -t target/sam.jvm.yaml -g\n"
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"Answer all the questions and your lambda will be deployed and the necessary hooks to the API Gateway will be set up. If\n"
+"everything deploys successfully, the root URL of your microservice will be output to the console.  Something like this:"
 msgstr ""
 
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:210
-msgid "Answer all the questions and your lambda will be deployed and the necessary hooks to the API Gateway will be set up. If everything deploys successfully, the root URL of your microservice will be output to the console.  Something like this:"
-msgstr "回答所有的问题，你的lambda将被部署，必要的钩子将被设置到API网关。如果一切部署成功，你的微服务的根URL将被输出到控制台。类似这样："
-
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:215
-#, no-wrap
+#: _guides/aws-lambda-http.adoc
 msgid ""
 "Key                 LambdaHttpApi\n"
 "Description         URL for application\n"
-"Value               https://234asdf234as.execute-api.us-east-1.amazonaws.com/\n"
+"Value               https://234asdf234as.execute-api.us-east-1.amazonaws.com/"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:218
+#: _guides/aws-lambda-http.adoc
 msgid "The `Value` attribute is the root URL for your lambda. Copy it to your browser and add `hello` at the end."
 msgstr "`Value` 属性是你的lambda的根URL。把它复制到你的浏览器，并在末尾添加 `hello` 。"
 
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:224
-msgid "Responses for binary types will be automatically encoded with base64.  This is different from the behavior using `quarkus:dev` which will return the raw bytes.  Amazon's API has additional restrictions requiring the base64 encoding.  In general, client code will automatically handle this encoding but in certain custom situations, you should be aware you may need to manually manage that encoding."
-msgstr "对二进制类型的响应将会使用base64自动编码。这与使用 `quarkus:dev` 的行为不同，后者将返回原始字节。亚马逊的API有额外的限制，要求base64编码。一般来说，客户端代码会自动处理这种编码，但在某些自定义情况下，你应该知道你可能需要手动管理这种编码。"
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"Responses for binary types will be automatically encoded with base64.  This is different from the behavior using\n"
+"`quarkus:dev` which will return the raw bytes.  Amazon's API has additional restrictions requiring the base64 encoding.\n"
+"In general, client code will automatically handle this encoding but in certain custom situations, you should be aware\n"
+"you may need to manually manage that encoding."
+msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/aws-lambda-http.adoc:225
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "Deploying a native executable"
 msgstr "部署一个本地可执行文件"
 
 #. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:228
+#: _guides/aws-lambda-http.adoc
 msgid "To deploy a native executable, you must build it with GraalVM."
 msgstr "要部署一个本地可执行文件，你必须用GraalVM构建它。"
 
 #. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:232
+#: _guides/aws-lambda-http.adoc
 msgid "You can then test the executable locally with sam local"
 msgstr "然后你可以使用sam local在本地测试可执行文件"
 
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:236
-#, no-wrap
-msgid "sam local start-api --template target/sam.native.yaml\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:239
+#: _guides/aws-lambda-http.adoc
 msgid "To deploy to AWS Lambda:"
 msgstr "要部署到AWS Lambda："
 
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:242
-#, no-wrap
-msgid "sam deploy -t target/sam.native.yaml -g\n"
-msgstr ""
-
 #. type: Title ==
-#: upstream/_guides/aws-lambda-http.adoc:244
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "Examine the POM"
 msgstr "检查POM"
 
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:249
-msgid "There is nothing special about the POM other than the inclusion of the `quarkus-amazon-lambda-http` extension (if you are deploying an AWS Gateway HTTP API) or the `quarkus-amazon-lambda-rest` extension (if you are deploying an AWS Gateway REST API).  These extensions automatically generate everything you might need for your lambda deployment."
-msgstr "除了包含 `quarkus-amazon-lambda-http` 扩展（如果你要部署AWS Gateway HTTP API）或 `quarkus-amazon-lambda-rest` 扩展（如果你要部署AWS Gateway REST API）外，POM没有什么特别之处。这些扩展会自动生成你的lambda部署可能需要的一切。"
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"There is nothing special about the POM other than the inclusion of the `quarkus-amazon-lambda-http` extension\n"
+"(if you are deploying an AWS Gateway HTTP API) or the `quarkus-amazon-lambda-rest` extension (if you are deploying an AWS Gateway REST API).\n"
+"These extensions automatically generate everything you might need for your lambda deployment."
+msgstr ""
 
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:253
-msgid "Also, at least in the generated Maven archetype `pom.xml`, the `quarkus-resteasy-reactive`, `quarkus-reactive-routes`, and `quarkus-undertow` dependencies are all optional.  Pick which HTTP framework(s) you want to use (Jakarta REST, Reactive Routes, and/or Servlet) and remove the other dependencies to shrink your deployment."
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"Also, at least in the generated Maven archetype `pom.xml`, the `quarkus-resteasy-reactive`, `quarkus-reactive-routes`, and `quarkus-undertow`\n"
+"dependencies are all optional.  Pick which HTTP framework(s) you want to use (Jakarta REST, Reactive Routes, and/or Servlet) and\n"
+"remove the other dependencies to shrink your deployment."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_guides/aws-lambda-http.adoc:254
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "Examine sam.yaml"
 msgstr "检查sam.yaml"
 
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:258
-msgid "The `sam.yaml` syntax is beyond the scope of this document.  There's a couple of things that must be highlighted just in case you are going to craft your own custom `sam.yaml` deployment files."
-msgstr "`sam.yaml` 语法已经超出了本文档的范围。有几件事情必须强调，以防你要制作你自己的自定义 `sam.yaml` 部署文件。"
-
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:261
-msgid "The first thing to note is that for pure Java lambda deployments require a specific handler class.  Do not change the Lambda handler name."
-msgstr "首先需要注意的是，对于纯Java lambda部署，需要一个特定的处理程序类。不要改变Lambda处理程序的名称。"
-
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:267
-#, no-wrap
+#: _guides/aws-lambda-http.adoc
 msgid ""
-"     Properties:\n"
-"        Handler: io.quarkus.amazon.lambda.runtime.QuarkusStreamHandler::handleRequest\n"
-"        Runtime: java11\n"
+"The `sam.yaml` syntax is beyond the scope of this document.  There's a couple of things that must be highlighted just in case you are\n"
+"going to craft your own custom `sam.yaml` deployment files."
+msgstr ""
+
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"The first thing to note is that for pure Java lambda deployments require a specific handler class.\n"
+"Do not change the Lambda handler name."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:270
+#: _guides/aws-lambda-http.adoc
 msgid "This handler is a bridge between the lambda runtime and the Quarkus HTTP framework you are using (Jakarta REST, Servlet, etc.)"
 msgstr ""
 
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:273
-msgid "If you want to go native, there's an environment variable that must be set for native GraalVM deployments.  If you look at `sam.native.yaml` you'll see this:"
-msgstr "如果你想使用原生，那么必须为本地GraalVM部署设置一个环境变量。如果你看一下 `sam.native.yaml` ，你会看到这个变量："
-
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:279
-#, no-wrap
+#: _guides/aws-lambda-http.adoc
 msgid ""
-"        Environment:\n"
-"          Variables:\n"
-"            DISABLE_SIGNAL_HANDLERS: true\n"
+"If you want to go native, there's an environment variable that must be set for native GraalVM deployments.  If you look at `sam.native.yaml`\n"
+"you'll see this:"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:282
+#: _guides/aws-lambda-http.adoc
 msgid "This environment variable resolves some incompatibilities between Quarkus and the AWS Lambda Custom Runtime environment."
 msgstr ""
 
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:287
-msgid "Finally, there is one specific thing for AWS Gateway REST API deployments.  That API assumes that HTTP response bodies are text unless you explicitly tell it which media types are binary through configuration.  To make things easier, the Quarkus extension forces a binary (base 64) encoding of all HTTP response messages and the `sam.yaml` file must configure the API Gateway to assume all media types are binary:"
-msgstr "最后，对于AWS Gateway REST API的部署，有一件特别的事情。该API假定HTTP响应体是文本，除非你通过配置明确告诉它哪些媒体类型是二进制。为了使事情更简单，Quarkus扩展强制对所有的HTTP响应信息进行二进制（base 64）编码， `sam.yaml` 文件必须配置API网关，以假设所有的媒体类型都是二进制："
-
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:295
-#, no-wrap
+#: _guides/aws-lambda-http.adoc
 msgid ""
-"  Globals:\n"
-"    Api:\n"
-"      EndpointConfiguration: REGIONAL\n"
-"      BinaryMediaTypes:\n"
-"        - \"*/*\"\n"
+"Finally, there is one specific thing for AWS Gateway REST API deployments.\n"
+"That API assumes that HTTP response bodies are text unless you explicitly tell it which media types are\n"
+"binary through configuration.  To make things easier, the Quarkus extension forces a binary (base 64) encoding of all\n"
+"HTTP response messages and the `sam.yaml` file must configure the API Gateway to assume all media types are binary:"
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/aws-lambda-http.adoc:297
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "Injectable AWS Context Variables"
 msgstr "可注入的AWS上下文变量"
 
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:301
-msgid "If you are using RESTEasy Reactive and Jakarta REST, you can inject various AWS Context variables into your Jakarta REST resource classes using the Jakarta REST `@Context` annotation or anywhere else with the CDI `@Inject` annotation."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:304
-msgid "For the AWS HTTP API you can inject the AWS variables `com.amazonaws.services.lambda.runtime.Context` and `com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPEvent`.  Here is an example:"
-msgstr "对于AWS HTTP API，你可以注入AWS变量 `com.amazonaws.services.lambda.runtime.Context` 和 `com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPEvent` 。下面是一个例子："
-
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:309
-#, no-wrap
+#: _guides/aws-lambda-http.adoc
 msgid ""
-"import jakarta.ws.rs.core.Context;\n"
-"import com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPEvent;\n"
+"If you are using RESTEasy Reactive and Jakarta REST, you can inject various AWS Context variables into your Jakarta REST resource classes\n"
+"using the Jakarta REST `@Context` annotation or anywhere else with the CDI `@Inject` annotation."
 msgstr ""
 
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:315
-#: upstream/_guides/aws-lambda-http.adoc:340
-#, no-wrap
+#: _guides/aws-lambda-http.adoc
 msgid ""
-"@Path(\"/myresource\")\n"
-"public class MyResource {\n"
-"    @GET\n"
-"    public String ctx(@Context com.amazonaws.services.lambda.runtime.Context ctx) { }\n"
+"For the AWS HTTP API you can inject the AWS variables `com.amazonaws.services.lambda.runtime.Context` and\n"
+"`com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPEvent`.  Here is an example:"
 msgstr ""
 
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:318
-#, no-wrap
+#: _guides/aws-lambda-http.adoc
 msgid ""
-"    @GET\n"
-"    public String event(@Context APIGatewayV2HTTPEvent event) { }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:321
-#, no-wrap
-msgid ""
-"    @GET\n"
-"    public String requestContext(@Context APIGatewayV2HTTPEvent.RequestContext req) { }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:324
-#: upstream/_guides/aws-lambda-http.adoc:348
-#, no-wrap
-msgid "}\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:328
-msgid "For the AWS REST API you can inject the AWS variables `com.amazonaws.services.lambda.runtime.Context` and `io.quarkus.amazon.lambda.http.model.AwsProxyRequestContext`.  Here is an example:"
-msgstr "对于AWS REST API，你可以注入AWS变量 `com.amazonaws.services.lambda.runtime.Context` 和 `io.quarkus.amazon.lambda.http.model.AwsProxyRequestContext` 。下面是一个例子："
-
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:334
-#, no-wrap
-msgid ""
-"import jakarta.ws.rs.core.Context;\n"
-"import io.quarkus.amazon.lambda.http.model.AwsProxyRequestContext;\n"
-"import io.quarkus.amazon.lambda.http.model.AwsProxyRequest;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:343
-#, no-wrap
-msgid ""
-"    @GET\n"
-"    public String reqContext(@Context AwsProxyRequestContext req) { }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:346
-#, no-wrap
-msgid ""
-"    @GET\n"
-"    public String req(@Context AwsProxyRequest req) { }\n"
+"For the AWS REST API you can inject the AWS variables `com.amazonaws.services.lambda.runtime.Context` and\n"
+"`io.quarkus.amazon.lambda.http.model.AwsProxyRequestContext`.  Here is an example:"
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/aws-lambda-http.adoc:350
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "Tracing with AWS XRay and GraalVM"
 msgstr "使用AWS XRay和GraalVM进行追踪"
 
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:355
-msgid "If you are building native images, and want to use https://aws.amazon.com/xray[AWS X-Ray Tracing] with your lambda you will need to include `quarkus-amazon-lambda-xray` as a dependency in your pom.  The AWS X-Ray library is not fully compatible with GraalVM, so we had to do some integration work to make this work."
-msgstr "如果你正在构建原生镜像，并希望在你的lambda中使用 link:https://aws.amazon.com/xray[AWS X-Ray 追踪] ，你将需要在你的pom中把 `quarkus-amazon-lambda-xray` 作为一个依赖项来包括。AWS X-Ray库与GraalVM并不完全兼容，因此我们不得不做一些整合工作来使其可以正常工作。"
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"If you are building native images, and want to use https://aws.amazon.com/xray[AWS X-Ray Tracing] with your lambda\n"
+"you will need to include `quarkus-amazon-lambda-xray` as a dependency in your pom.  The AWS X-Ray\n"
+"library is not fully compatible with GraalVM, so we had to do some integration work to make this work."
+msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/aws-lambda-http.adoc:356
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "Security Integration"
 msgstr "安全集成"
 
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:361
-msgid "When you invoke an HTTP request on the API Gateway, the Gateway turns that HTTP request into a JSON event document that is forwarded to a Quarkus Lambda.  The Quarkus Lambda parses this json and converts in into an internal representation of an HTTP request that can be consumed by any HTTP framework Quarkus supports (Jakarta REST, servlet, Reactive Routes)."
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"When you invoke an HTTP request on the API Gateway, the Gateway turns that HTTP request into a JSON event document that is\n"
+"forwarded to a Quarkus Lambda.  The Quarkus Lambda parses this json and converts in into an internal representation of an HTTP\n"
+"request that can be consumed by any HTTP framework Quarkus supports (Jakarta REST, servlet, Reactive Routes)."
+msgstr ""
+
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"API Gateway supports many ways to securely invoke on your HTTP endpoints that are backed by Lambda and Quarkus.\n"
+"If you enable it, Quarkus will automatically parse relevant parts of the https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html[event json document]\n"
+"and look for security based metadata and register a `java.security.Principal` internally that can be looked up in Jakarta REST\n"
+"by injecting a `jakarta.ws.rs.core.SecurityContext`, via `HttpServletRequest.getUserPrincipal()` in servlet, and `RouteContext.user()` in Reactive Routes.\n"
+"If you want more security information, the `Principal` object can be typecast to\n"
+"a class that will give you more information."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:368
-msgid "API Gateway supports many ways to securely invoke on your HTTP endpoints that are backed by Lambda and Quarkus.  If you enable it, Quarkus will automatically parse relevant parts of the https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html[event json document] and look for security based metadata and register a `java.security.Principal` internally that can be looked up in Jakarta REST by injecting a `jakarta.ws.rs.core.SecurityContext`, via `HttpServletRequest.getUserPrincipal()` in servlet, and `RouteContext.user()` in Reactive Routes.  If you want more security information, the `Principal` object can be typecast to a class that will give you more information."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:370
+#: _guides/aws-lambda-http.adoc
 msgid "To enable this security feature, add this to your `application.properties` file:"
 msgstr "要启用这一安全特性，请将此添加到你的 `application.properties` 文件中："
 
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:372
-#, no-wrap
-msgid "quarkus.lambda-http.enable-security=true\n"
+#: _guides/aws-lambda-http.adoc
+msgid "quarkus.lambda-http.enable-security=true"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:376
+#: _guides/aws-lambda-http.adoc
 msgid "Here's how its mapped:"
 msgstr "下面是它的映射方式："
 
 #. type: Block title
-#: upstream/_guides/aws-lambda-http.adoc:377
-#: upstream/_guides/aws-lambda-http.adoc:429
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "HTTP `quarkus-amazon-lambda-http`"
 msgstr "HTTP `quarkus-amazon-lambda-http` "
 
 #. type: Table
-#: upstream/_guides/aws-lambda-http.adoc:380
-#: upstream/_guides/aws-lambda-http.adoc:390
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "Auth Type"
 msgstr "认证类型"
 
 #. type: Table
-#: upstream/_guides/aws-lambda-http.adoc:380
-#: upstream/_guides/aws-lambda-http.adoc:390
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "Principal Class"
 msgstr "主体类"
 
 #. type: Table
-#: upstream/_guides/aws-lambda-http.adoc:381
-#: upstream/_guides/aws-lambda-http.adoc:391
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "Json path of Principal Name"
 msgstr "主体名的Json路径"
 
 #. type: Table
-#: upstream/_guides/aws-lambda-http.adoc:381
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "Cognito JWT"
 msgstr "Cognito JWT"
 
 #. type: Table
-#: upstream/_guides/aws-lambda-http.adoc:381
-#: upstream/_guides/aws-lambda-http.adoc:391
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "`io.quarkus.amazon.lambda.http.CognitoPrincipal`"
 msgstr "`io.quarkus.amazon.lambda.http.CognitoPrincipal` "
 
 #. type: Table
-#: upstream/_guides/aws-lambda-http.adoc:382
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "`requestContext.authorizer.jwt.claims.cognito:username`"
 msgstr "`requestContext.authorizer.jwt.claims.cognito:username` "
 
 #. type: Table
-#: upstream/_guides/aws-lambda-http.adoc:382
-#: upstream/_guides/aws-lambda-http.adoc:392
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "IAM"
 msgstr ""
 
 #. type: Table
-#: upstream/_guides/aws-lambda-http.adoc:382
-#: upstream/_guides/aws-lambda-http.adoc:392
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "`io.quarkus.amazon.lambda.http.IAMPrincipal`"
 msgstr "`io.quarkus.amazon.lambda.http.IAMPrincipal` "
 
 #. type: Table
-#: upstream/_guides/aws-lambda-http.adoc:383
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "`requestContext.authorizer.iam.userId`"
 msgstr "`requestContext.authorizer.iam.userId` "
 
 #. type: Table
-#: upstream/_guides/aws-lambda-http.adoc:383
-#: upstream/_guides/aws-lambda-http.adoc:393
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "Custom Lambda"
 msgstr "自定义Lambda"
 
 #. type: Table
-#: upstream/_guides/aws-lambda-http.adoc:383
-#: upstream/_guides/aws-lambda-http.adoc:393
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "`io.quarkus.amazon.lambda.http.CustomPrincipal`"
 msgstr "`io.quarkus.amazon.lambda.http.CustomPrincipal` "
 
 #. type: Table
-#: upstream/_guides/aws-lambda-http.adoc:385
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "`requestContext.authorizer.lambda.principalId`"
 msgstr "`requestContext.authorizer.lambda.principalId` "
 
 #. type: Block title
-#: upstream/_guides/aws-lambda-http.adoc:387
-#: upstream/_guides/aws-lambda-http.adoc:470
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "REST `quarkus-amazon-lambda-rest`"
 msgstr "REST `quarkus-amazon-lambda-rest` "
 
 #. type: Table
-#: upstream/_guides/aws-lambda-http.adoc:391
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "Cognito"
 msgstr "Cognito"
 
 #. type: Table
-#: upstream/_guides/aws-lambda-http.adoc:392
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "`requestContext.authorizer.claims.cognito:username`"
 msgstr "`requestContext.authorizer.claims.cognito:username` "
 
 #. type: Table
-#: upstream/_guides/aws-lambda-http.adoc:393
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "`requestContext.identity.user`"
 msgstr "`requestContext.identity.user` "
 
 #. type: Table
-#: upstream/_guides/aws-lambda-http.adoc:395
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "`requestContext.authorizer.principalId`"
 msgstr "`requestContext.authorizer.principalId` "
 
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:401
-msgid "If the `cognito:groups` claim is present, then Quarkus will extract and map those groups to Quarkus roles which can then be used in authorization with annotations like `@RolesAllowed`.  If you do not want to map `cognito:groups` to Quarkus roles, then you must explicitly disable it in configuration:"
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"If the `cognito:groups` claim is present, then Quarkus will extract and map those groups\n"
+"to Quarkus roles which can then be used in authorization with annotations like `@RolesAllowed`.\n"
+"If you do not want to map `cognito:groups` to Quarkus roles, then you must explicitly disable it\n"
+"in configuration:"
 msgstr ""
 
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:404
-#, no-wrap
-msgid "quarkus.lambda-http.map-cognito-to-roles=false\n"
+#: _guides/aws-lambda-http.adoc
+msgid "quarkus.lambda-http.map-cognito-to-roles=false"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:407
+#: _guides/aws-lambda-http.adoc
 msgid "You can also specify a different Cognito claim to extract roles from:"
 msgstr ""
 
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:410
-#, no-wrap
-msgid "quarkus.lambda-http.cognito-role-claim=cognito:roles\n"
+#: _guides/aws-lambda-http.adoc
+msgid "quarkus.lambda-http.cognito-role-claim=cognito:roles"
 msgstr ""
 
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:414
-msgid "By default, it expects roles in a space delimited list enclosed in brackets i.e. `[ user admin ]`.  You can specify the regular expression to use to find individual roles in the claim string too:"
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"By default, it expects roles in a space delimited list enclosed in brackets i.e. `[ user admin ]`.\n"
+"You can specify the regular expression to use to find individual roles in the claim string too:"
 msgstr ""
 
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:417
-#, no-wrap
-msgid "quarkus.lambda-http.cognito-claim-matcher=[^\\[\\] \\t]+\n"
+#: _guides/aws-lambda-http.adoc
+msgid "quarkus.lambda-http.cognito-claim-matcher=[^\\[\\] \\t]+"
 msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/aws-lambda-http.adoc:420
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "Custom Security Integration"
 msgstr "自定义安全集成"
 
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:428
-msgid "The default support for AWS security only maps the principal name to Quarkus security APIs and does nothing to map claims or roles or permissions.  You have full control on how security metadata in the lambda HTTP event is mapped to Quarkus Security APIs using implementations of the `io.quarkus.amazon.lambda.http.LambdaIdentityProvider` interface.  By implementing this interface, you can do things like define role mappings for your principal or publish additional attributes provided by IAM or Cognito or your Custom Lambda security integration."
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:433
-#: upstream/_guides/aws-lambda-http.adoc:474
-#, no-wrap
-msgid "package io.quarkus.amazon.lambda.http;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:443
-#, no-wrap
+#: _guides/aws-lambda-http.adoc
 msgid ""
-"/**\n"
-" * Helper interface that removes some boilerplate for creating\n"
-" * an IdentityProvider that processes APIGatewayV2HTTPEvent\n"
-" */\n"
-"public interface LambdaIdentityProvider extends IdentityProvider<LambdaAuthenticationRequest> {\n"
-"    @Override\n"
-"    default public Class<LambdaAuthenticationRequest> getRequestType() {\n"
-"        return LambdaAuthenticationRequest.class;\n"
-"    }\n"
+"The default support for AWS security only maps the principal name to Quarkus security\n"
+"APIs and does nothing to map claims or roles or permissions.  You have full control on\n"
+"how security metadata in the lambda HTTP event is mapped to Quarkus Security APIs using\n"
+"implementations of the `io.quarkus.amazon.lambda.http.LambdaIdentityProvider`\n"
+"interface.  By implementing this interface, you can do things like define role mappings for your principal\n"
+"or publish additional attributes provided by IAM or Cognito or your Custom Lambda security integration."
 msgstr ""
 
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:453
-#, no-wrap
+#: _guides/aws-lambda-http.adoc
 msgid ""
-"    @Override\n"
-"    default Uni<SecurityIdentity> authenticate(LambdaAuthenticationRequest request, AuthenticationRequestContext context) {\n"
-"        APIGatewayV2HTTPEvent event = request.getEvent();\n"
-"        SecurityIdentity identity = authenticate(event);\n"
-"        if (identity == null) {\n"
-"            return Uni.createFrom().optional(Optional.empty());\n"
-"        }\n"
-"        return Uni.createFrom().item(identity);\n"
-"    }\n"
+"For HTTP, the important method to override is `LambdaIdentityProvider.authenticate(APIGatewayV2HTTPEvent event)`.  From this\n"
+"you will allocate a SecurityIdentity based on how you want to map security data from `APIGatewayV2HTTPEvent`"
 msgstr ""
 
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:465
-#, no-wrap
+#: _guides/aws-lambda-http.adoc
 msgid ""
-"    /**\n"
-"     * You must override this method unless you directly override\n"
-"     * IdentityProvider.authenticate\n"
-"     *\n"
-"     * @param event\n"
-"     * @return\n"
-"     */\n"
-"    default SecurityIdentity authenticate(APIGatewayV2HTTPEvent event) {\n"
-"        throw new IllegalStateException(\"You must override this method or IdentityProvider.authenticate\");\n"
-"    }\n"
-"}\n"
+"For REST, the important method to override is `LambdaIdentityProvider.authenticate(AwsProxyRequest event)`.  From this\n"
+"you will allocate a SecurityIdentity based on how you want to map security data from `AwsProxyRequest`."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:469
-msgid "For HTTP, the important method to override is `LambdaIdentityProvider.authenticate(APIGatewayV2HTTPEvent event)`.  From this you will allocate a SecurityIdentity based on how you want to map security data from `APIGatewayV2HTTPEvent`"
-msgstr "对于HTTP，要覆盖的重要方法是 `LambdaIdentityProvider.authenticate(APIGatewayV2HTTPEvent event)` 。为此，你将根据你从 `APIGatewayV2HTTPEvent` 映射安全数据的方式来分配一个SecurityIdentity"
-
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:476
-#, no-wrap
-msgid "import java.util.Optional;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:484
-#, no-wrap
-msgid ""
-"import io.quarkus.amazon.lambda.http.model.AwsProxyRequest;\n"
-"import io.quarkus.security.identity.AuthenticationRequestContext;\n"
-"import io.quarkus.security.identity.IdentityProvider;\n"
-"import io.quarkus.security.identity.SecurityIdentity;\n"
-"import io.smallrye.mutiny.Uni;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:491
-#, no-wrap
-msgid ""
-"/**\n"
-" * Helper interface that removes some boilerplate for creating\n"
-" * an IdentityProvider that processes APIGatewayV2HTTPEvent\n"
-" */\n"
-"public interface LambdaIdentityProvider extends IdentityProvider<LambdaAuthenticationRequest> {\n"
-"...\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:503
-#, no-wrap
-msgid ""
-"    /**\n"
-"     * You must override this method unless you directly override\n"
-"     * IdentityProvider.authenticate\n"
-"     *\n"
-"     * @param event\n"
-"     * @return\n"
-"     */\n"
-"    default SecurityIdentity authenticate(AwsProxyRequest event) {\n"
-"        throw new IllegalStateException(\"You must override this method or IdentityProvider.authenticate\");\n"
-"    }\n"
-"}\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:507
-msgid "For REST, the important method to override is `LambdaIdentityProvider.authenticate(AwsProxyRequest event)`.  From this you will allocate a SecurityIdentity based on how you want to map security data from `AwsProxyRequest`."
-msgstr "对于REST，要覆盖的重要方法是 `LambdaIdentityProvider.authenticate(AwsProxyRequest event)` 。为此，你将根据你从 `AwsProxyRequest` 映射安全数据的方式来分配一个SecurityIdentity。"
-
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:509
+#: _guides/aws-lambda-http.adoc
 msgid "Your implemented provider must be a CDI bean.  Here's an example:"
 msgstr "您实现的提供者必须是一个CDI bean。这里是一个例子:"
 
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:513
-#: upstream/_guides/aws-lambda-http.adoc:544
-#, no-wrap
-msgid "package org.acme;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:515
-#: upstream/_guides/aws-lambda-http.adoc:546
-#, no-wrap
-msgid "import java.security.Principal;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:517
-#: upstream/_guides/aws-lambda-http.adoc:548
-#, no-wrap
-msgid "import jakarta.enterprise.context.ApplicationScoped;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:524
-#: upstream/_guides/aws-lambda-http.adoc:555
-#, no-wrap
-msgid ""
-"import io.quarkus.amazon.lambda.http.LambdaIdentityProvider;\n"
-"import io.quarkus.security.identity.SecurityIdentity;\n"
-"import io.quarkus.security.runtime.QuarkusPrincipal;\n"
-"import io.quarkus.security.runtime.QuarkusSecurityIdentity;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:537
-#, no-wrap
-msgid ""
-"@ApplicationScoped\n"
-"public class CustomSecurityProvider implements LambdaIdentityProvider {\n"
-"    @Override\n"
-"    public SecurityIdentity authenticate(APIGatewayV2HTTPEvent event) {\n"
-"        if (event.getHeaders() == null || !event.getHeaders().containsKey(\"x-user\"))\n"
-"            return null;\n"
-"        Principal principal = new QuarkusPrincipal(event.getHeaders().get(\"x-user\"));\n"
-"        QuarkusSecurityIdentity.Builder builder = QuarkusSecurityIdentity.builder();\n"
-"        builder.setPrincipal(principal);\n"
-"        return builder.build();\n"
-"    }\n"
-"}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:540
+#: _guides/aws-lambda-http.adoc
 msgid "Here's the same example, but with the AWS Gateway REST API:"
 msgstr "下面是同样的例子，但是使用了AWS Gateway REST API:"
 
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:550
-#, no-wrap
-msgid "import io.quarkus.amazon.lambda.http.model.AwsProxyRequest;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/aws-lambda-http.adoc:568
-#, no-wrap
+#: _guides/aws-lambda-http.adoc
 msgid ""
-"@ApplicationScoped\n"
-"public class CustomSecurityProvider implements LambdaIdentityProvider {\n"
-"    @Override\n"
-"    public SecurityIdentity authenticate(AwsProxyRequest event) {\n"
-"        if (event.getMultiValueHeaders() == null || !event.getMultiValueHeaders().containsKey(\"x-user\"))\n"
-"            return null;\n"
-"        Principal principal = new QuarkusPrincipal(event.getMultiValueHeaders().getFirst(\"x-user\"));\n"
-"        QuarkusSecurityIdentity.Builder builder = QuarkusSecurityIdentity.builder();\n"
-"        builder.setPrincipal(principal);\n"
-"        return builder.build();\n"
-"    }\n"
-"}\n"
+"Quarkus should automatically discover this implementation and use it instead of the default implementation\n"
+"discussed earlier."
 msgstr ""
-
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:572
-msgid "Quarkus should automatically discover this implementation and use it instead of the default implementation discussed earlier."
-msgstr "Quarkus应该自动发现这个实现并使用它，而不是前面讨论的默认实现。"
 
 #. type: Title ==
-#: upstream/_guides/aws-lambda-http.adoc:573
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "Simple SAM Local Principal"
 msgstr "简单的SAM本地主体"
 
-#. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:578
-msgid "If you are testing your application with `sam local` you can hardcode a principal name to use when your application runs by setting the `QUARKUS_AWS_LAMBDA_FORCE_USER_NAME` environment variable"
-msgstr "如果你使用 `sam local` 测试你的应用程序，你可以通过设置 `QUARKUS_AWS_LAMBDA_FORCE_USER_NAME` 环境变量来硬编码一个主体名，以便在应用程序运行时使用"
+#: _guides/aws-lambda-http.adoc
+msgid ""
+"If you are testing your application with `sam local` you can\n"
+"hardcode a principal name to use when your application runs by setting\n"
+"the `QUARKUS_AWS_LAMBDA_FORCE_USER_NAME` environment variable"
+msgstr ""
 
 #. type: Title ==
-#: upstream/_guides/aws-lambda-http.adoc:579
+#: _guides/aws-lambda-http.adoc
 #, no-wrap
 msgid "SnapStart"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/aws-lambda-http.adoc:581
+#: _guides/aws-lambda-http.adoc
 msgid "To optimize your application for Lambda SnapStart, check xref:aws-lambda-snapstart.adoc[the SnapStart Configuration Documentation]."
 msgstr ""

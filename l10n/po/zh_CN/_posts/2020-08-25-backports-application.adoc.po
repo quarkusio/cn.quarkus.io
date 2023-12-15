@@ -11,382 +11,303 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#. type: YAML Front Matter: author
-#: upstream/_posts/2020-08-25-backports-application.adoc:1
-#, fuzzy, no-wrap
-msgid "gastaldi"
-msgstr "伽斯特尔迪"
-
-#. type: YAML Front Matter: date
-#: upstream/_posts/2020-08-25-backports-application.adoc:1
-#, fuzzy, no-wrap
-msgid "2020-08-25"
-msgstr "2020-08-25"
-
-#. type: YAML Front Matter: layout
-#: upstream/_posts/2020-08-25-backports-application.adoc:1
-#, fuzzy, no-wrap
-msgid "post"
-msgstr "职位"
-
-#. type: YAML Front Matter: tags
-#: upstream/_posts/2020-08-25-backports-application.adoc:1
-#, fuzzy, no-wrap
-msgid "user-story"
-msgstr "用户故事"
-
 #. type: Title =
-#: upstream/_posts/2020-08-25-backports-application.adoc:1
-#: upstream/_posts/2020-08-25-backports-application.adoc:8
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy, no-wrap
 msgid "From zero to hero on backporting pull requests"
 msgstr "从零到英雄的回传拉动请求"
 
-#. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:14
-#, fuzzy
-msgid "The Quarkus project moves fast and when we prepare bugfix releases, we usually have several dozens of pull requests to backport.  The number of pull requests to backport is enormous and doing it via the GitHub UI is inconvenient and takes a lot of time (click PR, copy/paste commit hashes to cherry-pick, remove label, assign milestone, assign milestone to all fixed issues, next) plus some limitation of the UI (it's not possible to sort by merge date to avoid conflicts, for example).  So we decided to automate this work, and built an application.  Of course, with Quarkus!"
-msgstr "Quarkus项目进展很快，当我们准备发布bugfix时，通常会有几十个pull请求需要回传。需要回传的拉动请求数量巨大，而通过GitHub的用户界面进行回传是不方便的，需要花费大量的时间（点击PR，复制/粘贴提交哈希值来挑选，删除标签，分配里程碑，为所有修复的问题分配里程碑，下一步），再加上用户界面的一些限制（例如，不可能按照合并日期排序以避免冲突）。所以我们决定将这项工作自动化，并建立一个应用程序。当然，用Quarkus!"
+#: _posts/2020-08-25-backports-application.adoc
+msgid ""
+"The Quarkus project moves fast and when we prepare bugfix releases, we usually have several dozens of pull requests to backport.\n"
+"The number of pull requests to backport is enormous and doing it via the GitHub UI is inconvenient and takes a lot of time (click PR, copy/paste commit hashes to cherry-pick, remove label, assign milestone, assign milestone to all fixed issues, next) plus some limitation of the UI (it's not possible to sort by merge date to avoid conflicts, for example).\n"
+"So we decided to automate this work, and built an application.\n"
+"Of course, with Quarkus!"
+msgstr ""
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:16
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "Before we dig into the solution, let me give you a quick explanation of our release process."
 msgstr "在我们探讨解决方案之前，让我给你一个关于我们的发布过程的快速解释。"
 
 #. type: Title ==
-#: upstream/_posts/2020-08-25-backports-application.adoc:17
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy, no-wrap
 msgid "Release process"
 msgstr "释放过程"
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:20
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "The Quarkus Team adopts a `Major.Minor.Patch.Classifier` (eg. _1.7.0.CR1_, _1.7.0.Final_) version pattern. Depending on the version bumped, different processes are adopted:"
 msgstr "Quarkus团队采用的是 `Major.Minor.Patch.Classifier` （如 _1.7.0.CR1_ ， _1.7.0.Final_ ）的版本模式。根据不同的版本，采用不同的流程。"
 
 #. type: Title ===
-#: upstream/_posts/2020-08-25-backports-application.adoc:21
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy, no-wrap
 msgid "Major and Minor bumps"
 msgstr "主要和次要的颠簸"
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:23
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "Our main branch is always ready for the next major or minor release.  This process is usually very smooth and involves no backporting."
 msgstr "我们的主分支总是为下一个主要或次要版本做好准备。这个过程通常是非常顺利的，而且不涉及回传。"
 
 #. type: Title ===
-#: upstream/_posts/2020-08-25-backports-application.adoc:24
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy, no-wrap
 msgid "Patch or Classifier bumps"
 msgstr "补丁或分类器颠簸"
 
-#. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:27
-#, fuzzy
-msgid "Whenever a new patched version (or a second CR) is about to be released in Quarkus, our Release team starts backporting commits from pull requests that were merged in the master branch.  How do they know which pull request to grab? We have a `triage/backport?` label that our team add to pull requests for features that would be worth having it in the upcoming patch release."
-msgstr "每当Quarkus即将发布一个新的补丁版本（或第二个CR）时，我们的发布团队就会从主分支中合并的拉动请求中开始回传提交。他们怎么知道要抓哪个拉动请求呢？我们有一个 `triage/backport?` 标签，我们的团队会在拉取请求中添加值得在即将发布的补丁中使用的功能。"
+#: _posts/2020-08-25-backports-application.adoc
+msgid ""
+"Whenever a new patched version (or a second CR) is about to be released in Quarkus, our Release team starts backporting commits from pull requests that were merged in the master branch.\n"
+"How do they know which pull request to grab? We have a `triage/backport?` label that our team add to pull requests for features that would be worth having it in the upcoming patch release."
+msgstr ""
 
 #. type: Title ==
-#: upstream/_posts/2020-08-25-backports-application.adoc:28
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy, no-wrap
 msgid "How do we automate that?"
 msgstr "我们如何使之自动化？"
 
-#. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:31
-#, fuzzy
-msgid "The application basically queries a GitHub repository's merged pull requests and closed issues (using https://docs.github.com/en/graphql[the GraphQL API exposed by GitHub]) containing a certain label and changes their milestones to one selected in the UI (and removing the certain label afterwards).  Applying the changes introduced by these pull-requests (aka. _cherry-picking_) is simplified by providing a button next to each pull-request to copy the necessary `git cherry-pick` commands to the clipboard - we prefer this step to be done manually by the Release engineer."
-msgstr "该应用程序基本上是查询GitHub仓库的合并拉动请求和已关闭的问题（使用 link:https://docs.github.com/en/graphql[GitHub暴露的GraphQL API] ），其中包含某个标签，并将其里程碑更改为用户界面中选择的里程碑（并在之后删除某个标签）。通过在每个拉动请求旁边提供一个按钮，将必要的 `git cherry-pick` 命令复制到剪贴板上，简化了应用这些拉动请求所带来的变化（又称 _偷梁换柱_ ）--我们更希望这个步骤是由发布工程师手动完成。"
+#: _posts/2020-08-25-backports-application.adoc
+msgid ""
+"The application basically queries a GitHub repository's merged pull requests and closed issues (using https://docs.github.com/en/graphql[the GraphQL API exposed by GitHub]) containing a certain label and changes their milestones to one selected in the UI (and removing the certain label afterwards).\n"
+"Applying the changes introduced by these pull-requests (aka. _cherry-picking_) is simplified by providing a button next to each pull-request to copy the necessary `git cherry-pick` commands to the clipboard - we prefer this step to be done manually by the Release engineer."
+msgstr ""
 
 #. type: Title ===
-#: upstream/_posts/2020-08-25-backports-application.adoc:32
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy, no-wrap
 msgid "Screenshots"
 msgstr "屏幕截图"
 
 #. type: Title ====
-#: upstream/_posts/2020-08-25-backports-application.adoc:33
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy, no-wrap
 msgid "Choosing a milestone"
 msgstr "选择一个里程碑"
 
-#. type: Target for macro image
-#: upstream/_posts/2020-08-25-backports-application.adoc:34
-#, no-wrap
-msgid "https://raw.githubusercontent.com/quarkusio/quarkus-backports/main/documentation/screenshots/index.png"
-msgstr ""
-
 #. type: Title ====
-#: upstream/_posts/2020-08-25-backports-application.adoc:36
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy, no-wrap
 msgid "Choosing the pull requests to be backported"
 msgstr "选择要回传的拉动请求"
 
-#. type: Target for macro image
-#: upstream/_posts/2020-08-25-backports-application.adoc:37
-#, no-wrap
-msgid "https://raw.githubusercontent.com/quarkusio/quarkus-backports/main/documentation/screenshots/backports.png"
-msgstr ""
-
 #. type: Title ==
-#: upstream/_posts/2020-08-25-backports-application.adoc:39
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy, no-wrap
 msgid "Our experience with Quarkus"
 msgstr "我们使用Quarkus的经验"
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:42
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "Here you can find a summary of the extensions used in the backports application:"
 msgstr "在这里，你可以找到一个在backports应用程序中使用的扩展的摘要。"
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:44
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "ArC (CDI): Manages the services lifecycle"
 msgstr "ArC（CDI）。管理服务生命周期"
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:45
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "<<microprofile-config>>: To externalize properties"
 msgstr "link:#microprofile-config[[microprofile-config]] 。将属性外部化"
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:46
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "RESTEasy: Exposes an endpoint the UI can consume. Also serves the UI using Qute's Type-safe templates (see <<qute>>)."
 msgstr "RESTEasy: 暴露了一个用户界面可以使用的端点。同时使用Qute的类型安全模板为用户界面提供服务（见 link:#qute[[qute]] ）。"
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:47
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "<<qute>>: Used on all templates (UI and GraphQL query payload)"
 msgstr "link:#qute[[qute]] 。在所有模板上使用（用户界面和GraphQL查询有效载荷）。"
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:48
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "<<rest-client>>: To invoke the https://docs.github.com/en/graphql[GitHub's GraphQL endpoint]"
 msgstr "link:#rest-client[[rest-client]:] 调用 link:https://docs.github.com/en/graphql[GitHub的GraphQL端点]"
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:49
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "Cache: For https://github.com/quarkusio/quarkus-backports/blob/291868a9480601dd13b71703e7f8f73552109ded/src/main/java/io/quarkus/backports/GitHubService.java#L84[caching open Milestones] from the GitHub's GraphQL endpoint"
 msgstr "缓存。用于缓存从GitHub的GraphQL端点 link:https://github.com/quarkusio/quarkus-backports/blob/291868a9480601dd13b71703e7f8f73552109ded/src/main/java/io/quarkus/backports/GitHubService.java#L84[打开的里程碑] 。"
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:50
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "Hibernate Validator: For validating input"
 msgstr "Hibernate验证器。用于验证输入"
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:51
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "Jackson (JSON library): To parse the result from the GitHub GraphQL endpoint"
 msgstr "Jackson（JSON库）。解析来自GitHub GraphQL端点的结果"
 
 #. type: Title ===
-#: upstream/_posts/2020-08-25-backports-application.adoc:52
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy, no-wrap
 msgid "Live Coding"
 msgstr "现场编码"
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:55
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "The live coding is a killer feature in Quarkus and provided a quick feedback while classes and methods were changed during development. As a rule of thumb, always use `./mvnw quarkus:dev` while developing a Quarkus application."
 msgstr "实时编码是Quarkus的一个杀手锏，在开发过程中改变类和方法时，它提供了一个快速反馈。作为一个经验法则，在开发Quarkus应用程序时，总是使用 `./mvnw quarkus:dev` 。"
 
 #. type: Title ===
-#: upstream/_posts/2020-08-25-backports-application.adoc:57
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy, no-wrap
 msgid "MicroProfile Config"
 msgstr "微型轮廓配置"
 
-#. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:62
-#, fuzzy
-msgid "Configuring which GitHub repository to use (to test or even for non-Quarkus repositories) and the GitHub authentication token (plus a different backport label if necessary) should be easy to configure without changing any source code.  Quarkus uses Microprofile Config, so we externalized these properties.  Quarkus also supports `.env` files, which we used while testing. This made local testing easier by not requiring us to change the `application.properties` directly or setting any environment or system property before running the application."
-msgstr "配置哪个GitHub仓库（用于测试，甚至用于非Quarkus仓库）和GitHub认证令牌（必要时加上不同的回传标签）应该是很容易配置的，不需要改变任何源代码。Quarkus使用Microprofile配置，所以我们将这些属性外部化。Quarkus还支持 `.env` 文件，我们在测试时使用了这个文件。这使得本地测试更加容易，因为不需要我们直接改变 `application.properties` ，也不需要在运行应用程序之前设置任何环境或系统属性。"
+#: _posts/2020-08-25-backports-application.adoc
+msgid ""
+"Configuring which GitHub repository to use (to test or even for non-Quarkus repositories) and the GitHub authentication token (plus a different backport label if necessary) should be easy to configure without changing any source code.\n"
+"Quarkus uses Microprofile Config, so we externalized these properties.\n"
+"Quarkus also supports `.env` files, which we used while testing. This made local testing easier by not requiring us to change the `application.properties` directly or setting any environment or system property before running the application."
+msgstr ""
 
 #. type: Title ===
-#: upstream/_posts/2020-08-25-backports-application.adoc:64
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy, no-wrap
 msgid "Qute"
 msgstr "丘特"
 
-#. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:68
-#, fuzzy
-msgid "Qute is a template engine. We used it to generate the UI and to generate GraphQL queries where simply using GraphQL variables are not enough - for example, https://github.com/quarkusio/quarkus-backports/blob/291868a9480601dd13b71703e7f8f73552109ded/src/main/resources/templates/GitHubService/findIssues.txt#L3-L7[getting issue data from a list of issue numbers].  We used https://quarkus.io/guides/qute#type-safe-templates[Type-safe templates] to generate the UI and the GraphQL queries."
-msgstr "Qute是一个模板引擎。我们用它来生成用户界面和生成GraphQL查询，在这种情况下，仅仅使用GraphQL变量是不够的--例如， link:https://github.com/quarkusio/quarkus-backports/blob/291868a9480601dd13b71703e7f8f73552109ded/src/main/resources/templates/GitHubService/findIssues.txt#L3-L7[从问题编号的列表中获取问题数据] 。我们使用 link:https://quarkus.io/guides/qute#type-safe-templates[类型安全的模板] 来生成用户界面和GraphQL查询。"
+#: _posts/2020-08-25-backports-application.adoc
+msgid ""
+"Qute is a template engine. We used it to generate the UI and to generate GraphQL queries where simply using GraphQL variables are not enough - for example, https://github.com/quarkusio/quarkus-backports/blob/291868a9480601dd13b71703e7f8f73552109ded/src/main/resources/templates/GitHubService/findIssues.txt#L3-L7[getting issue data from a list of issue numbers].\n"
+"We used https://quarkus.io/guides/qute#type-safe-templates[Type-safe templates] to generate the UI and the GraphQL queries."
+msgstr ""
 
 #. type: Title ===
-#: upstream/_posts/2020-08-25-backports-application.adoc:69
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy, no-wrap
 msgid "Rest Client"
 msgstr "休息客户"
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:72
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "GraphQL, in a nutshell, means POSTing some JSON data to an HTTP endpoint and parsing the result as a JSON document. Simply that. The Microprofile REST Client is a good option to perform this task, so we came up with this:"
 msgstr "GraphQL，简而言之，就是把一些JSON数据发布到一个HTTP端点，并把结果解析为JSON文档。仅此而已。Microprofile REST客户端是执行这项任务的一个很好的选择，所以我们想出了这个办法。"
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:77
-#, fuzzy
-msgid "```java import javax.ws.rs.HeaderParam; import javax.ws.rs.POST; import javax.ws.rs.core.HttpHeaders;"
-msgstr " `` "
-
-#. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:80
-#, fuzzy
-msgid "import io.vertx.core.json.JsonObject; import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;"
-msgstr "import io.vertx.core.json.JsonObject; import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;"
-
-#. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:83
-#, fuzzy
-msgid "@RegisterRestClient(baseUri = \"https://api.github.com/graphql\")  public interface GraphQLClient {"
-msgstr "@RegisterRestClient(baseUri = \"https://api.github.com/graphql\") public interface GraphQLClient {"
-
-#. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:88
-#, fuzzy, no-wrap
-msgid ""
-"    @POST\n"
-"    JsonObject graphql(@HeaderParam(HttpHeaders.AUTHORIZATION) String authentication, JsonObject query);\n"
-"}\n"
-"```\n"
-msgstr ""
-"    @POST\n"
-"    JsonObject graphql(@HeaderParam(HttpHeaders.AUTHORIZATION) String authentication, JsonObject query)。\n"
-"}"
-
-#. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:90
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "In the GitHubService we can now consume the GraphQLClient object:"
 msgstr "在GitHubService中，我们现在可以消费GraphQLClient对象。"
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:96
-#, fuzzy, no-wrap
-msgid ""
-"```java\n"
-"    @Inject\n"
-"    @RestClient\n"
-"    GraphQLClient graphQLClient;\n"
-"```\n"
-msgstr ""
-" `@Inject\n"
-"    @RestClient\n"
-"    GraphQLClient graphQLClient;` "
-
-#. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:98
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "You can see how the client is invoked https://github.com/quarkusio/quarkus-backports/blob/291868a9480601dd13b71703e7f8f73552109ded/src/main/java/io/quarkus/backports/GitHubService.java#L85-L101[here]"
 msgstr "你可以 link:https://github.com/quarkusio/quarkus-backports/blob/291868a9480601dd13b71703e7f8f73552109ded/src/main/java/io/quarkus/backports/GitHubService.java#L85-L101[在这里] 看到客户端是如何被调用的"
 
 #. type: Title ===
-#: upstream/_posts/2020-08-25-backports-application.adoc:100
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy, no-wrap
 msgid "Next steps"
 msgstr "接下来的步骤"
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:103
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "Given the nature of dynamic queries, we decided to not use the SmallRye GraphQL extension, but that can be changed when the extension supports that feature."
 msgstr "考虑到动态查询的性质，我们决定不使用SmallRye GraphQL扩展，但当该扩展支持该功能时，可以改变这种情况。"
 
 #. type: Title ==
-#: upstream/_posts/2020-08-25-backports-application.adoc:104
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy, no-wrap
 msgid "Thanks"
 msgstr "谢谢"
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:107
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "This application took ~1 week to be developed (learning GraphQL included). That was made possible due to the following Quarkus team members:"
 msgstr "这个应用程序的开发花了~1周的时间（包括学习GraphQL）。这要归功于以下Quarkus团队的成员。"
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:110
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "image:https://github.com/gsmet.png?v=3&s=96[48,48] https://github.com/gsmet[Guillaume Smet]: For the beautiful frontend work"
 msgstr "image:https://github.com/gsmet.png?v=3&s=96[alt=\"48\", width=\"48\"] link:https://github.com/gsmet[纪尧姆-斯梅] 用于美丽的前端工作"
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:111
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "image:https://github.com/gastaldi.png?v=3&s=96[48,48] https://github.com/gastaldi[George Gastaldi]: For having fun developing the backend and the GraphQL integration"
 msgstr "image:https://github.com/gastaldi.png?v=3&s=96[alt=\"48\", width=\"48\"] link:https://github.com/gastaldi[George Gastaldi] ：为开发后端和GraphQL整合提供了乐趣。"
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:112
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "image:https://github.com/dmlloyd.png?v=3&s=96[48,48] https://github.com/dmlloyd[David Lloyd]: For the crazy regular expressions needed to extract issue numbers in commit messages."
 msgstr "image:https://github.com/dmlloyd.png?v=3&s=96[alt=\"48\", width=\"48\"] link:https://github.com/dmlloyd[David Lloyd] : 为了提取提交信息中的问题编号，需要疯狂的正则表达式。"
 
 #. type: Title ==
-#: upstream/_posts/2020-08-25-backports-application.adoc:113
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy, no-wrap
 msgid "More information"
 msgstr "更多信息"
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:116
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "Quarkus Backports sources: https://github.com/quarkusio/quarkus-backports"
 msgstr "夸库斯背板来源 https://github.com/quarkusio/quarkus-backports "
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:117
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "Quarkus website: https://quarkus.io"
 msgstr "Quarkus网站 https://quarkus.io "
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:118
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "Quarkus GitHub project: https://github.com/quarkusio/quarkus"
 msgstr "Quarkus GitHub项目: https://github.com/quarkusio/quarkus "
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:119
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "Quarkus Twitter: https://twitter.com/QuarkusIO"
 msgstr "Quarkus Twitter: https://twitter.com/QuarkusIO "
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:120
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "Quarkus chat: https://quarkusio.zulipchat.com/"
 msgstr "Quarkus chat: https://quarkusio.zulipchat.com/ "
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:121
+#: _posts/2020-08-25-backports-application.adoc
 #, fuzzy
 msgid "Quarkus mailing list: https://groups.google.com/forum/#!forum/quarkus-dev"
 msgstr "Quarkus邮件列表 https://groups.google.com/forum/#!forum/quarkus-dev "
 
 #. type: Plain text
-#: upstream/_posts/2020-08-25-backports-application.adoc:121
+#: _posts/2020-08-25-backports-application.adoc
 msgid "https://www.redhat.com/cms/managed-files/cl-4-reasons-try-quarkus-checklist-f19180cs-201909-en.pdf[Four reasons to use Quarkus]"
 msgstr ""

@@ -11,1585 +11,1397 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #. type: Title =
-#: upstream/_guides/datasource.adoc:7
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Configure data sources in Quarkus"
 msgstr "配置一个数据源，或多个数据源"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:15
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Use a unified configuration model to define data sources for Java Database Connectivity (JDBC) and Reactive drivers."
 msgstr "使用统一的配置模型来定义Java数据库连接（JDBC）和Reactive驱动程序的数据源。"
 
-#. Note for contributors and writers:
-#. In text, use "data source". In code, "datasource" or "DataSource" is more common.
-#. See, https://docs.oracle.com/javase/tutorial/jdbc/basics/connecting.html
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:24
-#, fuzzy
-msgid "Applications use datasources to access relational databases.  Quarkus provides a unified configuration model to define datasources for Java Database Connectivity (JDBC) and Reactive database drivers."
-msgstr "应用程序使用数据源来访问关系型数据库。Quarkus提供了一个统一的配置模型，为Java数据库连接（JDBC）和Reactive数据库驱动定义数据源。"
+#: _guides/datasource.adoc
+msgid ""
+"Applications use datasources to access relational databases.\n"
+"Quarkus provides a unified configuration model to define datasources for Java Database Connectivity (JDBC) and Reactive database drivers."
+msgstr ""
+
+#: _guides/datasource.adoc
+msgid ""
+"Quarkus uses link:https://agroal.github.io/[Agroal] and link:https://vertx.io/[Vert.x] to provide high-performance, scalable data source connection pooling for JDBC and reactive drivers.\n"
+"The `jdbc-\\*` and `reactive-*` extensions provide build time optimizations and integrate configured data sources with Quarkus features like security, health checks, and metrics."
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:27
-#, fuzzy
-msgid "Quarkus uses link:https://agroal.github.io/[Agroal] and link:https://vertx.io/[Vert.x] to provide high-performance, scalable data source connection pooling for JDBC and reactive drivers.  The `jdbc-\\*` and `reactive-*` extensions provide build time optimizations and integrate configured data sources with Quarkus features like security, health checks, and metrics."
-msgstr "Quarkus使用 link:https://agroal.github.io/[Agroal] 和 link:https://vertx.io/[Vert.x] 为JDBC和反应式驱动提供高性能、可扩展的数据源连接池。 `jdbc-*` 和 `reactive-*` 扩展提供了构建时间的优化，并将配置的数据源与Quarkus的功能（如安全、健康检查和度量）整合在一起。"
-
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:29
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "For more information about consuming and using a reactive datasource, see the Quarkus xref:reactive-sql-clients.adoc[Reactive SQL clients] guide."
 msgstr "本指南主要是关于数据源的配置。如果你想了解更多关于如何消费和利用反应式数据源的细节，请参考 link:reactive-sql-clients.html[反应式SQL客户端指南] 。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:31
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Additionally, refer to the Quarkus xref:hibernate-orm.adoc[Hibernate ORM] guide for information on consuming and using a JDBC datasource."
 msgstr "此外，请参考Quarkus link:hibernate-orm.html[Hibernate ORM] 指南中关于消费和使用JDBC数据源的信息。"
 
 #. type: Title ==
-#: upstream/_guides/datasource.adoc:33
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Get started with configuring `datasources` in Quarkus"
 msgstr "开始在Quarkus中配置 `datasources` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:36
+#: _guides/datasource.adoc
 msgid "For users familiar with the fundamentals, this section provides an overview and code samples to set up data sources quickly."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:38
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "For more advanced configuration with examples, see xref:datasource-reference[References]."
 msgstr "关于更多的高级配置和例子，请看 link:#datasource-reference[数据源参考] 。"
 
 #. type: Title ===
-#: upstream/_guides/datasource.adoc:40
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Zero-config setup in development mode"
 msgstr "开发模式下的零配置设置"
 
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:44
-#, fuzzy
-msgid "Quarkus simplifies database configuration by offering the Dev Services feature, enabling zero-config database setup for testing or running in development (dev) mode.  In dev mode, the suggested approach is to use DevServices and let Quarkus handle the database for you, whereas for production mode, you provide explicit database configuration details pointing to a database managed outside of Quarkus."
-msgstr "Quarkus通过提供Dev Services功能简化了数据库的配置，为测试或在开发模式下运行实现了零配置的数据库设置。在开发模式下，建议使用DevServices，让Quarkus为你处理数据库，而对于生产模式，你提供明确的数据库配置细节，指向Quarkus之外管理的数据库。"
+#: _guides/datasource.adoc
+msgid ""
+"Quarkus simplifies database configuration by offering the Dev Services feature, enabling zero-config database setup for testing or running in development (dev) mode.\n"
+"In dev mode, the suggested approach is to use DevServices and let Quarkus handle the database for you, whereas for production mode, you provide explicit database configuration details pointing to a database managed outside of Quarkus."
+msgstr ""
 
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:47
-#, fuzzy
-msgid "To use Dev Services, add the appropriate driver extension, such as `jdbc-postgresql`, for your desired database type to the `pom.xml` file.  In dev mode, if you do not provide any explicit database connection details, Quarkus automatically handles the database setup and provides the wiring between the application and the database."
-msgstr "要使用开发服务，请在 `pom.xml` 文件中为你所需的数据库类型添加适当的驱动扩展名，如 `jdbc-postgresql` 。在开发模式下，如果你没有提供任何明确的数据库连接细节，Quarkus会自动处理数据库的设置，并提供应用程序和数据库之间的连接线。如果你提供了用户凭证，底层数据库将被配置为使用这些凭证。如果你想用一个外部工具连接到数据库，这很有用。"
+#: _guides/datasource.adoc
+msgid ""
+"To use Dev Services, add the appropriate driver extension, such as `jdbc-postgresql`, for your desired database type to the `pom.xml` file.\n"
+"In dev mode, if you do not provide any explicit database connection details, Quarkus automatically handles the database setup and provides the wiring between the application and the database."
+msgstr ""
 
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:50
-msgid "If you provide user credentials, the underlying database will be configured to use them.  This is useful if you want to connect to the database with an external tool."
+#: _guides/datasource.adoc
+msgid ""
+"If you provide user credentials, the underlying database will be configured to use them.\n"
+"This is useful if you want to connect to the database with an external tool."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:52
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "To use this feature, ensure a Docker or Podman container runtime is installed, depending on the database type. Certain databases, such as H2, operate in in-memory mode and do not require a container runtime."
 msgstr "要利用这一功能，确保安装了Docker或Podman容器运行时间，这取决于数据库类型。某些数据库，如H2，在内存模式下运行，不需要容器运行时间。"
 
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:55
-#, fuzzy
-msgid "Prefix the actual connection details for prod mode with `%prod.` to ensure they are not applied in dev mode.  For more information, see the xref:config-reference.adoc#profiles[Profiles] section of the \"Configuration reference\" guide."
-msgstr "在Prod模式的实际连接细节前加上 `%prod.` ，以确保它们不会应用于Dev模式。欲了解更多信息，请参见 link:config-reference.html[配置参考] 指南中的 \" link:config-reference.html#profiles[配置文件] \"部分。"
+#: _guides/datasource.adoc
+msgid ""
+"Prefix the actual connection details for prod mode with `%prod.` to ensure they are not applied in dev mode.\n"
+"For more information, see the xref:config-reference.adoc#profiles[Profiles] section of the \"Configuration reference\" guide."
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:57
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "For more information about Dev Services, see xref:dev-services.adoc[Dev Services overview]."
 msgstr "关于开发服务的更多信息，见 link:dev-services.html[开发服务概述] 。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:59
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "For more details and optional configurations, see xref:databases-dev-services.adoc[Dev Services for databases]."
 msgstr "更多细节和可选配置，请参见 link:databases-dev-services.html[数据库的开发服务] 。"
 
 #. type: Title ===
-#: upstream/_guides/datasource.adoc:61
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Configure a JDBC datasource"
 msgstr "配置反应式数据源"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:64
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Add the correct JDBC extension for the database of your choice."
 msgstr "为你选择的数据库添加正确的JDBC扩展。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:66
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`jdbc-db2`"
 msgstr "DB2- `jdbc-db2` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:67
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`jdbc-derby`"
 msgstr "德比 - `jdbc-derby` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:68
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`jdbc-h2`"
 msgstr "H2 - `jdbc-h2` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:69
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`jdbc-mariadb`"
 msgstr " `mariadb` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:70
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`jdbc-mssql`"
 msgstr " `mssql` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:71
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`jdbc-mysql`"
 msgstr "MySQL- `jdbc-mysql` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:72
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`jdbc-oracle`"
 msgstr " `oracle` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:73
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`jdbc-postgresql`"
 msgstr " `postgresql` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:75
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Configure your JDBC datasource:"
 msgstr "然后配置你的数据源。"
 
-#. type: delimited block -
-#: upstream/_guides/datasource.adoc:81 upstream/_guides/datasource.adoc:117
-#, no-wrap
-msgid ""
-"quarkus.datasource.db-kind=postgresql <1>\n"
-"quarkus.datasource.username=<your username>\n"
-"quarkus.datasource.password=<your password>\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/datasource.adoc:84
-#, no-wrap
-msgid ""
-"quarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/hibernate_orm_test\n"
-"quarkus.datasource.jdbc.max-size=16\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:86
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "This configuration value is only required if there is more than one database extension on the classpath."
 msgstr "这个配置值只有在classpath上有一个以上的数据库扩展时才需要。"
 
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:89
-#, fuzzy
-msgid "If only one viable extension is available, Quarkus assumes this is the correct one.  When you add a driver to the test scope, Quarkus automatically includes the specified driver in testing."
-msgstr "如果只有一个可行的扩展是可用的，Quarkus会假定这是正确的。如果一个驱动程序被添加到测试范围中，Quarkus会自动将该驱动程序纳入测试。"
+#: _guides/datasource.adoc
+msgid ""
+"If only one viable extension is available, Quarkus assumes this is the correct one.\n"
+"When you add a driver to the test scope, Quarkus automatically includes the specified driver in testing."
+msgstr ""
 
 #. type: Title ====
-#: upstream/_guides/datasource.adoc:90
+#: _guides/datasource.adoc
 #, no-wrap
 msgid "JDBC connection pool size adjustment"
 msgstr ""
 
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:94
-msgid "To protect your database from overloading during load peaks, size the pool adequately to throttle the database load.  The optimal pool size depends on many factors, such as the number of parallel application users or the nature of the workload."
+#: _guides/datasource.adoc
+msgid ""
+"To protect your database from overloading during load peaks, size the pool adequately to throttle the database load.\n"
+"The optimal pool size depends on many factors, such as the number of parallel application users or the nature of the workload."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:96 upstream/_guides/datasource.adoc:320
+#: _guides/datasource.adoc
 msgid "Be aware that setting the pool size too low might cause some requests to time out while waiting for a connection."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:98
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "For more information about pool size adjustment properties, see the xref:jdbc-configuration[JDBC configuration reference] section."
 msgstr "你可以通过设置 `transactions` 配置属性来覆盖这一点--见下面的 link:#configuration-reference[配置参考] 。"
 
 #. type: Title ===
-#: upstream/_guides/datasource.adoc:100
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Configure a reactive datasource"
 msgstr "配置反应式数据源"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:103
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Add the correct reactive extension for the database of your choice."
 msgstr "为你选择的数据库添加正确的反应式扩展。"
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:105 upstream/_guides/datasource.adoc:713
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "`reactive-db2-client`"
 msgstr "DB2。 `quarkus-reactive-db2-client` "
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:106 upstream/_guides/datasource.adoc:705
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "`reactive-mssql-client`"
 msgstr "MariaDB/MySQL。 `quarkus-reactive-mysql-client` "
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:107 upstream/_guides/datasource.adoc:701
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "`reactive-mysql-client`"
 msgstr "MariaDB/MySQL。 `quarkus-reactive-mysql-client` "
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:108 upstream/_guides/datasource.adoc:697
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "`reactive-oracle-client`"
 msgstr "甲骨文。 `quarkus-reactive-oracle-client` "
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:109 upstream/_guides/datasource.adoc:709
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "`reactive-pg-client`"
 msgstr "PostgreSQL。 `quarkus-reactive-pg-client` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:111
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Configure your reactive datasource:"
 msgstr "然后配置你的反应性数据源。"
 
-#. type: delimited block -
-#: upstream/_guides/datasource.adoc:120 upstream/_guides/datasource.adoc:312
-#, no-wrap
-msgid ""
-"quarkus.datasource.reactive.url=postgresql:///your_database\n"
-"quarkus.datasource.reactive.max-size=20\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:122
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "This configuration value is only required if there is more than one Reactive driver extension on the classpath."
 msgstr "只有在classpath上有一个以上的Reactive驱动扩展时才需要这个配置值。"
 
 #. type: Title ==
-#: upstream/_guides/datasource.adoc:124
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Configure datasources"
 msgstr "消耗数据源"
 
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:128
-#, fuzzy
-msgid "The following section describes the configuration for single or multiple datasources.  For simplicity, we will reference a single datasource as the default (unnamed) datasource."
-msgstr "下面的部分描述了单个或多个数据源的配置。为了简单起见，我们将把单个数据源作为默认（未命名）的数据源。"
+#: _guides/datasource.adoc
+msgid ""
+"The following section describes the configuration for single or multiple datasources.\n"
+"For simplicity, we will reference a single datasource as the default (unnamed) datasource."
+msgstr ""
 
 #. type: Title ===
-#: upstream/_guides/datasource.adoc:129
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Configure a single datasource"
 msgstr "配置反应式数据源"
 
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:133
-#, fuzzy
-msgid "A datasource can be either a JDBC datasource, reactive, or both.  This depends on the configuration and the selection of project extensions."
-msgstr "数据源可以是JDBC数据源，也可以是反应式数据源，或者两者都是。这完全取决于你如何配置它，以及你在你的项目中添加了哪些扩展。"
+#: _guides/datasource.adoc
+msgid ""
+"A datasource can be either a JDBC datasource, reactive, or both.\n"
+"This depends on the configuration and the selection of project extensions."
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:135
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Define a datasource with the following configuration property, where `db-kind` defines which database platform to connect to, for example, `h2`:"
 msgstr "用以下配置属性定义一个数据源，其中 `db-kind` 定义了要连接到哪个数据库平台，例如 `h2` ："
 
-#. type: delimited block -
-#: upstream/_guides/datasource.adoc:139
-#, no-wrap
-msgid "quarkus.datasource.db-kind=h2\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:142
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Quarkus deduces the JDBC driver class it needs to use from the specified value of the `db-kind` database platform attribute."
 msgstr "Quarkus从 `db-kind` 数据库平台属性的指定值中推断出它需要使用的JDBC驱动类。"
 
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:145
-#, fuzzy
-msgid "This step is required only if your application depends on multiple database drivers.  If the application operates with a single driver, this driver is detected automatically."
-msgstr "只有当你的应用程序依赖于多个数据库驱动时，才需要这个步骤。如果应用程序只使用一个驱动，则会自动检测到这个驱动。"
+#: _guides/datasource.adoc
+msgid ""
+"This step is required only if your application depends on multiple database drivers.\n"
+"If the application operates with a single driver, this driver is detected automatically."
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:147
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Quarkus currently includes the following built-in database kinds:"
 msgstr "我们目前包括这些内置的数据库种类。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:149
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "DB2: `db2`"
 msgstr "DB2。 `db2` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:150
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Derby: `derby`"
 msgstr "德比。 `derby` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:151
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "H2: `h2`"
 msgstr "H2: `h2` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:152
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "MariaDB: `mariadb`"
 msgstr "MariaDB。 `mariadb` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:153
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Microsoft SQL Server: `mssql`"
 msgstr "微软SQL服务器。 `mssql` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:154
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "MySQL: `mysql`"
 msgstr "MySQL。 `mysql` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:155
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Oracle: `oracle`"
 msgstr "甲骨文。 `oracle` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:156
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "PostgreSQL: `postgresql`, `pgsql` or `pg`"
 msgstr "PostgreSQL。 `postgresql` , `pgsql` 或 `pg` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:157
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "To use a database kind that is not built-in, use `other` and define the JDBC driver explicitly"
 msgstr "使用没有内置扩展的数据库，或使用不同的驱动程序"
 
-#. type: delimited block =
-#: upstream/_guides/datasource.adoc:162
-#, fuzzy
-msgid "You can use any JDBC driver in a Quarkus app in JVM mode as described in xref:other-databases[Using other databases].  However, using a non-built-in database kind is unlikely to work when compiling your application to a native executable."
-msgstr "你可以在JVM模式下的Quarkus应用程序中使用任何JDBC驱动（参见 link:#other-databases[使用其他数据库] ）。但在将你的应用程序编译为本地可执行文件时，它不太可能工作。"
+#: _guides/datasource.adoc
+msgid ""
+"You can use any JDBC driver in a Quarkus app in JVM mode as described in xref:other-databases[Using other databases].\n"
+"However, using a non-built-in database kind is unlikely to work when compiling your application to a native executable."
+msgstr ""
 
 #. type: delimited block =
-#: upstream/_guides/datasource.adoc:164
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "For native executable builds, it is recommended to either use the available JDBC Quarkus extensions or contribute a custom extension for your specific driver."
 msgstr "如果你打算制作一个本地可执行文件，我们建议你使用现有的JDBC Quarkus扩展（或者为你的驱动程序贡献一个扩展）。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:167
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Configure the following properties to define credentials:"
 msgstr "这是通过配置以下属性来实现的。"
 
-#. type: delimited block -
-#: upstream/_guides/datasource.adoc:172
-#, no-wrap
-msgid ""
-"quarkus.datasource.username=<your username>\n"
-"quarkus.datasource.password=<your password>\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:175
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "You can also retrieve the password from Vault by link:{vault-datasource-guide}[using a credential provider] for your datasource."
 msgstr "你也可以通过 link:{vault-datasource-guide}[使用] 数据源的 link:{vault-datasource-guide}[凭证提供者] 从Vault检索密码。"
 
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:179
-#, fuzzy
-msgid "Until now, the configuration has been the same regardless of whether you are using a JDBC or a reactive driver.  When you have defined the database kind and the credentials, the rest depends on what type of driver you are using.  It is possible to use JDBC and a reactive driver simultaneously."
-msgstr "到目前为止，无论你是使用JDBC还是反应式驱动，配置都是一样的。当你定义了数据库种类和证书后，剩下的就取决于你使用的是什么类型的驱动程序。有可能同时使用JDBC和反应式驱动程序。"
+#: _guides/datasource.adoc
+msgid ""
+"Until now, the configuration has been the same regardless of whether you are using a JDBC or a reactive driver.\n"
+"When you have defined the database kind and the credentials, the rest depends on what type of driver you are using.\n"
+"It is possible to use JDBC and a reactive driver simultaneously."
+msgstr ""
 
 #. type: Title ====
-#: upstream/_guides/datasource.adoc:180
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "JDBC datasource"
 msgstr "JDBC数据源"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:183
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "JDBC is the most common database connection pattern, typically needed when used in combination with non-reactive Hibernate ORM."
 msgstr "JDBC是最常见的数据库连接模式。在使用Hibernate ORM时，你通常需要一个JDBC数据源。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:185
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "To use a JDBC datasource, start with adding the necessary dependencies:"
 msgstr "要使用一个JDBC数据源，首先要添加必要的依赖关系："
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:187
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "For use with a built-in JDBC driver, choose and add the Quarkus extension for your relational database driver from the list below:"
 msgstr "你还需要为你的关系数据库驱动程序选择并添加Quarkus扩展。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:189
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Derby - `jdbc-derby`"
 msgstr "德比 - `jdbc-derby` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:190
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "H2 - `jdbc-h2`"
 msgstr "H2 - `jdbc-h2` "
 
 #. type: delimited block =
-#: upstream/_guides/datasource.adoc:194
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "H2 and Derby databases can be configured to run in \"embedded mode\"; however, the Derby extension does not support compiling the embedded database engine into native executables."
 msgstr "H2和Derby数据库通常可以被配置为在 \"嵌入式模式 \"下运行；扩展不支持将嵌入式数据库引擎编译为本地可执行文件。"
 
 #. type: delimited block =
-#: upstream/_guides/datasource.adoc:196
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Read xref:in-memory-databases[Testing with in-memory databases] for suggestions regarding integration testing."
 msgstr "阅读《 link:#in-memory-databases[使用内存数据库进行测试] 》（下文），了解有关集成测试的建议。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:198
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "DB2 - `jdbc-db2`"
 msgstr "DB2- `jdbc-db2` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:199
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "MariaDB - `jdbc-mariadb`"
 msgstr "MariaDB - `jdbc-mariadb` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:200
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Microsoft SQL Server - `jdbc-mssql`"
 msgstr "微软SQL服务器- `jdbc-mssql` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:201
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "MySQL - `jdbc-mysql`"
 msgstr "MySQL- `jdbc-mysql` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:202
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Oracle - `jdbc-oracle`"
 msgstr "甲骨文 - `jdbc-oracle` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:203
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "PostgreSQL - `jdbc-postgresql`"
 msgstr "PostgreSQL - `jdbc-postgresql` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:204
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Other JDBC extensions, such as link:https://github.com/quarkiverse/quarkus-jdbc-sqlite[SQLite] and its link:https://quarkiverse.github.io/quarkiverse-docs/quarkus-jdbc-sqlite/dev/index.html[documentation], can be found in the https://github.com/quarkiverse[Quarkiverse]."
 msgstr "SQLite。 link:https://github.com/quarkiverse/quarkus-jdbc-sqlite[项目主页] - link:https://quarkiverse.github.io/quarkiverse-docs/quarkus-jdbc-sqlite/dev/index.html[文档]"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:206
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "For example, to add the PostgreSQL driver dependency:"
 msgstr "例如，要添加PostgreSQL驱动的依赖关系："
 
-#. type: delimited block -
-#: upstream/_guides/datasource.adoc:210
-#, no-wrap
-msgid "./mvnw quarkus:add-extension -Dextensions=\"jdbc-postgresql\"\n"
+#: _guides/datasource.adoc
+msgid ""
+"Using a built-in JDBC driver extension automatically includes the Agroal extension, which is the JDBC connection pool implementation applicable for custom and built-in JDBC drivers.\n"
+"However, for custom drivers, Agroal needs to be added explicitly."
 msgstr ""
 
-#. type: delimited block =
-#: upstream/_guides/datasource.adoc:216
-#, fuzzy
-msgid "Using a built-in JDBC driver extension automatically includes the Agroal extension, which is the JDBC connection pool implementation applicable for custom and built-in JDBC drivers.  However, for custom drivers, Agroal needs to be added explicitly."
-msgstr "使用内置JDBC驱动扩展会自动包括Agroal扩展，这是适用于自定义和内置JDBC驱动的JDBC连接池实现。然而，对于自定义驱动程序，Agroal需要明确添加。"
-
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:220
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "For use with a custom JDBC driver, add the `quarkus-agroal` dependency to your project alongside the extension for your relational database driver:"
 msgstr "你还需要为你的关系数据库驱动程序选择并添加Quarkus扩展。"
 
-#. type: delimited block -
-#: upstream/_guides/datasource.adoc:224
-#, no-wrap
-msgid "./mvnw quarkus:add-extension -Dextensions=\"agroal\"\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:227
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "To use a JDBC driver for another database, xref:other-databases[use a database with no built-in extension or with a different driver]."
 msgstr "使用没有内置扩展的数据库，或使用不同的驱动程序"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:230
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Configure the JDBC connection by defining the JDBC URL property:"
 msgstr "配置JDBC连接"
 
-#. type: delimited block -
-#: upstream/_guides/datasource.adoc:234
-#, no-wrap
-msgid "quarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/hibernate_orm_test\n"
+#: _guides/datasource.adoc
+msgid ""
+"Note the `jdbc` prefix in the property name.\n"
+"All the configuration properties specific to JDBC have the `jdbc` prefix.\n"
+"For reactive datasources, the prefix is `reactive`."
 msgstr ""
 
-#. type: delimited block =
-#: upstream/_guides/datasource.adoc:241
-#, fuzzy
-msgid "Note the `jdbc` prefix in the property name.  All the configuration properties specific to JDBC have the `jdbc` prefix.  For reactive datasources, the prefix is `reactive`."
-msgstr "注意属性名称中的 `jdbc` 前缀。所有针对JDBC的配置属性都有这个前缀。"
-
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:244
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "For more information about configuring JDBC, see xref:jdbc-url[JDBC URL format reference] and xref:extensions-and-database-drivers-reference[Quarkus extensions and database drivers reference]."
 msgstr "关于配置JDBC的更多信息，请参阅 link:#jdbc-url[JDBC URL格式参考] 和 link:#extensions-and-database-drivers-reference[Quarkus扩展和数据库驱动参考] 。"
 
 #. type: Title =====
-#: upstream/_guides/datasource.adoc:247
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Custom databases and drivers"
 msgstr "自定义数据库和驱动程序"
 
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:251
-#, fuzzy
-msgid "If you need to connect to a database for which Quarkus does not provide an extension with the JDBC driver, you can use a custom driver instead.  For example, if you are using the OpenTracing JDBC driver in your project."
-msgstr "如果你需要连接到Quarkus没有提供JDBC驱动扩展的数据库，你可以使用一个自定义的驱动来代替。例如，如果你在你的项目中使用OpenTracing JDBC驱动。"
+#: _guides/datasource.adoc
+msgid ""
+"If you need to connect to a database for which Quarkus does not provide an extension with the JDBC driver, you can use a custom driver instead.\n"
+"For example, if you are using the OpenTracing JDBC driver in your project."
+msgstr ""
 
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:255
-#, fuzzy
-msgid "Without an extension, the driver will work correctly in any Quarkus app running in JVM mode.  However, the driver is unlikely to work when compiling your application to a native executable.  If you plan to make a native executable, use the existing JDBC Quarkus extensions, or contribute one for your driver."
-msgstr "在没有扩展的情况下，该驱动可以在任何以JVM模式运行的Quarkus应用程序中正常工作。但在将你的应用程序编译为本地可执行文件时，它不太可能工作。如果你打算制作一个本地可执行文件，我们建议你使用现有的JDBC Quarkus扩展（或者为你的驱动程序贡献一个扩展）。"
+#: _guides/datasource.adoc
+msgid ""
+"Without an extension, the driver will work correctly in any Quarkus app running in JVM mode.\n"
+"However, the driver is unlikely to work when compiling your application to a native executable.\n"
+"If you plan to make a native executable, use the existing JDBC Quarkus extensions, or contribute one for your driver."
+msgstr ""
 
 #. type: Block title
-#: upstream/_guides/datasource.adoc:256
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "An example with the OpenTracing driver:"
 msgstr "下面是你如何使用OpenTracing驱动程序。"
 
-#. type: delimited block -
-#: upstream/_guides/datasource.adoc:261
-#, no-wrap
-msgid "quarkus.datasource.jdbc.driver=io.opentracing.contrib.jdbc.TracingDriver\n"
-msgstr ""
-
 #. type: Block title
-#: upstream/_guides/datasource.adoc:263
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "An example for defining access to a database with no built-in support in JVM mode:"
 msgstr "下面是你如何定义对一个没有内置支持的数据库的访问（在JVM模式下）。"
 
-#. type: delimited block -
-#: upstream/_guides/datasource.adoc:272
-#, no-wrap
+#: _guides/datasource.adoc
 msgid ""
-"quarkus.datasource.db-kind=other\n"
-"quarkus.datasource.jdbc.driver=oracle.jdbc.driver.OracleDriver\n"
-"quarkus.datasource.jdbc.url=jdbc:oracle:thin:@192.168.1.12:1521/ORCL_SVC\n"
-"quarkus.datasource.username=scott\n"
-"quarkus.datasource.password=tiger\n"
+"For all the details about the JDBC configuration options and configuring other aspects,\n"
+"such as the connection pool size, refer to the xref:jdbc-configuration[JDBC configuration reference] section."
 msgstr ""
 
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:276
-#, fuzzy
-msgid "For all the details about the JDBC configuration options and configuring other aspects, such as the connection pool size, refer to the xref:jdbc-configuration[JDBC configuration reference] section."
-msgstr "关于JDBC配置选项和配置其他方面的所有细节，如连接池大小，请参考 link:#jdbc-configuration[JDBC配置参考] 部分。"
-
 #. type: Title =====
-#: upstream/_guides/datasource.adoc:277
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Consuming the datasource"
 msgstr "消耗数据源"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:280
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "With Hibernate ORM, the Hibernate layer automatically picks up the datasource and uses it."
 msgstr "使用Hibernate ORM，Hibernate层会自动拾取数据源并使用它。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:282
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "For the in-code access to the datasource, obtain it as any other bean as follows:"
 msgstr "如果出于某种原因，在代码中需要访问数据源，可以像其他Bean一样以如下方式获得。"
 
-#. type: delimited block -
-#: upstream/_guides/datasource.adoc:287 upstream/_guides/datasource.adoc:398
-#, no-wrap
+#: _guides/datasource.adoc
 msgid ""
-"@Inject\n"
-"AgroalDataSource defaultDataSource;\n"
+"In the above example, the type is `AgroalDataSource`, a `javax.sql.DataSource` subtype.\n"
+"Because of this, you can also use `javax.sql.DataSource` as the injected type."
 msgstr ""
 
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:291
-#, fuzzy
-msgid "In the above example, the type is `AgroalDataSource`, a `javax.sql.DataSource` subtype.  Because of this, you can also use `javax.sql.DataSource` as the injected type."
-msgstr "在上面的例子中，类型是 `AgroalDataSource` ，它是 `javax.sql.DataSource` 的一个子类型。正因为如此，你也可以使用 `javax.sql.DataSource` 作为注入的类型。"
-
 #. type: Title ====
-#: upstream/_guides/datasource.adoc:292
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Reactive datasource"
 msgstr "反应式数据源"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:295
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Quarkus offers several reactive clients for use with a reactive datasource."
 msgstr "Quarkus提供了几个反应式客户端，用于反应式数据源的使用。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:297
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Add the corresponding extension to your application:"
 msgstr "在你的应用程序中添加相应的扩展："
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:299
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "DB2: `quarkus-reactive-db2-client`"
 msgstr "DB2。 `quarkus-reactive-db2-client` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:300
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "MariaDB/MySQL: `quarkus-reactive-mysql-client`"
 msgstr "MariaDB/MySQL。 `quarkus-reactive-mysql-client` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:301
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Microsoft SQL Server: `quarkus-reactive-mssql-client`"
 msgstr "微软SQL服务器。 `quarkus-reactive-mssql-client` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:302
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Oracle: `quarkus-reactive-oracle-client`"
 msgstr "甲骨文。 `quarkus-reactive-oracle-client` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:303
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "PostgreSQL: `quarkus-reactive-pg-client`"
 msgstr "PostgreSQL。 `quarkus-reactive-pg-client` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:305
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "The installed extension must be consistent with the `quarkus.datasource.db-kind` you define in your datasource configuration."
 msgstr "安装的扩展必须与你在数据源配置中定义的 `quarkus.datasource.db-kind` 一致。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:307
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "After adding the driver, configure the connection URL and define a proper size for your connection pool."
 msgstr "作为选择，但强烈建议，你应该为你的连接池定义一个适当的大小。"
 
 #. type: Title =====
-#: upstream/_guides/datasource.adoc:314
+#: _guides/datasource.adoc
 #, no-wrap
 msgid "Reactive connection pool size adjustment"
 msgstr ""
 
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:318
-msgid "To protect your database from overloading during load peaks, size the pool adequately to throttle the database load.  The proper size always depends on many factors, such as the number of parallel application users or the nature of the workload."
+#: _guides/datasource.adoc
+msgid ""
+"To protect your database from overloading during load peaks, size the pool adequately to throttle the database load.\n"
+"The proper size always depends on many factors, such as the number of parallel application users or the nature of the workload."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:322
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "For more information about pool size adjustment properties, see the xref:reactive-configuration[Reactive datasource configuration reference] section."
 msgstr "你可以通过设置 `transactions` 配置属性来覆盖这一点--见下面的 link:#configuration-reference[配置参考] 。"
 
 #. type: Title ====
-#: upstream/_guides/datasource.adoc:323
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "JDBC and reactive datasources simultaneously"
 msgstr "JDBC和反应式数据源同时进行"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:326
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "When a JDBC extension - along with Agroal - and a reactive datasource extension handling the given database kind are included, they will both be created by default."
 msgstr "默认情况下，如果你同时包含一个JDBC扩展（+Agroal）和一个处理给定数据库种类的反应式数据源扩展，两者都将被创建。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:328
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "To disable the JDBC datasource explicitly:"
 msgstr "如果你想明确地禁用JDBC数据源，请使用。"
 
-#. type: delimited block -
-#: upstream/_guides/datasource.adoc:332
-#, no-wrap
-msgid "quarkus.datasource.jdbc=false\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:335
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "To disable the reactive datasource explicitly:"
 msgstr "如果你想明确地禁用反应型数据源，请使用。"
 
-#. type: delimited block -
-#: upstream/_guides/datasource.adoc:339
-#, no-wrap
-msgid "quarkus.datasource.reactive=false\n"
-msgstr ""
-
 #. type: delimited block =
-#: upstream/_guides/datasource.adoc:344
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "In most cases, the configuration above will be optional as either a JDBC driver or a reactive datasource extension will be present, not both."
 msgstr "大多数时候，上面的配置是没有必要的，因为JDBC驱动或反应式数据源扩展都会存在，而不是同时存在。"
 
 #. type: Title ===
-#: upstream/_guides/datasource.adoc:346
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Configure multiple datasources"
 msgstr "配置多个数据源"
 
-#. type: delimited block =
-#: upstream/_guides/datasource.adoc:352
-#, fuzzy
-msgid "The Hibernate ORM extension supports defining xref:hibernate-orm.adoc#multiple-persistence-units[persistence units] by using configuration properties.  For each persistence unit, point to the datasource of your choice."
-msgstr "Hibernate ORM扩展 link:hibernate-orm.html#multiple-persistence-units[支持使用配置属性定义几个持久化单元] 。对于每个持久化单元，你可以指向你选择的数据源。"
+#: _guides/datasource.adoc
+msgid ""
+"The Hibernate ORM extension supports defining xref:hibernate-orm.adoc#multiple-persistence-units[persistence units] by using configuration properties.\n"
+"For each persistence unit, point to the datasource of your choice."
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:355
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Defining multiple datasources works like defining a single datasource, with one important change - you have to specify a name (configuration key) for each datasource."
 msgstr "定义多个数据源的方法与定义单个数据源的方法完全相同，但有一个重要的变化：你定义了一个名称。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:357
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "The following example provides three different datasources:"
 msgstr "在下面的例子中，你有3个不同的数据源。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:359
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "the default one"
 msgstr "默认的那个。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:360
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "a datasource named `users`"
 msgstr "一个名为 `users` 的数据源。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:361
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "a datasource named `inventory`"
 msgstr "一个名为 `inventory` 的数据源。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:363
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Each with its configuration:"
 msgstr "每个人都有自己的配置。"
 
-#. type: delimited block -
-#: upstream/_guides/datasource.adoc:370
-#, no-wrap
+#: _guides/datasource.adoc
 msgid ""
-"quarkus.datasource.db-kind=h2\n"
-"quarkus.datasource.username=username-default\n"
-"quarkus.datasource.jdbc.url=jdbc:h2:mem:default\n"
-"quarkus.datasource.jdbc.max-size=13\n"
+"Notice there is an extra section in the configuration key.\n"
+"The syntax is as follows: `quarkus.datasource.[optional name.][datasource property]`."
 msgstr ""
 
-#. type: delimited block -
-#: upstream/_guides/datasource.adoc:375
-#, no-wrap
+#: _guides/datasource.adoc
 msgid ""
-"quarkus.datasource.users.db-kind=h2\n"
-"quarkus.datasource.users.username=username1\n"
-"quarkus.datasource.users.jdbc.url=jdbc:h2:mem:users\n"
-"quarkus.datasource.users.jdbc.max-size=11\n"
+"Even when only one database extension is installed, named databases need to specify at least one build-time property so that Quarkus can detect them.\n"
+"Generally, this is the `db-kind` property, but you can also specify Dev Services properties to create named datasources according to the xref:databases-dev-services.adoc[Dev Services for Databases] guide."
 msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/datasource.adoc:380
-#, no-wrap
-msgid ""
-"quarkus.datasource.inventory.db-kind=h2\n"
-"quarkus.datasource.inventory.username=username2\n"
-"quarkus.datasource.inventory.jdbc.url=jdbc:h2:mem:inventory\n"
-"quarkus.datasource.inventory.jdbc.max-size=12\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:384
-#, fuzzy
-msgid "Notice there is an extra section in the configuration key.  The syntax is as follows: `quarkus.datasource.[optional name.][datasource property]`."
-msgstr "请注意，在钥匙里有一个额外的位。语法如下。 `quarkus.datasource.[optional name.][datasource property]` ."
-
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:387
-#, fuzzy
-msgid "Even when only one database extension is installed, named databases need to specify at least one build-time property so that Quarkus can detect them.  Generally, this is the `db-kind` property, but you can also specify Dev Services properties to create named datasources according to the xref:databases-dev-services.adoc[Dev Services for Databases] guide."
-msgstr "即使只安装了一个数据库扩展，命名的数据库也需要指定至少一个构建时间属性，以便Quarkus知道它们的存在。一般来说，这将是 `db-kind` 属性，尽管你也可以指定 Dev Services 属性来创建命名的数据源（在本指南的后面涉及）。"
 
 #. type: Title ====
-#: upstream/_guides/datasource.adoc:388
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Named datasource injection"
 msgstr "命名的数据源注入"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:391
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "When using multiple datasources, each `DataSource` also has the `io.quarkus.agroal.DataSource` qualifier with the name of the datasource as the value."
 msgstr "当使用多个数据源时，每个 `DataSource` ，也有以数据源名称为值的 `io.quarkus.agroal.DataSource` 修饰符。使用上述属性来配置三个不同的数据源，你也可以按以下方式注入每个数据源。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:393
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "By using the properties mentioned in the previous section to configure three different datasources, inject each one of them as follows:"
 msgstr "通过使用上一节中提到的属性来配置三个不同的数据源，按以下方式分别注入："
 
-#. type: delimited block -
-#: upstream/_guides/datasource.adoc:402
-#, no-wrap
-msgid ""
-"@Inject\n"
-"@DataSource(\"users\")\n"
-"AgroalDataSource usersDataSource;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/datasource.adoc:406
-#, no-wrap
-msgid ""
-"@Inject\n"
-"@DataSource(\"inventory\")\n"
-"AgroalDataSource inventoryDataSource;\n"
-msgstr ""
-
 #. type: Title ==
-#: upstream/_guides/datasource.adoc:408
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Datasource integrations"
 msgstr "数据源度量"
 
 #. type: Title ===
-#: upstream/_guides/datasource.adoc:410
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Datasource health check"
 msgstr "数据源健康检查"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:413
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "If you use the link:https://quarkus.io/extensions/io.quarkus/quarkus-smallrye-health[`quarkus-smallrye-health`] extension, the `quarkus-agroal` and reactive client extensions automatically add a readiness health check to validate the datasource."
 msgstr "如果你使用 `quarkus-smallrye-health` 扩展， `quarkus-agroal` 和反应式客户端扩展将自动添加就绪健康检查以验证数据源。"
 
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:416
-#, fuzzy
-msgid "When you access your application’s health readiness endpoint, `/q/health/ready` by default, you receive information about the datasource validation status.  If you have multiple datasources, all datasources are checked, and if a single datasource validation failure occurs, the status changes to `DOWN`."
-msgstr "当你访问你的应用程序的 `/q/health/ready` 端点时，你会有关于数据源验证状态的信息。如果你有多个数据源，所有的数据源都会被检查，一旦有一个数据源验证失败，状态就会被 `DOWN` 。"
+#: _guides/datasource.adoc
+msgid ""
+"When you access your application’s health readiness endpoint, `/q/health/ready` by default, you receive information about the datasource validation status.\n"
+"If you have multiple datasources, all datasources are checked, and if a single datasource validation failure occurs, the status changes to `DOWN`."
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:418
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "This behavior can be disabled by using the `quarkus.datasource.health.enabled` property."
 msgstr "这种行为可以通过属性 `quarkus.datasource.health.enabled` 来禁用。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:420
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "To exclude only a particular datasource from the health check, use:"
 msgstr "要从健康检查中只排除一个特定的数据源，请使用："
 
-#. type: delimited block -
-#: upstream/_guides/datasource.adoc:424
-#, fuzzy, no-wrap
-msgid "quarkus.datasource.\"datasource-name\".health-exclude=true\n"
-msgstr " `quarkus.datasource. _<datasource-name>_ .jdbc.transactions` 为命名的数据源"
-
 #. type: Title ===
-#: upstream/_guides/datasource.adoc:426
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Datasource metrics"
 msgstr "数据源度量"
 
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:430
-#, fuzzy
-msgid "If you are using the xref:micrometer.adoc[`quarkus-micrometer`] or xref:smallrye-metrics.adoc[`quarkus-smallrye-metrics`] extension, `quarkus-agroal` can contribute some datasource-related metrics to the metric registry.  This can be activated by setting the `quarkus.datasource.metrics.enabled` property to `true`."
-msgstr "如果你使用 `quarkus-micrometer` 或 `quarkus-smallrye-metrics` 扩展， `quarkus-agroal` 可以在 `/q/metrics` 端点上暴露一些数据源指标。这可以通过设置属性 `quarkus.datasource.metrics.enabled` 为真来开启。"
+#: _guides/datasource.adoc
+msgid ""
+"If you are using the xref:micrometer.adoc[`quarkus-micrometer`] or xref:smallrye-metrics.adoc[`quarkus-smallrye-metrics`] extension, `quarkus-agroal` can contribute some datasource-related metrics to the metric registry.\n"
+"This can be activated by setting the `quarkus.datasource.metrics.enabled` property to `true`."
+msgstr ""
+
+#: _guides/datasource.adoc
+msgid ""
+"For the exposed metrics to contain any actual values, a metric collection must be enabled internally by the Agroal mechanisms.\n"
+"By default, this metric collection mechanism is enabled for all datasources when a metrics extension is present, and metrics for the Agroal extension are enabled."
+msgstr ""
+
+#: _guides/datasource.adoc
+msgid ""
+"To disable metrics for a particular data source,\n"
+"set `quarkus.datasource.jdbc.enable-metrics` to `false`, or apply `quarkus.datasource.<datasource name>.jdbc.enable-metrics` for a named datasource.\n"
+"This disables collecting the metrics and exposing them in the `/q/metrics` endpoint if the mechanism to collect them is disabled."
+msgstr ""
+
+#: _guides/datasource.adoc
+msgid ""
+"Conversely, setting `quarkus.datasource.jdbc.enable-metrics` to `true`, or `quarkus.datasource.<datasource name>.jdbc.enable-metrics` for a named datasource explicitly enables metrics collection even if a metrics extension is not in use.\n"
+"This can be useful if you need to access the collected metrics programmatically.\n"
+"They are available after calling `dataSource.getMetrics()` on an injected `AgroalDataSource` instance."
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:433
-#, fuzzy
-msgid "For the exposed metrics to contain any actual values, a metric collection must be enabled internally by the Agroal mechanisms.  By default, this metric collection mechanism is enabled for all datasources when a metrics extension is present, and metrics for the Agroal extension are enabled."
-msgstr "为了使暴露的度量包含任何实际的值，Agroal机制必须在内部启用一个度量收集。默认情况下，当一个度量衡扩展存在时，这个度量衡收集机制对所有数据源都是启用的，而且Agroal扩展的度量衡也被启用。"
-
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:437
-#, fuzzy
-msgid "To disable metrics for a particular data source, set `quarkus.datasource.jdbc.enable-metrics` to `false`, or apply `quarkus.datasource.<datasource name>.jdbc.enable-metrics` for a named datasource.  This disables collecting the metrics and exposing them in the `/q/metrics` endpoint if the mechanism to collect them is disabled."
-msgstr "为了使暴露的度量包含任何实际的值，Agroal机制必须在内部启用度量收集。默认情况下，如果有一个度量衡扩展，并且Agroal扩展的度量衡被启用，那么这个度量衡收集机制就会为所有数据源打开。如果你想禁用某个特定数据源的度量，可以通过将 `quarkus.datasource.jdbc.enable-metrics` 设置为 `false` （或者对于一个命名的数据源， `quarkus.datasource.<datasource name>.jdbc.enable-metrics` ）来实现。这将禁止收集指标以及在 `/q/metrics` 端点中公开这些指标，因为如果收集指标的机制被禁用，那么公开指标是没有意义的。"
-
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:441
-#, fuzzy
-msgid "Conversely, setting `quarkus.datasource.jdbc.enable-metrics` to `true`, or `quarkus.datasource.<datasource name>.jdbc.enable-metrics` for a named datasource explicitly enables metrics collection even if a metrics extension is not in use.  This can be useful if you need to access the collected metrics programmatically.  They are available after calling `dataSource.getMetrics()` on an injected `AgroalDataSource` instance."
-msgstr "相反，将 `quarkus.datasource.jdbc.enable-metrics` 明确设置为 `true` （或者对于一个命名的数据源的 `quarkus.datasource.<datasource name>.jdbc.enable-metrics` ），可以用来启用指标的收集，即使没有使用指标扩展。如果你需要以编程方式访问所收集的度量，这可能很有用。在对注入的 `AgroalDataSource` 实例调用 `dataSource.getMetrics()` 后，它们就可用了。如果这个数据源的指标收集被禁用，所有的值都将是零。"
-
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:443
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "If the metrics collection for this datasource is disabled, all values result in zero."
 msgstr "如果这个数据源的指标收集被禁用，所有的值都会变成零。"
 
 #. type: Title ===
-#: upstream/_guides/datasource.adoc:444
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Narayana transaction manager integration"
 msgstr "纳兰性德交易经理的整合"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:447
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Integration is automatic if the Narayana JTA extension is also available."
 msgstr "如果Narayana JTA扩展也可用，则会自动进行整合。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:449
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "You can override this by setting the `transactions` configuration property:"
 msgstr "你可以通过设置 `transactions` 配置属性来覆盖这一点--见下面的 link:#configuration-reference[配置参考] 。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:451
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`quarkus.datasource.jdbc.transactions` for default unnamed datasource"
 msgstr " `quarkus.datasource.jdbc.transactions` 用于默认的未命名的数据源"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:452
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`quarkus.datasource._<datasource-name>_.jdbc.transactions` for named datasource"
 msgstr " `quarkus.datasource. _<datasource-name>_ .jdbc.transactions` 为命名的数据源"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:454
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "For more information, see the xref:configuration-reference[Configuration reference] section below."
 msgstr "你可以通过设置 `transactions` 配置属性来覆盖这一点--见下面的 link:#configuration-reference[配置参考] 。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:456
+#: _guides/datasource.adoc
 msgid "To facilitate the storage of transaction logs in a database by using JDBC, see xref:transaction.adoc#jdbcstore[Configuring transaction logs to be stored in a datasource] section of the xref:transaction.adoc[Using transactions in Quarkus] guide."
 msgstr ""
 
 #. type: Title ====
-#: upstream/_guides/datasource.adoc:457
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Named datasources"
 msgstr "命名的数据源"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:460
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "When using Dev Services, the default datasource will always be created, but to specify a named datasource, you need to have at least one build time property so Quarkus can detect how to create the datasource."
 msgstr "当使用Dev Services时，默认的数据源总是被创建的，但是要指定一个命名的数据源，你需要至少有一个构建时间属性，这样Quarkus才知道要创建数据源。一般来说，你通常会指定 `db-kind` 属性，或者明确启用DevDb： `quarkus.datasource.\"name\".devservices.enabled=true` 。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:462
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "You will usually specify the `db-kind` property or explicitly enable Dev Services by setting `quarkus.datasource.\"name\".devservices.enabled=true`."
 msgstr "你通常会指定 `db-kind` 属性或通过设置 `quarkus.datasource.\"name\".devservices.enabled=true` 明确地启用Dev服务。"
 
 #. type: Title ===
-#: upstream/_guides/datasource.adoc:464
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Testing with in-memory databases"
 msgstr "用内存数据库进行测试"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:467
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Some databases like H2 and Derby are commonly used in the _embedded mode_ as a facility to run integration tests quickly."
 msgstr "一些数据库如H2和Derby通常以 \"嵌入式模式 \"作为运行快速集成测试的设施。"
 
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:470
-#, fuzzy
-msgid "The recommended approach is to use the real database you intend to use in production, especially when xref:databases-dev-services.adoc[Dev Services provide a zero-config database for testing], and running tests against a container is relatively quick and produces expected results on an actual environment.  However, it is also possible to use JVM-powered databases for scenarios when the ability to run simple integration tests is required."
-msgstr "推荐的方法是使用你打算在生产中使用的真实数据库，特别是当 link:databases-dev-services.html[开发服务为测试提供零配置数据库] 时，针对容器运行测试相对较快，并在实际环境中产生预期结果。然而，当需要运行简单的集成测试的能力时，也可以使用JVM驱动的数据库的场景。"
+#: _guides/datasource.adoc
+msgid ""
+"The recommended approach is to use the real database you intend to use in production, especially when xref:databases-dev-services.adoc[Dev Services provide a zero-config database for testing], and running tests against a container is relatively quick and produces expected results on an actual environment.\n"
+"However, it is also possible to use JVM-powered databases for scenarios when the ability to run simple integration tests is required."
+msgstr ""
 
 #. type: Title ====
-#: upstream/_guides/datasource.adoc:472
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Support and limitations"
 msgstr "MySQL的局限性"
 
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:476
-#, fuzzy
-msgid "Embedded databases (H2 and Derby) work in JVM mode.  For native mode, the following limitations apply:"
-msgstr "嵌入式数据库（H2和Derby）在JVM模式下工作。对于本地模式，适用以下限制："
+#: _guides/datasource.adoc
+msgid ""
+"Embedded databases (H2 and Derby) work in JVM mode.\n"
+"For native mode, the following limitations apply:"
+msgstr ""
 
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:479
-#, fuzzy
-msgid "Derby cannot be embedded into the application in native mode.  However, the Quarkus Derby extension allows native compilation of the Derby JDBC *client*, supporting *remote* connections."
-msgstr "德比不能被嵌入到本地模式的应用程序中，只支持远程连接。"
+#: _guides/datasource.adoc
+msgid ""
+"Derby cannot be embedded into the application in native mode.\n"
+"However, the Quarkus Derby extension allows native compilation of the Derby JDBC *client*, supporting *remote* connections."
+msgstr ""
 
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:482
-#, fuzzy
-msgid "Embedding H2 within your native image is not recommended.  Consider using an alternative approach, for example, using a remote connection to a separate database instead."
-msgstr "不建议在你的本地图像中嵌入H2。考虑使用另一种方法，例如，使用远程连接到一个单独的数据库来代替。"
+#: _guides/datasource.adoc
+msgid ""
+"Embedding H2 within your native image is not recommended.\n"
+"Consider using an alternative approach, for example, using a remote connection to a separate database instead."
+msgstr ""
 
 #. type: Title ====
-#: upstream/_guides/datasource.adoc:483
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Run an integration test"
 msgstr "运行一个集成测试"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:486
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Add a dependency on the artifacts providing the additional tools that are under the following Maven coordinates:"
 msgstr "在提供额外工具的工件上添加一个依赖，这些工具在以下Maven坐标下："
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:488
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`io.quarkus:quarkus-test-h2` for H2"
 msgstr " `io.quarkus:quarkus-test-h2` 为H2"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:489
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`io.quarkus:quarkus-test-derby` for Derby"
 msgstr " `io.quarkus:quarkus-test-derby` 代表德比郡"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:491
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "This will allow you to test your application even when it is compiled into a native executable while the database will run as a JVM process."
 msgstr "这将允许你测试你的应用程序，即使它被编译成一个本地可执行文件，而数据库将照常在JVM中运行。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:493
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Add the following specific annotation on any class in your integration tests for running integration tests in both JVM or native executables:"
 msgstr "在你的集成测试中的任何类上添加以下特定注解，以便在JVM或本地可执行文件中运行集成测试："
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:495
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`@QuarkusTestResource(H2DatabaseTestResource.class)`"
 msgstr " `@QuarkusTestResource(H2DatabaseTestResource.class)` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:496
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`@QuarkusTestResource(DerbyDatabaseTestResource.class)`"
 msgstr " `@QuarkusTestResource(DerbyDatabaseTestResource.class)` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:498
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "This ensures that the test suite starts and terminates the managed database in a separate process as required for test execution."
 msgstr "这确保了测试套件根据测试执行的需要，在一个单独的进程中启动和终止管理的数据库。"
 
 #. type: Block title
-#: upstream/_guides/datasource.adoc:499
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "H2 example"
 msgstr "例子"
 
-#. type: delimited block -
-#: upstream/_guides/datasource.adoc:503
-#, no-wrap
-msgid "package my.app.integrationtests.db;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/datasource.adoc:506
-#, no-wrap
-msgid ""
-"import io.quarkus.test.common.QuarkusTestResource;\n"
-"import io.quarkus.test.h2.H2DatabaseTestResource;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/datasource.adoc:510
-#, no-wrap
-msgid ""
-"@QuarkusTestResource(H2DatabaseTestResource.class)\n"
-"public class TestResources {\n"
-"}\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:513
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Configure the connection to the managed database:"
 msgstr "配置反应式数据源"
 
-#. type: delimited block -
-#: upstream/_guides/datasource.adoc:518
-#, no-wrap
-msgid ""
-"quarkus.datasource.db-kind=h2\n"
-"quarkus.datasource.jdbc.url=jdbc:h2:tcp://localhost/mem:test\n"
-msgstr ""
-
 #. type: Title ==
-#: upstream/_guides/datasource.adoc:521
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "References"
 msgstr "JDBC URL参考"
 
 #. type: Title ===
-#: upstream/_guides/datasource.adoc:524
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Common datasource configuration reference"
 msgstr "通用数据源配置参考"
 
+#: _guides/datasource.adoc
+msgid "<span class=\"icon\"><i class=\"fa fa-lock\" title=\"Fixed at build time\"></i></span> Configuration property fixed at build time - All other configuration properties are overridable at runtime <input type=\"search\" id=\"config-search-0\" placeholder=\"FILTER CONFIGURATION\" disabled>"
+msgstr ""
+
 #. type: Title ===
-#: upstream/_guides/datasource.adoc:529
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "JDBC configuration reference"
 msgstr "JDBC配置参考"
 
+#: _guides/datasource.adoc
+msgid "<span class=\"icon\"><i class=\"fa fa-lock\" title=\"Fixed at build time\"></i></span> Configuration property fixed at build time - All other configuration properties are overridable at runtime <input type=\"search\" id=\"config-search-1\" placeholder=\"FILTER CONFIGURATION\" disabled>"
+msgstr ""
+
 #. type: Title ===
-#: upstream/_guides/datasource.adoc:534
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "JDBC URL reference"
 msgstr "JDBC URL参考"
 
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:538
-#, fuzzy
-msgid "Each of the supported databases contains different JDBC URL configuration options.  The following section gives an overview of each database URL and a link to the official documentation."
-msgstr "每个支持的数据库都包含不同的JDBC URL配置选项。深入了解这些选项超出了本文档的范围，但下面一节给出了每个数据库URL的概述和官方文档的链接。"
+#: _guides/datasource.adoc
+msgid ""
+"Each of the supported databases contains different JDBC URL configuration options.\n"
+"The following section gives an overview of each database URL and a link to the official documentation."
+msgstr ""
 
 #. type: Title ====
-#: upstream/_guides/datasource.adoc:539 upstream/_guides/datasource.adoc:751
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "DB2"
 msgstr "DB2"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:542
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`jdbc:db2://<serverName>[:<portNumber>]/<databaseName>[:<key1>=<value>;[<key2>=<value2>;]]`"
 msgstr " `jdbc:db2://<serverName>[:<portNumber>]/<databaseName>[:<key1>=<value>;[<key2>=<value2>;]]` "
 
 #. type: Labeled list
-#: upstream/_guides/datasource.adoc:543 upstream/_guides/datasource.adoc:551
-#: upstream/_guides/datasource.adoc:562 upstream/_guides/datasource.adoc:575
-#: upstream/_guides/datasource.adoc:583 upstream/_guides/datasource.adoc:594
-#: upstream/_guides/datasource.adoc:609 upstream/_guides/datasource.adoc:617
-#: upstream/_guides/datasource.adoc:755 upstream/_guides/datasource.adoc:771
-#: upstream/_guides/datasource.adoc:787 upstream/_guides/datasource.adoc:807
-#: upstream/_guides/datasource.adoc:813 upstream/_guides/datasource.adoc:819
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Example"
 msgstr "例子"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:544
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`jdbc:db2://localhost:50000/MYDB:user=dbadm;password=dbadm;`"
 msgstr " `jdbc:db2://localhost:50000/MYDB:user=dbadm;password=dbadm;` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:546
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "For more information on URL syntax and additional supported options, see the link:https://www.ibm.com/support/knowledgecenter/SSEPGG_11.5.0/com.ibm.db2.luw.apdv.java.doc/src/tpc/imjcc_r0052342.html[official documentation]."
 msgstr "关于URL语法和其他支持选项的更多细节，请参见 link:https://www.ibm.com/support/knowledgecenter/SSEPGG_11.5.0/com.ibm.db2.luw.apdv.java.doc/src/tpc/imjcc_r0052342.html[官方文档] 。"
 
 #. type: Title ====
-#: upstream/_guides/datasource.adoc:547
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Derby"
 msgstr "德比"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:550
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`jdbc:derby:[//serverName[:portNumber]/][memory:]databaseName[;property=value[;property=value]]`"
 msgstr " `jdbc:derby:[//serverName[:portNumber]/][memory:]databaseName[;property=value[;property=value]]` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:552
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`jdbc:derby://localhost:1527/myDB`, `jdbc:derby:memory:myDB;create=true`"
 msgstr " `jdbc:derby://localhost:1527/myDB` , `jdbc:derby:memory:myDB;create=true` "
 
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:555
-#, fuzzy
-msgid "Derby is an embedded database that can run as a server, based on a file, or can run completely in memory.  All of these options are available as listed above."
-msgstr "德比是一个嵌入式数据库。它可以作为一个服务器运行，基于一个文件，或者完全生活在内存中。所有这些选项都可以如上所列。你可以在 link:https://db.apache.org/derby/docs/10.8/devguide/cdevdvlp17453.html#cdevdvlp17453[官方文档] 中找到更多信息。"
+#: _guides/datasource.adoc
+msgid ""
+"Derby is an embedded database that can run as a server, based on a file, or can run completely in memory.\n"
+"All of these options are available as listed above."
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:557
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "For more information, see the link:https://db.apache.org/derby/docs/10.8/devguide/cdevdvlp17453.html#cdevdvlp17453[official documentation]."
 msgstr "更多信息请参见 link:https://db.apache.org/derby/docs/10.8/devguide/cdevdvlp17453.html#cdevdvlp17453[官方文件] 。"
 
 #. type: Title ====
-#: upstream/_guides/datasource.adoc:558
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "H2"
 msgstr "H2"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:561
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`jdbc:h2:{ {.|mem:}[name] | [file:]fileName | {tcp|ssl}:[//]server[:port][,server2[:port]]/name }[;key=value...]`"
 msgstr " `jdbc:h2:{ {.|mem:}[name] | [file:]fileName | {tcp|ssl}:[//]server[:port][,server2[:port]]/name }[;key=value…​]` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:563
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`jdbc:h2:tcp://localhost/~/test`, `jdbc:h2:mem:myDB`"
 msgstr " `jdbc:h2:tcp://localhost/~/test` , `jdbc:h2:mem:myDB` "
 
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:567
-#, fuzzy
-msgid "H2 is a database that can run in embedded or server mode.  It can use a file storage or run entirely in memory.  All of these options are available as listed above."
-msgstr "H2是一个嵌入式数据库。它可以作为一个服务器运行，基于一个文件，或者完全生活在内存中。所有这些选项都可以如上所列。你可以在 link:https://h2database.com/html/features.html?highlight=url&search=url#database_url[官方文档] 中找到更多信息。"
+#: _guides/datasource.adoc
+msgid ""
+"H2 is a database that can run in embedded or server mode.\n"
+"It can use a file storage or run entirely in memory.\n"
+"All of these options are available as listed above."
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:569
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "For more information, see the link:https://h2database.com/html/features.html#database_url[official documentation]."
 msgstr "更多信息请参见 link:https://h2database.com/html/features.html?highlight=url&search=url#database_url[官方文件] 。"
 
 #. type: Title ====
-#: upstream/_guides/datasource.adoc:570
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "MariaDB"
 msgstr "玛丽亚数据库"
 
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:573
-#, fuzzy
-msgid "`jdbc:mariadb:[replication:|failover:|sequential:|aurora:]//<hostDescription>[,<hostDescription>...]/[database][?<key1>=<value1>[&<key2>=<value2>]]`"
-msgstr " `jdbc:mariadb:[replication:|failover:|sequential:|aurora:]//<hostDescription>[,<hostDescription>…​]/[database][?<key1>=<value1>[&<key2>=<value2>]]` "
-
-#. type: Labeled list
-#: upstream/_guides/datasource.adoc:573 upstream/_guides/datasource.adoc:592
-#, fuzzy, no-wrap
-msgid "hostDescription"
-msgstr "宿主描述"
+#: _guides/datasource.adoc
+msgid ""
+"`jdbc:mariadb:[replication:|failover:|sequential:|aurora:]//<hostDescription>[,<hostDescription>...]/[database][?<key1>=<value1>[&<key2>=<value2>]]`\n"
+"hostDescription:: `<host>[:<portnumber>] or address=(host=<host>)[(port=<portnumber>)][(type=(master|slave))]`"
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:574 upstream/_guides/datasource.adoc:593
-#, fuzzy
-msgid "`<host>[:<portnumber>] or address=(host=<host>)[(port=<portnumber>)][(type=(master|slave))]`"
-msgstr " `<host>[:<portnumber>] or address=(host=<host>)[(port=<portnumber>)][(type=(master|slave))]` "
-
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:576
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`jdbc:mariadb://localhost:3306/test`"
 msgstr " `jdbc:mariadb://localhost:3306/test` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:578
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "For more information, see the link:https://mariadb.com/kb/en/library/about-mariadb-connector-j/[official documentation]."
 msgstr "你可以在 link:https://mariadb.com/kb/en/library/about-mariadb-connector-j/[官方文档] 中找到更多关于这个功能和其他功能的详细介绍。"
 
 #. type: Title ====
-#: upstream/_guides/datasource.adoc:579 upstream/_guides/datasource.adoc:767
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Microsoft SQL server"
 msgstr "微软SQL服务器"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:582
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`jdbc:sqlserver://[serverName[\\instanceName][:portNumber]][;property=value[;property=value]]`"
 msgstr " `jdbc:sqlserver://[serverName[\\instanceName][:portNumber]][;property=value[;property=value]]` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:584
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`jdbc:sqlserver://localhost:1433;databaseName=AdventureWorks`"
 msgstr " `jdbc:sqlserver://localhost:1433;databaseName=AdventureWorks` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:586
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "The Microsoft SQL Server JDBC driver works essentially the same as the others."
 msgstr "Microsoft SQL Server JDBC驱动的工作原理与其他驱动基本相同。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:588
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "For more information, see the link:https://docs.microsoft.com/en-us/sql/connect/jdbc/connecting-to-sql-server-with-the-jdbc-driver?view=sql-server-2017[official documentation]."
 msgstr "Microsoft SQL Server JDBC驱动的工作原理与其他驱动基本相同。更多细节可以在 link:https://docs.microsoft.com/en-us/sql/connect/jdbc/connecting-to-sql-server-with-the-jdbc-driver?view=sql-server-2017[官方文档] 中找到。"
 
 #. type: Title ====
-#: upstream/_guides/datasource.adoc:589
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "MySQL"
 msgstr "ǞǞǞ"
 
-#. type: Plain text
-#: upstream/_guides/datasource.adoc:592
-#, fuzzy
-msgid "`jdbc:mysql:[replication:|failover:|sequential:|aurora:]//<hostDescription>[,<hostDescription>...]/[database][?<key1>=<value1>[&<key2>=<value2>]]`"
-msgstr " `jdbc:mysql:[replication:|failover:|sequential:|aurora:]//<hostDescription>[,<hostDescription>…​]/[database][?<key1>=<value1>[&<key2>=<value2>]]` "
+#: _guides/datasource.adoc
+msgid ""
+"`jdbc:mysql:[replication:|failover:|sequential:|aurora:]//<hostDescription>[,<hostDescription>...]/[database][?<key1>=<value1>[&<key2>=<value2>]]`\n"
+"hostDescription:: `<host>[:<portnumber>] or address=(host=<host>)[(port=<portnumber>)][(type=(master|slave))]`"
+msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:595
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`jdbc:mysql://localhost:3306/test`"
 msgstr " `jdbc:mysql://localhost:3306/test` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:597
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "For more information, see the link:https://dev.mysql.com/doc/connector-j/en/[official documentation]."
 msgstr "你可以在 link:https://dev.mysql.com/doc/connector-j/8.0/en/connector-j-reference.html[官方文档] 中找到更多关于这个功能和其他功能的详细介绍。"
 
 #. type: Title =====
-#: upstream/_guides/datasource.adoc:598
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "MySQL limitations"
 msgstr "MySQL的局限性"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:601
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "When compiling a Quarkus application to a native image, the MySQL support for JMX and Oracle Cloud Infrastructure (OCI) integrations are disabled as they are incompatible with GraalVM native images."
 msgstr "当把Quarkus应用程序编译为本地图像时，MySQL对JMX和Oracle云基础设施（OCI）集成的支持被禁用，因为它们与GralVM本地图像不兼容。缺乏JMX支持是在本地运行的自然结果，不太可能解决。与OCI的集成可以解决，如果你需要它，我们建议向MySQL Connector/J的维护者提出支持请求。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:603
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "The lack of JMX support is a natural consequence of running in native mode and is unlikely to be resolved."
 msgstr "缺乏对JMX的支持是在本地模式下运行的一个自然结果，不太可能得到解决。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:604
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "The integration with OCI is not supported."
 msgstr "不支持与OCI的整合。"
 
 #. type: Title ====
-#: upstream/_guides/datasource.adoc:605 upstream/_guides/datasource.adoc:801
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Oracle"
 msgstr "甲骨文"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:608
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`jdbc:oracle:driver_type:@database_specifier`"
 msgstr " `jdbc:oracle:driver_type:@database_specifier` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:610
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`jdbc:oracle:thin:@localhost:1521/ORCL_SVC`"
 msgstr " `jdbc:oracle:thin:@localhost:1521/ORCL_SVC` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:612
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "For more information, see the link:https://docs.oracle.com/en/database/oracle/oracle-database/21/jjdbc/data-sources-and-URLs.html#GUID-AEA8E228-1B21-4111-AF4C-B1F33744CA08[official documentation]."
 msgstr "更多细节可以在 link:https://docs.oracle.com/en/database/oracle/oracle-database/21/jjdbc/data-sources-and-URLs.html#GUID-AEA8E228-1B21-4111-AF4C-B1F33744CA08[官方文件] 中找到。"
 
 #. type: Title ====
-#: upstream/_guides/datasource.adoc:613 upstream/_guides/datasource.adoc:815
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "PostgreSQL"
 msgstr "PostgreSQL"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:616
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`jdbc:postgresql:[//][host][:port][/database][?key=value...]`"
 msgstr " `jdbc:postgresql:[//][host][:port][/database][?key=value…​]` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:618
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`jdbc:postgresql://localhost/test`"
 msgstr " `jdbc:postgresql://localhost/test` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:620
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "The defaults for the different parts are as follows:"
 msgstr "不同部分的默认值如下。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:621 upstream/_guides/datasource.adoc:760
-#: upstream/_guides/datasource.adoc:776 upstream/_guides/datasource.adoc:792
-#: upstream/_guides/datasource.adoc:825
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "`host`"
 msgstr " `host` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:622
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "localhost"
 msgstr "本机"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:622 upstream/_guides/datasource.adoc:761
-#: upstream/_guides/datasource.adoc:777 upstream/_guides/datasource.adoc:793
-#: upstream/_guides/datasource.adoc:826
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "`port`"
 msgstr " `port` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:623
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "5432"
 msgstr "5432"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:623 upstream/_guides/datasource.adoc:764
-#: upstream/_guides/datasource.adoc:780
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "`database`"
 msgstr " `database` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:624
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "same name as the username"
 msgstr "同名的用户名"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:626
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "For more information about additional parameters, see the link:https://jdbc.postgresql.org/documentation/head/connect.html[official documentation]."
 msgstr "你可以在 link:https://dev.mysql.com/doc/connector-j/8.0/en/connector-j-reference.html[官方文档] 中找到更多关于这个功能和其他功能的详细介绍。"
 
 #. type: Title ===
-#: upstream/_guides/datasource.adoc:629
+#: _guides/datasource.adoc
 #, no-wrap
 msgid "Quarkus extensions and database drivers reference"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:632
+#: _guides/datasource.adoc
 msgid "The following tables list the built-in `db-kind` values, the corresponding Quarkus extensions, and the JDBC drivers used by those extensions."
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:634
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "When using one of the built-in datasource kinds, the JDBC and Reactive drivers are resolved automatically to match the values from these tables."
 msgstr "当使用内置的数据源种类之一时，JDBC驱动程序会自动解析为以下值。"
 
 #. type: Block title
-#: upstream/_guides/datasource.adoc:635
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Database platform kind to JDBC driver mapping"
 msgstr "数据库种类到JDBC驱动程序的映射"
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:638 upstream/_guides/datasource.adoc:693
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Database kind"
 msgstr "数据库种类"
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:638 upstream/_guides/datasource.adoc:693
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Quarkus extension"
 msgstr "Quarkus提供的驱动扩展用于。"
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:640
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Drivers"
 msgstr "JDBC驱动"
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:641 upstream/_guides/datasource.adoc:712
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "`db2`"
 msgstr " `db2` "
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:642
+#: _guides/datasource.adoc
 #, no-wrap
 msgid "`quarkus-jdbc-db2`"
 msgstr ""
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:646
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid ""
 "* JDBC: `com.ibm.db2.jcc.DB2Driver`\n"
@@ -1598,19 +1410,19 @@ msgid ""
 msgstr " `com.ibm.db2.jcc.DB2XADataSource` "
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:647
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "`derby`"
 msgstr " `derby` "
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:648
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "`quarkus-jdbc-derby`"
 msgstr "德比 - `jdbc-derby` "
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:652
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid ""
 "* JDBC: `org.apache.derby.jdbc.ClientDriver`\n"
@@ -1619,19 +1431,19 @@ msgid ""
 msgstr " `org.apache.derby.jdbc.ClientXADataSource` "
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:653
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "`h2`"
 msgstr " `h2` "
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:654
+#: _guides/datasource.adoc
 #, no-wrap
 msgid "`quarkus-jdbc-h2`"
 msgstr ""
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:658
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid ""
 "* JDBC: `org.h2.Driver`\n"
@@ -1640,19 +1452,19 @@ msgid ""
 msgstr " `org.h2.jdbcx.JdbcDataSource` "
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:659
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "`mariadb`"
 msgstr " `mariadb` "
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:660
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "`quarkus-jdbc-mariadb`"
 msgstr "MariaDB - `jdbc-mariadb` "
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:664
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid ""
 "* JDBC: `org.mariadb.jdbc.Driver`\n"
@@ -1661,19 +1473,19 @@ msgid ""
 msgstr " `org.mariadb.jdbc.MySQLDataSource` "
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:665 upstream/_guides/datasource.adoc:704
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "`mssql`"
 msgstr " `mssql` "
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:666
+#: _guides/datasource.adoc
 #, no-wrap
 msgid "`quarkus-jdbc-mssql`"
 msgstr ""
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:670
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid ""
 "* JDBC: `com.microsoft.sqlserver.jdbc.SQLServerDriver`\n"
@@ -1682,19 +1494,19 @@ msgid ""
 msgstr " `com.microsoft.sqlserver.jdbc.SQLServerXADataSource` "
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:671 upstream/_guides/datasource.adoc:700
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "`mysql`"
 msgstr " `mysql` "
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:672
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "`quarkus-jdbc-mysql`"
 msgstr "MySQL- `jdbc-mysql` "
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:676
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid ""
 "* JDBC: `com.mysql.cj.jdbc.Driver`\n"
@@ -1703,19 +1515,19 @@ msgid ""
 msgstr " `com.mysql.cj.jdbc.MysqlXADataSource` "
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:677 upstream/_guides/datasource.adoc:696
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "`oracle`"
 msgstr " `oracle` "
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:678
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "`quarkus-jdbc-oracle`"
 msgstr "甲骨文 - `jdbc-oracle` "
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:682
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid ""
 "* JDBC: `oracle.jdbc.driver.OracleDriver`\n"
@@ -1724,19 +1536,19 @@ msgid ""
 msgstr " `oracle.jdbc.xa.client.OracleXADataSource` "
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:683 upstream/_guides/datasource.adoc:708
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "`postgresql`"
 msgstr " `postgresql` "
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:684
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "`quarkus-jdbc-postgresql`"
 msgstr "PostgreSQL - `jdbc-postgresql` "
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:687
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid ""
 "* JDBC: `org.postgresql.Driver`\n"
@@ -1745,622 +1557,299 @@ msgid ""
 msgstr " `org.postgresql.xa.PGXADataSource` "
 
 #. type: Block title
-#: upstream/_guides/datasource.adoc:690
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Database kind to Reactive driver mapping"
 msgstr "数据库种类到JDBC驱动程序的映射"
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:695
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Driver"
 msgstr "JDBC驱动"
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:699
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "`io.vertx.oracleclient.spi.OracleDriver`"
 msgstr " `oracle.jdbc.driver.OracleDriver` "
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:703
+#: _guides/datasource.adoc
 #, no-wrap
 msgid "`io.vertx.mysqlclient.spi.MySQLDriver`"
 msgstr ""
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:707
+#: _guides/datasource.adoc
 #, no-wrap
 msgid "`io.vertx.mssqlclient.spi.MSSQLDriver`"
 msgstr ""
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:711
+#: _guides/datasource.adoc
 #, no-wrap
 msgid "`io.vertx.pgclient.spi.PgDriver`"
 msgstr ""
 
 #. type: Table
-#: upstream/_guides/datasource.adoc:714
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "`io.vertx.db2client.spi.DB2Driver`"
 msgstr " `org.apache.derby.jdbc.ClientDriver` "
 
 #. type: delimited block =
-#: upstream/_guides/datasource.adoc:719
+#: _guides/datasource.adoc
 msgid "This automatic resolution is applicable in most cases so that driver configuration is not needed."
 msgstr ""
 
 #. type: Title ===
-#: upstream/_guides/datasource.adoc:723
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Reactive datasource configuration reference"
 msgstr "反应式数据源配置参考"
 
+#: _guides/datasource.adoc
+msgid "<span class=\"icon\"><i class=\"fa fa-lock\" title=\"Fixed at build time\"></i></span> Configuration property fixed at build time - All other configuration properties are overridable at runtime <input type=\"search\" id=\"config-search-2\" placeholder=\"FILTER CONFIGURATION\" disabled>"
+msgstr ""
+
 #. type: Title ====
-#: upstream/_guides/datasource.adoc:727
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Reactive DB2 configuration"
 msgstr "反应式DB2配置"
 
+#: _guides/datasource.adoc
+msgid "<span class=\"icon\"><i class=\"fa fa-lock\" title=\"Fixed at build time\"></i></span> Configuration property fixed at build time - All other configuration properties are overridable at runtime <input type=\"search\" id=\"config-search-3\" placeholder=\"FILTER CONFIGURATION\" disabled>"
+msgstr ""
+
 #. type: Title ====
-#: upstream/_guides/datasource.adoc:731
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Reactive MariaDB/MySQL specific configuration"
 msgstr "反应式MariaDB/MySQL具体配置"
 
+#: _guides/datasource.adoc
+msgid "<span class=\"icon\"><i class=\"fa fa-lock\" title=\"Fixed at build time\"></i></span> Configuration property fixed at build time - All other configuration properties are overridable at runtime <input type=\"search\" id=\"config-search-4\" placeholder=\"FILTER CONFIGURATION\" disabled>"
+msgstr ""
+
 #. type: Title ====
-#: upstream/_guides/datasource.adoc:735
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Reactive Microsoft SQL server-specific configuration"
 msgstr "反应性的微软SQL服务器具体配置"
 
+#: _guides/datasource.adoc
+msgid "<span class=\"icon\"><i class=\"fa fa-lock\" title=\"Fixed at build time\"></i></span> Configuration property fixed at build time - All other configuration properties are overridable at runtime <input type=\"search\" id=\"config-search-5\" placeholder=\"FILTER CONFIGURATION\" disabled>"
+msgstr ""
+
 #. type: Title ====
-#: upstream/_guides/datasource.adoc:739
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Reactive Oracle-specific configuration"
 msgstr "反应性的Oracle特定配置"
 
+#: _guides/datasource.adoc
+msgid "<span class=\"icon\"><i class=\"fa fa-lock\" title=\"Fixed at build time\"></i></span> Configuration property fixed at build time - All other configuration properties are overridable at runtime <input type=\"search\" id=\"config-search-6\" placeholder=\"FILTER CONFIGURATION\" disabled>"
+msgstr ""
+
 #. type: Title ====
-#: upstream/_guides/datasource.adoc:743
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Reactive PostgreSQL-specific configuration"
 msgstr "反应式PostgreSQL的具体配置"
 
+#: _guides/datasource.adoc
+msgid "<span class=\"icon\"><i class=\"fa fa-lock\" title=\"Fixed at build time\"></i></span> Configuration property fixed at build time - All other configuration properties are overridable at runtime <input type=\"search\" id=\"config-search-7\" placeholder=\"FILTER CONFIGURATION\" disabled>"
+msgstr ""
+
 #. type: Title ===
-#: upstream/_guides/datasource.adoc:749
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "Reactive datasource URL reference"
 msgstr "反应式数据源"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:754
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`db2://[user[:[password]]@]host[:port][/database][?<key1>=<value1>[&<key2>=<value2>]]`"
 msgstr " `jdbc:db2://<serverName>[:<portNumber>]/<databaseName>[:<key1>=<value>;[<key2>=<value2>;]]` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:756
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`db2://dbuser:secretpassword@database.server.com:50000/mydb`"
 msgstr " `db2://dbuser:secretpassword@database.server.com:50000/mydb` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:758 upstream/_guides/datasource.adoc:774
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Currently, the client supports the following parameter keys:"
 msgstr "目前，客户端支持以下参数键。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:762 upstream/_guides/datasource.adoc:778
-#: upstream/_guides/datasource.adoc:794 upstream/_guides/datasource.adoc:827
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`user`"
 msgstr " `user` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:763 upstream/_guides/datasource.adoc:779
-#: upstream/_guides/datasource.adoc:795 upstream/_guides/datasource.adoc:828
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`password`"
 msgstr " `password` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:766 upstream/_guides/datasource.adoc:782
-#: upstream/_guides/datasource.adoc:800 upstream/_guides/datasource.adoc:837
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Configuring parameters in the connection URL overrides the default properties."
 msgstr "在连接URL中配置参数将覆盖默认属性。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:770
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`sqlserver://[user[:[password]]@]host[:port][/database][?<key1>=<value1>[&<key2>=<value2>]]`"
 msgstr " `jdbc:db2://<serverName>[:<portNumber>]/<databaseName>[:<key1>=<value>;[<key2>=<value2>;]]` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:772
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`sqlserver://dbuser:secretpassword@database.server.com:1433/mydb`"
 msgstr " `sqlserver://dbuser:secretpassword@database.server.com:1433/mydb` "
 
 #. type: Title ====
-#: upstream/_guides/datasource.adoc:783
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "MySQL / MariaDB"
 msgstr "玛丽亚数据库"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:786
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`mysql://[user[:[password]]@]host[:port][/database][?<key1>=<value1>[&<key2>=<value2>]]`"
 msgstr " `jdbc:db2://<serverName>[:<portNumber>]/<databaseName>[:<key1>=<value>;[<key2>=<value2>;]]` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:788
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`mysql://dbuser:secretpassword@database.server.com:3211/mydb`"
 msgstr " `mysql://dbuser:secretpassword@database.server.com:3211/mydb` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:790
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Currently, the client supports the following parameter keys (case-insensitive):"
 msgstr "目前，客户端支持以下参数键（不区分大小写）。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:796
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`schema`"
 msgstr " `schema` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:797
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`socket`"
 msgstr " `socket` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:798
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`useAffectedRows`"
 msgstr " `useAffectedRows` "
 
 #. type: Title =====
-#: upstream/_guides/datasource.adoc:803
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "EZConnect format"
 msgstr "EZConnect格式"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:806
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`oracle:thin:@[[protocol:]//]host[:port][/service_name][:server_mode][/instance_name][?connection properties]`"
 msgstr " `oracle:thin:@[[protocol:]//]host[:port][/service_name][:server_mode][/instance_name][?connection properties]` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:808
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`oracle:thin:@mydbhost1:5521/mydbservice?connect_timeout=10sec`"
 msgstr " `oracle:thin:@mydbhost1:5521/mydbservice?connect_timeout=10sec` "
 
 #. type: Title =====
-#: upstream/_guides/datasource.adoc:809
+#: _guides/datasource.adoc
 #, fuzzy, no-wrap
 msgid "TNS alias format"
 msgstr "TNS别名格式"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:812
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`oracle:thin:@<alias_name>[?connection properties]`"
 msgstr " `oracle:thin:@<alias_name>[?connection properties]` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:814
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`oracle:thin:@prod_db?TNS_ADMIN=/work/tns/`"
 msgstr " `oracle:thin:@prod_db?TNS_ADMIN=/work/tns/` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:818
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`postgresql://[user[:[password]]@]host[:port][/database][?<key1>=<value1>[&<key2>=<value2>]]`"
 msgstr " `jdbc:postgresql:[//][host][:port][/database][?key=value…​]` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:820
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`postgresql://dbuser:secretpassword@database.server.com:5432/mydb`"
 msgstr " `postgresql://dbuser:secretpassword@database.server.com:5432/mydb` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:822
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "Currently, the client supports:"
 msgstr "目前，客户端支持以下参数键。"
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:824
+#: _guides/datasource.adoc
 msgid "Following parameter keys:"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:829
+#: _guides/datasource.adoc
 #, fuzzy
 msgid "`dbname`"
 msgstr " `dbname` "
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:830
+#: _guides/datasource.adoc
 msgid "`sslmode`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:832
+#: _guides/datasource.adoc
 msgid "Additional properties, such as:"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:833
+#: _guides/datasource.adoc
 msgid "`application_name`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:834
+#: _guides/datasource.adoc
 msgid "`fallback_application_name`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:835
+#: _guides/datasource.adoc
 msgid "`search_path`"
 msgstr ""
 
 #. type: Plain text
-#: upstream/_guides/datasource.adoc:836
+#: _guides/datasource.adoc
 msgid "`options`"
 msgstr ""
-
-#, fuzzy
-#~ msgid "For rapid configuration of datasources, this section offers a brief overview and code samples for testing and utilization, suitable for users familiar with the fundamentals."
-#~ msgstr "为了快速配置数据源，本节提供了一个简单的概述和用于测试和利用的代码样本，适合于熟悉基本原理的用户。"
-
-#, fuzzy
-#~ msgid "While configuring Derby to use the embedded engine works as usual in JVM mode, such an application will not compile into a native executable. It is because Quarkus Derby extensions do not support embedding the entire database engine into a native executable, and it only covers making the JDBC client code compatible with the native compilation step."
-#~ msgstr "重要的是要记住，当配置H2（或Derby）使用嵌入式引擎时，这将在JVM模式下照常工作，但这样的应用程序不会编译成本地可执行文件，因为Quarkus扩展只包括使JDBC客户端代码与本地编译步骤兼容：将整个数据库引擎嵌入到本地可执行文件中目前没有实现。"
-
-#, fuzzy
-#~ msgid "Multiple datasources are only supported for JDBC and the Agroal extension.  Creating multiple reactive datasources is not currently possible."
-#~ msgstr "目前，多数据源只支持JDBC和Agroal扩展。所以目前不可能创建多个反应式数据源。"
-
-#, fuzzy
-#~ msgid "Datasources"
-#~ msgstr "数据来源"
-
-#, fuzzy
-#~ msgid "Many projects that use data require connections to a relational database."
-#~ msgstr "许多使用数据的项目需要连接到关系型数据库。"
-
-#, fuzzy
-#~ msgid "The usual way of obtaining connections to a database is to use a datasource and configure a JDBC driver.  But you might also prefer using a reactive driver to connect to your database in a reactive way."
-#~ msgstr "获得与数据库连接的通常方式是使用数据源并配置JDBC驱动。但你可能也喜欢使用一个反应式驱动程序，以反应式的方式连接到你的数据库。"
-
-#, fuzzy
-#~ msgid "Quarkus has you covered either way:"
-#~ msgstr "无论是哪种方式，夸库斯都能为你提供帮助。"
-
-#, fuzzy
-#~ msgid "For JDBC, the preferred datasource and connection pooling implementation is https://agroal.github.io/[Agroal]."
-#~ msgstr "对于JDBC，首选的数据源和连接池的实现是 link:https://agroal.github.io/[Agroal] 。"
-
-#, fuzzy
-#~ msgid "For reactive, we use the https://vertx.io/[Vert.x] reactive drivers."
-#~ msgstr "对于反应式，我们使用 link:https://vertx.io/[Vert.x] 反应式驱动。"
-
-#, fuzzy
-#~ msgid "Both are configured via unified and flexible configuration."
-#~ msgstr "两者都是通过统一的灵活配置。"
-
-#, fuzzy
-#~ msgid "Agroal is a modern, lightweight connection pool implementation designed for very high performance and scalability, and features first class integration with the other components in Quarkus, such as security, transaction management components, health, and metrics."
-#~ msgstr "Agroal是一个现代的、轻量级的连接池实现，旨在实现非常高的性能和可扩展性，并具有与Quarkus中其他组件的一流集成，如安全、事务管理组件、健康和指标等。"
-
-#, fuzzy
-#~ msgid "This guide will explain how to:"
-#~ msgstr "本指南将解释如何。"
-
-#, fuzzy
-#~ msgid "how to obtain a reference to those datasources in code"
-#~ msgstr "如何在代码中获得对这些数据源的引用"
-
-#, fuzzy
-#~ msgid "which pool tuning configuration properties are available"
-#~ msgstr "哪些池子的调整配置属性是可用的"
-
-#, fuzzy
-#~ msgid "TL;DR"
-#~ msgstr "TL;DR"
-
-#, fuzzy
-#~ msgid "This is a quick introduction to datasource configuration.  If you want a better understanding of how all this works, this guide has a lot more information in the subsequent paragraphs."
-#~ msgstr "这是对数据源配置的一个快速介绍。如果你想更好地了解这一切是如何运作的，本指南在随后的段落中还有很多信息。"
-
-#, fuzzy
-#~ msgid "Zero Config Setup (Dev Services)"
-#~ msgstr "零配置设置（开发服务）。"
-
-#, fuzzy
-#~ msgid "When testing or running in dev mode Quarkus can even provide you with a zero config database out of the box, a feature we refer to as Dev Services. Depending on your database type you may need Docker installed in order to use this feature."
-#~ msgstr "当测试或以开发模式运行时，Quarkus甚至可以为你提供一个开箱即用的零配置数据库，这个功能我们称之为开发服务。根据你的数据库类型，你可能需要安装Docker来使用这个功能。以下数据库支持开发服务。"
-
-#, fuzzy
-#~ msgid "If you want to use Dev Services then all you need to do is include the relevant extension for the type of database you want, e.g. `jdbc-postgresql`, `reactive-pg-client` or both. Don't configure a database URL, username and password - Quarkus will provide the database and you can just start coding without worrying about config."
-#~ msgstr "如果你想使用Dev Services，那么你所需要做的就是包括你想要的数据库类型的相关扩展（反应式或JDBC，或两者），不要配置数据库的URL、用户名和密码，Quarkus会提供数据库，你可以直接开始编码而不用担心配置问题。"
-
-#, fuzzy
-#~ msgid "See xref:databases-dev-services.adoc[Databases Dev Services] for more details and optional configurations."
-#~ msgstr "更多细节和可选配置请参见 link:databases-dev-services.html[数据库开发服务] 。"
-
-#, fuzzy
-#~ msgid "Add the `agroal` extension plus one of `jdbc-db2`, `jdbc-derby`, `jdbc-h2`, `jdbc-mariadb`, `jdbc-mssql`, `jdbc-mysql`, `jdbc-oracle` or `jdbc-postgresql`."
-#~ msgstr "添加 `agroal` 扩展名和 `jdbc-db2` , `jdbc-derby` , `jdbc-h2` , `jdbc-mariadb` , `jdbc-mssql` , `jdbc-mysql` , `jdbc-oracle` 或 `jdbc-postgresql` 中的一个。"
-
-#, fuzzy
-#~ msgid "If you only have a single JDBC extension, or you are running tests and only have a single test scoped JDBC extension installed then this is optional. If there is only one possible extension we assume this is the correct one, and if a driver has been added with test scope then we assume that this should be used in testing."
-#~ msgstr "如果你只有一个JDBC扩展，或者你正在运行测试并且只安装了一个测试范围的JDBC扩展，那么这是可选的。如果只有一个可能的扩展，我们认为这是正确的，如果一个驱动被添加了测试范围，那么我们认为这应该在测试中使用。"
-
-#, fuzzy
-#~ msgid "Add the correct reactive extension for the database you are using: `reactive-db2-client`, `reactive-mssql-client`, `reactive-mysql-client`, `reactive-oracle-client`, or `reactive-pg-client`."
-#~ msgstr "为你所使用的数据库添加正确的反应式扩展。 `reactive-db2-client` , `reactive-mssql-client` , `reactive-mysql-client` , `reactive-oracle-client` , 或 `reactive-pg-client` 。"
-
-#, fuzzy
-#~ msgid "As specified above this is optional."
-#~ msgstr "如上所述，这是可选的。"
-
-#, fuzzy
-#~ msgid "Default datasource"
-#~ msgstr "默认数据源"
-
-#, fuzzy
-#~ msgid "To define a datasource, start with the following (note that this is only required if you have more than one database type installed):"
-#~ msgstr "要定义一个数据源，从以下几点开始（注意，只有在你安装了一个以上的数据库类型时才需要这样做）。"
-
-#, fuzzy
-#~ msgid "The database kind defines which type of database you will connect to."
-#~ msgstr "数据库种类定义了你将连接到哪种类型的数据库。"
-
-#, fuzzy
-#~ msgid "Giving Quarkus the database kind you are targeting will facilitate configuration.  By using a JDBC driver extension and setting the kind in the configuration, Quarkus resolves the JDBC driver automatically, so you don't need to configure it yourself.  If you want to use a database kind that is not part of the built-in ones, use `other` and define the JDBC driver explicitly."
-#~ msgstr "给Quarkus提供你所针对的数据库种类将有利于配置。通过使用JDBC驱动扩展并在配置中设置种类，Quarkus会自动解决JDBC驱动，所以你不需要自己配置它。如果你想使用一个不属于内置的数据库种类，请使用 `other` ，并明确定义JDBC驱动。"
-
-#, fuzzy
-#~ msgid "There is a good chance you will need to define some credentials to access your database."
-#~ msgstr "你很有可能需要定义一些凭证来访问你的数据库。"
-
-#, fuzzy
-#~ msgid "Once you have defined the database kind and the credentials, you are ready to configure either a JDBC datasource, a reactive one, or both."
-#~ msgstr "一旦你定义了数据库种类和凭证，你就可以准备配置JDBC数据源、反应式数据源或两者。"
-
-#, fuzzy
-#~ msgid "Install the Maven dependencies"
-#~ msgstr "安装Maven依赖项"
-
-#, fuzzy
-#~ msgid "First, you will need to add the `quarkus-agroal` dependency to your project."
-#~ msgstr "首先，你需要在你的项目中添加 `quarkus-agroal` 的依赖关系。"
-
-#, fuzzy
-#~ msgid "You can add it using a simple Maven command:"
-#~ msgstr "你可以用一个简单的Maven命令添加它。"
-
-#, fuzzy
-#~ msgid "Agroal comes as a transitive dependency of the Hibernate ORM extension so if you are using Hibernate ORM, you don't need to add the Agroal extension dependency explicitly."
-#~ msgstr "Agroal是作为Hibernate ORM扩展的横向依赖，所以如果你使用Hibernate ORM，你不需要明确添加Agroal扩展依赖。"
-
-#, fuzzy
-#~ msgid "Some other JDBC extensions can be found in the Quarkiverse such as:"
-#~ msgstr "其他一些JDBC扩展可以在Quarkiverse中找到，比如。"
-
-#, fuzzy
-#~ msgid "See xref:other-databases[Use a database with no built-in extension or with a different driver] if you want to use a JDBC driver for another database."
-#~ msgstr "如果你想使用其他数据库的JDBC驱动，请参见 link:#other-databases[[other-databases]] 。"
-
-#, fuzzy
-#~ msgid "As usual, you can install the extension using `add-extension`."
-#~ msgstr "像往常一样，你可以使用 `add-extension` 来安装该扩展。"
-
-#, fuzzy
-#~ msgid "To install the PostgreSQL driver dependency for instance, run the following command:"
-#~ msgstr "以安装PostgreSQL驱动依赖为例，运行以下命令。"
-
-#, fuzzy
-#~ msgid "Configuring your JDBC connection is easy, the only mandatory property is the JDBC URL."
-#~ msgstr "配置你的JDBC连接很容易，唯一必须的属性是JDBC URL。"
-
-#, fuzzy
-#~ msgid "For more information about the JDBC URL format, please refer to the xref:jdbc-url[JDBC url reference section]."
-#~ msgstr "关于JDBC URL格式的更多信息，请参考 link:#jdbc-url[JDBC URL参考部分] 。"
-
-#, fuzzy
-#~ msgid "XA driver"
-#~ msgstr "XA驱动器"
-
-#, fuzzy
-#~ msgid "`com.ibm.db2.jcc.DBDriver`"
-#~ msgstr " `com.ibm.db2.jcc.DBDriver` "
-
-#, fuzzy
-#~ msgid "`org.h2.Driver`"
-#~ msgstr " `org.h2.Driver` "
-
-#, fuzzy
-#~ msgid "`org.mariadb.jdbc.Driver`"
-#~ msgstr " `org.mariadb.jdbc.Driver` "
-
-#, fuzzy
-#~ msgid "`com.microsoft.sqlserver.jdbc.SQLServerDriver`"
-#~ msgstr " `com.microsoft.sqlserver.jdbc.SQLServerDriver` "
-
-#, fuzzy
-#~ msgid "`com.mysql.cj.jdbc.Driver`"
-#~ msgstr " `com.mysql.cj.jdbc.Driver` "
-
-#, fuzzy
-#~ msgid "`org.postgresql.Driver`"
-#~ msgstr " `org.postgresql.Driver` "
-
-#, fuzzy
-#~ msgid "As previously stated, most of the time, this automatic resolution will suit you and you won't need to configure the driver."
-#~ msgstr "如前所述，大多数情况下，这种自动分辨率会适合你，你不需要配置驱动程序。"
-
-#, fuzzy
-#~ msgid "You can use a specific driver if you need to (for instance for using the OpenTracing driver)  or if you want to use a database for which Quarkus does not have a built-in JDBC driver extension."
-#~ msgstr "如果你需要的话，你可以使用一个特定的驱动（例如使用OpenTracing驱动），或者你想使用一个Quarkus没有内置JDBC驱动扩展的数据库。"
-
-#, fuzzy
-#~ msgid "More configuration"
-#~ msgstr "更多配置"
-
-#, fuzzy
-#~ msgid "You can configure a lot more things, for instance the size of the connection pool."
-#~ msgstr "你可以配置更多的东西，例如，连接池的大小。"
-
-#, fuzzy
-#~ msgid "Please refer to the xref:jdbc-configuration[JDBC configuration reference] for all the details about the JDBC configuration knobs."
-#~ msgstr "关于JDBC配置旋钮的所有细节，请参考JDBC配置 link:#jdbc-configuration[参考] 。"
-
-#, fuzzy
-#~ msgid "If you are using Hibernate ORM, the datasource will be consumed automatically."
-#~ msgstr "如果你使用的是Hibernate ORM，数据源将被自动消耗。"
-
-#, fuzzy
-#~ msgid "If you prefer using a reactive datasource, Quarkus offers DB2, MariaDB/MySQL, Microsoft SQL Server, Oracle and PostgreSQL reactive clients."
-#~ msgstr "如果你喜欢使用反应式数据源，Quarkus提供DB2、MariaDB/MySQL、Microsoft SQL Server、Oracle和PostgreSQL反应式客户端。"
-
-#, fuzzy
-#~ msgid "Depending on which database you want to use, add the corresponding extension:"
-#~ msgstr "根据你想使用的数据库，添加相应的扩展。"
-
-#, fuzzy
-#~ msgid "Once the driver is there, you just need to configure the connection URL."
-#~ msgstr "一旦有了驱动程序，你只需要配置连接URL。"
-
-#, fuzzy
-#~ msgid "Multiple Datasources"
-#~ msgstr "多个数据源"
-
-#, fuzzy
-#~ msgid "Our suggestion is to use the real database you intend to use in production; container technologies made this simple enough so you no longer have an excuse. Still, there are sometimes good reasons to also want the ability to run quick integration tests using the JVM powered databases, so this is possible as well."
-#~ msgstr "我们的建议是使用你打算在生产中使用的真正的数据库；容器技术使之变得足够简单，所以你不再有借口。不过，有时也有很好的理由，希望能够使用JVM驱动的数据库来运行快速的集成测试，所以这也是可以的。"
-
-#, fuzzy
-#~ msgid "If you plan to run such integration tests in the JVM exclusively, it will of course work as usual."
-#~ msgstr "如果你打算专门在JVM中运行这种集成测试，当然会照常工作。"
-
-#, fuzzy
-#~ msgid "If you want the ability to run such integration test in both JVM and/or native executables, we have some cool helpers for you: just add either `@QuarkusTestResource(H2DatabaseTestResource.class)` or `@QuarkusTestResource(DerbyDatabaseTestResource.class)` on any class in your integration tests, this will make sure the test suite starts (and stops) the embedded database into a separate process as necessary to run your tests."
-#~ msgstr "如果你想在JVM和/或本地可执行文件中运行这样的集成测试，我们有一些很酷的帮助：只要在你的集成测试中的任何类上添加 `@QuarkusTestResource(H2DatabaseTestResource.class)` 或 `@QuarkusTestResource(DerbyDatabaseTestResource.class)` ，这将确保测试套件在运行你的测试时，根据需要启动（和停止）嵌入式数据库到一个单独的进程中。"
-
-#, fuzzy
-#~ msgid "These additional helpers are provided by the artifacts having Maven coordinates `io.quarkus:quarkus-test-h2` and `io.quarkus:quarkus-test-derby`, respectively for H2 and Derby."
-#~ msgstr "这些额外的辅助工具是由Maven坐标 `io.quarkus:quarkus-test-h2` 和 `io.quarkus:quarkus-test-derby` 的工件提供的，分别用于H2和Derby。"
-
-#, fuzzy
-#~ msgid "Follows an example for H2:"
-#~ msgstr "跟随一个H2的例子。"
-
-#, fuzzy
-#~ msgid "Connect to it using:"
-#~ msgstr "使用连接到它。"
-
-#, fuzzy
-#~ msgid "PostgreSQL only runs as a server, as do the rest of the databases below.  As such, you must specify connection details, or use the defaults."
-#~ msgstr "PostgreSQL只作为一个服务器运行，下面的其他数据库也是如此。因此，你必须指定连接细节，或者使用默认值。"
-
-#, fuzzy
-#~ msgid "The https://jdbc.postgresql.org/documentation/head/connect.html[official documentation] go into more detail and list optional parameters as well."
-#~ msgstr "link:https://jdbc.postgresql.org/documentation/head/connect.html[官方文档] 更详细，也列出了可选参数。"
-
-#, fuzzy
-#~ msgid "DB2 (container) (requires license acceptance)"
-#~ msgstr "DB2（容器）（需要接受许可证）。"
-
-#, fuzzy
-#~ msgid "Derby (in-process)"
-#~ msgstr "德比（正在进行中）"
-
-#, fuzzy
-#~ msgid "H2 (in-process)"
-#~ msgstr "H2 (正在进行中)"
-
-#, fuzzy
-#~ msgid "MariaDB (container)"
-#~ msgstr "MariaDB (容器)"
-
-#, fuzzy
-#~ msgid "Microsoft SQL Server (container) (requires license acceptance)"
-#~ msgstr "微软SQL服务器（容器）（需要接受许可证）。"
-
-#, fuzzy
-#~ msgid "MySQL (container)"
-#~ msgstr "MySQL (容器)"
-
-#, fuzzy
-#~ msgid "Oracle Express Edition (container)"
-#~ msgstr "甲骨文快速版（容器）"
-
-#, fuzzy
-#~ msgid "PostgreSQL (container)"
-#~ msgstr "PostgreSQL (容器)"
-
-#, fuzzy
-#~ msgid "If you are using a proprietary database such as DB2 or MSSQL you will need to accept the license agreement. To do this create a `src/main/resources/container-license-acceptance.txt` files in your project and add a line with the image name and tag of the database. By default Quarkus uses the default image for the current version of Testcontainers, if you attempt to start Quarkus the resulting failure will tell you the exact image name in use for you to add to the file."
-#~ msgstr "如果你使用的是专有数据库，如DB2或MSSQL，你将需要接受许可协议。要做到这一点，在你的项目中创建一个 `src/main/resources/container-license-acceptance.txt` 文件，并添加一行数据库的图像名称和标签。默认情况下，Quarkus使用当前版本Testcontainers的默认镜像，如果你试图启动Quarkus，结果会告诉你正在使用的确切镜像名称，以便你添加到文件中。"
-
-#, fuzzy
-#~ msgid "An example file is shown below:"
-#~ msgstr "下面是一个例子的文件。"
-
-#, fuzzy
-#~ msgid "src/main/resources/container-license-acceptance.txt"
-#~ msgstr "src/main/resources/container-license-acceptance.txt"
-
-#, fuzzy
-#~ msgid "All services based on containers are run using Testcontainers but Quarkus is not using the Testcontainers JDBC driver."
-#~ msgstr "所有基于容器的服务都使用Testcontainers运行，但Quarkus没有使用Testcontainers的JDBC驱动。"
-
-#, fuzzy
-#~ msgid "Thus, even though extra JDBC URL properties can be set in your `application.properties` file, specific properties supported by the Testcontainers JDBC driver such as `TC_INITSCRIPT`, `TC_INITFUNCTION`, `TC_DAEMON`, `TC_TMPFS` are not supported."
-#~ msgstr "因此，即使可以在你的 `application.properties` 文件中设置额外的JDBC URL属性，也不支持Testcontainers JDBC驱动程序所支持的特定属性，如 `TC_INITSCRIPT` , `TC_INITFUNCTION` , `TC_DAEMON` , `TC_TMPFS` 。"
-
-#, fuzzy
-#~ msgid "Quarkus can support specific properties sent to the container itself though and, typically, this is the case for `TC_MY_CNF` which allows to override the MariaDB/MySQL configuration file."
-#~ msgstr "Quarkus可以支持发送到容器本身的特定属性，典型的情况是 `TC_MY_CNF` ，允许覆盖MariaDB/MySQL的配置文件。"
-
-#, fuzzy
-#~ msgid "Overriding the MariaDB/MySQL configuration would be done as follows:"
-#~ msgstr "覆盖MariaDB/MySQL的配置将按如下方式进行。"
-
-#, fuzzy
-#~ msgid "This support is database specific and needs to be implemented in each dev service specifically."
-#~ msgstr "这种支持是针对数据库的，需要在每个开发服务中具体实施。"
-
-#, fuzzy
-#~ msgid "Dev Services (Configuration Free Databases)"
-#~ msgstr "开发服务（免配置数据库）。"
-
-#, fuzzy
-#~ msgid "As mentioned above Quarkus supports a feature called Dev Services that allows you to create datasources without any config. If you have a database extension that supports it and no config is provided, Quarkus will automatically start a database (either using Testcontainers, or by starting a Java DB in process), and automatically configure a connection to this database."
-#~ msgstr "如上所述，Quarkus支持一个叫做Dev Services的功能，它允许你在没有任何配置的情况下创建数据源。如果你有一个支持它的数据库扩展，并且没有提供配置，Quarkus将自动启动一个数据库（可以使用Testcontainers，或者通过启动一个正在运行的Java DB），并自动配置与这个数据库的连接。"
-
-#, fuzzy
-#~ msgid "Production databases need to be configured as normal, so if you want to include a production database config in your application.properties and continue to use Dev Services we recommend that you use the `%prod.` profile to define your database settings."
-#~ msgstr "生产数据库需要正常配置，所以如果你想在你的application.properties中包含一个生产数据库配置，并继续使用Dev Services，我们建议你使用 `%prod.` profile来定义你的数据库设置。"
-
-#, fuzzy
-#~ msgid "Configuring Dev Services"
-#~ msgstr "配置开发服务"
-
-#, fuzzy
-#~ msgid "Dev Services supports the following config options:"
-#~ msgstr "开发服务支持以下配置选项。"
