@@ -2,7 +2,7 @@
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -31,12 +31,38 @@ msgstr "引导Quarkus URI路径解析的最新变化"
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "We have had an unusually bumpy ride the last few weeks. Path resolution can be sneakily complicated, and in trying to make things better, we accidentally made them worse! We've fixed it all now, but you might notice some changes. Hopefully, this post will make clear what those changes are, what they mean, and what you can do to put everything back the way you want it."
-msgstr "过去几周，我们经历了一次异常颠簸的旅程。路径解析可能是偷偷摸摸地复杂的，在试图使事情变得更好时，我们不小心使它们变得更糟了！我们现在已经全部修复了，但你可能会注意到一些变化。我们现在都已经修好了，但你可能会注意到一些变化。希望这篇文章能让你清楚这些变化是什么，它们意味着什么，以及你可以做什么来把一切恢复到你想要的样子。"
+msgid ""
+"We have had an unusually bumpy ride the last few weeks. Path resolution can "
+"be sneakily complicated, and in trying to make things better, we "
+"accidentally made them worse! We've fixed it all now, but you might notice "
+"some changes. Hopefully, this post will make clear what those changes are, "
+"what they mean, and what you can do to put everything back the way you want "
+"it."
+msgstr ""
+"过去几周，我们经历了一次异常颠簸的旅程。路径解析可能是偷偷摸摸地复杂的，在试图使事情变得更好时，我们不小心使它们变得更糟了！我们现在已经全部修复了，但你可能会注意到一些变化。我们现在都已经修好了，但你可能会注意到一些变化。希望这篇文章能让你清楚这些变化是什么，它们意味着什么，以及你可以做什么来把一切恢复到你想要的样子。"
 
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
-msgid "**TL;DR:** As of `1.11.5.Final` and `1.12.1.Final`, leading slashes matter in config. So if you use `/endpoint`, that endpoint will be served from the absolute root. If you want it relative to some containing bucket, omit that leading slash. For example, `quarkus.http.non-application-root-path` is now `q` by default, which nests it under `quarkus.http.root-path`, matching the original behavior. You can use an absolute path, e.g. `/q`, to serve non-application endpoints from the absolute root (as a sibling of the http root, if that is set). To remove the non-application endpoint behavior entirely, set `quarkus.http.non-application-root-path` to the same value as `quarkus.http.root-path`. The most foolproof way to do this is using a variable: `quarkus.http.non-application-root-path=${quarkus.http.root-path}`."
+#, fuzzy
+msgid ""
+"**TL;DR:** As of `1.11.5.Final` and `1.12.1.Final`, leading slashes matter "
+"in config. So if you use `/endpoint`, that endpoint will be served from the "
+"absolute root. If you want it relative to some containing bucket, omit that "
+"leading slash. For example, `quarkus.http.non-application-root-path` is now "
+"`q` by default, which nests it under `quarkus.http.root-path`, matching the "
+"original behavior. You can use an absolute path, e.g. `/q`, to serve non-"
+"application endpoints from the absolute root (as a sibling of the http root, "
+"if that is set). To remove the non-application endpoint behavior entirely, "
+"set `quarkus.http.non-application-root-path` to the same value as `quarkus."
+"http.root-path`. The most foolproof way to do this is using a variable: "
+"`quarkus.http.non-application-root-path=${quarkus.http.root-path}`."
 msgstr ""
+"*提示：* 从 `1.11.5.Final` 和 `1.12.1.Final` 开始，配置中的前导斜线很重要。因此，如果使用 `/endpoint` "
+"，端点将从绝对根目录提供服务。如果你想让它相对于某个包含的桶，请省略前导斜杠。例如，默认情况下 `quarkus.http.non-"
+"application-root-path` 现在是 `q` ，它嵌套在 `quarkus.http.root-path` "
+"下，与原始行为一致。您可以使用绝对路径，例如 `/q` ，从绝对根（作为 http "
+"根的同级根，如果已设置）为非应用端点提供服务。要完全删除非应用端点行为，可将 `quarkus.http.non-application-root-"
+"path` 设置为与 `quarkus.http.root-path` 相同的值。最简单的方法是使用一个变量： `quarkus.http.non-"
+"application-root-path=${quarkus.http.root-path}` 。"
 
 #. type: Title ==
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
@@ -47,26 +73,62 @@ msgstr "漫长的故事"
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "Once upon a time, Quarkus defined additional endpoints for things like health checks and metrics. They were served from the `quarkus.http.root-path` alongside any endpoints the application defined. This isn't always obvious, as `quarkus.http.root-path` is `/` by default, making it effectively invisible."
-msgstr "很久以前，Quarkus为健康检查和指标等事项定义了额外的端点。它们从 `quarkus.http.root-path` ，与应用程序定义的任何端点一起提供服务。这并不总是很明显，因为 `quarkus.http.root-path` 默认为 `/` ，这使得它实际上是看不见的。"
+msgid ""
+"Once upon a time, Quarkus defined additional endpoints for things like "
+"health checks and metrics. They were served from the `quarkus.http.root-"
+"path` alongside any endpoints the application defined. This isn't always "
+"obvious, as `quarkus.http.root-path` is `/` by default, making it "
+"effectively invisible."
+msgstr ""
+"很久以前，Quarkus为健康检查和指标等事项定义了额外的端点。它们从 `quarkus.http.root-path` "
+"，与应用程序定义的任何端点一起提供服务。这并不总是很明显，因为 `quarkus.http.root-path` 默认为 `/` "
+"，这使得它实际上是看不见的。"
 
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "As these proliferated, we started worrying about link:https://groups.google.com/g/quarkus-dev/c/FMnmlDIcGRY[polluting the application endpoint namespace], and thinking about how we could group these non-application endpoints together to avoid colliding with application endpoints and make it easier to deal with security and access policies. Some users further asked if we could serve these non-application endpoints from link:https://github.com/quarkusio/quarkus/issues/13602[another port entirely] (we haven't gotten there yet)."
-msgstr "随着这些终端的激增，我们开始担心会 link:https://groups.google.com/g/quarkus-dev/c/FMnmlDIcGRY[污染应用终端的命名空间] ，并考虑如何将这些非应用终端分组，以避免与应用终端发生冲突，并使安全和访问策略更容易处理。一些用户进一步询问我们是否可以 link:https://github.com/quarkusio/quarkus/issues/13602[完全] 从 link:https://github.com/quarkusio/quarkus/issues/13602[另一个端口] 为这些非应用端点提供服务（我们还没有达到这个目的）。"
+msgid ""
+"As these proliferated, we started worrying about link:https://groups.google."
+"com/g/quarkus-dev/c/FMnmlDIcGRY[polluting the application endpoint "
+"namespace], and thinking about how we could group these non-application "
+"endpoints together to avoid colliding with application endpoints and make it "
+"easier to deal with security and access policies. Some users further asked "
+"if we could serve these non-application endpoints from link:https://github."
+"com/quarkusio/quarkus/issues/13602[another port entirely] (we haven't gotten "
+"there yet)."
+msgstr ""
+"随着这些终端的激增，我们开始担心会 link:https://groups.google.com/g/quarkus-dev/c/"
+"FMnmlDIcGRY[污染应用终端的命名空间] "
+"，并考虑如何将这些非应用终端分组，以避免与应用终端发生冲突，并使安全和访问策略更容易处理。一些用户进一步询问我们是否可以 link:https://"
+"github.com/quarkusio/quarkus/issues/13602[完全] 从 link:https://github.com/"
+"quarkusio/quarkus/issues/13602[另一个端口] 为这些非应用端点提供服务（我们还没有达到这个目的）。"
 
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "The first step was to group all of these extension-defined endpoints together. This was the genesis of the link:https://github.com/quarkusio/quarkus/pull/13601[non-application endpoint path]. The default location of this new path was `/q`, and it was nested under the HTTP root path, just as the other endpoints had been. The effect was to move `/health` to `/q/health`, as an example."
-msgstr "第一步是将所有这些扩展定义的端点组合在一起。这 link:https://github.com/quarkusio/quarkus/pull/13601[就是非应用端点路径] 的起源。这个新路径的默认位置是 `/q` ，它被嵌套在HTTP根路径下，就像其他端点一样。其效果是将 `/health` 移到 `/q/health` ，作为一个例子。"
+msgid ""
+"The first step was to group all of these extension-defined endpoints "
+"together. This was the genesis of the link:https://github.com/quarkusio/"
+"quarkus/pull/13601[non-application endpoint path]. The default location of "
+"this new path was `/q`, and it was nested under the HTTP root path, just as "
+"the other endpoints had been. The effect was to move `/health` to `/q/"
+"health`, as an example."
+msgstr ""
+"第一步是将所有这些扩展定义的端点组合在一起。这 link:https://github.com/quarkusio/quarkus/pull/"
+"13601[就是非应用端点路径] 的起源。这个新路径的默认位置是 `/q` ，它被嵌套在HTTP根路径下，就像其他端点一样。其效果是将 `/"
+"health` 移到 `/q/health` ，作为一个例子。"
 
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "We knew that moving some of these endpoints, like metrics and health, would be problematic for already deployed applications and human muscle memory. To ease the transition, we added redirects for some of these endpoints, so that if you visited `/metrics` you would be redirected to `/q/metrics`."
-msgstr "我们知道，移动其中的一些端点，如指标和健康状况，对于已经部署的应用程序和人类的肌肉记忆来说，会有问题。为了缓解过渡，我们为其中一些端点添加了重定向，这样，如果你访问了 `/metrics` ，就会被重定向到 `/q/metrics` 。"
+msgid ""
+"We knew that moving some of these endpoints, like metrics and health, would "
+"be problematic for already deployed applications and human muscle memory. To "
+"ease the transition, we added redirects for some of these endpoints, so that "
+"if you visited `/metrics` you would be redirected to `/q/metrics`."
+msgstr ""
+"我们知道，移动其中的一些端点，如指标和健康状况，对于已经部署的应用程序和人类的肌肉记忆来说，会有问题。为了缓解过渡，我们为其中一些端点添加了重定向，这样，如果你访问了 "
+"`/metrics` ，就会被重定向到 `/q/metrics` 。"
 
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
@@ -77,52 +139,116 @@ msgstr "非应用端点支持在 `1.11.0.Final` 。"
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "And then things started to link:https://github.com/quarkusio/quarkus/pull/14179[go] link:https://github.com/quarkusio/quarkus/issues/15030[sideways]. Some cloud hosting providers only accept `200` as a definition of health, for example, so the redirect (a `301`) didn't have the intended effect. There was also some confusion about how to turn the non-application endpoint off to return to previous behavior, and further questions about how to move specific endpoints out of this non-application endpoint collection."
-msgstr "然后事情就开始 link:https://github.com/quarkusio/quarkus/pull/14179[走] link:https://github.com/quarkusio/quarkus/issues/15030[偏] 了。例如，一些云主机供应商只接受 `200` 作为健康的定义，所以重定向（一个 `301` ）没有达到预期的效果。对于如何关闭非应用端点以恢复以前的行为，也有一些困惑，还有关于如何将特定的端点移出这个非应用端点集合的进一步问题。"
+msgid ""
+"And then things started to link:https://github.com/quarkusio/quarkus/pull/"
+"14179[go] link:https://github.com/quarkusio/quarkus/issues/15030[sideways]. "
+"Some cloud hosting providers only accept `200` as a definition of health, "
+"for example, so the redirect (a `301`) didn't have the intended effect. "
+"There was also some confusion about how to turn the non-application endpoint "
+"off to return to previous behavior, and further questions about how to move "
+"specific endpoints out of this non-application endpoint collection."
+msgstr ""
+"然后事情就开始 link:https://github.com/quarkusio/quarkus/pull/14179[走] link:https://"
+"github.com/quarkusio/quarkus/issues/15030[偏] 了。例如，一些云主机供应商只接受 `200` "
+"作为健康的定义，所以重定向（一个 `301` "
+"）没有达到预期的效果。对于如何关闭非应用端点以恢复以前的行为，也有一些困惑，还有关于如何将特定的端点移出这个非应用端点集合的进一步问题。"
 
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "As an aside, how we got into this situation is not helped by differences in how libraries behave. Vert.x always wants segments beginning with leading slashes when creating routes, for example, while JAX-RS effectively ignores leading slashes in `@Path` annotations. Anyone used to Vert.x always adds leading slashes, and anyone using JAX-RS just does whatever and it magically works."
-msgstr "顺便说一句，我们是如何陷入这种情况的，并没有因为库的行为方式不同而得到帮助。例如，在创建路由时，Vert.x 总是希望分段以前面的斜线开始，而 JAX-RS 在 `@Path` 注释中实际上忽略了前面的斜线。任何习惯于Vert.x的人都会添加前导斜杠，而任何使用JAX-RS的人都会做任何事情，并且神奇地工作。"
+msgid ""
+"As an aside, how we got into this situation is not helped by differences in "
+"how libraries behave. Vert.x always wants segments beginning with leading "
+"slashes when creating routes, for example, while JAX-RS effectively ignores "
+"leading slashes in `@Path` annotations. Anyone used to Vert.x always adds "
+"leading slashes, and anyone using JAX-RS just does whatever and it magically "
+"works."
+msgstr ""
+"顺便说一句，我们是如何陷入这种情况的，并没有因为库的行为方式不同而得到帮助。例如，在创建路由时，Vert.x 总是希望分段以前面的斜线开始，而 JAX-"
+"RS 在 `@Path` 注释中实际上忽略了前面的斜线。任何习惯于Vert.x的人都会添加前导斜杠，而任何使用JAX-"
+"RS的人都会做任何事情，并且神奇地工作。"
 
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "In Quarkus, an implementation detail was exposed by accident: non-application endpoints defined by extensions are based on Vert.x routes. Default path configuration values started with slashes to enable quick route creation and allow simple append behavior. There wasn't anything in the early days of Quarkus to suggest this was a bad idea, and developers with experience in JAX-RS didn't have any warnings one way or the other, because JAX-RS handles it."
-msgstr "在Quarkus中，一个实施细节被意外地暴露出来：由扩展定义的非应用端点是基于Vert.x路由的。默认的路径配置值以斜线开始，以实现快速的路由创建并允许简单的追加行为。在Quarkus的早期，并没有任何东西表明这是一个坏主意，在JAX-RS方面有经验的开发者也没有任何警告，因为JAX-RS会处理它。"
+msgid ""
+"In Quarkus, an implementation detail was exposed by accident: non-"
+"application endpoints defined by extensions are based on Vert.x routes. "
+"Default path configuration values started with slashes to enable quick route "
+"creation and allow simple append behavior. There wasn't anything in the "
+"early days of Quarkus to suggest this was a bad idea, and developers with "
+"experience in JAX-RS didn't have any warnings one way or the other, because "
+"JAX-RS handles it."
+msgstr ""
+"在Quarkus中，一个实施细节被意外地暴露出来：由扩展定义的非应用端点是基于Vert."
+"x路由的。默认的路径配置值以斜线开始，以实现快速的路由创建并允许简单的追加行为。在Quarkus的早期，并没有任何东西表明这是一个坏主意，在JAX-"
+"RS方面有经验的开发者也没有任何警告，因为JAX-RS会处理它。"
 
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "Now, however, we were in the situation where paths weren't being resolved as people expected, and the configuration changes required to resolve that situation either weren't intuitive or lead to other problems. We ended up putting all of the possible configuration permutations into a spreadsheet so we could see side by side what happened when you combined different configuration values. The results were not awesome. However, the exercise allowed us to step back and look at the big picture to evaluate what needed to change to allow application and non-application endpoints to behave as you need them to."
-msgstr "然而，现在我们遇到的情况是，路径没有按照人们的预期得到解决，而解决这种情况所需的配置变化要么不直观，要么会导致其他问题。我们最后把所有可能的配置排列组合放到一个电子表格中，这样我们就可以看到当你结合不同的配置值时，会发生什么。结果不是很好。然而，这个练习让我们退后一步，从大局出发，评估需要改变什么，以使应用和非应用端点的行为符合你的需要。"
+msgid ""
+"Now, however, we were in the situation where paths weren't being resolved as "
+"people expected, and the configuration changes required to resolve that "
+"situation either weren't intuitive or lead to other problems. We ended up "
+"putting all of the possible configuration permutations into a spreadsheet so "
+"we could see side by side what happened when you combined different "
+"configuration values. The results were not awesome. However, the exercise "
+"allowed us to step back and look at the big picture to evaluate what needed "
+"to change to allow application and non-application endpoints to behave as "
+"you need them to."
+msgstr ""
+"然而，现在我们遇到的情况是，路径没有按照人们的预期得到解决，而解决这种情况所需的配置变化要么不直观，要么会导致其他问题。我们最后把所有可能的配置排列组合放到一个电子表格中，这样我们就可以看到当你结合不同的配置值时，会发生什么。结果不是很好。然而，这个练习让我们退后一步，从大局出发，评估需要改变什么，以使应用和非应用端点的行为符合你的需要。"
 
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "While the set of configuration attributes used to configure paths in Quarkus remains unchanged, how configured values are interpreted is different:"
+msgid ""
+"While the set of configuration attributes used to configure paths in Quarkus "
+"remains unchanged, how configured values are interpreted is different:"
 msgstr "虽然Quarkus中用于配置路径的配置属性集保持不变，但对配置值的解释方式却有所不同。"
 
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
-msgid "**Endpoint path configuration defaults are now relative values.** `/q` is now `q`, `/metrics` is now `metrics`, etc. This means that, out of the box, these endpoints will resolve relative to the containing root, which is what JAX-RS does per spec, and is what we believe most users intuitively expect."
+#, fuzzy
+msgid ""
+"**Endpoint path configuration defaults are now relative values.** `/q` is "
+"now `q`, `/metrics` is now `metrics`, etc. This means that, out of the box, "
+"these endpoints will resolve relative to the containing root, which is what "
+"JAX-RS does per spec, and is what we believe most users intuitively expect."
 msgstr ""
+"*端点路径配置默认值现在是相对值。* `/q` 现在是 `q` ， `/metrics` 现在是 `metrics` "
+"等。这意味着，开箱即用时，这些端点将相对于包含的根进行解析，这正是 JAX-RS 根据规范所做的，也是我们相信大多数用户的直观期望。"
 
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
-msgid "**Leading slashes in explicitly configured values matter.** We know some of you want to move endpoints to specific places, and the most consistent way to express that intent is to allow you to specify the exact uri you want an endpoint to use. If you specify `/metrics`, that is where you will find the metrics endpoint."
+#, fuzzy
+msgid ""
+"**Leading slashes in explicitly configured values matter.** We know some of "
+"you want to move endpoints to specific places, and the most consistent way "
+"to express that intent is to allow you to specify the exact uri you want an "
+"endpoint to use. If you specify `/metrics`, that is where you will find the "
+"metrics endpoint."
 msgstr ""
+"*显式配置值中的前导斜线很重要。* 我们知道有些用户希望将端点移动到特定位置，而表达这种意图的最一致方式就是允许用户指定希望端点使用的确切 "
+"uri。如果您指定 `/metrics` ，您就可以在这里找到度量端点。"
 
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "These updates have been made available and the dust should all have settled with `1.11.5.Final` and `1.12.1.Final`."
+msgid ""
+"These updates have been made available and the dust should all have settled "
+"with `1.11.5.Final` and `1.12.1.Final`."
 msgstr "这些更新已经提供，尘埃应该都已落定， `1.11.5.Final` 和 `1.12.1.Final` 。"
 
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "Note that convenience redirects for non-application endpoints are still present, but they can be disabled by setting `quarkus.http.redirect-to-non-application-root-path` to `false`. That hasn't changed at all."
-msgstr "请注意，非应用端点的方便重定向仍然存在，但可以通过设置 `quarkus.http.redirect-to-non-application-root-path` 到 `false` 来禁用它们。 这一点完全没有改变。"
+msgid ""
+"Note that convenience redirects for non-application endpoints are still "
+"present, but they can be disabled by setting `quarkus.http.redirect-to-non-"
+"application-root-path` to `false`. That hasn't changed at all."
+msgstr ""
+"请注意，非应用端点的方便重定向仍然存在，但可以通过设置 `quarkus.http.redirect-to-non-application-root-"
+"path` 到 `false` 来禁用它们。 这一点完全没有改变。"
 
 #. type: Title ==
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
@@ -133,19 +259,25 @@ msgstr "解决配置的路径"
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "Let's go through some examples of how paths resolve using our new rules. We'll start with the following assumptions:"
+msgid ""
+"Let's go through some examples of how paths resolve using our new rules. "
+"We'll start with the following assumptions:"
 msgstr "让我们通过一些例子来了解路径如何使用我们的新规则来解决。我们将从以下假设开始。"
 
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "We have a Hello World application that defines `@ApplicationPath(\"/hello\")`"
+msgid ""
+"We have a Hello World application that defines `@ApplicationPath(\"/"
+"hello\")`"
 msgstr "我们有一个Hello World应用程序，它定义了 `@ApplicationPath(\"/hello\")` "
 
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "The application specifies two endpoints using `@Path(\"world\")` and `@Path(\"/aliens\")`"
+msgid ""
+"The application specifies two endpoints using `@Path(\"world\")` and "
+"`@Path(\"/aliens\")`"
 msgstr "应用程序使用 `@Path(\"world\")` ，指定了两个端点。 `@Path(\"/aliens\")` "
 
 #. type: Plain text
@@ -157,43 +289,58 @@ msgstr "我们最关心的配置属性是。"
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "`quarkus.http.root-path` - The HTTP root path. All web content is served relative to this root path."
+msgid ""
+"`quarkus.http.root-path` - The HTTP root path. All web content is served "
+"relative to this root path."
 msgstr " `quarkus.http.root-path` - HTTP根路径。所有网络内容都是相对于这个根路径提供的。"
 
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "`quarkus.http.non-application-root-path` - The non-application endpoint root path."
+msgid ""
+"`quarkus.http.non-application-root-path` - The non-application endpoint root "
+"path."
 msgstr " `quarkus.http.non-application-root-path` - 非应用端点的根路径。"
 
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "We'll also highlight some configurable non-application endpoints of interest:"
+msgid ""
+"We'll also highlight some configurable non-application endpoints of interest:"
+""
 msgstr "我们还将强调一些感兴趣的可配置的非应用端点。"
 
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "`quarkus.micrometer.export.prometheus.path` - The location of the micrometer metrics endpoint."
+msgid ""
+"`quarkus.micrometer.export.prometheus.path` - The location of the micrometer "
+"metrics endpoint."
 msgstr " `quarkus.micrometer.export.prometheus.path` - 测微器计量端点的位置。"
 
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "`quarkus.smallrye-health.root-path` - The location of the all-encompassing health endpoint."
+msgid ""
+"`quarkus.smallrye-health.root-path` - The location of the all-encompassing "
+"health endpoint."
 msgstr " `quarkus.smallrye-health.root-path` - 包罗万象的健康终端的位置。"
 
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "`quarkus.smallrye-health.liveness-path` - The location of the liveness endpoint."
+msgid ""
+"`quarkus.smallrye-health.liveness-path` - The location of the liveness "
+"endpoint."
 msgstr " `quarkus.smallrye-health.liveness-path` - 活性端点的位置。"
 
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "Let's look at what happens when we start pulling levers. In the examples below, pay attention to punctuation in config, as that will be the key to why things behave the way they do."
+msgid ""
+"Let's look at what happens when we start pulling levers. In the examples "
+"below, pay attention to punctuation in config, as that will be the key to "
+"why things behave the way they do."
 msgstr "让我们看看当我们开始拉动杠杆时会发生什么。在下面的例子中，注意配置中的标点符号，因为这将是事情的行为方式的关键。"
 
 #. type: Title ===
@@ -241,7 +388,10 @@ msgstr " `quarkus.smallrye-health.liveness-path=liveness` "
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "That configuration (combined with the declared application endpoints) leads to the following valid URLs if our Quarkus application is running in dev mode:"
+msgid ""
+"That configuration (combined with the declared application endpoints) leads "
+"to the following valid URLs if our Quarkus application is running in dev "
+"mode:"
 msgstr "如果我们的Quarkus应用程序在开发模式下运行，该配置（结合声明的应用程序端点）导致以下有效的URL。"
 
 #. type: Plain text
@@ -283,14 +433,21 @@ msgstr " http://localhost:8080/q/health/liveness "
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "Note that the `quarkus.http.root-path` is hiding in this example, because its value is `/`."
+msgid ""
+"Note that the `quarkus.http.root-path` is hiding in this example, because "
+"its value is `/`."
 msgstr "请注意，在这个例子中， `quarkus.http.root-path` 是隐藏的，因为它的值是 `/` 。"
 
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "There are convenience redirects in this case as `quarkus.http.non-application-root-path` is not the same as `quarkus.http.root-path`. In this configuration, `/metrics` will be redirected to `/q/metrics`."
-msgstr "在这种情况下有方便的重定向，因为 `quarkus.http.non-application-root-path` 与 `quarkus.http.root-path` 不一样。在这个配置中， `/metrics` 将被重定向到 `/q/metrics` 。"
+msgid ""
+"There are convenience redirects in this case as `quarkus.http.non-"
+"application-root-path` is not the same as `quarkus.http.root-path`. In this "
+"configuration, `/metrics` will be redirected to `/q/metrics`."
+msgstr ""
+"在这种情况下有方便的重定向，因为 `quarkus.http.non-application-root-path` 与 `quarkus.http."
+"root-path` 不一样。在这个配置中， `/metrics` 将被重定向到 `/q/metrics` 。"
 
 #. type: Title ===
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
@@ -301,7 +458,9 @@ msgstr "改变Http根路径"
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "Let's change the HTTP root path to `/root` so the impact it has on resource resolution is visible:"
+msgid ""
+"Let's change the HTTP root path to `/root` so the impact it has on resource "
+"resolution is visible:"
 msgstr "让我们把HTTP根路径改为 `/root` ，这样就可以看到它对资源解析的影响。"
 
 #. type: Plain text
@@ -355,8 +514,16 @@ msgstr " http://localhost:8080/root/q/health/liveness "
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "There are convenience redirects in this case, too, as `quarkus.http.non-application-root-path` is not the same as `quarkus.http.root-path`. In this configuration, `/root/metrics` will be redirected to `/root/q/metrics`. This is consistent with previous behavior, where non-application endpoints were implicitly relative to the HTTP root path."
-msgstr "在这种情况下也有方便的重定向，因为 `quarkus.http.non-application-root-path` 与 `quarkus.http.root-path` 不一样。在这种配置中， `/root/metrics` 将被重定向到 `/root/q/metrics` 。这与以前的行为一致，即非应用端点隐含地相对于 HTTP 根路径。"
+msgid ""
+"There are convenience redirects in this case, too, as `quarkus.http.non-"
+"application-root-path` is not the same as `quarkus.http.root-path`. In this "
+"configuration, `/root/metrics` will be redirected to `/root/q/metrics`. This "
+"is consistent with previous behavior, where non-application endpoints were "
+"implicitly relative to the HTTP root path."
+msgstr ""
+"在这种情况下也有方便的重定向，因为 `quarkus.http.non-application-root-path` 与 `quarkus.http."
+"root-path` 不一样。在这种配置中， `/root/metrics` 将被重定向到 `/root/q/metrics` "
+"。这与以前的行为一致，即非应用端点隐含地相对于 HTTP 根路径。"
 
 #. type: Title ===
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
@@ -367,7 +534,9 @@ msgstr "移动非应用根路径（/q）。"
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "Let's try something we couldn't do before. We'll move the non-application endpoint outside of the HTTP root path by specifying an absolute path, `/q`:"
+msgid ""
+"Let's try something we couldn't do before. We'll move the non-application "
+"endpoint outside of the HTTP root path by specifying an absolute path, `/q`:"
 msgstr "让我们尝试一下我们以前无法做到的事情。我们将把非应用端点移到HTTP根路径之外，指定一个绝对路径， `/q` 。"
 
 #. type: Plain text
@@ -379,8 +548,14 @@ msgstr " `quarkus.http.non-application-root-path=/q` "
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "There are still convenience redirects in this case, as `quarkus.http.non-application-root-path` is not the same as `quarkus.http.root-path`. Redirected URLs are still relative to HTTP root, so `/root/metrics` will be redirected to `/q/metrics`."
-msgstr "在这种情况下，仍然有方便的重定向，因为 `quarkus.http.non-application-root-path` 与 `quarkus.http.root-path` 不一样。重定向的URL仍然是相对于HTTP根的，所以 `/root/metrics` 将被重定向到 `/q/metrics` 。"
+msgid ""
+"There are still convenience redirects in this case, as `quarkus.http.non-"
+"application-root-path` is not the same as `quarkus.http.root-path`. "
+"Redirected URLs are still relative to HTTP root, so `/root/metrics` will be "
+"redirected to `/q/metrics`."
+msgstr ""
+"在这种情况下，仍然有方便的重定向，因为 `quarkus.http.non-application-root-path` 与 `quarkus.http."
+"root-path` 不一样。重定向的URL仍然是相对于HTTP根的，所以 `/root/metrics` 将被重定向到 `/q/metrics` 。"
 
 #. type: Title ===
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
@@ -391,8 +566,13 @@ msgstr "移动个别非应用端点（/metrics和/liveness）。"
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "This is is another configuration that was not previously possible. We can individually move configurable non-application endpoints to a specified absolute path, specifically `/metrics` and `/liveness` in this example:"
-msgstr "这是另一个以前无法实现的配置。我们可以单独将可配置的非应用端点移动到指定的绝对路径，在这个例子中具体是指 `/metrics` 和 `/liveness` 。"
+msgid ""
+"This is is another configuration that was not previously possible. We can "
+"individually move configurable non-application endpoints to a specified "
+"absolute path, specifically `/metrics` and `/liveness` in this example:"
+msgstr ""
+"这是另一个以前无法实现的配置。我们可以单独将可配置的非应用端点移动到指定的绝对路径，在这个例子中具体是指 `/metrics` 和 `/"
+"liveness` 。"
 
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
@@ -421,8 +601,21 @@ msgstr " http://localhost:8080/liveness "
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "There are still convenience redirects in this case, as `quarkus.http.non-application-root-path` is not the same as `quarkus.http.root-path`. However, these redirects only apply to non-application endpoints controlled by the non-application endpoint root. We've essentially removed the metrics and liveness endpoints from that root, so they won't be redirected. In this configuration, if you request `/root/health`, it will be redirected to `/q/health`. A redirect will not be provided for `/root/health/liveness` or `/root/metrics`."
-msgstr "在这种情况下，仍然有方便的重定向，因为 `quarkus.http.non-application-root-path` 与 `quarkus.http.root-path` 。然而，这些重定向只适用于由非应用端点根控制的非应用端点。我们实质上已经从该根中删除了度量和有效性端点，所以它们不会被重定向。在这个配置中，如果你请求 `/root/health` ，它将被重定向到 `/q/health` 。 `/root/health/liveness` 或 `/root/metrics` 将不提供重定向。"
+msgid ""
+"There are still convenience redirects in this case, as `quarkus.http.non-"
+"application-root-path` is not the same as `quarkus.http.root-path`. However, "
+"these redirects only apply to non-application endpoints controlled by the "
+"non-application endpoint root. We've essentially removed the metrics and "
+"liveness endpoints from that root, so they won't be redirected. In this "
+"configuration, if you request `/root/health`, it will be redirected to `/q/"
+"health`. A redirect will not be provided for `/root/health/liveness` or `/"
+"root/metrics`."
+msgstr ""
+"在这种情况下，仍然有方便的重定向，因为 `quarkus.http.non-application-root-path` 与 `quarkus.http."
+"root-path` "
+"。然而，这些重定向只适用于由非应用端点根控制的非应用端点。我们实质上已经从该根中删除了度量和有效性端点，所以它们不会被重定向。在这个配置中，如果你请求 "
+"`/root/health` ，它将被重定向到 `/q/health` 。 `/root/health/liveness` 或 `/root/"
+"metrics` 将不提供重定向。"
 
 #. type: Title ===
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
@@ -433,8 +626,16 @@ msgstr "移除非应用的端点根"
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "Some of you have asked how to turn this non-application endpoint root stuff off entirely. A clear expression of your intent is best. To disable the non-application endpoint, make it identical to the HTTP root path. In essence, you are telling the runtime to \"serve all non-application endpoints from the HTTP root\". This example uses a variable to ensure the values remain the same:"
-msgstr "你们中的一些人问如何完全关闭这种非应用端点根的东西。明确表达你的意图是最好的。要关闭非应用端点，要让它与HTTP根路径相同。实质上，你是在告诉运行时 \"从HTTP根目录下为所有非应用端点服务\"。这个例子使用了一个变量来确保数值保持不变。"
+msgid ""
+"Some of you have asked how to turn this non-application endpoint root stuff "
+"off entirely. A clear expression of your intent is best. To disable the non-"
+"application endpoint, make it identical to the HTTP root path. In essence, "
+"you are telling the runtime to \"serve all non-application endpoints from "
+"the HTTP root\". This example uses a variable to ensure the values remain "
+"the same:"
+msgstr ""
+"你们中的一些人问如何完全关闭这种非应用端点根的东西。明确表达你的意图是最好的。要关闭非应用端点，要让它与HTTP根路径相同。实质上，你是在告诉运行时 "
+"\"从HTTP根目录下为所有非应用端点服务\"。这个例子使用了一个变量来确保数值保持不变。"
 
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
@@ -463,7 +664,9 @@ msgstr " http://localhost:8080/root/health/liveness "
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "There are no convenience redirects in this scenario, as the non-application endpoint behavior has been disabled entirely."
+msgid ""
+"There are no convenience redirects in this scenario, as the non-application "
+"endpoint behavior has been disabled entirely."
 msgstr "在这种情况下，没有方便的重定向，因为非应用端点行为已经完全被禁用。"
 
 #. type: Title ==
@@ -475,20 +678,39 @@ msgstr "连带效应"
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "For the most part, we hope this will be transparent. We discovered some very inconsistent path handling along the way, which lead us to believe that many (or even most) of these values are never customized."
+msgid ""
+"For the most part, we hope this will be transparent. We discovered some very "
+"inconsistent path handling along the way, which lead us to believe that many "
+"(or even most) of these values are never customized."
 msgstr "在大多数情况下，我们希望这将是透明的。我们一路走来发现了一些非常不一致的路径处理，这使我们相信，许多（甚至大多数）这些值从来没有被定制过。"
 
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "You are most likely to see a behavior change if you have customized the HTTP root path. In that case, we hope the new rules and examples above will help you understand how to tweak your configuration to get everything to behave the way you want it to."
-msgstr "如果你已经定制了HTTP根路径，你最有可能看到行为的改变。在这种情况下，我们希望上面的新规则和例子能够帮助你了解如何调整你的配置，让一切都按照你想要的方式进行。"
+msgid ""
+"You are most likely to see a behavior change if you have customized the HTTP "
+"root path. In that case, we hope the new rules and examples above will help "
+"you understand how to tweak your configuration to get everything to behave "
+"the way you want it to."
+msgstr ""
+"如果你已经定制了HTTP根路径，你最有可能看到行为的改变。在这种情况下，我们希望上面的新规则和例子能够帮助你了解如何调整你的配置，让一切都按照你想要的方式进行。"
 
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
 #, fuzzy
-msgid "Extension writers will see the biggest change. The link:https://quarkus.io/guides/writing-extensions#extension-defined-endpoints[Writing extensions guide] has been updated to describe changes to the build items used to create non-application endpoints. The general rule, however, is to avoid constructing your own endpoint paths, and rely on `NonApplicationRootPathBuildItem` and `HttpRootPathBuildItem` to construct them for you."
-msgstr "扩展编写者将看到最大的变化。 link:https://quarkus.io/guides/writing-extensions#extension-defined-endpoints[编写扩展指南] 已被更新，以描述用于创建非应用端点的构建项的变化。然而，一般的规则是避免构建你自己的端点路径，而是依靠 `NonApplicationRootPathBuildItem` 和 `HttpRootPathBuildItem` 来为你构建它们。"
+msgid ""
+"Extension writers will see the biggest change. The link:https://quarkus.io/"
+"guides/writing-extensions#extension-defined-endpoints[Writing extensions "
+"guide] has been updated to describe changes to the build items used to "
+"create non-application endpoints. The general rule, however, is to avoid "
+"constructing your own endpoint paths, and rely on "
+"`NonApplicationRootPathBuildItem` and `HttpRootPathBuildItem` to construct "
+"them for you."
+msgstr ""
+"扩展编写者将看到最大的变化。 link:https://quarkus.io/guides/writing-extensions#extension-"
+"defined-endpoints[编写扩展指南] "
+"已被更新，以描述用于创建非应用端点的构建项的变化。然而，一般的规则是避免构建你自己的端点路径，而是依靠 "
+"`NonApplicationRootPathBuildItem` 和 `HttpRootPathBuildItem` 来为你构建它们。"
 
 #. type: Title ==
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
@@ -498,5 +720,11 @@ msgstr "临别感言"
 
 #. type: Plain text
 #: _posts/2021-03-04-path-resolution-in-quarkus.adoc
-msgid "While we know it is impossible to make everyone happy, we hope we have at least managed to acheive a pattern for configuration that leads to more predictable and consistent results. And we apologize (again), for any behavior changes you may have observed as we sorted this out."
+#, fuzzy
+msgid ""
+"While we know it is impossible to make everyone happy, we hope we have at "
+"least managed to acheive a pattern for configuration that leads to more "
+"predictable and consistent results. And we apologize (again), for any "
+"behavior changes you may have observed as we sorted this out."
 msgstr ""
+"虽然我们知道不可能让每个人都满意，但我们希望我们至少已经设法实现了一种配置模式，从而带来更可预测和更一致的结果。我们再次向您道歉，因为在我们解决这个问题的过程中，您可能会观察到任何行为变化。"

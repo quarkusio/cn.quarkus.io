@@ -2,7 +2,7 @@
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -29,16 +29,22 @@ msgid "How to implement a simple cache with the Redis data source"
 msgstr "如何用Redis数据源实现一个简单的缓存"
 
 #: _posts/2022-09-07-redis-api-intro.adoc
+#, fuzzy
 msgid ""
 "In Quarkus 2.11, we introduced a new API to interact with Redis.\n"
 "The Redis DataSource APIs aim to be simpler, more extensive, and type-safe.\n"
-"Under the hood, it uses a performant, non-blocking client (that you can also use if you prefer low-level APIs)."
+"Under the hood, it uses a performant, non-blocking client (that you can also "
+"use if you prefer low-level APIs)."
 msgstr ""
+"在 Quarkus 2.11 中，我们引入了与 Redis 交互的新 API。Redis DataSource API "
+"的目标是更简单、更广泛且类型安全。在引擎盖下，它使用了一个高性能、无阻塞的客户端（如果你喜欢底层 API，也可以使用它）。"
 
 #. type: Plain text
 #: _posts/2022-09-07-redis-api-intro.adoc
 #, fuzzy
-msgid "In this post, we will introduce this new API and use it to build a cache, one of the main Redis use cases."
+msgid ""
+"In this post, we will introduce this new API and use it to build a cache, "
+"one of the main Redis use cases."
 msgstr "在这篇文章中，我们将介绍这个新的API，并使用它来建立一个缓存，这是Redis的主要用例之一。"
 
 #. type: Title ==
@@ -48,13 +54,19 @@ msgid "What is Redis?"
 msgstr "什么是Redis？"
 
 #: _posts/2022-09-07-redis-api-intro.adoc
+#, fuzzy
 msgid ""
-"https://redis.io/[Redis] is an open-source, in-memory data store that can be used as a database, cache, streaming engine, and message broker.\n"
-"Redis is often used as real-time data stores,  cache backends, data storage for geospatial entities, and so on.\n"
+"https://redis.io/[Redis] is an open-source, in-memory data store that can be "
+"used as a database, cache, streaming engine, and message broker.\n"
+"Redis is often used as real-time data stores,  cache backends, data storage "
+"for geospatial entities, and so on.\n"
 "To interact with Redis, you emit _commands_ and receive responses.\n"
 "These commands target _keys_ and manipulate the associated data.\n"
 "There are many commands divided into groups, including:"
 msgstr ""
+"link:https://redis.io/[Redis] 是一种开源的内存数据存储，可用作数据库、缓存、流引擎和消息代理。Redis "
+"通常用作实时数据存储、缓存后端、地理空间实体的数据存储等。要与 Redis 交互，你需要发出 _命令_ 并接收响应。这些命令 _以键_ "
+"为目标并操作相关数据。Redis 有许多按组划分的命令，包括"
 
 #. type: Plain text
 #: _posts/2022-09-07-redis-api-intro.adoc
@@ -77,13 +89,17 @@ msgstr "通过地理空间组来操作地理项目"
 #. type: Plain text
 #: _posts/2022-09-07-redis-api-intro.adoc
 #, fuzzy
-msgid "the Hash group to manipulate sets of `+field -> item+` pairs (like `Map` in Java)"
+msgid ""
+"the Hash group to manipulate sets of `+field -> item+` pairs (like `Map` in "
+"Java)"
 msgstr "Hash组来操作 `field -> item` 对的集合（像Java中的 `Map` ）。"
 
 #. type: Plain text
 #: _posts/2022-09-07-redis-api-intro.adoc
 #, fuzzy
-msgid "the List, Set, and Sorted Set groups to store list, set, and sorted set of items"
+msgid ""
+"the List, Set, and Sorted Set groups to store list, set, and sorted set of "
+"items"
 msgstr "列表、集和排序集组，以存储列表、集和排序集的项目。"
 
 #. type: Plain text
@@ -95,7 +111,9 @@ msgstr "在信道上发出信息和接收信息的Pub/Sub组"
 #. type: Plain text
 #: _posts/2022-09-07-redis-api-intro.adoc
 #, fuzzy
-msgid "the String group to manipulate value (in Redis, Strings represent values including binary, numbers...)"
+msgid ""
+"the String group to manipulate value (in Redis, Strings represent values "
+"including binary, numbers...)"
 msgstr "操作值的字符串组（在Redis中，字符串代表包括二进制、数字在内的值。）"
 
 #. type: Plain text
@@ -107,7 +125,9 @@ msgstr "交易组来执行交易"
 #. type: Plain text
 #: _posts/2022-09-07-redis-api-intro.adoc
 #, fuzzy
-msgid "You can find the complete list of commands on the https://redis.io/commands/[Redis Commands page]."
+msgid ""
+"You can find the complete list of commands on the https://redis.io/commands/"
+"[Redis Commands page]."
 msgstr "你可以在 link:https://redis.io/commands/[Redis命令页面] 找到完整的命令列表。"
 
 #. type: Title ==
@@ -119,51 +139,66 @@ msgstr "新的Quarkus Redis API"
 #. type: Plain text
 #: _posts/2022-09-07-redis-api-intro.adoc
 #, fuzzy
-msgid "The entry point of the new Quarkus Redis API are the two _data sources_ interfaces:"
+msgid ""
+"The entry point of the new Quarkus Redis API are the two _data sources_ "
+"interfaces:"
 msgstr "新的Quarkus Redis API的入口是两个 _数据源_ 接口。"
 
 #. type: Plain text
 #: _posts/2022-09-07-redis-api-intro.adoc
 #, fuzzy
-msgid "`io.quarkus.redis.datasource.RedisDataSource` - the imperative (blocking) API"
+msgid ""
+"`io.quarkus.redis.datasource.RedisDataSource` - the imperative (blocking) "
+"API"
 msgstr " `io.quarkus.redis.datasource.RedisDataSource` - 命令式（阻塞式）API"
 
 #. type: Plain text
 #: _posts/2022-09-07-redis-api-intro.adoc
 #, fuzzy
-msgid "`io.quarkus.redis.datasource.ReactiveRedisDataSource` - the reactive API"
+msgid ""
+"`io.quarkus.redis.datasource.ReactiveRedisDataSource` - the reactive API"
 msgstr " `io.quarkus.redis.datasource.ReactiveRedisDataSource` - 反应式API"
 
 #. type: Plain text
 #: _posts/2022-09-07-redis-api-intro.adoc
 #, fuzzy
-msgid "As mentioned above, these APIs are implemented on top of a lower-level client:"
+msgid ""
+"As mentioned above, these APIs are implemented on top of a lower-level "
+"client:"
 msgstr "如上所述，这些API是在一个较低级别的客户端之上实现的。"
 
 #: _posts/2022-09-07-redis-api-intro.adoc
+#, fuzzy
 msgid ""
 "The data source APIs follow the command group structure.\n"
-"For each group, you retrieve an object dedicated to emitting the commands of that group.\n"
+"For each group, you retrieve an object dedicated to emitting the commands of "
+"that group.\n"
 "In that regard, this new API is not an abstraction of Redis.\n"
 "You still need to know the command you need."
 msgstr ""
+"数据源 API 遵循命令组结构。对于每个组，你都可以检索到一个对象，专门用于发送该组的命令。在这方面，新的 API 并不是 Redis "
+"的抽象。你仍然需要知道你需要的命令。"
 
 #. type: Plain text
 #: _posts/2022-09-07-redis-api-intro.adoc
 #, fuzzy
-msgid "For example, to manipulate a `Set<Person>`, you will use the following code:"
+msgid ""
+"For example, to manipulate a `Set<Person>`, you will use the following code:"
 msgstr "例如，要操作一个 `Set<Person>` ，你将使用以下代码。"
 
 #: _posts/2022-09-07-redis-api-intro.adoc
+#, fuzzy
 msgid ""
 "The API manages the serialization and deserialization for you.\n"
-"Currently, it uses JSON for objects (using Jackson), but soon the API will offer more advanced features."
-msgstr ""
+"Currently, it uses JSON for objects (using Jackson), but soon the API will "
+"offer more advanced features."
+msgstr "API 可为您管理序列化和反序列化。目前，它使用 JSON 表示对象（使用 Jackson），但很快 API 将提供更多高级功能。"
 
 #. type: Plain text
 #: _posts/2022-09-07-redis-api-intro.adoc
 #, fuzzy
-msgid "This example uses the imperative API, but the reactive API is symmetric."
+msgid ""
+"This example uses the imperative API, but the reactive API is symmetric."
 msgstr "这个例子使用了命令式的API，但反应式API是对称的。"
 
 #. type: Title ==
@@ -173,98 +208,165 @@ msgid "Implementing a Redis cache"
 msgstr "实现Redis缓存"
 
 #: _posts/2022-09-07-redis-api-intro.adoc
+#, fuzzy
 msgid ""
 "Time for more cohesive code.\n"
-"Let's imagine the following https://github.com/cescoffier/quarkus-redis-demo[application]:"
+"Let's imagine the following https://github.com/cescoffier/quarkus-redis-"
+"demo[application]:"
 msgstr ""
+"是时候编写更有凝聚力的代码了。让我们想象一下下面的 link:https://github.com/cescoffier/quarkus-redis-"
+"demo[应用程序] ："
 
 #: _posts/2022-09-07-redis-api-intro.adoc
+#, fuzzy
 msgid ""
 "We have a database storing `Heroes`, a lot of them.\n"
 "You need to return the 3 most powerful heroes based on their level.\n"
-"Of course, you can use your SQL ninja skills, but let's imagine that this code was coded a long time ago, cannot be changed, and is very time-consuming:"
+"Of course, you can use your SQL ninja skills, but let's imagine that this "
+"code was coded a long time ago, cannot be changed, and is very time-"
+"consuming:"
 msgstr ""
+"我们有一个存储 `Heroes` 的数据库，里面有很多英雄。您需要根据他们的等级返回 3 个最强大的英雄。当然，您可以使用您的 SQL "
+"忍者技能，但让我们设想一下，这段代码是很久以前编写的，无法更改，而且非常耗时："
 
 #: _posts/2022-09-07-redis-api-intro.adoc
+#, fuzzy
 msgid ""
-"So, one solution to avoid having to re-compute this set of heroes on every call is to cache the result for a bit of time, let's say 10 seconds.\n"
-"Let's consider that it's acceptable in this case to return a potentially outdated result set."
+"So, one solution to avoid having to re-compute this set of heroes on every "
+"call is to cache the result for a bit of time, let's say 10 seconds.\n"
+"Let's consider that it's acceptable in this case to return a potentially "
+"outdated result set."
 msgstr ""
+"因此，为了避免每次调用都要重新计算这组英雄，一种解决方案是将结果缓存一段时间，比如 10 "
+"秒。让我们考虑一下，在这种情况下，返回一个可能过时的结果集是可以接受的。"
 
 #: _posts/2022-09-07-redis-api-intro.adoc
+#, fuzzy
 msgid ""
 "To use the new Redis API, we need to use the `redis-client` extension.\n"
-"For users from the previous API, it's the same extension. The previous API is still available but is deprecated, and we plan to remove it at some point."
+"For users from the previous API, it's the same extension. The previous API "
+"is still available but is deprecated, and we plan to remove it at some point."
+""
 msgstr ""
+"要使用新的 Redis API，我们需要使用 `redis-client` 扩展。对于使用旧版 API 的用户来说，扩展名也是一样的。以前的 API "
+"仍然可用，但已废弃，我们计划在某个时候将其移除。"
 
 #: _posts/2022-09-07-redis-api-intro.adoc
-msgid "Now that we can use the  `RedisDataSource`, we can implement the https://github.com/cescoffier/quarkus-redis-demo/blob/735f8cdbe579ef5c13631e8ec6e3ddad6821a3cb/src/main/java/me/escoffier/quarkus/supes/MyRedisCache.java[`MyRedisCache` class] as follows:"
+#, fuzzy
+msgid ""
+"Now that we can use the  `RedisDataSource`, we can implement the https://"
+"github.com/cescoffier/quarkus-redis-demo/blob/"
+"735f8cdbe579ef5c13631e8ec6e3ddad6821a3cb/src/main/java/me/escoffier/quarkus/"
+"supes/MyRedisCache.java[`MyRedisCache` class] as follows:"
 msgstr ""
+"现在我们可以使用 `RedisDataSource` 了，我们可以如下实现 link:https://github.com/cescoffier/"
+"quarkus-redis-demo/blob/735f8cdbe579ef5c13631e8ec6e3ddad6821a3cb/src/main/"
+"java/me/escoffier/quarkus/supes/MyRedisCache.java[MyRedisCache 类] ："
 
 #: _posts/2022-09-07-redis-api-intro.adoc
+#, fuzzy
 msgid ""
 "Note that it's a simple cache without any fancy features.\n"
-"Redis provides more advanced commands to implement more complicated strategies."
-msgstr ""
+"Redis provides more advanced commands to implement more complicated "
+"strategies."
+msgstr "请注意，这只是一个简单的缓存，没有任何花哨的功能。Redis 提供了更多高级命令来实现更复杂的策略。"
 
 #: _posts/2022-09-07-redis-api-intro.adoc
+#, fuzzy
 msgid ""
-"The constructor receives the `RedisDataSource` and gets an object to manipulate Redis _values_.\n"
-"In our case, https://github.com/cescoffier/quarkus-redis-demo/blob/735f8cdbe579ef5c13631e8ec6e3ddad6821a3cb/src/main/java/me/escoffier/quarkus/supes/Ranking.java[`Ranking`] (the top 3 heroes)"
+"The constructor receives the `RedisDataSource` and gets an object to "
+"manipulate Redis _values_.\n"
+"In our case, https://github.com/cescoffier/quarkus-redis-demo/blob/"
+"735f8cdbe579ef5c13631e8ec6e3ddad6821a3cb/src/main/java/me/escoffier/quarkus/"
+"supes/Ranking.java[`Ranking`] (the top 3 heroes)"
 msgstr ""
+"构造函数接收 `RedisDataSource` ，并获取一个用于操作 Redis _值_ 的对象。在我们的例子中 link:https://"
+"github.com/cescoffier/quarkus-redis-demo/blob/"
+"735f8cdbe579ef5c13631e8ec6e3ddad6821a3cb/src/main/java/me/escoffier/quarkus/"
+"supes/Ranking.java[Ranking] (前 3 位英雄）"
 
 #. type: Plain text
 #: _posts/2022-09-07-redis-api-intro.adoc
 #, fuzzy
-msgid "The `get` method emits the Redis `get` command to retrieve an already stored ``Ranking(``null` if it does not)."
+msgid ""
+"The `get` method emits the Redis `get` command to retrieve an already stored "
+"``Ranking(``null` if it does not)."
 msgstr " `get` 方法发出Redis `get` 命令来检索已经存储的 `Ranking(` null`，如果没有的话）。"
 
 #: _posts/2022-09-07-redis-api-intro.adoc
+#, fuzzy
 msgid ""
-"The `set` method emits the Redis `set` command and store a `Ranking` to the passed key.\n"
+"The `set` method emits the Redis `set` command and store a `Ranking` to the "
+"passed key.\n"
 "The command also configures the expiration time.\n"
 "So, after 10 seconds, the value is removed by Redis.\n"
 "As mentioned above, the Ranking instance is serialized into a JSON document."
 msgstr ""
+"`set` 方法会发出 Redis `set` 命令，并将 `Ranking` 存储到传递的密钥中。该命令还配置了过期时间。因此，10 秒后，Redis "
+"会删除该值。如上所述，Ranking 实例被序列化为 JSON 文档。"
 
 #: _posts/2022-09-07-redis-api-intro.adoc
+#, fuzzy
 msgid ""
 "The `evict` method allows removing the stored value.\n"
-"Multiple commands can do this, such as the `del` or `getdel` (which also returned the stored value)."
-msgstr ""
+"Multiple commands can do this, such as the `del` or `getdel` (which also "
+"returned the stored value)."
+msgstr "`evict` 方法允许删除存储值。多个命令都可以这样做，如 `del` 或 `getdel` （也返回存储的值）。"
 
 #: _posts/2022-09-07-redis-api-intro.adoc
+#, fuzzy
 msgid ""
 "For our application, we need something a bit more fancy.\n"
 "We want to check if we have a value in Redis.\n"
 "If so, uses that value, and if not, compute the value and store it.\n"
 "This is implemented in the `getOrSetIfAbsent`."
 msgstr ""
+"对于我们的应用程序来说，我们需要一些更花哨的东西。我们要检查 Redis 中是否有一个值。如果有，则使用该值；如果没有，则计算并存储该值。这将在 "
+"`getOrSetIfAbsent` .NET Framework 中实现。"
 
 #. type: Plain text
 #: _posts/2022-09-07-redis-api-intro.adoc
 #, fuzzy
-msgid "Now, we can just use this cache to avoid the heavy computation on every call (check the https://github.com/cescoffier/quarkus-redis-demo/blob/735f8cdbe579ef5c13631e8ec6e3ddad6821a3cb/src/main/java/me/escoffier/quarkus/supes/HeroService.java[HeroService] class to see the complete code):"
-msgstr "现在，我们可以直接使用这个缓存来避免每次调用时的繁重计算（查看 link:https://github.com/cescoffier/quarkus-redis-demo/blob/735f8cdbe579ef5c13631e8ec6e3ddad6821a3cb/src/main/java/me/escoffier/quarkus/supes/HeroService.java[HeroService] 类的完整代码）。"
+msgid ""
+"Now, we can just use this cache to avoid the heavy computation on every call "
+"(check the https://github.com/cescoffier/quarkus-redis-demo/blob/"
+"735f8cdbe579ef5c13631e8ec6e3ddad6821a3cb/src/main/java/me/escoffier/quarkus/"
+"supes/HeroService.java[HeroService] class to see the complete code):"
+msgstr ""
+"现在，我们可以直接使用这个缓存来避免每次调用时的繁重计算（查看 link:https://github.com/cescoffier/quarkus-"
+"redis-demo/blob/735f8cdbe579ef5c13631e8ec6e3ddad6821a3cb/src/main/java/me/"
+"escoffier/quarkus/supes/HeroService.java[HeroService] 类的完整代码）。"
 
 #. type: Plain text
 #: _posts/2022-09-07-redis-api-intro.adoc
 #, fuzzy
-msgid "To run the application, just start `mvn quarkus:dev` and open your browser to http://localhost:8080:"
+msgid ""
+"To run the application, just start `mvn quarkus:dev` and open your browser "
+"to http://localhost:8080:"
 msgstr "要运行该应用程序，只需启动 `mvn quarkus:dev` ，并打开浏览器到 http://localhost:8080 "
 
 #: _posts/2022-09-07-redis-api-intro.adoc
+#, fuzzy
 msgid ""
-"To see the cache in action, check the time displayed on the page and refresh the page.\n"
-"Don't forget that the cached value is only valid for 10 seconds (as set in `MyRedisCache`).\n"
+"To see the cache in action, check the time displayed on the page and refresh "
+"the page.\n"
+"Don't forget that the cached value is only valid for 10 seconds (as set in "
+"`MyRedisCache`).\n"
 "So, if you wait 10 seconds, it will recompute the result."
 msgstr ""
+"要查看缓存的运行情况，请查看页面上显示的时间并刷新页面。别忘了，缓存值的有效期只有 10 秒（在 `MyRedisCache` "
+"中设置）。因此，如果您等待 10 秒，它就会重新计算结果。"
 
 #. type: Plain text
 #: _posts/2022-09-07-redis-api-intro.adoc
 #, fuzzy
-msgid "Quarkus comes with a Redis Dev Service that automatically starts a Redis instance on your machine and configures the application. Note that you need to be able to run containers locally to use this feature."
-msgstr "Quarkus自带的Redis Dev Service可以在你的机器上自动启动一个Redis实例并配置应用程序。注意，你需要能够在本地运行容器才能使用这个功能。"
+msgid ""
+"Quarkus comes with a Redis Dev Service that automatically starts a Redis "
+"instance on your machine and configures the application. Note that you need "
+"to be able to run containers locally to use this feature."
+msgstr ""
+"Quarkus自带的Redis Dev "
+"Service可以在你的机器上自动启动一个Redis实例并配置应用程序。注意，你需要能够在本地运行容器才能使用这个功能。"
 
 #. type: Title ==
 #: _posts/2022-09-07-redis-api-intro.adoc
@@ -273,33 +375,53 @@ msgid "Conclusion"
 msgstr "解决方案"
 
 #: _posts/2022-09-07-redis-api-intro.adoc
+#, fuzzy
 msgid ""
-"This post briefly introduces the new Redis API and demonstrates its usage with a cache implementation example.\n"
-"The complete code is available from this  https://github.com/cescoffier/quarkus-redis-demo[GitHub repo]."
+"This post briefly introduces the new Redis API and demonstrates its usage "
+"with a cache implementation example.\n"
+"The complete code is available from this  https://github.com/cescoffier/"
+"quarkus-redis-demo[GitHub repo]."
 msgstr ""
+"这篇文章简要介绍了新的 Redis API，并通过一个缓存实现示例演示了其用法。完整代码可从 link:https://github.com/"
+"cescoffier/quarkus-redis-demo[GitHub] 代码库中获取。"
 
 #: _posts/2022-09-07-redis-api-intro.adoc
+#, fuzzy
 msgid ""
-"The API supports many more features, such as geospatial data, pub/sub, and transactions, which could be used to improve the `getOrSetIfAbsent`  method.\n"
+"The API supports many more features, such as geospatial data, pub/sub, and "
+"transactions, which could be used to improve the `getOrSetIfAbsent`  method.\n"
 "We will cover more advanced use cases in future posts."
 msgstr ""
+"应用程序接口支持更多的功能，如地理空间数据、发布/子发布和事务，这些功能可以用来改进 `getOrSetIfAbsent` "
+"方法。我们将在今后的文章中介绍更多高级用例。"
 
 #. type: Plain text
 #: _posts/2022-09-07-redis-api-intro.adoc
+#, fuzzy
 msgid "You can find more details about the new API in the:"
-msgstr ""
+msgstr "有关新应用程序接口的更多详情，请参阅《新应用程序接口》："
 
 #. type: Plain text
 #: _posts/2022-09-07-redis-api-intro.adoc
+#, fuzzy
 msgid "https://quarkus.io/guides/redis[Quarkus Getting Started guide]"
-msgstr ""
+msgstr "link:https://quarkus.io/guides/redis[Quarkus 入门指南]"
 
 #. type: Plain text
 #: _posts/2022-09-07-redis-api-intro.adoc
-msgid "https://quarkus.io/guides/redis-reference[Quarkus Redis Reference guide]"
-msgstr ""
+#, fuzzy
+msgid ""
+"https://quarkus.io/guides/redis-reference[Quarkus Redis Reference guide]"
+msgstr "link:https://quarkus.io/guides/redis-reference[Quarkus Redis 参考指南]"
 
 #. type: Plain text
 #: _posts/2022-09-07-redis-api-intro.adoc
-msgid "Also, the Quarkus team is working on integrating https://github.com/quarkusio/quarkus/issues/27785[Redis as a cache implementation]. So, eventually, you will just need to use `@CacheResult`, and let the magic happens."
+#, fuzzy
+msgid ""
+"Also, the Quarkus team is working on integrating https://github.com/"
+"quarkusio/quarkus/issues/27785[Redis as a cache implementation]. So, "
+"eventually, you will just need to use `@CacheResult`, and let the magic "
+"happens."
 msgstr ""
+"此外，Quarkus 团队正在努力整合 link:https://github.com/quarkusio/quarkus/issues/"
+"27785[Redis 作为缓存实现] 。因此，最终你只需使用 `@CacheResult` ，然后让奇迹发生。"

@@ -2,7 +2,7 @@
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -18,115 +18,196 @@ msgstr ""
 
 #. type: YAML Front Matter: title
 #: _posts/2023-09-30-virtual-threads-4.adoc
-#, no-wrap
+#, no-wrap, fuzzy
 msgid "Processing Kafka records on virtual threads"
-msgstr ""
+msgstr "在虚拟线程上处理 Kafka 记录"
 
 #. type: YAML Front Matter: synopsis
 #: _posts/2023-09-30-virtual-threads-4.adoc
-#, no-wrap
-msgid "Learn about the virtual threads integration in Quarkus messaging (Kafka, AMQP, Pulsar...)."
-msgstr ""
-
-#: _posts/2023-09-30-virtual-threads-4.adoc
+#, no-wrap, fuzzy
 msgid ""
-"In https://quarkus.io/blog/virtual-threads-2/[another blog post], we have seen how you can implement a CRUD application with Quarkus to utilize virtual threads.\n"
+"Learn about the virtual threads integration in Quarkus messaging (Kafka, "
+"AMQP, Pulsar...)."
+msgstr "了解 Quarkus 消息传递（Kafka、AMQP、Pulsar......）中的虚拟线程集成。"
+
+#: _posts/2023-09-30-virtual-threads-4.adoc
+#, fuzzy
+msgid ""
+"In https://quarkus.io/blog/virtual-threads-2/[another blog post], we have "
+"seen how you can implement a CRUD application with Quarkus to utilize "
+"virtual threads.\n"
 "The virtual threads support in Quarkus is not limited to REST and HTTP.\n"
-"Many other parts support virtual threads, such as gRPC, scheduled tasks, and messaging.\n"
-"In this post, we will see how you can process Kafka records on virtual threads, increasing the concurrency of the processing."
+"Many other parts support virtual threads, such as gRPC, scheduled tasks, and "
+"messaging.\n"
+"In this post, we will see how you can process Kafka records on virtual "
+"threads, increasing the concurrency of the processing."
 msgstr ""
+"在 link:https://quarkus.io/blog/virtual-threads-2/[另一篇博文] 中，我们看到了如何使用 Quarkus "
+"实现 CRUD 应用程序，以利用虚拟线程。Quarkus 的虚拟线程支持不仅限于 REST 和 HTTP。许多其他部分也支持虚拟线程，例如 "
+"gRPC、计划任务和消息传递。在本篇文章中，我们将了解如何在虚拟线程上处理 Kafka 记录，从而提高处理的并发性。"
 
 #: _posts/2023-09-30-virtual-threads-4.adoc
+#, fuzzy
 msgid "Processing messages on virtual threads"
-msgstr ""
+msgstr "在虚拟线程上处理信息"
 
 #: _posts/2023-09-30-virtual-threads-4.adoc
+#, fuzzy
 msgid ""
 "The Quarkus Reactive Messaging extension supports virtual threads.\n"
-"Similarly to HTTP, to execute the processing on a virtual thread, you need to use the `@RunOnVirtualThread` annotation:"
+"Similarly to HTTP, to execute the processing on a virtual thread, you need "
+"to use the `@RunOnVirtualThread` annotation:"
 msgstr ""
+"Quarkus Reactive Messaging 扩展支持虚拟线程。与 HTTP 类似，要在虚拟线程上执行处理，需要使用 "
+"`@RunOnVirtualThread` 注解："
 
 #: _posts/2023-09-30-virtual-threads-4.adoc
+#, fuzzy
 msgid ""
 "The processing of each message runs on separate virtual threads.\n"
-"So, for each message from the `input-channel`, a new virtual thread is created (as seen in https://quarkus.io/blog/virtual-thread-1/[this blog post], virtual thread creation is cheap)."
+"So, for each message from the `input-channel`, a new virtual thread is "
+"created (as seen in https://quarkus.io/blog/virtual-thread-1/[this blog "
+"post], virtual thread creation is cheap)."
 msgstr ""
+"每条信息的处理都在不同的虚拟线程上进行。因此，对于来自 `input-channel` 的每条消息，都会创建一个新的虚拟线程（正如 link:https:"
+"//quarkus.io/blog/virtual-thread-1/[本博文] 所述，创建虚拟线程的成本很低）。"
 
 #: _posts/2023-09-30-virtual-threads-4.adoc
+#, fuzzy
 msgid ""
-"This execution model can be used with any Quarkus reactive messaging connector, including AMQP 1.0, Apache Pulsar, and Apache Kafka.\n"
-"The concurrency of this processing is no longer limited by the number of worker threads, as it would with the `@Blocking` annotation.\n"
-"Thus, this novel execution model simplifies the development of highly concurrent data streaming applications."
+"This execution model can be used with any Quarkus reactive messaging "
+"connector, including AMQP 1.0, Apache Pulsar, and Apache Kafka.\n"
+"The concurrency of this processing is no longer limited by the number of "
+"worker threads, as it would with the `@Blocking` annotation.\n"
+"Thus, this novel execution model simplifies the development of highly "
+"concurrent data streaming applications."
 msgstr ""
+"这种执行模型可与任何 Quarkus 反应式消息连接器配合使用，包括 AMQP 1.0、Apache Pulsar 和 Apache "
+"Kafka。这种处理的并发性不再受工作线程数量的限制，就像使用 `@Blocking` "
+"注释时那样。因此，这种新颖的执行模式简化了高并发数据流应用程序的开发。"
 
 #: _posts/2023-09-30-virtual-threads-4.adoc
+#, fuzzy
 msgid ""
 "As we will see later, such high-level concurrency can cause problems.\n"
-"To keep this concurrency controllable, Quarkus limits the number of concurrent message processing to `1024` (This default value is https://quarkus.io/guides/messaging-virtual-threads[configurable]).\n"
-"One of the main benefits of this limit is preventing the application from polling millions of messages, which would be very expensive in terms of memory.\n"
-"Without this limit, a Kafka application would poll all the records from the assigned topics-partitions and consume a large amount of memory."
+"To keep this concurrency controllable, Quarkus limits the number of "
+"concurrent message processing to `1024` (This default value is https://"
+"quarkus.io/guides/messaging-virtual-threads[configurable]).\n"
+"One of the main benefits of this limit is preventing the application from "
+"polling millions of messages, which would be very expensive in terms of "
+"memory.\n"
+"Without this limit, a Kafka application would poll all the records from the "
+"assigned topics-partitions and consume a large amount of memory."
 msgstr ""
+"正如我们稍后将看到的，这种高级并发性可能会导致问题。为了保持并发性可控，Quarkus 将并发消息处理的数量限制为 `1024` （该默认值 link:"
+"https://quarkus.io/guides/messaging-virtual-threads[可配置] "
+"）。这一限制的主要好处之一是防止应用程序轮询数百万条消息，因为这将耗费大量内存。如果没有这个限制，Kafka "
+"应用程序就会轮询分配的主题分区中的所有记录，从而消耗大量内存。"
 
 #: _posts/2023-09-30-virtual-threads-4.adoc
+#, fuzzy
 msgid ""
 "Also, you may wonder why we do not use virtual threads by default.\n"
-"The reasons have been explained in https://quarkus.io/blog/virtual-thread-1/#five-things-you-need-to-know-before-using-virtual-threads-for-everything[a previous blog post].\n"
+"The reasons have been explained in https://quarkus.io/blog/virtual-thread-1/"
+"#five-things-you-need-to-know-before-using-virtual-threads-for-everything[a "
+"previous blog post].\n"
 "There are limitations that can make virtual threads dangerous.\n"
 "You need to make sure your virtual threads usage is safe before using it.\n"
 "We will see a few examples in this post."
 msgstr ""
+"此外，你可能会问为什么我们默认不使用虚拟线程。 link:https://quarkus.io/blog/virtual-thread-1/#five-"
+"things-you-need-to-know-before-using-virtual-threads-for-everything[上一篇博文] "
+"已经解释了原因。有一些限制会使虚拟线程变得危险。在使用虚拟线程之前，您需要确保其使用是安全的。我们将在本篇博文中举例说明。"
 
 #: _posts/2023-09-30-virtual-threads-4.adoc
+#, fuzzy
 msgid ""
-"To illustrate how to process Kafka records on virtual threads, let's consider a simple application.\n"
+"To illustrate how to process Kafka records on virtual threads, let's "
+"consider a simple application.\n"
 "This application is a fake fraud detector.\n"
-"It analyzes banking transactions, and if the transaction amount for a given account in a given period of time reaches a threshold, we consider there is fraud.\n"
-"The code is available in this https://github.com/quarkusio/virtual-threads-demos/tree/main/kafka-example[GitHub repository].\n"
-"Of course, you can use more complex detection algorithms, and even use AI/ML.\n"
-"In this case, we use the https://redis.io/docs/data-types/timeseries/[Redis time series] commands inefficiently to introduce more I/O than necessary.\n"
+"It analyzes banking transactions, and if the transaction amount for a given "
+"account in a given period of time reaches a threshold, we consider there is "
+"fraud.\n"
+"The code is available in this https://github.com/quarkusio/virtual-threads-"
+"demos/tree/main/kafka-example[GitHub repository].\n"
+"Of course, you can use more complex detection algorithms, and even use AI/ML."
+"\n"
+"In this case, we use the https://redis.io/docs/data-types/timeseries/[Redis "
+"time series] commands inefficiently to introduce more I/O than necessary.\n"
 "It is done purposefully to utilize the virtual thread's ability to block:"
 msgstr ""
+"为了说明如何在虚拟线程上处理 Kafka "
+"记录，让我们考虑一个简单的应用程序。这个应用程序是一个假冒欺诈检测器。它分析银行交易，如果给定时间内给定账户的交易金额达到阈值，我们就认为存在欺诈行为。代码可在此 "
+"link:https://github.com/quarkusio/virtual-threads-demos/tree/main/kafka-"
+"example[GitHub] 代码 link:https://github.com/quarkusio/virtual-threads-demos/"
+"tree/main/kafka-example[库中] 找到。当然，你也可以使用更复杂的检测算法，甚至使用人工智能/人工智能。在本例中，我们低效地使用了 "
+"link:https://redis.io/docs/data-types/timeseries/[Redis 时间序列] 命令，引入了超出必要的 I/"
+"O。这样做的目的是为了利用虚拟线程的阻塞能力："
 
 #: _posts/2023-09-30-virtual-threads-4.adoc
+#, fuzzy
 msgid ""
-"If you run this application and have a burst of transactions, it will not work.\n"
+"If you run this application and have a burst of transactions, it will not "
+"work.\n"
 "The processing is correctly executed on virtual threads.\n"
-"However, the Redis connection pool has not been tuned to handle that concurrency level.\n"
-"Very quickly, no Redis connections are available, and it starts enqueuing the commands into a waiting list.\n"
+"However, the Redis connection pool has not been tuned to handle that "
+"concurrency level.\n"
+"Very quickly, no Redis connections are available, and it starts enqueuing "
+"the commands into a waiting list.\n"
 "When this queue is full, it starts rejecting the commands.\n"
 "Fortunately, you can configure the max size of the waiting queue with:"
 msgstr ""
+"如果运行此应用程序并发生突发事务，它将无法工作。处理会在虚拟线程上正确执行。但是，Redis 连接池尚未调整到可处理该并发级别。很快，就没有可用的 "
+"Redis 连接了，于是它开始将命令排入等待队列。当队列已满时，它就会开始拒绝命令。幸运的是，你可以通过以下方式配置等待队列的最大大小："
 
 #: _posts/2023-09-30-virtual-threads-4.adoc
+#, fuzzy
 msgid ""
-"While we use Redis in this application, you will face identical problems with many other clients (including HTTP clients).\n"
+"While we use Redis in this application, you will face identical problems "
+"with many other clients (including HTTP clients).\n"
 "So, configure them properly to handle this new level of concurrency."
 msgstr ""
+"虽然我们在此应用程序中使用了 Redis，但许多其他客户端（包括 HTTP "
+"客户端）也会遇到相同的问题。因此，请对它们进行适当配置，以处理这种新的并发级别。"
 
 #: _posts/2023-09-30-virtual-threads-4.adoc
-msgid "If you run the application and open the UI, you will see that the concurrency reached a maximum of 1024, as expected."
-msgstr ""
+#, fuzzy
+msgid ""
+"If you run the application and open the UI, you will see that the "
+"concurrency reached a maximum of 1024, as expected."
+msgstr "如果运行应用程序并打开用户界面，就会发现并发量达到了预期的 1024。"
 
 #: _posts/2023-09-30-virtual-threads-4.adoc
+#, fuzzy
 msgid "A note about pinning and monopolization"
-msgstr ""
+msgstr "关于插针和垄断的说明"
 
 #: _posts/2023-09-30-virtual-threads-4.adoc
+#, fuzzy
 msgid ""
 "Our messaging connectors have been tailored to avoid pinning.\n"
 "It is also the case for the Quarkus Redis client.\n"
 "Thus, this application does not pin the carrier thread."
-msgstr ""
+msgstr "我们的消息传递连接器经过专门定制，可避免钉销。Quarkus Redis 客户端也是如此。因此，该应用程序不会钉住载体线程。"
 
 #: _posts/2023-09-30-virtual-threads-4.adoc
+#, fuzzy
 msgid ""
 "But pinning is not the only problem that can arise.\n"
-"While virtual threads can be appealing, you must be careful not to monopolize the carrier thread.\n"
-"If, for example, you implemented a complex and CPU-intensive detection algorithm instead of relying on Redis, you would likely monopolize the carrier thread, defeating the purpose of virtual threads.\n"
-"It will force the JVM to create new carrier threads, ultimately increasing memory usage.\n"
+"While virtual threads can be appealing, you must be careful not to "
+"monopolize the carrier thread.\n"
+"If, for example, you implemented a complex and CPU-intensive detection "
+"algorithm instead of relying on Redis, you would likely monopolize the "
+"carrier thread, defeating the purpose of virtual threads.\n"
+"It will force the JVM to create new carrier threads, ultimately increasing "
+"memory usage.\n"
 "The JVM will limit the number of created carrier threads.\n"
-"When this happens, your application will under-perform as your tasks will be enqueued until a carrier thread is available."
+"When this happens, your application will under-perform as your tasks will be "
+"enqueued until a carrier thread is available."
 msgstr ""
+"但是，钉牢并不是唯一可能出现的问题。虽然虚拟线程很有吸引力，但必须注意不要垄断载体线程。例如，如果您不依赖 Redis，而是实施了一种复杂的 CPU "
+"密集型检测算法，那么您很可能会垄断载体线程，从而违背虚拟线程的初衷。这将迫使 JVM 创建新的载体线程，最终增加内存使用量。JVM "
+"会限制创建的载体线程数量。出现这种情况时，您的应用程序将无法正常运行，因为您的任务将被排队，直到有载体线程可用为止。"
 
 #: _posts/2023-09-30-virtual-threads-4.adoc
 #, fuzzy
@@ -134,16 +215,25 @@ msgid "Summary"
 msgstr "摘要"
 
 #: _posts/2023-09-30-virtual-threads-4.adoc
+#, fuzzy
 msgid ""
-"This post explains how you can execute message processing on virtual threads.\n"
-"While the example uses Kafka, you can use the same approach with the other messaging connectors provided by Quarkus.\n"
+"This post explains how you can execute message processing on virtual threads."
+"\n"
+"While the example uses Kafka, you can use the same approach with the other "
+"messaging connectors provided by Quarkus.\n"
 "Do not forget that such kind of application:"
 msgstr ""
+"这篇文章介绍了如何在虚拟线程上执行消息处理。虽然示例使用的是 Kafka，但你也可以对 Quarkus "
+"提供的其他消息连接器使用同样的方法。不要忘了，此类应用程序也可以使用虚拟线程："
 
 #: _posts/2023-09-30-virtual-threads-4.adoc
-msgid "requires tuning connection pools, as the concurrency is much higher than before"
-msgstr ""
+#, fuzzy
+msgid ""
+"requires tuning connection pools, as the concurrency is much higher than "
+"before"
+msgstr "需要调整连接池，因为并发量比以前高得多"
 
 #: _posts/2023-09-30-virtual-threads-4.adoc
+#, fuzzy
 msgid "can lead to monopolization if your processing is CPU-intensive"
-msgstr ""
+msgstr "如果您的处理是 CPU 密集型的，则可能导致垄断"

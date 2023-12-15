@@ -2,7 +2,7 @@
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -25,19 +25,32 @@ msgstr "用Stork发现和选择Kubernetes服务"
 #. type: YAML Front Matter: synopsis
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
 #, fuzzy, no-wrap
-msgid "How to configure Smallrye Stork in a client-side microservice for using Kubernetes Service Discovery strategy"
+msgid ""
+"How to configure Smallrye Stork in a client-side microservice for using "
+"Kubernetes Service Discovery strategy"
 msgstr "如何在客户端微服务中配置Smallrye Stork以使用Kubernetes服务发现策略"
 
 #. type: Plain text
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
 #, fuzzy
-msgid "As we already described in the https://quarkus.io/blog/smallrye-stork-intro/[previous post], SmallRye Stork is a service discovery and client-side load-balancing framework that brings out-of-the-box integration with Kubernetes, among others. This post will explain this integration, how to configure Stork in a client-side microservice, and how it differs from the classic Kubernetes service discovery and load-balancing."
-msgstr "正如我们在 link:https://quarkus.io/blog/smallrye-stork-intro/[上一篇文章] 中所描述的，SmallRye Stork是一个服务发现和客户端负载平衡框架，它与Kubernetes等带来了开箱即用的集成。这篇文章将解释这种集成，如何在客户端微服务中配置Stork，以及它与经典的Kubernetes服务发现和负载均衡有什么不同。"
+msgid ""
+"As we already described in the https://quarkus.io/blog/smallrye-stork-intro/"
+"[previous post], SmallRye Stork is a service discovery and client-side load-"
+"balancing framework that brings out-of-the-box integration with Kubernetes, "
+"among others. This post will explain this integration, how to configure "
+"Stork in a client-side microservice, and how it differs from the classic "
+"Kubernetes service discovery and load-balancing."
+msgstr ""
+"正如我们在 link:https://quarkus.io/blog/smallrye-stork-intro/[上一篇文章] "
+"中所描述的，SmallRye "
+"Stork是一个服务发现和客户端负载平衡框架，它与Kubernetes等带来了开箱即用的集成。这篇文章将解释这种集成，如何在客户端微服务中配置Stork，以及它与经典的Kubernetes服务发现和负载均衡有什么不同。"
 
 #. type: Plain text
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
 #, fuzzy
-msgid "This post has been updated to use the `quarkus.` prefix when configuring stork properties. This prefix is required since Quarkus 2.8."
+msgid ""
+"This post has been updated to use the `quarkus.` prefix when configuring "
+"stork properties. This prefix is required since Quarkus 2.8."
 msgstr "这篇文章已经更新，在配置stork属性时使用 `quarkus.` 前缀。从Quarkus 2.8开始，这个前缀是必须的。"
 
 #. type: Title ==
@@ -55,8 +68,20 @@ msgstr "Kubernetes有内置的服务发现和负载平衡。"
 #. type: Plain text
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
 #, fuzzy
-msgid "Let's imagine you have an application deployed in Kubernetes and exposing an HTTP API. You declare a Kubernetes service that delegates the calls to your application. This service acts as a proxy in front of a set of pods (often application replicas). When another application calls our HTTP API, it uses DNS to locate the Kubernetes service and uses the resolved address. It's important to understand that it does not locate and call the application instance but the Kubernetes service. This service then delegates the call to the actual application and implements a round-robin when there are multiple replicas."
-msgstr "让我们想象一下，你有一个部署在Kubernetes中的应用程序，并暴露了一个HTTP API。你声明了一个Kubernetes服务，将调用委托给你的应用程序。这个服务在一组pod（通常是应用程序副本）面前充当代理。当另一个应用程序调用我们的HTTP API时，它使用DNS来定位Kubernetes服务，并使用解析的地址。重要的是要理解，它不是定位和调用应用程序实例，而是Kubernetes服务。然后，该服务将调用委托给实际的应用程序，并在有多个副本时实现轮流调用。"
+msgid ""
+"Let's imagine you have an application deployed in Kubernetes and exposing an "
+"HTTP API. You declare a Kubernetes service that delegates the calls to your "
+"application. This service acts as a proxy in front of a set of pods (often "
+"application replicas). When another application calls our HTTP API, it uses "
+"DNS to locate the Kubernetes service and uses the resolved address. It's "
+"important to understand that it does not locate and call the application "
+"instance but the Kubernetes service. This service then delegates the call to "
+"the actual application and implements a round-robin when there are multiple "
+"replicas."
+msgstr ""
+"让我们想象一下，你有一个部署在Kubernetes中的应用程序，并暴露了一个HTTP "
+"API。你声明了一个Kubernetes服务，将调用委托给你的应用程序。这个服务在一组pod（通常是应用程序副本）面前充当代理。当另一个应用程序调用我们的HTTP "
+"API时，它使用DNS来定位Kubernetes服务，并使用解析的地址。重要的是要理解，它不是定位和调用应用程序实例，而是Kubernetes服务。然后，该服务将调用委托给实际的应用程序，并在有多个副本时实现轮流调用。"
 
 #. type: Title ==
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
@@ -67,32 +92,55 @@ msgstr "Stork为Kubernetes带来了什么？"
 #. type: Plain text
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
 #, fuzzy
-msgid "Even though Kubernetes has built-in support for service discovery, sometimes we need more flexibility in the service instance selection. As we have seen, the Kubernetes service implements a round-robin.  With Stork, you can customize the selection."
-msgstr "尽管Kubernetes内置了对服务发现的支持，但有时我们需要在服务实例选择上有更大的灵活性。正如我们所看到的，Kubernetes服务实现了一个轮回。使用Stork，你可以自定义选择。"
+msgid ""
+"Even though Kubernetes has built-in support for service discovery, sometimes "
+"we need more flexibility in the service instance selection. As we have seen, "
+"the Kubernetes service implements a round-robin.  With Stork, you can "
+"customize the selection."
+msgstr ""
+"尽管Kubernetes内置了对服务发现的支持，但有时我们需要在服务实例选择上有更大的灵活性。正如我们所看到的，Kubernetes服务实现了一个轮回。使用Stork，你可以自定义选择。"
 
 #. type: Plain text
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
 #, fuzzy
-msgid "Unlike in the previous example, Stork does not use DNS to locate the Kubernetes service. It uses the Kubernetes API to retrieve the set of pods behind a Kubernetes service. Then, you can apply any Stork service selection or even implement your own."
-msgstr "与前面的例子不同，Stork不使用DNS来定位Kubernetes服务。它使用Kubernetes API来检索Kubernetes服务背后的pod集合。然后，你可以应用任何Stork服务选择，甚至实现你自己的。"
+msgid ""
+"Unlike in the previous example, Stork does not use DNS to locate the "
+"Kubernetes service. It uses the Kubernetes API to retrieve the set of pods "
+"behind a Kubernetes service. Then, you can apply any Stork service selection "
+"or even implement your own."
+msgstr ""
+"与前面的例子不同，Stork不使用DNS来定位Kubernetes服务。它使用Kubernetes "
+"API来检索Kubernetes服务背后的pod集合。然后，你可以应用任何Stork服务选择，甚至实现你自己的。"
 
 #. type: Plain text
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
 #, fuzzy
-msgid "The following figure depicts the architecture and how Stork locates and selects the service instance."
+msgid ""
+"The following figure depicts the architecture and how Stork locates and "
+"selects the service instance."
 msgstr "下图描述了架构以及Stork如何定位和选择服务实例。"
 
 #. type: Plain text
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
 #, fuzzy
-msgid "As shown in the architecture above, the Kubernetes rest-service is backed by two pods.  While classic Kubernetes service discovery would ensure that requests to the rest-service are load-balanced across these two pods, Stork retrieves the pods' addresses directly. Thus it can handle the service selection (using a round-robin for now)."
-msgstr "如上面的架构所示，Kubernetes休息服务是由两个pod支持的。虽然经典的Kubernetes服务发现将确保对休息服务的请求在这两个pod之间进行负载均衡，但Stork直接检索pod的地址。因此，它可以处理服务的选择（目前使用一个轮回）。"
+msgid ""
+"As shown in the architecture above, the Kubernetes rest-service is backed by "
+"two pods.  While classic Kubernetes service discovery would ensure that "
+"requests to the rest-service are load-balanced across these two pods, Stork "
+"retrieves the pods' addresses directly. Thus it can handle the service "
+"selection (using a round-robin for now)."
+msgstr ""
+"如上面的架构所示，Kubernetes休息服务是由两个pod支持的。虽然经典的Kubernetes服务发现将确保对休息服务的请求在这两个pod之间进行负载均衡，但Stork直接检索pod的地址。因此，它可以处理服务的选择（目前使用一个轮回）。"
 
 #. type: Plain text
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
 #, fuzzy
-msgid "Note that while applications using Stork do not use the Kubernetes service delegation, they still require a Kubernetes service to discover the backed pods. So, it does not change your Kubernetes deployment."
-msgstr "注意，虽然使用Stork的应用程序不使用Kubernetes服务委托，但它们仍然需要Kubernetes服务来发现支持的pod。因此，它不会改变你的Kubernetes部署。"
+msgid ""
+"Note that while applications using Stork do not use the Kubernetes service "
+"delegation, they still require a Kubernetes service to discover the backed "
+"pods. So, it does not change your Kubernetes deployment."
+msgstr ""
+"注意，虽然使用Stork的应用程序不使用Kubernetes服务委托，但它们仍然需要Kubernetes服务来发现支持的pod。因此，它不会改变你的Kubernetes部署。"
 
 #. type: Title ==
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
@@ -101,8 +149,15 @@ msgid "Configuring and Using Stork Kubernetes Service Discovery"
 msgstr "配置和使用Stork Kubernetes服务发现系统"
 
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
-msgid "On the client-side, our Quarkus application uses the REST Client Reactive to interact with the REST API exposed by the `rest-service`. The  Client app uses Stork to discover the rest-service instances. The easiest way to enable Stork is to add the corresponding Jar to the classpath of your project:"
+#, fuzzy
+msgid ""
+"On the client-side, our Quarkus application uses the REST Client Reactive to "
+"interact with the REST API exposed by the `rest-service`. The  Client app "
+"uses Stork to discover the rest-service instances. The easiest way to enable "
+"Stork is to add the corresponding Jar to the classpath of your project:"
 msgstr ""
+"在客户端，我们的 Quarkus 应用程序使用 REST Client Reactive 与 `rest-service` 公开的 REST API "
+"进行交互。客户端应用程序使用 Stork 来发现 rest-service 实例。启用 Stork 的最简单方法就是在项目的类路径中添加相应的 Jar："
 
 #. type: Block title
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
@@ -113,8 +168,17 @@ msgstr "pom.xml"
 #. type: Plain text
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
 #, fuzzy
-msgid "With Stork and the Stork Kubernetes Service Discovery on the classpath, we need to tell Stork how to locate and select the service. To achieve this, we just add `stork.[service-name].[kebab-cased-property-name]` into the Quarkus application configuration. In our case, to configure the rest-service and indicate to Stork that it should use Kubernetes, we add:"
-msgstr "有了Stork和classpath上的Stork Kubernetes服务发现，我们需要告诉Stork如何定位和选择服务。为了实现这一点，我们只需在Quarkus应用配置中添加 `stork.[service-name].[kebab-cased-property-name]` 。在我们的案例中，为了配置rest-service并向Stork表明它应该使用Kubernetes，我们添加了。"
+msgid ""
+"With Stork and the Stork Kubernetes Service Discovery on the classpath, we "
+"need to tell Stork how to locate and select the service. To achieve this, we "
+"just add `stork.[service-name].[kebab-cased-property-name]` into the Quarkus "
+"application configuration. In our case, to configure the rest-service and "
+"indicate to Stork that it should use Kubernetes, we add:"
+msgstr ""
+"有了Stork和classpath上的Stork "
+"Kubernetes服务发现，我们需要告诉Stork如何定位和选择服务。为了实现这一点，我们只需在Quarkus应用配置中添加 `stork."
+"[service-name].[kebab-cased-property-name]` 。在我们的案例中，为了配置rest-"
+"service并向Stork表明它应该使用Kubernetes，我们添加了。"
 
 #. type: Block title
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
@@ -125,17 +189,26 @@ msgstr "应用程序属性"
 #. type: Plain text
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
 #, fuzzy
-msgid "Note that you can also configure them via annotations, check the `@ServiceDiscoveryType` and `@ServiceDiscoveryAttribute` annotations."
-msgstr "注意，你也可以通过注释来配置它们，查看 `@ServiceDiscoveryType` 和 `@ServiceDiscoveryAttribute` 注释。"
+msgid ""
+"Note that you can also configure them via annotations, check the "
+"`@ServiceDiscoveryType` and `@ServiceDiscoveryAttribute` annotations."
+msgstr ""
+"注意，你也可以通过注释来配置它们，查看 `@ServiceDiscoveryType` 和 `@ServiceDiscoveryAttribute` "
+"注释。"
 
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
-msgid "We also can  limit the service lookup to our namespace. We can also use the `all` value to look for services in all namespaces."
-msgstr ""
+#, fuzzy
+msgid ""
+"We also can  limit the service lookup to our namespace. We can also use the "
+"`all` value to look for services in all namespaces."
+msgstr "我们还可以将服务查找限制在我们的命名空间内。我们还可以使用 `all` 值查找所有命名空间中的服务。"
 
 #. type: Plain text
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
 #, fuzzy
-msgid "There are a few more properties that we can configure to tune the service discovery:"
+msgid ""
+"There are a few more properties that we can configure to tune the service "
+"discovery:"
 msgstr "还有一些我们可以配置的属性来调整服务发现。"
 
 #. type: Table
@@ -207,8 +280,13 @@ msgstr "这就是Stork Kubernetes服务发现的简易程度。"
 #. type: Plain text
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
 #, fuzzy
-msgid "Once Stork is configured, we need to configure the REST Client to use it. It can be done in the `@RegisterRestClient` annotated interface by adding the `baseUri` attribute with the `stork://` scheme:"
-msgstr "一旦Stork被配置好，我们需要配置REST客户端来使用它。它可以在 `@RegisterRestClient` 注释的接口中通过添加 `baseUri` 属性与 `stork://` 方案来完成。"
+msgid ""
+"Once Stork is configured, we need to configure the REST Client to use it. It "
+"can be done in the `@RegisterRestClient` annotated interface by adding the "
+"`baseUri` attribute with the `stork://` scheme:"
+msgstr ""
+"一旦Stork被配置好，我们需要配置REST客户端来使用它。它可以在 `@RegisterRestClient` 注释的接口中通过添加 "
+"`baseUri` 属性与 `stork://` 方案来完成。"
 
 #. type: Title ==
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
@@ -218,23 +296,36 @@ msgstr "定制服务选择"
 
 #. type: Plain text
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
-msgid "Now that the service is located, we need to select the _best_ instance. For example, you can use the least-response-time load-balancer implementation. This selection strategy monitors the interactions and selects the fastest instance to improve the response time."
+#, fuzzy
+msgid ""
+"Now that the service is located, we need to select the _best_ instance. For "
+"example, you can use the least-response-time load-balancer implementation. "
+"This selection strategy monitors the interactions and selects the fastest "
+"instance to improve the response time."
 msgstr ""
+"现在服务已经定位，我们需要选择 _最佳_ 实例。例如，可以使用最小响应时间负载平衡器实现。这种选择策略会监控交互，并选择最快的实例来提高响应时间。"
 
 #. type: Plain text
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
-msgid "To achieve this, you need to add the load-balancer implementation on your classpath:"
-msgstr ""
+#, fuzzy
+msgid ""
+"To achieve this, you need to add the load-balancer implementation on your "
+"classpath:"
+msgstr "为此，您需要在类路径中添加负载平衡器实现："
 
 #. type: Plain text
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
+#, fuzzy
 msgid "Then, in the application configuration, add:"
-msgstr ""
+msgstr "然后，在应用程序配置中添加"
 
 #. type: Plain text
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
-msgid "Obviously, you can pick any load-balancing strategy or even implement your own one!"
-msgstr ""
+#, fuzzy
+msgid ""
+"Obviously, you can pick any load-balancing strategy or even implement your "
+"own one!"
+msgstr "显然，你可以选择任何负载平衡策略，甚至实施自己的策略！"
 
 #. type: Title ==
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
@@ -244,10 +335,26 @@ msgstr "摘要"
 
 #. type: Plain text
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
-msgid "This post shows how you can use Stork in a Kubernetes environment to customize the service selection. While Kubernetes offers built-in service discovery and load-balancing, Stork adds another level of flexibility."
+#, fuzzy
+msgid ""
+"This post shows how you can use Stork in a Kubernetes environment to "
+"customize the service selection. While Kubernetes offers built-in service "
+"discovery and load-balancing, Stork adds another level of flexibility."
 msgstr ""
+"这篇文章展示了如何在 Kubernetes 环境中使用 Stork 来定制服务选择。Kubernetes 提供内置服务发现和负载平衡，而 Stork "
+"则增加了另一层灵活性。"
 
 #. type: Plain text
 #: _posts/2022-02-17-stork-kubernetes-discovery.adoc
-msgid "You can check the code of the example in https://github.com/michalszynkiewicz/rest-client-reactive-stork/tree/kubernetes[this repo] for the client-side, and https://github.com/michalszynkiewicz/configurable-rest-service/tree/kubernetes[this one] for the HTTP service."
+#, fuzzy
+msgid ""
+"You can check the code of the example in https://github.com/"
+"michalszynkiewicz/rest-client-reactive-stork/tree/kubernetes[this repo] for "
+"the client-side, and https://github.com/michalszynkiewicz/configurable-rest-"
+"service/tree/kubernetes[this one] for the HTTP service."
 msgstr ""
+"您可以在 link:https://github.com/michalszynkiewicz/rest-client-reactive-stork/"
+"tree/kubernetes[此版本库] 中查看客户端的示例代码，也可以在 link:https://github.com/"
+"michalszynkiewicz/configurable-rest-service/tree/kubernetes[此] link:https://"
+"github.com/michalszynkiewicz/rest-client-reactive-stork/tree/"
+"kubernetes[版本库中] 查看 HTTP 服务的代码。"
