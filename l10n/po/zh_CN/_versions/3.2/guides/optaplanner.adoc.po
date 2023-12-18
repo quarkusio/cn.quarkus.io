@@ -11,7 +11,7 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,1845 +20,883 @@ msgstr ""
 #. and pull requests should be submitted there:
 #. https://github.com/quarkusio/quarkus/tree/main/docs/src/main/asciidoc
 #. type: Title =
-#: upstream/_versions/3.2/guides/optaplanner.adoc:6
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy, no-wrap
 msgid "OptaPlanner - Using AI to optimize a schedule with OptaPlanner"
-msgstr ""
+msgstr "OptaPlanner - 通过 OptaPlanner 使用人工智能优化日程安排"
 
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:14
-msgid "This guide walks you through the process of creating a Quarkus application with https://www.optaplanner.org/[OptaPlanner]'s constraint solving Artificial Intelligence (AI)."
-msgstr ""
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"This guide walks you through the process of creating a Quarkus application\n"
+"with https://www.optaplanner.org/[OptaPlanner]'s constraint solving Artificial Intelligence (AI)."
+msgstr "本指南将指导您使用 link:https://www.optaplanner.org/[OptaPlanner] 的约束求解人工智能（AI）创建 Quarkus 应用程序。"
 
 #. type: Title ==
-#: upstream/_versions/3.2/guides/optaplanner.adoc:15
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy, no-wrap
 msgid "What you will build"
-msgstr ""
+msgstr "你将建造什么"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:18
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "You will build a REST application that optimizes a school timetable for students and teachers:"
-msgstr ""
+msgstr "您将构建一个 REST 应用程序，为学生和教师优化学校课程表："
 
-#. type: Target for macro image
-#: upstream/_versions/3.2/guides/optaplanner.adoc:19
-#, no-wrap
-msgid "optaplanner-time-table-app-screenshot.png"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:23
-msgid "Your service will assign `Lesson` instances to `Timeslot` and `Room` instances automatically by using AI to adhere to hard and soft scheduling _constraints_, such as the following examples:"
-msgstr ""
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"Your service will assign `Lesson` instances to `Timeslot` and `Room` instances automatically\n"
+"by using AI to adhere to hard and soft scheduling _constraints_, such as the following examples:"
+msgstr "您的服务将通过人工智能自动将 `Lesson` 实例分配到 `Timeslot` 和 `Room` 实例，以遵守硬性和软性调度 _约束_ ，例如以下示例："
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:25
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "A room can have at most one lesson at the same time."
-msgstr ""
+msgstr "一个房间最多只能同时上一节课。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:26
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "A teacher can teach at most one lesson at the same time."
-msgstr ""
+msgstr "一名教师在同一时间最多只能讲授一堂课。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:27
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "A student can attend at most one lesson at the same time."
-msgstr ""
+msgstr "一名学生在同一时间最多只能上一节课。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:28
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "A teacher prefers to teach all lessons in the same room."
-msgstr ""
+msgstr "教师喜欢在同一间教室教授所有课程。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:29
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "A teacher prefers to teach sequential lessons and dislikes gaps between lessons."
-msgstr ""
+msgstr "教师喜欢按顺序授课，不喜欢课程之间有空隙。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:30
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "A student dislikes sequential lessons on the same subject."
-msgstr ""
+msgstr "学生不喜欢同一科目的连续课程。"
 
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:37
-msgid "Mathematically speaking, school timetabling is an _NP-hard_ problem.  This means it is difficult to scale.  Simply brute force iterating through all possible combinations takes millions of years for a non-trivial dataset, even on a supercomputer.  Luckily, AI constraint solvers such as OptaPlanner have advanced algorithms that deliver a near-optimal solution in a reasonable amount of time."
-msgstr ""
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"Mathematically speaking, school timetabling is an _NP-hard_ problem.\n"
+"This means it is difficult to scale.\n"
+"Simply brute force iterating through all possible combinations takes millions of years\n"
+"for a non-trivial dataset, even on a supercomputer.\n"
+"Luckily, AI constraint solvers such as OptaPlanner have advanced algorithms\n"
+"that deliver a near-optimal solution in a reasonable amount of time."
+msgstr "从数学上讲，学校时间安排是一个 _NP 难_ 问题。这意味着它很难扩展。即使在超级计算机上，简单地对所有可能的组合进行蛮力迭代也需要数百万年的时间。幸运的是，OptaPlanner 等人工智能约束求解器拥有先进的算法，能在合理的时间内提供接近最优的解决方案。"
 
 #. type: Title ==
-#: upstream/_versions/3.2/guides/optaplanner.adoc:39
+#: _versions/3.2/guides/optaplanner.adoc
 #, no-wrap
 msgid "Solution"
 msgstr "解决方案"
 
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:43
-msgid "We recommend that you follow the instructions in the next sections and create the application step by step.  However, you can go right to the completed example."
-msgstr "我们建议您按照下面几节的说明，一步一步地创建应用程序。但您也可以直接跳到已完成的例子。"
+#: _versions/3.2/guides/optaplanner.adoc
+msgid ""
+"We recommend that you follow the instructions in the next sections and create the application step by step.\n"
+"However, you can go right to the completed example."
+msgstr "我们建议您按照下一节的说明逐步创建应用程序。然而，您可以直接转到已完成的示例。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:45
+#: _versions/3.2/guides/optaplanner.adoc
 msgid "Clone the Git repository: `git clone {quickstarts-clone-url}`, or download an {quickstarts-archive-url}[archive]."
 msgstr "克隆 Git 仓库： `git clone {quickstarts-clone-url}` ，或者下载 {quickstarts-archive-url}[存档] 。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:47
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "The solution is located in link:{quickstarts-tree-url}/optaplanner-quickstart[the `optaplanner-quickstart` directory]."
-msgstr ""
+msgstr "解决方案位于 link:{quickstarts-tree-url}/optaplanner-quickstart[optaplanner-quickstart 目录] 中。"
 
 #. type: Title ==
-#: upstream/_versions/3.2/guides/optaplanner.adoc:48
+#: _versions/3.2/guides/optaplanner.adoc
 #, no-wrap
 msgid "Prerequisites"
 msgstr "先决条件"
 
 #. type: Title ==
-#: upstream/_versions/3.2/guides/optaplanner.adoc:54
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy, no-wrap
 msgid "The build file and the dependencies"
-msgstr ""
+msgstr "构建文件和依赖项"
+
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"Use https://code.quarkus.io/[code.quarkus.io] to generate an application\n"
+"with the following extensions, for Maven or Gradle:"
+msgstr "使用 link:https://code.quarkus.io/[code.quarkus.io] 生成带有以下扩展的应用程序，适用于 Maven 或 Gradle："
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:58
-msgid "Use https://code.quarkus.io/[code.quarkus.io] to generate an application with the following extensions, for Maven or Gradle:"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:60
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "RESTEasy Reactive (`quarkus-resteasy-reactive`)"
-msgstr ""
+msgstr "RESTEasy Reactive ( `quarkus-resteasy-reactive` )"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:61
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "RESTEasy Reactive Jackson (`quarkus-resteasy-reactive-jackson`)"
-msgstr ""
+msgstr "RESTEasy Reactive Jackson ( `quarkus-resteasy-reactive-jackson` )"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:62
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "OptaPlanner (`optaplanner-quarkus`)"
-msgstr ""
+msgstr "OptaPlanner ( `optaplanner-quarkus` )"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:63
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "OptaPlanner Jackson (`optaplanner-quarkus-jackson`)"
-msgstr ""
+msgstr "OptaPlanner Jackson ( `optaplanner-quarkus-jackson` )"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:65
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "Alternatively, generate it from the command line:"
-msgstr ""
+msgstr "或者，从命令行中生成："
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:71
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "This will include the following dependencies in your build file:"
-msgstr ""
+msgstr "这将在构建文件中包含以下依赖项："
 
 #. type: Block title
-#: upstream/_versions/3.2/guides/optaplanner.adoc:73
-#: upstream/_versions/3.2/guides/optaplanner.adoc:727
+#: _versions/3.2/guides/optaplanner.adoc
 #, no-wrap
 msgid "pom.xml"
 msgstr "pom.xml"
 
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:110
-#, no-wrap
-msgid ""
-"<dependencyManagement>\n"
-"    <dependencies>\n"
-"        <dependency>\n"
-"            <groupId>{quarkus-platform-groupid}</groupId>\n"
-"            <artifactId>quarkus-bom</artifactId>\n"
-"            <version>{quarkus-version}</version>\n"
-"            <type>pom</type>\n"
-"            <scope>import</scope>\n"
-"        </dependency>\n"
-"        <dependency>\n"
-"            <groupId>{quarkus-platform-groupid}</groupId>\n"
-"            <artifactId>quarkus-optaplanner-bom</artifactId>\n"
-"            <version>{quarkus-version}</version>\n"
-"            <type>pom</type>\n"
-"            <scope>import</scope>\n"
-"        </dependency>\n"
-"    </dependencies>\n"
-"</dependencyManagement>\n"
-"<dependencies>\n"
-"    <dependency>\n"
-"        <groupId>io.quarkus</groupId>\n"
-"        <artifactId>quarkus-resteasy-reactive</artifactId>\n"
-"    </dependency>\n"
-"    <dependency>\n"
-"        <groupId>io.quarkus</groupId>\n"
-"        <artifactId>quarkus-resteasy-reactive-jackson</artifactId>\n"
-"    </dependency>\n"
-"    <dependency>\n"
-"        <groupId>org.optaplanner</groupId>\n"
-"        <artifactId>optaplanner-quarkus</artifactId>\n"
-"    </dependency>\n"
-"    <dependency>\n"
-"        <groupId>org.optaplanner</groupId>\n"
-"        <artifactId>optaplanner-quarkus-jackson</artifactId>\n"
-"    </dependency>\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:117
-#, no-wrap
-msgid ""
-"    <dependency>\n"
-"        <groupId>io.quarkus</groupId>\n"
-"        <artifactId>quarkus-junit5</artifactId>\n"
-"        <scope>test</scope>\n"
-"    </dependency>\n"
-"</dependencies>\n"
-msgstr ""
-
 #. type: Block title
-#: upstream/_versions/3.2/guides/optaplanner.adoc:120
-#: upstream/_versions/3.2/guides/optaplanner.adoc:737
+#: _versions/3.2/guides/optaplanner.adoc
 #, no-wrap
 msgid "build.gradle"
 msgstr "build.gradle"
 
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:129
-#, no-wrap
-msgid ""
-"dependencies {\n"
-"    implementation enforcedPlatform(\"{quarkus-platform-groupid}:quarkus-bom:{quarkus-version}\")\n"
-"    implementation enforcedPlatform(\"{quarkus-platform-groupid}:quarkus-optaplanner-bom:{quarkus-version}\")\n"
-"    implementation 'io.quarkus:quarkus-resteasy-reactive'\n"
-"    implementation 'io.quarkus:quarkus-resteasy-reactive-jackson'\n"
-"    implementation 'org.optaplanner:optaplanner-quarkus'\n"
-"    implementation 'org.optaplanner:optaplanner-quarkus-jackson'\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:132
-#, no-wrap
-msgid ""
-"    testImplementation 'io.quarkus:quarkus-junit5'\n"
-"}\n"
-msgstr ""
-
 #. type: Title ==
-#: upstream/_versions/3.2/guides/optaplanner.adoc:134
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy, no-wrap
 msgid "Model the domain objects"
-msgstr ""
+msgstr "为领域对象建模"
 
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:138
-msgid "Your goal is to assign each lesson to a time slot and a room.  You will create these classes:"
-msgstr ""
-
-#. type: Target for macro image
-#: upstream/_versions/3.2/guides/optaplanner.adoc:139
-#, no-wrap
-msgid "optaplanner-time-table-class-diagram-pure.png"
-msgstr ""
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"Your goal is to assign each lesson to a time slot and a room.\n"
+"You will create these classes:"
+msgstr "您的目标是将每节课分配到一个时间段和一个房间。您将创建这些课程："
 
 #. type: Title ===
-#: upstream/_versions/3.2/guides/optaplanner.adoc:141
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy, no-wrap
 msgid "Timeslot"
-msgstr ""
+msgstr "时段"
+
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"The `Timeslot` class represents a time interval when lessons are taught,\n"
+"for example, `Monday 10:30 - 11:30` or `Tuesday 13:30 - 14:30`.\n"
+"For simplicity's sake, all time slots have the same duration\n"
+"and there are no time slots during lunch or other breaks."
+msgstr "`Timeslot` 表示上课的时间间隔，如 `Monday 10:30 - 11:30` 或 `Tuesday 13:30 - 14:30` 。为简单起见，所有时间段的持续时间相同，午餐或其他休息时间没有时间段。"
+
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"A time slot has no date, because a high school schedule just repeats every week.\n"
+"So there is no need for https://docs.optaplanner.org/latestFinal/optaplanner-docs/html_single/index.html#continuousPlanning[continuous planning]."
+msgstr "时间段没有日期，因为高中的课程表每周都在重复。因此，没有必要 link:https://docs.optaplanner.org/latestFinal/optaplanner-docs/html_single/index.html#continuousPlanning[持续规划] 。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:147
-msgid "The `Timeslot` class represents a time interval when lessons are taught, for example, `Monday 10:30 - 11:30` or `Tuesday 13:30 - 14:30`.  For simplicity's sake, all time slots have the same duration and there are no time slots during lunch or other breaks."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:150
-msgid "A time slot has no date, because a high school schedule just repeats every week.  So there is no need for https://docs.optaplanner.org/latestFinal/optaplanner-docs/html_single/index.html#continuousPlanning[continuous planning]."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:152
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "Create the `src/main/java/org/acme/optaplanner/domain/Timeslot.java` class:"
-msgstr ""
+msgstr "创建 `src/main/java/org/acme/optaplanner/domain/Timeslot.java` 类："
 
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:156
-#: upstream/_versions/3.2/guides/optaplanner.adoc:213
-#: upstream/_versions/3.2/guides/optaplanner.adoc:268
-#: upstream/_versions/3.2/guides/optaplanner.adoc:505
-#, no-wrap
-msgid "package org.acme.optaplanner.domain;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:159
-#: upstream/_versions/3.2/guides/optaplanner.adoc:750
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid ""
-"import java.time.DayOfWeek;\n"
-"import java.time.LocalTime;\n"
-msgstr ""
+"Because no `Timeslot` instances change during solving, a `Timeslot` is called a _problem fact_.\n"
+"Such classes do not require any OptaPlanner specific annotations."
+msgstr "由于 `Timeslot` 实例在求解过程中不会发生变化，因此 `Timeslot` 被称为 _问题事实_ 。这些类不需要任何 OptaPlanner 专用注释。"
 
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:161
-#, no-wrap
-msgid "public class Timeslot {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:165
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid ""
-"    private DayOfWeek dayOfWeek;\n"
-"    private LocalTime startTime;\n"
-"    private LocalTime endTime;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:168
-#, no-wrap
-msgid ""
-"    public Timeslot() {\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:174
-#, no-wrap
-msgid ""
-"    public Timeslot(DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime) {\n"
-"        this.dayOfWeek = dayOfWeek;\n"
-"        this.startTime = startTime;\n"
-"        this.endTime = endTime;\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:178
-#, no-wrap
-msgid ""
-"    public DayOfWeek getDayOfWeek() {\n"
-"        return dayOfWeek;\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:182
-#, no-wrap
-msgid ""
-"    public LocalTime getStartTime() {\n"
-"        return startTime;\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:186
-#, no-wrap
-msgid ""
-"    public LocalTime getEndTime() {\n"
-"        return endTime;\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:191
-#, no-wrap
-msgid ""
-"    @Override\n"
-"    public String toString() {\n"
-"        return dayOfWeek + \" \" + startTime;\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:193
-#: upstream/_versions/3.2/guides/optaplanner.adoc:235
-#: upstream/_versions/3.2/guides/optaplanner.adoc:336
-#: upstream/_versions/3.2/guides/optaplanner.adoc:407
-#: upstream/_versions/3.2/guides/optaplanner.adoc:483
-#: upstream/_versions/3.2/guides/optaplanner.adoc:556
-#: upstream/_versions/3.2/guides/optaplanner.adoc:649
-#: upstream/_versions/3.2/guides/optaplanner.adoc:792
-#: upstream/_versions/3.2/guides/optaplanner.adoc:882
-#: upstream/_versions/3.2/guides/optaplanner.adoc:1036
-#: upstream/_versions/3.2/guides/optaplanner.adoc:1096
-#, no-wrap
-msgid "}\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:197
-msgid "Because no `Timeslot` instances change during solving, a `Timeslot` is called a _problem fact_.  Such classes do not require any OptaPlanner specific annotations."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:200
-msgid "Notice the `toString()` method keeps the output short, so it is easier to read OptaPlanner's `DEBUG` or `TRACE` log, as shown later."
-msgstr ""
+"Notice the `toString()` method keeps the output short,\n"
+"so it is easier to read OptaPlanner's `DEBUG` or `TRACE` log, as shown later."
+msgstr "注意 `toString()` 方法使输出简短，因此更容易阅读 OptaPlanner 的 `DEBUG` 或 `TRACE` 日志，如稍后所示。"
 
 #. type: Title ===
-#: upstream/_versions/3.2/guides/optaplanner.adoc:201
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy, no-wrap
 msgid "Room"
-msgstr ""
+msgstr "房间"
+
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"The `Room` class represents a location where lessons are taught,\n"
+"for example, `Room A` or `Room B`.\n"
+"For simplicity's sake, all rooms are without capacity limits\n"
+"and they can accommodate all lessons."
+msgstr "`Room` 类代表授课地点，如 `Room A` 或 `Room B` 。为简单起见，所有教室都没有容量限制，可以容纳所有课程。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:207
-msgid "The `Room` class represents a location where lessons are taught, for example, `Room A` or `Room B`.  For simplicity's sake, all rooms are without capacity limits and they can accommodate all lessons."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:209
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "Create the `src/main/java/org/acme/optaplanner/domain/Room.java` class:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:215
-#, no-wrap
-msgid "public class Room {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:217
-#, no-wrap
-msgid "    private String name;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:220
-#, no-wrap
-msgid ""
-"    public Room() {\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:224
-#, no-wrap
-msgid ""
-"    public Room(String name) {\n"
-"        this.name = name;\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:228
-#, no-wrap
-msgid ""
-"    public String getName() {\n"
-"        return name;\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:233
-#, no-wrap
-msgid ""
-"    @Override\n"
-"    public String toString() {\n"
-"        return name;\n"
-"    }\n"
-msgstr ""
+msgstr "创建 `src/main/java/org/acme/optaplanner/domain/Room.java` 类："
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:238
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "`Room` instances do not change during solving, so `Room` is also a _problem fact_."
-msgstr ""
+msgstr "`Room` 实例在求解过程中不会改变，因此 也是一个 `Room` _问题事实_ 。"
 
 #. type: Title ===
-#: upstream/_versions/3.2/guides/optaplanner.adoc:239
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy, no-wrap
 msgid "Lesson"
-msgstr ""
+msgstr "课程"
+
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"During a lesson, represented by the `Lesson` class,\n"
+"a teacher teaches a subject to a group of students,\n"
+"for example, `Math by A.Turing for 9th grade` or `Chemistry by M.Curie for 10th grade`.\n"
+"If a subject is taught multiple times per week by the same teacher to the same student group,\n"
+"there are multiple `Lesson` instances that are only distinguishable by `id`.\n"
+"For example, the 9th grade has six math lessons a week."
+msgstr "在 `Lesson` class 表示的一节课中，教师向一组学生讲授一门课程，例如， `Math by A.Turing for 9th grade` 或 `Chemistry by M.Curie for 10th grade` 。如果同一教师每周向同一学生组多次讲授一门课程，则有多个 `Lesson` 实例，只能通过 `id` 进行区分。例如，九年级每周有六节数学课。"
+
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"During solving, OptaPlanner changes the `timeslot` and `room` fields of the `Lesson` class,\n"
+"to assign each lesson to a time slot and a room.\n"
+"Because OptaPlanner changes these fields, `Lesson` is a _planning entity_:"
+msgstr "在求解过程中，OptaPlanner 会更改 `Lesson` 类的 `timeslot` 和 `room` 字段，以便为每节课分配时间段和房间。由于 OptaPlanner 更改了这些字段，因此 `Lesson` 是一个 _规划实体_ ："
+
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"Most of the fields in the previous diagram contain input data, except for the orange fields:\n"
+"A lesson's `timeslot` and `room` fields are unassigned (`null`) in the input data\n"
+"and assigned (not `null`) in the output data.\n"
+"OptaPlanner changes these fields during solving.\n"
+"Such fields are called planning variables.\n"
+"In order for OptaPlanner to recognize them,\n"
+"both the `timeslot` and `room` fields require an `@PlanningVariable` annotation.\n"
+"Their containing class, `Lesson`, requires an `@PlanningEntity` annotation."
+msgstr "除了橙色字段外，上图中的大多数字段都包含输入数据：课程的 `timeslot` 和 `room` 字段在输入数据中是未指定的 ( `null` )，而在输出数据中是已指定的 (不是 `null` )。OptaPlanner 会在求解过程中更改这些字段。这些字段称为规划变量。为了使 OptaPlanner 能够识别它们， `timeslot` 和 `room` 字段都需要 `@PlanningVariable` 注释。它们的包含类 `Lesson` 需要 `@PlanningEntity` 注释。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:247
-msgid "During a lesson, represented by the `Lesson` class, a teacher teaches a subject to a group of students, for example, `Math by A.Turing for 9th grade` or `Chemistry by M.Curie for 10th grade`.  If a subject is taught multiple times per week by the same teacher to the same student group, there are multiple `Lesson` instances that are only distinguishable by `id`.  For example, the 9th grade has six math lessons a week."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:251
-msgid "During solving, OptaPlanner changes the `timeslot` and `room` fields of the `Lesson` class, to assign each lesson to a time slot and a room.  Because OptaPlanner changes these fields, `Lesson` is a _planning entity_:"
-msgstr ""
-
-#. type: Target for macro image
-#: upstream/_versions/3.2/guides/optaplanner.adoc:252
-#, no-wrap
-msgid "optaplanner-time-table-class-diagram-annotated.png"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:262
-msgid "Most of the fields in the previous diagram contain input data, except for the orange fields: A lesson's `timeslot` and `room` fields are unassigned (`null`) in the input data and assigned (not `null`) in the output data.  OptaPlanner changes these fields during solving.  Such fields are called planning variables.  In order for OptaPlanner to recognize them, both the `timeslot` and `room` fields require an `@PlanningVariable` annotation.  Their containing class, `Lesson`, requires an `@PlanningEntity` annotation."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:264
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "Create the `src/main/java/org/acme/optaplanner/domain/Lesson.java` class:"
-msgstr ""
+msgstr "创建 `src/main/java/org/acme/optaplanner/domain/Lesson.java` 类："
 
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:272
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid ""
-"import org.optaplanner.core.api.domain.entity.PlanningEntity;\n"
-"import org.optaplanner.core.api.domain.lookup.PlanningId;\n"
-"import org.optaplanner.core.api.domain.variable.PlanningVariable;\n"
-msgstr ""
+"The `Lesson` class has an `@PlanningEntity` annotation,\n"
+"so OptaPlanner knows that this class changes during solving\n"
+"because it contains one or more planning variables."
+msgstr "`Lesson` 类带有 `@PlanningEntity` 注释，因此 OptaPlanner 知道该类在求解过程中会发生变化，因为它包含一个或多个规划变量。"
 
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:275
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid ""
-"@PlanningEntity\n"
-"public class Lesson {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:278
-#, no-wrap
-msgid ""
-"    @PlanningId\n"
-"    private Long id;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:282
-#, no-wrap
-msgid ""
-"    private String subject;\n"
-"    private String teacher;\n"
-"    private String studentGroup;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:287
-#, no-wrap
-msgid ""
-"    @PlanningVariable\n"
-"    private Timeslot timeslot;\n"
-"    @PlanningVariable\n"
-"    private Room room;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:290
-#, no-wrap
-msgid ""
-"    public Lesson() {\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:297
-#, no-wrap
-msgid ""
-"    public Lesson(Long id, String subject, String teacher, String studentGroup) {\n"
-"        this.id = id;\n"
-"        this.subject = subject;\n"
-"        this.teacher = teacher;\n"
-"        this.studentGroup = studentGroup;\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:301
-#, no-wrap
-msgid ""
-"    public Long getId() {\n"
-"        return id;\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:305
-#, no-wrap
-msgid ""
-"    public String getSubject() {\n"
-"        return subject;\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:309
-#, no-wrap
-msgid ""
-"    public String getTeacher() {\n"
-"        return teacher;\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:313
-#, no-wrap
-msgid ""
-"    public String getStudentGroup() {\n"
-"        return studentGroup;\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:317
-#, no-wrap
-msgid ""
-"    public Timeslot getTimeslot() {\n"
-"        return timeslot;\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:321
-#, no-wrap
-msgid ""
-"    public void setTimeslot(Timeslot timeslot) {\n"
-"        this.timeslot = timeslot;\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:325
-#, no-wrap
-msgid ""
-"    public Room getRoom() {\n"
-"        return room;\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:329
-#, no-wrap
-msgid ""
-"    public void setRoom(Room room) {\n"
-"        this.room = room;\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:334
-#, no-wrap
-msgid ""
-"    @Override\n"
-"    public String toString() {\n"
-"        return subject + \"(\" + id + \")\";\n"
-"    }\n"
-msgstr ""
+"The `timeslot` field has an `@PlanningVariable` annotation, so OptaPlanner knows that it can change its value.\n"
+"In order to find potential Timeslot instances to assign to this field, OptaPlanner uses the variable type to connect to a value range provider that provides a List<Timeslot> to pick from."
+msgstr "`timeslot` 字段具有 `@PlanningVariable` 注解，因此 OptaPlanner 知道可以更改其值。为了找到要分配给该字段的潜在时隙实例，OptaPlanner 使用变量类型连接到一个值范围提供者，该提供者提供了一个 List<Timeslot> 以供选择。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:341
-msgid "The `Lesson` class has an `@PlanningEntity` annotation, so OptaPlanner knows that this class changes during solving because it contains one or more planning variables."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:344
-msgid "The `timeslot` field has an `@PlanningVariable` annotation, so OptaPlanner knows that it can change its value.  In order to find potential Timeslot instances to assign to this field, OptaPlanner uses the variable type to connect to a value range provider that provides a List<Timeslot> to pick from."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:346
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "The `room` field also has an `@PlanningVariable` annotation, for the same reasons."
-msgstr ""
+msgstr "出于同样的原因， `room` 字段也有 `@PlanningVariable` 注释。"
 
-#. type: delimited block =
-#: upstream/_versions/3.2/guides/optaplanner.adoc:353
-msgid "Determining the `@PlanningVariable` fields for an arbitrary constraint solving use case is often challenging the first time.  Read https://docs.optaplanner.org/latestFinal/optaplanner-docs/html_single/index.html#domainModelingGuide[the domain modeling guidelines] to avoid common pitfalls."
-msgstr ""
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"Determining the `@PlanningVariable` fields for an arbitrary constraint solving use case\n"
+"is often challenging the first time.\n"
+"Read https://docs.optaplanner.org/latestFinal/optaplanner-docs/html_single/index.html#domainModelingGuide[the domain modeling guidelines]\n"
+"to avoid common pitfalls."
+msgstr "为任意的约束求解用例确定 `@PlanningVariable` 字段，第一次往往具有挑战性。请阅读 link:https://docs.optaplanner.org/latestFinal/optaplanner-docs/html_single/index.html#domainModelingGuide[领域建模指南] ，避免常见陷阱。"
 
 #. type: Title ==
-#: upstream/_versions/3.2/guides/optaplanner.adoc:355
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy, no-wrap
 msgid "Define the constraints and calculate the score"
-msgstr ""
+msgstr "定义限制条件并计算得分"
+
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"A _score_ represents the quality of a specific solution.\n"
+"The higher, the better.\n"
+"OptaPlanner looks for the best solution, which is the solution with the highest score found in the available time.\n"
+"It might be the _optimal_ solution."
+msgstr "_分数_ 代表特定解决方案的质量。分数越高越好。OptaPlanner 会寻找最佳解决方案，即在可用时间内找到的得分最高的解决方案。它可能是 _最佳_ 解决方案。"
+
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"Because this use case has hard and soft constraints,\n"
+"use the `HardSoftScore` class to represent the score:"
+msgstr "由于此用例具有硬约束和软约束，因此使用 `HardSoftScore` 类来表示分数："
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:361
-msgid "A _score_ represents the quality of a specific solution.  The higher, the better.  OptaPlanner looks for the best solution, which is the solution with the highest score found in the available time.  It might be the _optimal_ solution."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:364
-msgid "Because this use case has hard and soft constraints, use the `HardSoftScore` class to represent the score:"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:366
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "Hard constraints must not be broken. For example: _A room can have at most one lesson at the same time._"
-msgstr ""
+msgstr "硬约束不得突破。例如 _一个房间在同一时间最多只能上一节课。_"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:367
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "Soft constraints should not be broken. For example: _A teacher prefers to teach in a single room._"
-msgstr ""
+msgstr "不应打破软约束。例如 _一位教师喜欢在单人间授课。_"
+
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"Hard constraints are weighted against other hard constraints.\n"
+"Soft constraints are weighted too, against other soft constraints.\n"
+"*Hard constraints always outweigh soft constraints*, regardless of their respective weights."
+msgstr "硬约束与其他硬约束进行加权。软约束也会相对于其他软约束进行加权。无论各自的权重如何， *硬约束条件总是大于软约束条件* 。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:371
-msgid "Hard constraints are weighted against other hard constraints.  Soft constraints are weighted too, against other soft constraints.  *Hard constraints always outweigh soft constraints*, regardless of their respective weights."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:373
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "To calculate the score, you could implement an `EasyScoreCalculator` class:"
-msgstr ""
+msgstr "要计算得分，可以实现一个 `EasyScoreCalculator` 类："
 
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:377
-#, no-wrap
-msgid "public class TimeTableEasyScoreCalculator implements EasyScoreCalculator<TimeTable, HardSoftScore> {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:405
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid ""
-"    @Override\n"
-"    public HardSoftScore calculateScore(TimeTable timeTable) {\n"
-"        List<Lesson> lessonList = timeTable.getLessonList();\n"
-"        int hardScore = 0;\n"
-"        for (Lesson a : lessonList) {\n"
-"            for (Lesson b : lessonList) {\n"
-"                if (a.getTimeslot() != null && a.getTimeslot().equals(b.getTimeslot())\n"
-"                        && a.getId() < b.getId()) {\n"
-"                    // A room can accommodate at most one lesson at the same time.\n"
-"                    if (a.getRoom() != null && a.getRoom().equals(b.getRoom())) {\n"
-"                        hardScore--;\n"
-"                    }\n"
-"                    // A teacher can teach at most one lesson at the same time.\n"
-"                    if (a.getTeacher().equals(b.getTeacher())) {\n"
-"                        hardScore--;\n"
-"                    }\n"
-"                    // A student can attend at most one lesson at the same time.\n"
-"                    if (a.getStudentGroup().equals(b.getStudentGroup())) {\n"
-"                        hardScore--;\n"
-"                    }\n"
-"                }\n"
-"            }\n"
-"        }\n"
-"        int softScore = 0;\n"
-"        // Soft constraints are only implemented in the optaplanner-quickstarts code\n"
-"        return HardSoftScore.of(hardScore, softScore);\n"
-"    }\n"
-msgstr ""
+"Unfortunately **that does not scale well**, because it is non-incremental:\n"
+"every time a lesson is assigned to a different time slot or room,\n"
+"all lessons are re-evaluated to calculate the new score."
+msgstr "遗憾的是， *这种* 方法不能 *很好地扩展* ，因为它是非递增的：每当一堂课被分配到不同的时段或教室时，所有的课程都要重新评估，以计算出新的分数。"
+
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"Instead, create a `src/main/java/org/acme/optaplanner/solver/TimeTableConstraintProvider.java` class\n"
+"to perform incremental score calculation.\n"
+"It uses OptaPlanner's ConstraintStream API which is inspired by Java Streams and SQL:"
+msgstr "取而代之的是创建一个 `src/main/java/org/acme/optaplanner/solver/TimeTableConstraintProvider.java` 类来执行增量分数计算。该类使用 OptaPlanner 的 ConstraintStream API，其灵感来自 Java Streams 和 SQL："
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:412
-msgid "Unfortunately **that does not scale well**, because it is non-incremental: every time a lesson is assigned to a different time slot or room, all lessons are re-evaluated to calculate the new score."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:416
-msgid "Instead, create a `src/main/java/org/acme/optaplanner/solver/TimeTableConstraintProvider.java` class to perform incremental score calculation.  It uses OptaPlanner's ConstraintStream API which is inspired by Java Streams and SQL:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:420
-#: upstream/_versions/3.2/guides/optaplanner.adoc:747
-#, no-wrap
-msgid "package org.acme.optaplanner.solver;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:427
-#, no-wrap
-msgid ""
-"import org.acme.optaplanner.domain.Lesson;\n"
-"import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;\n"
-"import org.optaplanner.core.api.score.stream.Constraint;\n"
-"import org.optaplanner.core.api.score.stream.ConstraintFactory;\n"
-"import org.optaplanner.core.api.score.stream.ConstraintProvider;\n"
-"import org.optaplanner.core.api.score.stream.Joiners;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:429
-#, no-wrap
-msgid "public class TimeTableConstraintProvider implements ConstraintProvider {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:440
-#, no-wrap
-msgid ""
-"    @Override\n"
-"    public Constraint[] defineConstraints(ConstraintFactory constraintFactory) {\n"
-"        return new Constraint[] {\n"
-"                // Hard constraints\n"
-"                roomConflict(constraintFactory),\n"
-"                teacherConflict(constraintFactory),\n"
-"                studentGroupConflict(constraintFactory),\n"
-"                // Soft constraints are only implemented in the optaplanner-quickstarts code\n"
-"        };\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:443
-#, no-wrap
-msgid ""
-"    Constraint roomConflict(ConstraintFactory constraintFactory) {\n"
-"        // A room can accommodate at most one lesson at the same time.\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:459
-#, no-wrap
-msgid ""
-"        // Select a lesson ...\n"
-"        return constraintFactory\n"
-"                .forEach(Lesson.class)\n"
-"                // ... and pair it with another lesson ...\n"
-"                .join(Lesson.class,\n"
-"                        // ... in the same timeslot ...\n"
-"                        Joiners.equal(Lesson::getTimeslot),\n"
-"                        // ... in the same room ...\n"
-"                        Joiners.equal(Lesson::getRoom),\n"
-"                        // ... and the pair is unique (different id, no reverse pairs) ...\n"
-"                        Joiners.lessThan(Lesson::getId))\n"
-"                // ... then penalize each pair with a hard weight.\n"
-"                .penalize(HardSoftScore.ONE_HARD)\n"
-"                .asConstraint(\"Room conflict\");\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:470
-#, no-wrap
-msgid ""
-"    Constraint teacherConflict(ConstraintFactory constraintFactory) {\n"
-"        // A teacher can teach at most one lesson at the same time.\n"
-"        return constraintFactory.forEach(Lesson.class)\n"
-"                .join(Lesson.class,\n"
-"                        Joiners.equal(Lesson::getTimeslot),\n"
-"                        Joiners.equal(Lesson::getTeacher),\n"
-"                        Joiners.lessThan(Lesson::getId))\n"
-"                .penalize(HardSoftScore.ONE_HARD)\n"
-"                .asConstraint(\"Teacher conflict\");\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:481
-#, no-wrap
-msgid ""
-"    Constraint studentGroupConflict(ConstraintFactory constraintFactory) {\n"
-"        // A student can attend at most one lesson at the same time.\n"
-"        return constraintFactory.forEach(Lesson.class)\n"
-"                .join(Lesson.class,\n"
-"                        Joiners.equal(Lesson::getTimeslot),\n"
-"                        Joiners.equal(Lesson::getStudentGroup),\n"
-"                        Joiners.lessThan(Lesson::getId))\n"
-"                .penalize(HardSoftScore.ONE_HARD)\n"
-"                .asConstraint(\"Student group conflict\");\n"
-"    }\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:486
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "The `ConstraintProvider` scales an order of magnitude better than the `EasyScoreCalculator`: __O__(n) instead of __O__(n²)."
-msgstr ""
+msgstr "`ConstraintProvider` 的扩展速度比 `EasyScoreCalculator` 快一个数量级： _O_ (n) 而不是 _O_ (n²)。"
 
 #. type: Title ==
-#: upstream/_versions/3.2/guides/optaplanner.adoc:487
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy, no-wrap
 msgid "Gather the domain objects in a planning solution"
-msgstr ""
+msgstr "在规划解决方案中收集领域对象"
+
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"A `TimeTable` wraps all `Timeslot`, `Room`, and `Lesson` instances of a single dataset.\n"
+"Furthermore, because it contains all lessons, each with a specific planning variable state,\n"
+"it is a _planning solution_ and it has a score:"
+msgstr "`TimeTable` 包含一个数据集的所有 `Timeslot` 、 `Room` 和 `Lesson` 实例。此外，由于它包含了所有课程，每个课程都有一个特定的规划变量状态，因此它是一个 _规划方案_ ，并有一个分数："
+
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"If lessons are still unassigned, then it is an _uninitialized_ solution,\n"
+"for example, a solution with the score `-4init/0hard/0soft`."
+msgstr "如果课时仍未分配，那么它就是一个 _未初始化的_ 解，例如，分数为 `-4init/0hard/0soft` 的解。"
+
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"If it breaks hard constraints, then it is an _infeasible_ solution,\n"
+"for example, a solution with the score `-2hard/-3soft`."
+msgstr "如果它打破了硬约束，那么它就是一个 _不可行的_ 解，例如，得分为 `-2hard/-3soft` 的解。"
+
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"If it adheres to all hard constraints, then it is a _feasible_ solution,\n"
+"for example, a solution with the score `0hard/-7soft`."
+msgstr "如果它遵守了所有硬约束，那么它就是一个 _可行_ 解，例如，得分 `0hard/-7soft` 的解。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:492
-msgid "A `TimeTable` wraps all `Timeslot`, `Room`, and `Lesson` instances of a single dataset.  Furthermore, because it contains all lessons, each with a specific planning variable state, it is a _planning solution_ and it has a score:"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:495
-msgid "If lessons are still unassigned, then it is an _uninitialized_ solution, for example, a solution with the score `-4init/0hard/0soft`."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:497
-msgid "If it breaks hard constraints, then it is an _infeasible_ solution, for example, a solution with the score `-2hard/-3soft`."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:499
-msgid "If it adheres to all hard constraints, then it is a _feasible_ solution, for example, a solution with the score `0hard/-7soft`."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:501
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "Create the `src/main/java/org/acme/optaplanner/domain/TimeTable.java` class:"
-msgstr ""
+msgstr "创建 `src/main/java/org/acme/optaplanner/domain/TimeTable.java` 类："
 
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:507
-#, no-wrap
-msgid "import java.util.List;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:514
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid ""
-"import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty;\n"
-"import org.optaplanner.core.api.domain.solution.PlanningScore;\n"
-"import org.optaplanner.core.api.domain.solution.PlanningSolution;\n"
-"import org.optaplanner.core.api.domain.solution.ProblemFactCollectionProperty;\n"
-"import org.optaplanner.core.api.domain.valuerange.ValueRangeProvider;\n"
-"import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:517
-#, no-wrap
-msgid ""
-"@PlanningSolution\n"
-"public class TimeTable {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:526
-#, no-wrap
-msgid ""
-"    @ValueRangeProvider\n"
-"    @ProblemFactCollectionProperty\n"
-"    private List<Timeslot> timeslotList;\n"
-"    @ValueRangeProvider\n"
-"    @ProblemFactCollectionProperty\n"
-"    private List<Room> roomList;\n"
-"    @PlanningEntityCollectionProperty\n"
-"    private List<Lesson> lessonList;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:529
-#, no-wrap
-msgid ""
-"    @PlanningScore\n"
-"    private HardSoftScore score;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:532
-#, no-wrap
-msgid ""
-"    public TimeTable() {\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:538
-#, no-wrap
-msgid ""
-"    public TimeTable(List<Timeslot> timeslotList, List<Room> roomList, List<Lesson> lessonList) {\n"
-"        this.timeslotList = timeslotList;\n"
-"        this.roomList = roomList;\n"
-"        this.lessonList = lessonList;\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:542
-#, no-wrap
-msgid ""
-"    public List<Timeslot> getTimeslotList() {\n"
-"        return timeslotList;\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:546
-#, no-wrap
-msgid ""
-"    public List<Room> getRoomList() {\n"
-"        return roomList;\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:550
-#, no-wrap
-msgid ""
-"    public List<Lesson> getLessonList() {\n"
-"        return lessonList;\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:554
-#, no-wrap
-msgid ""
-"    public HardSoftScore getScore() {\n"
-"        return score;\n"
-"    }\n"
-msgstr ""
+"The `TimeTable` class has an `@PlanningSolution` annotation,\n"
+"so OptaPlanner knows that this class contains all the input and output data."
+msgstr "`TimeTable` 类带有 `@PlanningSolution` 注释，因此 OptaPlanner 知道该类包含所有输入和输出数据。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:560
-msgid "The `TimeTable` class has an `@PlanningSolution` annotation, so OptaPlanner knows that this class contains all the input and output data."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:562
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "Specifically, this class is the input of the problem:"
-msgstr ""
+msgstr "具体来说，这一类是问题的输入："
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:564
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "A `timeslotList` field with all time slots"
-msgstr ""
+msgstr "一个 `timeslotList` 字段，包含所有时段"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:565
-#: upstream/_versions/3.2/guides/optaplanner.adoc:567
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "This is a list of problem facts, because they do not change during solving."
-msgstr ""
+msgstr "这是一份问题事实清单，因为它们在解题过程中不会改变。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:566
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "A `roomList` field with all rooms"
-msgstr ""
+msgstr "`roomList` 与所有房间相连"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:568
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "A `lessonList` field with all lessons"
-msgstr ""
+msgstr "`lessonList` 所有课程的场地"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:569
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "This is a list of planning entities, because they change during solving."
-msgstr ""
+msgstr "这是一份规划实体清单，因为它们在解题过程中会发生变化。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:570
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "Of each `Lesson`:"
-msgstr ""
+msgstr "每个 `Lesson` ："
+
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"The values of the `timeslot` and `room` fields are typically still `null`, so unassigned.\n"
+"They are planning variables."
+msgstr "`timeslot` 和 `room` 字段的值通常仍为 `null` ，因此尚未分配。它们是规划变量。"
+
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"The other fields, such as `subject`, `teacher` and `studentGroup`, are filled in.\n"
+"These fields are problem properties."
+msgstr "其他字段，如 `subject` 、 `teacher` 和 `studentGroup` ，均已填写。这些字段是问题属性。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:572
-msgid "The values of the `timeslot` and `room` fields are typically still `null`, so unassigned.  They are planning variables."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:574
-msgid "The other fields, such as `subject`, `teacher` and `studentGroup`, are filled in.  These fields are problem properties."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:576
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "However, this class is also the output of the solution:"
-msgstr ""
+msgstr "不过，这一类也是解决方案的输出："
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:578
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "A `lessonList` field for which each `Lesson` instance has non-null `timeslot` and `room` fields after solving"
-msgstr ""
+msgstr "`lessonList` 字段，其中每个 `Lesson` 实例在求解后都有非空的 `timeslot` 和 `room` 字段"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:579
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "A `score` field that represents the quality of the output solution, for example, `0hard/-5soft`"
-msgstr ""
+msgstr "`score` 表示输出解决方案质量的字段，例如 `0hard/-5soft`"
 
 #. type: Title ===
-#: upstream/_versions/3.2/guides/optaplanner.adoc:580
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy, no-wrap
 msgid "The value range providers"
-msgstr ""
+msgstr "数值范围提供者"
+
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"The `timeslotList` field is a value range provider.\n"
+"It holds the `Timeslot` instances which OptaPlanner can pick from to assign to the `timeslot` field of `Lesson` instances.\n"
+"The `timeslotList` field has an `@ValueRangeProvider` annotation to connect the `@PlanningVariable` with the `@ValueRangeProvider`,\n"
+"by matching the type of the planning variable with the type returned by the value range provider."
+msgstr "`timeslotList` 字段是值范围提供者。它包含 `Timeslot` 实例，OptaPlanner 可从中挑选出这些实例分配给 `Lesson` 实例的 `timeslot` 字段。 `timeslotList` 字段有一个 `@ValueRangeProvider` 注释，通过将规划变量的类型与值域提供者返回的类型相匹配，将 `@PlanningVariable` 与 `@ValueRangeProvider` 连接起来。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:586
-msgid "The `timeslotList` field is a value range provider.  It holds the `Timeslot` instances which OptaPlanner can pick from to assign to the `timeslot` field of `Lesson` instances.  The `timeslotList` field has an `@ValueRangeProvider` annotation to connect the `@PlanningVariable` with the `@ValueRangeProvider`, by matching the type of the planning variable with the type returned by the value range provider."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:588
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "Following the same logic, the `roomList` field also has an `@ValueRangeProvider` annotation."
-msgstr ""
+msgstr "按照同样的逻辑， `roomList` 字段也有一个 `@ValueRangeProvider` 注释。"
 
 #. type: Title ===
-#: upstream/_versions/3.2/guides/optaplanner.adoc:589
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy, no-wrap
 msgid "The problem fact and planning entity properties"
-msgstr ""
+msgstr "问题事实和规划实体属性"
 
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:594
-msgid "Furthermore, OptaPlanner needs to know which `Lesson` instances it can change as well as how to retrieve the `Timeslot` and `Room` instances used for score calculation by your `TimeTableConstraintProvider`."
-msgstr ""
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"Furthermore, OptaPlanner needs to know which `Lesson` instances it can change\n"
+"as well as how to retrieve the `Timeslot` and `Room` instances used for score calculation\n"
+"by your `TimeTableConstraintProvider`."
+msgstr "此外，OptaPlanner 还需要知道它可以更改哪些 `Lesson` 实例，以及如何检索用于计算得分的 `Timeslot` 和 `Room` 实例， `TimeTableConstraintProvider` 。"
 
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:597
-msgid "The `timeslotList` and `roomList` fields have an `@ProblemFactCollectionProperty` annotation, so your `TimeTableConstraintProvider` can select _from_ those instances."
-msgstr ""
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"The `timeslotList` and `roomList` fields have an `@ProblemFactCollectionProperty` annotation,\n"
+"so your `TimeTableConstraintProvider` can select _from_ those instances."
+msgstr "`timeslotList` 和 `roomList` 字段有 `@ProblemFactCollectionProperty` 注释，因此您的 `TimeTableConstraintProvider` 可以 _从_ 这些实例 _中_ 选择。"
 
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:601
-msgid "The `lessonList` has an `@PlanningEntityCollectionProperty` annotation, so OptaPlanner can change them during solving and your `TimeTableConstraintProvider` can select _from_ those too."
-msgstr ""
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"The `lessonList` has an `@PlanningEntityCollectionProperty` annotation,\n"
+"so OptaPlanner can change them during solving\n"
+"and your `TimeTableConstraintProvider` can select _from_ those too."
+msgstr "`lessonList` 有 `@PlanningEntityCollectionProperty` 注释，因此 OptaPlanner 可以在求解过程中更改它们，您的 `TimeTableConstraintProvider` 也可以 _从中_ 进行选择。"
 
 #. type: Title ==
-#: upstream/_versions/3.2/guides/optaplanner.adoc:602
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy, no-wrap
 msgid "Create the solver service"
-msgstr ""
+msgstr "创建求解器服务"
+
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"Now you are ready to put everything together and create a REST service.\n"
+"But solving planning problems on REST threads causes HTTP timeout issues.\n"
+"Therefore, the Quarkus extension injects a `SolverManager` instance,\n"
+"which runs solvers in a separate thread pool\n"
+"and can solve multiple datasets in parallel."
+msgstr "现在，您已经准备好将所有内容整合在一起，创建一个 REST 服务。但是，在 REST 线程上解决规划问题会导致 HTTP 超时问题。因此，Quarkus 扩展注入了一个 `SolverManager` 实例，该实例在单独的线程池中运行求解器，可以并行求解多个数据集。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:609
-msgid "Now you are ready to put everything together and create a REST service.  But solving planning problems on REST threads causes HTTP timeout issues.  Therefore, the Quarkus extension injects a `SolverManager` instance, which runs solvers in a separate thread pool and can solve multiple datasets in parallel."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:611
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "Create the `src/main/java/org/acme/optaplanner/rest/TimeTableResource.java` class:"
-msgstr ""
+msgstr "创建 `src/main/java/org/acme/optaplanner/rest/TimeTableResource.java` 类："
 
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:615
-#: upstream/_versions/3.2/guides/optaplanner.adoc:813
-#: upstream/_versions/3.2/guides/optaplanner.adoc:955
-#: upstream/_versions/3.2/guides/optaplanner.adoc:1056
-#, no-wrap
-msgid "package org.acme.optaplanner.rest;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:621
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid ""
-"import java.util.UUID;\n"
-"import java.util.concurrent.ExecutionException;\n"
-"import jakarta.inject.Inject;\n"
-"import jakarta.ws.rs.POST;\n"
-"import jakarta.ws.rs.Path;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:625
-#, no-wrap
-msgid ""
-"import org.acme.optaplanner.domain.TimeTable;\n"
-"import org.optaplanner.core.api.solver.SolverJob;\n"
-"import org.optaplanner.core.api.solver.SolverManager;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:628
-#: upstream/_versions/3.2/guides/optaplanner.adoc:974
-#, no-wrap
-msgid ""
-"@Path(\"/timeTable\")\n"
-"public class TimeTableResource {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:631
-#, no-wrap
-msgid ""
-"    @Inject\n"
-"    SolverManager<TimeTable, UUID> solverManager;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:647
-#, no-wrap
-msgid ""
-"    @POST\n"
-"    @Path(\"/solve\")\n"
-"    public TimeTable solve(TimeTable problem) {\n"
-"        UUID problemId = UUID.randomUUID();\n"
-"        // Submit the problem to start solving\n"
-"        SolverJob<TimeTable, UUID> solverJob = solverManager.solve(problemId, problem);\n"
-"        TimeTable solution;\n"
-"        try {\n"
-"            // Wait until the solving ends\n"
-"            solution = solverJob.getFinalBestSolution();\n"
-"        } catch (InterruptedException | ExecutionException e) {\n"
-"            throw new IllegalStateException(\"Solving failed.\", e);\n"
-"        }\n"
-"        return solution;\n"
-"    }\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:654
-msgid "For simplicity's sake, this initial implementation waits for the solver to finish, which can still cause an HTTP timeout.  The _complete_ implementation avoids HTTP timeouts much more elegantly."
-msgstr ""
+"For simplicity's sake, this initial implementation waits for the solver to finish,\n"
+"which can still cause an HTTP timeout.\n"
+"The _complete_ implementation avoids HTTP timeouts much more elegantly."
+msgstr "为了简单起见，最初的实现会等待求解器完成，这仍然会导致 HTTP 超时。 _完整的_ 实现可以更优雅地避免 HTTP 超时。"
 
 #. type: Title ==
-#: upstream/_versions/3.2/guides/optaplanner.adoc:655
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy, no-wrap
 msgid "Set the termination time"
-msgstr ""
+msgstr "设置终止时间"
 
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:660
-msgid "Without a termination setting or a termination event, the solver runs forever.  To avoid that, limit the solving time to five seconds.  That is short enough to avoid the HTTP timeout."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:662
-msgid "Create the `src/main/resources/application.properties` file:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:668
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid ""
-"# The solver runs only for 5 seconds to avoid an HTTP timeout in this simple implementation.\n"
-"# It's recommended to run for at least 5 minutes (\"5m\") otherwise.\n"
-"quarkus.optaplanner.solver.termination.spent-limit=5s\n"
-msgstr ""
+"Without a termination setting or a termination event, the solver runs forever.\n"
+"To avoid that, limit the solving time to five seconds.\n"
+"That is short enough to avoid the HTTP timeout."
+msgstr "如果没有终止设置或终止事件，求解器将永远运行。为避免这种情况，请将求解时间限制在 5 秒内。这个时间足够短，可以避免 HTTP 超时。"
+
+#. type: Plain text
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid "Create the `src/main/resources/application.properties` file:"
+msgstr "创建 `src/main/resources/application.properties` 文件："
 
 #. type: Title ==
-#: upstream/_versions/3.2/guides/optaplanner.adoc:671
+#: _versions/3.2/guides/optaplanner.adoc
 #, no-wrap
 msgid "Run the application"
 msgstr "运行应用程序"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:674
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "First start the application:"
-msgstr ""
+msgstr "首先启动应用程序："
 
 #. type: Title ===
-#: upstream/_versions/3.2/guides/optaplanner.adoc:677
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy, no-wrap
 msgid "Try the application"
-msgstr ""
+msgstr "尝试应用"
 
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:682
-msgid "Now that the application is running, you can test the REST service.  You can use any REST client you wish.  The following example uses the Linux command `curl` to send a POST request:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:686
-#, no-wrap
-msgid "$ curl -i -X POST http://localhost:8080/timeTable/solve -H \"Content-Type:application/json\" -d '{\"timeslotList\":[{\"dayOfWeek\":\"MONDAY\",\"startTime\":\"08:30:00\",\"endTime\":\"09:30:00\"},{\"dayOfWeek\":\"MONDAY\",\"startTime\":\"09:30:00\",\"endTime\":\"10:30:00\"}],\"roomList\":[{\"name\":\"Room A\"},{\"name\":\"Room B\"}],\"lessonList\":[{\"id\":1,\"subject\":\"Math\",\"teacher\":\"A. Turing\",\"studentGroup\":\"9th grade\"},{\"id\":2,\"subject\":\"Chemistry\",\"teacher\":\"M. Curie\",\"studentGroup\":\"9th grade\"},{\"id\":3,\"subject\":\"French\",\"teacher\":\"M. Curie\",\"studentGroup\":\"10th grade\"},{\"id\":4,\"subject\":\"History\",\"teacher\":\"I. Jones\",\"studentGroup\":\"10th grade\"}]}'\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:690
-msgid "After about five seconds, according to the termination spent time defined in your `application.properties`, the service returns an output similar to the following example:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:696
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid ""
-"HTTP/1.1 200\n"
-"Content-Type: application/json\n"
-"...\n"
-msgstr ""
+"Now that the application is running, you can test the REST service.\n"
+"You can use any REST client you wish.\n"
+"The following example uses the Linux command `curl` to send a POST request:"
+msgstr "现在应用程序已经运行，您可以测试 REST 服务了。您可以使用任何 REST 客户端。下面的示例使用 Linux 命令 `curl` 发送 POST 请求："
 
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:698
-#, no-wrap
-msgid "{\"timeslotList\":...,\"roomList\":...,\"lessonList\":[{\"id\":1,\"subject\":\"Math\",\"teacher\":\"A. Turing\",\"studentGroup\":\"9th grade\",\"timeslot\":{\"dayOfWeek\":\"MONDAY\",\"startTime\":\"08:30:00\",\"endTime\":\"09:30:00\"},\"room\":{\"name\":\"Room A\"}},{\"id\":2,\"subject\":\"Chemistry\",\"teacher\":\"M. Curie\",\"studentGroup\":\"9th grade\",\"timeslot\":{\"dayOfWeek\":\"MONDAY\",\"startTime\":\"09:30:00\",\"endTime\":\"10:30:00\"},\"room\":{\"name\":\"Room A\"}},{\"id\":3,\"subject\":\"French\",\"teacher\":\"M. Curie\",\"studentGroup\":\"10th grade\",\"timeslot\":{\"dayOfWeek\":\"MONDAY\",\"startTime\":\"08:30:00\",\"endTime\":\"09:30:00\"},\"room\":{\"name\":\"Room B\"}},{\"id\":4,\"subject\":\"History\",\"teacher\":\"I. Jones\",\"studentGroup\":\"10th grade\",\"timeslot\":{\"dayOfWeek\":\"MONDAY\",\"startTime\":\"09:30:00\",\"endTime\":\"10:30:00\"},\"room\":{\"name\":\"Room B\"}}],\"score\":\"0hard/0soft\"}\n"
-msgstr ""
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"After about five seconds, according to the termination spent time defined in your `application.properties`,\n"
+"the service returns an output similar to the following example:"
+msgstr "大约 5 秒后，根据 `application.properties` 中定义的终止时间，服务会返回与下例类似的输出："
+
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"Notice that your application assigned all four lessons to one of the two time slots and one of the two rooms.\n"
+"Also notice that it conforms to all hard constraints.\n"
+"For example, M. Curie's two lessons are in different time slots."
+msgstr "请注意，您的应用程序将所有四节课都分配给了两个时段和两个房间中的一个。还请注意，它符合所有硬约束。例如，居里夫人的两节课在不同的时段。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:703
-msgid "Notice that your application assigned all four lessons to one of the two time slots and one of the two rooms.  Also notice that it conforms to all hard constraints.  For example, M. Curie's two lessons are in different time slots."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:705
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "On the server side, the `info` log show what OptaPlanner did in those five seconds:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:712
-#, no-wrap
-msgid ""
-"... Solving started: time spent (33), best score (-8init/0hard/0soft), environment mode (REPRODUCIBLE), random (JDK with seed 0).\n"
-"... Construction Heuristic phase (0) ended: time spent (73), best score (0hard/0soft), score calculation speed (459/sec), step total (4).\n"
-"... Local Search phase (1) ended: time spent (5000), best score (0hard/0soft), score calculation speed (28949/sec), step total (28398).\n"
-"... Solving ended: time spent (5000), best score (0hard/0soft), score calculation speed (28524/sec), phase total (2), environment mode (REPRODUCIBLE).\n"
-msgstr ""
+msgstr "在服务器端， `info` 日志显示了 OptaPlanner 在这五秒钟内做了什么："
 
 #. type: Title ===
-#: upstream/_versions/3.2/guides/optaplanner.adoc:714
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy, no-wrap
 msgid "Test the application"
-msgstr ""
+msgstr "测试应用程序"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:717
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "A good application includes test coverage."
-msgstr ""
+msgstr "一个好的应用程序包括测试覆盖率。"
 
 #. type: Title ====
-#: upstream/_versions/3.2/guides/optaplanner.adoc:718
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy, no-wrap
 msgid "Test the constraints"
-msgstr ""
+msgstr "测试限制条件"
+
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"To test each constraint in isolation, use a `ConstraintVerifier` in unit tests.\n"
+"It tests each constraint's corner cases in isolation from the other tests,\n"
+"which lowers maintenance when adding a new constraint with proper test coverage."
+msgstr "要隔离测试每个约束，可在单元测试中使用 `ConstraintVerifier` 。它可以将每个约束的角案例与其他测试隔离开来进行测试，这样在添加新约束时就能降低维护成本，并获得适当的测试覆盖率。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:723
-msgid "To test each constraint in isolation, use a `ConstraintVerifier` in unit tests.  It tests each constraint's corner cases in isolation from the other tests, which lowers maintenance when adding a new constraint with proper test coverage."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:725
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "Add a `optaplanner-test` dependency in your build file:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:734
-#, no-wrap
-msgid ""
-"<dependency>\n"
-"    <groupId>org.optaplanner</groupId>\n"
-"    <artifactId>optaplanner-test</artifactId>\n"
-"    <scope>test</scope>\n"
-"</dependency>\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:740
-#, no-wrap
-msgid "testImplementation(\"org.optaplanner:optaplanner-test\")\n"
-msgstr ""
+msgstr "在构建文件中添加 `optaplanner-test` 依赖项："
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:743
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "Create the `src/test/java/org/acme/optaplanner/solver/TimeTableConstraintProviderTest.java` class:"
-msgstr ""
+msgstr "创建 `src/test/java/org/acme/optaplanner/solver/TimeTableConstraintProviderTest.java` 类："
 
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:752
-#: upstream/_versions/3.2/guides/optaplanner.adoc:820
-#: upstream/_versions/3.2/guides/optaplanner.adoc:1058
-#, no-wrap
-msgid "import jakarta.inject.Inject;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:760
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid ""
-"import io.quarkus.test.junit.QuarkusTest;\n"
-"import org.acme.optaplanner.domain.Lesson;\n"
-"import org.acme.optaplanner.domain.Room;\n"
-"import org.acme.optaplanner.domain.TimeTable;\n"
-"import org.acme.optaplanner.domain.Timeslot;\n"
-"import org.junit.jupiter.api.Test;\n"
-"import org.optaplanner.test.api.score.stream.ConstraintVerifier;\n"
-msgstr ""
+"This test verifies that the constraint `TimeTableConstraintProvider::roomConflict`,\n"
+"when given three lessons in the same room, where two lessons have the same timeslot,\n"
+"it penalizes with a  match weight of `1`.\n"
+"So with a constraint weight of `10hard` it would reduce the score by `-10hard`."
+msgstr "该测试验证了约束 `TimeTableConstraintProvider::roomConflict` ，当给定同一房间的三节课，其中两节课的时间段相同时，它的惩罚匹配权重为 `1` 。因此，如果约束权重为 `10hard` ，它将减少得分 `-10hard` 。"
 
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:763
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid ""
-"@QuarkusTest\n"
-"class TimeTableConstraintProviderTest {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:767
-#, no-wrap
-msgid ""
-"    private static final Room ROOM = new Room(\"Room1\");\n"
-"    private static final Timeslot TIMESLOT1 = new Timeslot(DayOfWeek.MONDAY, LocalTime.of(9,0), LocalTime.NOON);\n"
-"    private static final Timeslot TIMESLOT2 = new Timeslot(DayOfWeek.TUESDAY, LocalTime.of(9,0), LocalTime.NOON);\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:770
-#, no-wrap
-msgid ""
-"    @Inject\n"
-"    ConstraintVerifier<TimeTableConstraintProvider, TimeTable> constraintVerifier;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:776
-#, no-wrap
-msgid ""
-"    @Test\n"
-"    void roomConflict() {\n"
-"        Lesson firstLesson = new Lesson(1, \"Subject1\", \"Teacher1\", \"Group1\");\n"
-"        Lesson conflictingLesson = new Lesson(2, \"Subject2\", \"Teacher2\", \"Group2\");\n"
-"        Lesson nonConflictingLesson = new Lesson(3, \"Subject3\", \"Teacher3\", \"Group3\");\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:779
-#, no-wrap
-msgid ""
-"        firstLesson.setRoom(ROOM);\n"
-"        firstLesson.setTimeslot(TIMESLOT1);\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:782
-#, no-wrap
-msgid ""
-"        conflictingLesson.setRoom(ROOM);\n"
-"        conflictingLesson.setTimeslot(TIMESLOT1);\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:785
-#, no-wrap
-msgid ""
-"        nonConflictingLesson.setRoom(ROOM);\n"
-"        nonConflictingLesson.setTimeslot(TIMESLOT2);\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:790
-#, no-wrap
-msgid ""
-"        constraintVerifier.verifyThat(TimeTableConstraintProvider::roomConflict)\n"
-"                .given(firstLesson, conflictingLesson, nonConflictingLesson)\n"
-"                .penalizesBy(1);\n"
-"    }\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:798
-msgid "This test verifies that the constraint `TimeTableConstraintProvider::roomConflict`, when given three lessons in the same room, where two lessons have the same timeslot, it penalizes with a match weight of `1`.  So with a constraint weight of `10hard` it would reduce the score by `-10hard`."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:803
-msgid "Notice how `ConstraintVerifier` ignores the constraint weight during testing - even if those constraint weights are hard coded in the `ConstraintProvider` - because constraints weights change regularly before going into production.  This way, constraint weight tweaking does not break the unit tests."
-msgstr ""
+"Notice how `ConstraintVerifier` ignores the constraint weight during testing - even\n"
+"if those constraint weights are hard coded in the `ConstraintProvider` - because\n"
+"constraints weights change regularly before going into production.\n"
+"This way, constraint weight tweaking does not break the unit tests."
+msgstr "请注意 `ConstraintVerifier` 在测试过程中是如何忽略约束权重的--即使这些约束权重是硬编码在 `ConstraintProvider` 中的--因为在投入生产之前，约束权重会定期发生变化。这样，约束权重的调整就不会破坏单元测试。"
 
 #. type: Title ====
-#: upstream/_versions/3.2/guides/optaplanner.adoc:804
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy, no-wrap
 msgid "Test the solver"
-msgstr ""
+msgstr "测试求解器"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:807
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "In a JUnit test, generate a test dataset and send it to the `TimeTableResource` to solve."
-msgstr ""
+msgstr "在 JUnit 测试中，生成一个测试数据集，并将其发送到 `TimeTableResource` 进行求解。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:809
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "Create the `src/test/java/org/acme/optaplanner/rest/TimeTableResourceTest.java` class:"
-msgstr ""
+msgstr "创建 `src/test/java/org/acme/optaplanner/rest/TimeTableResourceTest.java` 类："
 
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:818
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid ""
-"import java.time.DayOfWeek;\n"
-"import java.time.LocalTime;\n"
-"import java.util.ArrayList;\n"
-"import java.util.List;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:829
-#, no-wrap
-msgid ""
-"import io.quarkus.test.junit.QuarkusTest;\n"
-"import org.acme.optaplanner.domain.Room;\n"
-"import org.acme.optaplanner.domain.Timeslot;\n"
-"import org.acme.optaplanner.domain.Lesson;\n"
-"import org.acme.optaplanner.domain.TimeTable;\n"
-"import org.acme.optaplanner.rest.TimeTableResource;\n"
-"import org.junit.jupiter.api.Test;\n"
-"import org.junit.jupiter.api.Timeout;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:833
-#: upstream/_versions/3.2/guides/optaplanner.adoc:1069
-#, no-wrap
-msgid ""
-"import static org.junit.jupiter.api.Assertions.assertFalse;\n"
-"import static org.junit.jupiter.api.Assertions.assertNotNull;\n"
-"import static org.junit.jupiter.api.Assertions.assertTrue;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:836
-#: upstream/_versions/3.2/guides/optaplanner.adoc:1072
-#, no-wrap
-msgid ""
-"@QuarkusTest\n"
-"public class TimeTableResourceTest {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:839
-#: upstream/_versions/3.2/guides/optaplanner.adoc:1075
-#, no-wrap
-msgid ""
-"    @Inject\n"
-"    TimeTableResource timeTableResource;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:852
-#, no-wrap
-msgid ""
-"    @Test\n"
-"    @Timeout(600_000)\n"
-"    public void solve() {\n"
-"        TimeTable problem = generateProblem();\n"
-"        TimeTable solution = timeTableResource.solve(problem);\n"
-"        assertFalse(solution.getLessonList().isEmpty());\n"
-"        for (Lesson lesson : solution.getLessonList()) {\n"
-"            assertNotNull(lesson.getTimeslot());\n"
-"            assertNotNull(lesson.getRoom());\n"
-"        }\n"
-"        assertTrue(solution.getScore().isFeasible());\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:860
-#, no-wrap
-msgid ""
-"    private TimeTable generateProblem() {\n"
-"        List<Timeslot> timeslotList = new ArrayList<>();\n"
-"        timeslotList.add(new Timeslot(DayOfWeek.MONDAY, LocalTime.of(8, 30), LocalTime.of(9, 30)));\n"
-"        timeslotList.add(new Timeslot(DayOfWeek.MONDAY, LocalTime.of(9, 30), LocalTime.of(10, 30)));\n"
-"        timeslotList.add(new Timeslot(DayOfWeek.MONDAY, LocalTime.of(10, 30), LocalTime.of(11, 30)));\n"
-"        timeslotList.add(new Timeslot(DayOfWeek.MONDAY, LocalTime.of(13, 30), LocalTime.of(14, 30)));\n"
-"        timeslotList.add(new Timeslot(DayOfWeek.MONDAY, LocalTime.of(14, 30), LocalTime.of(15, 30)));\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:865
-#, no-wrap
-msgid ""
-"        List<Room> roomList = new ArrayList<>();\n"
-"        roomList.add(new Room(\"Room A\"));\n"
-"        roomList.add(new Room(\"Room B\"));\n"
-"        roomList.add(new Room(\"Room C\"));\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:872
-#, no-wrap
-msgid ""
-"        List<Lesson> lessonList = new ArrayList<>();\n"
-"        lessonList.add(new Lesson(101L, \"Math\", \"B. May\", \"9th grade\"));\n"
-"        lessonList.add(new Lesson(102L, \"Physics\", \"M. Curie\", \"9th grade\"));\n"
-"        lessonList.add(new Lesson(103L, \"Geography\", \"M. Polo\", \"9th grade\"));\n"
-"        lessonList.add(new Lesson(104L, \"English\", \"I. Jones\", \"9th grade\"));\n"
-"        lessonList.add(new Lesson(105L, \"Spanish\", \"P. Cruz\", \"9th grade\"));\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:880
-#, no-wrap
-msgid ""
-"        lessonList.add(new Lesson(201L, \"Math\", \"B. May\", \"10th grade\"));\n"
-"        lessonList.add(new Lesson(202L, \"Chemistry\", \"M. Curie\", \"10th grade\"));\n"
-"        lessonList.add(new Lesson(203L, \"History\", \"I. Jones\", \"10th grade\"));\n"
-"        lessonList.add(new Lesson(204L, \"English\", \"P. Cruz\", \"10th grade\"));\n"
-"        lessonList.add(new Lesson(205L, \"French\", \"M. Curie\", \"10th grade\"));\n"
-"        return new TimeTable(timeslotList, roomList, lessonList);\n"
-"    }\n"
-msgstr ""
+"This test verifies that after solving, all lessons are assigned to a time slot and a room.\n"
+"It also verifies that it found a feasible solution (no hard constraints broken)."
+msgstr "该测试验证了在求解后，所有课程都被分配到了一个时间段和一个房间。它还能验证是否找到了可行的解决方案（没有破坏任何硬约束）。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:886
-msgid "This test verifies that after solving, all lessons are assigned to a time slot and a room.  It also verifies that it found a feasible solution (no hard constraints broken)."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:888
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "Add test properties to the `src/main/resources/application.properties` file:"
-msgstr ""
+msgstr "在 `src/main/resources/application.properties` 文件中添加测试属性："
 
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:892
-#, no-wrap
-msgid "quarkus.optaplanner.solver.termination.spent-limit=5s\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:896
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid ""
-"# Effectively disable spent-time termination in favor of the best-score-limit\n"
-"%test.quarkus.optaplanner.solver.termination.spent-limit=1h\n"
-"%test.quarkus.optaplanner.solver.termination.best-score-limit=0hard/*soft\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:904
-msgid "Normally, the solver finds a feasible solution in less than 200 milliseconds.  Notice how the `application.properties` overwrites the solver termination during tests to terminate as soon as a feasible solution (`0hard/*soft`) is found.  This avoids hard coding a solver time, because the unit test might run on arbitrary hardware.  This approach ensures that the test runs long enough to find a feasible solution, even on slow machines.  But it does not run a millisecond longer than it strictly must, even on fast machines."
-msgstr ""
+"Normally, the solver finds a feasible solution in less than 200 milliseconds.\n"
+"Notice how the `application.properties` overwrites the solver termination during tests\n"
+"to terminate as soon as a feasible solution (`0hard/*soft`) is found.\n"
+"This avoids hard coding a solver time, because the unit test might run on arbitrary hardware.\n"
+"This approach ensures that the test runs long enough to find a feasible solution, even on slow machines.\n"
+"But it does not run a millisecond longer than it strictly must, even on fast machines."
+msgstr "通常情况下，求解器会在不到 200 毫秒的时间内找到可行的解决方案。请注意 `application.properties` 在测试过程中是如何覆盖求解器终止时间的，即一旦找到可行解 ( `0hard/*soft` ) 即终止。这避免了硬编码求解器时间，因为单元测试可能会在任意硬件上运行。这种方法能确保测试运行足够长的时间，即使在慢速机器上也能找到可行的解决方案。但即使在快速机器上，它也不会比它必须运行的时间多出一毫秒。"
 
 #. type: Title ===
-#: upstream/_versions/3.2/guides/optaplanner.adoc:905
+#: _versions/3.2/guides/optaplanner.adoc
 #, no-wrap
 msgid "Logging"
 msgstr "日志"
 
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:910
-msgid "When adding constraints in your `ConstraintProvider`, keep an eye on the _score calculation speed_ in the `info` log, after solving for the same amount of time, to assess the performance impact:"
-msgstr ""
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"When adding constraints in your `ConstraintProvider`,\n"
+"keep an eye on the _score calculation speed_ in the `info` log,\n"
+"after solving for the same amount of time, to assess the performance impact:"
+msgstr "在 `ConstraintProvider` 中添加约束条件时，请留意 `info` 日志中的 _分数计算速度_ ，在求解相同时间后，以评估对性能的影响："
 
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:914
-#, no-wrap
-msgid "... Solving ended: ..., score calculation speed (29455/sec), ...\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:918
-msgid "To understand how OptaPlanner is solving your problem internally, change the logging in the `application.properties` file or with a `-D` system property:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:922
-#, no-wrap
-msgid "quarkus.log.category.\"org.optaplanner\".level=debug\n"
-msgstr ""
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"To understand how OptaPlanner is solving your problem internally,\n"
+"change the logging in the `application.properties` file or with a `-D` system property:"
+msgstr "要了解 OptaPlanner 如何在内部解决问题，请在 `application.properties` 文件或 `-D` 系统属性中更改日志记录："
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:925
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "Use `debug` logging to show every _step_:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:932
-#, no-wrap
-msgid ""
-"... Solving started: time spent (67), best score (-20init/0hard/0soft), environment mode (REPRODUCIBLE), random (JDK with seed 0).\n"
-"...     CH step (0), time spent (128), score (-18init/0hard/0soft), selected move count (15), picked move ([Math(101) {null -> Room A}, Math(101) {null -> MONDAY 08:30}]).\n"
-"...     CH step (1), time spent (145), score (-16init/0hard/0soft), selected move count (15), picked move ([Physics(102) {null -> Room A}, Physics(102) {null -> MONDAY 09:30}]).\n"
-"...\n"
-msgstr ""
+msgstr "使用 `debug` 日志显示每个 _步骤_ ："
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:935
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "Use `trace` logging to show every _step_ and every _move_ per step."
-msgstr ""
+msgstr "使用 `trace` 日志来显示每 _一步_ 和每一步的 _移动_ 。"
 
 #. type: Title ==
-#: upstream/_versions/3.2/guides/optaplanner.adoc:936
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy, no-wrap
 msgid "Summary"
-msgstr ""
+msgstr "摘要"
 
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:940
-msgid "Congratulations! You have just developed a Quarkus application with https://www.optaplanner.org/[OptaPlanner]!"
-msgstr ""
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"Congratulations!\n"
+"You have just developed a Quarkus application with https://www.optaplanner.org/[OptaPlanner]!"
+msgstr "恭喜您！您刚刚使用 link:https://www.optaplanner.org/[OptaPlanner] 开发了一个 Quarkus 应用程序！"
 
 #. type: Title ==
-#: upstream/_versions/3.2/guides/optaplanner.adoc:941
-#, no-wrap
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy, no-wrap
 msgid "Further improvements: Database and UI integration"
-msgstr ""
+msgstr "进一步改进：数据库和用户界面集成"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:944
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "Now try adding database and UI integration:"
-msgstr ""
+msgstr "现在尝试添加数据库和用户界面集成："
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:946
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "Store `Timeslot`, `Room`, and `Lesson` in the database with xref:hibernate-orm-panache.adoc[Hibernate and Panache]."
-msgstr ""
+msgstr "使用 xref:hibernate-orm-panache.adoc[Hibernate 和 Panache] 在数据库中存储 `Timeslot` 、 `Room` 和 `Lesson` 。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:948
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "xref:rest-json.adoc[Expose them through REST]."
-msgstr ""
+msgstr "xref:rest-json.adoc[通过 REST 将其公开] 。"
+
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"Adjust the `TimeTableResource` to read and write a `TimeTable` instance in a single transaction\n"
+"and use those accordingly:"
+msgstr "调整 `TimeTableResource` ，以便在单个事务中读取和写入 `TimeTable` 实例，并相应地使用这些事务："
+
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"For simplicity's sake, this code handles only one `TimeTable` instance,\n"
+"but it is straightforward to enable multi-tenancy and handle multiple `TimeTable` instances of different high schools in parallel."
+msgstr "为简单起见，本代码只处理一个 `TimeTable` 实例，但可以直接启用多租户功能，并行处理不同中学的多个 `TimeTable` 实例。"
+
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"The `getTimeTable()` method returns the latest timetable from the database.\n"
+"It uses the `ScoreManager` (which is automatically injected)\n"
+"to calculate the score of that timetable, so the UI can show the score."
+msgstr "`getTimeTable()` 方法从数据库中返回最新的时刻表。它使用 `ScoreManager` （已自动注入）计算该时刻表的得分，因此用户界面可以显示得分。"
+
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"The `solve()` method starts a job to solve the current timetable and store the time slot and room assignments in the database.\n"
+"It uses the `SolverManager.solveAndListen()` method to listen to intermediate best solutions\n"
+"and update the database accordingly.\n"
+"This enables the UI to show progress while the backend is still solving."
+msgstr "`solve()` 方法会启动一项任务来解决当前的时间表问题，并将时隙和房间分配情况存储到数据库中。它使用 `SolverManager.solveAndListen()` 方法监听中间最佳解决方案，并相应地更新数据库。这样，当后台仍在求解时，用户界面就能显示进度。"
+
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
+msgid ""
+"Adjust the `TimeTableResourceTest` instance accordingly, now that the `solve()` method returns immediately.\n"
+"Poll for the latest solution until the solver finishes solving:"
+msgstr "相应调整 `TimeTableResourceTest` 实例，因为 `solve()` 方法会立即返回。轮询最新解决方案，直到求解器完成求解："
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:951
-msgid "Adjust the `TimeTableResource` to read and write a `TimeTable` instance in a single transaction and use those accordingly:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:961
-#, no-wrap
-msgid ""
-"import jakarta.inject.Inject;\n"
-"import jakarta.transaction.Transactional;\n"
-"import jakarta.ws.rs.GET;\n"
-"import jakarta.ws.rs.POST;\n"
-"import jakarta.ws.rs.Path;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:971
-#, no-wrap
-msgid ""
-"import io.quarkus.panache.common.Sort;\n"
-"import org.acme.optaplanner.domain.Lesson;\n"
-"import org.acme.optaplanner.domain.Room;\n"
-"import org.acme.optaplanner.domain.TimeTable;\n"
-"import org.acme.optaplanner.domain.Timeslot;\n"
-"import org.optaplanner.core.api.score.ScoreManager;\n"
-"import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;\n"
-"import org.optaplanner.core.api.solver.SolverManager;\n"
-"import org.optaplanner.core.api.solver.SolverStatus;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:976
-#, no-wrap
-msgid "    public static final Long SINGLETON_TIME_TABLE_ID = 1L;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:981
-#, no-wrap
-msgid ""
-"    @Inject\n"
-"    SolverManager<TimeTable, Long> solverManager;\n"
-"    @Inject\n"
-"    ScoreManager<TimeTable, HardSoftScore> scoreManager;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:993
-#, no-wrap
-msgid ""
-"    // To try, open http://localhost:8080/timeTable\n"
-"    @GET\n"
-"    public TimeTable getTimeTable() {\n"
-"        // Get the solver status before loading the solution\n"
-"        // to avoid the race condition that the solver terminates between them\n"
-"        SolverStatus solverStatus = getSolverStatus();\n"
-"        TimeTable solution = findById(SINGLETON_TIME_TABLE_ID);\n"
-"        scoreManager.updateScore(solution); // Sets the score\n"
-"        solution.setSolverStatus(solverStatus);\n"
-"        return solution;\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:1001
-#, no-wrap
-msgid ""
-"    @POST\n"
-"    @Path(\"/solve\")\n"
-"    public void solve() {\n"
-"        solverManager.solveAndListen(SINGLETON_TIME_TABLE_ID,\n"
-"                this::findById,\n"
-"                this::save);\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:1005
-#, no-wrap
-msgid ""
-"    public SolverStatus getSolverStatus() {\n"
-"        return solverManager.getSolverStatus(SINGLETON_TIME_TABLE_ID);\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:1011
-#, no-wrap
-msgid ""
-"    @POST\n"
-"    @Path(\"/stopSolving\")\n"
-"    public void stopSolving() {\n"
-"        solverManager.terminateEarly(SINGLETON_TIME_TABLE_ID);\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:1024
-#, no-wrap
-msgid ""
-"    @Transactional\n"
-"    protected TimeTable findById(Long id) {\n"
-"        if (!SINGLETON_TIME_TABLE_ID.equals(id)) {\n"
-"            throw new IllegalStateException(\"There is no timeTable with id (\" + id + \").\");\n"
-"        }\n"
-"        // Occurs in a single transaction, so each initialized lesson references the same timeslot/room instance\n"
-"        // that is contained by the timeTable's timeslotList/roomList.\n"
-"        return new TimeTable(\n"
-"                Timeslot.listAll(Sort.by(\"dayOfWeek\").and(\"startTime\").and(\"endTime\").and(\"id\")),\n"
-"                Room.listAll(Sort.by(\"name\").and(\"id\")),\n"
-"                Lesson.listAll(Sort.by(\"subject\").and(\"teacher\").and(\"studentGroup\").and(\"id\")));\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:1034
-#, no-wrap
-msgid ""
-"    @Transactional\n"
-"    protected void save(TimeTable timeTable) {\n"
-"        for (Lesson lesson : timeTable.getLessonList()) {\n"
-"            // TODO this is awfully naive: optimistic locking causes issues if called by the SolverManager\n"
-"            Lesson attachedLesson = Lesson.findById(lesson.getId());\n"
-"            attachedLesson.setTimeslot(lesson.getTimeslot());\n"
-"            attachedLesson.setRoom(lesson.getRoom());\n"
-"        }\n"
-"    }\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:1040
-msgid "For simplicity's sake, this code handles only one `TimeTable` instance, but it is straightforward to enable multi-tenancy and handle multiple `TimeTable` instances of different high schools in parallel."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:1044
-msgid "The `getTimeTable()` method returns the latest timetable from the database.  It uses the `ScoreManager` (which is automatically injected)  to calculate the score of that timetable, so the UI can show the score."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:1049
-msgid "The `solve()` method starts a job to solve the current timetable and store the time slot and room assignments in the database.  It uses the `SolverManager.solveAndListen()` method to listen to intermediate best solutions and update the database accordingly.  This enables the UI to show progress while the backend is still solving."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:1052
-msgid "Adjust the `TimeTableResourceTest` instance accordingly, now that the `solve()` method returns immediately.  Poll for the latest solution until the solver finishes solving:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:1065
-#, no-wrap
-msgid ""
-"import io.quarkus.test.junit.QuarkusTest;\n"
-"import org.acme.optaplanner.domain.Lesson;\n"
-"import org.acme.optaplanner.domain.TimeTable;\n"
-"import org.junit.jupiter.api.Test;\n"
-"import org.junit.jupiter.api.Timeout;\n"
-"import org.optaplanner.core.api.solver.SolverStatus;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/3.2/guides/optaplanner.adoc:1094
-#, no-wrap
-msgid ""
-"    @Test\n"
-"    @Timeout(600_000)\n"
-"    public void solveDemoDataUntilFeasible() throws InterruptedException {\n"
-"        timeTableResource.solve();\n"
-"        TimeTable timeTable = timeTableResource.getTimeTable();\n"
-"        while (timeTable.getSolverStatus() != SolverStatus.NOT_SOLVING) {\n"
-"            // Quick polling (not a Test Thread Sleep anti-pattern)\n"
-"            // Test is still fast on fast machines and doesn't randomly fail on slow machines.\n"
-"            Thread.sleep(20L);\n"
-"            timeTable = timeTableResource.getTimeTable();\n"
-"        }\n"
-"        assertFalse(timeTable.getLessonList().isEmpty());\n"
-"        for (Lesson lesson : timeTable.getLessonList()) {\n"
-"            assertNotNull(lesson.getTimeslot());\n"
-"            assertNotNull(lesson.getRoom());\n"
-"        }\n"
-"        assertTrue(timeTable.getScore().isFeasible());\n"
-"    }\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:1099
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "Build an attractive web UI on top of these REST methods to visualize the timetable."
-msgstr ""
+msgstr "在这些 REST 方法的基础上建立一个有吸引力的网络用户界面，使时间表可视化。"
 
 #. type: Plain text
-#: upstream/_versions/3.2/guides/optaplanner.adoc:1100
+#: _versions/3.2/guides/optaplanner.adoc
+#, fuzzy
 msgid "Take a look at link:{quickstarts-tree-url}/optaplanner-quickstart[the quickstart source code] to see how this all turns out."
-msgstr ""
+msgstr "请查看 link:{quickstarts-tree-url}/optaplanner-quickstart[快速启动源代码] ，了解这一切是如何实现的。"

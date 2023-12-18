@@ -11,7 +11,7 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,478 +20,300 @@ msgstr ""
 #. and pull requests should be submitted there:
 #. https://github.com/quarkusio/quarkus/tree/main/docs/src/main/asciidoc
 #. type: Title =
-#: upstream/_versions/2.13/guides/spring-cache.adoc:6
-#, no-wrap
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy, no-wrap
 msgid "Quarkus Extension for Spring Cache API"
-msgstr ""
+msgstr "Quarkus Extension for Spring Cache API"
 
 #. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:12
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
 msgid "While users are encouraged to use xref:cache.adoc[Quarkus annotations for caching], Quarkus nevertheless provides a compatibility layer for Spring Cache annotations in the form of the `spring-cache` extension."
-msgstr ""
+msgstr "虽然我们鼓励用户使用 link:cache.html[Quarkus注释进行缓存] ，但Quarkus还是以 `spring-cache` 扩展的形式为Spring Cache注释提供了一个兼容层。"
 
 #. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:14
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
 msgid "This guide explains how a Quarkus application can leverage the well known Spring Cache annotations to enable application data caching for their Spring beans."
-msgstr ""
+msgstr "本指南解释了Quarkus应用程序如何利用众所周知的Spring Cache注解来为其Spring Bean实现应用数据缓存。"
 
 #. type: Title ==
-#: upstream/_versions/2.13/guides/spring-cache.adoc:15
+#: _versions/2.13/guides/spring-cache.adoc
 #, no-wrap
 msgid "Prerequisites"
 msgstr "先决条件"
 
 #. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:19
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
 msgid "Some familiarity with the Spring DI extension"
-msgstr ""
+msgstr "对Spring DI扩展有一定的熟悉程度"
 
 #. type: Title ==
-#: upstream/_versions/2.13/guides/spring-cache.adoc:20
+#: _versions/2.13/guides/spring-cache.adoc
 #, no-wrap
 msgid "Creating the Maven project"
 msgstr "创建Maven项目"
 
 #. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:23
+#: _versions/2.13/guides/spring-cache.adoc
 msgid "First, we need a new project. Create a new project with the following command:"
 msgstr "首先，我们需要一个新的项目。使用以下命令创建一个新的项目:"
 
 #. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:29
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
 msgid "This command generates a project which imports the `spring-cache` and `spring-di` extensions."
-msgstr ""
+msgstr "该命令生成一个导入 `spring-cache` 和 `spring-di` 扩展的项目。"
+
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
+msgid ""
+"If you already have your Quarkus project configured, you can add the `spring-cache` extension\n"
+"to your project by running the following command in your project base directory:"
+msgstr "如果已经配置了 Quarkus 项目，可以在项目基本目录下运行以下命令，将 `spring-cache` 扩展添加到项目中："
 
 #. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:32
-msgid "If you already have your Quarkus project configured, you can add the `spring-cache` extension to your project by running the following command in your project base directory:"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:37
+#: _versions/2.13/guides/spring-cache.adoc
 msgid "This will add the following to your build file:"
 msgstr "这会将以下内容添加到你的构建文件中:"
 
 #. type: Block title
-#: upstream/_versions/2.13/guides/spring-cache.adoc:39
+#: _versions/2.13/guides/spring-cache.adoc
 #, no-wrap
 msgid "pom.xml"
 msgstr "pom.xml"
 
-#. type: delimited block -
-#: upstream/_versions/2.13/guides/spring-cache.adoc:45
-#, no-wrap
-msgid ""
-"<dependency>\n"
-"    <groupId>io.quarkus</groupId>\n"
-"    <artifactId>quarkus-spring-cache</artifactId>\n"
-"</dependency>\n"
-msgstr ""
-
 #. type: Block title
-#: upstream/_versions/2.13/guides/spring-cache.adoc:48
+#: _versions/2.13/guides/spring-cache.adoc
 #, no-wrap
 msgid "build.gradle"
 msgstr "build.gradle"
 
-#. type: delimited block -
-#: upstream/_versions/2.13/guides/spring-cache.adoc:51
-#, no-wrap
-msgid "implementation(\"io.quarkus:quarkus-spring-cache\")\n"
-msgstr ""
-
 #. type: Title ==
-#: upstream/_versions/2.13/guides/spring-cache.adoc:53
-#, no-wrap
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy, no-wrap
 msgid "Creating the REST API"
-msgstr ""
+msgstr "创建REST API"
+
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
+msgid ""
+"Let's start by creating a service which will simulate an extremely slow call to an external meteorological service.\n"
+"Create `src/main/java/org/acme/spring/cache/WeatherForecastService.java` with the following content:"
+msgstr "让我们先创建一个服务，模拟极其缓慢地调用外部气象服务。创建 `src/main/java/org/acme/spring/cache/WeatherForecastService.java` ，内容如下："
 
 #. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:57
-msgid "Let's start by creating a service which will simulate an extremely slow call to an external meteorological service.  Create `src/main/java/org/acme/spring/cache/WeatherForecastService.java` with the following content:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.13/guides/spring-cache.adoc:61
-#: upstream/_versions/2.13/guides/spring-cache.adoc:102
-#: upstream/_versions/2.13/guides/spring-cache.adoc:131
-#, no-wrap
-msgid "package org.acme.spring.cache;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.13/guides/spring-cache.adoc:63
-#: upstream/_versions/2.13/guides/spring-cache.adoc:195
-#, no-wrap
-msgid "import java.time.LocalDate;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.13/guides/spring-cache.adoc:65
-#, no-wrap
-msgid "import org.springframework.stereotype.Component;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.13/guides/spring-cache.adoc:68
-#: upstream/_versions/2.13/guides/spring-cache.adoc:201
-#, no-wrap
-msgid ""
-"@Component\n"
-"public class WeatherForecastService {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.13/guides/spring-cache.adoc:77
-#, no-wrap
-msgid ""
-"    public String getDailyForecast(LocalDate date, String city) {\n"
-"        try {\n"
-"            Thread.sleep(2000L); // <1>\n"
-"        } catch (InterruptedException e) {\n"
-"            Thread.currentThread().interrupt();\n"
-"        }\n"
-"        return date.getDayOfWeek() + \" will be \" + getDailyResult(date.getDayOfMonth() % 4) + \" in \" + city;\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.13/guides/spring-cache.adoc:93
-#: upstream/_versions/2.13/guides/spring-cache.adoc:227
-#, no-wrap
-msgid ""
-"    private String getDailyResult(int dayOfMonthModuloFour) {\n"
-"        switch (dayOfMonthModuloFour) {\n"
-"            case 0:\n"
-"                return \"sunny\";\n"
-"            case 1:\n"
-"                return \"cloudy\";\n"
-"            case 2:\n"
-"                return \"chilly\";\n"
-"            case 3:\n"
-"                return \"rainy\";\n"
-"            default:\n"
-"                throw new IllegalArgumentException();\n"
-"        }\n"
-"    }\n"
-"}\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:95
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
 msgid "This is where the slowness comes from."
-msgstr ""
+msgstr "这就是迟钝的来源。"
+
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
+msgid ""
+"We also need a class which contains the response sent to the users when they ask for the next three days weather forecast.\n"
+"Create `src/main/java/org/acme/spring/cache/WeatherForecast.java` this way:"
+msgstr "我们还需要一个类，其中包含当用户询问未来三天天气预报时发送给用户的响应。请这样创建 `src/main/java/org/acme/spring/cache/WeatherForecast.java` ："
 
 #. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:98
-msgid "We also need a class which contains the response sent to the users when they ask for the next three days weather forecast.  Create `src/main/java/org/acme/spring/cache/WeatherForecast.java` this way:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.13/guides/spring-cache.adoc:104
-#, no-wrap
-msgid "import java.util.List;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.13/guides/spring-cache.adoc:106
-#, no-wrap
-msgid "public class WeatherForecast {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.13/guides/spring-cache.adoc:108
-#, no-wrap
-msgid "    private List<String> dailyForecasts;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.13/guides/spring-cache.adoc:110
-#, no-wrap
-msgid "    private long executionTimeInMs;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.13/guides/spring-cache.adoc:115
-#, no-wrap
-msgid ""
-"    public WeatherForecast(List<String> dailyForecasts, long executionTimeInMs) {\n"
-"        this.dailyForecasts = dailyForecasts;\n"
-"        this.executionTimeInMs = executionTimeInMs;\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.13/guides/spring-cache.adoc:119
-#, no-wrap
-msgid ""
-"    public List<String> getDailyForecasts() {\n"
-"        return dailyForecasts;\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.13/guides/spring-cache.adoc:124
-#, no-wrap
-msgid ""
-"    public long getExecutionTimeInMs() {\n"
-"        return executionTimeInMs;\n"
-"    }\n"
-"}\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:127
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
 msgid "Now, we just need to create the `src/main/java/org/acme/spring/cache/WeatherForecastResource.java` class to use the service and response:"
-msgstr ""
+msgstr "现在，我们只需要创建 `src/main/java/org/acme/spring/cache/WeatherForecastResource.java` 类来使用该服务和响应。"
 
-#. type: delimited block -
-#: upstream/_versions/2.13/guides/spring-cache.adoc:135
-#, no-wrap
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
 msgid ""
-"import java.time.LocalDate;\n"
-"import java.util.Arrays;\n"
-"import java.util.List;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.13/guides/spring-cache.adoc:139
-#, no-wrap
-msgid ""
-"import javax.inject.Inject;\n"
-"import javax.ws.rs.GET;\n"
-"import javax.ws.rs.Path;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.13/guides/spring-cache.adoc:141
-#, no-wrap
-msgid "import org.jboss.resteasy.reactive.RestQuery;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.13/guides/spring-cache.adoc:144
-#, no-wrap
-msgid ""
-"@Path(\"/weather\")\n"
-"public class WeatherForecastResource {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.13/guides/spring-cache.adoc:147
-#, no-wrap
-msgid ""
-"    @Inject\n"
-"    WeatherForecastService service;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.13/guides/spring-cache.adoc:160
-#, no-wrap
-msgid ""
-"    @GET\n"
-"    public WeatherForecast getForecast(@RestQuery String city, @RestQuery long daysInFuture) { // <1>\n"
-"        long executionStart = System.currentTimeMillis();\n"
-"        List<String> dailyForecasts = Arrays.asList(\n"
-"                service.getDailyForecast(LocalDate.now().plusDays(daysInFuture), city),\n"
-"                service.getDailyForecast(LocalDate.now().plusDays(daysInFuture + 1L), city),\n"
-"                service.getDailyForecast(LocalDate.now().plusDays(daysInFuture + 2L), city)\n"
-"        );\n"
-"        long executionEnd = System.currentTimeMillis();\n"
-"        return new WeatherForecast(dailyForecasts, executionEnd - executionStart);\n"
-"    }\n"
-"}\n"
-msgstr ""
+"If the `daysInFuture` query parameter is omitted, the three days weather forecast will start from the current day.\n"
+"Otherwise, it will start from the current day plus the `daysInFuture` value."
+msgstr "如果省略 `daysInFuture` 查询参数，三天天气预报将从当天开始。否则，天气预报将从当天开始，加上 `daysInFuture` 值。"
 
 #. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:163
-msgid "If the `daysInFuture` query parameter is omitted, the three days weather forecast will start from the current day.  Otherwise, it will start from the current day plus the `daysInFuture` value."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:165
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
 msgid "We're all done! Let's check if everything's working."
-msgstr ""
+msgstr "我们都完成了!让我们检查一下是否一切正常。"
 
 #. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:167
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
 msgid "First, run the application using:"
-msgstr ""
+msgstr "首先，使用运行应用程序。"
 
-#. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:172
-msgid "Then, call `http://localhost:8080/weather?city=Raleigh` from a browser.  After six long seconds, the application will answer something like this:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.13/guides/spring-cache.adoc:176
-#, no-wrap
-msgid "{\"dailyForecasts\":[\"MONDAY will be cloudy in Raleigh\",\"TUESDAY will be chilly in Raleigh\",\"WEDNESDAY will be rainy in Raleigh\"],\"executionTimeInMs\":6001}\n"
-msgstr ""
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
+msgid ""
+"Then, call `http://localhost:8080/weather?city=Raleigh` from a browser.\n"
+"After six long seconds, the application will answer something like this:"
+msgstr "然后，从浏览器中调用 `http://localhost:8080/weather?city=Raleigh` 浏览器。经过漫长的 6 秒钟后，应用程序将作出如下回答："
 
 #. type: delimited block =
-#: upstream/_versions/2.13/guides/spring-cache.adoc:181
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
 msgid "The response content may vary depending on the day you run the code."
-msgstr ""
+msgstr "响应内容可能因你运行代码的日子而不同。"
 
 #. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:184
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
 msgid "You can try calling the same URL again and again, it will always take six seconds to answer."
-msgstr ""
+msgstr "你可以试着反复拨打同一个网址，它总是需要6秒钟才能接听。"
 
 #. type: Title ==
-#: upstream/_versions/2.13/guides/spring-cache.adoc:185
-#, no-wrap
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy, no-wrap
 msgid "Enabling the cache"
-msgstr ""
+msgstr "启用缓存"
+
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
+msgid ""
+"Now that your Quarkus application is up and running, let's tremendously improve its response time by caching the external meteorological service responses.\n"
+"Update the `WeatherForecastService` class as follows:"
+msgstr "现在，您的 Quarkus 应用程序已经启动并开始运行，让我们通过缓存外部气象服务响应来大大改善其响应时间。更新 `WeatherForecastService` 类如下："
 
 #. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:189
-msgid "Now that your Quarkus application is up and running, let's tremendously improve its response time by caching the external meteorological service responses.  Update the `WeatherForecastService` class as follows:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.13/guides/spring-cache.adoc:193
-#, no-wrap
-msgid "package org.acme.cache;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.13/guides/spring-cache.adoc:198
-#, no-wrap
-msgid ""
-"import org.springframework.cache.annotation.Cacheable;\n"
-"import org.springframework.stereotype.Component;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.13/guides/spring-cache.adoc:211
-#, no-wrap
-msgid ""
-"    @Cacheable(\"weather-cache\") // <1>\n"
-"    public String getDailyForecast(LocalDate date, String city) {\n"
-"        try {\n"
-"            Thread.sleep(2000L);\n"
-"        } catch (InterruptedException e) {\n"
-"            Thread.currentThread().interrupt();\n"
-"        }\n"
-"        return date.getDayOfWeek() + \" will be \" + getDailyResult(date.getDayOfMonth() % 4) + \" in \" + city;\n"
-"    }\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:229
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
 msgid "We only added this annotation (and the associated import of course)."
-msgstr ""
+msgstr "我们只添加了这个注释（当然还有相关的导入）。"
+
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
+msgid ""
+"Let's try to call `http://localhost:8080/weather?city=Raleigh` again.\n"
+"You're still waiting a long time before receiving an answer.\n"
+"This is normal since the server just restarted and the cache was empty."
+msgstr "让我们试着再打 `http://localhost:8080/weather?city=Raleigh` 再打一次。您仍然要等待很长时间才能收到应答。这很正常，因为服务器刚刚重启，缓存是空的。"
+
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
+msgid ""
+"Wait a second! The server restarted by itself after the `WeatherForecastService` update?\n"
+"Yes, this is one of Quarkus amazing features for developers called `live coding`."
+msgstr "等一下！ `WeatherForecastService` 更新后服务器自己重启了？是的，这是 Quarkus 为开发人员提供的神奇功能之一，名为 `live coding` 。"
+
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
+msgid ""
+"Now that the cache was loaded during the previous call, try calling the same URL.\n"
+"This time, you should get a super fast answer with an `executionTimeInMs` value close to 0."
+msgstr "既然缓存已在上一次调用中加载，那么请尝试调用相同的 URL。这次，你应该会得到一个超快的答案， `executionTimeInMs` 值接近 0。"
+
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
+msgid ""
+"Let's see what happens if we start from one day in the future using the `http://localhost:8080/weather?city=Raleigh&daysInFuture=1` URL.\n"
+"You should get an answer two seconds later since two of the requested days were already loaded in the cache."
+msgstr "让我们看看如果我们从未来的某一天开始使用 `http://localhost:8080/weather?city=Raleigh&daysInFuture=1` URL。由于缓存中已经加载了所请求日期中的两天，所以两秒钟后就会得到答案。"
+
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
+msgid ""
+"You can also try calling the same URL with a different city and see the cache in action again.\n"
+"The first call will take six seconds and the following ones will be answered immediately."
+msgstr "您还可以尝试用不同的城市调用相同的 URL，再次查看缓存的运行情况。第一次调用需要 6 秒钟，随后的调用将立即响应。"
 
 #. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:233
-msgid "Let's try to call `http://localhost:8080/weather?city=Raleigh` again.  You're still waiting a long time before receiving an answer.  This is normal since the server just restarted and the cache was empty."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:236
-msgid "Wait a second! The server restarted by itself after the `WeatherForecastService` update? Yes, this is one of Quarkus amazing features for developers called `live coding`."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:239
-msgid "Now that the cache was loaded during the previous call, try calling the same URL.  This time, you should get a super fast answer with an `executionTimeInMs` value close to 0."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:242
-msgid "Let's see what happens if we start from one day in the future using the `http://localhost:8080/weather?city=Raleigh&daysInFuture=1` URL.  You should get an answer two seconds later since two of the requested days were already loaded in the cache."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:245
-msgid "You can also try calling the same URL with a different city and see the cache in action again.  The first call will take six seconds and the following ones will be answered immediately."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:247
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
 msgid "Congratulations! You just added application data caching to your Quarkus application with a single line of code!"
-msgstr ""
+msgstr "恭喜你！你刚刚用一行代码在你的Quarkus应用程序中添加了应用程序数据缓存。你只用了一行代码就为你的Quarkus应用程序添加了应用数据缓存!"
 
 #. type: Title ==
-#: upstream/_versions/2.13/guides/spring-cache.adoc:248
-#, no-wrap
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy, no-wrap
 msgid "Supported features"
-msgstr ""
+msgstr "支持的功能"
 
 #. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:251
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
 msgid "Quarkus provides compatibility with the following Spring Cache annotations:"
-msgstr ""
+msgstr "Quarkus提供了与以下Spring Cache注释的兼容性。"
 
 #. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:253
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
 msgid "`@Cacheable`"
-msgstr ""
+msgstr " `@Cacheable` "
 
 #. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:254
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
 msgid "`@CachePut`"
-msgstr ""
+msgstr " `@CachePut` "
 
 #. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:255
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
 msgid "`@CacheEvict`"
-msgstr ""
+msgstr " `@CacheEvict` "
 
-#. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:259
-msgid "Note that in this first version of the Spring Cache annotations extension, not all features of these annotations are supported (with proper errors being logged when trying to use an unsupported feature).  However, additional features are planned for future releases."
-msgstr ""
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
+msgid ""
+"Note that in this first version of the Spring Cache annotations extension, not all features of these annotations are supported\n"
+"(with proper errors being logged when trying to use an unsupported feature).\n"
+"However, additional features are planned for future releases."
+msgstr "请注意，在 Spring Cache 注释扩展的第一个版本中，并不支持这些注释的所有功能（在尝试使用不支持的功能时会记录适当的错误）。不过，我们计划在未来的版本中提供更多功能。"
 
 #. type: Title ==
-#: upstream/_versions/2.13/guides/spring-cache.adoc:260
+#: _versions/2.13/guides/spring-cache.adoc
 #, no-wrap
 msgid "More Spring guides"
 msgstr "更多 Spring 指南"
 
 #. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:263
+#: _versions/2.13/guides/spring-cache.adoc
 msgid "Quarkus has more Spring compatibility features. See the following guides for more details:"
 msgstr "Quarkus拥有更多的Spring兼容特性。获取更多细节请参阅以下指南:"
 
 #. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:265
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
 msgid "xref:spring-di.adoc[Quarkus - Extension for Spring DI]"
-msgstr ""
+msgstr "link:spring-di.html[Quarkus - Spring DI的扩展]"
 
 #. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:266
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
 msgid "xref:spring-web.adoc[Quarkus - Extension for Spring Web]"
-msgstr ""
+msgstr "link:spring-web.html[Quarkus - Spring Web的扩展]"
 
 #. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:267
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
 msgid "xref:spring-security.adoc[Quarkus - Extension for Spring Security]"
-msgstr ""
+msgstr "link:spring-security.html[Quarkus - Spring Security的扩展]"
 
 #. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:268
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
 msgid "xref:spring-data-jpa.adoc[Quarkus - Extension for Spring Data JPA]"
-msgstr ""
+msgstr "link:spring-data-jpa.html[Quarkus - Spring Data JPA的扩展]"
 
 #. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:269
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
 msgid "xref:spring-data-rest.adoc[Quarkus - Extension for Spring Data REST]"
-msgstr ""
+msgstr "link:spring-data-rest.html[Quarkus - Spring Data REST的扩展]"
 
 #. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:270
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
 msgid "xref:spring-cloud-config-client.adoc[Quarkus - Reading properties from Spring Cloud Config Server]"
-msgstr ""
+msgstr "link:spring-cloud-config-client.html[Quarkus - 从Spring Cloud配置服务器读取属性]"
 
 #. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:271
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
 msgid "xref:spring-boot-properties.adoc[Quarkus - Extension for Spring Boot properties]"
-msgstr ""
+msgstr "link:spring-boot-properties.html[Quarkus - Spring Boot属性的扩展]"
 
 #. type: Plain text
-#: upstream/_versions/2.13/guides/spring-cache.adoc:271
+#: _versions/2.13/guides/spring-cache.adoc
+#, fuzzy
 msgid "xref:spring-scheduled.adoc[Quarkus - Extension for Spring Scheduled]"
-msgstr ""
+msgstr "xref:spring-scheduled.adoc[Quarkus - 春季扩展计划]"

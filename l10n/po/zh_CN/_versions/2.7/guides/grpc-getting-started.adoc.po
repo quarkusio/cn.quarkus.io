@@ -11,7 +11,7 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,737 +20,447 @@ msgstr ""
 #. and pull requests should be submitted there:
 #. https://github.com/quarkusio/quarkus/tree/main/docs/src/main/asciidoc
 #. type: Title =
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:6
+#: _versions/2.7/guides/grpc-getting-started.adoc
 #, no-wrap
 msgid "Getting Started with gRPC"
 msgstr "开始使用gRPC"
 
-#. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:12
-msgid "This page explains how to start using gRPC in your Quarkus application.  While this page describes how to configure it with Maven, it is also possible to use Gradle."
-msgstr ""
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
+msgid ""
+"This page explains how to start using gRPC in your Quarkus application.\n"
+"While this page describes how to configure it with Maven, it is also possible to use Gradle."
+msgstr "本页介绍了如何在 Quarkus 应用程序中开始使用 gRPC。本页介绍了如何使用 Maven 进行配置，也可以使用 Gradle。"
 
-#. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:15
-msgid "Let's imagine you have a regular Quarkus project, generated from the https://code.quarkus.io[Quarkus project generator].  The default configuration is enough, but you can also select some extensions if you want."
-msgstr ""
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
+msgid ""
+"Let's imagine you have a regular Quarkus project, generated from the https://code.quarkus.io[Quarkus project generator].\n"
+"The default configuration is enough, but you can also select some extensions if you want."
+msgstr "假设你有一个普通的 Quarkus 项目，由 link:https://code.quarkus.io[Quarkus 项目生成器生成] 。默认配置已经足够，但你也可以根据需要选择一些扩展。"
 
 #. type: Title ==
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:16
+#: _versions/2.7/guides/grpc-getting-started.adoc
 #, no-wrap
 msgid "Solution"
 msgstr "解决方案"
 
-#. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:20
-msgid "We recommend that you follow the instructions in the next sections and create the application step by step.  However, you can go right to the completed example."
+#: _versions/2.7/guides/grpc-getting-started.adoc
+msgid ""
+"We recommend that you follow the instructions in the next sections and create the application step by step.\n"
+"However, you can go right to the completed example."
 msgstr "我们建议您按照下一节的说明逐步创建应用程序。然而，您可以直接转到已完成的示例。"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:22
+#: _versions/2.7/guides/grpc-getting-started.adoc
 msgid "Clone the Git repository: `git clone {quickstarts-clone-url}`, or download an {quickstarts-archive-url}[archive]."
 msgstr "克隆 Git 仓库: `git clone {quickstarts-clone-url}` ，或下载一个 {quickstarts-archive-url}[存档] 。"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:24
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "The solution is located in the `grpc-plain-text-quickstart` {quickstarts-tree-url}/grpc-plain-text-quickstart[directory]."
-msgstr ""
+msgstr "解决方案位于 `grpc-plain-text-quickstart` {quickstarts-tree-url}/grpc-plain-text-quickstart[目录]。"
 
 #. type: Title ==
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:25
-#, no-wrap
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy, no-wrap
 msgid "Configuring your project"
-msgstr ""
+msgstr "配置你的项目"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:28
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "Edit the `pom.xml` file to add the Quarkus gRPC extension dependency (just under `<dependencies>`):"
-msgstr ""
+msgstr "编辑 `pom.xml` 文件，添加 Quarkus gRPC 扩展依赖（位于 `<dependencies>` 下方）："
 
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:35
-#, no-wrap
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid ""
-"<dependency>\n"
-"  <groupId>io.quarkus</groupId>\n"
-"  <artifactId>quarkus-grpc</artifactId>\n"
-"</dependency>\n"
-msgstr ""
+"By default the `quarkus-grpc` extension relies on reactive programming model, in this guide we will follow reactive approach.\n"
+"Under the dependencies section of your `pom.xml` file replace the `quarkus-resteasy` dependency with:"
+msgstr "默认情况下， `quarkus-grpc` 扩展依赖于反应式编程模型，在本指南中，我们将采用反应式方法。在 `pom.xml` 文件的依赖关系部分，将 `quarkus-resteasy` 的依赖关系替换为"
 
-#. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:39
-msgid "By default the `quarkus-grpc` extension relies on reactive programming model, in this guide we will follow reactive approach.  Under the dependencies section of your `pom.xml` file replace the `quarkus-resteasy` dependency with:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:46
-#, no-wrap
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid ""
-"<dependency>\n"
-"    <groupId>io.quarkus</groupId>\n"
-"    <artifactId>quarkus-resteasy-reactive</artifactId>\n"
-"</dependency>\n"
-msgstr ""
+"Make sure you have `generate-code` goal of `quarkus-maven-plugin` enabled in your `pom.xml`.\n"
+"If you wish to generate code from different `proto` files for tests, also add the `generate-code-tests` goal.\n"
+"Please note that no additional task/goal is required for the Gradle plugin."
+msgstr "确保在 `pom.xml` 中启用了 `generate-code` 的 `quarkus-maven-plugin` 目标。如果希望从不同的 `proto` 文件中生成测试代码，还需添加 `generate-code-tests` 目标。请注意，Gradle 插件不需要额外的任务/目标。"
 
-#. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:51
-msgid "Make sure you have `generate-code` goal of `quarkus-maven-plugin` enabled in your `pom.xml`.  If you wish to generate code from different `proto` files for tests, also add the `generate-code-tests` goal.  Please note that no additional task/goal is required for the Gradle plugin."
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:73
-#, no-wrap
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid ""
-"<build>\n"
-"    <plugins>\n"
-"        <plugin>\n"
-"            <groupId>io.quarkus</groupId>\n"
-"            <artifactId>quarkus-maven-plugin</artifactId>\n"
-"            <version>${quarkus-plugin.version}</version>\n"
-"            <extensions>true</extensions>\n"
-"            <executions>\n"
-"                <execution>\n"
-"                    <goals>\n"
-"                        <goal>build</goal>\n"
-"                        <goal>generate-code</goal>\n"
-"                        <goal>generate-code-tests</goal>\n"
-"                    </goals>\n"
-"                </execution>\n"
-"            </executions>\n"
-"        </plugin>\n"
-"    </plugins>\n"
-"</build>\n"
-msgstr ""
+"With this configuration, you can put your service and message definitions in the `src/main/proto` directory.\n"
+"`quarkus-maven-plugin` will generate Java files from your `proto` files."
+msgstr "通过这种配置，您可以将服务和消息定义放在 `src/main/proto` 目录中。 `quarkus-maven-plugin` 将根据 `proto` 文件生成 Java 文件。"
+
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
+msgid ""
+"`quarkus-maven-plugin` retrieves a version of `protoc` (the protobuf compiler) from Maven repositories. The retrieved version matches your operating system and CPU architecture.\n"
+"If this retrieved version does not work in your context, you can either force to use a different OS classifier with\n"
+"`-Dquarkus.grpc.protoc-os-classifier=your-os-classifier` (e.g. `osx-x86_64`).\n"
+"You can also download the suitable binary and specify the location via\n"
+"`-Dquarkus.grpc.protoc-path=/path/to/protoc`."
+msgstr "`quarkus-maven-plugin` 从 Maven 资源库中检索 （protobuf 编译器）的版本。检索到的版本与操作系统和 CPU 架构相匹配。如果检索到的版本不适合您的情况，您可以通过 （如 ）强制使用不同的操作系统分类器。也可以通过 下载合适的二进制文件并指定位置。 `protoc` `-Dquarkus.grpc.protoc-os-classifier=your-os-classifier` `osx-x86_64` `-Dquarkus.grpc.protoc-path=/path/to/protoc`"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:77
-msgid "With this configuration, you can put your service and message definitions in the `src/main/proto` directory.  `quarkus-maven-plugin` will generate Java files from your `proto` files."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:83
-msgid "`quarkus-maven-plugin` retrieves a version of `protoc` (the protobuf compiler) from Maven repositories. The retrieved version matches your operating system and CPU architecture.  If this retrieved version does not work in your context, you can either force to use a different OS classifier with `-Dquarkus.grpc.protoc-os-classifier=your-os-classifier` (e.g. `osx-x86_64`).  You can also download the suitable binary and specify the location via `-Dquarkus.grpc.protoc-path=/path/to/protoc`."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:86
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "Alternatively to using the `generate-code` goal of the `quarkus-maven-plugin`, you can use `protobuf-maven-plugin` to generate these files, more in <<Generating Java files from proto with protobuf-maven-plugin>>"
-msgstr ""
+msgstr "除了使用 `generate-code` 目标的 `quarkus-maven-plugin` 之外，您还可以使用 `protobuf-maven-plugin` 来生成这些文件，更多信息请参见 <<Generating Java files from proto with protobuf-maven-plugin>>"
+
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
+msgid ""
+"Let's start with a simple _Hello_ service.\n"
+"Create the `src/main/proto/helloworld.proto` file with the following content:"
+msgstr "让我们从简单的 _Hello_ 服务开始。创建 `src/main/proto/helloworld.proto` 文件，内容如下："
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:89
-msgid "Let's start with a simple _Hello_ service.  Create the `src/main/proto/helloworld.proto` file with the following content:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:93
-#, no-wrap
-msgid "syntax = \"proto3\";\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:97
-#, no-wrap
-msgid ""
-"option java_multiple_files = true;\n"
-"option java_package = \"io.quarkus.example\";\n"
-"option java_outer_classname = \"HelloWorldProto\";\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:99
-#, no-wrap
-msgid "package helloworld;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:105
-#, no-wrap
-msgid ""
-"// The greeting service definition.\n"
-"service Greeter {\n"
-"    // Sends a greeting\n"
-"    rpc SayHello (HelloRequest) returns (HelloReply) {}\n"
-"}\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:110
-#, no-wrap
-msgid ""
-"// The request message containing the user's name.\n"
-"message HelloRequest {\n"
-"    string name = 1;\n"
-"}\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:115
-#, no-wrap
-msgid ""
-"// The response message containing the greetings\n"
-"message HelloReply {\n"
-"    string message = 1;\n"
-"}\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:118
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "This `proto` file defines a simple service interface with a single method (`SayHello`), and the exchanged messages (`HelloRequest` containing the name and `HelloReply` containing the greeting message)."
-msgstr ""
+msgstr "这个 `proto` 文件定义了一个简单的服务接口，其中有一个方法( `SayHello` )，以及交换的信息( `HelloRequest` ，包含名字， `HelloReply` ，包含问候信息)。"
+
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
+msgid ""
+"Before coding, we need to generate the classes used to implement and consume gRPC services.\n"
+"In a terminal, run:"
+msgstr "在编码之前，我们需要生成用于实现和使用 gRPC 服务的类。在终端运行"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:121
-msgid "Before coding, we need to generate the classes used to implement and consume gRPC services.  In a terminal, run:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:125
-#, no-wrap
-msgid "$ mvn compile\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:128
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "Once generated, you can look at the `target/generated-sources/grpc` directory:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:145
-#, no-wrap
-msgid ""
-"target/generated-sources/grpc\n"
-"└── io\n"
-"    └── quarkus\n"
-"        └── example\n"
-"            ├── Greeter.java\n"
-"            ├── GreeterBean.java\n"
-"            ├── GreeterClient.java\n"
-"            ├── GreeterGrpc.java\n"
-"            ├── HelloReply.java\n"
-"            ├── HelloReplyOrBuilder.java\n"
-"            ├── HelloRequest.java\n"
-"            ├── HelloRequestOrBuilder.java\n"
-"            ├── HelloWorldProto.java\n"
-"            └── MutinyGreeterGrpc.java\n"
-msgstr ""
+msgstr "一旦生成，你可以查看 `target/generated-sources/grpc` 目录。"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:148
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "These are the classes we are going to use."
-msgstr ""
+msgstr "这些是我们要使用的类。"
 
 #. type: Title ===
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:150
-#, no-wrap
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy, no-wrap
 msgid "`proto` files with imports"
-msgstr ""
+msgstr "`proto` 导入的文件"
+
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
+msgid ""
+"Protocol Buffers specification provides a way to import `proto` files.\n"
+"The Quarkus code generation mechanism lets you control the scope of dependencies to scan for possible imports by setting the `quarkus.generate-code.grpc.scan-for-imports` property to one of the following:"
+msgstr "协议缓冲区规范提供了一种导入 `proto` 文件的方法。Quarkus 代码生成机制可让你控制依赖关系的范围，通过将 `quarkus.generate-code.grpc.scan-for-imports` 属性设置为以下之一来扫描可能的导入："
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:154
-msgid "Protocol Buffers specification provides a way to import `proto` files.  The Quarkus code generation mechanism lets you control the scope of dependencies to scan for possible imports by setting the `quarkus.generate-code.grpc.scan-for-imports` property to one of the following:"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:156
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "`all` - scan all the dependencies"
-msgstr ""
+msgstr "`all` - 扫描所有依赖项"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:157
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "`none` - don't scan the dependencies, use only what is defined in the `src/main/proto` or `src/test/proto`"
-msgstr ""
+msgstr "`none` - 不扫描依赖项，只使用 或 `src/main/proto` `src/test/proto`"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:158
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "`groupId1:artifactId1,groupId2:artifactId2` - scan only the dependencies with group id and artifact id in the list."
-msgstr ""
+msgstr "`groupId1:artifactId1,groupId2:artifactId2` - 只扫描列表中具有组 id 和工件 id 的依赖项。"
 
-#. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:161
-msgid "If not specified, the property is set to `com.google.protobuf:protobuf-java`.  To override it, set the `quarkus.generate-code.grpc.scan-for-imports` property in your application.properties to the desired value, e.g."
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:165
-#, no-wrap
-msgid "quarkus.generate-code.grpc.scan-for-imports=all\n"
-msgstr ""
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
+msgid ""
+"If not specified, the property is set to `com.google.protobuf:protobuf-java`.\n"
+"To override it, set the `quarkus.generate-code.grpc.scan-for-imports` property in your application.properties to the desired value, e.g."
+msgstr "如果未指定，该属性将设置为 `com.google.protobuf:protobuf-java` 。要覆盖它，请将应用程序属性中的 `quarkus.generate-code.grpc.scan-for-imports` 属性设置为所需值，例如"
 
 #. type: Title ===
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:167
-#, no-wrap
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy, no-wrap
 msgid "`proto` files from dependencies"
-msgstr ""
+msgstr "`proto` 附件中的文件"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:169
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "In some cases, you may want to use `proto` files from a different project to generate the gRPC stubs. In this case:"
-msgstr ""
+msgstr "在某些情况下，您可能希望使用来自不同项目的 `proto` 文件来生成 gRPC 存根。在这种情况下"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:171
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "Add a dependency on the artifact that contains the proto file to your project"
-msgstr ""
+msgstr "在项目中添加对包含 proto 文件的构件的依赖关系"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:172
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "In `application.properties`, specify the dependencies you want to scan for proto files."
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:176
-#, no-wrap
-msgid "quarkus.generate-code.grpc.scan-for-proto=<groupId>:<artifactId>\n"
-msgstr ""
+msgstr "在 `application.properties` 中，指定要扫描 proto 文件的依赖项。"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:178
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "The value of the property may be `none`, which is the default value, or a comma separated list of `groupId:artifactId` coordinates."
-msgstr ""
+msgstr "属性值可以是 `none` （默认值），也可以是以逗号分隔的 `groupId:artifactId` 坐标列表。"
 
 #. type: Title ==
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:179
-#, no-wrap
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy, no-wrap
 msgid "Implementing a gRPC service"
-msgstr ""
+msgstr "实现一个gRPC服务"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:182
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "Now that we have the generated classes let's implement our _hello_ service."
-msgstr ""
+msgstr "现在我们有了生成的类，让我们来实现我们的 _Hello_ 服务。"
 
-#. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:186
-msgid "With Quarkus, implementing a service requires to implement the generated service interface based on Mutiny, a Reactive Programming API integrated in Quarkus, and expose it as a CDI bean.  Learn more about Mutiny on the xref:mutiny-primer.adoc[Mutiny guide].  The service class must be annotated with the `@io.quarkus.grpc.GrpcService` annotation."
-msgstr ""
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
+msgid ""
+"With Quarkus, implementing a service requires to implement the generated service interface based on Mutiny, a Reactive Programming API integrated in Quarkus, and expose it as a CDI bean.\n"
+"Learn more about Mutiny on the xref:mutiny-primer.adoc[Mutiny guide].\n"
+"The service class must be annotated with the `@io.quarkus.grpc.GrpcService` annotation."
+msgstr "使用 Quarkus 实现服务需要基于 Mutiny（Quarkus 中集成的反应式编程 API）实现生成的服务接口，并将其作为 CDI Bean 公开。有关 Mutiny 的更多信息，请参阅 xref:mutiny-primer.adoc[Mutiny 指南] 。服务类必须使用 `@io.quarkus.grpc.GrpcService` 注解。"
 
 #. type: Title ===
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:187
-#, no-wrap
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy, no-wrap
 msgid "Implementing a service"
-msgstr ""
+msgstr "实施一项服务"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:190
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "Create the `src/main/java/org/acme/HelloService.java` file with the following content:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:194
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:222
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:272
-#, no-wrap
-msgid "package org.acme;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:201
-#, no-wrap
-msgid ""
-"import io.grpc.stub.StreamObserver;\n"
-"import io.quarkus.example.Greeter;\n"
-"import io.quarkus.example.HelloReply;\n"
-"import io.quarkus.example.HelloRequest;\n"
-"import io.quarkus.grpc.GrpcService;\n"
-"import io.smallrye.mutiny.Uni;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:204
-#, no-wrap
-msgid ""
-"@GrpcService <1>\n"
-"public class HelloService implements Greeter {  <2>\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:212
-#, no-wrap
-msgid ""
-"    @Override\n"
-"    public Uni<HelloReply> sayHello(HelloRequest request) { <3>\n"
-"        return Uni.createFrom().item(() ->\n"
-"                HelloReply.newBuilder().setMessage(\"Hello \" + request.getName()).build()\n"
-"        );\n"
-"    }\n"
-"}\n"
-msgstr ""
+msgstr "创建具有以下内容的 `src/main/java/org/acme/HelloService.java` 文件。"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:214
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:242
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "Expose your implementation as a bean."
-msgstr ""
+msgstr "将你的实现作为一个Bean公开。"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:215
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "Implement the generated service interface."
-msgstr ""
+msgstr "实现生成的服务接口。"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:216
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:244
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "Implement the methods defined in the service definition (here we have a single method)."
-msgstr ""
+msgstr "实现服务定义中定义的方法（这里我们有一个单一的方法）。"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:218
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "You can also use the default gRPC API instead of Mutiny:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:228
-#, no-wrap
-msgid ""
-"import io.grpc.stub.StreamObserver;\n"
-"import io.quarkus.example.GreeterGrpc;\n"
-"import io.quarkus.example.HelloReply;\n"
-"import io.quarkus.example.HelloRequest;\n"
-"import io.quarkus.grpc.GrpcService;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:231
-#, no-wrap
-msgid ""
-"@GrpcService <1>\n"
-"public class HelloService extends GreeterGrpc.GreeterImplBase { <2>\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:240
-#, no-wrap
-msgid ""
-"    @Override\n"
-"    public void sayHello(HelloRequest request, StreamObserver<HelloReply> responseObserver) { <3>\n"
-"        String name = request.getName();\n"
-"        String message = \"Hello \" + name;\n"
-"        responseObserver.onNext(HelloReply.newBuilder().setMessage(message).build()); <4>\n"
-"        responseObserver.onCompleted(); <5>\n"
-"    }\n"
-"}\n"
-msgstr ""
+msgstr "你也可以使用默认的gRPC API而不是Mutiny。"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:243
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "Extends the `ImplBase` class. This is a generated class."
-msgstr ""
+msgstr "扩展了 `ImplBase` 类。这是一个生成的类。"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:245
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "Build and send the response."
-msgstr ""
+msgstr "建立并发送响应。"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:246
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "Close the response."
-msgstr ""
+msgstr "关闭响应。"
 
-#. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:251
-msgid "If your service implementation logic is blocking (use blocking I/O for example), annotate your method with `@Blocking`.  The `io.smallrye.common.annotation.Blocking` annotation instructs the framework to invoke the annotated method on a worker thread instead of the I/O thread (event-loop)."
-msgstr ""
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
+msgid ""
+"If your service implementation logic is blocking (use blocking I/O for example), annotate your method with\n"
+"`@Blocking`.\n"
+"The `io.smallrye.common.annotation.Blocking` annotation instructs the framework to invoke the\n"
+"annotated method on a worker thread instead of the I/O thread (event-loop)."
+msgstr "如果您的服务实现逻辑是阻塞的（例如使用阻塞 I/O），请使用 `@Blocking` 注释您的方法。 `io.smallrye.common.annotation.Blocking` 注解指示框架在工作线程上调用注解的方法，而不是在 I/O 线程上（事件循环）。"
 
 #. type: Title ===
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:252
-#, no-wrap
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy, no-wrap
 msgid "The gRPC server"
-msgstr ""
+msgstr "gRPC服务器"
+
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
+msgid ""
+"The services are _served_ by a _server_.\n"
+"Available services (_CDI beans_) are automatically registered and exposed."
+msgstr "服务由 _服务器_ _提供_ 。可用的服务 _（CDI Bean_ ）会自动注册并公开。"
+
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
+msgid ""
+"By default, the server is exposed on `localhost:9000`, and uses _plain-text_ (so no TLS) when\n"
+"running normally, and `localhost:9001` for tests."
+msgstr "默认情况下，服务器通过 `localhost:9000` 公开，正常运行时使用 _纯文本_ （因此不使用 TLS），测试时使用 `localhost:9001` 。"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:256
-msgid "The services are _served_ by a _server_.  Available services (_CDI beans_) are automatically registered and exposed."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:259
-msgid "By default, the server is exposed on `localhost:9000`, and uses _plain-text_ (so no TLS) when running normally, and `localhost:9001` for tests."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:261
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "Run the application using: `mvn quarkus:dev`."
-msgstr ""
+msgstr "运行应用程序，使用： `mvn quarkus:dev` 。"
 
 #. type: Title ==
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:262
-#, no-wrap
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy, no-wrap
 msgid "Consuming a gRPC service"
-msgstr ""
+msgstr "消耗一个gRPC服务"
+
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
+msgid ""
+"In this section, we are going to consume the service we expose.\n"
+"To simplify, we are going to consume the service from the same application, which in the real world, does not make sense."
+msgstr "在本节中，我们将使用我们公开的服务。为简化起见，我们将从同一个应用程序中消费服务，但这在现实世界中并不合理。"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:266
-msgid "In this section, we are going to consume the service we expose.  To simplify, we are going to consume the service from the same application, which in the real world, does not make sense."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:268
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "Open the existing `org.acme.ExampleResource` class, and edit the content to become:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:277
-#, no-wrap
-msgid ""
-"import io.quarkus.example.Greeter;\n"
-"import io.quarkus.example.HelloRequest;\n"
-"import io.quarkus.grpc.GrpcClient;\n"
-"import io.smallrye.mutiny.Uni;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:283
-#, no-wrap
-msgid ""
-"import javax.ws.rs.GET;\n"
-"import javax.ws.rs.Path;\n"
-"import javax.ws.rs.PathParam;\n"
-"import javax.ws.rs.Produces;\n"
-"import javax.ws.rs.core.MediaType;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:286
-#, no-wrap
-msgid ""
-"@Path(\"/hello\")\n"
-"public class ExampleResource {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:289
-#, no-wrap
-msgid ""
-"    @GrpcClient                               // <1>\n"
-"    Greeter hello;                            // <2>\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:295
-#, no-wrap
-msgid ""
-"    @GET\n"
-"    @Produces(MediaType.TEXT_PLAIN)\n"
-"    public String hello() {\n"
-"        return \"hello\";\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:303
-#, no-wrap
-msgid ""
-"    @GET\n"
-"    @Path(\"/{name}\")\n"
-"    public Uni<String> hello(@PathParam(\"name\") String name) {\n"
-"        return hello.sayHello(HelloRequest.newBuilder().setName(name).build())\n"
-"                .onItem().transform(helloReply -> helloReply.getMessage());  // <3>\n"
-"    }\n"
-"}\n"
-msgstr ""
+msgstr "打开现有的 `org.acme.ExampleResource` 类，并编辑内容，成为。"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:305
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "Inject the service and configure its name. The name is used in the application configuration. If not specified then the field name is used instead: `hello` in this particular case."
-msgstr ""
+msgstr "注入服务并配置其名称。该名称在应用程序配置中使用。如果没有指定，则使用字段名代替： `hello` 在这个特定的情况下。"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:306
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "Use the generated service interface based on Mutiny API."
-msgstr ""
+msgstr "使用基于Mutiny API生成的服务接口。"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:307
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "Invoke the service."
-msgstr ""
+msgstr "调用该服务。"
+
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
+msgid ""
+"We need to configure the application to indicate where the `hello` service is found.\n"
+"In the `src/main/resources/application.properties` file, add the following property:"
+msgstr "我们需要对应用程序进行配置，以指明 `hello` 服务的位置。在 `src/main/resources/application.properties` 文件中，添加以下属性："
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:310
-msgid "We need to configure the application to indicate where the `hello` service is found.  In the `src/main/resources/application.properties` file, add the following property:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:314
-#, no-wrap
-msgid "quarkus.grpc.clients.hello.host=localhost\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:317
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "`hello` is the name used in the `@GrpcClient` annotation."
-msgstr ""
+msgstr " `hello` 是 注释中使用的名称。 `@GrpcClient` "
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:318
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "`host` configures the service host (here it's localhost)."
-msgstr ""
+msgstr " `host` 配置服务主机（这里是localhost）。"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:320
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "Then, open http://localhost:8080/hello/quarkus in a browser, and you should get `Hello quarkus`!"
-msgstr ""
+msgstr "然后，在浏览器中打开 http://localhost:8080/hello/quarkus ，你应该得到 `Hello quarkus` !"
 
 #. type: Title ==
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:321
+#: _versions/2.7/guides/grpc-getting-started.adoc
 #, no-wrap
 msgid "Packaging the application"
 msgstr "打包应用"
 
-#. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:325
-msgid "Like any other Quarkus applications, you can package it with: `mvn package`.  You can also package the application into a native executable with: `mvn package -Pnative`."
-msgstr ""
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
+msgid ""
+"Like any other Quarkus applications, you can package it with: `mvn package`.\n"
+"You can also package the application into a native executable with: `mvn package -Pnative`."
+msgstr "与其他 Quarkus 应用程序一样，您可以用： `mvn package` .您也可以使用以下方法将应用程序打包为本地可执行文件： `mvn package -Pnative` ."
 
 #. type: Title ==
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:326
-#, no-wrap
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy, no-wrap
 msgid "Generating Java files from proto with protobuf-maven-plugin"
-msgstr ""
+msgstr "使用 protobuf-maven-plugin 从 proto 生成 Java 文件"
+
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
+msgid ""
+"Alternatively to using Quarkus code generation to generate stubs for `proto` files, you can also use\n"
+"`protobuf-maven-plugin`."
+msgstr "除了使用 Quarkus 代码生成为 `proto` 文件生成存根外，还可以使用 `protobuf-maven-plugin` 。"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:330
-msgid "Alternatively to using Quarkus code generation to generate stubs for `proto` files, you can also use `protobuf-maven-plugin`."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:332
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "To do it, first define the 2 following properties in the `<properties>` section:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:337
-#, no-wrap
-msgid ""
-"<grpc.version>{grpc-version}</grpc.version>\n"
-"<protoc.version>{protoc-version}</protoc.version>\n"
-msgstr ""
+msgstr "要做到这一点，首先要在 `<properties>` 部分定义以下 2 个属性："
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:340
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "They configure the gRPC version and the `protoc` version."
-msgstr ""
+msgstr "它们配置了 gRPC 版本和 `protoc` 版本。"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:342
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "Then, add to the `build` section the `os-maven-plugin` extension and the `protobuf-maven-plugin` configuration."
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:353
-#, no-wrap
-msgid ""
-"<build>\n"
-"    <extensions>\n"
-"        <extension>\n"
-"            <groupId>kr.motd.maven</groupId>\n"
-"            <artifactId>os-maven-plugin</artifactId>\n"
-"            <version>${os-maven-plugin-version}</version>\n"
-"        </extension>\n"
-"    </extensions>\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:390
-#, no-wrap
-msgid ""
-"    <plugins>\n"
-"        <plugin>\n"
-"            <groupId>org.xolstice.maven.plugins</groupId>\n"
-"            <artifactId>protobuf-maven-plugin</artifactId>      // <1>\n"
-"            <version>${protobuf-maven-plugin-version}</version>\n"
-"            <configuration>\n"
-"                <protocArtifact>com.google.protobuf:protoc:${protoc.version}:exe:${os.detected.classifier}</protocArtifact> // <2>\n"
-"                <pluginId>grpc-java</pluginId>\n"
-"                <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}</pluginArtifact>\n"
-"                <protocPlugins>\n"
-"                    <protocPlugin>\n"
-"                        <id>quarkus-grpc-protoc-plugin</id>\n"
-"                        <groupId>io.quarkus</groupId>\n"
-"                        <artifactId>quarkus-grpc-protoc-plugin</artifactId>\n"
-"                        <version>{quarkus-version}</version>\n"
-"                        <mainClass>io.quarkus.grpc.protoc.plugin.MutinyGrpcGenerator</mainClass>\n"
-"                    </protocPlugin>\n"
-"                </protocPlugins>\n"
-"            </configuration>\n"
-"            <executions>\n"
-"                <execution>\n"
-"                    <id>compile</id>\n"
-"                    <goals>\n"
-"                        <goal>compile</goal>\n"
-"                        <goal>compile-custom</goal>\n"
-"                    </goals>\n"
-"                </execution>\n"
-"                <execution>\n"
-"                    <id>test-compile</id>\n"
-"                    <goals>\n"
-"                        <goal>test-compile</goal>\n"
-"                        <goal>test-compile-custom</goal>\n"
-"                    </goals>\n"
-"                </execution>\n"
-"            </executions>\n"
-"        </plugin>\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:394
-#, no-wrap
-msgid ""
-"        <!-- ... -->\n"
-"    </plugins>\n"
-"</build>\n"
-msgstr ""
+msgstr "然后，在 `build` 部分添加 `os-maven-plugin` 扩展名和 `protobuf-maven-plugin` 配置。"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:396
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "The `protobuf-maven-plugin` that generates stub classes from your gRPC service definition (`proto` files)."
-msgstr ""
+msgstr "`protobuf-maven-plugin` 根据 gRPC 服务定义（ `proto` 文件）生成存根类。"
+
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
+msgid ""
+"The class generation uses a tool named `protoc`, which is OS-specific.\n"
+"That's why we use the `os-maven-plugin` to target the executable compatible with the operating system."
+msgstr "类的生成使用一个名为 `protoc` 的工具，该工具与操作系统有关。因此，我们使用 `os-maven-plugin` 来定位与操作系统兼容的可执行文件。"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:398
-msgid "The class generation uses a tool named `protoc`, which is OS-specific.  That's why we use the `os-maven-plugin` to target the executable compatible with the operating system."
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:400
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "This configuration instructs the `protobuf-maven-plugin` to generate the default gRPC classes and classes using Mutiny to fit with the Quarkus development experience."
-msgstr ""
+msgstr "该配置指示 `protobuf-maven-plugin` 使用 Mutiny 生成默认的 gRPC 类和类，以适应 Quarkus 的开发体验。"
 
 #. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:402
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid "When using `protobuf-maven-plugin`, instead of the `quarkus-maven-plugin`, every time you update the `proto` files, you need to re-generate the classes (using `mvn compile`)."
-msgstr ""
+msgstr "当使用 `protobuf-maven-plugin` 而不是 `quarkus-maven-plugin` 时，每次更新 `proto` 文件时，都需要重新生成类（使用 `mvn compile` ）。"
 
 #. type: Title ==
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:404
-#, no-wrap
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy, no-wrap
 msgid "gRPC classes from dependencies"
-msgstr ""
+msgstr "从依赖关系中获取 gRPC 类"
 
-#. type: Plain text
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:408
-msgid "When gRPC classes - the classes generated from `proto` files - are in a dependency of the application, then the dependency needs a Jandex index.  The `jandex-maven-plugin` can be used to create a Jandex index. More information on this topic can be found in the xref:cdi-reference.adoc#bean_discovery[Bean Discovery] section of the CDI guide."
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/2.7/guides/grpc-getting-started.adoc:428
-#, no-wrap
+#: _versions/2.7/guides/grpc-getting-started.adoc
+#, fuzzy
 msgid ""
-"<build>\n"
-"    <plugins>\n"
-"        <plugin>\n"
-"            <groupId>org.jboss.jandex</groupId>\n"
-"            <artifactId>jandex-maven-plugin</artifactId>\n"
-"            <version>{jandex-maven-plugin-version}</version>\n"
-"            <executions>\n"
-"                <execution>\n"
-"                <id>make-index</id>\n"
-"                <goals>\n"
-"                    <goal>jandex</goal>\n"
-"                </goals>\n"
-"                </execution>\n"
-"            </executions>\n"
-"        </plugin>\n"
-"    </plugins>\n"
-"</build>\n"
-msgstr ""
+"When gRPC classes - the classes generated from `proto` files - are in a dependency of the application, then the dependency needs a Jandex index.\n"
+"The `jandex-maven-plugin` can be used to create a Jandex index. More information on this topic can be found in the xref:cdi-reference.adoc#bean_discovery[Bean Discovery] section of the CDI guide."
+msgstr "当 gRPC 类（由 `proto` 文件生成的类）处于应用程序的依赖关系中时，该依赖关系需要一个 Jandex 索引。 `jandex-maven-plugin` 可用于创建 Jandex 索引。有关此主题的更多信息，请参阅 CDI 指南的 xref:cdi-reference.adoc#bean_discovery[Bean Discovery] 部分。"

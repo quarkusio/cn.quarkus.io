@@ -11,344 +11,230 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#. type: YAML Front Matter: author
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:1
-#, fuzzy, no-wrap
-msgid "cescoffier"
-msgstr "鹤壁市"
-
-#. type: YAML Front Matter: date
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:1
-#, fuzzy, no-wrap
-msgid "2022-11-22"
-msgstr "2022-11-22"
-
-#. type: YAML Front Matter: layout
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:1
-#, fuzzy, no-wrap
-msgid "post"
-msgstr "职位"
-
-#. type: YAML Front Matter: synopsis
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:1
-#, fuzzy, no-wrap
-msgid "How to implement a more reliable job queue with Redis, including fault tolerance, de-duplication, and poison pill."
-msgstr "如何用Redis实现一个更可靠的作业队列，包括容错、去重和毒丸。"
-
-#. type: YAML Front Matter: tags
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:1
-#, fuzzy, no-wrap
-msgid "redis"
-msgstr "Redis"
-
 #. type: YAML Front Matter: title
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:1
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy, no-wrap
 msgid "Redis Job Queue - Reloaded"
 msgstr "Redis作业队列--重装上阵"
 
-#. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:12
+#. type: YAML Front Matter: synopsis
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
+#, fuzzy, no-wrap
+msgid "How to implement a more reliable job queue with Redis, including fault tolerance, de-duplication, and poison pill."
+msgstr "如何用Redis实现一个更可靠的作业队列，包括容错、去重和毒丸。"
+
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
-msgid "In https://quarkus.io/blog/redis-job-queue/[How to implement a job queue with Redis], we explained how to implement a job queue mechanism with Redis and the new Redis API from Quarkus.  The approach explored in that blog post had a significant flaw: if the execution of a job failed, the request was lost and will never be re-attempted."
-msgstr "在《 link:https://quarkus.io/blog/redis-job-queue/[如何用Redis实现作业队列] 》中，我们解释了如何用Redis和Quarkus的新Redis API实现作业队列机制。那篇博文中探讨的方法有一个明显的缺陷：如果一个作业的执行失败了，请求就会丢失，而且永远不会被重新尝试。"
+msgid ""
+"In https://quarkus.io/blog/redis-job-queue/[How to implement a job queue with Redis], we explained how to implement a job queue mechanism with Redis and the new Redis API from Quarkus.\n"
+"The approach explored in that blog post had a significant flaw: if the execution of a job failed, the request was lost and will never be re-attempted."
+msgstr "在《 link:https://quarkus.io/blog/redis-job-queue/[如何使用 Redis 实现作业队列] 》一文中，我们介绍了如何使用 Redis 和 Quarkus 的新 Redis API 实现作业队列机制。那篇博文中探讨的方法有一个重大缺陷：如果作业执行失败，请求就会丢失，并且永远不会被重新尝试。"
 
 #. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:14
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
 msgid "In this post, we explain how to improve the reliability of the job queue to handle failures, enable retry and use a _dead-letter queue_ to avoid poison pills."
 msgstr "在这篇文章中，我们解释了如何提高作业队列的可靠性来处理故障，启用重试，并使用 _死字队列_ 来避免毒丸。"
 
-#. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:16
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
-msgid "## Recap & Problem"
-msgstr "回顾与问题\n"
+msgid "Recap & Problem"
+msgstr "回顾与问题"
 
 #. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:18
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
 msgid "In the https://quarkus.io/blog/redis-job-queue/[previous blog post], we implemented the following system."
 msgstr "在 link:https://quarkus.io/blog/redis-job-queue/[上一篇博文] 中，我们实现了以下系统。"
 
-#. type: Target for macro image
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:19
-#, no-wrap
-msgid "/assets/images/posts/redis-job-queue/application.png"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:24
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
-msgid "An application receives _fight requests_ and writes these requests into a Redis list.  Several simulators processed this list.  The outcomes of the _fights_ were communicated using Redis Pub/Sub."
-msgstr "一个应用程序接收 _战斗请求_ ，并将这些请求写入一个Redis列表中。几个模拟器处理这个列表。 _战斗_ 的结果使用Redis的Pub/Sub进行交流。"
+msgid ""
+"An application receives _fight requests_ and writes these requests into a Redis list.\n"
+"Several simulators processed this list.\n"
+"The outcomes of the _fights_ were communicated using Redis Pub/Sub."
+msgstr "应用程序接收 _战斗请求_ ，并将这些请求写入 Redis 列表。多个模拟器对该列表进行处理。 _战斗_ 结果通过 Redis Pub/Sub 进行通信。"
 
-#. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:27
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
-msgid "The architecture works and ensures that a fight can only be executed once, thanks to the `brpop` command used by the simulator code.  This command pops the item from the queue in an atomic manner and ensure that the other simulators can't process it too."
-msgstr "该架构是有效的，并确保一场战斗只能被执行一次，这要归功于模拟器代码使用的 `brpop` 命令。这个命令以原子方式将项目从队列中弹出，并确保其他模拟器也不能处理它。"
+msgid ""
+"The architecture works and ensures that a fight can only be executed once, thanks to the `brpop` command used by the simulator code.\n"
+"This command pops the item from the queue in an atomic manner and ensure that the other simulators can't process it too."
+msgstr "由于模拟器代码使用了 `brpop` 命令，该架构可以确保战斗只能执行一次。该命令以原子方式从队列中弹出项目，确保其他模拟器无法同时处理。"
 
-#. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:31
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
-msgid "However, this architecture has a drawback.  If the processing of the popped fight request fails, the request is lost.  No other simulator would be able to process it, and if the simulator that failed restarts, it will not reprocess the same request."
-msgstr "然而，这种架构有一个缺点。如果对弹出的战斗请求的处理失败，该请求就会丢失。没有其他模拟器能够处理它，而且如果失败的模拟器重新启动，它也不会重新处理同样的请求。"
+msgid ""
+"However, this architecture has a drawback.\n"
+"If the processing of the popped fight request fails, the request is lost.\n"
+"No other simulator would be able to process it, and if the simulator that failed restarts, it will not reprocess the same request."
+msgstr "不过，这种架构也有缺点。如果处理弹出战斗请求失败，请求就会丢失。任何其他模拟器都无法处理它，而且如果处理失败的模拟器重新启动，它也不会重新处理相同的请求。"
 
-#. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:33
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
-msgid "## Introducing more queues"
-msgstr "引入更多的队列\n"
+msgid "Introducing more queues"
+msgstr "引入更多队列"
 
-#. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:37
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
-msgid "An approach to handle that problem is to introduce more queues.  In addition to the main queue (the Redis list from the image above), we introduce one queue per simulator.  Thus, each simulator has its private queue."
-msgstr "处理这个问题的一个方法是引入更多的队列。除了主队列（上图中的Redis列表），我们为每个模拟器引入一个队列。因此，每个模拟器都有其私人队列。"
-
-#. type: Target for macro image
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:38
-#, no-wrap
-msgid "/assets/images/posts/redis-job-queue/reloaded.png"
-msgstr ""
+msgid ""
+"An approach to handle that problem is to introduce more queues.\n"
+"In addition to the main queue (the Redis list from the image above), we introduce one queue per simulator.\n"
+"Thus, each simulator has its private queue."
+msgstr "处理这一问题的方法是引入更多队列。除了主队列（上图中的 Redis 列表），我们还为每个模拟器引入了一个队列。因此，每个模拟器都有自己的私有队列。"
 
 #. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:41
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
 msgid "These private queues form a safety net."
 msgstr "这些私人队列形成了一个安全网。"
 
 #. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:43
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
 msgid "So, the simulator does use not only the _main queue_ but also its private queue:"
 msgstr "因此，模拟器不仅使用 _主队列_ ，而且还使用其私有队列。"
 
-#. type: delimited block -
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:48
-#, no-wrap
-msgid ""
-"this.queues = ds.list(FightRequest.class);\n"
-"this.queueName = \"queue-\" + name; // the name of the private queue\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:54
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
-msgid "When a simulator pops a request from the main queue, it does not process it immediately; it writes it to its private queue.  To achieve this, we cannot use `brpop` and then write to the other queue, as if something wrong happens in between, we would have the same problem.  Instead, we use `blmove,` which pops an element from a list and pushes it into another in an atomic fashion.  Thus, we ensure that multiple simulators cannot consume the same request and that the request cannot be lost."
-msgstr "当模拟器从主队列中弹出一个请求时，它不会立即处理，而是将其写入其私有队列中。为了实现这一点，我们不能使用 `brpop` ，然后写到另一个队列中，因为如果中间发生了什么错误，我们会有同样的问题。相反，我们使用 `blmove,` ，它从一个列表中弹出一个元素，并以原子的方式将其推入另一个列表。因此，我们确保多个模拟器不能消费同一个请求，而且请求不会丢失。"
+msgid ""
+"When a simulator pops a request from the main queue, it does not process it immediately; it writes it to its private queue.\n"
+"To achieve this, we cannot use `brpop` and then write to the other queue, as if something wrong happens in between, we would have the same problem.\n"
+"Instead, we use `blmove,` which pops an element from a list and pushes it into another in an atomic fashion.\n"
+"Thus, we ensure that multiple simulators cannot consume the same request and that the request cannot be lost."
+msgstr "当模拟器从主队列中弹出一个请求时，它不会立即进行处理，而是将其写入自己的私有队列。要做到这一点，我们不能使用 `brpop` ，然后再写入另一个队列，因为如果中间出了差错，就会出现同样的问题。相反，我们使用 `blmove,` ，它以原子方式从列表中弹出一个元素并将其推入另一个列表。这样，我们就能确保多个模拟器无法使用同一个请求，而且请求也不会丢失。"
 
 #. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:56
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
 msgid "So, we use the following code to move the request from the main queue to the private queue:"
 msgstr "因此，我们使用下面的代码将请求从主队列转移到私有队列。"
 
-#. type: delimited block -
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:65
-#, no-wrap
-msgid ""
-"// pop the item at the right side of the 'fight-requests' queue\n"
-"// and writes it to the left side of 'queueName'.\n"
-"// it returns the moved item or `null` in the entry queue, 'fight-requests',\n"
-"// does not have any item, even after the 1-second delay\n"
-"var moved = queues.blmove(\"fight-requests\", queueName,  \n"
-"        Position.RIGHT, Position.LEFT, Duration.ofSeconds(1));\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:68
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
 msgid "Now, the simulator does not simulate the requests from the main queue but needs to process the ones added to its private queue."
 msgstr "现在，模拟器不模拟主队列中的请求，而是需要处理添加到其私有队列中的请求。"
 
-#. type: delimited block -
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:79
-#, no-wrap
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
+#, fuzzy
 msgid ""
-"public void processRequestFromPrivateQueue() {  \n"
-"    var request = queues.lindex(queueName, -1);  \n"
-"    while (request != null) {  \n"
-"        runSimulation(request);  \n"
-"        queues.lrem(queueName, 1, request);    \n"
-"        request = queues.lindex(\"queue-\" + name, -1);  \n"
-"    }  \n"
-"}\n"
-msgstr ""
+"This code is slightly different from the code from the previous blog.\n"
+"This time, we do not pop.\n"
+"We get the last item from the queue (index `-1` is the last one), process it, and then remove it from the queue.\n"
+"We do this until the queue is empty."
+msgstr "这段代码与上一篇博客中的代码略有不同。这次，我们不弹出。我们从队列中获取最后一个项目（索引 `-1` 是最后一个），对其进行处理，然后将其从队列中移除。直到队列清空为止。"
 
-#. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:85
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
-msgid "This code is slightly different from the code from the previous blog.  This time, we do not pop.  We get the last item from the queue (index `-1` is the last one), process it, and then remove it from the queue.  We do this until the queue is empty."
-msgstr "这段代码与之前博客中的代码略有不同。这一次，我们没有弹出。我们从队列中获取最后一个项目（索引 `-1` 是最后一个），处理它，然后从队列中删除它。我们这样做直到队列为空。"
-
-#. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:87
-#, fuzzy
-msgid "Let's put everything together:"
-msgstr "让我们把一切都放在一起。"
-
-#. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:88
-#, fuzzy
-msgid "when the simulator starts, it should process the items from its private queue. So, if it crashes, it will retry to process the item."
-msgstr "当模拟器启动时，它应该处理其私有队列中的项目。因此，如果它崩溃了，它将重试处理该项目。"
-
-#. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:89
-#, fuzzy
-msgid "once the private queue is empty, it gets new requests from the main queue. It will not process them directly but re-trigger the processing of the private queue until the queue is empty."
-msgstr "一旦私有队列为空，它就会从主队列中获得新的请求。它不会直接处理它们，而是重新触发私有队列的处理，直到队列为空。"
-
-#. type: delimited block -
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:108
-#, no-wrap
 msgid ""
-"@Override  \n"
-"public void run() {  \n"
-"  // First, check if we are recovering, and drain the requests from the \n"
-"  // simulator's queue  \n"
-"  processRequestFromPrivateQueue();  \n"
-"  while (! stopped) {  \n"
-"    // Simulator's queue drained - poll the main queue  \n"
-"    var moved = queues.blmove(\"fight-requests\", queueName,  \n"
-"        Position.RIGHT, Position.LEFT, Duration.ofSeconds(1)\n"
-"    );  \n"
-"    if (moved != null) {  \n"
-"      // If an element has been moved, process it  \n"
-"      processRequestFromPrivateQueue();  \n"
-"    }  \n"
-"  }\n"
-"}\n"
-msgstr ""
+"Let's put everything together:\n"
+"1. when the simulator starts, it should process the items from its private queue. So, if it crashes, it will retry to process the item.\n"
+"2. once the private queue is empty, it gets new requests from the main queue. It will not process them directly but re-trigger the processing of the private queue until the queue is empty."
+msgstr "让我们把所有东西放在一起：1. 当模拟器启动时，它应该处理其私有队列中的项目。因此，如果模拟器崩溃，它会重新尝试处理项目。2. 一旦私有队列为空，它就会从主队列中获取新的请求。它不会直接处理这些请求，而是重新触发私有队列的处理，直到队列清空为止。"
 
-#. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:111
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
-msgid "## New architecture, new problems"
-msgstr "新架构，新问题\n"
+msgid "New architecture, new problems"
+msgstr "新架构，新问题"
 
-#. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:115
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
-msgid "That approach fixes the initial problem.  If the processing fails, we retry it (as the request is not removed from the private queue).  That will handle transient failures pretty well."
-msgstr "这种方法解决了最初的问题。如果处理失败，我们重试（因为请求没有从私有队列中删除）。这将很好地处理瞬时故障。"
+msgid ""
+"That approach fixes the initial problem.\n"
+"If the processing fails, we retry it (as the request is not removed from the private queue).\n"
+"That will handle transient failures pretty well."
+msgstr "这种方法解决了最初的问题。如果处理失败，我们会重试（因为请求不会从私有队列中移除）。这样就能很好地处理瞬时故障。"
 
 #. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:117
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
 msgid "However, it also has its own set of drawbacks:"
 msgstr "然而，它也有自己的一套缺点。"
 
 #. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:119
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
 msgid "_Duplicates_: if the processing succeeds, but the `lrem` fails for any reason (like a network failure), the request will be processed another time as it was not removed from the queue."
 msgstr " _重复_ ：如果处理成功，但 `lrem` ，由于任何原因（如网络故障）失败，该请求将被再次处理，因为它没有从队列中删除。"
 
 #. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:120
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
 msgid "_Poison pill_: if a request cannot be processed successfully, it will retry to process it forever."
 msgstr " _毒丸_ ：如果一个请求不能被成功处理，它将永远重试处理它。"
 
-#. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:122
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
-msgid "### De-duplication"
-msgstr "去重"
+msgid "De-duplication"
+msgstr "重复数据删除"
 
-#. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:125
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
-msgid "Handling _duplicates_ require having a way to identify the requests uniquely and deduplicate manually.  In other words, if all our requests have a unique id, we can check if that id has already been processed (for example, by storing the processed ids in another list or a hash). If the item has already been processed, ignore it (remove it from the queue) and process it to the next one:"
-msgstr "处理 _重复的_ 请求需要有一种方法来唯一地识别这些请求，并手动进行重复处理。换句话说，如果我们所有的请求都有一个唯一的id，我们可以检查这个id是否已经被处理了（例如，通过将已处理的id存储在另一个列表或哈希中）。如果该项目已经被处理过了，就忽略它（从队列中移除），并处理到下一个项目。"
-
-#. type: delimited block -
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:138
-#, no-wrap
 msgid ""
-"public void processRequestFromPrivateQueue() {  \n"
-"    var request = queues.lindex(queueName, -1);  \n"
-"    while (request != null) {  \n"
-"        if (! isDuplicate(request)) {\n"
-"            runSimulation(request);  \n"
-"        }\n"
-"        queues.lrem(queueName, 1, request);    \n"
-" .      request = queues.lindex(\"queue-\" + name, -1);  \n"
-"    }  \n"
-"}\n"
-msgstr ""
+"Handling _duplicates_ require having a way to identify the requests uniquely and deduplicate manually.\n"
+"In other words, if all our requests have a unique id, we can check if that id has already been processed (for example, by storing the processed ids in another list or a hash). If the item has already been processed, ignore it (remove it from the queue) and process it to the next one:"
+msgstr "处理 _重复_ 请求需要有一种方法来唯一识别请求并手动重复。换句话说，如果我们的所有请求都有一个唯一的 id，我们就可以检查该 id 是否已被处理过（例如，将已处理过的 id 储存在另一个列表或哈希值中）。如果该项目已被处理，则忽略它（从队列中删除），然后处理下一个项目："
 
-#. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:141
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
-msgid "### Avoiding swallowing the poison pill"
+msgid "Avoiding swallowing the poison pill"
 msgstr "避免吞下毒药"
 
-#. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:146
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
-msgid "Handling _poison pills_ is more complex.  A _poison pill_ is a request that will always make the processing fails.  It can be because of a bug in the processing code or something unexpected; it will always fail.  Retrying, in this case, will not help; we are not facing a transient issue."
-msgstr "处理 \" _毒丸 \"_ 则更为复杂。 _毒丸_ 是一个将永远使处理失败的请求。它可能是因为处理代码中的一个错误或一些意外的事情；它总是会失败。在这种情况下，重试是无济于事的；我们面对的不是一个短暂的问题。"
-
-#. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:150
-#, fuzzy
-msgid "So, what can we do? We need to track the number of processing attempts for that request, and if it exceeds a specific number, let's face it: we won't be able to handle the request.  We generally want to send the request to a dead-letter queue (DLQ), i.e., a specific queue storing the unprocessable items:"
-msgstr "那么，我们能做什么呢？我们需要跟踪该请求的处理次数，如果超过一个特定的数字，让我们面对它：我们将无法处理该请求。我们一般要把请求发送到死字队列（DLQ），即一个存储不可处理的项目的特定队列。"
-
-#. type: delimited block -
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:167
-#, no-wrap
 msgid ""
-"public void processRequestFromPrivateQueue() {  \n"
-"    var request = queues.lindex(queueName, -1);  \n"
-"    while (request != null) {  \n"
-"        if (counter.incr(counterName) > MAX_ATTEMPT) {  \n"
-"            // Give up - it's a poison pill\n"
-"            queues.lpush(DLQ, request); // Add to DLQ\n"
-"        } else {  \n"
-"            runSimulation(request);  \n"
-"        }  \n"
-"        request = queues.lindex(\"queue-\" + name, -1);  \n"
-"        queues.lrem(queueName, 1, request);  \n"
-"        counter.set(counterName, 0); // Reset  \n"
-"    }\n"
-"}\n"
-msgstr ""
+"Handling _poison pills_ is more complex.\n"
+"A _poison pill_ is a request that will always make the processing fails.\n"
+"It can be because of a bug in the processing code or something unexpected; it will always fail.\n"
+"Retrying, in this case, will not help; we are not facing a transient issue."
+msgstr "处理 _毒丸_ 则更为复杂。 _毒丸_ 是一种总是会导致处理失败的请求。可能是因为处理代码中的错误，也可能是其他意想不到的原因，但它总是会失败。在这种情况下，重试不会有任何帮助；我们面对的不是一个短暂的问题。"
+
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
+#, fuzzy
+msgid ""
+"So, what can we do?\n"
+"We need to track the number of processing attempts for that request, and if it exceeds a specific number, let's face it: we won't be able to handle the request.\n"
+"We generally want to send the request to a dead-letter queue (DLQ), i.e., a specific queue storing the unprocessable items:"
+msgstr "那么，我们能做些什么呢？我们需要跟踪该请求的处理尝试次数，如果超过了特定的次数，那就面对现实吧：我们将无法处理该请求。一般来说，我们希望将请求发送到死字队列（DLQ），即存储无法处理项目的特定队列："
 
 #. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:170
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
 msgid "The counter is a specific Redis integer value that we increment and reset once we succeed or give up."
 msgstr "该计数器是一个特定的Redis整数值，一旦我们成功或放弃，我们就会递增并重置。"
 
-#. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:174
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
-msgid "The items from the DLQ are not lost; they are saved for future processing.  These items could be re-added to the main queue (to verify if it was not a transient issue or the bug was fixed).  Another approach requires that a human administrator looks at these requests before re-injecting them into the system; maybe it was just a formatting issue..."
-msgstr "来自DLQ的项目不会丢失；它们被保存起来供将来处理。这些项目可以被重新添加到主队列中（以验证它是否不是一个短暂的问题或错误被修复）。另一种方法要求在将这些请求重新注入系统之前，由人类管理员查看这些请求；也许这只是一个格式问题......"
+msgid ""
+"The items from the DLQ are not lost; they are saved for future processing.\n"
+"These items could be re-added to the main queue (to verify if it was not a transient issue or the bug was fixed).\n"
+"Another approach requires that a human administrator looks at these requests before re-injecting them into the system; maybe it was just a formatting issue..."
+msgstr "DLQ 中的项目不会丢失；它们会被保存起来，以备将来处理。这些项目可以重新添加到主队列中（以验证这是否不是一个短暂的问题，或者错误是否已被修复）。另一种方法是，在将这些请求重新注入系统之前，需要人工管理员查看这些请求；也许这只是一个格式问题......"
 
-#. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:176
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
-msgid "## Summary"
-msgstr "摘要\n"
+msgid "Summary"
+msgstr "摘要"
 
-#. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:181
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
 #, fuzzy
-msgid "This post explores how to improve the job queue we implemented in https://quarkus.io/blog/redis-job-queue/[How to implement a job queue with Redis].  This initial implementation, while simple, would lose requests if the processing fails.  This post proposes another, more complex, architecture to handle that case but also handle duplicates and poison pills.  But, nothing comes for free, and the resulting code is slightly more complex."
-msgstr "这篇文章探讨了如何改进我们在《 link:https://quarkus.io/blog/redis-job-queue/[如何用Redis实现一个工作队列] 》中实现的工作队列。这个最初的实现虽然简单，但如果处理失败就会丢失请求。这篇文章提出了另一个更复杂的架构来处理这种情况，但也处理重复和毒丸。但是，没有什么是免费的，所产生的代码也稍微复杂一些。"
+msgid ""
+"This post explores how to improve the job queue we implemented in https://quarkus.io/blog/redis-job-queue/[How to implement a job queue with Redis].\n"
+"This initial implementation, while simple, would lose requests if the processing fails.\n"
+"This post proposes another, more complex, architecture to handle that case but also handle duplicates and poison pills.\n"
+"But, nothing comes for free, and the resulting code is slightly more complex."
+msgstr "本篇文章将探讨如何改进我们在《 link:https://quarkus.io/blog/redis-job-queue/[如何使用 Redis 实现] 作业队列》一文中实现的作业队列。最初的实现虽然简单，但会在处理失败时丢失请求。本篇文章提出了另一种更复杂的架构，不仅能处理这种情况，还能处理重复请求和毒丸。不过，没有什么东西是免费的，因此代码也略显复杂。"
 
-#. type: Plain text
-#: upstream/_posts/2022-11-22-redis-job-queue-reloaded.adoc:184
-msgid "Remember: Redis is a fantastic toolbox.  But, it's a toolbox; you build what you need with it, as it is rarely available out of the box.  That being said, the richness of the Redis commands lets you do many things... (spoiler: we will see some of these things in future posts)."
-msgstr ""
+#: _posts/2022-11-22-redis-job-queue-reloaded.adoc
+#, fuzzy
+msgid ""
+"Remember: Redis is a fantastic toolbox.\n"
+"But, it's a toolbox; you build what you need with it, as it is rarely available out of the box.\n"
+"That being said, the richness of the Redis commands lets you do many things... (spoiler: we will see some of these things in future posts)."
+msgstr "请记住Redis 是一个神奇的工具箱。但是，它只是一个工具箱；你需要用它来构建你所需要的东西，因为它很少是开箱即用的。尽管如此，Redis 命令的丰富性让你可以做很多事情......（剧透：我们将在未来的文章中看到其中一些事情）。"

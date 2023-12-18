@@ -11,7 +11,7 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,377 +20,194 @@ msgstr ""
 #. and pull requests should be submitted there:
 #. https://github.com/quarkusio/quarkus/tree/main/docs/src/main/asciidoc
 #. type: Title =
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:6
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
 #, no-wrap
 msgid "Simplified Hibernate ORM with Panache and Kotlin"
 msgstr "用Panache和Kotlin简化Hibernate ORM"
 
-#. type: Plain text
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:18
-msgid "Hibernate ORM is the de facto standard Jakarta Persistence (formerly known as JPA) implementation and is well-known in the Java ecosystem. Hibernate ORM with Panache offers a new layer atop this familiar framework.  This guide will not dive in to the specifics of either as those are already covered in the xref:hibernate-orm-panache.adoc[Hibernate ORM with Panache guide].  In this guide, we'll cover the Kotlin specific changes needed to use Hibernate ORM with Panache in your Kotlin-based Quarkus applications."
-msgstr ""
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
+#, fuzzy
+msgid ""
+"Hibernate ORM is the de facto standard Jakarta Persistence (formerly known as JPA) implementation and is well-known in the Java ecosystem. Hibernate ORM with Panache offers a\n"
+"new layer atop this familiar framework.  This guide will not dive in to the specifics of either as those are already\n"
+"covered in the xref:hibernate-orm-panache.adoc[Hibernate ORM with Panache guide].  In this guide, we'll cover the Kotlin specific changes\n"
+"needed to use Hibernate ORM with Panache in your Kotlin-based Quarkus applications."
+msgstr "Hibernate ORM 是事实上的标准 Jakarta Persistence（以前称为 JPA）实现，在 Java 生态系统中享有盛誉。Hibernate ORM with Panache 在这个熟悉的框架之上提供了一个新的层。本指南将不深入探讨两者的具体细节，因为 xref:hibernate-orm-panache.adoc[Hibernate ORM with Panache 指南] 已经涵盖了这些内容。在本指南中，我们将介绍在基于 Kotlin 的 Quarkus 应用程序中使用 Hibernate ORM with Panache 所需的 Kotlin 特定更改。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:20
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
+#, fuzzy
 msgid "When using the Kotlin version of Hibernate ORM with Panache, note that the `PanacheEntity`, `PanacheQuery` and `PanacheRepository` are in a different package: `io.quarkus.hibernate.orm.panache.kotlin`."
-msgstr ""
+msgstr "当使用带有Panache的Hibernate ORM的kotlin版本时，注意 `PanacheEntity` , `PanacheQuery` 和 `PanacheRepository` 是在不同的包中： `io.quarkus.hibernate.orm.panache.kotlin` 。"
 
 #. type: Title ==
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:21
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
 #, no-wrap
 msgid "First: an example"
 msgstr "第一：一个例子"
 
-#. type: Plain text
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:26
-msgid "As we saw in the Hibernate with Panache guide, it allows us to extend the functionality in our entities and repositories (also known as DAOs) with some automatically provided functionality.  When using Kotlin, the approach is very similar to what we see in the Java version with a slight change or two.  To Panache-enable your entity, you would define it something like:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:35
-#, no-wrap
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
+#, fuzzy
 msgid ""
-"@Entity\n"
-"class Person: PanacheEntity() {\n"
-"    lateinit var name: String\n"
-"    lateinit var birth: LocalDate\n"
-"    lateinit var status: Status\n"
-"}\n"
-msgstr ""
+"As we saw in the Hibernate with Panache guide, it allows us to extend the functionality in our entities and repositories (also known as DAOs) with some automatically\n"
+"provided functionality.  When using Kotlin, the approach is very similar to what we see in the Java version with a slight\n"
+"change or two.  To Panache-enable your entity, you would define it something like:"
+msgstr "正如我们在 \"Hibernate with Panache \"指南中所看到的，它允许我们使用一些自动提供的功能来扩展实体和存储库（也称为 DAO）中的功能。在使用 Kotlin 时，这种方法与 Java 版本非常相似，只是略有一两处改动。要启用 Panache 实体，您需要对其进行如下定义"
 
-#. type: Plain text
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:40
-msgid "As you can see our entities remain simple.  There is, however, a slight difference from the Java version.  The Kotlin language doesn't support the notion of static methods in quite the same way as Java does.  Instead, we must use a https://kotlinlang.org/docs/tutorials/kotlin-for-py/objects-and-companion-objects.html#companion-objects[companion object]:"
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
+msgid ""
+"As you can see our entities remain simple.  There is, however, a slight difference from the Java version.  The Kotlin\n"
+"language doesn't support the notion of static methods in quite the same way as Java does.  Instead, we must use a\n"
+"https://kotlinlang.org/docs/tutorials/kotlin-for-py/objects-and-companion-objects.html#companion-objects[companion object]:"
 msgstr "如你所见，我们的实体仍然很简单。然而，与Java版本有一点不同。Kotlin语言并不像Java那样支持静态方法的概念。相反，我们必须使用一个 link:https://kotlinlang.org/docs/tutorials/kotlin-for-py/objects-and-companion-objects.html#companion-objects[companion object（同伴对象）] ："
 
-#. type: delimited block -
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:50
-#, no-wrap
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
 msgid ""
-"@Entity\n"
-"class Person : PanacheEntity() {\n"
-"    companion object: PanacheCompanion<Person> {  // <1>\n"
-"        fun findByName(name: String) = find(\"name\", name).firstResult()\n"
-"        fun findAlive() = list(\"status\", Status.Alive)\n"
-"        fun deleteStefs() = delete(\"name\", \"Stef\")\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:55
-#, no-wrap
-msgid ""
-"    lateinit var name: String  // <2>\n"
-"    lateinit var birth: LocalDate\n"
-"    lateinit var status: Status\n"
-"}\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:58
-msgid "The companion object holds all the methods not related to a specific instance allowing for general management and querying bound to a specific type."
+"The companion object holds all the methods not related to a specific instance allowing for general management and\n"
+"querying bound to a specific type."
 msgstr "companion object持有所有与特定实例无关的方法，允许进行一般管理和与特定类型绑定的查询。"
 
-#. type: Plain text
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:61
-msgid "Here there are options, but we've chosen the `lateinit` approach.  This allows us to declare these fields as non-null knowing they will be properly assigned either by the constructor (not shown) or by hibernate loading data from the database."
-msgstr ""
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
+#, fuzzy
+msgid ""
+"Here there are options, but we've chosen the `lateinit` approach.  This allows us to declare these fields as non-null\n"
+"knowing they will be properly assigned either by the constructor (not shown) or by hibernate loading data from the\n"
+"database."
+msgstr "这里有多种选择，但我们选择了 `lateinit` 方法。这样，我们就可以将这些字段声明为非空，并知道它们将由构造函数（未显示）或从数据库加载数据的 hibernate 正确分配。"
 
-#. type: Plain text
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:65
-msgid "These types differ from the Java types mentioned in those tutorials.  For Kotlin support, all the Panache types will be found in the `io.quarkus.hibernate.orm.panache.kotlin` package.  This subpackage allows for the distinction between the Java and Kotlin variants and allows for both to be used unambiguously in a single project."
-msgstr ""
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
+#, fuzzy
+msgid ""
+"These types differ from the Java types mentioned in those tutorials.  For Kotlin support, all the Panache\n"
+"types will be found in the `io.quarkus.hibernate.orm.panache.kotlin` package.  This subpackage allows for the distinction\n"
+"between the Java and Kotlin variants and allows for both to be used unambiguously in a single project."
+msgstr "这些类型与这些教程中提到的 Java 类型不同。对于 Kotlin 支持，所有 Panache 类型都可以在 `io.quarkus.hibernate.orm.panache.kotlin` 包中找到。该子软件包允许区分 Java 和 Kotlin 变体，并允许在单个项目中明确使用这两种类型。"
 
-#. type: Plain text
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:69
-msgid "In the Kotlin version, we've simply moved the bulk of the link:https://www.martinfowler.com/eaaCatalog/activeRecord.html[`active record pattern`] functionality to the `companion object`.  Apart from this slight change, we can then work with our types in ways that map easily from the Java side of world."
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
+msgid ""
+"In the Kotlin version, we've simply moved the bulk of the link:https://www.martinfowler.com/eaaCatalog/activeRecord.html[`active record pattern`]\n"
+"functionality to the `companion object`.  Apart from this slight change, we can then work with our types in ways that map easily\n"
+"from the Java side of world."
 msgstr "在Kotlin版本中，我们只是把大部分的功能 link:https://www.martinfowler.com/eaaCatalog/activeRecord.html[`active record pattern`] 转移到了 `companion object` 。除了这个细微的变化，我们还可以从 Java 方面轻松映射的方式来处理我们的类型。"
 
 #. type: Title ==
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:71
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
 #, no-wrap
 msgid "Solution"
 msgstr "解决方案"
 
-#. type: Plain text
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:75
-msgid "We recommend that you follow the instructions in the next sections and create the application step by step.  However, you can go right to the completed example."
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
+msgid ""
+"We recommend that you follow the instructions in the next sections and create the application step by step.\n"
+"However, you can go right to the completed example."
 msgstr "我们建议您按照下一节的说明逐步创建应用程序。然而，您可以直接转到已完成的示例。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:77
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
 msgid "Clone the Git repository: `git clone {quickstarts-clone-url}`, or download an {quickstarts-archive-url}[archive]."
 msgstr "克隆 Git 仓库: `git clone {quickstarts-clone-url}` ，或下载一个 {quickstarts-archive-url}[存档] 。"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:79
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
+#, fuzzy
 msgid "The solution is located in the `hibernate-orm-panache-kotlin-quickstart` link:{quickstarts-tree-url}/hibernate-orm-panache-kotlin-quickstart[directory]."
-msgstr ""
+msgstr "该解决方案位于 `hibernate-orm-panache-kotlin-quickstart` {quickstarts-tree-url}/hibernate-orm-panache-kotlin-quickstart[目录]中。"
 
 #. type: Title ==
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:81
-#, no-wrap
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
+#, fuzzy, no-wrap
 msgid "Setting up and configuring Hibernate ORM with Panache and Kotlin"
-msgstr ""
+msgstr "用Panache和Kotlin设置和配置Hibernate ORM"
 
-#. type: Plain text
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:86
-msgid "To get started using Hibernate ORM with Panache and Kotlin, you can, generally, follow the steps laid out in the Java tutorial. The biggest change to configuring your project is the Quarkus artifact to include.  You can, of course, keep the Java version if you need but if all you need are the Kotlin APIs then include the following dependency instead:"
-msgstr ""
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
+#, fuzzy
+msgid ""
+"To get started using Hibernate ORM with Panache and Kotlin, you can, generally, follow the steps laid out in the Java tutorial. The biggest\n"
+"change to configuring your project is the Quarkus artifact to include.  You can, of course, keep the Java version if you\n"
+"need but if all you need are the Kotlin APIs then include the following dependency instead:"
+msgstr "要开始在 Panache 和 Kotlin 中使用 Hibernate ORM，一般可以按照 Java 教程中的步骤进行。配置项目的最大变化在于要包含的 Quarkus 工具。当然，如果需要，你可以保留 Java 版本，但如果你需要的只是 Kotlin API，那么请加入以下依赖关系："
 
 #. type: Block title
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:88
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
 #, no-wrap
 msgid "pom.xml"
 msgstr "pom.xml"
 
-#. type: delimited block -
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:94
-#, no-wrap
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
 msgid ""
-"<dependency>\n"
-"    <groupId>io.quarkus</groupId>\n"
-"    <artifactId>quarkus-hibernate-orm-panache-kotlin</artifactId>  // <1>\n"
-"</dependency>\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:97
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:105
-msgid "Note the addition of `-kotlin` on the end. Generally you'll only need this version but if your project will be using both Java and Kotlin code, you can safely include both artifacts."
-msgstr ""
+"Note the addition of `-kotlin` on the end. Generally you'll only need this version but if your project will be using\n"
+"both Java and Kotlin code, you can safely include both artifacts."
+msgstr "注意最后添加了 `-kotlin` 。通常你只需要这个版本，但如果你的项目将同时使用 Java 和 Kotlin 代码，你可以安全地包含这两个工件。"
 
 #. type: Block title
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:99
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
 #, no-wrap
 msgid "build.gradle"
 msgstr "build.gradle"
 
-#. type: delimited block -
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:102
-#, no-wrap
-msgid "implementation(\"io.quarkus:quarkus-hibernate-orm-panache-kotlin\") <1>\n"
-msgstr ""
-
 #. type: Title ==
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:106
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
 #, no-wrap
 msgid "Using the repository pattern"
 msgstr "使用资源库模式"
 
 #. type: Title ===
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:109
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
 #, no-wrap
 msgid "Defining your entity"
 msgstr "定义你的实体"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:112
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
 #, fuzzy
 msgid "When using the repository pattern, you can define your entities as regular Jakarta Persistence entities."
 msgstr "使用Repository模式时，可以将实体类定义为普通的JPA实体。"
 
-#. type: delimited block -
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:123
-#, no-wrap
-msgid ""
-"@Entity\n"
-"class Person {\n"
-"    @Id\n"
-"    @GeneratedValue\n"
-"    var id: Long? = null;\n"
-"    lateinit var name: String\n"
-"    lateinit var birth: LocalDate\n"
-"    lateinit var status: Status\n"
-"}\n"
-msgstr ""
-
 #. type: Title ===
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:125
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
 #, no-wrap
 msgid "Defining your repository"
 msgstr "定义你的存储库"
 
-#. type: Plain text
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:129
-msgid "When using Repositories, you get the exact same convenient methods as with the active record pattern, injected in your Repository, by making them implement `PanacheRepository`:"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:138
-#, no-wrap
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
+#, fuzzy
 msgid ""
-"@ApplicationScoped\n"
-"class PersonRepository: PanacheRepository<Person> {\n"
-"     fun findByName(name: String) = find(\"name\", name).firstResult()\n"
-"     fun findAlive() = list(\"status\", Status.Alive)\n"
-"     fun deleteStefs() = delete(\"name\", \"Stef\")\n"
-"}\n"
-msgstr ""
+"When using Repositories, you get the exact same convenient methods as with the active record pattern, injected in your Repository,\n"
+"by making them implement `PanacheRepository`:"
+msgstr "在使用 Repository 时，您可以通过让 Repository 实现 `PanacheRepository` ，获得与 Active Record 模式完全相同的便捷方法，并注入到 Repository 中："
 
-#. type: Plain text
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:142
-msgid "All the operations that are defined on `PanacheEntityBase` are available on your repository, so using it is exactly the same as using the active record pattern, except you need to inject it:"
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
+msgid ""
+"All the operations that are defined on `PanacheEntityBase` are available on your repository, so using it\n"
+"is exactly the same as using the active record pattern, except you need to inject it:"
 msgstr "`PanacheEntityBase` 中定义的所有方法都可以在你的Repository类上使用，所以它使用起来与Active Record模式完全一样，只是你需要注入Repository类的实例："
 
-#. type: delimited block -
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:147
-#, no-wrap
-msgid ""
-"@Inject\n"
-"lateinit var personRepository: PersonRepository\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:150
-#, no-wrap
-msgid ""
-"@GET\n"
-"fun count() = personRepository.count()\n"
-msgstr ""
-
 #. type: Title ===
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:152
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
 #, no-wrap
 msgid "Most useful operations"
 msgstr "最有用的操作"
 
 #. type: Plain text
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:155
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
 msgid "Once you have written your repository, here are the most common operations you will be able to perform:"
 msgstr "编写存储库后，您可以执行以下最常见的操作："
 
-#. type: delimited block -
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:163
-#, no-wrap
-msgid ""
-"// creating a person\n"
-"var person = Person()\n"
-"person.name = \"Stef\"\n"
-"person.birth = LocalDate.of(1910, Month.FEBRUARY, 1)\n"
-"person.status = Status.Alive\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:166
-#, no-wrap
-msgid ""
-"// persist it\n"
-"personRepository.persist(person)\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:169
-#, no-wrap
-msgid ""
-"// note that once persisted, you don't need to explicitly save your entity: all\n"
-"// modifications are automatically persisted on transaction commit.\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:175
-#, no-wrap
-msgid ""
-"// check if it's persistent\n"
-"if(personRepository.isPersistent(person)){\n"
-"    // delete it\n"
-"    personRepository.delete(person)\n"
-"}\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:178
-#, no-wrap
-msgid ""
-"// getting a list of all Person entities\n"
-"val allPersons = personRepository.listAll()\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:181
-#, no-wrap
-msgid ""
-"// finding a specific person by ID\n"
-"person = personRepository.findById(personId) ?: throw Exception(\"No person with that ID\")\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:184
-#, no-wrap
-msgid ""
-"// finding all living persons\n"
-"val livingPersons = personRepository.list(\"status\", Status.Alive)\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:187
-#, no-wrap
-msgid ""
-"// counting all persons\n"
-"val countAll = personRepository.count()\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:190
-#, no-wrap
-msgid ""
-"// counting all living persons\n"
-"val countAlive = personRepository.count(\"status\", Status.Alive)\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:193
-#, no-wrap
-msgid ""
-"// delete all living persons\n"
-"personRepository.delete(\"status\", Status.Alive)\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:196
-#, no-wrap
-msgid ""
-"// delete all persons\n"
-"personRepository.deleteAll()\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:199
-#, no-wrap
-msgid ""
-"// delete by id\n"
-"val deleted = personRepository.deleteById(personId)\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:202
-#, no-wrap
-msgid ""
-"// set the name of all living persons to 'Mortal'\n"
-"personRepository.update(\"name = 'Mortal' where status = ?1\", Status.Alive)\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:206
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
 msgid "All `list` methods have equivalent `stream` versions."
 msgstr "所有 `list` 方法都有相对应的 `stream` 版本。"
 
-#. type: delimited block -
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:213
-#, no-wrap
-msgid ""
-"val persons = personRepository.streamAll();\n"
-"val namesButEmmanuels = persons\n"
-"    .map { it.name.toLowerCase() }\n"
-"    .filter { it != \"emmanuel\" }\n"
-msgstr ""
-
 #. type: Plain text
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:216
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
 msgid "The `stream` methods require a transaction to work."
 msgstr "`stream` 方法的运行需要事务。"
 
-#. type: Plain text
-#: upstream/_versions/main/guides/hibernate-orm-panache-kotlin.adoc:220
-msgid "For more examples, please consult the xref:hibernate-orm-panache.adoc[Java version] for complete details.  Both APIs are the same and work identically except for some Kotlin-specific tweaks to make things feel more natural to Kotlin developers.  These tweaks include things like better use of nullability and the lack of `Optional` on API methods."
-msgstr ""
+#: _versions/main/guides/hibernate-orm-panache-kotlin.adoc
+#, fuzzy
+msgid ""
+"For more examples, please consult the xref:hibernate-orm-panache.adoc[Java version] for complete details.  Both APIs\n"
+"are the same and work identically except for some Kotlin-specific tweaks to make things feel more natural to\n"
+"Kotlin developers.  These tweaks include things like better use of nullability and the lack of `Optional` on API\n"
+"methods."
+msgstr "如需了解更多示例，请查阅 xref:hibernate-orm-panache.adoc[Java 版本] 的完整细节。除了一些特定于 Kotlin 的调整，让 Kotlin 开发人员感觉更自然之外，这两个 API 是一样的，工作方式也完全相同。这些调整包括更好地使用 nullability 以及在 API 方法上不使用 `Optional` 。"

@@ -11,317 +11,153 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #. type: Title =
-#: upstream/_guides/security-proactive-authentication.adoc:7
+#: _guides/security-proactive-authentication.adoc
 #, no-wrap
 msgid "Proactive authentication"
 msgstr "主动认证"
 
 #. type: Plain text
-#: upstream/_guides/security-proactive-authentication.adoc:15
+#: _guides/security-proactive-authentication.adoc
 #, fuzzy
 msgid "Proactive authentication is enabled in Quarkus by default. This means that if an incoming request has a credential then that request will always be authenticated, even if the target page does not require authentication."
 msgstr "Quarkus默认启用了主动认证。这意味着，如果一个传入的请求有一个证书，那么这个请求将总是被认证，即使目标页面不需要认证。"
 
 #. type: Plain text
-#: upstream/_guides/security-proactive-authentication.adoc:19
+#: _guides/security-proactive-authentication.adoc
 #, fuzzy
 msgid "Requests with an invalid credential will always be rejected, even when the page is public."
 msgstr "无效凭证的请求将总是被拒绝，即使页面是公开的。"
 
 #. type: Plain text
-#: upstream/_guides/security-proactive-authentication.adoc:21
+#: _guides/security-proactive-authentication.adoc
 #, fuzzy
 msgid "If you only want to authenticate when the target page requires authentication, you can change the default behavior."
 msgstr "如果你只想在目标页面需要认证时进行认证，你可以改变默认行为。"
 
 #. type: Plain text
-#: upstream/_guides/security-proactive-authentication.adoc:23
+#: _guides/security-proactive-authentication.adoc
 #, fuzzy
 msgid "To disable proactive authentication in Quarkus, set the following attribute in the `application.properties` configuration file:"
 msgstr "要在Quarkus中禁用主动认证，请在 `application.properties` 配置文件中设置以下属性："
 
-#. type: delimited block -
-#: upstream/_guides/security-proactive-authentication.adoc:27
-#, no-wrap
-msgid "quarkus.http.auth.proactive=false\n"
-msgstr ""
+#: _guides/security-proactive-authentication.adoc
+#, fuzzy
+msgid ""
+"If you disable proactive authentication, the authentication process runs only when an identity is requested.\n"
+"An identity can be requested because of security rules that require the user to authenticate or because programmatic access to the current identity is required."
+msgstr "如果禁用主动身份验证，只有在请求身份时才会运行身份验证流程。请求身份的原因可能是安全规则要求用户进行身份验证，也可能是需要对当前身份进行编程访问。"
+
+#: _guides/security-proactive-authentication.adoc
+#, fuzzy
+msgid ""
+"If proactive authentication is in use, accessing `SecurityIdentity` is a blocking operation.\n"
+"This is because authentication might have yet to happen and accessing `SecurityIdentity` might require calls to external systems, such as databases, that might block the operation.\n"
+"For blocking applications, this is not an issue.\n"
+"However, if you have disabled authentication in a reactive application, this will fail because you cannot do blocking operations on the I/O thread.\n"
+"To work around this, you need to `@Inject` an instance of `io.quarkus.security.identity.CurrentIdentityAssociation` and call the `Uni<SecurityIdentity> getDeferredIdentity();` method.\n"
+"Then, you can subscribe to the resulting `Uni` and will be notified when authentication is complete and the identity is available."
+msgstr "如果使用的是主动身份验证，访问 `SecurityIdentity` 将是一个阻塞操作。这是因为身份验证可能尚未进行，访问 `SecurityIdentity` 可能需要调用外部系统（如数据库），这可能会阻塞操作。对于阻塞应用程序来说，这不是问题。但是，如果在反应式应用程序中禁用了身份验证，则会出现故障，因为无法在 I/O 线程上执行阻塞操作。要解决这个问题，您需要 `@Inject` `io.quarkus.security.identity.CurrentIdentityAssociation` 的一个实例，并调用 `Uni<SecurityIdentity> getDeferredIdentity();` 方法。然后，您可以订阅由此产生的 `Uni` ，并在身份验证完成且身份可用时收到通知。"
+
+#: _guides/security-proactive-authentication.adoc
+#, fuzzy
+msgid ""
+"You can still access `SecurityIdentity` synchronously with `public SecurityIdentity getIdentity()` in xref:resteasy-reactive.adoc[RESTEasy Reactive] from endpoints that are annotated with `@RolesAllowed`, `@Authenticated`, or with respective configuration authorization checks because authentication has already happened.\n"
+"The same is also valid for xref:reactive-routes.adoc[Reactive routes] if a route response is synchronous."
+msgstr "您仍然可以在 xref:resteasy-reactive.adoc[RESTEasy Reactive] 中通过 `public SecurityIdentity getIdentity()` 从注释为 `@RolesAllowed` 、 `@Authenticated` 或相应配置授权检查的端点同步访问 `SecurityIdentity` ，因为身份验证已经发生。如果路由响应是同步的，同样的情况也适用于 xref:reactive-routes.adoc[Reactive] 路由。"
 
 #. type: Plain text
-#: upstream/_guides/security-proactive-authentication.adoc:31
-#, fuzzy
-msgid "If you disable proactive authentication, the authentication process runs only when an identity is requested.  An identity can be requested because of security rules that require the user to authenticate or because programmatic access to the current identity is required."
-msgstr "如果你禁用主动认证，认证过程只在身份被请求时运行。请求一个身份可能是因为安全规则要求用户进行身份验证，或者是因为需要对当前身份进行程序化访问。"
-
-#. type: Plain text
-#: upstream/_guides/security-proactive-authentication.adoc:38
-#, fuzzy
-msgid "If proactive authentication is in use, accessing `SecurityIdentity` is a blocking operation.  This is because authentication might have yet to happen and accessing `SecurityIdentity` might require calls to external systems, such as databases, that might block the operation.  For blocking applications, this is not an issue.  However, if you have disabled authentication in a reactive application, this will fail because you cannot do blocking operations on the I/O thread.  To work around this, you need to `@Inject` an instance of `io.quarkus.security.identity.CurrentIdentityAssociation` and call the `Uni<SecurityIdentity> getDeferredIdentity();` method.  Then, you can subscribe to the resulting `Uni` and will be notified when authentication is complete and the identity is available."
-msgstr "如果正在使用主动认证，访问 `SecurityIdentity` 是一个阻塞操作。这是因为认证可能还没有发生，访问 `SecurityIdentity` 可能需要调用外部系统，如数据库，这可能会阻塞操作。对于阻塞的应用程序，这不是一个问题。然而，如果你在一个反应式应用程序中禁用了认证，这将会失败，因为你不能在I/O线程上进行阻塞操作。为了解决这个问题，你需要 `@Inject` 一个 `io.quarkus.security.identity.CurrentIdentityAssociation` 的实例并调用 `Uni<SecurityIdentity> getDeferredIdentity();` 方法。然后，你可以订阅产生的 `Uni` ，当认证完成和身份可用时，你将得到通知。"
-
-#. type: delimited block =
-#: upstream/_guides/security-proactive-authentication.adoc:43
-#, fuzzy
-msgid "You can still access `SecurityIdentity` synchronously with `public SecurityIdentity getIdentity()` in xref:resteasy-reactive.adoc[RESTEasy Reactive] from endpoints that are annotated with `@RolesAllowed`, `@Authenticated`, or with respective configuration authorization checks because authentication has already happened.  The same is also valid for xref:reactive-routes.adoc[Reactive routes] if a route response is synchronous."
-msgstr "你仍然可以在 link:resteasy-reactive.html[RESTEasy Reactive] 中用 `public SecurityIdentity getIdentity()` ，从注有 `@RolesAllowed` 、 `@Authenticated` 、或各自配置授权检查的端点同步访问 `SecurityIdentity` ，因为认证已经发生。如果路由响应是同步的，这对 link:reactive-routes.html[Reactive路由] 也同样有效。"
-
-#. type: Plain text
-#: upstream/_guides/security-proactive-authentication.adoc:46
+#: _guides/security-proactive-authentication.adoc
 #, fuzzy
 msgid "xref:security-authorize-web-endpoints-reference.adoc#standard-security-annotations[Standard security annotations] on CDI beans are not supported on an I/O thread if a non-void secured method returns a value synchronously and proactive authentication is disabled because they need to access `SecurityIdentity`."
 msgstr "如果一个非void的安全方法同步返回一个值，并且因为需要访问 `SecurityIdentity` ，所以在I/O线程上不支持CDI Bean上的 link:security-authorization.html#standard-security-annotations[标准安全注解] ，主动认证被禁用。"
 
-#. type: Plain text
-#: upstream/_guides/security-proactive-authentication.adoc:49
+#: _guides/security-proactive-authentication.adoc
 #, fuzzy
-msgid "In the following example, `HelloResource` and `HelloService` are defined.  Any GET request to `/hello` will run on the I/O thread and throw a `BlockingOperationNotAllowedException` exception."
-msgstr "在下面的例子中， `HelloResource` 和 `HelloService` 被定义。任何对 `/hello` 的GET请求将在I/O线程上运行，并抛出一个 `BlockingOperationNotAllowedException` 异常。"
+msgid ""
+"In the following example, `HelloResource` and `HelloService` are defined.\n"
+"Any GET request to `/hello` will run on the I/O thread and throw a `BlockingOperationNotAllowedException` exception."
+msgstr "在下面的示例中，定义了 `HelloResource` 和 `HelloService` 。对 `/hello` 的任何 GET 请求都将在 I/O 线程上运行，并引发 `BlockingOperationNotAllowedException` 异常。"
 
 #. type: Plain text
-#: upstream/_guides/security-proactive-authentication.adoc:51
+#: _guides/security-proactive-authentication.adoc
 #, fuzzy
 msgid "There is more than one way to fix the example:"
 msgstr "修复这个例子的方法不止一种："
 
 #. type: Plain text
-#: upstream/_guides/security-proactive-authentication.adoc:53
+#: _guides/security-proactive-authentication.adoc
 #, fuzzy
 msgid "Switch to a worker thread by annotating the `hello` endpoint with `@Blocking`."
 msgstr "通过用 `@Blocking` 注释 `hello` 端点来切换到一个工作线程。"
 
 #. type: Plain text
-#: upstream/_guides/security-proactive-authentication.adoc:54
+#: _guides/security-proactive-authentication.adoc
 #, fuzzy
 msgid "Change the `sayHello` method return type by using a reactive or asynchronous data type."
 msgstr "通过使用反应式或异步数据类型，改变 `sayHello` 方法的返回类型。"
 
-#. type: Plain text
-#: upstream/_guides/security-proactive-authentication.adoc:56
+#: _guides/security-proactive-authentication.adoc
 #, fuzzy
-msgid "Move `@RolesAllowed` annotation to the endpoint.  This could be one of the safest ways because accessing `SecurityIdentity` from endpoint methods is never the blocking operation."
-msgstr "将 `@RolesAllowed` 注释移至端点。这可能是最安全的方法之一，因为从端点方法中访问 `SecurityIdentity` ，永远不会是阻塞操作。"
-
-#. type: delimited block -
-#: upstream/_guides/security-proactive-authentication.adoc:63
-#, no-wrap
 msgid ""
-"import jakarta.annotation.security.PermitAll;\n"
-"import jakarta.inject.Inject;\n"
-"import jakarta.ws.rs.GET;\n"
-"import jakarta.ws.rs.Path;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/security-proactive-authentication.adoc:65
-#, no-wrap
-msgid "import io.smallrye.mutiny.Uni;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/security-proactive-authentication.adoc:69
-#, no-wrap
-msgid ""
-"@Path(\"/hello\")\n"
-"@PermitAll\n"
-"public class HelloResource {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/security-proactive-authentication.adoc:72
-#, no-wrap
-msgid ""
-"    @Inject\n"
-"    HelloService helloService;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/security-proactive-authentication.adoc:77
-#, no-wrap
-msgid ""
-"    @GET\n"
-"    public Uni<String> hello() {\n"
-"        return Uni.createFrom().item(helloService.sayHello());\n"
-"    }\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/security-proactive-authentication.adoc:79
-#: upstream/_guides/security-proactive-authentication.adoc:95
-#, no-wrap
-msgid "}\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/security-proactive-authentication.adoc:85
-#, no-wrap
-msgid ""
-"import jakarta.annotation.security.RolesAllowed;\n"
-"import jakarta.enterprise.context.ApplicationScoped;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/security-proactive-authentication.adoc:88
-#, no-wrap
-msgid ""
-"@ApplicationScoped\n"
-"public class HelloService {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/security-proactive-authentication.adoc:93
-#, no-wrap
-msgid ""
-"    @RolesAllowed(\"admin\")\n"
-"    public String sayHello() {\n"
-"        return \"Hello\";\n"
-"    }\n"
-msgstr ""
+"Move `@RolesAllowed` annotation to the endpoint.\n"
+"This could be one of the safest ways because accessing `SecurityIdentity` from endpoint methods is never the blocking operation."
+msgstr "将 `@RolesAllowed` 注释移至端点。这可能是最安全的方法之一，因为从端点方法访问 `SecurityIdentity` 绝不是阻塞操作。"
 
 #. type: Title ==
-#: upstream/_guides/security-proactive-authentication.adoc:98
+#: _guides/security-proactive-authentication.adoc
 #, fuzzy, no-wrap
 msgid "Customize authentication exception responses"
 msgstr "自定义认证异常响应"
 
 #. type: Plain text
-#: upstream/_guides/security-proactive-authentication.adoc:101
+#: _guides/security-proactive-authentication.adoc
 #, fuzzy
 msgid "You can use Jakarta REST `ExceptionMapper` to capture Quarkus Security authentication exceptions such as `io.quarkus.security.AuthenticationFailedException`, for example:"
 msgstr "你可以使用Jakarta REST `ExceptionMapper` 来捕获Quarkus Security认证异常，例如： `io.quarkus.security.AuthenticationFailedException` ："
 
-#. type: delimited block -
-#: upstream/_guides/security-proactive-authentication.adoc:105
-#: upstream/_guides/security-proactive-authentication.adoc:138
-#, no-wrap
-msgid "package io.quarkus.it.keycloak;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/security-proactive-authentication.adoc:111
-#, no-wrap
-msgid ""
-"import jakarta.annotation.Priority;\n"
-"import jakarta.ws.rs.Priorities;\n"
-"import jakarta.ws.rs.core.Response;\n"
-"import jakarta.ws.rs.ext.ExceptionMapper;\n"
-"import jakarta.ws.rs.ext.Provider;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/security-proactive-authentication.adoc:113
-#, no-wrap
-msgid "import io.quarkus.security.AuthenticationFailedException;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/security-proactive-authentication.adoc:117
-#, no-wrap
-msgid ""
-"@Provider\n"
-"@Priority(Priorities.AUTHENTICATION)\n"
-"public class AuthenticationFailedExceptionMapper implements ExceptionMapper<AuthenticationFailedException> {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/security-proactive-authentication.adoc:120
-#, no-wrap
-msgid ""
-"    @Context\n"
-"    UriInfo uriInfo;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/security-proactive-authentication.adoc:126
-#, no-wrap
-msgid ""
-"    @Override\n"
-"    public Response toResponse(AuthenticationFailedException exception) {\n"
-"        return Response.status(401).header(\"WWW-Authenticate\", \"Basic realm=\\\"Quarkus\\\"\").build();\n"
-"    }\n"
-"}\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_guides/security-proactive-authentication.adoc:134
+#: _guides/security-proactive-authentication.adoc
 #, fuzzy
-msgid "Some HTTP authentication mechanisms need to handle authentication exceptions themselves to create a correct authentication challenge.  For example, `io.quarkus.oidc.runtime.CodeAuthenticationMechanism`, which manages OpenID Connect (OIDC) authorization code flow authentication, needs to build a correct redirect URL, cookies, and so on.  For that reason, avoid using custom exception mappers to customize authentication exceptions thrown by such mechanisms.  Instead, a safer approach is to ensure that proactive authentication is enabled and to use Vert.x HTTP route failure handlers.  This is because events come to the handler with the correct response status and headers.  You then only need to customize the response, as shown in the following example:"
-msgstr "一些HTTP认证机制需要自己处理认证异常，以创建一个正确的认证挑战。例如， `io.quarkus.oidc.runtime.CodeAuthenticationMechanism` ，它管理OpenID Connect（OIDC）授权代码流认证，需要建立一个正确的重定向URL、cookies等。出于这个原因，避免使用自定义异常映射器来定制此类机制抛出的认证异常。相反，更安全的方法是确保启用主动认证并使用Vert.x HTTP路由失败处理程序。这是因为事件会带着正确的响应状态和头文件来到处理程序。然后你只需要定制响应，如下面的例子所示："
-
-#. type: delimited block -
-#: upstream/_guides/security-proactive-authentication.adoc:141
-#, no-wrap
 msgid ""
-"import jakarta.enterprise.context.ApplicationScoped;\n"
-"import jakarta.enterprise.event.Observes;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/security-proactive-authentication.adoc:146
-#, no-wrap
-msgid ""
-"import io.quarkus.security.AuthenticationFailedException;\n"
-"import io.vertx.core.Handler;\n"
-"import io.vertx.ext.web.Router;\n"
-"import io.vertx.ext.web.RoutingContext;\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/security-proactive-authentication.adoc:149
-#, no-wrap
-msgid ""
-"@ApplicationScoped\n"
-"public class AuthenticationFailedExceptionHandler {\n"
-msgstr ""
-
-#. type: delimited block -
-#: upstream/_guides/security-proactive-authentication.adoc:163
-#, no-wrap
-msgid ""
-"    public void init(@Observes Router router) {\n"
-"        router.route().failureHandler(new Handler<RoutingContext>() {\n"
-"            @Override\n"
-"            public void handle(RoutingContext event) {\n"
-"                if (event.failure() instanceof AuthenticationFailedException) {\n"
-"                    event.response().end(\"CUSTOMIZED_RESPONSE\");\n"
-"                } else {\n"
-"                    event.next();\n"
-"                }\n"
-"            }\n"
-"        });\n"
-"    }\n"
-"}\n"
-msgstr ""
+"Some HTTP authentication mechanisms need to handle authentication exceptions themselves to create a correct authentication challenge.\n"
+"For example, `io.quarkus.oidc.runtime.CodeAuthenticationMechanism`, which manages OpenID Connect (OIDC) authorization code flow authentication, needs to build a correct redirect URL, cookies, and so on.\n"
+"For that reason, avoid using custom exception mappers to customize authentication exceptions thrown by such mechanisms.\n"
+"Instead, a safer approach is to ensure that proactive authentication is enabled and to use Vert.x HTTP route failure handlers.\n"
+"This is because events come to the handler with the correct response status and headers.\n"
+"You then only need to customize the response, as shown in the following example:"
+msgstr "有些 HTTP 身份验证机制需要自行处理身份验证异常，以创建正确的身份验证挑战。例如，管理 OpenID Connect (OIDC) 授权代码流身份验证的 `io.quarkus.oidc.runtime.CodeAuthenticationMechanism` 需要创建正确的重定向 URL、cookie 等。因此，应避免使用自定义异常映射器来自定义此类机制抛出的身份验证异常。相反，更安全的方法是确保启用主动身份验证，并使用 Vert.x HTTP 路由失败处理程序。这是因为事件会以正确的响应状态和标头到达处理程序。然后，您只需自定义响应即可，如下例所示："
 
 #. type: Title ==
-#: upstream/_guides/security-proactive-authentication.adoc:165
+#: _guides/security-proactive-authentication.adoc
 #, no-wrap
 msgid "References"
 msgstr "参考文献"
 
 #. type: Plain text
-#: upstream/_guides/security-proactive-authentication.adoc:168
+#: _guides/security-proactive-authentication.adoc
 #, fuzzy
 msgid "xref:security-overview.adoc[Quarkus Security overview]"
-msgstr "link:security-overview.html[Quarkus安全概述]"
+msgstr "xref:security-overview.adoc[Quarkus 安全概述]"
 
 #. type: Plain text
-#: upstream/_guides/security-proactive-authentication.adoc:169
+#: _guides/security-proactive-authentication.adoc
 #, fuzzy
 msgid "xref:security-architecture.adoc[Quarkus Security architecture]"
 msgstr "link:security-architecture.html[Quarkus安全架构]"
 
 #. type: Plain text
-#: upstream/_guides/security-proactive-authentication.adoc:170
+#: _guides/security-proactive-authentication.adoc
 #, fuzzy
 msgid "xref:security-authentication-mechanisms.adoc[Authentication mechanisms in Quarkus]"
-msgstr "link:security-authentication-mechanisms.html[Quarkus的认证机制]"
+msgstr "xref:security-authentication-mechanisms.adoc[夸克认证机制]"
 
 #. type: Plain text
-#: upstream/_guides/security-proactive-authentication.adoc:170
+#: _guides/security-proactive-authentication.adoc
+#, fuzzy
 msgid "xref:security-identity-providers.adoc[Identity providers]"
-msgstr ""
+msgstr "xref:security-identity-providers.adoc[身份供应商]"

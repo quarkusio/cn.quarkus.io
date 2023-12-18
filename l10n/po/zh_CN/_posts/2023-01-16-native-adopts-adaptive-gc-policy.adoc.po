@@ -11,221 +11,197 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#. type: YAML Front Matter: author
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:1
-#, fuzzy, no-wrap
-msgid "galderz"
-msgstr "galderz"
-
-#. type: YAML Front Matter: date
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:1
-#, fuzzy, no-wrap
-msgid "2023-01-25"
-msgstr "2023-01-25"
-
-#. type: YAML Front Matter: layout
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:1
-#, fuzzy, no-wrap
-msgid "post"
-msgstr "职位"
-
-#. type: YAML Front Matter: synopsis
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:1
-#, fuzzy, no-wrap
-msgid "Native runtime GC policy switches to adaptive to more consistency and predictability"
-msgstr "原生的运行时GC策略切换到自适应，以获得更多的一致性和可预测性"
-
-#. type: YAML Front Matter: tags
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:1
-#, fuzzy, no-wrap
-msgid "native gc"
-msgstr "本土的gc"
-
 #. type: YAML Front Matter: title
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:1
+#: _posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc
 #, fuzzy, no-wrap
 msgid "Quarkus Native adopts Adaptive GC policy"
 msgstr "Quarkus Native采用自适应GC政策"
 
-#. type: Plain text
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:13
+#. type: YAML Front Matter: synopsis
+#: _posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc
+#, fuzzy, no-wrap
+msgid "Native runtime GC policy switches to adaptive to more consistency and predictability"
+msgstr "原生的运行时GC策略切换到自适应，以获得更多的一致性和可预测性"
+
+#: _posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc
 #, fuzzy
-msgid "Starting with Quarkus 2.13.6.Final, the native runtime garbage collection policy switched in order to provide more consistent and predictable runtime performance.  This blog post tells the story of this switch."
-msgstr "从Quarkus 2.13.6.Final开始，本地运行时的垃圾收集策略进行了切换，以提供更一致和可预测的运行时性能。这篇博文讲述了这个转换的故事。"
-
-#. type: Plain text
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:17
-#, fuzzy
-msgid "Sometime in 2022 while carrying out some native runtime performance benchmarking we observed that, in constant load plain text benchmarks, memory consumption would grow continuously until it reached around 500MB and then it would drop.  The memory consumption graph would look something like this:"
-msgstr "2022年的某个时候，在进行一些本地运行时性能基准测试时，我们观察到，在恒定负载的纯文本基准测试中，内存消耗会持续增长，直到达到500MB左右，然后就会下降。内存消耗图看起来是这样的。"
-
-#. type: Target for macro image
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:18
-#, no-wrap
-msgid "space-time-memory-consumption.png"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:25
-#, fuzzy
-msgid "The graph above was obtained with VisualVM.  This feature has only been available in the GraalVM Community Edition starting with version 22.3.0.  See https://www.graalvm.org/latest/tools/visualvm[here] for more details."
-msgstr "上面的图表是用VisualVM获得的。这个功能只在GraalVM社区版中提供，从22.3.0版本开始。更多细节请看 link:https://www.graalvm.org/latest/tools/visualvm[这里] 。"
-
-#. type: Plain text
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:29
-#, fuzzy
-msgid "The graph looked suspicious.  At a first glance, small garbage collections were happening regularly but those collections were not able to fully collect all the garbage.  This uncollected garbage would continue to grow until around the 500MB mark, at which point a full garbage collection would happen and it would clear the growing leak."
-msgstr "该图看起来很可疑。乍一看，小规模的垃圾收集是定期发生的，但这些收集并不能完全收集所有的垃圾。这些未收集的垃圾将继续增长，直到500MB左右，在这一点上，一个完整的垃圾收集将发生，它将清除不断增长的泄漏。"
-
-#. type: Plain text
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:34
-#, fuzzy
-msgid "The first thing we wondered was, what this ~500MB limit was and where it was coming from.  To do that, we enabled GC logging to see if we could get some clues:"
-msgstr "我们想知道的第一件事是，这个~500MB的限制是什么，它是从哪里来的。为了做到这一点，我们启用了GC日志，看看我们是否能得到一些线索。"
-
-#. type: delimited block -
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:46
-#, no-wrap
 msgid ""
-"$ quarkus-project/target/quarkus-project-1.0.0-SNAPSHOT-runner -XX:+PrintGC -XX:+VerboseGC\n"
-"2023-01-09 13:29:32,155 INFO  [io.quarkus] (main) quarkus-project 1.0.0-SNAPSHOT native (powered by Quarkus 2.15.2.Final) started in 0.017s. Listening on: http://0.0.0.0:8080\n"
-"...\n"
-"[Heap policy parameters:\n"
-"  YoungGenerationSize: 268435456\n"
-"      MaximumHeapSize: 27487790640\n"
-"      MinimumHeapSize: 536870912 <--\n"
-"     AlignedChunkSize: 1048576\n"
-"  LargeArrayThreshold: 131072]\n"
-msgstr ""
+"Starting with Quarkus 2.13.6.Final, the native runtime garbage collection policy switched in order to provide more consistent and predictable runtime performance.\n"
+"This blog post tells the story of this switch."
+msgstr "从 Quarkus 2.13.6.Final 开始，本机运行时垃圾回收策略发生了变化，以便提供更一致、更可预测的运行时性能。本博文将讲述这一转换的故事。"
 
-#. type: Plain text
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:50
+#: _posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc
 #, fuzzy
-msgid "We realized that this number is actually 512MB, which is the default minimum heap size GraalVM configures when the maximum heap size is anything above ~3GB of physical memory."
-msgstr "我们意识到，这个数字实际上是512MB，这是GraalVM配置的默认最小堆大小，当最大堆大小超过~3GB的物理内存时。"
-
-#. type: Plain text
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:59
-#, fuzzy
-msgid "The next question was, why is there a relationship between the minimum heap size and the memory consumption at which a full GC appears to happen? Looking at the output above, on our system the default maximum heap size is 25.6GB.  GraalVM defaults the maximum heap size to 80% of the physical memory if no specific configuration is passed, and indeed 25.6GB is 80% of 32GB.  It would seem odd to do a full GC when 512MB have been consumed, given that our system has given it a maximum heap size that is far bigger.  The answer was found in the GC policy Quarkus was explicitly configuring."
-msgstr "下一个问题是，为什么最小堆大小和出现完全GC的内存消耗之间有关系？看一下上面的输出，在我们的系统上，默认的最大堆大小是25.6GB。如果没有特定的配置，GraalVM默认的最大堆大小为物理内存的80%，事实上，25.6GB是32GB的80%。考虑到我们的系统给它的最大堆大小要大得多，在512MB被消耗的时候做一个完整的GC似乎很奇怪。答案是在Quarkus明确配置的GC策略中找到的。"
-
-#. type: Plain text
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:66
-#, fuzzy
-msgid "By default GraalVM uses a GC policy called \"adaptive\", but Quarkus was instead instructing GraalVM to use another GC policy called \"by space and time\".  The full story on why Quarkus was using a different GC policy can be found https://github.com/quarkusio/quarkus/issues/28267[here], but to summarize, the decision was made in 2018, when \"by space and time\" appeared to generate less full GCs and offered considerably better throughput."
-msgstr "默认情况下，GraalVM使用一种名为 \"自适应 \"的GC策略，但Quarkus却指示GraalVM使用另一种名为 \"按空间和时间 \"的GC策略。关于Quarkus为什么使用不同的GC策略的完整故事可以 link:https://github.com/quarkusio/quarkus/issues/28267[在这里] 找到，但总结一下，这个决定是在2018年做出的，当时 \"按空间和时间 \"似乎产生了更少的完整GC，并提供了相当好的吞吐量。"
-
-#. type: Plain text
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:69
-#, fuzzy
-msgid "The \"by space and time\" GC policy implemented a `shouldCollectCompletely` method that decided whether to do a complete (full) or incremental (minimal) collection.  The relevant code of the \"by space and time\" GC policy is the following:"
-msgstr "\"按空间和时间 \"的GC策略实现了一个 `shouldCollectCompletely` 方法，决定是做完全（完全）还是增量（最小）收集。\"按空间和时间 \"的GC策略的相关代码如下。"
-
-#. type: delimited block -
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:74
-#, no-wrap
 msgid ""
-"return estimateUsedHeapAtNextIncrementalCollection().aboveThan(getMaximumHeapSize()) // (1)\n"
-"  || GCImpl.getChunkBytes().aboveThan(getMinimumHeapSize()) && enoughTimeSpentOnIncrementalGCs(); // (2)\n"
-msgstr ""
+"Sometime in 2022 while carrying out some native runtime performance benchmarking we observed that, in constant load plain text benchmarks,\n"
+"memory consumption would grow continuously until it reached around 500MB and then it would drop.\n"
+"The memory consumption graph would look something like this:"
+msgstr "2022 年的某个时候，我们在进行一些本地运行时性能基准测试时发现，在恒定负载的纯文本基准测试中，内存消耗会持续增长，直到达到 500MB 左右，然后才会下降。内存消耗曲线图如下所示："
 
-#. type: Plain text
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:80
+#: _posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc
 #, fuzzy
-msgid "One option `(1)` for doing a full GC would be when it estimates that the used heap will exceed maximum heap size, but that wasn’t our case.  The other `(2)` would be if enough minimal collections had happened and the used heap was above the minimum heap size.  This latter option was what was happening here."
-msgstr "一个选择 `(1)` ，做一个完整的GC是当它估计使用的堆将超过最大堆的大小，但这不是我们的情况。另一个 `(2)` ，就是如果已经发生了足够多的最小集合，并且使用的堆超过了最小堆的大小。后一种情况就是这里发生的情况。"
-
-#. type: Plain text
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:85
-#, fuzzy
-msgid "At this point we thought, do the assumptions made about the default GC policy still apply in 2022? So, we removed the GC policy configuration tweak, repeated the test and we observed the following memory consumption:"
-msgstr "在这一点上，我们想，关于默认GC策略的假设在2022年是否仍然适用？因此，我们删除了GC策略的配置调整，重复测试，我们观察到以下的内存消耗。"
-
-#. type: Target for macro image
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:86
-#, no-wrap
-msgid "adaptive-memory-consumption.png"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:94
-#, fuzzy
-msgid "For the same workload the default GC policy, called \"adaptive\", consumed close to 50% less heap compared to the \"by space and time\" one.  Note, however, that these graphs alone are not enough to make the switch since we could have a situation where \"adaptive\" is using less memory because the overall throughput is less.  So, let’s look at the benchmark that generated the graphs above and see what throughput numbers we obtain.  Using https://github.com/Hyperfoil/Hyperfoil[Hyperfoil], the \"by space and time\" policy reported these numbers on our environment:"
-msgstr "对于同样的工作负载，被称为 \"自适应 \"的默认GC策略，与 \"按空间和时间 \"的策略相比，消耗的堆少了近50%。然而，请注意，仅凭这些图表还不足以进行切换，因为我们可能会出现这样的情况：\"自适应 \"使用的内存较少，因为整体吞吐量较小。因此，让我们看看产生上述图表的基准，看看我们得到的吞吐量数字是多少。使用 link:https://github.com/Hyperfoil/Hyperfoil[Hyperfoil] ，\"按空间和时间 \"策略在我们的环境中报告了这些数字。"
-
-#. type: delimited block -
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:100
-#, no-wrap
 msgid ""
-"[hyperfoil@in-vm]$ wrk -t 128 -c 512 -H 'accept: text/plain' -d 16m http://<host>:8080/hello\n"
-"PHASE        METRIC   THROUGHPUT    REQUESTS  ... TIMEOUTS  ERRORS  BLOCKED   2xx\n"
-"test         request  93.79k req/s  90036541  ...        0       0      0 ns  90036094\n"
-msgstr ""
+"The graph above was obtained with VisualVM.\n"
+"This feature has only been available in the GraalVM Community Edition starting with version 22.3.0.\n"
+"See\n"
+"https://www.graalvm.org/latest/tools/visualvm[here]\n"
+"for more details."
+msgstr "上图是使用 VisualVM 绘制的。从 22.3.0 版开始，GraalVM 社区版才提供此功能。更多详情，请参阅 link:https://www.graalvm.org/latest/tools/visualvm[此处] 。"
+
+#: _posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc
+#, fuzzy
+msgid ""
+"The graph looked suspicious.\n"
+"At a first glance, small garbage collections were happening regularly but those collections were not able to fully collect all the garbage.\n"
+"This uncollected garbage would continue to grow until around the 500MB mark, at which point a full garbage collection would happen and it would clear the growing leak."
+msgstr "图表看起来很可疑。乍一看，小规模的垃圾收集正在有规律地进行，但这些收集并不能完全收集所有垃圾。这些未收集的垃圾会继续增加，直到 500MB 左右，这时就会进行一次完整的垃圾收集，清除不断增加的泄漏。"
+
+#: _posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc
+#, fuzzy
+msgid ""
+"The first thing we wondered was,\n"
+"what this ~500MB limit was and where it was coming from.\n"
+"To do that,\n"
+"we enabled GC logging to see if we could get some clues:"
+msgstr "我们首先想知道的是，这个 ~500MB 的限制是什么，它来自哪里。为此，我们启用了 GC 日志，看看能否找到一些线索："
+
+#: _posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc
+#, fuzzy
+msgid ""
+"We realized that this number is actually 512MB,\n"
+"which is the default minimum heap size GraalVM configures when the maximum heap size is anything above ~3GB of physical memory."
+msgstr "我们发现这个数字实际上是 512MB，这是 GraalVM 在最大堆大小超过 ~3GB 物理内存时配置的默认最小堆大小。"
+
+#: _posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc
+#, fuzzy
+msgid ""
+"The next question was,\n"
+"why is there a relationship between the minimum heap size and the memory consumption at which a full GC appears to happen?\n"
+"Looking at the output above,\n"
+"on our system the default maximum heap size is 25.6GB.\n"
+"GraalVM defaults the maximum heap size to 80% of the physical memory if no specific configuration is passed, and indeed 25.6GB is 80% of 32GB.\n"
+"It would seem odd to do a full GC when 512MB have been consumed,\n"
+"given that our system has given it a maximum heap size that is far bigger.\n"
+"The answer was found in the GC policy Quarkus was explicitly configuring."
+msgstr "下一个问题是，为什么最小堆大小与出现完全 GC 的内存消耗量之间存在关系？从上面的输出来看，我们系统的默认最大堆大小是 25.6GB。如果没有通过特定配置，GraalVM 会将最大堆大小默认为物理内存的 80%，而 25.6GB 的确是 32GB 的 80%。鉴于我们的系统为其设定的最大堆大小远远大于 512MB，因此在 512MB 已消耗殆尽的情况下进行完全 GC 似乎有些奇怪。答案就在 Quarkus 明确配置的 GC 策略中。"
+
+#: _posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc
+#, fuzzy
+msgid ""
+"By default GraalVM uses a GC policy called \"adaptive\",\n"
+"but Quarkus was instead instructing GraalVM to use another GC policy called \"by space and time\".\n"
+"The full story on why Quarkus was using a different GC policy can be found\n"
+"https://github.com/quarkusio/quarkus/issues/28267[here],\n"
+"but to summarize,\n"
+"the decision was made in 2018, when \"by space and time\" appeared to generate less full GCs and offered considerably better throughput."
+msgstr "GraalVM 默认使用名为 \"自适应 \"的 GC 策略，但 Quarkus 却指示 GraalVM 使用另一种名为 \"按空间和时间 \"的 GC 策略。关于 Quarkus 为何使用另一种 GC 策略的完整故事，可以 link:https://github.com/quarkusio/quarkus/issues/28267[在这里] 找到，但概括地说，这一决定是在 2018 年做出的，当时 \"按空间和时间 \"似乎产生了较少的全 GC，并提供了相当不错的吞吐量。"
+
+#: _posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc
+#, fuzzy
+msgid ""
+"The \"by space and time\" GC policy implemented a `shouldCollectCompletely` method that decided whether to do a complete (full) or incremental (minimal) collection.\n"
+"The relevant code of the \"by space and time\" GC policy is the following:"
+msgstr "按空间和时间 \"GC 策略实施了一种 `shouldCollectCompletely` 方法，用于决定是进行完整（完全）还是增量（最小）收集。按空间和时间 \"GC 策略的相关代码如下："
+
+#: _posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc
+#, fuzzy
+msgid ""
+"One option `(1)` for doing a full GC would be when it estimates that the used heap will exceed maximum heap size,\n"
+"but that wasn’t our case.\n"
+"The other `(2)` would be if enough minimal collections had happened and the used heap was above the minimum heap size.\n"
+"This latter option was what was happening here."
+msgstr "`(1)` 进行全 GC 的一个选项是估计已用堆将超过最大堆大小，但我们的情况并非如此。另一种情况是，如果已经进行了足够多的最小集合，并且已用堆超过了最小堆大小， `(2)` 。这里发生的就是后一种情况。"
+
+#: _posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc
+#, fuzzy
+msgid ""
+"At this point we thought,\n"
+"do the assumptions made about the default GC policy still apply in 2022?\n"
+"So, we removed the GC policy configuration tweak,\n"
+"repeated the test and we observed the following memory consumption:"
+msgstr "这时我们想，关于默认 GC 策略的假设在 2022 年是否仍然适用？于是，我们删除了 GC 策略配置调整，重新进行了测试，观察到的内存消耗情况如下："
+
+#: _posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc
+#, fuzzy
+msgid ""
+"For the same workload the default GC policy, called \"adaptive\",\n"
+"consumed close to 50% less heap compared to the \"by space and time\" one.\n"
+"Note, however, that these graphs alone are not enough to make the switch since we could have a situation where \"adaptive\" is using less memory because the overall throughput is less.\n"
+"So, let’s look at the benchmark that generated the graphs above and see what throughput numbers we obtain.\n"
+"Using https://github.com/Hyperfoil/Hyperfoil[Hyperfoil],\n"
+"the \"by space and time\" policy reported these numbers on our environment:"
+msgstr "对于相同的工作负载，默认 GC 策略（即 \"自适应 \"策略）的堆消耗比 \"按空间和时间 \"策略少近 50%。但请注意，仅凭这些图表还不足以决定是否进行切换，因为我们可能会遇到这样的情况：\"自适应 \"占用的内存更少，因为总体吞吐量更低。因此，让我们看看生成上述图表的基准，看看我们获得了哪些吞吐量数据。使用 link:https://github.com/Hyperfoil/Hyperfoil[Hyperfoil] ，\"按空间和时间 \"策略在我们的环境中报告了这些数据："
 
 #. type: Plain text
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:103
+#: _posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc
 #, fuzzy
 msgid "And here are the numbers for the \"adaptive\" policy:"
 msgstr "而这里是 \"适应性 \"政策的数字。"
 
-#. type: delimited block -
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:109
-#, no-wrap
+#: _posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc
+#, fuzzy
 msgid ""
-"[hyperfoil@in-vm]$ wrk -t 128 -c 512 -H 'accept: text/plain' -d 16m http://<host>:8080/hello\n"
-"PHASE        METRIC   THROUGHPUT    REQUESTS  ... TIMEOUTS  ERRORS  BLOCKED   2xx\n"
-"test         request  93.05k req/s  89329151  ...         0       0     0 ns  89328711\n"
-msgstr ""
+"The results were obtained with `wrk`,\n"
+"which is known to have issues with latency numbers\n"
+"(see https://redhatperf.github.io/post/coordinated-omission[this blog post] for more details),\n"
+"so we can ignore those in the context of this blog post and focus on throughput numbers."
+msgstr "这些结果是使用 `wrk` 得出的，众所周知，它在延迟数据方面存在问题（更多详情，请参阅 link:https://redhatperf.github.io/post/coordinated-omission[本博文] ），因此在本博文中我们可以忽略这些问题，重点关注吞吐量数据。"
 
-#. type: Plain text
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:115
+#: _posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc
 #, fuzzy
-msgid "The results were obtained with `wrk`, which is known to have issues with latency numbers (see https://redhatperf.github.io/post/coordinated-omission[this blog post] for more details), so we can ignore those in the context of this blog post and focus on throughput numbers."
-msgstr "这些结果是用 `wrk` ，众所周知，它在延迟数字上有问题（更多细节见 link:https://redhatperf.github.io/post/coordinated-omission[这篇博文] ），所以在这篇博文的背景下，我们可以忽略这些问题，而专注于吞吐量数字。"
+msgid ""
+"For the same workload,\n"
+"the throughput obtained with the \"adaptive\" policy is within 1% of the one obtained with the \"by space and time\" policy.\n"
+"So getting pretty much the same throughput with \"adaptive\" as with \"by space and time\" and close to 50% less memory consumption,\n"
+"made it a pretty convincing argument to switch to the \"adaptive\" GC policy as the default for Quarkus,\n"
+"as it was already the case for other GraalVM."
+msgstr "对于相同的工作负载，使用 \"自适应 \"策略获得的吞吐量与使用 \"按空间和时间 \"策略获得的吞吐量相差不到 1%。因此，使用 \"自适应 \"策略获得的吞吐量与使用 \"按空间和时间 \"策略获得的吞吐量基本相同，而内存消耗却减少了近 50%，这让我们有足够的理由将 \"自适应 \"GC 策略作为 Quarkus 的默认配置，因为其他 GraalVM 也已经采用了这种策略。"
 
-#. type: Plain text
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:121
+#: _posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc
 #, fuzzy
-msgid "For the same workload, the throughput obtained with the \"adaptive\" policy is within 1% of the one obtained with the \"by space and time\" policy.  So getting pretty much the same throughput with \"adaptive\" as with \"by space and time\" and close to 50% less memory consumption, made it a pretty convincing argument to switch to the \"adaptive\" GC policy as the default for Quarkus, as it was already the case for other GraalVM."
-msgstr "对于同样的工作负载，使用 \"自适应 \"策略得到的吞吐量与使用 \"按空间和时间 \"策略得到的吞吐量相差不超过1%。因此，用 \"自适应 \"获得的吞吐量与用 \"按空间和时间 \"获得的吞吐量基本相同，而且内存消耗减少了近50%，这使得我们有足够的理由将 \"自适应 \"GC策略作为Quarkus的默认策略，因为其他GraalVM已经是这样了。"
+msgid ""
+"The memory consumption benefits do not apply evenly across all heap sizes.\n"
+"Numbers like the ones published in this blog post would apply for maximum heap sizes that are equal or above 3GB,\n"
+"at which stage the default minimum heap size is set to ~512MB unless configured otherwise.\n"
+"For smaller maximum heap sizes, the memory consumption improvements might be smaller or non-existent."
+msgstr "内存消耗的好处并不适用于所有堆大小。本博文中公布的数据适用于最大堆大小等于或大于 3GB 的情况，此时默认的最小堆大小为 ~512MB，除非另有配置。对于较小的最大堆大小，内存消耗的改善可能较小或不存在。"
 
-#. type: Plain text
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:126
+#: _posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc
 #, fuzzy
-msgid "The memory consumption benefits do not apply evenly across all heap sizes.  Numbers like the ones published in this blog post would apply for maximum heap sizes that are equal or above 3GB, at which stage the default minimum heap size is set to ~512MB unless configured otherwise.  For smaller maximum heap sizes, the memory consumption improvements might be smaller or non-existent."
-msgstr "内存消耗的好处并不均匀地适用于所有堆的大小。像这篇博文中公布的数字适用于最大堆大小等于或超过3GB的情况，在这个阶段，默认的最小堆大小被设置为~512MB，除非另行配置。对于较小的最大堆大小，内存消耗的改善可能较小或不存在。"
+msgid ""
+"We often see tests or benchmarks run with no `-Xmx` configured,\n"
+"in which case as stated above,\n"
+"the maximum heap size is set to 80% of the available physical memory and this heap size can easily exceed 3GB on modern hardware.\n"
+"These users would see better out of the box experience with the \"adaptive\" GC policy."
+msgstr "我们经常看到在未配置 `-Xmx` 的情况下运行测试或基准，在这种情况下，如上所述，最大堆大小被设置为可用物理内存的 80%，而在现代硬件上，堆大小很容易超过 3GB。如果使用 \"自适应 \"GC 策略，这些用户将获得更好的开箱即用体验。"
 
-#. type: Plain text
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:131
+#: _posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc
 #, fuzzy
-msgid "We often see tests or benchmarks run with no `-Xmx` configured, in which case as stated above, the maximum heap size is set to 80% of the available physical memory and this heap size can easily exceed 3GB on modern hardware.  These users would see better out of the box experience with the \"adaptive\" GC policy."
-msgstr "我们经常看到在没有配置 `-Xmx` 的情况下运行测试或基准，在这种情况下，如上所述，最大堆大小被设置为可用物理内存的80%，在现代硬件上这个堆大小很容易超过3GB。这些用户在使用 \"自适应 \"GC策略时会有更好的开箱体验。"
+msgid ""
+"So, starting with Quarkus 2.13.6.Final, the GC policy for Quarkus native applications was aligned with GraalVM's default, called \"adaptive\".\n"
+"It is still possible to set the GC policy back to \"by space and time\", should that work better in a specific case.\n"
+"This can be useful to do if you observe a regression with this GC policy change in your own Quarkus application.\n"
+"To do so, pass in:"
+msgstr "因此，从 Quarkus 2.13.6.Final 开始，Quarkus 原生应用程序的 GC 策略与 GraalVM 的默认策略一致，即 \"自适应\"。如果在特定情况下，将 GC 策略设置为 \"按空间和时间 \"效果更好，那么仍然可以将其设置为 \"按空间和时间\"。如果你在自己的 Quarkus 应用程序中观察到 GC 策略改变后出现了退步，这将非常有用。为此，请输入"
 
 #. type: Plain text
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:136
-#, fuzzy
-msgid "So, starting with Quarkus 2.13.6.Final, the GC policy for Quarkus native applications was aligned with GraalVM's default, called \"adaptive\".  It is still possible to set the GC policy back to \"by space and time\", should that work better in a specific case.  This can be useful to do if you observe a regression with this GC policy change in your own Quarkus application.  To do so, pass in:"
-msgstr "因此，从Quarkus 2.13.6.Final开始，Quarkus本地应用程序的GC策略与GraalVM的默认值保持一致，称为 \"自适应\"。如果在特定的情况下，GC策略的效果更好的话，仍然可以将其设置为 \"按空间和时间\"。如果你在自己的Quarkus应用程序中观察到GC策略的变化，这可能是有用的。要做到这一点，请传入。"
-
-#. type: delimited block -
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:140
-#, no-wrap
-msgid "-Dquarkus.native.additional-build-args=-H:InitialCollectionPolicy=com.oracle.svm.core.genscavenge.CollectionPolicy\\$BySpaceAndTime\n"
-msgstr ""
-
-#. type: Plain text
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:143
+#: _posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc
 #, fuzzy
 msgid "It is necessary to escape `$` sign if passing in via command line."
 msgstr "如果通过命令行传入，有必要转义为 `$` 号。"
 
-#. type: Plain text
-#: upstream/_posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc:149
-msgid "More details on the investigation carried out can be found in https://github.com/quarkusio/quarkus/issues/28267[the original GitHub issue].  As a result of this work, we have also enhanced the Quarkus Native Reference Guide to add a https://quarkus.io/guides/native-reference#native-memory-management[Native Memory Management section].  This new section should help Quarkus Native users understand how memory management works and how to get the most out of it."
-msgstr ""
+#: _posts/2023-01-16-native-adopts-adaptive-gc-policy.adoc
+#, fuzzy
+msgid ""
+"More details on the investigation carried out can be found in\n"
+"https://github.com/quarkusio/quarkus/issues/28267[the original GitHub issue].\n"
+"As a result of this work,\n"
+"we have also enhanced the Quarkus Native Reference Guide to add a\n"
+"https://quarkus.io/guides/native-reference#native-memory-management[Native Memory Management section].\n"
+"This new section should help Quarkus Native users understand how memory management works and how to get the most out of it."
+msgstr "有关调查的更多详情，请参阅 link:https://github.com/quarkusio/quarkus/issues/28267[GitHub 上的原始问题] 。作为这项工作的成果，我们还增强了《Quarkus 原生参考指南》，添加了 \" link:https://quarkus.io/guides/native-reference#native-memory-management[本地内存管理 \"部分] 。这个新章节将帮助 Quarkus Native 用户了解内存管理的工作原理以及如何充分利用内存。"
