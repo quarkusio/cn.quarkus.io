@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2023-12-07 02:24+0000\n"
+"POT-Creation-Date: 2023-12-18 02:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -509,6 +509,100 @@ msgstr ""
 msgid "Map the `admin` role to `Admin1` role. The `SecurityIdentity` will have both `admin` and `Admin1` roles."
 msgstr ""
 
+#. type: Title ===
+#: upstream/_versions/main/guides/security-authorize-web-endpoints-reference.adoc:374
+#, no-wrap
+msgid "Shared permission checks"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/security-authorize-web-endpoints-reference.adoc:380
+msgid "One important rule for unshared permission checks is that only one path match is applied, the most specific one.  Naturally you can specify as many permissions with the same winning path as you want and they will all be applied.  However, there can be permission checks you want to apply to many paths without repeating them over and over again.  That's where shared permission checks come in, they are always applied when the permission path is matched."
+msgstr ""
+
+#. type: Block title
+#: upstream/_versions/main/guides/security-authorize-web-endpoints-reference.adoc:381
+#, no-wrap
+msgid "Example of custom named HttpSecurityPolicy applied on every HTTP request"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/security-authorize-web-endpoints-reference.adoc:387
+#, no-wrap
+msgid ""
+"quarkus.http.auth.permission.custom1.paths=/*\n"
+"quarkus.http.auth.permission.custom1.shared=true    <1>\n"
+"quarkus.http.auth.permission.custom1.policy=custom\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/security-authorize-web-endpoints-reference.adoc:391
+#, no-wrap
+msgid ""
+"quarkus.http.auth.policy.admin-policy1.roles-allowed=admin\n"
+"quarkus.http.auth.permission.roles1.paths=/admin/*\n"
+"quarkus.http.auth.permission.roles1.policy=admin-policy1\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/security-authorize-web-endpoints-reference.adoc:393
+msgid "xref:custom-http-security-policy[Custom HttpSecurityPolicy] will be also applied on the `/admin/1` path together with the `admin-policy1` policy."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/security-authorize-web-endpoints-reference.adoc:396
+msgid "Configuring many shared permission checks is less effective than configuring unshared ones.  Use shared permissions to complement unshared permission checks like in the example below."
+msgstr ""
+
+#. type: Block title
+#: upstream/_versions/main/guides/security-authorize-web-endpoints-reference.adoc:397
+#, no-wrap
+msgid "Map `SecurityIdentity` roles with shared permission"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/security-authorize-web-endpoints-reference.adoc:404
+#, no-wrap
+msgid ""
+"quarkus.http.auth.policy.role-policy1.roles.root=admin,user <1>\n"
+"quarkus.http.auth.permission.roles1.paths=/secured/*        <2>\n"
+"quarkus.http.auth.permission.roles1.policy=role-policy1\n"
+"quarkus.http.auth.permission.roles1.shared=true\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/security-authorize-web-endpoints-reference.adoc:408
+#, no-wrap
+msgid ""
+"quarkus.http.auth.policy.role-policy2.roles-allowed=user    <3>\n"
+"quarkus.http.auth.permission.roles2.paths=/secured/user/*\n"
+"quarkus.http.auth.permission.roles2.policy=role-policy2\n"
+msgstr ""
+
+#. type: delimited block -
+#: upstream/_versions/main/guides/security-authorize-web-endpoints-reference.adoc:412
+#, no-wrap
+msgid ""
+"quarkus.http.auth.policy.role-policy3.roles-allowed=admin\n"
+"quarkus.http.auth.permission.roles3.paths=/secured/admin/*\n"
+"quarkus.http.auth.permission.roles3.policy=role-policy3\n"
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/security-authorize-web-endpoints-reference.adoc:414
+msgid "Role `root` will be able to access `/secured/user/*` and `/secured/admin/*` paths."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/security-authorize-web-endpoints-reference.adoc:415
+msgid "The `/secured/*` path can only be accessed by authenticated users. This way, you have secured the `/secured/all` path and so on."
+msgstr ""
+
+#. type: Plain text
+#: upstream/_versions/main/guides/security-authorize-web-endpoints-reference.adoc:416
+msgid "Shared permissions are always applied before unshared ones, therefore a `SecurityIdentity` with the `root` role will have the `user` role as well."
+msgstr ""
+
 #. type: Title ==
 #: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
 #, fuzzy, no-wrap
@@ -571,7 +665,7 @@ msgstr "@RolesAllowed"
 #: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
 #, fuzzy, no-wrap
 msgid ""
-"Specifies the list of security roles permitted to access methods in an application.\n"
+"Specifies the list of security roles allowed to access methods in an application.\n"
 "\n"
 "As an equivalent to `@RolesAllowed(\"**\")`, {project-name} also provides the `io.quarkus.security.Authenticated` annotation that permits any authenticated user to access the resource."
 msgstr "指定允许访问应用程序中的方法的安全角色列表。"
