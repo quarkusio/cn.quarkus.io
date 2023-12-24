@@ -48,6 +48,7 @@ msgid ""
 msgstr "这样做的目的是让多个服务协同执行不同的计算/操作，同时保留对计算过程中执行的任何操作进行补偿的选项。这种松散的服务耦合弥补了 JTA/XA 等强一致性模型与 \"自创 \"的临时一致性解决方案之间的差距。"
 
 #: _versions/2.16/guides/lra.adoc
+#, fuzzy
 msgid ""
 "The model is based on the https://github.com/eclipse/microprofile-lra/blob/master/spec/src/main/asciidoc/microprofile-lra-spec.asciidoc[Eclipse MicroProfile LRA specification].\n"
 "The approach is for the developer to annotate a business method with a Java annotation\n"
@@ -71,7 +72,7 @@ msgid ""
 "and closing an LRA causes all participants to be notified via their Complete callback (if they have one).\n"
 "Other annotations for controlling participants are documented in the\n"
 "https://download.eclipse.org/microprofile/microprofile-lra-1.0/apidocs/[MicroProfile LRA API v1.0 javadoc]."
-msgstr ""
+msgstr "该模型基于 link:https://github.com/eclipse/microprofile-lra/blob/master/spec/src/main/asciidoc/microprofile-lra-spec.asciidoc[Eclipse MicroProfile LRA 规范] 。方法是开发人员用 Java 注释 ( link:https://download.eclipse.org/microprofile/microprofile-lra-1.0/apidocs/[@LRA] ).当调用这样的方法时，会创建一个 LRA 上下文（如果还没有的话），该上下文会与后续的 JAX-RS 调用一起传递，直到到达一个也包含 `@LRA` 注解的方法，该注解的属性表示 LRA 应被关闭或取消。默认情况下，LRA 将在启动 LRA 的同一方法中关闭（该方法本身可能在方法执行期间传播了上下文）。JAX-RS 资源希望参与交互，最简单的方法是用 link:https://download.eclipse.org/microprofile/microprofile-lra-1.0/apidocs/[@Compensate] 注解来表明它希望参与交互。如果后来取消了上下文，那么即使在出现故障的情况下，也能保证调用该 `@Compensate` 操作，并触发资源补偿它在 LRA 上下文中执行的任何活动。这种保证使服务能够可靠地运行，并确保最终的一致性（当所有补偿活动都运行完成时）。参与方可要求在其参与的 LRA 关闭时得到可靠的通知，方法是在其中一个方法上标注 link:https://download.eclipse.org/microprofile/microprofile-lra-1.0/apidocs/[@Complete] 注释。这样，取消 LRA 会导致所有参与者通过其补偿回调得到通知，而关闭 LRA 则会导致所有参与者通过其完成回调（如果有的话）得到通知。其他用于控制参与者的注解在 link:https://download.eclipse.org/microprofile/microprofile-lra-1.0/apidocs/[MicroProfile LRA API v1.0 javadoc] 中有详细说明。"
 
 #. type: Title ==
 #: _versions/2.16/guides/lra.adoc
@@ -199,6 +200,7 @@ msgid ""
 msgstr "下面是一个示例，说明如何使用 `LRA` 注解中的 `end` 元素在一个资源方法中启动 LRA，并在另一个资源方法中关闭 LRA。它还展示了如何配置 LRA，以便在业务方法返回 `cancelOn` 和 `cancelOnFamily` 元素中标识的特定 HTTP 状态代码时自动取消："
 
 #: _versions/2.16/guides/lra.adoc
+#, fuzzy
 msgid ""
 "The `end = false` element on the bookTrip method forces the LRA to continue running when\n"
 "the method finishes and the `end = true` element on the confirmTrip method forces the LRA\n"
@@ -206,4 +208,4 @@ msgid ""
 "end element can be placed on any JAX-RS resource (ie one service can start the LRA whilst\n"
 "a different service ends it). There are many more examples in the\n"
 "https://github.com/eclipse/microprofile-lra/blob/master/spec/src/main/asciidoc/microprofile-lra-spec.asciidoc#java-annotations-for-lras[Microprofile LRA specification document] and in the https://github.com/eclipse/microprofile-lra/tree/master/tck/src/main/java/org/eclipse/microprofile/lra/tck[Microprofile LRA TCK]."
-msgstr ""
+msgstr "bookTrip 方法中的 `end = false` 元素会强制 LRA 在方法结束时继续运行，而 confirmTrip 方法中的 `end = true` 元素会强制 LRA（由 bookTrip 方法启动）在方法结束时关闭。请注意，这个结束元素可以放在任何 JAX-RS 资源上（即一个服务可以启动 LRA，而另一个服务可以结束它）。 link:https://github.com/eclipse/microprofile-lra/blob/master/spec/src/main/asciidoc/microprofile-lra-spec.asciidoc#java-annotations-for-lras[Microprofile LRA 规范文档] 和 link:https://github.com/eclipse/microprofile-lra/tree/master/tck/src/main/java/org/eclipse/microprofile/lra/tck[Microprofile LRA TCK] 中还有更多示例。"

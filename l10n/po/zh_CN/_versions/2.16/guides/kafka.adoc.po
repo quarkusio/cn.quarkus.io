@@ -400,6 +400,7 @@ msgid ""
 msgstr "`throttled` 会跟踪收到的信息，并按顺序提交最新被接受的信息的偏移量（这意味着之前的所有信息也被接受）。即使通道执行异步处理，这种策略也能保证至少一次发送。连接器会跟踪接收到的记录，并定期（周期由 指定，默认值：5000 ms）提交最高连续偏移量。如果与记录相关的信息在 （默认值：60000 毫秒）内未得到确认，连接器将被标记为不健康。事实上，这种策略无法在单条记录处理失败后立即提交偏移量。如果 设置为小于或等于 ，则不会执行任何健康检查验证。如果存在 \"毒丸 \"信息（从未被接受），这种设置可能会导致内存不足。如果 未明确设为 true，则默认采用此策略。 `auto.commit.interval.ms` `throttled.unprocessed-record-max-age.ms` `throttled.unprocessed-record-max-age.ms` `0` `enable.auto.commit`"
 
 #: _versions/2.16/guides/kafka.adoc
+#, fuzzy
 msgid ""
 "`checkpoint` allows persisting consumer offsets on a **state store**, instead of committing them back to the Kafka broker.\n"
 "Using the `CheckpointMetadata` API, consumer code can persist a _processing state_ with the record offset to mark the progress of a consumer.\n"
@@ -408,7 +409,7 @@ msgid ""
 "The connector will be marked as unhealthy if no processing state is persisted to the state store in `checkpoint.unsynced-state-max-age.ms` (default: 10000).\n"
 "If `checkpoint.unsynced-state-max-age.ms` is set to less than or equal to 0, it does not perform any health check verification.\n"
 "For more information, see <<Stateful processing with Checkpointing>>"
-msgstr ""
+msgstr "`checkpoint` 允许在 *状态存储* 上持久化消费者偏移量，而不是将其提交回 Kafka 代理。使用 API，消费者代码可以持久化带有记录偏移量的 `CheckpointMetadata` _处理状态_ ，以标记消费者的进度。当处理从先前持久化的偏移量继续进行时，它会将 Kafka 消费者搜索到该偏移量，同时还原持久化状态，继续进行状态处理。检查点策略在本地保存与最新偏移量相关的处理状态，并定期将其持久化到状态存储中（周期由 （默认值：5000）指定）。如果在 （默认值：10000）中没有处理状态持久化到状态存储中，连接器将被标记为不健康。如果 设置为小于或等于 0，则不会执行任何健康检查验证。更多信息，请参阅 `auto.commit.interval.ms` `checkpoint.unsynced-state-max-age.ms` `checkpoint.unsynced-state-max-age.ms` <<Stateful processing with Checkpointing>>"
 
 #: _versions/2.16/guides/kafka.adoc
 msgid ""
@@ -842,13 +843,14 @@ msgid "The `checkpoint` commit strategy is an experimental feature and can chang
 msgstr "`KafkaClientService` 是一个实验性的API，在未来可能会发生变化。"
 
 #: _versions/2.16/guides/kafka.adoc
+#, fuzzy
 msgid ""
 "Smallrye Reactive Messaging `checkpoint` commit strategy allows consumer applications to process messages in a stateful manner, while also respecting Kafka consumer scalability.\n"
 "An incoming channel with `checkpoint` commit strategy persists consumer offsets on an external\n"
 "<<state-stores, state store>>, such as a relational database or a key-value store.\n"
 "As a result of processing consumed records, the consumer application can accumulate an internal state for each topic-partition assigned to the Kafka consumer.\n"
 "This local state will be periodically persisted to the state store and will be associated with the offset of the record that produced it."
-msgstr ""
+msgstr "Smallrye Reactive Messaging `checkpoint` 提交策略允许消费者应用程序以有状态的方式处理消息，同时也尊重 Kafka 消费者的可扩展性。采用 `checkpoint` 提交策略的传入通道会在外部 xref:state-stores[状态存储] （如关系数据库或键值存储）上持久化消费者偏移量。在处理消耗的记录时，消费者应用程序可以为分配给 Kafka 消费者的每个主题分区积累内部状态。这种本地状态会定期持久化到状态存储中，并与产生这种状态的记录的偏移量相关联。"
 
 #: _versions/2.16/guides/kafka.adoc
 #, fuzzy
@@ -903,12 +905,13 @@ msgid "Quarkus provides following state store implementations:"
 msgstr "Quarkus提供了以下状态存储的实现。"
 
 #: _versions/2.16/guides/kafka.adoc
+#, fuzzy
 msgid ""
 "`quarkus-redis`: Uses the xref:redis-reference.adoc[`quarkus-redis-client`] extension to persist processing states.\n"
 "Jackson is used to serialize processing state in Json. For complex objects it is required to configure the `checkpoint.state-type` property with the class name of the object.\n"
 "By default, the state store uses the default redis client, but if a link:https://quarkus.io/guides/redis-reference#default-and-named-clients[named client] is to be used, the client name can be specified using the `mp.messaging.incoming.[channel-name].checkpoint.quarkus-redis.client-name` property.\n"
 "Processing states will be stored in Redis using the key naming scheme `[consumer-group-id]:[topic]:[partition]`."
-msgstr ""
+msgstr "`quarkus-redis` :使用 xref:redis-reference.adoc[quarkus-redis-client] 扩展来持久化处理状态。Jackson 用于以 Json 格式序列化处理状态。对于复杂对象，需要在 `checkpoint.state-type` 属性中配置对象的类名。默认情况下，状态存储使用默认的 Redis 客户端，但如果要使用已 link:https://quarkus.io/guides/redis-reference#default-and-named-clients[命名的客户端] ，则可使用 `mp.messaging.incoming.[channel-name].checkpoint.quarkus-redis.client-name` 属性指定 link:https://quarkus.io/guides/redis-reference#default-and-named-clients[客户端] 名称。处理状态将使用键命名方案 `[consumer-group-id]:[topic]:[partition]` 存储在 Redis 中。"
 
 #. type: Plain text
 #: _versions/2.16/guides/kafka.adoc
@@ -917,17 +920,19 @@ msgid "For example the configuration of the previous code would be the following
 msgstr "例如，前面的代码的配置是这样的。"
 
 #: _versions/2.16/guides/kafka.adoc
+#, fuzzy
 msgid ""
 "`quarkus-hibernate-reactive`: Uses the xref:hibernate-reactive.adoc[`quarkus-hibernate-reactive`] extension to persist processing states.\n"
 "Processing state objects are required to be a JPA entity and extend the `CheckpointEntity` class,\n"
 "which handles object identifiers composed of the consumer group id, topic and partition.\n"
 "Therefore, the class name of the entity needs to be configured using the `checkpoint.state-type` property."
-msgstr ""
+msgstr "`quarkus-hibernate-reactive` :使用 xref:hibernate-reactive.adoc[quarkus-hibernate-reactive] 扩展来持久化处理状态。处理状态对象必须是 JPA 实体，并扩展 `CheckpointEntity` 类，该类处理由消费者组 ID、主题和分区组成的对象标识符。因此，需要使用 `checkpoint.state-type` 属性配置实体的类名。"
 
 #. type: Plain text
 #: _versions/2.16/guides/kafka.adoc
+#, fuzzy
 msgid "With `AveragePriceEntity` being a JPA entity extending `CheckpointEntity`:"
-msgstr ""
+msgstr "`AveragePriceEntity` 是一个扩展了 `CheckpointEntity` 的 JPA 实体："
 
 #: _versions/2.16/guides/kafka.adoc
 #, fuzzy
