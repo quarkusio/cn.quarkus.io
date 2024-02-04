@@ -229,6 +229,10 @@ msgid "Interval Trigger Example"
 msgstr "区间触发实例"
 
 #: _guides/scheduler-reference.adoc
+msgid "A value less than one second may not be supported by the underlying scheduler implementation. In that case a warning message is logged during build and application start."
+msgstr ""
+
+#: _guides/scheduler-reference.adoc
 #, fuzzy
 msgid ""
 "The `every` attribute supports xref:config-reference.adoc#property-expressions[Property Expressions] including default values and nested\n"
@@ -378,11 +382,14 @@ msgid "Conditional Execution"
 msgstr "条件性执行"
 
 #: _guides/scheduler-reference.adoc
-#, fuzzy
 msgid ""
 "You can define the logic to skip any execution of a scheduled method via `@Scheduled#skipExecutionIf()`.\n"
-"The specified bean class must implement `io.quarkus.scheduler.Scheduled.SkipPredicate` and the execution is skipped if the result of the `test()` method is `true`."
-msgstr "您可以通过 `@Scheduled#skipExecutionIf()` 定义跳过任何计划方法执行的逻辑。指定的 Bean 类必须实现 `io.quarkus.scheduler.Scheduled.SkipPredicate` ，如果 `test()` 方法的结果是 `true` ，执行将被跳过。"
+"The specified class must implement `io.quarkus.scheduler.Scheduled.SkipPredicate` and the execution is skipped if the result of the `test()` method is `true`.\n"
+"The class must either represent a CDI bean or declare a public no-args constructor.\n"
+"In case of CDI, there must be exactly one bean that has the specified class in its set of bean types, otherwise the build fails.\n"
+"Furthermore, the scope of the bean must be active during execution of the job.\n"
+"If the scope is `@Dependent` then the bean instance belongs exclusively to the specific scheduled method and is destroyed when the application is shut down."
+msgstr ""
 
 #. type: Plain text
 #: _guides/scheduler-reference.adoc
@@ -547,11 +554,9 @@ msgstr "以编程方式添加的作业也可以删除。"
 msgid "By default, the scheduler is not started unless a `@Scheduled` business method is found. You may need to force the start of the scheduler for \"pure\" programmatic scheduling via `quarkus.scheduler.start-mode=forced`."
 msgstr "默认情况下，除非找到一个 `@Scheduled` 的业务方法，否则调度器不会被启动。你可能需要为 \"纯 \"程序化调度强制启动调度器。请参见 link:quartz.html#quartz-configuration-reference[Quartz配置参考] 。"
 
-#. type: Plain text
 #: _guides/scheduler-reference.adoc
-#, fuzzy
-msgid "If the xref:quartz.adoc[Quartz extension] is present then the Quartz API can be also used to schedule a job programmatically."
-msgstr "如果存在 xref:quartz.adoc[Quartz 扩展] ，则还可以使用 Quartz API 以编程方式安排作业。"
+msgid "If the xref:quartz.adoc[Quartz extension] is present and the DB store type is used then it's not possible to pass a task instance to the job definition and a task class must be used instead. The Quartz API can be also used to schedule a job programmatically."
+msgstr ""
 
 #. type: Title ==
 #: _guides/scheduler-reference.adoc
@@ -597,11 +602,9 @@ msgstr "如果存在 xref:smallrye-metrics.adoc[SmallRye Metrics 扩展] ，则�
 msgid "OpenTelemetry Tracing"
 msgstr "开放式遥测追踪"
 
-#. type: Plain text
 #: _guides/scheduler-reference.adoc
-#, fuzzy
-msgid "If `quarkus.scheduler.tracing.enabled` is set to `true` and the xref:opentelemetry.adoc[OpenTelemetry extension] is present then the `@io.opentelemetry.instrumentation.annotations.WithSpan` annotation is added automatically to every `@Scheduled` method. As a result, each execution of this method has a new `io.opentelemetry.api.trace.Span` associated."
-msgstr "如果 `quarkus.scheduler.tracing.enabled` 被设置为 `true` ，并且存在 link:opentelemetry.html[OpenTelemetry扩展] ，那么 `@io.opentelemetry.instrumentation.annotations.WithSpan` 注释将自动添加到每个 `@Scheduled` 方法中。因此，这个方法的每次执行都有一个新的 `io.opentelemetry.api.trace.Span` 。"
+msgid "If `quarkus.scheduler.tracing.enabled` is set to `true` and the xref:opentelemetry.adoc[OpenTelemetry extension] is present then every job execution, either defined with the `@Scheduled` annotation or scheduled programmatically, automatically creates a span named after the job's xref:identity[Identity]."
+msgstr ""
 
 #. type: Title ==
 #: _guides/scheduler-reference.adoc

@@ -2085,12 +2085,20 @@ msgid "Arguments"
 msgstr "碎片"
 
 #: _guides/qute-reference.adoc
-#, fuzzy
 msgid ""
-"Named arguments can be accessed directly in a tag template.\n"
-"The first argument does not have to define a name but can be accessed using the `it` alias.\n"
-"Furthermore, arguments metadata are accessible in a tag using the `_args` alias."
-msgstr "已命名参数可在标签模板中直接访问。第一个参数无需定义名称，但可以使用 `it` 别名访问。此外，还可以使用 `_args` 别名访问标签中的参数元数据。"
+"Named arguments can be accessed directly in the tag template.\n"
+"However, the first argument does not need to define a name and it can be accessed using the `it` alias.\n"
+"Furthermore, if an argument does not have a name defined and the value is a single identifier, such as `foo`, then the name is defaulted to the value identifier, e.g. `{#myTag foo /}` becomes `{#myTag foo=foo /}`.\n"
+"In other words, the argument value `foo` is resolved and can be accessed using `{foo}` in the tag template."
+msgstr ""
+
+#: _guides/qute-reference.adoc
+msgid "If an argument does not have a name and the value is a single word string literal , such as `\"foo\"`, then the name is defaulted and quotation marks are removed, e.g. `{#myTag \"foo\" /}` becomes `{#myTag foo=\"foo\" /}`."
+msgstr ""
+
+#: _guides/qute-reference.adoc
+msgid "`io.quarkus.qute.UserTagSectionHelper.Arguments` metadata are accessible in a tag using the `_args` alias."
+msgstr ""
 
 #. type: Plain text
 #: _guides/qute-reference.adoc
@@ -2098,17 +2106,13 @@ msgstr "已命名参数可在标签模板中直接访问。第一个参数无需
 msgid "`_args.size` - returns the actual number of arguments passed to a tag"
 msgstr " `size` :返回一个地图中的键值映射的数量"
 
-#. type: Plain text
 #: _guides/qute-reference.adoc
-#, fuzzy
-msgid "`_args.empty` - returns `true` if no arguments are passed"
-msgstr "`_args.empty` - 如果没有传递参数，则返回 `true` "
+msgid "`_args.empty`/`_args.isEmpty` - returns `true` if no arguments are passed"
+msgstr ""
 
-#. type: Plain text
 #: _guides/qute-reference.adoc
-#, fuzzy
-msgid "`_args.get(String name)` - returns the argument value of the given name"
-msgstr "`_args.get(String name)` - 返回给定名称的参数值"
+msgid "`_args.get(String name)` - returns the argument value of the given name or `null`"
+msgstr ""
 
 #. type: Plain text
 #: _guides/qute-reference.adoc
@@ -2116,23 +2120,31 @@ msgstr "`_args.get(String name)` - 返回给定名称的参数值"
 msgid "`_args.filter(String...)` - returns the arguments matching the given names"
 msgstr "`_args.filter(String…​)` - 返回与给定名称匹配的参数"
 
+#: _guides/qute-reference.adoc
+msgid "`_args.filterIdenticalKeyValue` - returns the arguments with the name equal to the value; typically `foo` from `{#test foo=\"foo\" bar=true}` or `{#test \"foo\" bar=true /}`"
+msgstr ""
+
 #. type: Plain text
 #: _guides/qute-reference.adoc
 #, fuzzy
 msgid "`_args.skip(String...)` - returns only the arguments that do not match the given names"
 msgstr "`_args.skip(String…​)` - 只返回与给定名称不匹配的参数"
 
-#. type: Plain text
 #: _guides/qute-reference.adoc
-#, fuzzy
-msgid "`_args.asHtmlAttributes` - renders the arguments as HTML attributes; e.g. `foo=\"true\" bar=\"false\"` (the arguments are sorted by name in alphabetical order)"
-msgstr "`_args.asHtmlAttributes` - 将参数显示为 HTML 属性；例如 （参数按名称字母顺序排序） `foo=\"true\" bar=\"false\"` "
+msgid "`_args.skipIdenticalKeyValue` - returns only the arguments with the name not equal to the value; typically `bar` from `{#test foo=\"foo\" bar=true /}`"
+msgstr ""
 
-#. type: Plain text
 #: _guides/qute-reference.adoc
-#, fuzzy
-msgid "`_args` is also iterable: `{#each _args}{it.key}={it.value}{/each}`."
-msgstr "`_args` 也是可迭代的： . `{#each _args}{it.key}={it.value}{/each}`"
+msgid "`_args.skipIt` - returns all arguments except for the first unnamed argument; typically `bar` from `{#test foo bar=true /}`"
+msgstr ""
+
+#: _guides/qute-reference.adoc
+msgid "`_args.asHtmlAttributes` - renders the arguments as HTML attributes; e.g. `foo=\"true\" readonly=\"readonly\"`; the arguments are sorted by name in alphabetical order and the `'`, `\"`, `<`, `>`, `&` characters are escaped"
+msgstr ""
+
+#: _guides/qute-reference.adoc
+msgid "`_args` is also iterable of `java.util.Map.Entry`: `{#each _args}{it.key}={it.value}{/each}`."
+msgstr ""
 
 #. type: Plain text
 #: _guides/qute-reference.adoc
@@ -4045,11 +4057,20 @@ msgid "Global Variables"
 msgstr "全局变量"
 
 #: _guides/qute-reference.adoc
-#, fuzzy
-msgid ""
-"The `io.quarkus.qute.TemplateGlobal` annotation can be used to denote static fields and methods that supply _global variables_ which are accessible in any template.\n"
-"Internally, each global variable is added to the data map of any `TemplateInstance` via the `TemplateInstance#data(String, Object)` method."
-msgstr "`io.quarkus.qute.TemplateGlobal` 注解可用于表示提供 _全局变量_ 的静态字段和方法，这些全局变量可在任何模板中访问。在内部，每个全局变量都会通过 `TemplateInstance#data(String, Object)` 方法添加到任何 `TemplateInstance` 的数据映射中。"
+msgid "The `io.quarkus.qute.TemplateGlobal` annotation can be used to denote static fields and methods that supply _global variables_ which are accessible in any template."
+msgstr ""
+
+#: _guides/qute-reference.adoc
+msgid "Global variables are:"
+msgstr ""
+
+#: _guides/qute-reference.adoc
+msgid "added to the data map of any `TemplateInstance` during initialization,"
+msgstr ""
+
+#: _guides/qute-reference.adoc
+msgid "accessible with the `global:` namespace."
+msgstr ""
 
 #. type: Block title
 #: _guides/qute-reference.adoc
@@ -4081,11 +4102,9 @@ msgstr "一个访问全局变量的模板"
 msgid "`currentUser` resolves to `Globals#user()`."
 msgstr " `currentUser` 解决了 。 `Globals#user()` "
 
-#. type: Plain text
 #: _guides/qute-reference.adoc
-#, fuzzy
-msgid "`age` resolves to `Globals#age`."
-msgstr " `age` 解决了 。 `Globals#age` "
+msgid "The `global:` namespace is used; `age` resolves to `Globals#age`."
+msgstr ""
 
 #. type: Plain text
 #: _guides/qute-reference.adoc
@@ -4112,12 +4131,11 @@ msgid "Resolving Conflicts"
 msgstr "解决冲突"
 
 #: _guides/qute-reference.adoc
-#, fuzzy
 msgid ""
-"Global variables may conflict with regular data objects.\n"
+"If not accessed via the `global:` namespace the global variables may conflict with regular data objects.\n"
 "xref:typesafe_templates[Type-safe templates] override the global variables automatically.\n"
 "For example, the following definition overrides the global variable supplied by the `Globals#user()` method:"
-msgstr "全局变量可能会与常规数据对象发生冲突。 xref:typesafe_templates[类型安全模板] 会自动覆盖全局变量。例如，下面的定义覆盖了 `Globals#user()` 方法提供的全局变量："
+msgstr ""
 
 #. type: Block title
 #: _guides/qute-reference.adoc
@@ -4230,11 +4248,13 @@ msgstr "如果您想在 Jakarta REST 应用程序中使用 Qute，那么根据�
 msgid "If instead you are using RESTEasy Reactive via the `quarkus-resteasy-reactive` extension, then in your `pom.xml` file, add:"
 msgstr "如果你是通过 `quarkus-resteasy-reactive` 扩展使用RESTEasy Reactive，那么在你的 `pom.xml` 文件中，添加:"
 
-#. type: Plain text
 #: _guides/qute-reference.adoc
-#, fuzzy
-msgid "Both of these extensions register a special `ContainerResponseFilter` implementation which enables resource methods to return a `TemplateInstance`, thus freeing users of having to take care of all necessary internal steps."
-msgstr "这两个扩展都注册了一个特殊的 `ContainerResponseFilter` 实现，使资源方法能够返回一个 `TemplateInstance` ，从而使用户不必照顾到所有必要的内部步骤。"
+msgid "Both of these extensions register a special response filter which enables resource methods to return a `TemplateInstance`, thus freeing users of having to take care of all necessary internal steps."
+msgstr ""
+
+#: _guides/qute-reference.adoc
+msgid "If using RESTEasy Reactive, a resource method that returns `TemplateInstance` is considered non-blocking. You need to annotate the method with `io.smallrye.common.annotation.Blocking` in order to mark the method as blocking. For example if it's also annotated with `@RunOnVirtualThread`."
+msgstr ""
 
 #. type: Plain text
 #: _guides/qute-reference.adoc

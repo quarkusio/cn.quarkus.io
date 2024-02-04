@@ -23,12 +23,16 @@ msgid "Authorization of web endpoints"
 msgstr "网络端点的授权"
 
 #: _guides/security-authorize-web-endpoints-reference.adoc
-#, fuzzy
 msgid ""
-"Quarkus has an integrated pluggable web security layer.\n"
-"If security is enabled, all HTTP requests have a permission check performed to verify that they are allowed to continue.\n"
-"Therefore, you cannot use `@PermitAll` to open a path if the path is blocked by the `quarkus.http.auth.` configuration."
-msgstr "Quarkus 集成了可插拔的网络安全层。如果启用了安全层，所有 HTTP 请求都要进行权限检查，以确认是否允许继续。因此，如果 `quarkus.http.auth.` 配置阻止了路径，则无法使用 `@PermitAll` 打开路径。"
+"Quarkus incorporates a pluggable web security layer.\n"
+"When security is active, the system performs a permission check on all HTTP requests to determine if they should proceed."
+msgstr ""
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid ""
+"Using `@PermitAll` will not open a path if the path is restricted by the `quarkus.http.auth.` configuration.\n"
+"To ensure specific paths are accessible, appropriate configurations must be made within the Quarkus security settings."
+msgstr ""
 
 #. type: delimited block =
 #: _guides/security-authorize-web-endpoints-reference.adoc
@@ -50,11 +54,9 @@ msgstr "授权基于安全提供商提供的用户角色。要定制这些角色
 msgid "Authorization using configuration"
 msgstr "使用配置进行授权"
 
-#. type: Plain text
 #: _guides/security-authorize-web-endpoints-reference.adoc
-#, fuzzy
-msgid "Permissions are defined in the Quarkus configuration using permission sets, each specifying a policy for access control."
-msgstr "权限在Quarkus配置中使用权限集来定义，每个权限集指定一个访问控制的策略。"
+msgid "Permissions are defined in the Quarkus configuration by permission sets, each specifying a policy for access control."
+msgstr ""
 
 #. type: Block title
 #: _guides/security-authorize-web-endpoints-reference.adoc
@@ -161,6 +163,12 @@ msgid ""
 "`roles1` is an example name; you can call the permission sets whatever you want."
 msgstr "该权限集引用先前定义的策略。 `roles1` 是一个示例名称，你可以任意称呼权限集。"
 
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid ""
+"The exact path `/forbidden` in the example will not secure the `/forbidden/` path.\n"
+"It is necessary to add a new exact path for the `/forbidden/` path to ensure proper security coverage."
+msgstr ""
+
 #. type: Title ===
 #: _guides/security-authorize-web-endpoints-reference.adoc
 #, fuzzy, no-wrap
@@ -213,6 +221,12 @@ msgid ""
 "Otherwise, it queries for an exact match and only matches that specific path:"
 msgstr "权限集还可以逗号分隔的列表形式指定路径和方法。如果路径以 `*` 通配符结尾，它生成的查询会匹配所有子路径。否则，它将查询精确匹配，并只匹配该特定路径："
 
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid ""
+"The `$$*$$` wildcard at the end of the path matches zero or more path segments, but never any word starting from the `/public` path.\n"
+"For that reason, a path like `/public-info` is not matched by this pattern."
+msgstr ""
+
 #. type: Title ===
 #: _guides/security-authorize-web-endpoints-reference.adoc
 #, fuzzy, no-wrap
@@ -253,11 +267,68 @@ msgid ""
 msgstr "考虑到前面的权限集， `GET /public/forbidden-folder/foo` 将同时匹配两个权限集的路径。但是，由于较长的路径与 `deny1` 权限集的路径相匹配，因此选择了 `deny1` ，请求被拒绝。"
 
 #: _guides/security-authorize-web-endpoints-reference.adoc
-#, fuzzy
+msgid "Subpath permissions precede root path permissions, as the `deny1` versus `permit1` permission example previously illustrated."
+msgstr ""
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid "This rule is further exemplified by a scenario where subpath permission allows access to a public resource while the root path permission necessitates authorization."
+msgstr ""
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid "Matching multiple sub-paths: longest path to the `*` wildcard wins"
+msgstr ""
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
 msgid ""
-"Subpath permissions always win against the root path permissions, as explained in the preceding `deny1` versus `permit1` permission example.\n"
-"Here is another example showing subpath permission allowing a public resource access with the root path permission requiring the authorization:"
-msgstr "子路径权限总是胜过根路径权限，这在前面的 `deny1` 与 `permit1` 权限对比示例中已有解释。下面是另一个例子，显示子路径权限允许访问公共资源，而根路径权限需要授权："
+"Previous examples demonstrated matching all sub-paths when a path concludes with the `$$*$$`\n"
+"wildcard."
+msgstr ""
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid ""
+"This wildcard also applies in the middle of a path, representing a single path segment.\n"
+"It cannot be mixed with other path segment characters; thus, path separators always enclose the `$$*$$` wildcard, as seen in the `/public/`$$*$$`/about-us` path."
+msgstr ""
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid ""
+"When several path patterns correspond to the same request path, the system selects the longest sub-path leading to the `$$*$$` wildcard.\n"
+"In this context, every path segment character is more specific than the `$$*$$`\n"
+"wildcard."
+msgstr ""
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid "Here is a simple example:"
+msgstr ""
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid "Request paths like `/api/product/detail` can only be accessed by authenticated users."
+msgstr ""
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid "The path `/api/public-product/detail` is more specific, therefore accessible by anyone."
+msgstr ""
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid ""
+"All paths secured with the authorization using configuration should be tested.\n"
+"Writing path patterns with multiple wildcards can be cumbersome.\n"
+"Please make sure paths are authorized as you intended."
+msgstr ""
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid "In the following example, paths are ordered from the most specific to the least specific one:"
+msgstr ""
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid "Request path `/one/two/three/four/five` matches ordered from the most specific to the least specific path"
+msgstr ""
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid ""
+"The `$$*$$` wildcard at the end of the path matches zero or more path segments.\n"
+"The `$$*$$` wildcard placed anywhere else matches exactly one path segment."
+msgstr ""
 
 #. type: Title ===
 #: _guides/security-authorize-web-endpoints-reference.adoc
@@ -272,17 +343,13 @@ msgid ""
 "In this instance, the permission sets without methods only come into effect if the request method does not match permission sets with the method specification."
 msgstr "当一个路径注册了多个权限集时，明确指定了与请求相匹配的 HTTP 方法的权限集优先。在这种情况下，不含方法的权限集只有在请求方法与指定方法的权限集不匹配时才会生效。"
 
-#. type: delimited block =
 #: _guides/security-authorize-web-endpoints-reference.adoc
-#, fuzzy
-msgid "Given the preceding permission set, `GET /public/foo` would match the paths of both permission sets, but because it fits the explicit method of the `permit1` permission set, `permit1` is chosen, and the request is accepted."
-msgstr "鉴于上述权限集， `GET /public/foo` 将符合两个权限集的路径，但由于它符合 `permit1` 权限集的明确方法， `permit1` 被选中，请求被接受。"
+msgid "The preceding permission set shows that `GET /public/foo` matches the paths of both permission sets.However, it specifically aligns with the explicit method of the `permit1` permission set.Therefore, `permit1` is selected, and the request is accepted."
+msgstr ""
 
-#. type: delimited block =
 #: _guides/security-authorize-web-endpoints-reference.adoc
-#, fuzzy
-msgid "Conversely, `PUT /public/foo` would not match the method permissions of `permit1`, so `deny1` would be activated and reject the request."
-msgstr " `PUT /public/foo` , 另一方面，将不符合 `permit1` 的方法权限，所以 `deny1` 将被激活并拒绝请求。"
+msgid "In contrast, `PUT /public/foo` does not match the method permissions of `permit1`. As a result, `deny1` is activated, leading to the rejection of the request."
+msgstr ""
 
 #. type: Title ===
 #: _guides/security-authorize-web-endpoints-reference.adoc
@@ -401,12 +468,14 @@ msgid "This configuration is equivalent to the following:"
 msgstr "该配置相当于以下内容："
 
 #: _guides/security-authorize-web-endpoints-reference.adoc
-#, fuzzy
 msgid ""
 "A leading slash changes how the configured permission path is interpreted.\n"
-"The configured URL is used as-is, and paths are not adjusted if the value of `quarkus.http.root-path` changes.\n"
-"For example:"
-msgstr "前导斜线会改变配置权限路径的解释方式。配置的 URL 将按原样使用，如果 `quarkus.http.root-path` 的值发生变化，也不会调整路径。例如"
+"The configured URL is used as-is, and paths are not adjusted if the value of `quarkus.http.root-path` changes."
+msgstr ""
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid "Example:"
+msgstr ""
 
 #. type: Plain text
 #: _guides/security-authorize-web-endpoints-reference.adoc
@@ -419,6 +488,62 @@ msgstr "此配置将只影响从固定/静态URL `/public` 提供的资源，如
 #, fuzzy
 msgid "For more information, see link:https://quarkus.io/blog/path-resolution-in-quarkus/[Path Resolution in Quarkus]."
 msgstr "更多信息见 link:https://quarkus.io/blog/path-resolution-in-quarkus/[Quarkus中的路径解析] 。"
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid "Map `SecurityIdentity` roles"
+msgstr ""
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid ""
+"Winning role-based policy can map the `SecurityIdentity` roles to the deployment-specific roles.\n"
+"These roles are then applicable for endpoint authorization by using the @RolesAllowed annotation."
+msgstr ""
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid "Map the `admin` role to `Admin1` role. The `SecurityIdentity` will have both `admin` and `Admin1` roles."
+msgstr ""
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid "Shared permission checks"
+msgstr ""
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid ""
+"One important rule for unshared permission checks is that only one path match is applied, the most specific one.\n"
+"Naturally you can specify as many permissions with the same winning path as you want and they will all be applied.\n"
+"However, there can be permission checks you want to apply to many paths without repeating them over and over again.\n"
+"That's where shared permission checks come in, they are always applied when the permission path is matched."
+msgstr ""
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid "Example of custom named HttpSecurityPolicy applied on every HTTP request"
+msgstr ""
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid "xref:custom-http-security-policy[Custom HttpSecurityPolicy] will be also applied on the `/admin/1` path together with the `admin-policy1` policy."
+msgstr ""
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid ""
+"Configuring many shared permission checks is less effective than configuring unshared ones.\n"
+"Use shared permissions to complement unshared permission checks like in the example below."
+msgstr ""
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid "Map `SecurityIdentity` roles with shared permission"
+msgstr ""
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid "Role `root` will be able to access `/secured/user/*` and `/secured/admin/*` paths."
+msgstr ""
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid "The `/secured/*` path can only be accessed by authenticated users. This way, you have secured the `/secured/all` path and so on."
+msgstr ""
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid "Shared permissions are always applied before unshared ones, therefore a `SecurityIdentity` with the `root` role will have the `user` role as well."
+msgstr ""
 
 #. type: Title ==
 #: _guides/security-authorize-web-endpoints-reference.adoc
@@ -478,14 +603,12 @@ msgstr "指定所有安全角色都允许调用指定的方法。"
 msgid "@RolesAllowed"
 msgstr "@RolesAllowed"
 
-#. type: Table
 #: _guides/security-authorize-web-endpoints-reference.adoc
-#, fuzzy, no-wrap
 msgid ""
-"Specifies the list of security roles permitted to access methods in an application.\n"
+"Specifies the list of security roles allowed to access methods in an application.\n"
 "\n"
 "As an equivalent to `@RolesAllowed(\"**\")`, {project-name} also provides the `io.quarkus.security.Authenticated` annotation that permits any authenticated user to access the resource."
-msgstr "指定允许访问应用程序中的方法的安全角色列表。"
+msgstr ""
 
 #. type: Plain text
 #: _guides/security-authorize-web-endpoints-reference.adoc
@@ -632,11 +755,9 @@ msgid ""
 "In development mode, it allows any authenticated user."
 msgstr "在生产模式下，该 `/subject/secured` 端点要求认证用户具有 `User` 角色。在开发模式下，它允许任何通过身份验证的用户使用。"
 
-#. type: Plain text
 #: _guides/security-authorize-web-endpoints-reference.adoc
-#, fuzzy
-msgid "Property expression `all-roles` will be treated as a collection type `List`, therefore the endpoint will be accessible for roles `Administrator`, `Software`, `Tester` and `User`."
-msgstr "属性表达式 `all-roles` 将被视为集合类型 `List` ，因此，角色 `Administrator` 、 `Software` 、 `Tester` 和 `User` 都可以访问端点。"
+msgid "Property expression `all-roles` will be treated as a collection type `List`, therefore, the endpoint will be accessible for roles `Administrator`, `Software`, `Tester` and `User`."
+msgstr ""
 
 #. type: Title ===
 #: _guides/security-authorize-web-endpoints-reference.adoc
@@ -731,12 +852,11 @@ msgid ""
 msgstr "角色策略 `role-policy1` 只允许通过身份验证的请求访问 `/crud/modify` 和 `/crud/id` 子路径。有关路径匹配算法的更多信息，请参阅本指南稍后部分的 \" xref:matching-multiple-paths[匹配多条路径：最长路径获胜] \"。"
 
 #: _guides/security-authorize-web-endpoints-reference.adoc
-#, fuzzy
 msgid ""
-"You can also specify a custom implementation of the `java.security.Permission` class.\n"
+"You can specify a custom implementation of the `java.security.Permission` class.\n"
 "Your custom class must define exactly one constructor that accepts the permission name and optionally some actions, for example, `String` array.\n"
 "In this scenario, the permission `list` is added to the `SecurityIdentity` instance as `new CustomPermission(\"list\")`."
-msgstr "您也可以指定 `java.security.Permission` 类的自定义实现。自定义类必须定义一个构造函数，该构造函数接受权限名称和一些可选操作，例如 `String` 数组。在这种情况下，权限 `list` 会以 `new CustomPermission(\"list\")` 的形式添加到 `SecurityIdentity` 实例中。"
+msgstr ""
 
 #: _guides/security-authorize-web-endpoints-reference.adoc
 #, fuzzy
@@ -819,12 +939,17 @@ msgid ""
 msgstr "授予 `media-library` 权限，允许执行 `read` 、 `write` 和 `list` 操作。由于 `MediaLibrary` 是 `TvLibrary` 类的父类，因此也允许具有 `admin` 角色的用户修改 `TvLibrary` 。"
 
 #: _guides/security-authorize-web-endpoints-reference.adoc
-#, fuzzy
 msgid ""
-"The examples provided so far use role-to-permission mapping.\n"
-"You can also add permissions to the `SecurityIdentity` instance programmatically.\n"
+"The `/library/*` path can be tested from a Keycloak provider Dev UI page, because the user `alice` which is created\n"
+"automatically by the xref:security-openid-connect-dev-services.adoc[Dev Services for Keycloak] has an `admin` role."
+msgstr ""
+
+#: _guides/security-authorize-web-endpoints-reference.adoc
+msgid ""
+"The examples provided so far demonstrate role-to-permission mapping.\n"
+"It is also possible to programmatically add permissions to the `SecurityIdentity` instance.\n"
 "In the following example, xref:security-customization.adoc#security-identity-customization[`SecurityIdentity` is customized] to add the same permission that was previously granted with the HTTP role-based policy."
-msgstr "目前提供的示例使用的是角色到权限映射。您也可以通过编程向 `SecurityIdentity` 实例添加权限。在下面的示例中， xref:security-customization.adoc#security-identity-customization[SecurityIdentity 被定制] 为添加与之前通过基于 HTTP 角色的策略授予的相同权限。"
+msgstr ""
 
 #. type: Block title
 #: _guides/security-authorize-web-endpoints-reference.adoc
@@ -881,11 +1006,9 @@ msgstr "xref:security-authentication-mechanisms.adoc#other-supported-authenticat
 msgid "xref:security-basic-authentication.adoc[Basic authentication]"
 msgstr "link:security-basic-authentication.html[基本认证]"
 
-#. type: Plain text
 #: _guides/security-authorize-web-endpoints-reference.adoc
-#, fuzzy
-msgid "xref:security-getting-started-tutorial.adoc[Getting Started with Security using Basic authentication and Jakarta Persistence]"
-msgstr "link:security-basic-authentication-tutorial.html[用基本认证和Jakarta持久性保护Quarkus应用程序]"
+msgid "xref:security-getting-started-tutorial.adoc[Getting started with Security by using Basic authentication and Jakarta Persistence]"
+msgstr ""
 
 #. type: Plain text
 #: _guides/security-authorize-web-endpoints-reference.adoc

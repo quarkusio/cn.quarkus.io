@@ -576,11 +576,13 @@ msgid ""
 "If you plan to make a native executable, use the existing JDBC Quarkus extensions, or contribute one for your driver."
 msgstr "在没有扩展的情况下，驱动程序可以在任何以 JVM 模式运行的 Quarkus 应用程序中正常工作。但是，在将应用程序编译为本地可执行文件时，驱动程序不太可能正常工作。如果你打算制作本地可执行文件，请使用现有的 JDBC Quarkus 扩展，或者为你的驱动程序贡献一个扩展。"
 
-#. type: Block title
 #: _guides/datasource.adoc
-#, fuzzy, no-wrap
-msgid "An example with the OpenTracing driver:"
-msgstr "下面是你如何使用OpenTracing驱动程序。"
+msgid "OpenTracing has been deprecated in favor of OpenTelemetry. For tracing information, please check the related section about xref:datasource-tracing[Datasource tracing], bellow."
+msgstr ""
+
+#: _guides/datasource.adoc
+msgid "A custom driver definition example with the legacy OpenTracing driver:"
+msgstr ""
 
 #. type: Block title
 #: _guides/datasource.adoc
@@ -742,11 +744,9 @@ msgid ""
 "For each persistence unit, point to the datasource of your choice."
 msgstr "Hibernate ORM 扩展支持使用配置属性来定义 xref:hibernate-orm.adoc#multiple-persistence-units[持久化单元] 。对于每个持久化单元，都要指向你所选择的数据源。"
 
-#. type: Plain text
 #: _guides/datasource.adoc
-#, fuzzy
-msgid "Defining multiple datasources works like defining a single datasource, with one important change - you have to specify a name (configuration key) for each datasource."
-msgstr "定义多个数据源的方法与定义单个数据源的方法完全相同，但有一个重要的变化：你定义了一个名称。"
+msgid "Defining multiple datasources works like defining a single datasource, with one important change - you have to specify a name (configuration property) for each datasource."
+msgstr ""
 
 #. type: Plain text
 #: _guides/datasource.adoc
@@ -779,11 +779,10 @@ msgid "Each with its configuration:"
 msgstr "每个人都有自己的配置。"
 
 #: _guides/datasource.adoc
-#, fuzzy
 msgid ""
-"Notice there is an extra section in the configuration key.\n"
+"Notice there is an extra section in the configuration property.\n"
 "The syntax is as follows: `quarkus.datasource.[optional name.][datasource property]`."
-msgstr "请注意，配置密钥中有一个额外的部分。语法如下 `quarkus.datasource.[optional name.][datasource property]` ."
+msgstr ""
 
 #: _guides/datasource.adoc
 #, fuzzy
@@ -809,6 +808,69 @@ msgstr "当使用多个数据源时，每个 `DataSource` ，也有以数据源�
 #, fuzzy
 msgid "By using the properties mentioned in the previous section to configure three different datasources, inject each one of them as follows:"
 msgstr "通过使用上一节中提到的属性来配置三个不同的数据源，按以下方式分别注入："
+
+#: _guides/datasource.adoc
+msgid "Activate/deactivate datasources"
+msgstr ""
+
+#: _guides/datasource.adoc
+msgid ""
+"If a datasource is configured at build time,\n"
+"by default it is active at runtime,\n"
+"that is Quarkus will start the corresponding JDBC connection pool or reactive client on application startup."
+msgstr ""
+
+#: _guides/datasource.adoc
+msgid ""
+"To deactivate a datasource at runtime, set `quarkus.datasource[.optional name].active` to `false`.\n"
+"Then Quarkus will not start the corresponding JDBC connection pool or reactive client on application startup.\n"
+"Any attempt to use the corresponding datasource at runtime will fail with a clear error message."
+msgstr ""
+
+#: _guides/datasource.adoc
+msgid ""
+"This is in particular useful when you want an application to be able\n"
+"to use one of a pre-determined set of datasources at runtime."
+msgstr ""
+
+#: _guides/datasource.adoc
+msgid ""
+"If another Quarkus extension relies on an inactive datasource,\n"
+"that extension might fail to start."
+msgstr ""
+
+#: _guides/datasource.adoc
+msgid ""
+"In such case, you will need to deactivate that other extension too.\n"
+"For example see xref:hibernate-orm.adoc#persistence-unit-active[here for Hibernate ORM]."
+msgstr ""
+
+#: _guides/datasource.adoc
+msgid "For example, with the following configuration:"
+msgstr ""
+
+#: _guides/datasource.adoc
+msgid ""
+"Setting `quarkus.datasource.\"pg\".active=true` xref:config-reference.adoc#configuration-sources[at runtime]\n"
+"will make only the PostgreSQL datasource available,\n"
+"and setting `quarkus.datasource.\"oracle\".active=true` at runtime\n"
+"will make only the Oracle datasource available."
+msgstr ""
+
+#: _guides/datasource.adoc
+msgid ""
+"xref:config-reference.adoc#custom-profiles[Custom configuration profiles] can help simplify such a setup.\n"
+"By appending the following profile-specific configuration to the one above,\n"
+"you can select a persistence unit/datasource at runtime simply by\n"
+"xref:config-reference.adoc#multiple-profiles[setting `quarkus.profile`]:\n"
+"`quarkus.profile=prod,pg` or `quarkus.profile=prod,oracle`."
+msgstr ""
+
+#: _guides/datasource.adoc
+msgid ""
+"It can also be useful to define a xref:cdi.adoc#ok-you-said-that-there-are-several-kinds-of-beans[CDI bean producer] redirecting to the currently active datasource,\n"
+"like this:"
+msgstr ""
 
 #. type: Title ==
 #: _guides/datasource.adoc
@@ -888,6 +950,22 @@ msgstr "相反，如果将 `quarkus.datasource.jdbc.enable-metrics` 设置为 `t
 #, fuzzy
 msgid "If the metrics collection for this datasource is disabled, all values result in zero."
 msgstr "如果这个数据源的指标收集被禁用，所有的值都会变成零。"
+
+#: _guides/datasource.adoc
+msgid "Datasource tracing"
+msgstr ""
+
+#: _guides/datasource.adoc
+msgid "To use tracing with a datasource, you need to add the xref:opentelemetry.adoc[`quarkus-opentelemetry`] extension to your project."
+msgstr ""
+
+#: _guides/datasource.adoc
+msgid "You don't need to declare a different driver because you need tracing. If you use a JDBC driver, you need to follow the instructions in the OpenTelemetry extension xref:opentelemetry.adoc#jdbc[here]."
+msgstr ""
+
+#: _guides/datasource.adoc
+msgid "Even with all the tracing infrastructure in place the datasource tracing is not enabled by default, and you need to enable it by setting this property:"
+msgstr ""
 
 #. type: Title ===
 #: _guides/datasource.adoc
