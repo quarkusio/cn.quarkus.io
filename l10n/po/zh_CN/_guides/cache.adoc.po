@@ -301,13 +301,12 @@ msgid "Loads a method result from the cache without executing the method body wh
 msgstr "尽可能地从缓存中加载方法结果，而不执行方法主体。"
 
 #: _guides/cache.adoc
-#, fuzzy
 msgid ""
 "When a method annotated with `@CacheResult` is invoked, Quarkus will compute a cache key and use it to check in the cache whether the method has been already invoked.\n"
-"See the xref:cache-keys-building-logic[Cache keys building logic] section of this guide to learn how the cache key is computed.\n"
+"See the <<cache-keys-building-logic>> section of this guide to learn how the cache key is computed.\n"
 "If a value is found in the cache, it is returned and the annotated method is never actually executed.\n"
 "If no value is found, the annotated method is invoked and the returned value is stored in the cache using the computed key."
-msgstr "当一个注释为 `@CacheResult` 的方法被调用时，Quarkus 会计算一个缓存键，并用它在缓存中检查该方法是否已被调用。请参阅本指南的 \"缓存键 xref:cache-keys-building-logic[构建逻辑] \"部分，了解缓存键是如何计算的。如果在缓存中找到值，则会返回该值，而注释方法不会被实际执行。如果没有找到值，则会调用注释方法，并使用计算出的键将返回值存储到缓存中。"
+msgstr ""
 
 #: _guides/cache.adoc
 #, fuzzy
@@ -327,11 +326,10 @@ msgid "This annotation cannot be used on a method returning `void`."
 msgstr "该注释不能用于返回 `void` 的方法。"
 
 #: _guides/cache.adoc
-#, fuzzy
 msgid ""
 "Quarkus is able to also cache `null` values unlike the underlying Caffeine provider.\n"
-"See xref:negative-cache[more on this topic below]."
-msgstr "与底层 Caffeine 提供商不同，Quarkus 还能缓存 `null` 值。 xref:negative-cache[有关此主题的更多] 信息，请参阅 xref:negative-cache[下文] 。"
+"See <<negative-cache,more on this topic below>>."
+msgstr ""
 
 #. type: Title ===
 #: _guides/cache.adoc
@@ -346,12 +344,11 @@ msgid "Removes an entry from the cache."
 msgstr "从缓存中删除一个条目。"
 
 #: _guides/cache.adoc
-#, fuzzy
 msgid ""
 "When a method annotated with `@CacheInvalidate` is invoked, Quarkus will compute a cache key and use it to try to remove an existing entry from the cache.\n"
-"See the xref:cache-keys-building-logic[Cache keys building logic] section of this guide to learn how the cache key is computed.\n"
+"See the <<cache-keys-building-logic>> section of this guide to learn how the cache key is computed.\n"
 "If the key does not identify any cache entry, nothing will happen."
-msgstr "当调用注释为 `@CacheInvalidate` 的方法时，Quarkus 将计算一个缓存密钥，并使用它来尝试从缓存中移除现有条目。请参阅本指南的 \" xref:cache-keys-building-logic[缓存键构建逻辑] \"部分，了解缓存键是如何计算的。如果缓存键无法识别任何缓存条目，则不会发生任何事情。"
+msgstr ""
 
 #. type: Title ===
 #: _guides/cache.adoc
@@ -476,12 +473,18 @@ msgid ""
 msgstr "您可能希望在缓存键中包含一个方法的多个参数。这可以通过实现 `io.quarkus.cache.CacheKeyGenerator` 接口，并在 `@CacheResult` 或 `@CacheInvalidate` 注释的 `keyGenerator` 字段中声明该实现来实现。"
 
 #: _guides/cache.adoc
-#, fuzzy
 msgid ""
-"If a CDI scope is declared on a key generator class and if that class has a default qualifier (no qualifier annotation or `@jakarta.enterprise.inject.Default`), then the key generator will be injected as a CDI bean during the cache key computation.\n"
-"Otherwise, the key generator will be instantiated using its default constructor.\n"
-"All CDI scopes supported by Quarkus can be used on a key generator."
-msgstr "如果在密钥生成器类上声明了 CDI 作用域，且该类有默认限定符（无限定符注解或 `@jakarta.enterprise.inject.Default` ），那么在计算缓存密钥时，密钥生成器将作为 CDI Bean 注入。否则，密钥生成器将使用其默认构造函数实例化。Quarkus 支持的所有 CDI 作用域都可以在密钥生成器上使用。"
+"The class must either represent a CDI bean or declare a public no-args constructor.\n"
+"If it represents a CDI bean, then the key generator will be injected during the cache key computation.\n"
+"Otherwise, a new instance of the key generator will be created using its default constructor for each cache key computation."
+msgstr ""
+
+#: _guides/cache.adoc
+msgid ""
+"In case of CDI, there must be exactly one bean that has the class in its set of bean types, otherwise the build fails.\n"
+"The context associated with the scope of the bean must be active when the `CacheKeyGenerator#generate()` method is invoked.\n"
+"If the scope is `@Dependent` then the bean instance is destroyed when the `CacheKeyGenerator#generate()` method completes."
+msgstr ""
 
 #. type: Plain text
 #: _guides/cache.adoc
@@ -625,11 +628,10 @@ msgid "Building a programmatic cache key"
 msgstr "建立一个程序化的缓存密钥"
 
 #: _guides/cache.adoc
-#, fuzzy
 msgid ""
 "Before building a programmatic cache key, you need to know how cache keys are built by the annotations API when an annotated method is invoked.\n"
-"This is explained in the xref:cache-keys-building-logic[Cache keys building logic] section of this guide."
-msgstr "在构建编程式缓存键之前，您需要了解注释 API 在调用注释方法时是如何构建缓存键的。本指南的 \" xref:cache-keys-building-logic[缓存键构建逻辑] \"部分将对此进行说明。"
+"This is explained in the <<cache-keys-building-logic>> section of this guide."
+msgstr ""
 
 #. type: Plain text
 #: _guides/cache.adoc
@@ -771,11 +773,9 @@ msgstr " `bar` 缓存正在配置中。"
 msgid "Enabling Micrometer metrics"
 msgstr "启用测微仪指标"
 
-#. type: Plain text
 #: _guides/cache.adoc
-#, fuzzy
-msgid "Each cache declared using the xref:annotations-api[annotations caching API] can be monitored using Micrometer metrics."
-msgstr "使用 link:#annotations-api[注释缓存API] 声明的每个缓存都可以使用Micrometer指标进行监控。"
+msgid "Each cache declared using the <<#annotations-api,annotations caching API>> can be monitored using Micrometer metrics."
+msgstr ""
 
 #: _guides/cache.adoc
 #, fuzzy
