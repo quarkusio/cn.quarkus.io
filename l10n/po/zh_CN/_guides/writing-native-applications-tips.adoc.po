@@ -134,11 +134,12 @@ msgid "Using a configuration file"
 msgstr "使用配置文件"
 
 #: _guides/writing-native-applications-tips.adoc
-#, fuzzy
 msgid ""
 "If globs are not sufficiently precise for your use case and you need to rely on regular expressions, or if you prefer relying on the GraalVM infrastructure,\n"
-"you can also create a `resources-config.json` (the most common location is within `src/main/resources`) JSON file defining which resources should be included."
-msgstr "如果 globs 对于您的使用情况来说不够精确，需要依赖正则表达式，或者如果您更喜欢依赖 GraalVM 基础架构，也可以创建一个 `resources-config.json` （最常见的位置是 `src/main/resources` ）JSON 文件，定义哪些资源应被包含。"
+"you can also create a `resource-config.json` JSON file defining which resources should be included.\n"
+"This, and other native image configuration files, should be placed under the `src/main/resources/META-INF/native-image/<group-id>/<artifact-id>` folder.\n"
+"This way they will be automatically parsed by the native build, without additional configuration."
+msgstr ""
 
 #. type: delimited block =
 #: _guides/writing-native-applications-tips.adoc
@@ -146,11 +147,9 @@ msgstr "如果 globs 对于您的使用情况来说不够精确，需要依赖�
 msgid "Relying on the GraalVM infrastructure means that you are responsible for keeping the configuration file up to date as new Mandrel and GraalVM versions are released."
 msgstr "依赖 GraalVM 基础架构意味着，当新的 Mandrel 和 GraalVM 版本发布时，您需要负责保持配置文件的更新。"
 
-#. type: delimited block =
 #: _guides/writing-native-applications-tips.adoc
-#, fuzzy
-msgid "Please also note that the `resources-config.json` file will be overwritten by Quarkus if placed directly under `src/main/resources/META-INF/native-image/` as Quarkus generates its own configuration file in this directory."
-msgstr "还请注意，如果将 `resources-config.json` 文件直接放在 `src/main/resources/META-INF/native-image/` 下，Quarkus 将覆盖该文件，因为 Quarkus 会在该目录下生成自己的配置文件。"
+msgid "Please also note that the `resource-config.json` file will be overwritten by Quarkus if placed directly under `src/main/resources/META-INF/native-image/` as Quarkus generates its own configuration file in this directory."
+msgstr ""
 
 #. type: Plain text
 #: _guides/writing-native-applications-tips.adoc
@@ -169,44 +168,6 @@ msgstr "这些模式都是有效的Java重组函数。在这里，我们将所�
 #, fuzzy
 msgid "For more information about this topic, see the link:https://www.graalvm.org/{graalvm-docs-version}/reference-manual/native-image/dynamic-features/Resources/[GraalVM Accessing Resources in Native Image] guide."
 msgstr "你可以在 https://github.com/oracle/graal/blob/master/docs/reference-manual/native-image/Resources.md[GraalVM文档]中找到更多关于这个主题的信息。"
-
-#. type: Plain text
-#: _guides/writing-native-applications-tips.adoc
-msgid "The final order of business is to make the configuration file known to the `native-image` executable by adding the proper configuration to `application.properties`:"
-msgstr "最后一项工作是通过向 `application.properties` 添加适当的配置，使配置文件为 `native-image` 可执行文件所知："
-
-#: _guides/writing-native-applications-tips.adoc
-#, fuzzy
-msgid ""
-"Starting with Mandrel 23.1 and GraalVM for JDK 21, `-H:ResourceConfigurationFiles=resources-config.json` results in a warning being shown unless wrapped in `-H:+UnlockExperimentalVMOptions` and `-H:-UnlockExperimentalVMOptions`.\n"
-"The absence of these options will result in build failures in the future."
-msgstr "从 Mandrel 23.1 和 GraalVM for JDK 21 开始，除非使用 `-H:+UnlockExperimentalVMOptions` 和 `-H:-UnlockExperimentalVMOptions` 封装，否则 `-H:ResourceConfigurationFiles=resources-config.json` 会显示警告。缺少这些选项将导致今后的构建失败。"
-
-#: _guides/writing-native-applications-tips.adoc
-msgid ""
-"In the previous snippet we were able to simply use `resources-config.json` instead of specifying the entire path of the file simply because it was added to `src/main/resources`.\n"
-"If the file had been added to another directory, the proper file path would have had to be specified manually."
-msgstr "在前面的片段中，我们能够简单地使用 `resources-config.json` ，而不是指定文件的整个路径，只是因为它被添加到了 `src/main/resources` 。如果该文件被添加到了另一个目录，就必须手动指定适当的文件路径。"
-
-#. type: delimited block =
-#: _guides/writing-native-applications-tips.adoc
-msgid "Multiple options may be separated by a comma. For example, one could use:"
-msgstr "多个选项可以用逗号隔开。例如，可以使用："
-
-#. type: Plain text
-#: _guides/writing-native-applications-tips.adoc
-msgid "in order to ensure that various resources are included and additional reflection is registered."
-msgstr "以确保各种资源被包括在内，并注册了额外的反射。"
-
-#. type: delimited block =
-#: _guides/writing-native-applications-tips.adoc
-msgid "If for some reason adding the aforementioned configuration to `application.properties` is not desirable, it is possible to configure the build tool to effectively perform the same operation."
-msgstr "如果由于某种原因，将上述配置添加到 `application.properties` ，是不可取的，可以通过配置构建工具来有效地执行相同的操作。"
-
-#. type: delimited block =
-#: _guides/writing-native-applications-tips.adoc
-msgid "When using Maven, we could use the following configuration:"
-msgstr "使用Maven时，我们可以使用以下配置："
 
 #. type: Title ===
 #: _guides/writing-native-applications-tips.adoc
@@ -282,10 +243,9 @@ msgstr "在运用使用对象映射功能的第三方库（如Jackson或GSON）�
 msgid "You can also use a configuration file to register classes for reflection, if you prefer relying on the GraalVM infrastructure."
 msgstr "你可以使用一个配置文件来为反射注册类。"
 
-#. type: Plain text
 #: _guides/writing-native-applications-tips.adoc
-msgid "As an example, in order to register all methods of class `com.acme.MyClass` for reflection, we create `reflection-config.json` (the most common location is within `src/main/resources`)"
-msgstr "作为一个例子，为了注册类 `com.acme.MyClass` 的所有方法进行反射，我们创建 `reflection-config.json` （最常见的位置是在 `src/main/resources` 内）"
+msgid "As an example, in order to register all methods of class `com.acme.MyClass` for reflection, we create `reflect-config.json` (the most common location is within `src/main/resources`)"
+msgstr ""
 
 #. type: delimited block =
 #: _guides/writing-native-applications-tips.adoc
@@ -295,9 +255,10 @@ msgstr "关于该文件格式的更多细节，请参考 https://github.com/orac
 
 #: _guides/writing-native-applications-tips.adoc
 msgid ""
-"In the previous snippet we were able to simply use `reflection-config.json` instead of specifying the entire path of the file simply because it was added to `src/main/resources`.\n"
-"If the file had been added to another directory, the proper file path would have had to be specified manually."
-msgstr "在前面的片段中，我们能够简单地使用 `reflection-config.json` ，而不是指定文件的整个路径，只是因为它被添加到了 `src/main/resources` 。如果该文件被添加到了另一个目录，就必须手动指定适当的文件路径。"
+"The final order of business is to make the configuration file known to the `native-image` executable.\n"
+"To do that, place the configuration file under the `src/main/resources/META-INF/native-image/<group-id>/<artifact-id>` folder.\n"
+"This way they will be automatically parsed by the native build, without additional configuration."
+msgstr ""
 
 #. type: Title ===
 #: _guides/writing-native-applications-tips.adoc
@@ -381,17 +342,12 @@ msgstr "在编写本地应用程序时，你需要在构建时通过指定它们
 msgid "In such a situation, the error you might encounter is:"
 msgstr "在这种情况下，你可能遇到的错误是："
 
-#. type: Plain text
 #: _guides/writing-native-applications-tips.adoc
-#, fuzzy
-msgid "Solving this issue requires adding the `-H:DynamicProxyConfigurationResources=<comma-separated-config-resources>` option and to provide a dynamic proxy configuration file."
-msgstr "解决这个问题需要添加 `-H:DynamicProxyConfigurationResources=<comma-separated-config-resources>` 选项，并提供一个动态代理配置文件。你可以在 https://github.com/oracle/graal/blob/master/docs/reference-manual/native-image/DynamicProxy.md#manual-configuration[GraalVM文档]中找到关于这个文件格式的所有信息。"
-
-#. type: Plain text
-#: _guides/writing-native-applications-tips.adoc
-#, fuzzy
-msgid "For more information about the format of this file, see the link:https://www.graalvm.org/{graalvm-docs-version}/reference-manual/native-image/guides/configure-dynamic-proxies/[GraalVM Configure Dynamic Proxies Manually] guide."
-msgstr "关于代理类的更多信息，你可以阅读 https://github.com/oracle/graal/blob/master/docs/reference-manual/native-image/DynamicProxy.md[GraalVM文档] 。"
+msgid ""
+"Solving this issue requires creating a `proxy-config.json` file under the `src/main/resources/META-INF/native-image/<group-id>/<artifact-id>` folder.\n"
+"This way the configuration will be automatically parsed by the native build, without additional configuration.\n"
+"For more information about the format of this file, see the link:https://www.graalvm.org/{graalvm-docs-version}/reference-manual/native-image/metadata/#dynamic-proxy-metadata-in-json[Dynamic Proxy Metadata in JSON] documentation."
+msgstr ""
 
 #. type: Title ===
 #: _guides/writing-native-applications-tips.adoc

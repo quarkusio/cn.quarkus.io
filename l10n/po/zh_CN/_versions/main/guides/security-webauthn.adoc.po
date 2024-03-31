@@ -34,6 +34,10 @@ msgstr "本指南演示了你的Quarkus应用程序如何使用WebAuthn认证来
 msgid "Prerequisites"
 msgstr "先决条件"
 
+#: _versions/main/guides/security-webauthn.adoc
+msgid "A WebAuthn or PassKeys-capable device, or https://developer.chrome.com/docs/devtools/webauthn/[an emulator of those]."
+msgstr ""
+
 #. type: Title ==
 #: _versions/main/guides/security-webauthn.adoc
 #, fuzzy, no-wrap
@@ -115,6 +119,20 @@ msgstr "在实际操作中，情况会稍微复杂一些，因为在使用硬件
 #, fuzzy
 msgid "And also there are a lot more fields to store than just a public key, but we will help you with that."
 msgstr "还有，除了公钥，还有很多字段需要存储，但我们会帮助你解决这个问题。"
+
+#: _versions/main/guides/security-webauthn.adoc
+msgid ""
+"Just in case you get there wondering what's the relation with https://fidoalliance.org/passkeys/[PassKeys]\n"
+"and whether we support it: sure, yes, PassKeys is a way that your authenticator devices can share and sync\n"
+"their credentials, which you can then use with our WebAuthn authentication."
+msgstr ""
+
+#: _versions/main/guides/security-webauthn.adoc
+msgid ""
+"The WebAuthn specification requires `https` to be used for communication with the server, though\n"
+"some browsers allow `localhost`. If you must use `https` in `DEV` mode, you can always use the\n"
+"https://docs.quarkiverse.io/quarkus-ngrok/dev/index.html[quarkus-ngrok] extension."
+msgstr ""
 
 #. type: Title ==
 #: _versions/main/guides/security-webauthn.adoc
@@ -392,11 +410,11 @@ msgid ""
 "form on the right, then pressing the `Register` button:"
 msgstr "首先在右侧的 `Register` 表单中输入用户名、姓和名，然后按 `Register` 按钮注册 WebAuthn 凭据："
 
-#. type: Plain text
 #: _versions/main/guides/security-webauthn.adoc
-#, fuzzy
-msgid "Your browser will ask you to activate your WebAuthn authenticator:"
-msgstr "你的浏览器会要求你激活你的WebAuthn认证器。"
+msgid ""
+"Your browser will ask you to activate your WebAuthn authenticator (you will need a WebAuthn-capable browser\n"
+"and possibly device, or you can use https://developer.chrome.com/docs/devtools/webauthn/[an emulator of those]):"
+msgstr ""
 
 #. type: Plain text
 #: _versions/main/guides/security-webauthn.adoc
@@ -452,23 +470,19 @@ msgstr " `POST /q/webauthn/register` :设置并获得注册挑战"
 msgid "Request"
 msgstr "要求"
 
+#: _versions/main/guides/security-webauthn.adoc
+msgid "Required"
+msgstr ""
+
+#: _versions/main/guides/security-webauthn.adoc
+msgid "Optional"
+msgstr ""
+
 #. type: Block title
 #: _versions/main/guides/security-webauthn.adoc
 #, fuzzy, no-wrap
 msgid "Response"
 msgstr "响应"
-
-#. type: Title ===
-#: _versions/main/guides/security-webauthn.adoc
-#, fuzzy, no-wrap
-msgid "Obtain a login challenge"
-msgstr "获得一个登录挑战"
-
-#. type: Plain text
-#: _versions/main/guides/security-webauthn.adoc
-#, fuzzy
-msgid "`POST /q/webauthn/login`: Set up and obtain a login challenge"
-msgstr " `POST /q/webauthn/login` :设置并获得一个登录挑战"
 
 #. type: Title ===
 #: _versions/main/guides/security-webauthn.adoc
@@ -487,6 +501,18 @@ msgstr " `POST /q/webauthn/callback` :触发注册"
 #, fuzzy
 msgid "This returns a 204 with no body."
 msgstr "这将返回一个没有主体的204。"
+
+#. type: Title ===
+#: _versions/main/guides/security-webauthn.adoc
+#, fuzzy, no-wrap
+msgid "Obtain a login challenge"
+msgstr "获得一个登录挑战"
+
+#. type: Plain text
+#: _versions/main/guides/security-webauthn.adoc
+#, fuzzy
+msgid "`POST /q/webauthn/login`: Set up and obtain a login challenge"
+msgstr " `POST /q/webauthn/login` :设置并获得一个登录挑战"
 
 #. type: Title ===
 #: _versions/main/guides/security-webauthn.adoc
@@ -610,12 +636,22 @@ msgid ""
 msgstr "在这种情况下，您可以使用 JavaScript 库中的 `WebAuthn.loginOnly` 和 `WebAuthn.registerOnly` 方法，将验证器数据存储在隐藏的表单元素中，然后作为表单有效载荷的一部分发送到服务器上的自定义登录或注册端点。"
 
 #: _versions/main/guides/security-webauthn.adoc
-#, fuzzy
 msgid ""
 "If you are storing them in form input elements, you can then use the `WebAuthnLoginResponse` and\n"
 "`WebAuthnRegistrationResponse` classes, mark them as `@BeanParam` and then use the `WebAuthnSecurity.login`\n"
-"and `WebAuthnSecurity.register` methods. For example, here's how you can handle a custom login and register:"
-msgstr "如果将它们存储在表单输入元素中，则可以使用 `WebAuthnLoginResponse` 和 `WebAuthnRegistrationResponse` 类，将它们标记为 `@BeanParam` ，然后使用 `WebAuthnSecurity.login` 和 `WebAuthnSecurity.register` 方法。例如，以下是处理自定义登录和注册的方法："
+"and `WebAuthnSecurity.register` methods to replace the `/q/webauthn/callback` endpoint. This even\n"
+"allows you to create two separate endpoints for handling login and registration at different endpoints."
+msgstr ""
+
+#: _versions/main/guides/security-webauthn.adoc
+msgid ""
+"In most cases you can keep using the `/q/webauthn/login` and `/q/webauthn/register` challenge-initiating\n"
+"endpoints, because this is not where custom logic is required."
+msgstr ""
+
+#: _versions/main/guides/security-webauthn.adoc
+msgid "For example, here's how you can handle a custom login and register action:"
+msgstr ""
 
 #: _versions/main/guides/security-webauthn.adoc
 #, fuzzy
@@ -646,6 +682,16 @@ msgid ""
 "You will have to add the `@Blocking` annotation on your `WebAuthnUserProvider` class in order to tell the\n"
 "Quarkus WebAuthn endpoints to defer those calls to the worker pool."
 msgstr "您必须在 `WebAuthnUserProvider` 类上添加 `@Blocking` 注解，以便告诉 Quarkus WebAuthn 端点将这些调用推迟到 Worker 池。"
+
+#: _versions/main/guides/security-webauthn.adoc
+msgid "Virtual-Threads version"
+msgstr ""
+
+#: _versions/main/guides/security-webauthn.adoc
+msgid ""
+"You will have to add the `@RunOnVirtualThread` annotation on your `WebAuthnUserProvider` class in order to tell the\n"
+"Quarkus WebAuthn endpoints to defer those calls to virtual threads."
+msgstr ""
 
 #. type: Title ==
 #: _versions/main/guides/security-webauthn.adoc
@@ -682,6 +728,13 @@ msgstr "在本次测试中，我们既要测试提供的回调端点（更新 `W
 #, no-wrap
 msgid "Configuration Reference"
 msgstr "配置参考"
+
+#: _versions/main/guides/security-webauthn.adoc
+msgid ""
+"The security encryption key can be set with the\n"
+"link:all-config#quarkus-vertx-http_quarkus.http.auth.session.encryption-key[`quarkus.http.auth.session.encryption-key`]\n"
+"configuration option, as described in the link:security-authentication-mechanisms#form-auth[security guide]."
+msgstr ""
 
 #: _versions/main/guides/security-webauthn.adoc
 #, fuzzy
