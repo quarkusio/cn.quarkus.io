@@ -7,288 +7,347 @@ msgstr ""
 "X-Generator: jekyll-l10n\n"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "Changing the Quarkus loggers level from Unleash"
-msgstr ""
+msgstr "从 Unleash 更改 Quarkus 记录仪级别"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "Updating an environment variable to change a logger level can sometimes be slow. What if you could change that level immediately with Unleash?"
-msgstr ""
+msgstr "更新环境变量以更改日志记录器级别有时会很慢。如果能用 Unleash 立即更改记录器级别，会怎样呢？"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
 msgid "Introduction"
 msgstr "简介"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid ""
 "I'm part of a Red Hat team that is responsible for a dozen of Quarkus apps which run in Red Hat OpenShift, with multiple pods each.\n"
 "While these apps all have different purposes, they also share a common fate: something will go wrong eventually.\n"
 "When it does, we'll need to understand and fix the problem as fast as possible.\n"
 "Lowering the level of a logger is often helpful, but our apps are containerized and updating an environment variable to change the logger level isn't always as easy at it sounds.\n"
 "We also don't want to expose REST endpoints in most of our apps, so extensions such as https://github.com/quarkiverse/quarkus-logging-manager[quarkus-logging-manager^] are not an option."
-msgstr ""
+msgstr "我是红帽团队的一员，该团队负责在红帽 OpenShift 中运行十几个 Quarkus 应用程序，每个应用程序都有多个 pod。虽然这些应用程序都有不同的用途，但它们也有一个共同的命运：终究会出错。一旦出现问题，我们需要尽快了解并解决问题。降低日志记录器的级别通常很有帮助，但我们的应用程序是容器化的，更新环境变量来更改日志记录器级别并不总是像听起来那么容易。我们也不想在大多数应用程序中暴露 REST 端点，所以像 link:https://github.com/quarkiverse/quarkus-logging-manager[quarkus-logging-manager] 这样的扩展并不是我们的选择。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid ""
 "Our apps have another thing in common: they depend on https://docs.quarkiverse.io/quarkus-unleash/dev/index.html[quarkus-unleash^] because we're fetching our feature toggles from https://www.getunleash.io/[Unleash^].\n"
 "When I read https://medium.com/safe-engineering/how-unleash-enhanced-our-troubleshooting-experience-by-100x-e0c82b6df825[Zero downtime log level changes using Unleash^] from Aman Jain, it made me want to try the same thing with Quarkus.\n"
 "I'll show you below how I successfully did that."
-msgstr ""
+msgstr "我们的应用程序还有一个共同点：它们依赖于 link:https://docs.quarkiverse.io/quarkus-unleash/dev/index.html[Quarkus-unleash] ，因为我们从 link:https://www.getunleash.io/[Unleash] 获取功能切换。当我从 Aman Jain 那里读到 link:https://medium.com/safe-engineering/how-unleash-enhanced-our-troubleshooting-experience-by-100x-e0c82b6df825[使用 Unleash 实现零宕机日志级别更改] 时，我就想在 Quarkus 上做同样的尝试。下面我将向大家展示我是如何成功做到这一点的。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid ""
 "This blog post contains incremental code snippets.\n"
 "Each one of them is an enhanced version of the previous one and addresses a specific technical challenge."
-msgstr ""
+msgstr "本博文包含递增代码片段。每个代码片段都是前一个代码片段的增强版，可解决特定的技术难题。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "Changing a logger level programmatically"
-msgstr ""
+msgstr "以编程方式更改记录仪级别"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "Let's start with the obvious requirement: how to change the level of a logger programmatically with Quarkus."
-msgstr ""
+msgstr "让我们从一个显而易见的需求开始：如何使用 Quarkus 以编程方式更改记录仪的级别。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid ""
 "As described in the https://quarkus.io/guides/logging[Logging configuration guide^], Quarkus supports multiple logging APIs.\n"
 "I only tested the following code with the JBoss Logging API as well as the `io.quarkus.logging.Log` API.\n"
 "I can't guarantee that everything will work out of the box with other logging APIs."
-msgstr ""
+msgstr "如 link:https://quarkus.io/guides/logging[日志配置指南] 所述，Quarkus 支持多种日志 API。我仅使用 JBoss Logging API 和 `io.quarkus.logging.Log` API 测试了以下代码。我不能保证其他日志 API 也能正常工作。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "The JBoss Logging API doesn't offer a way to change the level of a logger programmatically, so we need the help of the `java.util.logging` API to do it:"
-msgstr ""
+msgstr "JBoss Logging API 并不提供以编程方式更改日志记录器级别的方法，因此我们需要 `java.util.logging` API 的帮助才能做到这一点："
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "Make sure you're importing classes from the `java.util.logging` package."
-msgstr ""
+msgstr "确保您从 `java.util.logging` 软件包中导入了类。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "Any category as described in the https://quarkus.io/guides/logging#logging-categories[Logging configuration guide^] will work as the logger name."
-msgstr ""
+msgstr "link:https://quarkus.io/guides/logging#logging-categories[记录配置指南] 中描述的任何类别都可以作为记录仪名称。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "`Level#parse` will throw exceptions if the level name is not valid. Please handle them carefully."
-msgstr ""
+msgstr "`Level#parse` 如果级别名称无效，将抛出异常。请谨慎处理。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "Setting a logger level from Unleash"
-msgstr ""
+msgstr "从 Unleash 设置日志记录器级别"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid ""
 "So, we're able to set a logger level programmatically.\n"
 "Now, how do we feed the `LogLevelManager#setLoggerLevel` method with data from Unleash?"
-msgstr ""
+msgstr "这样，我们就能以编程方式设置记录仪级别了。现在，我们如何向 `LogLevelManager#setLoggerLevel` 方法提供来自 Unleash 的数据？"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "Unleash variants to the rescue"
-msgstr ""
+msgstr "释放变体，拯救生命"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid ""
 "In Unleash, the feature toggles can be associated with https://docs.getunleash.io/reference/feature-toggle-variants[variants^] which are meant to facilitate A/B testing and experimentation.\n"
 "Each variant is defined with a set of properties, including the optional `payload` that can be used to pass JSON data from Unleash to our Quarkus app.\n"
 "That's how we'll set the level of our Quarkus app loggers:"
-msgstr ""
+msgstr "在 Unleash 中，功能切换可以与 link:https://docs.getunleash.io/reference/feature-toggle-variants[变体] 相关联，以便于进行 A/B 测试和实验。每个变体都定义了一系列属性，包括可选的 `payload` ，可用于将 JSON 数据从 Unleash 传递到我们的 Quarkus 应用程序。这就是我们如何设置 Quarkus 应用程序日志记录器级别的方法："
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "Retrieving the variant payload"
-msgstr ""
+msgstr "检索变体有效载荷"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "Now, let's see how we'll retrieve from the Quarkus app the variant payload defined in Unleash."
-msgstr ""
+msgstr "现在，让我们看看如何从 Quarkus 应用程序中获取在 Unleash 中定义的变体有效载荷。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "First, the Quarkus app needs to depend on the https://docs.quarkiverse.io/quarkus-unleash/dev/index.html[quarkus-unleash^] extension."
-msgstr ""
+msgstr "首先，Quarkus 应用程序需要依赖 link:https://docs.quarkiverse.io/quarkus-unleash/dev/index.html[quarkus-unleash] 扩展。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "We'll also use a very simple data structure to deserialize the payload with Jackson:"
-msgstr ""
+msgstr "我们还将使用一个非常简单的数据结构，与 Jackson 一起反序列化有效载荷："
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "Then, here's an update of the `LogLevelManager` class to make it get the variant from Unleash, deserialize the payload and change the level of a series of loggers:"
-msgstr ""
+msgstr "然后，更新 `LogLevelManager` 类，使其能够从 Unleash 获取变量、反序列化有效载荷并更改一系列日志记录器的级别："
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "From now on, `LogLevelManager` is an `@ApplicationScoped` bean."
-msgstr ""
+msgstr "从现在起， `LogLevelManager` 是一个 `@ApplicationScoped` 豆子。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "`Unleash` is an `@ApplicationScoped` bean produced by the https://docs.quarkiverse.io/quarkus-unleash/dev/index.html[quarkus-unleash^] extension."
-msgstr ""
+msgstr "`Unleash` 是由 link:https://docs.quarkiverse.io/quarkus-unleash/dev/index.html[quarkus-unleash] 扩展生成的 bean。 `@ApplicationScoped` "
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "Be careful about the argument passed to `Unleash#getVariant`: it has to be the toggle name, not the variant name."
-msgstr ""
+msgstr "请注意传给 `Unleash#getVariant` 的参数：必须是切换名称，而不是变体名称。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "`variant.isEnabled()` will return `false` if the toggle is disabled in Unleash or if the toggle has no variants."
-msgstr ""
+msgstr "`variant.isEnabled()` 如果在 Unleash 中禁用了切换或切换没有变体，则返回 。 `false` "
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "If the method is unable to find a variant payload or if it fails to deserialize that payload for any reasons, an empty `LogConfig` array will be returned."
-msgstr ""
+msgstr "如果该方法无法找到变量有效载荷，或者由于任何原因无法反序列化该有效载荷，则将返回一个空的 `LogConfig` 数组。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid ""
 "We can now retrieve the loggers configuration from Unleash, that's great!\n"
 "But that new `LogLevelManager#updateLoggerslevel` method isn't used yet.\n"
 "Where should it be used from, and when?"
-msgstr ""
+msgstr "我们现在可以从 Unleash 获取记录仪配置，这很好！但新的 `LogLevelManager#updateLoggerslevel` 方法尚未使用。应该在哪里使用，什么时候使用？"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid ""
 "We need that method to be executed as soon as the loggers configuration is changed in Unleash.\n"
 "So, its execution has to be periodically scheduled somehow.\n"
 "We could make the method `@Scheduled` with the https://quarkus.io/guides/scheduler-reference[quarkus-scheduler^] extension, but there is a better approach thanks to the Unleash SDK.\n"
 "Let's jump to the next section."
-msgstr ""
+msgstr "我们需要在 Unleash 中更改记录仪配置后立即执行该方法。因此，必须以某种方式定期调度该方法的执行。我们可以使用 link:https://quarkus.io/guides/scheduler-reference[quarkus-scheduler] 扩展让该方法 `@Scheduled` ，但有一个更好的方法，这要归功于 Unleash SDK。让我们跳转到下一节。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "The Subscriber API from Unleash"
-msgstr ""
+msgstr "来自 Unleash 的订阅者 API"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid ""
 "The Unleash Client SDK for Java comes with a feature that will be very helpful here: the https://docs.getunleash.io/reference/sdks/java#subscriber-api[Subscriber API^].\n"
 "The https://github.com/Unleash/unleash-client-java/blob/main/src/main/java/io/getunleash/event/UnleashSubscriber.java[UnleashSubscriber^] interface can indeed be implemented to subscribe to various Unleash events, including `FeatureToggleResponse` which is emitted when the Unleash client fetches toggles from the server."
-msgstr ""
+msgstr "适用于 Java 的 Unleash 客户端 SDK 附带了一个非常有用的功能： link:https://docs.getunleash.io/reference/sdks/java#subscriber-api[订阅者 API] 。 link:https://github.com/Unleash/unleash-client-java/blob/main/src/main/java/io/getunleash/event/UnleashSubscriber.java[UnleashSubscriber] 接口确实可以用来订阅各种 Unleash 事件，包括当 Unleash 客户端从服务器获取切换时发出的 `FeatureToggleResponse` 。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid ""
 "Using the Subscriber API with the https://docs.quarkiverse.io/quarkus-unleash/dev/index.html[quarkus-unleash^] extension is extremely simple.\n"
 "`UnleashSubscriber` needs to be implemented in a CDI bean and that's it!\n"
 "The extension will pass the bean to the Unleash client builder automatically."
-msgstr ""
+msgstr "通过 link:https://docs.quarkiverse.io/quarkus-unleash/dev/index.html[quarkus-unleash] 扩展使用 Subscriber API 非常简单。 `UnleashSubscriber` ，只需在 CDI Bean 中实现即可！该扩展会自动将 bean 传递给 Unleash 客户端生成器。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "We're still using the same `LogLevelManager` class, but now it's implementing `UnleashSubscriber`."
-msgstr ""
+msgstr "我们仍在使用同一个 `LogLevelManager` 类，但现在它实现了 `UnleashSubscriber` 。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "This method is invoked every time the Unleash client fetches toggles from the server."
-msgstr ""
+msgstr "每次 Unleash 客户端从服务器获取切换时，都会调用此方法。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "We'll update the loggers level only if the toggles changed server-side."
-msgstr ""
+msgstr "只有当服务器端的切换发生变化时，我们才会更新日志记录器级别。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid ""
 "Okay, the `LogLevelManager#updateLoggerslevel` method is now automatically invoked whenever the client fetches new data from the server.\n"
 "But what about scheduling that periodically?\n"
 "Well, the Unleash client already relies on an internal scheduled executor to fetch the toggles.\n"
 "Therefore, we don't need to bother scheduling anything in our app.\n"
 "It will work automagically!"
-msgstr ""
+msgstr "好了，现在只要客户端从服务器获取新数据，就会自动调用 `LogLevelManager#updateLoggerslevel` 方法。但如何定期调度呢？好吧，Unleash 客户端已经依赖内部调度执行器来获取切换。因此，我们不需要在应用程序中进行任何调度。它将自动运行！"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "One variant to rule them all"
-msgstr ""
+msgstr "一个变体统治所有变体"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid ""
 "At the beginning of this post, I mentioned that my team is responsible for a dozen of Quarkus apps.\n"
 "Each app runs with a varying number of replicas.\n"
 "Let's simplify and consider all of them as hosts."
-msgstr ""
+msgstr "在这篇文章的开头，我提到我的团队负责十几个 Quarkus 应用程序。每个应用程序都有不同数量的副本。让我们简化一下，将它们全部视为主机。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid ""
 "We have dozens of hosts and yet only one Unleash variant to manage the loggers level for all of them.\n"
 "Here's how I implemented that."
-msgstr ""
+msgstr "我们有几十台主机，但只有一个 Unleash 变体可以管理所有主机的日志记录器级别。我是这样实现的。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "First, the data structure of the variant payload needs a small addition:"
-msgstr ""
+msgstr "首先，需要对变体有效载荷的数据结构稍作补充："
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "That's new!"
-msgstr ""
+msgstr "这倒是新鲜事！"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "Now, we can introduce a host filtering capability in `LogLevelManager`:"
-msgstr ""
+msgstr "现在，我们可以在 `LogLevelManager` 中引入主机过滤功能："
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "In OpenShift, we're passing the generated pod name through the `HOST_NAME` environment variable."
-msgstr ""
+msgstr "在 OpenShift 中，我们通过 `HOST_NAME` 环境变量传递生成的 pod 名称。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "This block is used to filter hosts based on a host name prefix. That's enough for our use case, but a regular expression could be used for finer filtering."
-msgstr ""
+msgstr "该模块用于根据主机名前缀过滤主机。这足以满足我们的使用要求，但也可以使用正则表达式进行更精细的过滤。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "Here's how the variant payload may look like after these changes:"
-msgstr ""
+msgstr "以下是更改后变体有效载荷的样子："
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "In that payload:"
-msgstr ""
+msgstr "在该有效载荷中"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "the first entry will affect a specific host: `unstable-service-7dbbcb4cc-9d9hl`"
-msgstr ""
+msgstr "第一个条目将影响特定主机： `unstable-service-7dbbcb4cc-9d9hl`"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "the second entry will affect all hosts whose name starts with `awesome-app`"
-msgstr ""
+msgstr "第二个条目将影响名称以 `awesome-app`"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "the third entry will affect all hosts regardless of their names"
-msgstr ""
+msgstr "第三项将影响所有主机，无论其名称如何"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "Reverting changes automatically"
-msgstr ""
+msgstr "自动恢复更改"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid ""
 "Changing the level of loggers through an Unleash variant should be a temporary action, mostly for troubleshooting purposes.\n"
 "This means we need to revert the level of the loggers eventually when the troubleshooting is over.\n"
 "Doing so by hand would be painful, so let's see how we can automate that."
-msgstr ""
+msgstr "通过 Unleash 变体更改日志记录器级别应该是一个临时操作，主要用于故障排除。这意味着当故障排除结束后，我们最终需要恢复日志记录器的级别。手工操作会很麻烦，所以我们来看看如何实现自动化。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "The original logger level is now stored in memory and will be used when the changes are eventually reverted."
-msgstr ""
+msgstr "最初的记录仪级别已存储在内存中，并将在最终还原更改时使用。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "If the level of a logger was previously modified from Unleash and that logger is no longer part of the latest Unleash variant payload, its level will be reverted to the original value."
-msgstr ""
+msgstr "如果日志记录器的级别以前曾被 Unleash 修改过，而该日志记录器不再是最新 Unleash 变体有效载荷的一部分，则其级别将恢复为原始值。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "If the original level is `null`, then the logger will inherit the level from its parent logger."
-msgstr ""
+msgstr "如果原始级别为 `null` ，则日志记录器将继承其父日志记录器的级别。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
 msgid "Conclusion"
 msgstr "解决方案"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "The `LogLevelManager` class is still far from perfect, but it finally meets the requirements of this blog post:"
-msgstr ""
+msgstr "`LogLevelManager` 类还远远不够完美，但它终于满足了本博文的要求："
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "it changes the level of Quarkus loggers automatically and immediately, based on a variant payload from Unleash"
-msgstr ""
+msgstr "它会根据来自 Unleash 的变种有效载荷，立即自动更改 Quarkus 记录器的级别"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "it automatically reverts all changes to the previous loggers configuration when needed"
-msgstr ""
+msgstr "在需要时，它会自动将所有更改还原为先前的记录仪配置"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "Thanks for reading this post! I hope it will help you troubleshoot your applications faster."
-msgstr ""
+msgstr "感谢您阅读这篇文章！希望它能帮助您更快地排除应用程序故障。"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "Special thanks"
-msgstr ""
+msgstr "特别感谢"
 
 #: _posts/2024-04-03-changing-loggers-level-from-unleash.adoc
+#, fuzzy
 msgid "Thanks to Mikel Alejo Barcina for helping me fix a bug in the code above!"
-msgstr ""
+msgstr "感谢 Mikel Alejo Barcina 帮我修复了上述代码中的一个错误！"
