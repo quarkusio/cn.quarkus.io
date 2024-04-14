@@ -1432,12 +1432,17 @@ msgid "To support the integration with such OAuth2 servers, `quarkus-oidc` needs
 msgstr "为了支持与此类OAuth2服务器的整合， `quarkus-oidc` ，需要进行一些不同的配置，以允许授权代码流响应，而不需要 `IdToken` ： `quarkus.oidc.authentication.id-token-required=false` 。"
 
 #: _versions/main/guides/security-oidc-code-flow-authentication.adoc
-#, fuzzy
 msgid ""
 "Even though you configure the extension to support the authorization code flows without `IdToken`, an internal `IdToken` is generated to standardize the way `quarkus-oidc` operates.\n"
-"You use an `IdToken` to support the authentication session and to avoid redirecting the user to the provider,  such as GitHub, on every request.\n"
-"In this case, the session lifespan is set to 5 minutes, which you can extend further as described in the <<session-management,session management>> section."
-msgstr "即使您配置扩展以支持无需 `IdToken` 的授权代码流，也会生成一个内部 `IdToken` ，以规范 `quarkus-oidc` 的操作方式。您使用 `IdToken` 来支持身份验证会话，避免每次请求都将用户重定向到提供商（如 GitHub）。在这种情况下，会话生命期被设置为 5 分钟，您可以根据 xref:session-management[会话管理] 部分的描述进一步延长 xref:session-management[会话] 生命期。"
+"You use an internal `IdToken` to support the authentication session and to avoid redirecting the user to the provider,  such as GitHub, on every request.\n"
+"In this case, the `IdToken` age is set to the value of a standard `expires_in` property in the authorization code flow response.\n"
+"You can use a `quarkus.oidc.authentication.internal-id-token-lifespan`property to customize the ID token age.\n"
+"The default ID token age is 5 minutes."
+msgstr ""
+
+#: _versions/main/guides/security-oidc-code-flow-authentication.adoc
+msgid ", which you can extend further as described in the <<session-management,session management>> section."
+msgstr ""
 
 #. type: Plain text
 #: _versions/main/guides/security-oidc-code-flow-authentication.adoc
@@ -1458,21 +1463,22 @@ msgid ""
 msgstr "下一步是确保返回的访问令牌对当前的 Quarkus 端点有用且有效。第一种方法是通过配置 `quarkus.oidc.introspection-path` 来调用 OAuth2 提供商自省端点（如果提供商提供此类端点的话）。在这种情况下，你可以使用 `quarkus.oidc.roles.source=accesstoken` 将访问令牌用作角色来源。如果没有自省端点，可以尝试从提供程序请求 xref:user-info[用户信息] ，因为它至少会验证访问令牌。为此，请指定 `quarkus.oidc.token.verify-access-token-with-user-info=true` 。还需要将 `quarkus.oidc.user-info-path` 属性设置为获取用户信息的 URL 端点（或受访问令牌保护的端点）。对于 GitHub 而言，由于它没有自省端点，因此需要请求 UserInfo。"
 
 #: _versions/main/guides/security-oidc-code-flow-authentication.adoc
-#, fuzzy
-msgid ""
-"Requiring <<user-info,UserInfo>> involves making a remote call on every request.\n"
-"Therefore, you might want to consider caching `UserInfo` data.\n"
-"For more information, see the xref:security-oidc-bearer-token-authentication.adoc#token-introspection-userinfo-cache[Token Introspection and UserInfo cache] section of the \"OpenID Connect (OIDC) Bearer token authentication\" guide."
-msgstr "要求提供 xref:user-info[UserInfo] 会导致每次请求都要进行远程调用。因此，你可能需要考虑缓存 `UserInfo` 数据。更多信息，请参阅 \"OpenID Connect (OIDC) Bearer xref:security-oidc-bearer-token-authentication.adoc#token-introspection-userinfo-cache[令牌] 验证 \"指南中的 xref:security-oidc-bearer-token-authentication.adoc#token-introspection-userinfo-cache[令牌自省和 UserInfo 缓存] 部分。"
+msgid "Requiring <<user-info,UserInfo>> involves making a remote call on every request."
+msgstr ""
 
 #: _versions/main/guides/security-oidc-code-flow-authentication.adoc
-#, fuzzy
+msgid "Therefore, `UserInfo` is embedded in the internal generated `IdToken` and saved in the encrypted session cookie. It can be disabled with `quarkus.oidc.cache-user-info-in-idtoken=false`."
+msgstr ""
+
+#: _versions/main/guides/security-oidc-code-flow-authentication.adoc
 msgid ""
-"Alternatively, you might want to request that `UserInfo` is embedded into the internal generated `IdToken` with the `quarkus.oidc.cache-user-info-in-idtoken=true` property.\n"
-"The advantage of this approach is that, by default, no cached `UserInfo` state will be kept with the endpoint - instead it will be stored in a session cookie.\n"
-"You might also want to consider encrypting `IdToken` in this case if `UserInfo` contains sensitive data.\n"
-"For more information, see <<token-state-manager,Encrypt tokens with TokenStateManager>>."
-msgstr "或者，您也可以使用 `quarkus.oidc.cache-user-info-in-idtoken=true` 属性要求将 `UserInfo` 嵌入到内部生成的 `IdToken` 中。这种方法的优点是，默认情况下，端点不会保留缓存的 `UserInfo` 状态，而是将其存储在会话 cookie 中。在这种情况下，如果 `UserInfo` 包含敏感数据，可能还需要考虑加密 `IdToken` 。更多信息，请参阅 xref:token-state-manager[使用 TokenStateManager 加密令牌] 。"
+"Alternatively, you might want to consider caching `UserInfo` using a default or custom UserInfo cache provider.\n"
+"For more information, see the xref:security-oidc-bearer-token-authentication.adoc#token-introspection-userinfo-cache[Token Introspection and UserInfo cache] section of the \"OpenID Connect (OIDC) Bearer token authentication\" guide."
+msgstr ""
+
+#: _versions/main/guides/security-oidc-code-flow-authentication.adoc
+msgid "Most well-known social OAuth2 providers enforce rate-limiting so there is a high chance you will prefer to have UserInfo cached."
+msgstr ""
 
 #: _versions/main/guides/security-oidc-code-flow-authentication.adoc
 #, fuzzy
