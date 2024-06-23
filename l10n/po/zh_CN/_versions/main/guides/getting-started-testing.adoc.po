@@ -1212,25 +1212,19 @@ msgstr "对于将应用程序作为容器启动的 `@QuarkusIntegrationTest` 测
 msgid "Testing Components"
 msgstr "测试组件"
 
-#. type: Plain text
 #: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid "This feature is experimental and the API may change in the future."
-msgstr "这个功能是实验性的，在未来的Quarkus版本中可能会有变化。"
-
-#: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
 msgid ""
-"In Quarkus, the component model is built on top CDI.\n"
-"Therefore, Quarkus provides the `QuarkusComponentTestExtension`, a JUnit extension to ease the testing of components and mocking of their dependencies.\n"
-"This extension is available in the `quarkus-junit5-component` dependency."
-msgstr "在Quarkus中，组件模型建立在CDI之上。因此，Quarkus 提供了 `QuarkusComponentTestExtension` ，这是一个 JUnit 扩展，用于简化组件测试及其依赖关系的模拟。该扩展可从 `quarkus-junit5-component` 依赖项中获取。"
+"Quarkus provides the `QuarkusComponentTestExtension`, a JUnit extension to ease the testing of components and mocking of their dependencies.\n"
+"This JUnit extension is available in the `quarkus-junit5-component` dependency."
+msgstr ""
 
-#. type: Plain text
 #: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid "Let's have a component `Foo`:"
-msgstr "让我们有一个组件 `Foo` ："
+msgid "Let's have a component `Foo` - a CDI bean with two injection points."
+msgstr ""
+
+#: _versions/main/guides/getting-started-testing.adoc
+msgid "`Foo` component"
+msgstr ""
 
 #. type: Plain text
 #: _versions/main/guides/getting-started-testing.adoc
@@ -1244,17 +1238,19 @@ msgstr " `Foo` 是一个 CDI豆。 `@ApplicationScoped` "
 msgid "`Foo` depends on `Charlie` which declares a method `ping()`."
 msgstr " `Foo` 依赖于 ，它声明了一个方法 。 `Charlie` `ping()` "
 
-#. type: Plain text
 #: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid "`Foo` depends on the config property `bar`."
-msgstr " `Foo` 取决于配置属性 。 `bar` "
+msgid "`Foo` depends on the config property `bar`. `@Inject` is not needed for this injection point because it also declares a CDI qualifier - this is a Quarkus-specific feature."
+msgstr ""
 
 #. type: Plain text
 #: _versions/main/guides/getting-started-testing.adoc
 #, fuzzy
 msgid "Then a component test could look like:"
 msgstr "示例用法如下所示："
+
+#: _versions/main/guides/getting-started-testing.adoc
+msgid "Simple component test"
+msgstr ""
 
 #. type: Plain text
 #: _versions/main/guides/getting-started-testing.adoc
@@ -1274,11 +1270,9 @@ msgstr "为测试设置一个配置属性。"
 msgid "The test injects the component under the test. The types of all fields annotated with `@Inject` are considered the component types under test. You can also specify additional component classes via `@QuarkusComponentTest#value()`. Furthermore, the static nested classes declared on the test class are components too."
 msgstr "该测试注入被测试的组件。所有用 `@Inject` 注释的字段的类型都被认为是被测组件的类型。你也可以通过 `@QuarkusComponentTest#value()` ，指定额外的组件类型。"
 
-#. type: Plain text
 #: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid "The test also injects `Charlie`, a dependency for which a synthetic `@Singleton` bean is registered automatically. The injected reference is an \"unconfigured\" Mockito mock."
-msgstr "该测试还注入了 `Charlie` ，这个依赖关系自动注册了一个合成的 `@Singleton` bean。注入的引用是一个 \"未配置的 \"Mockito模拟。"
+msgid "The test also injects a mock for `Charlie`. `Charlie` is an _unsatisifed_ dependency for which a synthetic `@Singleton` bean is registered automatically. The injected reference is an \"unconfigured\" Mockito mock."
+msgstr ""
 
 #. type: Plain text
 #: _versions/main/guides/getting-started-testing.adoc
@@ -1287,168 +1281,5 @@ msgid "We can leverage the Mockito API in a test method to configure the behavio
 msgstr "我们可以在一个测试方法中利用Mockito API来配置行为。"
 
 #: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid ""
-"`QuarkusComponentTestExtension` also resolves parameters of test methods and injects matching beans.\n"
-"So the code snippet above can be rewritten as:"
-msgstr "`QuarkusComponentTestExtension` 也会解析测试方法的参数并注入匹配的 Bean。因此，上面的代码片段可以重写为"
-
-#: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid "Parameters annotated with `@io.quarkus.test.component.SkipInject` are never resolved by this extension."
-msgstr "使用 `@io.quarkus.test.component.SkipInject` 注释的参数永远不会被该扩展解决。"
-
-#: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid ""
-"Furthermore, if you need the full control over the `QuarkusComponentTestExtension` configuration then you can use the `@RegisterExtension` annotation and configure the extension programatically.\n"
-"The original test could be rewritten like:"
-msgstr "此外，如果需要完全控制 `QuarkusComponentTestExtension` 配置，则可以使用 `@RegisterExtension` 注释，以编程方式配置扩展。原始测试可重写如下"
-
-#. type: Plain text
-#: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid "The `QuarkusComponentTestExtension` is configured in a static field of the test class."
-msgstr " `QuarkusComponentTestExtension` ，配置在一个静态字段中。"
-
-#. type: Title ===
-#: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy, no-wrap
-msgid "Lifecycle"
-msgstr "生命周期"
-
-#: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid ""
-"So what exactly does the `QuarkusComponentTest` do?\n"
-"It starts the CDI container and registers a dedicated xref:config-reference.adoc[configuration object].\n"
-"If the test instance lifecycle is `Lifecycle#PER_METHOD` (default) then the container is started during the `before each` test phase and stopped during the `after each` test phase.\n"
-"However, if  the test instance lifecycle is `Lifecycle#PER_CLASS` then the container is started during the `before all` test phase and stopped during the `after all` test phase.\n"
-"The fields annotated with `@Inject` and `@InjectMock` are injected after a test instance is created.\n"
-"Finally, the CDI request context is activated and terminated per each test method."
-msgstr "那么 `QuarkusComponentTest` 到底要做什么呢？它启动 CDI 容器并注册专用 xref:config-reference.adoc[配置对象] 。如果测试实例生命周期为 `Lifecycle#PER_METHOD` （默认），那么容器在 `before each` 测试阶段启动，在 `after each` 测试阶段停止。但是，如果测试实例生命周期为 `Lifecycle#PER_CLASS` ，则容器在 `before all` 测试阶段启动，在 `after all` 测试阶段停止。注释为 `@Inject` 和 `@InjectMock` 的字段会在创建测试实例后注入。最后，根据每个测试方法激活和终止 CDI 请求上下文。"
-
-#: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid "Injection"
-msgstr "注射"
-
-#: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid ""
-"Test class fields annotated with `@jakarta.inject.Inject` and `@io.quarkus.test.InjectMock` are injected after a test instance is created.\n"
-"Dependent beans injected into these fields are correctly destroyed before a test instance is destroyed.\n"
-"Parameters of a test method for which a matching bean exists are resolved unless annotated with `@io.quarkus.test.component.SkipInject`.\n"
-"Dependent beans injected into the test method arguments are correctly destroyed after the test method completes."
-msgstr "在创建测试实例后，会注入注释为 `@jakarta.inject.Inject` 和 `@io.quarkus.test.InjectMock` 的测试类字段。注入这些字段的依赖 bean 会在测试实例销毁前正确销毁。除非注释为 `@io.quarkus.test.component.SkipInject` ，否则会解析存在匹配 Bean 的测试方法参数。注入测试方法参数的依赖豆会在测试方法完成后正确销毁。"
-
-#: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid "Arguments of a `@ParameterizedTest` method that are provided by an `ArgumentsProvider`, for example with `@org.junit.jupiter.params.provider.ValueArgumentsProvider`, must be annotated with `@SkipInject`."
-msgstr "`@ParameterizedTest` 方法的参数如果由 `ArgumentsProvider` 提供，例如由 `@org.junit.jupiter.params.provider.ValueArgumentsProvider` 提供，则必须用 `@SkipInject` 加以注释。"
-
-#. type: Title ===
-#: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy, no-wrap
-msgid "Auto Mocking Unsatisfied Dependencies"
-msgstr "自动嘲弄不满足的依赖关系"
-
-#: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid ""
-"Unlike in regular CDI environments the test does not fail if a component injects an unsatisfied dependency.\n"
-"Instead, a synthetic bean is registered automatically for each combination of required type and qualifiers of an injection point that resolves to an unsatisfied dependency.\n"
-"The bean has the `@Singleton` scope so it's shared across all injection points with the same required type and qualifiers.\n"
-"The injected reference is an _unconfigured_ Mockito mock.\n"
-"You can inject the mock in your test using the `io.quarkus.test.InjectMock` annotation and leverage the Mockito API to configure the behavior."
-msgstr "与常规 CDI 环境不同，如果组件注入了未满足的依赖关系，测试不会失败。相反，如果注入点的要求类型和限定条件的组合解析为未满足的依赖关系，则会自动注册一个合成 Bean。该 Bean 的作用域为 `@Singleton` ，因此它可在具有相同所需类型和限定符的所有注入点中共享。注入的引用是一个 _未配置_ 的 Mockito mock。您可以使用 `io.quarkus.test.InjectMock` 注解在测试中注入该 mock，并利用 Mockito API 配置行为。"
-
-#. type: Title ===
-#: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy, no-wrap
-msgid "Custom Mocks For Unsatisfied Dependencies"
-msgstr "为不满足的依赖关系定制Mocks"
-
-#: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid ""
-"Sometimes you need the full control over the bean attributes and maybe even configure the default mock behavior.\n"
-"You can use the mock configurator API via the `QuarkusComponentTestExtensionBuilder#mock()` method."
-msgstr "有时，您需要完全控制 bean 的属性，甚至需要配置默认的 mock 行为。您可以通过 `QuarkusComponentTestExtensionBuilder#mock()` 方法使用 mock 配置器 API。"
-
-#. type: Title ===
-#: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy, no-wrap
-msgid "Configuration"
-msgstr "配置"
-
-#: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid ""
-"You can set the configuration properties for a test with the `@io.quarkus.test.component.TestConfigProperty` annotation or with the `QuarkusComponentTestExtensionBuilder#configProperty(String, String)` method.\n"
-"If you only need to use the default values for missing config properties, then the `@QuarkusComponentTest#useDefaultConfigProperties()` or `QuarkusComponentTestExtensionBuilder#useDefaultConfigProperties()` might come in useful."
-msgstr "您可以使用 `@io.quarkus.test.component.TestConfigProperty` 注解或 `QuarkusComponentTestExtensionBuilder#configProperty(String, String)` 方法为测试设置配置属性。如果您只需要使用缺失配置属性的默认值，那么 `@QuarkusComponentTest#useDefaultConfigProperties()` 或 `QuarkusComponentTestExtensionBuilder#useDefaultConfigProperties()` 可能会有用。"
-
-#: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid ""
-"It is also possible to set configuration properties for a test method with the `@io.quarkus.test.component.TestConfigProperty` annotation.\n"
-"However, if the test instance lifecycle is `Lifecycle#_PER_CLASS` this annotation can only be used on the test class and is ignored on test methods."
-msgstr "还可以使用 `@io.quarkus.test.component.TestConfigProperty` 注解为测试方法设置配置属性。不过，如果测试实例生命周期为 `Lifecycle#_PER_CLASS` ，则该注解只能用于测试类，测试方法将被忽略。"
-
-#. type: Plain text
-#: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid "CDI beans are also automatically registered for all injected https://smallrye.io/smallrye-config/Main/config/mappings/[Config Mappings]. The mappings are populated with the test configuration properties."
-msgstr "CDI Bean 也会为所有注入的 link:https://smallrye.io/smallrye-config/Main/config/mappings/[配置映] 射自动注册。这些映射将由测试配置属性填充。"
-
-#. type: Title ===
-#: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy, no-wrap
-msgid "Mocking CDI Interceptors"
-msgstr "模拟 CDI 拦截器"
-
-#: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid ""
-"If a tested component class declares an interceptor binding then you might need to mock the interception too.\n"
-"There are two ways to accomplish this task.\n"
-"First, you can define an interceptor class as a static nested class of the test class."
-msgstr "如果测试的组件类声明了拦截器绑定，那么您可能也需要模拟拦截。完成这项任务有两种方法。首先，可以将拦截器类定义为测试类的静态嵌套类。"
-
-#. type: Plain text
-#: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid "`@SimpleBinding` is an interceptor binding."
-msgstr "`@SimpleBinding` 是一种拦截器绑定。"
-
-#. type: Plain text
-#: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid "The interceptor class is automatically considered a tested component."
-msgstr "拦截器类自动被视为已测试组件。"
-
-#. type: Plain text
-#: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid "Static nested classed declared on a test class that is annotated with `@QuarkusComponentTest` are excluded from bean discovery when running a `@QuarkusTest` in order to prevent unintentional CDI conflicts."
-msgstr "在运行 `@QuarkusTest` 时，声明在注释为 `@QuarkusComponentTest` 的测试类上的静态嵌套类将被排除在 Bean 发现之外，以防止意外的 CDI 冲突。"
-
-#: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid ""
-"Furthermore, you can also declare a \"test interceptor method\" directly on the test class.\n"
-"This method is then invoked in the relevant interception phase."
-msgstr "此外，还可以直接在测试类中声明 \"测试拦截器方法\"。然后在相关的拦截阶段调用该方法。"
-
-#. type: Plain text
-#: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid "The interceptor bindings of the resulting interceptor are specified by annotating the method with the interceptor binding types."
-msgstr "通过用拦截器绑定类型对方法进行注解，可指定生成拦截器的拦截器绑定。"
-
-#. type: Plain text
-#: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid "Defines the interception type."
-msgstr "定义拦截类型。"
+msgid "You can find more examples and hints in the xref:testing-components.adoc[testing components reference guide]."
+msgstr ""
