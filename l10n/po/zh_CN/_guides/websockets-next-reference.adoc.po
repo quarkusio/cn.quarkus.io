@@ -102,16 +102,12 @@ msgid ""
 msgstr "Quarkus WebSockets next 扩展使用的注解与 JSR 356 中的注解不同，尽管有时名称相同。JSR 注释带有一种语义，而 Quarkus WebSockets Next 扩展并不遵循这种语义。"
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Use the WebSockets Next extension"
-msgstr "使用 WebSockets Next 扩展"
+msgid "Project setup"
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid ""
-"To use the `websockets-next` extension, you need to add the `io.quarkus.quarkus-websockets-next` extension to your project.\n"
-"In your `pom.xml` file, add:"
-msgstr "要使用 `websockets-next` 扩展名，需要在项目中添加 `io.quarkus.quarkus-websockets-next` 扩展名。在 `pom.xml` 文件中，添加"
+msgid "To use the `websockets-next` extension, you need to add the `io.quarkus:quarkus-websockets-next` depencency to your project."
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
 msgid "pom.xml"
@@ -122,41 +118,31 @@ msgid "build.gradle"
 msgstr "build.gradle"
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Configure the WebSocket server"
-msgstr "配置 WebSocket 服务器"
+msgid "Endpoints"
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "The WebSocket handling reuses the _main_ HTTP server."
-msgstr "WebSocket 处理重复使用 _主_ HTTP 服务器。"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Thus, the configuration of the WebSocket server is done in the `quarkus.http.` configuration section."
-msgstr "因此，WebSocket 服务器的配置在 `quarkus.http.` 配置部分完成。"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
 msgid ""
-"WebSocket paths configured within the application are concatenated with the root path defined by `quarkus.http.root` (which defaults to /).\n"
-"This concatenation ensures that WebSocket endpoints are appropriately positioned within the application's URL structure."
-msgstr "应用程序中配置的 WebSocket 路径与 `quarkus.http.root` 定义的根路径（默认为/）连接。这种连接可确保 WebSocket 端点在应用程序的 URL 结构中位置恰当。"
+"Both the server and client APIs allow you to define _endpoints_ that are used to consume and send messages.\n"
+"The endpoints are implemented as CDI beans and support injection.\n"
+"Endpoints declare <<callback-methods,_callback methods_>> annotated with `@OnTextMessage`, `@OnBinaryMessage`, `@OnPong`, `@OnOpen`, `@OnClose` and `@OnError`.\n"
+"These methods are used to handle various WebSocket events.\n"
+"Typically, a method annotated with `@OnTextMessage` is called when the connected client sends a message to the server and vice versa."
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Refer to the xref:http-reference.adoc[HTTP guide] for more details."
-msgstr "详情请参考 xref:http-reference.adoc[HTTP 指南] 。"
+msgid "The client API also includes <<client-connectors,connectors>> that are used to configure and create new WebSocket connections."
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Declare WebSocket endpoints"
-msgstr "声明 WebSocket 端点"
+msgid "Server endpoints"
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "To declare web socket endpoints, you need to create a class annotated with `@io.quarkus.websockets.next.WebSocket` and define the path of the WebSocket endpoint:"
-msgstr "要声明 Web socket 端点，需要创建一个注释为 `@io.quarkus.websockets.next.WebSocket` 的类，并定义 WebSocket 端点的路径："
+msgid ""
+"Server endpoints are classes annotated with `@io.quarkus.websockets.next.WebSocket`.\n"
+"The value of `WebSocket#path()` is used to define the path of the endpoint."
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
 #, fuzzy
@@ -166,88 +152,85 @@ msgid ""
 msgstr "因此，客户端可以使用 `ws://localhost:8080/chat/your-name` 连接到该网络套接字端点。如果使用 TLS，则 URL 为 `wss://localhost:8443/chat/your-name` 。"
 
 #: _guides/websockets-next-reference.adoc
+msgid "Client endpoints"
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid ""
+"Client endpoints are classes annotated with `@io.quarkus.websockets.next.WebSocketClient`.\n"
+"The value of `WebSocketClient#path()` is used to define the path of the endpoint this client will be connected to."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "Client endpoints are used to consume and send messages. You'll need the <<client-connectors,connectors API>> to configure and open new WebSocket connections."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
 #, fuzzy
 msgid "Path parameters"
 msgstr "路径参数"
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
 msgid ""
-"The path of the WebSocket endpoint can contain path parameters.\n"
+"The path of a WebSocket endpoint can contain path parameters.\n"
 "The syntax is the same as for JAX-RS resources: `{parameterName}`."
-msgstr "WebSocket 端点的路径可以包含路径参数。其语法与 JAX-RS 资源相同： `{parameterName}` ."
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Access to the path parameter values is done through the `io.quarkus.websockets.next.WebSocketConnection` _session_ object:"
-msgstr "通过 `io.quarkus.websockets.next.WebSocketConnection` _会话_ 对象访问路径参数值："
+msgid ""
+"You can access the path parameter values using the `io.quarkus.websockets.next.WebSocketConnection#pathParam(String)` method, or `io.quarkus.websockets.next.WebSocketClientConnection#pathParam(String)` respectively.\n"
+"Alternatively, an endpoint callback method parameter annotated with `@io.quarkus.websockets.next.PathParam` is injected automatically."
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
+msgid "`WebSocketConnection#pathParam(String)` example"
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
 msgid ""
 "Path parameter values are always strings.\n"
-"If the path parameter is not present in the path, the `pathParam` method returns `null`."
-msgstr "路径参数值总是字符串。如果路径中不存在路径参数， `pathParam` 方法将返回 `null` 。"
+"If the path parameter is not present in the path, the `WebSocketConnection#pathParam(String)`/`WebSocketClientConnection#pathParam(String)` method returns `null`.\n"
+"If there is an endpoint callback method parameter annotated with `@PathParam` and the parameter name is not defined in the endpoint path, then the build fails."
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Query parameters are not supported. However, you can access the query using `session.handshakeRequest().query()`"
-msgstr "不支持查询参数。不过，您可以使用 `session.handshakeRequest().query()`"
+msgid "Query parameters are not supported. However, you can access the query using `WebSocketConnection#handshakeRequest().query()`"
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Sub-websockets endpoints"
-msgstr "子网络接口端点"
+msgid "CDI scopes"
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
 msgid ""
-"A class annotated with `@WebSocket` can encapsulate static nested classes, which are also annotated with `@WebSocket` and represent _sub-web_ sockets.\n"
-"The resulting path of these sub-web sockets concatenates the path from the enclosing class and the nested class.\n"
-"The resulting path is normalized, following the HTTP URL rules."
-msgstr "注释为 `@WebSocket` 的类可以封装静态嵌套类，这些嵌套类也注释为 `@WebSocket` ，代表 _子网络_ 套接字。这些子网络套接字的路径由外层类和嵌套类的路径连接而成。生成的路径将按照 HTTP URL 规则进行规范化处理。"
+"Endpoints are managed as CDI beans.\n"
+"By default, the `@Singleton` scope is used.\n"
+"However, developers can specify alternative scopes to fit their specific requirements."
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
 msgid ""
-"Sub-web sockets inherit access to the path parameters declared in the `@WebSocket` annotation of both the enclosing and nested classes.\n"
-"The `consumePrimary` method within the enclosing class can access the `version` parameter in the following example.\n"
-"Meanwhile, the `consumeNested` method within the nested class can access both `version` and `id` parameters:"
-msgstr "子网络套接字继承了对外层类和嵌套类的 `@WebSocket` 注解中声明的路径参数的访问权限。在下面的示例中，外层类中的 `consumePrimary` 方法可以访问 `version` 参数。同时，嵌套类中的 `consumeNested` 方法可以访问 `version` 和 `id` 参数："
+"`@Singleton` and `@ApplicationScoped` endpoints are shared accross all WebSocket connections.\n"
+"Therefore, implementations should be either stateless or thread-safe."
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "CDI Scopes for WebSocket Endpoints"
-msgstr "WebSocket 端点的 CDI 作用域"
+msgid "This server endpoint is not shared and is scoped to the session."
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
 msgid ""
-"Classes annotated with `@WebSocket` are managed as CDI beans, allowing for flexible scope management within the application.\n"
-"By default, WebSocket endpoints are considered in the singleton pseudo-scope.\n"
-"However, developers can specify alternative scopes to suit their specific requirements:"
-msgstr "注释为 `@WebSocket` 的类作为 CDI Bean 管理，允许在应用程序内进行灵活的作用域管理。默认情况下，WebSocket 端点被视为单例伪作用域。不过，开发人员可以指定其他作用域，以满足其特定需求："
+"Each WebSocket connection is associated with its own _session_ context.\n"
+"When the `@OnOpen` method is invoked, a session context corresponding to the WebSocket connection is created.\n"
+"Subsequent calls to `@On[Text|Binary]Message` or `@OnClose` methods utilize this same session context.\n"
+"The session context remains active until the `@OnClose` method completes execution, at which point it is terminated."
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
 msgid ""
-"Furthermore, each WebSocket connection is associated with its own _session_ scope.\n"
-"When the `@OnOpen` method is invoked, a session scope corresponding to the WebSocket connection is established.\n"
-"Subsequent calls to `@On[Text|Binary]Message` or `@OnClose` methods utilize this same session scope.\n"
-"The session scope remains active until the `@OnClose` method completes execution, at which point it is terminated."
-msgstr "此外，每个 WebSocket 连接都与自己的 _会话_ 作用域相关联。调用 `@OnOpen` 方法时，会建立一个与 WebSocket 连接相对应的会话作用域。随后对 `@On[Text|Binary]Message` 或 `@OnClose` 方法的调用都会使用相同的会话作用域。在 `@OnClose` 方法执行完毕之前，会话作用域一直处于活动状态，直到该方法被终止。"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "The `WebSocketConnection` object, which represents the connection itself, is also a session-scoped bean, allowing developers to access and manage WebSocket-specific data within the context of the session."
-msgstr "代表连接本身的 `WebSocketConnection` 对象也是一个会话作用域 Bean，允许开发人员在会话上下文中访问和管理 WebSocket 特定数据。"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid ""
-"In cases where a WebSocket endpoint does not declare an `@OnOpen` method, the session scope is still created.\n"
+"In cases where a WebSocket endpoint does not declare an `@OnOpen` method, the session context is still created.\n"
 "It remains active until the connection terminates, regardless of the presence of an `@OnClose` method."
-msgstr "如果 WebSocket 端点没有声明 `@OnOpen` 方法，会话作用域仍会被创建。无论是否存在 `@OnClose` 方法，会话作用域都会一直处于活动状态，直到连接终止。"
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
 #, fuzzy
@@ -255,39 +238,32 @@ msgid "Methods annotated with `@OnTextMessage,` `@OnBinaryMessage,` `@OnOpen`, a
 msgstr "注释为 `@OnTextMessage,` `@OnBinaryMessage,` `@OnOpen` , 和 `@OnClose` 的方法也会在方法执行期间激活请求作用域（直到产生结果）。"
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "WebSocket endpoint methods"
-msgstr "WebSocket 端点方法"
+msgid "Callback methods"
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "A WebSocket endpoint comprises the following components:"
-msgstr "WebSocket 端点由以下组件组成："
+msgid "A WebSocket endpoint may declare:"
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Path: This is the URL path where the WebSocket connection is established (e.g., ws://localhost:8080/)."
-msgstr "路径：这是建立 WebSocket 连接的 URL 路径（如 ws://localhost:8080/）。"
+msgid "At most one `@OnTextMessage` method: Handles the text messages from the connected client/server."
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "At most one `@OnTextMessage` method: Handles the connected client's text messages."
-msgstr "最多一个 `@OnTextMessage` 方法：处理已连接客户端的文本信息。"
+msgid "At most one `@OnBinaryMessage` method: Handles the binary messages from the connected client/server."
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "At most one `@OnBinaryMessage` method: Handles the binary messages the connected client sends."
-msgstr "最多一个 `@OnBinaryMessage` 方法：处理已连接客户端发送的二进制信息。"
+msgid "At most one `@OnPongMessage` method: Handles the pong messages from the connected client/server."
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "At most one `@OnOpen` method: Invoked when a client connects to the WebSocket."
-msgstr "最多一个 `@OnOpen` 方法：当客户端连接到 WebSocket 时调用。"
+msgid "At most one `@OnOpen` method: Invoked when a connection is opened."
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "At most one `@OnClose` method: Executed upon the client disconnecting from the WebSocket."
-msgstr "最多一个 `@OnClose` 方法：在客户端断开 WebSocket 连接时执行。"
+msgid "At most one `@OnClose` method: Executed when the connection is closed."
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
 #, fuzzy
@@ -331,9 +307,8 @@ msgid ""
 msgstr "`OnTextMessage` 从客户端接收到的 _每条_ _文本_ 信息都会调用 。 `OnBinaryMessage` "
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Invocation Rules"
-msgstr "调用规则"
+msgid "Invocation rules"
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
 #, fuzzy
@@ -383,9 +358,8 @@ msgid "Methods returning `void` or plain objects are considered blocking."
 msgstr "返回 `void` 或纯对象的方法被视为阻塞方法。"
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Method Parameters"
-msgstr "方法参数"
+msgid "Method parameters"
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
 #, fuzzy
@@ -408,9 +382,8 @@ msgid "However, it may also accept the following parameters:"
 msgstr "不过，它也可以接受以下参数："
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "`WebSocketConnection`"
-msgstr "`WebSocketConnection`"
+msgid "`WebSocketConnection`/`WebSocketClientConnection`"
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
 #, fuzzy
@@ -435,9 +408,8 @@ msgid ""
 msgstr "接收 `Multi` 时，每个连接调用一次该方法，所提供的 `Multi` 接收此连接传送的项目。该方法必须订阅 `Multi` 才能接收这些项目（或返回一个 Multi）。"
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Allowed Returned Types"
-msgstr "允许的返回类型"
+msgid "Supported return types"
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
 #, fuzzy
@@ -535,28 +507,6 @@ msgstr "Vert.x `JsonObject` 和 `JsonArray` 实例绕过了序列化和反序列
 
 #: _guides/websockets-next-reference.adoc
 #, fuzzy
-msgid "Broadcasting"
-msgstr "广播"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid ""
-"By default, responses produced by `@On[Text|Binary]Message` methods are sent back to the connected client.\n"
-"However, using the `broadcast` parameter, responses can be broadcasted to all connected clients."
-msgstr "默认情况下， `@On[Text|Binary]Message` 方法产生的响应会发回已连接的客户端。不过，使用 `broadcast` 参数，可以将响应广播给所有已连接的客户端。"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "The same principle applies to methods returning instances of `Multi` or `Uni`."
-msgstr "同样的原则也适用于返回 `Multi` 或 `Uni` 实例的方法。"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "If you need to select the connected clients that should receive the message, you can use `WebSocketConnection.broadcast().filter().sendText()`."
-msgstr "如果需要选择应接收信息的已连接客户端，可以使用 `WebSocketConnection.broadcast().filter().sendText()` 。"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
 msgid "OnOpen and OnClose methods"
 msgstr "打开和关闭方法"
 
@@ -629,18 +579,16 @@ msgid "`Uni<X>`: Specifies a non-blocking method where the item emitted by the n
 msgstr "`Uni<X>` :指定一个非阻塞方法，将非空 `Uni` 发送的项目发送到客户端。"
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
 msgid ""
-"Items sent to the client are serialized except for the `String`, `JsonObject`, `JsonArray`, `Buffer`, and `byte[]` types.\n"
+"Items sent to the client are <<serialization,serialized>> except for the `String`, `io.vertx.core.json.JsonObject`, `io.vertx.core.json.JsonArray`, `io.vertx.core.buffer.Buffer`, and `byte[]` types.\n"
 "In the case of `Multi`, Quarkus subscribes to the returned `Multi` and writes the items to the `WebSocket` as they are emitted.\n"
 "`String`, `JsonObject` and `JsonArray` are sent as text messages.\n"
 "`Buffers` and byte arrays are sent as binary messages."
-msgstr "除了 `String` , `JsonObject` , `JsonArray` , `Buffer` 和 `byte[]` 类型之外，发送到客户端的项目都是序列化的。在 `Multi` 的情况下，Quarkus 会订阅返回的 `Multi` ，并在项目发出时将其写入 `WebSocket` 。 `String` `JsonObject` `JsonArray` `Buffers` 和字节数组以二进制信息的形式发送。"
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "For `@OnClose` methods, the allowed return types are:"
-msgstr "对于 `@OnClose` 方法，允许的返回类型有"
+msgid "For `@OnClose` methods, the supported return types include:"
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
 #, fuzzy
@@ -653,51 +601,27 @@ msgid "`Uni<Void>`: The method is considered non-blocking."
 msgstr "`Uni<Void>` :该方法被认为是非阻塞的。"
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
 msgid ""
-"`@OnClose` methods cannot send items to the connection client by returning objects.\n"
-"They can only send messages to the other client by using the `WebSocketConnection` object."
-msgstr "`@OnClose` 方法不能通过返回对象向连接客户端发送项目。它们只能通过 对象向其他客户端发送消息。 `WebSocketConnection` "
+"`@OnClose` methods declared on a server endpoint cannot send items to the connected client by returning objects.\n"
+"They can only send messages to the other clients by using the `WebSocketConnection` object."
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Server-side Streaming"
-msgstr "服务器端流媒体"
+msgid "Error handling"
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Methods annotated with `@OnOpen` can utilize server-side streaming by returning a `Multi<X>`:"
-msgstr "注释为 `@OnOpen` 的方法可以通过返回 `Multi<X>` 来利用服务器端流媒体："
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Broadcasting with @OnOpen"
-msgstr "通过 @OnOpen 进行广播"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Similar to `@On[Text|Binary]Message`, items sent to the client from a method annotated with `@OnOpen` can be broadcasted to all clients instead of just the connecting client:"
-msgstr "与 `@On[Text|Binary]Message` 类似，从注释为 `@OnOpen` 的方法发送到客户端的项目可以广播给所有客户端，而不仅仅是连接的客户端："
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Error Handling"
-msgstr "错误处理"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
 msgid ""
-"The WebSocket endpoint can also be notified when an error occurs.\n"
+"WebSocket endpoints can also be notified when an error occurs.\n"
 "A WebSocket endpoint method annotated with `@io.quarkus.websockets.next.OnError` is invoked when an endpoint callback throws a runtime error, or when a conversion errors occurs,\n"
 "or when a returned `io.smallrye.mutiny.Uni`/`io.smallrye.mutiny.Multi` receives a failure."
-msgstr "当发生错误时，WebSocket 端点也会收到通知。当端点回调抛出运行时错误、发生转换错误或返回的 `io.smallrye.mutiny.Uni` / `io.smallrye.mutiny.Multi` 出现故障时，会调用注释为 `@io.quarkus.websockets.next.OnError` 的 WebSocket 端点方法。"
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
 msgid ""
-"The method must accept exactly one \"error\" parameter, i.e. a parameter that is assignable from `java.lang.Throwable`.\n"
+"The method must accept exactly one _error_ parameter, i.e. a parameter that is assignable from `java.lang.Throwable`.\n"
 "The method may also accept the following parameters:"
-msgstr "方法必须接受一个 \"错误 \"参数，即可从 `java.lang.Throwable` 分配的参数。方法还可接受以下参数："
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
 #, fuzzy
@@ -713,44 +637,193 @@ msgid "The `@io.quarkus.websockets.next.OnError` annotation can be also used to 
 msgstr "`@io.quarkus.websockets.next.OnError` 注解也可用于声明全局错误处理程序，即未在 WebSocket 端点上声明的方法。这种方法可能不接受 `@PathParam` 参数。在端点上声明的错误处理程序优先于全局错误处理程序。"
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
 msgid ""
-"When an error occurs but no error handler can handle the failure, Quarkus uses the strategy specified by `quarkus.websockets-next.server.unhandled-failure-strategy` and `quarkus.websockets-next.client.unhandled-failure-strategy`, respectively.\n"
+"When an error occurs but no error handler can handle the failure, Quarkus uses the strategy specified by `quarkus.websockets-next.server.unhandled-failure-strategy`.\n"
 "By default, the connection is closed.\n"
 "Alternatively, an error message can be logged or no operation performed."
-msgstr "当发生错误但没有错误处理程序可以处理该故障时，Quarkus 会使用 `quarkus.websockets-next.server.unhandled-failure-strategy` 和 `quarkus.websockets-next.client.unhandled-failure-strategy` 分别指定的策略。默认情况下，连接会被关闭。或者，记录一条错误信息，或者不执行任何操作。"
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "Serialization and deserialization"
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
 #, fuzzy
-msgid "Access to the WebSocketConnection"
-msgstr "访问 WebSocketConnection"
+msgid "The WebSocket Next extension supports automatic serialization and deserialization of messages."
+msgstr "WebSocket Next 扩展支持消息的自动序列化和反序列化。"
+
+#: _guides/websockets-next-reference.adoc
+msgid ""
+"Objects of type `String`, `JsonObject`, `JsonArray`, `Buffer`, and `byte[]` are sent as-is and by-pass the serialization and deserialization.\n"
+"When no codec is provided, the serialization and deserialization convert the message from/to JSON automatically."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+#, fuzzy
+msgid "When you need to customize the serialization and deserialization, you can provide a custom codec."
+msgstr "如果需要自定义序列化和反序列化，可以提供自定义编解码器。"
+
+#: _guides/websockets-next-reference.adoc
+#, fuzzy
+msgid "Custom codec"
+msgstr "自定义编解码器"
+
+#: _guides/websockets-next-reference.adoc
+msgid "To implement a custom codec, you must provide a CDI bean implementing:"
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "`io.quarkus.websockets.next.BinaryMessageCodec` for binary messages"
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "`io.quarkus.websockets.next.TextMessageCodec` for text messages"
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+#, fuzzy
+msgid "The following example shows how to implement a custom codec for a `Item` class:"
+msgstr "下面的示例展示了如何为 `Item` 类实现自定义编解码器："
+
+#: _guides/websockets-next-reference.adoc
+msgid "`OnTextMessage` and `OnBinaryMessage` methods can also specify which codec should be used explicitly:"
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+#, fuzzy
+msgid "Specify the codec to use for both the deserialization and serialization of the message"
+msgstr "指定用于报文反序列化和序列化的编解码器"
+
+#: _guides/websockets-next-reference.adoc
+#, fuzzy
+msgid "When the serialization and deserialization must use a different codec, you can specify the codec to use for the serialization and deserialization separately:"
+msgstr "如果序列化和反序列化必须使用不同的编解码器，可以分别指定序列化和反序列化使用的编解码器："
+
+#: _guides/websockets-next-reference.adoc
+#, fuzzy
+msgid "Specify the codec to use for both the deserialization of the incoming message"
+msgstr "指定输入信息反序列化时使用的编解码器"
+
+#: _guides/websockets-next-reference.adoc
+#, fuzzy
+msgid "Specify the codec to use for the serialization of the outgoing message"
+msgstr "指定用于外发信息序列化的编解码器"
+
+#: _guides/websockets-next-reference.adoc
+#, fuzzy
+msgid "Ping/pong messages"
+msgstr "乒乓球信息"
 
 #: _guides/websockets-next-reference.adoc
 #, fuzzy
 msgid ""
+"A https://datatracker.ietf.org/doc/html/rfc6455#section-5.5.2[ping message] may serve as a keepalive or to verify the remote endpoint.\n"
+"A https://datatracker.ietf.org/doc/html/rfc6455#section-5.5.3[pong message] is sent in response to a ping message and it must have an identical payload."
+msgstr "link:https://datatracker.ietf.org/doc/html/rfc6455#section-5.5.2[ping 报文] 可用作保持报文或验证远程端点。 link:https://datatracker.ietf.org/doc/html/rfc6455#section-5.5.3[pong] 报文是对 ping 报文的回应，其有效载荷必须完全相同。"
+
+#: _guides/websockets-next-reference.adoc
+msgid ""
+"Server/client endpoints automatically respond to a ping message sent from the client/server.\n"
+"In other words, there is no need for `@OnPingMessage` callback declared on an endpoint."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid ""
+"The server can send ping messages to a connected client.\n"
+"`WebSocketConnection`/`WebSocketClientConnection` declare methods to send ping messages; there is a non-blocking variant: `sendPing(Buffer)` and a blocking variant: `sendPingAndAwait(Buffer)`.\n"
+"By default, the ping messages are not sent automatically.\n"
+"However, the configuration properties `quarkus.websockets-next.server.auto-ping-interval` and `quarkus.websockets-next.client.auto-ping-interval` can be used to set the interval after which, the server/client sends a ping message to a connected client/server automatically."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "Sends a ping message from the server to a connected client every 2 seconds."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid ""
+"The `@OnPongMessage` annotation is used to define a callback that consumes pong messages sent from the client/server.\n"
+"An endpoint must declare at most one method annotated with `@OnPongMessage`.\n"
+"The callback method must return either `void` or `Uni<Void>`, and it must accept a single parameter of type `Buffer`."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "The server/client can also send unsolicited pong messages that may serve as a unidirectional heartbeat. There is a non-blocking variant: `WebSocketConnection#sendPong(Buffer)` and also a blocking variant: `WebSocketConnection#sendPongAndAwait(Buffer)`."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "Server API"
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "HTTP server configuration"
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "This extension reuses the _main_ HTTP server."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+#, fuzzy
+msgid "Thus, the configuration of the WebSocket server is done in the `quarkus.http.` configuration section."
+msgstr "因此，WebSocket 服务器的配置在 `quarkus.http.` 配置部分完成。"
+
+#: _guides/websockets-next-reference.adoc
+#, fuzzy
+msgid ""
+"WebSocket paths configured within the application are concatenated with the root path defined by `quarkus.http.root` (which defaults to /).\n"
+"This concatenation ensures that WebSocket endpoints are appropriately positioned within the application's URL structure."
+msgstr "应用程序中配置的 WebSocket 路径与 `quarkus.http.root` 定义的根路径（默认为/）连接。这种连接可确保 WebSocket 端点在应用程序的 URL 结构中位置恰当。"
+
+#: _guides/websockets-next-reference.adoc
+#, fuzzy
+msgid "Refer to the xref:http-reference.adoc[HTTP guide] for more details."
+msgstr "详情请参考 xref:http-reference.adoc[HTTP 指南] 。"
+
+#: _guides/websockets-next-reference.adoc
+#, fuzzy
+msgid "Sub-websockets endpoints"
+msgstr "子网络接口端点"
+
+#: _guides/websockets-next-reference.adoc
+msgid ""
+"A `@WebSocket` endpoint can encapsulate static nested classes, which are also annotated with /`@WebSocket` and represent _sub-websockets_.\n"
+"The resulting path of these sub-web sockets concatenates the path from the enclosing class and the nested class.\n"
+"The resulting path is normalized, following the HTTP URL rules."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+#, fuzzy
+msgid ""
+"Sub-web sockets inherit access to the path parameters declared in the `@WebSocket` annotation of both the enclosing and nested classes.\n"
+"The `consumePrimary` method within the enclosing class can access the `version` parameter in the following example.\n"
+"Meanwhile, the `consumeNested` method within the nested class can access both `version` and `id` parameters:"
+msgstr "子网络套接字继承了对外层类和嵌套类的 `@WebSocket` 注解中声明的路径参数的访问权限。在下面的示例中，外层类中的 `consumePrimary` 方法可以访问 `version` 参数。同时，嵌套类中的 `consumeNested` 方法可以访问 `version` 和 `id` 参数："
+
+#: _guides/websockets-next-reference.adoc
+msgid "WebSocket connection"
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid ""
 "The `io.quarkus.websockets.next.WebSocketConnection` object represents the WebSocket connection.\n"
-"It's _session-scoped_  and is valid for the whole duration of the connection."
-msgstr "`io.quarkus.websockets.next.WebSocketConnection` 对象代表 WebSocket 连接。它是 _会话作用域_ ，在整个连接期间有效。"
+"Quarkus provides a `@SessionScoped` CDI bean that implements this interface and can be injected in a `WebSocket` endpoint and used to interact with the connected client."
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Methods annotated with `@OnOpen`, `@OnTextMessage`, `@OnBinaryMessage`, and `@OnClose` can access the `WebSocketConnection` object:"
-msgstr "注释为 `@OnOpen` , `@OnTextMessage` , `@OnBinaryMessage` 和 `@OnClose` 的方法可以访问 `WebSocketConnection` 对象："
+msgid "Methods annotated with `@OnOpen`, `@OnTextMessage`, `@OnBinaryMessage`, and `@OnClose` can access the injected `WebSocketConnection` object:"
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Note that outside of these methos, the `WebSocketConnection` object is not available."
-msgstr "请注意，在这些方法之外， `WebSocketConnection` 对象不可用。"
+msgid "Note that outside of these methos, the `WebSocketConnection` object is not available. However, it is possible to <<list-open-connections,list all open connections>>."
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "The connection can be used to send messages to the client, access the path parameters, and broadcast messages to all connected clients."
-msgstr "该连接可用于向客户端发送消息、访问路径参数以及向所有连接的客户端广播消息。"
+msgid "The connection can be used to send messages to the client, access the path parameters, broadcast messages to all connected clients, etc."
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "The `WebSocketConnection` provides both a blocking and a non-blocking method to send messages:"
-msgstr "`WebSocketConnection` 提供了阻塞和非阻塞两种发送消息的方法："
+msgid "The `WebSocketConnection` provides both a blocking and a non-blocking method variants to send messages:"
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
 #, fuzzy
@@ -802,124 +875,6 @@ msgstr "打开新连接时，Quarkus 会异步触发 `io.quarkus.websockets.next
 #, fuzzy
 msgid "An asynchronous observer method is executed using the default blocking executor service."
 msgstr "异步观察者方法使用默认的阻塞执行器服务执行。"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Serialization and Deserialization"
-msgstr "序列化和反序列化"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "The WebSocket Next extension supports automatic serialization and deserialization of messages."
-msgstr "WebSocket Next 扩展支持消息的自动序列化和反序列化。"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid ""
-"Objects of type `String`, `JsonObject`, `JsonArray`, `Buffer`, and `byte[]` are sent as-is and by-pass the serialization and deserialization.\n"
-"When no codec is provided, the serialization and deserialization uses JSON (Jackson) automatically."
-msgstr "`String` , `JsonObject` , `JsonArray` , `Buffer` 和 `byte[]` 类型的对象按原样发送，并通过序列化和反序列化。如果没有提供编码解码器，序列化和反序列化将自动使用 JSON (Jackson)。"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "When you need to customize the serialization and deserialization, you can provide a custom codec."
-msgstr "如果需要自定义序列化和反序列化，可以提供自定义编解码器。"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Custom codec"
-msgstr "自定义编解码器"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "To implement a custom codec, you must provides a CDI bean implementing:"
-msgstr "要实现自定义编解码器，必须提供一个 CDI Bean 来实现："
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "`io.quarkus.websockets.next.BinaryMessageCodec`  for binary messages"
-msgstr "`io.quarkus.websockets.next.BinaryMessageCodec` 用于二进制信息"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "`io.quarkus.websockets.next.TextMessageCodec`  for text messages"
-msgstr "`io.quarkus.websockets.next.TextMessageCodec` 用于短信"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "The following example shows how to implement a custom codec for a `Item` class:"
-msgstr "下面的示例展示了如何为 `Item` 类实现自定义编解码器："
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "`OnTextMessage` and `OnBinaryMessage` methods can also specify which codec need to be used explicitly:"
-msgstr "`OnTextMessage` 和 方法也可以明确指定需要使用的编解码器： `OnBinaryMessage` "
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Specify the codec to use for both the deserialization and serialization of the message"
-msgstr "指定用于报文反序列化和序列化的编解码器"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "When the serialization and deserialization must use a different codec, you can specify the codec to use for the serialization and deserialization separately:"
-msgstr "如果序列化和反序列化必须使用不同的编解码器，可以分别指定序列化和反序列化使用的编解码器："
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Specify the codec to use for both the deserialization of the incoming message"
-msgstr "指定输入信息反序列化时使用的编解码器"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Specify the codec to use for the serialization of the outgoing message"
-msgstr "指定用于外发信息序列化的编解码器"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Ping/pong messages"
-msgstr "乒乓球信息"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid ""
-"A https://datatracker.ietf.org/doc/html/rfc6455#section-5.5.2[ping message] may serve as a keepalive or to verify the remote endpoint.\n"
-"A https://datatracker.ietf.org/doc/html/rfc6455#section-5.5.3[pong message] is sent in response to a ping message and it must have an identical payload."
-msgstr "link:https://datatracker.ietf.org/doc/html/rfc6455#section-5.5.2[ping 报文] 可用作保持报文或验证远程端点。 link:https://datatracker.ietf.org/doc/html/rfc6455#section-5.5.3[pong] 报文是对 ping 报文的回应，其有效载荷必须完全相同。"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid ""
-"The server automatically responds to a ping message sent from the client.\n"
-"In other words, there is no need for `@OnPingMessage` callback declared on an endpoint."
-msgstr "服务器会自动响应客户端发送的 ping 消息。换句话说，无需在端点上声明 `@OnPingMessage` 回调。"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid ""
-"The server can send ping messages to a connected client.\n"
-"The `WebSocketConnection` declares methods to send ping messages; there is a non-blocking variant: `WebSocketConnection#sendPing(Buffer)` and a blocking variant: `WebSocketConnection#sendPingAndAwait(Buffer)`.\n"
-"By default, the ping messages are not sent automatically.\n"
-"However, the configuration property `quarkus.websockets-next.server.auto-ping-interval` can be used to set the interval after which, the server sends a ping message to a connected client automatically."
-msgstr "服务器可向已连接的客户端发送 ping 消息。 `WebSocketConnection` 声明了发送 ping 消息的方法；有一个非阻塞变体： `WebSocketConnection#sendPing(Buffer)` 和一个阻塞变体： `WebSocketConnection#sendPingAndAwait(Buffer)` 。默认情况下，ping 消息不会自动发送。不过，可以使用配置属性 `quarkus.websockets-next.server.auto-ping-interval` 来设置服务器自动向已连接客户端发送 ping 消息的时间间隔。"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Sends a ping message to a connected client every 2 seconds."
-msgstr "每 2 秒向已连接的客户端发送一条 ping 信息。"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid ""
-"The `@OnPongMessage` annotation is used to define a callback that consumes pong messages sent from the client.\n"
-"An endpoint must declare at most one method annotated with `@OnPongMessage`.\n"
-"The callback method must return either `void` or `Uni<Void>`, and it must accept a single parameter of type `Buffer`."
-msgstr "`@OnPongMessage` 注解用于定义一个回调函数，该函数消耗客户端发送的 pong 消息。端点必须最多声明一个注释为 `@OnPongMessage` 的方法。回调方法必须返回 `void` 或 `Uni<Void>` ，并且必须接受一个类型为 `Buffer` 的参数。"
-
-#: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "The server can also send unsolicited pong messages that may serve as a unidirectional heartbeat. There is a non-blocking variant: `WebSocketConnection#sendPong(Buffer)` and also a blocking variant: `WebSocketConnection#sendPongAndAwait(Buffer)`."
-msgstr "服务器还可以主动发送乒乓信息，作为单向心跳。有一种非阻塞变体： `WebSocketConnection#sendPong(Buffer)` ，还有一种阻塞变体： `WebSocketConnection#sendPongAndAwait(Buffer)` 。"
 
 #: _guides/websockets-next-reference.adoc
 msgid "Security"
@@ -1028,19 +983,180 @@ msgid "You can choose WebSocket endpoints to which the `HttpUpgradeCheck` is app
 msgstr "您可以通过 `HttpUpgradeCheck#appliesTo` 方法选择应用 `HttpUpgradeCheck` 的 WebSocket 端点。"
 
 #: _guides/websockets-next-reference.adoc
+msgid "TLS"
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "As a direct consequence of the fact this extension reuses the _main_ HTTP server, all the relevant server configurations apply. See Refer to the xref:http-reference.adoc#ssl[HTTP guide] for more details."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "Client API"
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "Client connectors"
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid ""
+"The `io.quarkus.websockets.next.WebSocketConnector<CLIENT>` is used to configure and create new connections for client endpoints.\n"
+"A CDI bean that implements this interface is provided and can be injected in other beans.\n"
+"The actual type argument is used to determine the client endpoint.\n"
+"The type is validated during build - if it does not represent a client endpoint the build fails."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "Let’s consider the following client endpoint:"
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "Client endpoint"
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "The connector for this client endpoint is used as follows:"
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "Connector"
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "Inject the connector for `ClientEndpoint`."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "If the base `URI` is not supplied we attempt to obtain the value from the config. The key consists of the client id and the `.base-uri` suffix."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "Set the path param value. Throws `IllegalArgumentException` if the client endpoint path does not contain a parameter with the given name."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "Use the connection to send messages, if needed."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "If an application attempts to inject a connector for a missing endpoint, an error is thrown."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "Basic connector"
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid ""
+"In the case where the application developer does not need the combination of the client endpoint and the connector, a _basic connector_ can be used.\n"
+"The basic connector is a simple way to create a connection and consume/send messages without defining a client endpoint."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "Inject the connector."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "The base URI must be always set."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "The additional path that should be appended to the base URI."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "Set the execution model for callback handlers. By default, the callback may block the current thread. However in this case, the callback is executed on the event loop and may not block the current thread."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "The lambda will be called for every text message sent from the server."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid ""
+"The basic connector is closed to a low-level API and is reserved for advanced users.\n"
+"However, unlike others low-level WebSocket clients, it is still a CDI bean and can be injected in other beans.\n"
+"It also provides a way to configure the execution model of the callbacks, ensuring the optimal integration with the rest of Quarkus."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "WebSocket client connection"
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid ""
+"The `io.quarkus.websockets.next.WebSocketClientConnection` object represents the WebSocket connection.\n"
+"Quarkus provides a `@SessionScoped` CDI bean that implements this interface and can be injected in a `WebSocketClient` endpoint and used to interact with the connected server."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "Methods annotated with `@OnOpen`, `@OnTextMessage`, `@OnBinaryMessage`, and `@OnClose` can access the injected `WebSocketClientConnection` object:"
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "Note that outside of these methos, the `WebSocketClientConnection` object is not available. However, it is possible to <<list-open-client-connections,list all open client connections>>."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "The connection can be used to send messages to the client, access the path parameters, etc."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "The `WebSocketClientConnection` provides both a blocking and a non-blocking method variants to send messages:"
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "List open client connections"
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid ""
+"It is also possible to list all open connections.\n"
+"Quarkus provides a CDI bean of type `io.quarkus.websockets.next.OpenClientConnections` that declares convenient methods to access the connections."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "`OpenClientConnections#listAll()` returns an immutable snapshot of all open connections at the given time."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid ""
+"There are also other convenient methods.\n"
+"For example, `OpenClientConnections#findByClientId(String)` makes it easy to find connections for a specific endpoint."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "Configuring SSL/TLS"
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "To establish a TLS connection, you need to configure a _named_ configuration using the xref:./tls-registry-reference.adoc[TLS registry]:"
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid ""
+"When using the WebSocket client, using a _named_ configuration is required to avoid conflicts with other TLS configurations.\n"
+"The client will not use the default TLS configuration."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
+msgid "When you configure a _named_ TLS configuration, TLS is enabled by default."
+msgstr ""
+
+#: _guides/websockets-next-reference.adoc
 #, fuzzy
 msgid "Traffic logging"
 msgstr "流量记录"
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
 msgid ""
 "Quarkus can log the messages sent and received for debugging purposes.\n"
-"To enable traffic logging, set the `quarkus.websockets-next.server.traffic-logging.enabled` configuration property to `true`.\n"
+"To enable traffic logging for the server, set the `quarkus.websockets-next.server.traffic-logging.enabled` configuration property to `true`.\n"
+"To enable traffic logging for the client, set the `quarkus.websockets-next.client.traffic-logging.enabled` configuration property to `true`.\n"
 "The payload of text messages is logged as well.\n"
 "However, the number of logged characters is limited.\n"
-"The default limit is 100, but you can change this limit with the `quarkus.websockets-next.server.traffic-logging.text-payload-limit` configuration property."
-msgstr "Quarkus 可以记录发送和接收的信息，以便调试。要启用流量记录，请将 `quarkus.websockets-next.server.traffic-logging.enabled` 配置属性设置为 `true` 。文本信息的有效载荷也会被记录。不过，记录的字符数有限制。默认限制为 100，但可以通过 `quarkus.websockets-next.server.traffic-logging.text-payload-limit` 配置属性更改此限制。"
+"The default limit is 100, but you can change this limit with the `quarkus.websockets-next.server.traffic-logging.text-payload-limit` and `quarkus.websockets-next.client.traffic-logging.text-payload-limit` configuration property, respectively."
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
 #, fuzzy
@@ -1048,9 +1164,8 @@ msgid "The messages are only logged if the `DEBUG` level is enabled for the logg
 msgstr "只有在记录仪 `io.quarkus.websockets.next.traffic` 启用 `DEBUG` 级别时，才会记录报文。"
 
 #: _guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "Example configuration"
-msgstr "配置示例"
+msgid "Example server configuration"
+msgstr ""
 
 #: _guides/websockets-next-reference.adoc
 #, fuzzy
