@@ -7,217 +7,271 @@ msgstr ""
 "X-Generator: jekyll-l10n\n"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Leveraging Quarkus build-time metaprogramming capabilities to improve Jackson's serialization performance"
-msgstr ""
+msgstr "利用 Quarkus 构建时元编程功能提高 Jackson 的序列化性能"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "One of the key architectural decisions taken by Quarkus designers has been moving as much work as possible from the startup time to the build time. This choice implies a clear separation between the deployment (aka. build-time) and runtime parts of each extension, and allows to perform the biggest part of the work once and for all during the build, thus allowing the typical Quarkus application to have a smaller footprint and faster load time."
-msgstr ""
+msgstr "Quarkus 设计人员所做的关键架构决定之一，就是将尽可能多的工作从启动时间转移到构建时间。这种选择意味着每个扩展的部署（又称构建时间）和运行时间部分之间的明确分离，并允许在构建过程中一次性执行最大部分的工作，从而使典型的 Quarkus 应用程序具有更小的占用空间和更快的加载时间。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "A consequence of this architecture is the possibility of extensively leveraging https://en.wikipedia.org/wiki/Metaprogramming[metaprogramming], identifying and analyzing the Java classes implementing the domain model of a given application and generating other code intended to opportunely and efficiently manipulate those classes. In particular the goal of the improvement discussed in this article is replacing the standard Jackson serialization mechanism, based on reflection, with code generated at build time."
-msgstr ""
+msgstr "这种架构的一个结果是可以广泛利用 link:https://en.wikipedia.org/wiki/Metaprogramming[元编程] ，识别和分析实现给定应用程序领域模型的 Java 类，并生成其他代码，以便适时、高效地操作这些类。本文讨论的改进目标尤其是用构建时生成的代码取代基于反射的标准 Jackson 序列化机制。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Reflection is used (and abused) by many Java frameworks and libraries to support dynamic behavior. If more work is done at build time, this dynamism is no longer needed. Reducing reflection to a bare minimum gives performance improvements. It also makes the application more suitable for compilation to a native binary (the https://docs.oracle.com/en/learn/understanding-reflection-graalvm-native-image/index.html#step-2-the-closed-world-assumption[GraalVM closed world assumption])."
-msgstr ""
+msgstr "许多 Java 框架和库都使用（和滥用）反射来支持动态行为。如果在构建时完成更多工作，就不再需要这种动态性。将反射减少到最低限度可以提高性能。它还能使应用程序更适合编译为本地二进制文件（ link:https://docs.oracle.com/en/learn/understanding-reflection-graalvm-native-image/index.html#step-2-the-closed-world-assumption[GraalVM 封闭世界假设] ）。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "A similar idea has been already implemented also in the area of object to JSON serialization by https://github.com/quarkusio/qson[Qson], a Quarkus extension that generates through Gizmo the bytecode of deserializer (parser) and serializer (writer) classes. However, this is a full replacement of Jackson and comes with some, quite significant, https://github.com/quarkusio/qson?tab=readme-ov-file#limitations[limitations]."
-msgstr ""
+msgstr "在对象到 JSON 的序列化领域， link:https://github.com/quarkusio/qson[Qson] 也实现了类似的想法， link:https://github.com/quarkusio/qson[Qson] 是 Quarkus 的一个扩展，可通过 Gizmo 生成反序列化器（解析器）和序列化器（写入器）类的字节码。不过，这只是对 Jackson 的完全替代，存在一些相当大的 link:https://github.com/quarkusio/qson?tab=readme-ov-file#limitations[局限性] 。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "If you decide to remain on the most common choice and keep using Jackson for the JSON serialization of objects returned by the invocation of a REST endpoint, you will still pay the price of the heavily reflection-based implementation offered out of the box by that library. In this article I will illustrate how I filled this gap and, most importantly, what I learned on how to write a Quarkus extension, or in my case improve an existing one, and in particular on how to use tools like Jandex and Gizmo."
-msgstr ""
+msgstr "如果你决定保留最常见的选择，继续使用 Jackson 来对调用 REST 端点时返回的对象进行 JSON 序列化，那么你仍将付出该库开箱即用、严重基于反射实现的代价。在本文中，我将说明我是如何填补这一空白的，最重要的是，我学到了如何编写 Quarkus 扩展，或者在我的案例中如何改进现有扩展，尤其是如何使用 Jandex 和 Gizmo 等工具。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Out-of-the-box Jackson’s reflection-based serialization"
-msgstr ""
+msgstr "开箱即用的 Jackson 基于反射的序列化"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Before trying to remove the use of reflection from Jackson's serialization, let’s look at the current situation. To do so I added a https://github.com/franz1981/quarkus-profiling-workshop/blob/b0f1f61e2ed5f8b196d62bd74ad15d658e949d8c/src/main/java/profiling/workshop/json/CustomerLookupResource.java#L18[new REST endpoint] to the https://github.com/franz1981/quarkus-profiling-workshop[benchmark suite] written by https://x.com/forked_franz[Francesco Nigro] and myself that we also used for our https://www.youtube.com/watch?v=Cw4nN5L-2vU[Devoxx Belgium workshop on profiling]. The goal of this benchmark is stressing the JSON serialization, so this endpoint doesn’t do anything else other than returning and then serializing in JSON a fixed object, in essence, writing and returning a JSON like the following:"
-msgstr ""
+msgstr "在尝试从 Jackson 的序列化中移除反射的使用之前，让我们先看看当前的情况。为此，我在由 link:https://x.com/forked_franz[Francesco Nigro] 和我本人编写的 link:https://github.com/franz1981/quarkus-profiling-workshop[基准套件] 中添加了一个 link:https://github.com/franz1981/quarkus-profiling-workshop/blob/b0f1f61e2ed5f8b196d62bd74ad15d658e949d8c/src/main/java/profiling/workshop/json/CustomerLookupResource.java#L18[新的 REST 端点] ，我们在 link:https://www.youtube.com/watch?v=Cw4nN5L-2vU[比利时 Devoxx 编程研讨会上] 也使用了该 link:https://github.com/franz1981/quarkus-profiling-workshop[基准套件] 。该基准的目标是强调 JSON 序列化，因此该端点除了返回并序列化一个固定对象的 JSON 之外没有做其他任何事情，实质上就是编写并返回类似下面这样的 JSON："
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Running the benchmark suite against that endpoint I got the following result."
-msgstr ""
+msgstr "针对该端点运行基准套件，我得到了以下结果。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "or in other words my laptop can process just a bit more than 81K requests per second when serving that endpoint. We will see how getting rid of reflection will bring a 12% improvement of this figure, allowing it to process more than 92K requests per second, and in particular producing the following result."
-msgstr ""
+msgstr "换句话说，我的笔记本电脑在为该端点提供服务时，每秒只能处理 81K 多一点的请求。我们将看到，去掉反射后，这一数字将提高 12%，每秒可处理超过 92K 个请求，特别是会产生以下结果。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Being intended to be used for profiling, our benchmark suite also automatically produces a flamegraph of the benchmark under investigation. Zooming the resulting flamegraph on the https://github.com/quarkusio/quarkus/blob/5f2d29b4500e88ebd6a3c7a8731f6165fb6b64e0/extensions/resteasy-reactive/rest-jackson/runtime/src/main/java/io/quarkus/resteasy/reactive/jackson/runtime/serialisers/FullyFeaturedServerJacksonMessageBodyWriter.java#L52[method of the rest-jackson extension] triggering the JSON serialization we find the following situation where we can see that the `ObjectWriter::writeValue` Jackson’s method actually converting the object to its JSON representation has been found on the stack of 252 samples during the benchmark execution."
-msgstr ""
+msgstr "我们的基准套件旨在用于剖析，因此也会自动生成所研究基准的火焰图。将生成的火焰图放大到 link:https://github.com/quarkusio/quarkus/blob/5f2d29b4500e88ebd6a3c7a8731f6165fb6b64e0/extensions/resteasy-reactive/rest-jackson/runtime/src/main/java/io/quarkus/resteasy/reactive/jackson/runtime/serialisers/FullyFeaturedServerJacksonMessageBodyWriter.java#L52[rest-jackson 扩展] 中触发 JSON 序列化的 link:https://github.com/quarkusio/quarkus/blob/5f2d29b4500e88ebd6a3c7a8731f6165fb6b64e0/extensions/resteasy-reactive/rest-jackson/runtime/src/main/java/io/quarkus/resteasy/reactive/jackson/runtime/serialisers/FullyFeaturedServerJacksonMessageBodyWriter.java#L52[方法] 上，我们会发现以下情况：在基准执行期间，我们在 252 个样本的堆栈中发现了 `ObjectWriter::writeValue` Jackson 方法，该方法实际上是将对象转换为 JSON 表示形式。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Flamegraph of out of the box Jackson’s serialization"
-msgstr ""
+msgstr "开箱即用的杰克逊序列化火焰图"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Further zooming the flamegraph on the Jackson’s `BeanPropertyWriter::serializeAsField` method and searching for the word “reflect” it is possible to see in how many different places, evidenced in purple in this flamegraph, Jackson needs to use Java reflection in order to read the state of the object to be serialized and write it into a JSON string."
-msgstr ""
+msgstr "进一步放大杰克逊 `BeanPropertyWriter::serializeAsField` 方法的火焰图并搜索 \"反射 \"一词，可以看到杰克逊需要在许多不同的地方（如火焰图中的紫色部分）使用 Java 反射来读取要序列化对象的状态并将其写入 JSON 字符串。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Use of reflection in out of the box Jackson’s serialization"
-msgstr ""
+msgstr "在开箱即用的杰克逊序列化中使用反射"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "As expected this use case requires a quite heavy use of reflection which is the thing that we want to avoid. We have already found that the JSON serialization is performed by the rest-jackson extension, so let’s see how we can modify it to achieve this goal."
-msgstr ""
+msgstr "不出所料，这种用例需要大量使用反射，而这正是我们想要避免的。我们已经发现 JSON 序列化是由 rest-jackson 扩展执行的，因此让我们看看如何修改它来实现这一目标。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Overriding Jackson serialization"
-msgstr ""
+msgstr "覆盖杰克逊序列化"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Jackson makes it possible to override its standard reflection-based serialization behavior in a pretty simple way. It is sufficient to implement a class extending its `StdSerializer` thus defining how an instance of a given pojo should be rendered in JSON, something like:"
-msgstr ""
+msgstr "Jackson 可以通过非常简单的方式覆盖其标准的基于反射的序列化行为。只需实现一个扩展其 `StdSerializer` 的类，从而定义给定 pojo 的实例应如何以 JSON 格式呈现，比如"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "and then to add this serializer to a module and register it on the ObjectMapper used by Jackson to perform the JSON serialization."
-msgstr ""
+msgstr "然后将此序列化器添加到模块中，并在 Jackson 用于执行 JSON 序列化的 ObjectMapper 上注册。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "With this setup everytime Jackson will have to convert an instance of the `Person` class into its JSON representation it will do this through this custom serializer instead of accessing the person’s fields via reflection."
-msgstr ""
+msgstr "有了这个设置，Jackson 每次需要将 `Person` 类的实例转换为 JSON 表示时，都会通过这个自定义序列化器来完成，而不是通过反射来访问人的字段。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "The strategy to implement reflection-free JSON serialization is then quite straightforward, but of course it would be great if the Quarkus extension could generate and register those serializers automatically and effortlessly. The first step to achieve this is discovering at deployment time for which classes we need to generate those serializers. In our case they are the classes returned by all the REST endpoints in our application, but of course the same approach could be extended to a wider scope."
-msgstr ""
+msgstr "实现无反射 JSON 序列化的策略非常简单，当然，如果 Quarkus 扩展能毫不费力地自动生成和注册这些序列化器就更好了。实现这一目标的第一步是在部署时发现我们需要为哪些类生成这些序列化器。在我们的例子中，它们是应用程序中所有 REST 端点返回的类，当然，同样的方法也可以扩展到更大的范围。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Discovering and indexing the classes to be serialized with Jandex"
-msgstr ""
+msgstr "使用 Jandex 发现要序列化的类并编制索引"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "In general https://quarkus.io/guides/cdi-reference#bean_discovery[bean discovery] is performed by Quarkus, which indexes all the beans that are part of the CDI process through https://smallrye.io/jandex/[Jandex]. Since it finds all the bean classes having a https://jakarta.ee/specifications/cdi/4.1/jakarta-cdi-spec-4.1.html#bean_defining_annotations[bean defining annotation], this already includes all services exposing one or more REST endpoints that must have such an annotation. This means that all endpoints are already discovered by default. Even better, the https://jakarta.ee/specifications/cdi/4.1/jakarta-cdi-spec-4.1.html#bean_defining_annotations[quarkus-rest] extension already collects https://github.com/quarkusio/quarkus/blob/4ee036a19d64f537bea7836a25d5362091b0e8fc/extensions/resteasy-reactive/rest/deployment/src/main/java/io/quarkus/resteasy/reactive/server/deployment/ResteasyReactiveResourceMethodEntriesBuildItem.java#L30[an Entry for each rest method] in the `ResteasyReactiveResourceMethodEntriesBuildItem`."
-msgstr ""
+msgstr "一般来说， link:https://quarkus.io/guides/cdi-reference#bean_discovery[豆类发现] 由 Quarkus 执行，它通过 link:https://smallrye.io/jandex/[Jandex] 索引 CDI 流程中的所有豆类。由于它会找到所有具有 link:https://jakarta.ee/specifications/cdi/4.1/jakarta-cdi-spec-4.1.html#bean_defining_annotations[bean 定义注解的] bean 类，因此这已经包括了所有暴露一个或多个 REST 端点的服务，而这些端点必须具有此类注解。这意味着默认情况下所有端点都已被发现。更妙的是， link:https://jakarta.ee/specifications/cdi/4.1/jakarta-cdi-spec-4.1.html#bean_defining_annotations[quarkus-rest] 扩展已经 link:https://github.com/quarkusio/quarkus/blob/4ee036a19d64f537bea7836a25d5362091b0e8fc/extensions/resteasy-reactive/rest/deployment/src/main/java/io/quarkus/resteasy/reactive/server/deployment/ResteasyReactiveResourceMethodEntriesBuildItem.java#L30[为] `ResteasyReactiveResourceMethodEntriesBuildItem` 中的 link:https://github.com/quarkusio/quarkus/blob/4ee036a19d64f537bea7836a25d5362091b0e8fc/extensions/resteasy-reactive/rest/deployment/src/main/java/io/quarkus/resteasy/reactive/server/deployment/ResteasyReactiveResourceMethodEntriesBuildItem.java#L30[每个休息方法] 收集了 link:https://github.com/quarkusio/quarkus/blob/4ee036a19d64f537bea7836a25d5362091b0e8fc/extensions/resteasy-reactive/rest/deployment/src/main/java/io/quarkus/resteasy/reactive/server/deployment/ResteasyReactiveResourceMethodEntriesBuildItem.java#L30[一个 Entry] 。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Here each of these entries contains an instance of the Jandex `MethodInfo` that carries all the necessary offline reflection information about the signature of a Java method implementing a specific REST endpoint. As anticipated we are interested in the types returned by those methods, because those are the classes of the objects that will require to be converted in JSON as response to the REST endpoints invocation."
-msgstr ""
+msgstr "在这里，每个条目都包含一个 Jandex `MethodInfo` 的实例，该实例包含实现特定 REST 端点的 Java 方法签名的所有必要离线反射信息。正如预期的那样，我们对这些方法返回的类型很感兴趣，因为这些类型是需要转换成 JSON 格式的对象类，以响应 REST 端点的调用。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Now we have all the building blocks to start developing a https://quarkus.io/guides/writing-extensions#build-step-processors[`BuildStep`] that collects, without duplications, all those return types, represented as Jandex `ClassInfo` s, and pass them to another service that will have the responsibility of generating the bytecode of a Jackson serializer for each of them."
-msgstr ""
+msgstr "现在我们有了所有的构件，可以开始开发一个 link:https://quarkus.io/guides/writing-extensions#build-step-processors[BuildStep] 将所有这些以 Jandex `ClassInfo` s 表示的返回类型不重复地收集起来，并将它们传递给另一个服务，该服务将负责为每个返回类型生成 Jackson 序列化器的字节码。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "where the `JaxRsResourceIndexBuildItem` provides the Jandex `IndexView` that allows access to all reflection information collected and indexed by Jandex. Since we already know that the JSON serialization will be triggered by the rest-jackson extension it is convenient to simply add this new `BuildStep` to the https://github.com/quarkusio/quarkus/blob/main/extensions/resteasy-reactive/rest-jackson/deployment/src/main/java/io/quarkus/resteasy/reactive/jackson/deployment/processor/ResteasyReactiveJacksonProcessor.java[BuildStepsProcessor already present in that extension]."
-msgstr ""
+msgstr "其中 `JaxRsResourceIndexBuildItem` 提供了 Jandex `IndexView` ，允许访问 Jandex 收集和索引的所有反射信息。由于我们已经知道 JSON 序列化将由 rest-jackson 扩展触发，因此只需将这个新的 `BuildStep` 添加到 link:https://github.com/quarkusio/quarkus/blob/main/extensions/resteasy-reactive/rest-jackson/deployment/src/main/java/io/quarkus/resteasy/reactive/jackson/deployment/processor/ResteasyReactiveJacksonProcessor.java[该扩展中已有的 BuildStepsProcessor] 即可。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Generating the Jackson serializers with Gizmo"
-msgstr ""
+msgstr "用 Gizmo 生成杰克逊序列化器"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "At this point we know the classes for which it will be necessary to automatically generate the bytecode implementing a Jackson serializer, something similar to the one sketched when discussing how to customize Jackson serialization."
-msgstr ""
+msgstr "至此，我们已经知道哪些类需要自动生成字节码来实现 Jackson 序列化，类似于讨论如何定制 Jackson 序列化时所勾画的那样。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Quarkus makes heavy use of https://github.com/quarkusio/gizmo/blob/main/USAGE.adoc[Gizmo] in all the many cases when it needs to perform some bytecode generation. Generating bytecode is a relatively low level task, so using a library like Gizmo, with a convenient higher level API that abstracts lots of the underlying complexity, is practically mandatory to perform this difficult task with a reasonable level of productivity and to keep the code readable and maintainable."
-msgstr ""
+msgstr "Quarkus 在需要生成字节码的许多情况下都会大量使用 link:https://github.com/quarkusio/gizmo/blob/main/USAGE.adoc[Gizmo] 。生成字节码是一项相对低级的任务，因此要想以合理的生产率完成这项艰巨的任务，并保持代码的可读性和可维护性，就必须使用像 Gizmo 这样的库，它具有方便的高级应用程序接口，可以抽象出许多底层的复杂性。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "We don’t make an exception this time, so for each of the Jandex `ClassInfo` collected during the former step, Gizmo is used to generate the bytecode of a class extending the Jackson’s `StdSerializer` and having a name equal to the one of the bean to be serialized plus the `$quarkusjacksonserializer` suffix."
-msgstr ""
+msgstr "这次我们没有例外，因此对于在前一步中收集的每个 Jandex `ClassInfo` ，都会使用 Gizmo 生成一个类的字节码，该类扩展了 Jackson's `StdSerializer` ，其名称等于要序列化的 Bean 的名称加上 `$quarkusjacksonserializer` 后缀。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Without going into too many details the core logic of this serializer is contained in the `serialize` method that can be generated as follows"
-msgstr ""
+msgstr "无需赘述，该序列化器的核心逻辑包含在 `serialize` 方法中，其生成过程如下"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Querying the `ClassInfo` it is possible to iterate all the fields to be serialized, together with their accessor methods, in order to generate the code serializing in JSON each of those fields. For instance if valueHandle is the handle to the object to be serialized, which is the first argument of the signature of the `serialize` method, and `getterMethod` is the `MethodInfo` of a getter returning a numeric field, the corresponding code generating the serialization of that field can be something like"
-msgstr ""
+msgstr "通过查询 `ClassInfo` ，可以遍历所有要序列化的字段及其访问方法，以便生成将每个字段序列化为 JSON 格式的代码。例如，如果 valueHandle 是要序列化对象的句柄（也就是 `serialize` 方法签名的第一个参数），而 `getterMethod` 是返回数值字段的 getter 的 `MethodInfo` ，那么生成该字段的序列化代码的相应代码可以如下所示"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Note that, doing so, the logic to decide whether a field should be serialized or not, and how, totally bypasses the one implemented in Jackson and could sometimes differ from it. In particular this behavior can be explicitly modified by users through some specific Jackson annotations. To play safe when the serializers generator https://github.com/quarkusio/quarkus/blob/b3e608507e3bdcbcebe15a3d45de1b6cc6945d10/extensions/resteasy-reactive/rest-jackson/deployment/src/main/java/io/quarkus/resteasy/reactive/jackson/deployment/processor/JacksonSerializerFactory.java#L312[meets any of those annotations], it simply gives up generating a serializer for the specific class containing it. In this circumstance the serialization of that class will be performed with the normal reflection-based mechanism employed by Jackson."
-msgstr ""
+msgstr "请注意，这样做时，决定字段是否应序列化以及如何序列化的逻辑完全绕过了在 Jackson 中实现的逻辑，有时可能与之不同。特别是，用户可以通过一些特定的 Jackson 注释显式地修改这种行为。为了安全 link:https://github.com/quarkusio/quarkus/blob/b3e608507e3bdcbcebe15a3d45de1b6cc6945d10/extensions/resteasy-reactive/rest-jackson/deployment/src/main/java/io/quarkus/resteasy/reactive/jackson/deployment/processor/JacksonSerializerFactory.java#L312[起见] ，当序列化器生成器 link:https://github.com/quarkusio/quarkus/blob/b3e608507e3bdcbcebe15a3d45de1b6cc6945d10/extensions/resteasy-reactive/rest-jackson/deployment/src/main/java/io/quarkus/resteasy/reactive/jackson/deployment/processor/JacksonSerializerFactory.java#L312[遇到任何这些注解] 时，它会干脆放弃为包含它的特定类生成序列化器。在这种情况下，该类的序列化将通过 Jackson 采用的基于反射的正常机制来执行。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Actually I see this as a defect and I tried to figure out if I could reuse Jackson's logic in some way also for this serializers generation. As discussed https://github.com/FasterXML/jackson-modules-base/issues/247[here], the main problem is that a library like Jackson, but also the vast majority of the Java frameworks, doesn’t have a clear separation between deployment and runtime as it happens with Quarkus. This however also demonstrates the clear advantage of this separation as implemented in Quarkus, that allows to develop features and optimizations that are otherwise simply impossible for other tools."
-msgstr ""
+msgstr "事实上，我认为这是一个缺陷，我试图找出是否可以在某种程度上重用 Jackson 的逻辑来生成序列化程序。正如 link:https://github.com/FasterXML/jackson-modules-base/issues/247[这里所] 讨论的，主要问题在于像 Jackson 这样的库，以及绝大多数 Java 框架，并没有像 Quarkus 那样在部署和运行时之间进行明确的分离。不过，这也证明了 Quarkus 实现这种分离的明显优势，即允许开发其他工具根本无法实现的功能和优化。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Finally, we also need to take into account the fact that during the iteration of the fields of a class, the serializers generator also will very likely encounter other types belonging to the application’s business domain. In our original example the `Customer` has an `Address`, a `List<Person>` who are her children and a `CreditCard[]`. When this happens these new types are added to a queue of `ClassInfo` s for which another serializer has to be generated. The whole bytecode generation process terminates only when this queue is empty."
-msgstr ""
+msgstr "最后，我们还需要考虑这样一个事实，即在迭代类的字段期间，序列化器生成器也很有可 能遇到属于应用程序业务域的其他类型。在我们最初的示例中， `Customer` 有一个 `Address` 、一个 `List<Person>` 是她的孩子，还有一个 `CreditCard[]` 。当这种情况发生时，这些新类型就会被添加到 `ClassInfo` 的队列中，必须为其生成另一个序列化器。只有当队列为空时，整个字节码生成过程才会结束。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "At the end of this process all the newly created classes are passed back to the `BuildStep` that will record them in the `ResteasyReactiveServerJacksonRecorder` thus making them available also at runtime."
-msgstr ""
+msgstr "在这一过程结束时，所有新创建的类都会传回 `BuildStep` ，该程序会将它们记录在 `ResteasyReactiveServerJacksonRecorder` 中，从而使它们在运行时也能使用。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "For this reason it is necessary to add the `@Record` annotation to the `BuildStep` in order to indicate that it also outputs https://quarkus.io/guides/writing-extensions#bytecode-recording[recorded bytecode]. This concludes the description of all the steps necessary to the implementation of this new feature, that can be visually summarized as it follows."
-msgstr ""
+msgstr "因此，有必要在 `BuildStep` 中添加 `@Record` 注释，以表明它也输出 link:https://quarkus.io/guides/writing-extensions#bytecode-recording[记录的字节码] 。至此，实现这一新功能所需的所有步骤介绍完毕，可直观地概括如下。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Blocks diagram describing the implementation of the generated reflection-free Jackson serializers"
-msgstr ""
+msgstr "描述生成的无反射杰克逊序列化器的实现的模块图"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Making it optional"
-msgstr ""
+msgstr "使其成为可选项"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Since it was not possible to reuse any of the heuristics used by Jackson to decide if and how a specific field should be serialized, and as discussed there could still exist some edge cases when the generated serializers produce a result that differs from what Jackson would do using reflection, we decided for now to disable this feature by default and give the possibility to users to opt-in. Considering that all the code implementing this new feature is self-contained in a single `BuildStep`, that is easily achievable using a https://quarkus.io/guides/writing-extensions#conditional-step-inclusion[conditional step inclusion]."
-msgstr ""
+msgstr "由于无法重用 Jackson 用于决定是否以及如何序列化特定字段的任何启发式方法，而且正如所讨论的那样，当生成的序列化器产生的结果与 Jackson 使用反射所产生的结果不同时，仍可能存在一些边缘情况，因此我们决定暂时默认禁用该功能，并允许用户选择加入。考虑到实现这一新功能的所有代码都自包含在一个 `BuildStep` 中，使用 link:https://quarkus.io/guides/writing-extensions#conditional-step-inclusion[条件步骤包含] 很容易实现这一点。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "For this purpose it is sufficient to https://quarkus.io/guides/config-mappings[map a configuration to an interface] using the `@ConfigMapping` annotation"
-msgstr ""
+msgstr "为此，只需使用 `@ConfigMapping` 注解 link:https://quarkus.io/guides/config-mappings[将配置映射到接口] 即可"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "and also having an implementation of a `BooleanSupplier` reading that configuration"
-msgstr ""
+msgstr "并实现 `BooleanSupplier` 读取该配置"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "so that the `BuildStep` will be enabled only if this supplier returns true."
-msgstr ""
+msgstr "这样，只有当该供应商返回 true 时，才会启用 `BuildStep` 。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "In this way this optimization is turned off by default (note the `@WithDefault(\"false\")` annotation on the boolean method) and can be enabled by simply adding the flag"
-msgstr ""
+msgstr "这样，这种优化在默认情况下就会关闭（注意布尔方法上的 `@WithDefault(\"false\")` 注释），只需添加标记"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "to the `application.properties` configuration file. With this last change, the final code of the complete `BuildStep` is available https://github.com/quarkusio/quarkus/blob/39ec43201a690e7895b643e6c328d9042e73ccf0/extensions/resteasy-reactive/rest-jackson/deployment/src/main/java/io/quarkus/resteasy/reactive/jackson/deployment/processor/ResteasyReactiveJacksonProcessor.java#L374[here]."
-msgstr ""
+msgstr "到 `application.properties` 配置文件中。经过这最后一次修改，完整的 `BuildStep` 的最终代码就可以 link:https://github.com/quarkusio/quarkus/blob/39ec43201a690e7895b643e6c328d9042e73ccf0/extensions/resteasy-reactive/rest-jackson/deployment/src/main/java/io/quarkus/resteasy/reactive/jackson/deployment/processor/ResteasyReactiveJacksonProcessor.java#L374[在这里] 找到了。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Putting it at work and measuring the results"
-msgstr ""
+msgstr "投入使用并衡量成果"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Now that all the development has been done, let’s try to put this at work with the same benchmark from where we started and check if this change comes with a real performance gain as we hoped. First of all it is necessary to enable this feature by setting the above mentioned flag in the Quarkus `application.properties` file. Additionally it will be useful to also set a second flag enabling Quarkus to dump the decompiled bytecode generated at deployment time"
-msgstr ""
+msgstr "现在，所有的开发工作都已完成，让我们试着用开始时的相同基准进行测试，看看这一变化是否如我们所希望的那样带来了真正的性能提升。首先，有必要通过在 Quarkus `application.properties` 文件中设置上述标志来启用该功能。此外，还需要设置第二个标志，使 Quarkus 能够转储部署时生成的反编译字节码"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "In fact thanks to this second flag, after having recompiled our application, it is possible to find the bytecode of the generated classes under the folder `target/decompiled/generated-bytecode`"
-msgstr ""
+msgstr "事实上，多亏了第二个标记，在重新编译应用程序后，我们可以在文件夹 `target/decompiled/generated-bytecode`"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "The Jackson serializers generated at deployment time"
-msgstr ""
+msgstr "部署时生成的 Jackson 序列化器"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Here, other than the code already generated by Quarkus to perform the invocation of the REST endpoints without reflection, you can see all the classes, terminating in `$quarkusjacksonserializer`, implementing the reflection-free JSON serialization of all the classes in our domain. For instance for the Customer class it generates a Jackson’s `StdSerializer` implementation like the following."
-msgstr ""
+msgstr "在这里，除了 Quarkus 已经生成的无需反射即可执行 REST 端点调用的代码之外，你还可以看到以 `$quarkusjacksonserializer` 结尾的所有类，它们实现了我们领域中所有类的无反射 JSON 序列化。例如，对于客户（Customer）类，它生成的杰克逊 `StdSerializer` 实现如下。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "As already anticipated, running again the benchmark with this optimization in place I got the following result"
-msgstr ""
+msgstr "正如我所预料的那样，在进行优化后再次运行基准测试，结果如下"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "This time Quarkus can serve more than 92K requests per second, compared with the 81K we had before doing this work, quite an interesting improvement. Finally also the corresponding flamegraph helps to make sense of this improvement: there isn’t any trace of usage of Java reflection in it and now the `ObjectWriter::writeValue` Jackson’s method is sampled only 193 times instead of the 252 observed before."
-msgstr ""
+msgstr "这一次，Quarkus 每秒可以处理超过 92K 个请求，而我们在做这项工作之前只有 81K，这是一个相当有趣的改进。最后，相应的火焰图（flamegraph）也有助于理解这种改进：其中没有任何使用 Java 反射的痕迹，现在 `ObjectWriter::writeValue` Jackson 方法的采样次数只有 193 次，而不是之前的 252 次。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Flamegraph of serialization using the generated Jackson’s serializers demonstrating the absence of any usage of reflection"
-msgstr ""
+msgstr "使用生成的杰克逊序列化器进行序列化的火焰图，显示没有使用任何反射"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "In fact in this case all the objects serializations, the one of the `Customer` instance returned by the rest endpoint plus all other objects referenced by it, are now performed by the serializers generated during the deployment phase, the ones with the class names terminating in `$quarkusjacksonserializer` and evidenced in purple in this last flamegraph."
-msgstr ""
+msgstr "事实上，在这种情况下，所有对象的序列化，包括其余端点返回的 `Customer` 实例的序列化，以及该实例引用的所有其他对象的序列化，现在都由部署阶段生成的序列化器来执行，即类名以 `$quarkusjacksonserializer` 结尾的序列化器，在最后一张火焰图中以紫色显示。"
 
 #: _posts/2024-08-19-quarkus-metaprogramming.adoc
+#, fuzzy
 msgid "Flamegraph of serialization demonstrating how all the necessary generated serializers are invoked"
-msgstr ""
+msgstr "展示如何调用所有必要生成的序列化器的序列化火焰图"
