@@ -818,32 +818,24 @@ msgid "Starting services before the Quarkus application starts"
 msgstr "在Quarkus应用程序启动之前启动服务"
 
 #: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid "A very common need is to start some services on which your Quarkus application depends, before the Quarkus application starts for testing. To address this need, Quarkus provides `@io.quarkus.test.common.WithTestResource` and `io.quarkus.test.common.QuarkusTestResourceLifecycleManager`."
-msgstr "一个非常普遍的需求是，在 Quarkus 应用程序启动测试之前，启动 Quarkus 应用程序所依赖的某些服务。为满足这一需求，Quarkus 提供了 `@io.quarkus.test.common.WithTestResource` 和 `io.quarkus.test.common.QuarkusTestResourceLifecycleManager` 。"
+msgid "A very common need is to start some services on which your Quarkus application depends, before the Quarkus application starts for testing. To address this need, Quarkus provides `@io.quarkus.test.common.QuarkusTestResource` and `io.quarkus.test.common.QuarkusTestResourceLifecycleManager`."
+msgstr ""
 
 #: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid "When a test annotated with `@WithTestResource`, Quarkus will run the corresponding `QuarkusTestResourceLifecycleManager` before the test."
-msgstr "当测试注释为 `@WithTestResource` 时，Quarkus 将在测试前运行相应的 `QuarkusTestResourceLifecycleManager` 。"
-
-#: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
 msgid ""
-"By default, `@WithTestResource` applies only to the test on which the annotation is placed. Each test that is annotated with `@WithTestResource`  will result in the application being re-augmented and restarted\n"
-"(in a similar fashion as happens in dev-mode when a change is detected) in order to incorporate the settings configured by the annotation. This means that if there are many instances of the annotation used throughout the testsuite,\n"
-"test execution speed will be impacted by these restarts."
-msgstr "默认情况下， `@WithTestResource` 只适用于添加注释的测试。使用 `@WithTestResource` 进行注释的每个测试都将导致应用程序重新分割和重启（与在开发模式中检测到更改时发生的情况类似），以便纳入注释配置的设置。这意味着，如果测试套件中使用了很多注释实例，测试执行速度将受到这些重启的影响。"
+"By simply annotating any test in the test suite with `@QuarkusTestResource`, Quarkus will run the corresponding `QuarkusTestResourceLifecycleManager` before any tests are run.\n"
+"A test suite is also free to utilize multiple `@QuarkusTestResource` annotations, in which case all the corresponding `QuarkusTestResourceLifecycleManager` objects will be run before the tests."
+msgstr ""
 
 #: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid "Test resources are applied for a given test class or custom profile. To activate for all tests you can use `@WithTestResource(restrictToAnnotatedClass = false)`."
-msgstr "测试资源适用于给定的测试类或自定义配置文件。要激活所有测试，可以使用 `@WithTestResource(restrictToAnnotatedClass = false)` 。"
+msgid ""
+"Test resources are global, even if they are defined on a test class or custom profile, which means they will all be activated for all tests, even though we do\n"
+"remove duplicates. If you want to only enable a test resource on a single test class or test profile, you can use `@QuarkusTestResource(restrictToAnnotatedClass = true)`."
+msgstr ""
 
 #: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid "When using multiple test resources they can be started concurrently. For that you need to set `@WithTestResource(parallel = true)`."
-msgstr "使用多个测试资源时，它们可以同时启动。为此，需要设置 `@WithTestResource(parallel = true)` 。"
+msgid "When using multiple test resources, they can be started concurrently. For that you need to set `@QuarkusTestResource(parallel = true)`."
+msgstr ""
 
 #: _versions/main/guides/getting-started-testing.adoc
 msgid ""
@@ -889,11 +881,10 @@ msgid "Annotation-based test resources"
 msgstr "基于注解的测试资源"
 
 #: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
 msgid ""
-"It is possible to write test resources that are enabled and configured using annotations. This is enabled by placing the `@WithTestResource`\n"
+"It is possible to write test resources that are enabled and configured using annotations. This is enabled by placing the `@QuarkusTestResource`\n"
 "on an annotation which will be used to enable and configure the test resource."
-msgstr "可以编写使用注解启用和配置的测试资源。将 `@WithTestResource` 放在注解上，就能启用和配置测试资源。"
+msgstr ""
 
 #: _versions/main/guides/getting-started-testing.adoc
 msgid ""
@@ -908,11 +899,10 @@ msgid ""
 msgstr "`KubernetesServerTestResource` 类必须实现 `QuarkusTestResourceConfigurableLifecycleManager` 接口，以便使用前面的注解进行配置："
 
 #: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
 msgid ""
-"If you want to make the annotation repeatable, the containing annotation type must be annotated with `@WithTestResourceRepeatable`.\n"
+"If you want to make the annotation repeatable, the containing annotation type must be annotated with `@QuarkusTestResourceRepeatable`.\n"
 "For example, this would define a repeatable `@WithRepeatableTestResource` annotation."
-msgstr "如果要使注释可重复，则必须用 `@WithTestResourceRepeatable` 对包含的注释类型进行注释。例如，这将定义一个可重复的 `@WithRepeatableTestResource` 注释。"
+msgstr ""
 
 #. type: Title ==
 #: _versions/main/guides/getting-started-testing.adoc
@@ -1050,9 +1040,8 @@ msgid "The following example illustrates the use with PostgreSQL, but the approa
 msgstr "下面的例子展示了在PostgreSQL上的使用，但这个方法也适用于所有的容器。"
 
 #: _versions/main/guides/getting-started-testing.adoc
-#, fuzzy
-msgid "`CustomResource` would be activated on a `@QuarkusIntegrationTest` using `@WithTestResource` as is described in the corresponding section of this doc."
-msgstr "`CustomResource` 将在 上使用 激活，如本文档相应部分所述。 `@QuarkusIntegrationTest` `@WithTestResource` "
+msgid "`CustomResource` would be activated on a `@QuarkusIntegrationTest` using `@QuarkusTestResource` as is described in the corresponding section of this doc."
+msgstr ""
 
 #. type: Title ===
 #: _versions/main/guides/getting-started-testing.adoc
