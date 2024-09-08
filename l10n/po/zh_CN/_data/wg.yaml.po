@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2024-09-01 08:12+0000\n"
+"POT-Creation-Date: 2024-09-08 08:12+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,14 +19,72 @@ msgstr ""
 #. type: Hash Value: working-groups board-url
 #: upstream/_data/wg.yaml:0
 #, fuzzy, no-wrap
-msgid "https://github.com/orgs/quarkusio/projects/28"
-msgstr "https://github.com/orgs/quarkusio/projects/28"
+msgid "https://github.com/orgs/quarkusio/projects/30"
+msgstr "https://github.com/orgs/quarkusio/projects/30"
 
 #. type: Hash Value: working-groups last-activity
 #: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "2024-09-06"
+msgstr ""
+
+#. type: Hash Value: working-groups last-update
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid ""
+"Since we don't have a target date, and progress is being made, I can declare this on track, with only a slightly murky conscience. \n"
+"This is a big change, and one which doesn't lend itself well to dividing into smaller chunks. I'm keeping a spreadsheet of build results. In the CI runs, the number of failing jobs was 31 at the last update, and it is now 25. A number of suites, such as `integration-tests/devtools` were failing, and are now passing.\n"
+msgstr ""
+
+#. type: Hash Value: working-groups readme
+#: upstream/_data/wg.yaml:0
 #, fuzzy, no-wrap
-msgid "2024-08-30"
-msgstr "2024-08-30"
+msgid ""
+"<p>At the moment, Quarkus tests are invoked using one classloader, and then executed in a different classloader. This mostly works well, but means some use cases don't work: extensions cannot manipulate test classes in the same way that they do normal application classes. For example, anything run via a JUnit @TestTemplate test case will see the un-transformed class.</p>\n"
+"<p>It also means we have extra user-facing complexity, such as the QuarkusTest*Callbacks](https://quarkus.io/guides/getting-started-testing#enrichment-via-quarkustestcallback):</p>\n"
+"<blockquote>\n"
+"<p>While it is possible to use JUnit Jupiter callback interfaces like BeforeEachCallback, you might run into classloading issues because Quarkus has to run tests in a custom classloader which JUnit is not aware of.</p>\n"
+"</blockquote>\n"
+"<p>A final benefit is a reduction in the internal complexity of our code. Hopping between classloaders during test execution takes a lot of work, and adds a lot of code! It also is brittle in places. For example, because the hop between classloaders relies on serialization in some cases, it's becoming harder to do as the JVM tightens up security restrictions. We used to rely on xstream, but that stopped working in Java 17. In https://github.com/quarkusio/quarkus/pull/40601, @dmlloyd moved us to use the JBoss Serializer, which works better, but might still be affected by future restrictions on class access.</p>\n"
+"<p>The goal of this working group is to allow test classes to fully participate in the 'quarkification' of classes. The mechanism for this is probably just to load the test classes with the classloader we intend to run them with, so that JUnit sees the 'correct' version of the class.</p>\n"
+msgstr ""
+"<p>目前，Quarkus 测试使用一个类加载器调用，然后在另一个类加载器中执行。这在大多数情况下运行良好，但也意味着某些用例无法运行：扩展无法像操作普通应用程序类那样操作测试类。例如，通过 JUnit @TestTemplate 测试用例运行的任何程序都将看到未转换的类。</p>\n"
+"<p>这也意味着我们有额外的面向用户的复杂性，例如 QuarkusTest*Callbacks](https://quarkus.io/guides/getting-started-testing#enrichment-via-quarkustestcallback) ：</p>\n"
+"<blockquote>\n"
+"<p>虽然可以使用 JUnit Jupiter 回调接口（如 BeforeEachCallback），但可能会遇到类加载问题，因为 Quarkus 必须在 JUnit 不知道的自定义类加载器中运行测试。</p>\n"
+"</blockquote>\n"
+"<p>最后一个好处是降低了代码的内部复杂性。在测试执行过程中，在类加载器之间跳来跳去会耗费大量工作，并增加大量代码！而且在某些地方还很脆弱。例如，由于类加载器之间的跳转在某些情况下依赖于序列化，随着 JVM 收紧安全限制，这种跳转变得越来越难。我们曾经依赖 xstream，但在 Java 17 中停止使用。在 https://github.com/quarkusio/quarkus/pull/40601 中，@dmlloyd 让我们使用 JBoss Serializer，它的效果更好，但仍可能受到未来类访问限制的影响。</p>\n"
+"<p>该工作组的目标是允许测试类完全参与类的 \"夸克化\"。其机制可能只是用我们打算运行的类加载器加载测试类，这样 JUnit 就能看到类的 \"正确 \"版本。</p>\n"
+
+#. type: Hash Value: working-groups short-description
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "The goal of this working group is to rewrite Quarkus's test classloading, so that tests are run in the same classloader as the application under tests, and Quarkus extensions can do \"Quarkus-y\" manipulations of test classes."
+msgstr "该工作组的目标是重写 Quarkus 的测试类加载，使测试能在与被测应用程序相同的类加载器中运行，并使 Quarkus 扩展能对测试类进行 \"Quarkus 式 \"操作。"
+
+#. type: Hash Value: working-groups status
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "on track"
+msgstr "未离题"
+
+#. type: Hash Value: working-groups title
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "Test classloading"
+msgstr "测试类加载"
+
+#. type: Hash Value: working-groups board-url
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "https://github.com/orgs/quarkusio/projects/28"
+msgstr "https://github.com/orgs/quarkusio/projects/28"
+
+#. type: Hash Value: working-groups last-update
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "Work is progressing. Still items that will need to be cleaned. Thus still at risk but managable.\n"
+msgstr ""
 
 #. type: Hash Value: working-groups readme
 #: upstream/_data/wg.yaml:0
@@ -74,9 +132,9 @@ msgstr "https://github.com/orgs/quarkusio/projects/24"
 
 #. type: Hash Value: working-groups last-update
 #: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "Approaching completion. Watch [Quarkus Insight"
-msgstr "即将完成。观看 [夸克洞察"
+#, no-wrap
+msgid "Approaching completion. Watch [Quarkus Insight #177](https://www.youtube.com/watch?v=VP7c9ftFwrQ&list=PLsM3ZE5tGAVatO65JIxgskQh-OKoqM4F2&index=1) to see various demo going from configuration, local TLS, certificate reloading and ACME integration.\n"
+msgstr ""
 
 #. type: Hash Value: working-groups readme
 #: upstream/_data/wg.yaml:0
@@ -98,12 +156,6 @@ msgstr ""
 msgid "Track the progress around the new TLS configuration centralization and new features (like Let's Encrypt, Cert-Manager, and local experience...)"
 msgstr "跟踪围绕新 TLS 配置集中化和新功能（如 Let's Encrypt、Cert-Manager 和本地体验......）的进展情况"
 
-#. type: Hash Value: working-groups status
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "on track"
-msgstr "未离题"
-
 #. type: Hash Value: working-groups title
 #: upstream/_data/wg.yaml:0
 #, fuzzy, no-wrap
@@ -116,11 +168,17 @@ msgstr "增强的 TLS 支持"
 msgid "https://github.com/orgs/quarkusio/projects/26"
 msgstr "https://github.com/orgs/quarkusio/projects/26"
 
+#. type: Hash Value: working-groups last-activity
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "2024-09-05"
+msgstr ""
+
 #. type: Hash Value: working-groups last-update
 #: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "The last outstanding issue is OTel integration. @michalvavrik is working on a [pull request](https://github.com/quarkusio/quarkus/pull/41956). I will meet with Michal and Bruno in the coming weeks. The PR is quite massive and we need to review it carefully."
-msgstr "最后一个悬而未决的问题是 OTel 集成。@michalvavrik 正在进行 [pull request](https://github.com/quarkusio/quarkus/pull/41956)。我将在未来几周内与 Michal 和 Bruno 会晤。该 PR 相当庞大，我们需要仔细审查。"
+#, no-wrap
+msgid "The last outstanding issue is OTel integration. @michalvavrik is working on a [pull request](https://github.com/quarkusio/quarkus/pull/41956). I will meet with Michal and Bruno in the coming weeks. The PR is quite massive and we need to review it carefully.\n"
+msgstr ""
 
 #. type: Hash Value: working-groups readme
 #: upstream/_data/wg.yaml:0
@@ -149,52 +207,18 @@ msgstr "WebSocket 下一步"
 #. type: Hash Value: working-groups board-url
 #: upstream/_data/wg.yaml:0
 #, fuzzy, no-wrap
-msgid "https://github.com/orgs/quarkusio/projects/30"
-msgstr "https://github.com/orgs/quarkusio/projects/30"
-
-#. type: Hash Value: working-groups readme
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid ""
-"<p>At the moment, Quarkus tests are invoked using one classloader, and then executed in a different classloader. This mostly works well, but means some use cases don't work: extensions cannot manipulate test classes in the same way that they do normal application classes. For example, anything run via a JUnit @TestTemplate test case will see the un-transformed class.</p>\n"
-"<p>It also means we have extra user-facing complexity, such as the QuarkusTest*Callbacks](https://quarkus.io/guides/getting-started-testing#enrichment-via-quarkustestcallback):</p>\n"
-"<blockquote>\n"
-"<p>While it is possible to use JUnit Jupiter callback interfaces like BeforeEachCallback, you might run into classloading issues because Quarkus has to run tests in a custom classloader which JUnit is not aware of.</p>\n"
-"</blockquote>\n"
-"<p>A final benefit is a reduction in the internal complexity of our code. Hopping between classloaders during test execution takes a lot of work, and adds a lot of code! It also is brittle in places. For example, because the hop between classloaders relies on serialization in some cases, it's becoming harder to do as the JVM tightens up security restrictions. We used to rely on xstream, but that stopped working in Java 17. In https://github.com/quarkusio/quarkus/pull/40601, @dmlloyd moved us to use the JBoss Serializer, which works better, but might still be affected by future restrictions on class access.</p>\n"
-"<p>The goal of this working group is to allow test classes to fully participate in the 'quarkification' of classes. The mechanism for this is probably just to load the test classes with the classloader we intend to run them with, so that JUnit sees the 'correct' version of the class.</p>\n"
-msgstr ""
-"<p>目前，Quarkus 测试使用一个类加载器调用，然后在另一个类加载器中执行。这在大多数情况下运行良好，但也意味着某些用例无法运行：扩展无法像操作普通应用程序类那样操作测试类。例如，通过 JUnit @TestTemplate 测试用例运行的任何程序都将看到未转换的类。</p>\n"
-"<p>这也意味着我们有额外的面向用户的复杂性，例如 QuarkusTest*Callbacks](https://quarkus.io/guides/getting-started-testing#enrichment-via-quarkustestcallback) ：</p>\n"
-"<blockquote>\n"
-"<p>虽然可以使用 JUnit Jupiter 回调接口（如 BeforeEachCallback），但可能会遇到类加载问题，因为 Quarkus 必须在 JUnit 不知道的自定义类加载器中运行测试。</p>\n"
-"</blockquote>\n"
-"<p>最后一个好处是降低了代码的内部复杂性。在测试执行过程中，在类加载器之间跳来跳去会耗费大量工作，并增加大量代码！而且在某些地方还很脆弱。例如，由于类加载器之间的跳转在某些情况下依赖于序列化，随着 JVM 收紧安全限制，这种跳转变得越来越难。我们曾经依赖 xstream，但在 Java 17 中停止使用。在 https://github.com/quarkusio/quarkus/pull/40601 中，@dmlloyd 让我们使用 JBoss Serializer，它的效果更好，但仍可能受到未来类访问限制的影响。</p>\n"
-"<p>该工作组的目标是允许测试类完全参与类的 \"夸克化\"。其机制可能只是用我们打算运行的类加载器加载测试类，这样 JUnit 就能看到类的 \"正确 \"版本。</p>\n"
-
-#. type: Hash Value: working-groups short-description
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "The goal of this working group is to rewrite Quarkus's test classloading, so that tests are run in the same classloader as the application under tests, and Quarkus extensions can do \"Quarkus-y\" manipulations of test classes."
-msgstr "该工作组的目标是重写 Quarkus 的测试类加载，使测试能在与被测应用程序相同的类加载器中运行，并使 Quarkus 扩展能对测试类进行 \"Quarkus 式 \"操作。"
-
-#. type: Hash Value: working-groups title
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "Test classloading"
-msgstr "测试类加载"
-
-#. type: Hash Value: working-groups board-url
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
 msgid "https://github.com/orgs/quarkiverse/projects/6"
 msgstr "https://github.com/orgs/quarkiverse/projects/6"
 
 #. type: Hash Value: working-groups last-update
 #: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "Good progress so far."
-msgstr "目前进展良好。"
+#, no-wrap
+msgid ""
+"0.0.3 has been released, it is the MVP version and allowed to publish the Roq blog: https://quarkiverse.io/quarkus-roq/posts/2024-08-29-welcome-to-roq/\n"
+"From now on, we start adding features incrementally, documenting.\n"
+"The target is to have 1.0.0 the 1 October 2024.\n"
+"For 1.0 we need pagination, tags and SEO.\n"
+msgstr ""
 
 #. type: Hash Value: working-groups readme
 #: upstream/_data/wg.yaml:0
@@ -249,6 +273,12 @@ msgstr "Roq :：夸克 SSG"
 #, fuzzy, no-wrap
 msgid "https://github.com/orgs/quarkusio/projects/32"
 msgstr "https://github.com/orgs/quarkusio/projects/32"
+
+#. type: Hash Value: working-groups last-activity
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "2024-08-30"
+msgstr "2024-08-30"
 
 #. type: Hash Value: working-groups readme
 #: upstream/_data/wg.yaml:0
@@ -320,8 +350,26 @@ msgstr ""
 msgid "A working group focusing on the generation of Dockerfile / ContainerFile"
 msgstr "专注于生成 Dockerfile / ContainerFile 的工作组"
 
+#. type: Hash Value: working-groups status
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "staled"
+msgstr ""
+
 #. type: Hash Value: working-groups title
 #: upstream/_data/wg.yaml:0
 #, fuzzy, no-wrap
 msgid "Docker file generation"
 msgstr "生成 Docker 文件"
+
+#, fuzzy, no-wrap
+#~ msgid "Approaching completion. Watch [Quarkus Insight"
+#~ msgstr "即将完成。观看 [夸克洞察"
+
+#, fuzzy, no-wrap
+#~ msgid "The last outstanding issue is OTel integration. @michalvavrik is working on a [pull request](https://github.com/quarkusio/quarkus/pull/41956). I will meet with Michal and Bruno in the coming weeks. The PR is quite massive and we need to review it carefully."
+#~ msgstr "最后一个悬而未决的问题是 OTel 集成。@michalvavrik 正在进行 [pull request](https://github.com/quarkusio/quarkus/pull/41956)。我将在未来几周内与 Michal 和 Bruno 会晤。该 PR 相当庞大，我们需要仔细审查。"
+
+#, fuzzy, no-wrap
+#~ msgid "Good progress so far."
+#~ msgstr "目前进展良好。"
