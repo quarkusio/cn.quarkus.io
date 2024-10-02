@@ -1023,12 +1023,11 @@ msgid ""
 msgstr "您可以指定 `java.security.Permission` 类的自定义实现。自定义类必须定义一个构造函数，该构造函数接受权限名称和一些可选操作，例如 `String` 数组。在这种情况下，权限 `list` 会以 `new CustomPermission(\"list\")` 的形式添加到 `SecurityIdentity` 实例中。"
 
 #: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
-#, fuzzy
 msgid ""
 "You can also create a custom `java.security.Permission` class with additional constructor parameters.\n"
-"These additional parameters get matched with arguments of the method annotated with the `@PermissionsAllowed` annotation.\n"
+"These additional parameters names get matched with arguments names of the method annotated with the `@PermissionsAllowed` annotation.\n"
 "Later, Quarkus instantiates your custom permission with actual arguments, with which the method annotated with the `@PermissionsAllowed` has been invoked."
-msgstr "您还可以创建带有附加构造函数参数的自定义 `java.security.Permission` 类。这些附加参数会与带有 `@PermissionsAllowed` 注解的方法的参数相匹配。之后，Quarkus 会用实际参数实例化你的自定义权限，并调用注释为 `@PermissionsAllowed` 的方法。"
+msgstr ""
 
 #. type: Block title
 #: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
@@ -1058,18 +1057,17 @@ msgid "The following example shows how the `LibraryPermission` class can be used
 msgstr "下面的示例展示了如何使用 `LibraryPermission` 类："
 
 #: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
-#, fuzzy
 msgid ""
-"The formal parameter `update` is identified as the first `Library` parameter and gets passed to the `LibraryPermission` class.\n"
+"The formal parameter `library` is identified as the parameter matching same-named `LibraryPermission` constructor parameter.\n"
+"Therefore, Quarkus will pass the `library` parameter to the `LibraryPermission` class constructor.\n"
 "However, the `LibraryPermission` must be instantiated each time the `updateLibrary` method is invoked."
-msgstr "形式参数 `update` 被确定为第一个 `Library` 参数，并传递给 `LibraryPermission` 类。不过，每次调用 `updateLibrary` 方法时，都必须实例化 `LibraryPermission` 。"
+msgstr ""
 
 #: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
-#, fuzzy
 msgid ""
-"Here, the first `Library` parameter is `migrate`; therefore, the `library` parameter gets marked explicitly through `PermissionsAllowed#params`.\n"
-"The permission constructor and the annotated method must have the parameter `library` set; otherwise, validation fails."
-msgstr "这里，第一个 `Library` 参数是 `migrate` ；因此， `library` 参数通过 `PermissionsAllowed#params` 明确标记。权限构造函数和注释方法必须设置参数 `library` ，否则验证失败。"
+"Here, the second `Library` parameter matches the name `library`,\n"
+"while the `migrate` parameter is ignored during the `LibraryPermission` permission instantiation."
+msgstr ""
 
 #. type: Block title
 #: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
@@ -1157,6 +1155,54 @@ msgstr "`@PermissionsAllowed` 也可用于元注释。例如，可以像这样�
 #, fuzzy
 msgid "Any method or class annotated with the `@CanWrite` annotation is secured with this `@PermissionsAllowed` annotation instance."
 msgstr "任何使用 `@CanWrite` 注解注释的方法或类都使用此 `@PermissionsAllowed` 注解实例来保护。"
+
+#: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
+msgid "Pass `@BeanParam` parameters into a custom permission"
+msgstr ""
+
+#: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
+msgid ""
+"Quarkus can map fields of a secured method parameters to a custom permission constructor parameters.\n"
+"You can use this feature to pass `jakarta.ws.rs.BeanParam` parameters into your custom permission.\n"
+"Let's consider following Jakarta REST resource:"
+msgstr ""
+
+#: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
+msgid ""
+"The `params` annotation attribute specifies that user principal name should be passed to the `BeanParamPermission` constructor.\n"
+"Other `BeanParamPermission` constructor parameters like `customAuthorizationHeader` and `query` are matched automatically.\n"
+"Quarkus identifies the `BeanParamPermission` constructor parameters among `beanParam` fields and their public accessors.\n"
+"To avoid ambiguous resolution, automatic detection only works for the `beanParam` fields.\n"
+"For that reason, we had to specify path to the user principal name explicitly."
+msgstr ""
+
+#: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
+msgid "Where the `SimpleBeanParam` class is declared like in the example below:"
+msgstr ""
+
+#: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
+msgid "Quarkus Security can only pass public fields to a custom permission constructor."
+msgstr ""
+
+#: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
+msgid "Quarkus Security automatically uses public getter methods if they are available."
+msgstr ""
+
+#: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
+msgid ""
+"The `customAuthorizationHeader` field is not public, therefore Quarkus access this field with the `customAuthorizationHeader` accessor.\n"
+"That is particularly useful with Java records, where generated accessors are not prefixed with `get`."
+msgstr ""
+
+#: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
+msgid "Here is an example of the `BeanParamPermission` permission that checks user principal, custom header and query parameter:"
+msgstr ""
+
+#: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
+msgid ""
+"You can pass `@BeanParam` directly into a custom permission constructor and access its fields programmatically in the constructor instead.\n"
+"Ability to reference `@BeanParam` fields with the `@PermissionsAllowed#params` attribute is useful when you have multiple differently structured `@BeanParam` classes."
+msgstr ""
 
 #. type: Title ==
 #: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
