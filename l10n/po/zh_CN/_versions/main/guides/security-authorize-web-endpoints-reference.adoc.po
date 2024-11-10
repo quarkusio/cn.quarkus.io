@@ -1143,6 +1143,62 @@ msgid "Annotation-based permissions do not work with custom xref:security-custom
 msgstr "注释权限与自定义的 link:security-customization.html#jaxrs-security-context[JAX-RS SecurityContext] 不起作用，因为在 `jakarta.ws.rs.core.SecurityContext` 。"
 
 #: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
+msgid "Create permission checkers"
+msgstr ""
+
+#: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
+msgid ""
+"By default, `SecurityIdentity` must be configured with permissions which can be used to check if this identity passes `@PermissionAllowed` authorization restrictions.\n"
+"Alternatively, you can use a `@PermissionChecker` annotation to mark any CDI bean method as a permission checker.\n"
+"The `@PermissionChecker` annotation value should match required permission declared by the `@PermissionsAllowed` annotation value.\n"
+"For example, a permission checker can be created like this:"
+msgstr ""
+
+#: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
+msgid "The permission required to access the `ProjectResource#renameProject` is the `rename-project` permission."
+msgstr ""
+
+#: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
+msgid "The `ProjectResource#canRenameProject` method authorizes access to the `ProjectResource#renameProject` endpoint."
+msgstr ""
+
+#: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
+msgid "The `SecurityIdentity` instance can be injected into any permission checker method."
+msgstr ""
+
+#: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
+msgid ""
+"In this example, the `rename-project` permission checker is declared on the same resource.\n"
+"However, there is no restriction on where this permission checker can be declared as demonstrated in the next example."
+msgstr ""
+
+#: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
+msgid ""
+"Permission checker methods can be declared on a normal scoped CDI bean or on a `@Singleton` bean.\n"
+"The `@Dependent` CDI bean scope is currently not supported."
+msgstr ""
+
+#: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
+msgid ""
+"The permission checker above requires the `SecurityIdentity` instance to authorize the `renameProject` endpoint.\n"
+"Instead of declaring the `rename-project` permission checker directly on the resource, you can declare it on any CDI bean like in this example:"
+msgstr ""
+
+#: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
+msgid "A CDI bean with the permission checker must be either a normal scoped bean or a `@Singleton` bean."
+msgstr ""
+
+#: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
+msgid "The permission checker method must return either `boolean` or `Uni<Boolean>`. Private checker methods are not supported."
+msgstr ""
+
+#: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
+msgid ""
+"Permission checks run by default on event loops whenever possible.\n"
+"Annotate a permission checker method with the `io.smallrye.common.annotation.Blocking` annotation if you want to run the check on a worker thread."
+msgstr ""
+
+#: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
 #, fuzzy
 msgid "Create permission meta-annotations"
 msgstr "创建权限元注释"
@@ -1173,14 +1229,13 @@ msgid ""
 msgstr "Quarkus 可以将安全方法参数字段映射到自定义权限构造函数参数。你可以使用此功能将 `jakarta.ws.rs.BeanParam` 参数传递到你的自定义权限中。让我们看看下面的 Jakarta REST 资源："
 
 #: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
-#, fuzzy
 msgid ""
-"The `params` annotation attribute specifies that user principal name should be passed to the `BeanParamPermission` constructor.\n"
-"Other `BeanParamPermission` constructor parameters like `customAuthorizationHeader` and `query` are matched automatically.\n"
-"Quarkus identifies the `BeanParamPermission` constructor parameters among `beanParam` fields and their public accessors.\n"
+"The `params` annotation attribute specifies that user principal name should be passed to the `BeanParamPermissionChecker#canSayHello` method.\n"
+"Other `BeanParamPermissionChecker#canSayHello` method parameters like `customAuthorizationHeader` and `query` are matched automatically.\n"
+"Quarkus identifies the `BeanParamPermissionChecker#canSayHello` method parameters among `beanParam` fields and their public accessors.\n"
 "To avoid ambiguous resolution, automatic detection only works for the `beanParam` fields.\n"
 "For that reason, we had to specify path to the user principal name explicitly."
-msgstr "`params` 注解属性指定应将用户 principal 名称传递给 `BeanParamPermission` 构造函数。其他 `BeanParamPermission` 构造函数参数（如 `customAuthorizationHeader` 和 `query` ）会自动匹配。Quarkus 可在 `beanParam` 字段及其公共访问器中识别 `BeanParamPermission` 构造器参数。为避免模棱两可的解析，自动检测仅适用于 `beanParam` 字段。因此，我们必须明确指定用户 principal 名称的路径。"
+msgstr ""
 
 #: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
 #, fuzzy
@@ -1205,16 +1260,14 @@ msgid ""
 msgstr "`customAuthorizationHeader` 字段不是公开的，因此 Quarkus 使用 `customAuthorizationHeader` 访问器访问该字段。这对 Java 记录特别有用，因为生成的访问器不会以 `get` 作为前缀。"
 
 #: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
-#, fuzzy
-msgid "Here is an example of the `BeanParamPermission` permission that checks user principal, custom header and query parameter:"
-msgstr "下面是 `BeanParamPermission` 权限的示例，它可以检查用户本金、自定义标头和查询参数："
+msgid "Here is an example of a `@PermissionChecker` method that checks the `say-hello` permission based on a user principal, custom header and query parameter:"
+msgstr ""
 
 #: _versions/main/guides/security-authorize-web-endpoints-reference.adoc
-#, fuzzy
 msgid ""
-"You can pass `@BeanParam` directly into a custom permission constructor and access its fields programmatically in the constructor instead.\n"
+"You can pass `@BeanParam` directly into a `@PermissionChecker` method and access its fields programmatically.\n"
 "Ability to reference `@BeanParam` fields with the `@PermissionsAllowed#params` attribute is useful when you have multiple differently structured `@BeanParam` classes."
-msgstr "您可以将 `@BeanParam` 直接传入自定义权限构造函数，然后在构造函数中以编程方式访问其字段。使用 `@PermissionsAllowed#params` 属性引用 `@BeanParam` 字段的功能在拥有多个不同结构的 `@BeanParam` 类时非常有用。"
+msgstr ""
 
 #. type: Title ==
 #: _versions/main/guides/security-authorize-web-endpoints-reference.adoc

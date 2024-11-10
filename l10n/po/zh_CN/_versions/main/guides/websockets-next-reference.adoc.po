@@ -237,32 +237,49 @@ msgid ""
 msgstr ""
 
 #: _versions/main/guides/websockets-next-reference.adoc
-#, fuzzy
-msgid "This server endpoint is not shared and is scoped to the session."
-msgstr "该服务器端点不共享，只适用于会话。"
-
-#: _versions/main/guides/websockets-next-reference.adoc
-#, fuzzy
-msgid ""
-"Each WebSocket connection is associated with its own _session_ context.\n"
-"When the `@OnOpen` method is invoked, a session context corresponding to the WebSocket connection is created.\n"
-"Subsequent calls to `@On[Text|Binary]Message` or `@OnClose` methods utilize this same session context.\n"
-"The session context remains active until the `@OnClose` method completes execution, at which point it is terminated."
-msgstr "每个 WebSocket 连接都与自己的 _会话_ 上下文相关联。调用 `@OnOpen` 方法时，会创建一个与 WebSocket 连接相对应的会话上下文。随后对 `@On[Text|Binary]Message` 或 `@OnClose` 方法的调用将使用相同的会话上下文。在 `@OnClose` 方法执行完毕之前，会话上下文一直处于活动状态，此时会话上下文会被终止。"
-
-#: _versions/main/guides/websockets-next-reference.adoc
-#, fuzzy
-msgid ""
-"In cases where a WebSocket endpoint does not declare an `@OnOpen` method, the session context is still created.\n"
-"It remains active until the connection terminates, regardless of the presence of an `@OnClose` method."
-msgstr "如果 WebSocket 端点没有声明 `@OnOpen` 方法，会话上下文仍会创建。无论是否存在 `@OnClose` 方法，会话上下文都会一直处于活动状态，直到连接终止。"
+msgid "Session context"
+msgstr ""
 
 #: _versions/main/guides/websockets-next-reference.adoc
 msgid ""
-"Endpoint callbacks may also have the request context activated for the duration of the method execution (until it produced its result).\n"
-"By default, the request context is only activated if needed, i.e. if there is a request scoped bean , or a bean annotated with a security annotation (such as `@RolesAllowed`) in the dependency tree of the endpoint.\n"
-"However, it is possible to set the `quarkus.websockets-next.server.activate-request-context` config property to `always`.\n"
-"In this case, the request context is always activated when an endpoint callback is invoked."
+"If an endpoint is annotated with `@SessionScoped`, or depends directly or indirectly on a `@SessionScoped` bean, then each WebSocket connection is associated with its own _session context_.\n"
+"The session context is active during endpoint callback invocation.\n"
+"Subsequent invocations of <<callback-methods>> within the same connection utilize the same session context.\n"
+"The session context remains active until the connection is closed (usually when the `@OnClose` method completes execution), at which point it is terminated."
+msgstr ""
+
+#: _versions/main/guides/websockets-next-reference.adoc
+msgid "It is also possible to set the `quarkus.websockets-next.server.activate-session-context` config property to `always`. In this case, the session context is always activated, no matter if a `@SessionScoped` bean participates in the dependency tree."
+msgstr ""
+
+#: _versions/main/guides/websockets-next-reference.adoc
+msgid "`@SessionScoped` Endpoint"
+msgstr ""
+
+#: _versions/main/guides/websockets-next-reference.adoc
+msgid "This server endpoint is not shared and is scoped to the session/connection."
+msgstr ""
+
+#: _versions/main/guides/websockets-next-reference.adoc
+msgid "Request context"
+msgstr ""
+
+#: _versions/main/guides/websockets-next-reference.adoc
+msgid ""
+"If an endpoint is annotated with `@RequestScoped`, or with a security annotation (such as `@RolesAllowed`), or depends directly or indirectly on a `@RequestScoped` bean, or on a bean annotated with a security annotation, then each WebSocket endpoint callback method execution is associated with a new _request context_.\n"
+"The request context is active during endpoint callback invocation."
+msgstr ""
+
+#: _versions/main/guides/websockets-next-reference.adoc
+msgid "It is also possible to set the `quarkus.websockets-next.server.activate-request-context` config property to `always`. In this case, the request context is always activated when an endpoint callback is invoked."
+msgstr ""
+
+#: _versions/main/guides/websockets-next-reference.adoc
+msgid "`@RequestScoped` Endpoint"
+msgstr ""
+
+#: _versions/main/guides/websockets-next-reference.adoc
+msgid "This server endpoint is instantiated for each callback method execution."
 msgstr ""
 
 #: _versions/main/guides/websockets-next-reference.adoc
@@ -1387,6 +1404,20 @@ msgstr "设置将被记录的文本信息有效载荷的字符数。"
 #, fuzzy
 msgid "Enable `DEBUG` level is for the logger `io.quarkus.websockets.next.traffic`."
 msgstr "启用 `DEBUG` 级别为记录仪 `io.quarkus.websockets.next.traffic` 。"
+
+#: _versions/main/guides/websockets-next-reference.adoc
+msgid "Telemetry"
+msgstr ""
+
+#: _versions/main/guides/websockets-next-reference.adoc
+msgid ""
+"When the OpenTelemetry extension is present, traces for opened and closed WebSocket connections are collected by default.\n"
+"If you do not require WebSocket traces, you can disable collecting of traces like in the example below:"
+msgstr ""
+
+#: _versions/main/guides/websockets-next-reference.adoc
+msgid "Telemetry for the `BasicWebSocketConnector` is currently not supported."
+msgstr ""
 
 #: _versions/main/guides/websockets-next-reference.adoc
 #, fuzzy
