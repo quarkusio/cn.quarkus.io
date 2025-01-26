@@ -30,12 +30,12 @@ msgid ""
 msgstr "了解如何在 Quarkus 中管理主动身份验证，包括自定义设置和处理异常。获得针对各种应用场景的实用见解和策略。"
 
 #: _guides/security-proactive-authentication.adoc
-#, fuzzy
 msgid ""
 "Proactive authentication is enabled in Quarkus by default.\n"
 "It ensures that all incoming requests with credentials are authenticated, even if the target page does not require authentication.\n"
-"As a result, requests with invalid credentials are rejected, even if the target page is public."
-msgstr "Quarkus 默认启用了主动验证功能。它能确保所有带凭证的传入请求都经过身份验证，即使目标页面不需要身份验证。因此，即使目标页面是公开的，无效凭证的请求也会被拒绝。"
+"As a result, requests with invalid credentials are rejected, even if the target page is public.\n"
+"Requests without credentials are not rejected, because anonymous requests are allowed."
+msgstr ""
 
 #: _guides/security-proactive-authentication.adoc
 #, fuzzy
@@ -52,15 +52,14 @@ msgid ""
 msgstr "如果关闭主动身份验证，只有在请求身份时才会运行身份验证流程。请求身份的原因可能是安全规则要求用户进行身份验证，也可能是需要对当前身份进行编程访问。"
 
 #: _guides/security-proactive-authentication.adoc
-#, fuzzy
 msgid ""
-"If proactive authentication is used, accessing `SecurityIdentity` is a blocking operation.\n"
+"If proactive authentication is not used, accessing `SecurityIdentity` is a blocking operation.\n"
 "This is because authentication might have yet to happen, and accessing `SecurityIdentity` might require calls to external systems, such as databases, that might block the operation.\n"
 "For blocking applications, this is not an issue.\n"
 "However, if you have disabled authentication in a reactive application, this fails because you cannot do blocking operations on the I/O thread.\n"
 "To work around this, you need to `@Inject` an instance of `io.quarkus.security.identity.CurrentIdentityAssociation` and call the `Uni<SecurityIdentity> getDeferredIdentity();` method.\n"
 "Then, you can subscribe to the resulting `Uni` to be notified when authentication is complete and the identity is available."
-msgstr "如果使用主动身份验证，访问 `SecurityIdentity` 将是一个阻塞操作。这是因为身份验证可能尚未进行，访问 `SecurityIdentity` 可能需要调用外部系统（如数据库），这可能会阻塞操作。对于阻塞应用程序来说，这不是问题。但是，如果在反应式应用程序中禁用了身份验证，则会出现故障，因为无法在 I/O 线程上执行阻塞操作。要解决这个问题，您需要 `@Inject` `io.quarkus.security.identity.CurrentIdentityAssociation` 的一个实例，并调用 `Uni<SecurityIdentity> getDeferredIdentity();` 方法。然后，您可以订阅由此产生的 `Uni` ，以便在身份验证完成且身份可用时收到通知。"
+msgstr ""
 
 #: _guides/security-proactive-authentication.adoc
 #, fuzzy
@@ -107,6 +106,26 @@ msgid ""
 "Move the `@RolesAllowed` annotation to the endpoint.\n"
 "This could be one of the safest ways because accessing `SecurityIdentity` from endpoint methods is never the blocking operation."
 msgstr "将 `@RolesAllowed` 注解移至端点。这可能是最安全的方法之一，因为从端点方法访问 `SecurityIdentity` 绝不是阻塞操作。"
+
+#: _guides/security-proactive-authentication.adoc
+msgid "Activating the CDI request context"
+msgstr ""
+
+#: _guides/security-proactive-authentication.adoc
+msgid ""
+"You may need to inject `@RequestScoped` beans during authentication and authorization.\n"
+"A good example of this is accessing a database during a `SecurityIdentity` augmentation,\n"
+"which is described in the xref:security-customization.adoc#security-identity-customization[Security Identity Customization] section of the \"Security Tips and Tricks\" guide.\n"
+"If authentication or authorization fails with the `jakarta.enterprise.context.ContextNotActiveException`, disabling proactive authentication is most often the best solution.\n"
+"Users can also activate xref:cdi-reference.adoc#request-context-lifecycle[CDI request context], for example, by using the `@ActivateRequestContext` annotation.\n"
+"However, some CDI beans may not be ready for use."
+msgstr ""
+
+#: _guides/security-proactive-authentication.adoc
+msgid ""
+"One exception to this solution is a situation when application endpoints are secured with the xref:security-authorize-web-endpoints-reference.adoc#authorization-using-configuration[Authorization using configuration].\n"
+"For more information, see the xref:security-authorize-web-endpoints-reference.adoc#policy-active-cdi-request-context[Inject RequestScoped beans into HttpSecurityPolicy] section of the \"Authorization of Web endpoints\" guide for more information."
+msgstr ""
 
 #. type: Title ==
 #: _guides/security-proactive-authentication.adoc
