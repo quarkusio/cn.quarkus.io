@@ -3026,10 +3026,8 @@ msgstr "如果您使用Hibernate Reactive，请参看link:#writing-entities-mana
 msgid ""
 "Because we write to a database, we must run this method in a transaction.\n"
 "Yet, sending the entity to Kafka happens asynchronously.\n"
-"The operation returns a `CompletionStage` (or a `Uni` if you use a `MutinyEmitter`) reporting when the operation completes.\n"
-"We must be sure that the transaction is still running until the object is written.\n"
-"Otherwise, you may access the object outside the transaction, which is not allowed."
-msgstr "因为我们要往数据库写入数据，所以我们必须在事务中运行该方法。然而，向Kafka发送消息是异步的。该操作完成后会返回一个 `CompletionStage` (如果您使用 `MutinyEmitter`，则返回 `Uni`)。我们必须确认在对象被写入之前事务仍然在运行。否则，您可能会在事务之外访问到该对象，而这是不允许的。"
+"We can achieve this by using `.sendAndAwait()` or `.sendAndForget()` on the `MutinyEmitter`, or `.send().toCompletableFuture().join()` on the `Emitter`."
+msgstr ""
 
 #. type: Plain text
 #: _guides/kafka.adoc
@@ -3041,17 +3039,20 @@ msgstr "为了实现这一过程，您需要采取以下方法："
 msgid "As we are writing to the database, make sure we run inside a transaction"
 msgstr "当我们向数据库中写入数据时，请确保运行在事务中"
 
-#. type: Plain text
 #: _guides/kafka.adoc
-msgid "The method receives the fruit instance to persist. It returns a `CompletionStage` which is used for the transaction demarcation. The transaction is committed when the return `CompletionStage` completes. In our case, it's when the message is written to Kafka."
-msgstr "该方法接收要持久化的fruit实例。它返回了一个 `CompletionStage` ，用于事务分界。当返回的 `CompletionStage` 完成时，事务即会提交。在我们的例子中，这种情况就是消息被写入Kafka的时候。"
+msgid "The method receives the fruit instance to persist."
+msgstr ""
 
 #: _guides/kafka.adoc
-#, fuzzy
 msgid ""
 "Wrap the managed entity inside a Data transfer object and send it to Kafka.\n"
-"This makes sure that managed entity is not impacted by the Kafka serialization."
-msgstr "将托管实体包裹在数据传输对象中，然后将其发送到 Kafka。这样可以确保托管实体不受 Kafka 序列化的影响。"
+"This makes sure that managed entity is not impacted by the Kafka serialization.\n"
+"Then await the completion of the operation before returning."
+msgstr ""
+
+#: _guides/kafka.adoc
+msgid "You should not return a `CompletionStage` or `Uni` when using `@Transactional`, as all transaction commits will happen on a single thread, which impacts performance."
+msgstr ""
 
 #. type: Title ===
 #: _guides/kafka.adoc

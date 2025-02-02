@@ -16,94 +16,114 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#. type: Title =
 #: _guides/security-cors.adoc
-#, no-wrap
-msgid "Cross-origin resource sharing"
-msgstr "Cross-Origin 资源共享"
-
-#. type: Plain text
-#: _guides/security-cors.adoc
-#, fuzzy
-msgid "Cross-origin resource sharing (CORS) is an HTTP-header-based mechanism that allows a server to indicate any origins other than its own, from which a browser should permit loading resources."
-msgstr "跨源资源共享（CORS）是一种基于 HTTP 头信息的机制，它允许服务器指出除其自身之外的其他源，浏览器应允许从这些源加载资源。"
+msgid "Cross-Origin Resource Sharing (CORS)"
+msgstr ""
 
 #: _guides/security-cors.adoc
-#, fuzzy
+msgid "Enable and configure CORS in Quarkus to specify allowed origins, methods, and headers, guiding browsers in handling cross-origin requests safely."
+msgstr ""
+
+#: _guides/security-cors.adoc
 msgid ""
-"These origins consist of a single domain, scheme, and port.\n"
-"For the complete origin definition, see the link:https://datatracker.ietf.org/doc/html/rfc6454[Web Origin Concept] page."
-msgstr "这些起源由单个域、方案和端口组成。有关完整的起源定义，请参阅 link:https://datatracker.ietf.org/doc/html/rfc6454[网络起源概念] 页面。"
-
-#. type: Title ==
-#: _guides/security-cors.adoc
-#, fuzzy, no-wrap
-msgid "CORS filter"
-msgstr "CORS过滤器"
+"Cross-Origin Resource Sharing (CORS) uses HTTP headers to manage browser requests for resources from external origins securely.\n"
+"By specifying permitted origins, methods, and headers, Quarkus servers can use the CORS filter to enable browsers to request resources across domains while maintaining controlled access.\n"
+"This mechanism enhances security and supports legitimate cross-origin requests.\n"
+"For more on origin definitions, see the link:https://datatracker.ietf.org/doc/html/rfc6454[Web Origin Concept]."
+msgstr ""
 
 #: _guides/security-cors.adoc
-#, fuzzy
+msgid "Enabling the CORS filter"
+msgstr ""
+
+#: _guides/security-cors.adoc
+msgid "To enforce CORS policies in your application, enable the Quarkus CORS filter by adding the following line to the `src/main/resources/application.properties` file:"
+msgstr ""
+
+#: _guides/security-cors.adoc
 msgid ""
-"Quarkus provides a CORS filter, which implements the `jakarta.servlet.Filter` interface and intercepts all incoming HTTP requests.\n"
-"It can be enabled in the Quarkus configuration file, `src/main/resources/application.properties`:"
-msgstr "Quarkus 提供 CORS 过滤器，它实现了 `jakarta.servlet.Filter` 接口并拦截所有传入 HTTP 请求。它可以在 Quarkus 配置文件 `src/main/resources/application.properties` 中启用："
+"The filter intercepts all incoming HTTP requests to identify cross-origin requests and applies the configured policy.\n"
+"The filter then adds CORS headers to the HTTP response, informing browsers about allowed origins and access parameters.\n"
+"For preflight requests, the filter returns an HTTP response immediately.\n"
+"For regular CORS requests, the filter denies access with an HTTP 403 status if the request violates the configured policy; otherwise, the filter forwards the request to the destination if the policy allows it."
+msgstr ""
 
 #: _guides/security-cors.adoc
-#, fuzzy
+msgid "For detailed configuration options, see the following Configuration Properties section."
+msgstr ""
+
+#: _guides/security-cors.adoc
+msgid "Example CORS configuration"
+msgstr ""
+
+#: _guides/security-cors.adoc
+msgid "The following example shows a complete CORS filter configuration, including a regular expression to define one of the origins."
+msgstr ""
+
+#: _guides/security-cors.adoc
+msgid "Enables the CORS filter."
+msgstr ""
+
+#: _guides/security-cors.adoc
+msgid "Specifies allowed origins, including a regular expression."
+msgstr ""
+
+#: _guides/security-cors.adoc
+msgid "Lists allowed HTTP methods for cross-origin requests."
+msgstr ""
+
+#: _guides/security-cors.adoc
+msgid "Declares custom headers that clients can include in requests."
+msgstr ""
+
+#: _guides/security-cors.adoc
+msgid "Identifies response headers that clients can access."
+msgstr ""
+
+#: _guides/security-cors.adoc
+msgid "Sets how long preflight request results are cached."
+msgstr ""
+
+#: _guides/security-cors.adoc
+msgid "Allows cookies or credentials in cross-origin requests."
+msgstr ""
+
+#: _guides/security-cors.adoc
 msgid ""
-"When the filter is enabled and identifies an HTTP request as cross-origin, it will enforce the CORS policy.\n"
-"It will also add headers configured with the following properties before forwarding the request to its intended destination, like a servlet, Jakarta REST resource, or other endpoints."
-msgstr "当过滤器启用并将 HTTP 请求识别为跨源请求时，它将执行 CORS 策略。在将请求转发到预期目标（如 servlet、Jakarta REST 资源或其他端点）之前，它还会添加配置了以下属性的标头。"
-
-#. type: Plain text
-#: _guides/security-cors.adoc
-#, fuzzy
-msgid "An example of a full CORS filter configuration that includes a regular expression defining an allowed origin"
-msgstr "一个完整 CORS 过滤器配置的示例，其中包括定义允许来源的正则表达式"
+"When using regular expressions in an `application.properties` file, escape special characters with four backward slashes (`\\\\\\\\`) to ensure proper behavior.\n"
+"For example:"
+msgstr ""
 
 #: _guides/security-cors.adoc
-#, fuzzy
+msgid "`\\\\\\\\.` matches a literal `.` character."
+msgstr ""
+
+#: _guides/security-cors.adoc
+msgid "`\\\\.` matches any single character as a regular expression metadata character."
+msgstr ""
+
+#: _guides/security-cors.adoc
 msgid ""
-"quarkus.http.cors=true\n"
-"quarkus.http.cors.origins=http://foo.com,http://www.bar.io,/https://([a-z0-9\\\\-_]+)\\\\\\\\.app\\\\\\\\.mydomain\\\\\\\\.com/\n"
-"quarkus.http.cors.methods=GET,PUT,POST\n"
-"quarkus.http.cors.headers=X-Custom\n"
-"quarkus.http.cors.exposed-headers=Content-Disposition\n"
-"quarkus.http.cors.access-control-max-age=24H\n"
-"quarkus.http.cors.access-control-allow-credentials=true"
-msgstr "quarkus.http.cors=true quarkus.http.cors.origins=http://foo.com,http://www.bar.io,/https://([a-z0-9\\-_]+)\\\\\\\\.app\\\\\\\\.mydomain\\\\\\\\.com/ quarkus.http.cors.methods=GET,PUT,POST quarkus.http.cors.headers=X-Custom quarkus.http.cors.exposed-headers=Content-Disposition quarkus.http.cors.access-control-headers=Content-Dispositionhttp.cors.headers=X-Custom quarkus.http.cors.exposed-headers=Content-Disposition quarkus.http.cors.access-control-max-age=24H quarkus.http.cors.access-control-allow-credentials=true"
-
-#. type: Plain text
-#: _guides/security-cors.adoc
-#, fuzzy
-msgid "`/https://([a-z0-9\\\\-_]+)\\\\\\\\.app\\\\\\\\.mydomain\\\\\\\\.com/` is treated as a regular expression because forward slash characters surround it."
-msgstr "`/https://([a-z0-9\\\\-_]+)\\\\\\\\.app\\\\\\\\.mydomain\\\\\\\\.com/` 被视为正则表达式，因为它周围有正斜线字符。"
-
-#. type: delimited block =
-#: _guides/security-cors.adoc
-#, fuzzy
-msgid "If you use regular expressions in an `application.properties` file, make sure four backward slashes are used to represent `.` and other regular expression metadata characters as normal characters, for example, `\\\\\\\\.` represents a `.` character while `\\\\.` represents a metadata character allowing for any character."
-msgstr "如果在 `application.properties` 文件中使用正则表达式，请确保使用四个向后斜线将 `.` 和其他正则表达式元数据字符表示为普通字符，例如 `\\\\\\\\.` 表示 `.` 字符，而 `\\\\.` 表示允许任何字符的元数据字符。"
-
-#. type: Title ===
-#: _guides/security-cors.adoc
-#, fuzzy, no-wrap
-msgid "Support all origins in dev mode"
-msgstr "在开发模式下支持所有起源"
+"Incorrectly escaped patterns can lead to unintended behavior or security vulnerabilities.\n"
+"Always verify regular expression syntax before deployment."
+msgstr ""
 
 #: _guides/security-cors.adoc
-#, fuzzy
+msgid "Allowing all origins in dev mode"
+msgstr ""
+
+#: _guides/security-cors.adoc
 msgid ""
-"Configuring required origins when developing a Quarkus application requiring CORS support can be difficult.\n"
-"In such cases, consider allowing all origins in dev mode only in order to focus on the actual development first:"
-msgstr "在开发需要 CORS 支持的 Quarkus 应用程序时，配置所需的起源可能比较困难。在这种情况下，可以考虑只允许在开发模式下使用所有起源，以便首先专注于实际开发："
+"Configuring origins during development can be challenging.\n"
+"To simplify development, consider allowing all origins in development mode only:"
+msgstr ""
 
 #: _guides/security-cors.adoc
-#, fuzzy
 msgid ""
-"Enable all origins exclusively for the dev profile.\n"
-"It is not advisable to permit all origins in a production environment, as it can lead to significant security risks."
-msgstr "专门为开发配置文件启用所有来源。在生产环境中不建议允许所有来源，因为这会导致严重的安全风险。"
+"Only allow all origins in the development profile (`%dev`).\n"
+"Allowing unrestricted origins in production environments poses severe security risks, such as unauthorized data access or resource abuse.\n"
+"For production, define explicit origins in the `quarkus.http.cors.origins` property."
+msgstr ""
 
 #. type: Title ==
 #: _guides/security-cors.adoc

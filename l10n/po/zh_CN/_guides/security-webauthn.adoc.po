@@ -284,24 +284,15 @@ msgid "Storing our WebAuthn credentials"
 msgstr "储存我们的WebAuthn凭证"
 
 #: _guides/security-webauthn.adoc
-#, fuzzy
 msgid ""
-"We can now describe how our WebAuthn credentials are stored in our database with three entities. Note that we've\n"
+"We can now describe how our WebAuthn credentials are stored in our database with two entities. Note that we've\n"
 "simplified the model in order to only store one credential per user (who could actually have more than one WebAuthn credential\n"
 "and other data such as roles):"
-msgstr "现在我们可以用三个实体来描述 WebAuthn 凭据是如何存储在数据库中的。请注意，我们简化了模型，以便每个用户只存储一个凭据（实际上，用户可能拥有不止一个 WebAuthn 凭据和其他数据，如角色）："
+msgstr ""
 
-#. type: Plain text
 #: _guides/security-webauthn.adoc
-#, fuzzy
-msgid "We also need a second entity for the credentials:"
-msgstr "我们还需要第二个实体的凭证。"
-
-#. type: Plain text
-#: _guides/security-webauthn.adoc
-#, fuzzy
-msgid "And last but not least, our user entity:"
-msgstr "最后但并非最不重要的是，我们的用户实体。"
+msgid "And our user entity:"
+msgstr ""
 
 #. type: Title ====
 #: _guides/security-webauthn.adoc
@@ -309,37 +300,15 @@ msgstr "最后但并非最不重要的是，我们的用户实体。"
 msgid "A note about usernames and credential IDs"
 msgstr "关于用户名和凭证ID的说明"
 
-#. type: Plain text
 #: _guides/security-webauthn.adoc
-#, fuzzy
-msgid "WebAuthn relies on a combination of usernames (unique per user) and credential IDs (unique per authenticator device)."
-msgstr "WebAuthn依赖于用户名（每个用户唯一）和凭证ID（每个认证器设备唯一）的组合。"
-
-#. type: Plain text
-#: _guides/security-webauthn.adoc
-#, fuzzy
-msgid "The reasons why there are two such identifiers, and why they are not unique keys for the credentials themselves are:"
-msgstr "为什么有两个这样的标识符，以及为什么它们不是凭证本身的唯一键，原因是。"
+msgid "Usernames are unique and to your users. Every created WebAuthn credential record has a unique ID."
+msgstr ""
 
 #: _guides/security-webauthn.adoc
-#, fuzzy
 msgid ""
-"A single user can have more than one authenticator device, which means a single username can map to multiple credential IDs,\n"
-"all of which identify the same user."
-msgstr "一个用户可以拥有多个验证器设备，这意味着一个用户名可以映射到多个凭证 ID，而所有凭证 ID 都能识别同一个用户。"
-
-#: _guides/security-webauthn.adoc
-#, fuzzy
-msgid ""
-"An authenticator device may be shared by multiple users, because a single person may want multiple user accounts with different\n"
-"usernames, all of which having the same authenticator device. So a single credential ID may be used by multiple different users."
-msgstr "一个身份验证设备可由多个用户共享，因为一个人可能需要多个用户账户，用户名各不相同，而所有账户都使用同一个身份验证设备。因此，一个身份验证 ID 可能会被多个不同的用户使用。"
-
-#. type: Plain text
-#: _guides/security-webauthn.adoc
-#, fuzzy
-msgid "The combination of username and credential ID should be a unicity constraint for your credentials table, though."
-msgstr "不过，用户名和凭证ID的组合应该是你的凭证表的单一性约束。"
+"You can allow (if you want, but you don't have to) your users to have more than one authenticator device,\n"
+"which means a single username can map to multiple credential IDs, all of which identify the same user."
+msgstr ""
 
 #. type: Title ===
 #: _guides/security-webauthn.adoc
@@ -348,12 +317,32 @@ msgid "Exposing your entities to Quarkus WebAuthn"
 msgstr "将你的实体暴露给Quarkus WebAuthn"
 
 #: _guides/security-webauthn.adoc
-#, fuzzy
 msgid ""
-"You need to define a bean implementing the `WebAuthnUserProvider` in order to allow the Quarkus WebAuthn\n"
+"You need to define a bean implementing the link:{webauthn-api}/io/quarkus/security/webauthn/WebAuthnUserProvider.html[`WebAuthnUserProvider`] in order to allow the Quarkus WebAuthn\n"
 "extension to load and store credentials. This is where you tell Quarkus how to turn your data model into the\n"
 "WebAuthn security model:"
-msgstr "您需要定义一个实现 `WebAuthnUserProvider` 的 Bean，以便允许 Quarkus WebAuthn 扩展加载和存储凭证。在这里，你要告诉 Quarkus 如何将你的数据模型转化为 WebAuthn 安全模型："
+msgstr ""
+
+#: _guides/security-webauthn.adoc
+msgid ""
+"Warning: When implementing your own `WebAuthnUserProvider.store` method, make sure that you never allow creating\n"
+"new credentials for a `username` that already exists. Otherwise you risk allowing third-parties to impersonate existing\n"
+"users by letting them add their own credentials to existing accounts. If you want to allow existing users to register\n"
+"more than one WebAuthn credential, you must make sure in `WebAuthnUserProvider.store` that the user is currently logged\n"
+"in under the same `username` to which you want to add new credentials. In every other case, make sure to return a failed\n"
+"`Uni` from this method. In this particular example, this is checked using a unicity constraint on the user name, which\n"
+"will cause the transaction to fail if the user already exists."
+msgstr ""
+
+#: _guides/security-webauthn.adoc
+msgid "Configuration"
+msgstr ""
+
+#: _guides/security-webauthn.adoc
+msgid ""
+"Because we want to delegate login and registration to the default Quarkus WebAuthn endpoints, we need to enable them\n"
+"in configuration (`src/main/resources/application.properties`):"
+msgstr ""
 
 #. type: Title ==
 #: _guides/security-webauthn.adoc
@@ -368,11 +357,9 @@ msgid ""
 "in `src/main/resources/META-INF/resources/index.html`:"
 msgstr "现在，我们需要在 `src/main/resources/META-INF/resources/index.html` 中编写一个网页，其中包含指向所有 API 的链接，以及注册新用户、登录和注销的方法："
 
-#. type: Title ==
 #: _guides/security-webauthn.adoc
-#, fuzzy, no-wrap
-msgid "Testing the application"
-msgstr "测试应用程序"
+msgid "Trying the application"
+msgstr ""
 
 #. type: Plain text
 #: _guides/security-webauthn.adoc
@@ -426,11 +413,9 @@ msgstr "浏览器会要求您激活 WebAuthn 身份验证器（您需要一个�
 msgid "You will then be logged in, and can check that the user API is now accessible:"
 msgstr "然后你将被登录，并可以检查用户API现在是否可以访问。"
 
-#. type: Plain text
 #: _guides/security-webauthn.adoc
-#, fuzzy
-msgid "At this stage you can `Logout` and enter your username in the `Login` form:"
-msgstr "在这个阶段，你可以 `Logout` ，并在 `Login` 表格中输入你的用户名。"
+msgid "At this stage you can `Logout`:"
+msgstr ""
 
 #. type: Plain text
 #: _guides/security-webauthn.adoc
@@ -443,6 +428,49 @@ msgstr "然后按 `Login` 按钮，你就可以登录了。"
 #, fuzzy
 msgid "The admin API is only accessible if you register with the `admin` user name."
 msgstr "只有当你用 `admin` 用户名注册时，才能访问管理API。"
+
+#: _guides/security-webauthn.adoc
+msgid "Explanation of the flow for WebAuthn authentication."
+msgstr ""
+
+#: _guides/security-webauthn.adoc
+msgid "There are two modes of operation for how you want to handle user and credential creation:"
+msgstr ""
+
+#: _guides/security-webauthn.adoc
+msgid ""
+"By default, the solution we have seen handles user and credential creation and logins automatically\n"
+"via the <<WebAuthn endpoints>> provided out of the box by this extension."
+msgstr ""
+
+#: _guides/security-webauthn.adoc
+msgid ""
+"In this scenario, all you have to to is provide a link:{webauthn-api}/io/quarkus/security/webauthn/WebAuthnUserProvider.html[`WebAuthnUserProvider`] to\n"
+"tell Quarkus how to find, store and update your credentials (see\n"
+"<<Exposing your entities to Quarkus WebAuthn>>)."
+msgstr ""
+
+#: _guides/security-webauthn.adoc
+msgid ""
+"Thus, triggering a registration on the client requires obtaining a challenge from the server (see\n"
+"<<Obtain a registration challenge>>), which will then be returned to the client which\n"
+"uses that to create new credentials and send them to the server (see\n"
+"<<Trigger a registration>>) which will store the credentials and log you in:"
+msgstr ""
+
+#: _guides/security-webauthn.adoc
+msgid ""
+"Later, triggering a login on the client requires obtaining a challenge from the server (see\n"
+"<<Obtain a login challenge>>), which will then be returned to the client which\n"
+"uses that to get the required credentials and send proof of them to the server (see\n"
+"<<Trigger a login>>) which will update the credentials and log you in:"
+msgstr ""
+
+#: _guides/security-webauthn.adoc
+msgid ""
+"If you want to customise the registration and login flow, you can also handle user and credential\n"
+"creation and logins yourself via your own logic (see <<Handling login and registration endpoints yourself>>)."
+msgstr ""
 
 #. type: Title ==
 #: _guides/security-webauthn.adoc
@@ -462,27 +490,25 @@ msgstr "Quarkus WebAuthn扩展开箱即预设了这些REST端点。"
 msgid "Obtain a registration challenge"
 msgstr "获得登记挑战"
 
-#. type: Plain text
 #: _guides/security-webauthn.adoc
-#, fuzzy
-msgid "`POST /q/webauthn/register`: Set up and obtain a registration challenge"
-msgstr " `POST /q/webauthn/register` :设置并获得注册挑战"
-
-#. type: Block title
-#: _guides/security-webauthn.adoc
-#, fuzzy, no-wrap
-msgid "Request"
-msgstr "要求"
+msgid "`GET /q/webauthn/register-options-challenge?username=<username>&displayName=<displayName>`: Set up and obtain a registration challenge"
+msgstr ""
 
 #: _guides/security-webauthn.adoc
-#, fuzzy
-msgid "Required"
-msgstr "需要"
+msgid "Query parameters:"
+msgstr ""
 
 #: _guides/security-webauthn.adoc
-#, fuzzy
-msgid "Optional"
-msgstr "可选"
+msgid "`username` is a username. Required."
+msgstr ""
+
+#: _guides/security-webauthn.adoc
+msgid "`displayName` is a human-palatable name for the user account. Optional."
+msgstr ""
+
+#: _guides/security-webauthn.adoc
+msgid "This causes a cookie to be set for the challenge, it will be used by the registration step later."
+msgstr ""
 
 #. type: Block title
 #: _guides/security-webauthn.adoc
@@ -496,11 +522,26 @@ msgstr "响应"
 msgid "Trigger a registration"
 msgstr "触发注册"
 
-#. type: Plain text
 #: _guides/security-webauthn.adoc
-#, fuzzy
-msgid "`POST /q/webauthn/callback`: Trigger a registration"
-msgstr " `POST /q/webauthn/callback` :触发注册"
+msgid "`POST /q/webauthn/register?username=<username>`: Trigger a registration"
+msgstr ""
+
+#: _guides/security-webauthn.adoc
+msgid ""
+"This uses the challenge cookie set by the registration challenge and clears it. It\n"
+"also uses your link:{webauthn-api}/io/quarkus/security/webauthn/WebAuthnUserProvider.html[`WebAuthnUserProvider`] to store the new credentials, and sets up\n"
+"the <<configuration-reference,session cookie>> to log you in."
+msgstr ""
+
+#: _guides/security-webauthn.adoc
+msgid "This is only enabled if the `quarkus.webauthn.enable-registration-endpoint` configuration is set to `true`."
+msgstr ""
+
+#. type: Block title
+#: _guides/security-webauthn.adoc
+#, fuzzy, no-wrap
+msgid "Request"
+msgstr "要求"
 
 #. type: Plain text
 #: _guides/security-webauthn.adoc
@@ -514,11 +555,17 @@ msgstr "这将返回一个没有主体的204。"
 msgid "Obtain a login challenge"
 msgstr "获得一个登录挑战"
 
-#. type: Plain text
 #: _guides/security-webauthn.adoc
-#, fuzzy
-msgid "`POST /q/webauthn/login`: Set up and obtain a login challenge"
-msgstr " `POST /q/webauthn/login` :设置并获得一个登录挑战"
+msgid "`GET /q/webauthn/login-options-challenge?username=<username>`: Set up and obtain a login challenge"
+msgstr ""
+
+#: _guides/security-webauthn.adoc
+msgid "`username` is a username. Optional in the case of https://www.w3.org/TR/webauthn-3/#discoverable-credential[Discoverable Credentials] (with PassKeys)."
+msgstr ""
+
+#: _guides/security-webauthn.adoc
+msgid "This causes a cookie to be set for the challenge, it will be used by the login step later."
+msgstr ""
 
 #. type: Title ===
 #: _guides/security-webauthn.adoc
@@ -526,11 +573,16 @@ msgstr " `POST /q/webauthn/login` :设置并获得一个登录挑战"
 msgid "Trigger a login"
 msgstr "触发一次登录"
 
-#. type: Plain text
 #: _guides/security-webauthn.adoc
-#, fuzzy
-msgid "`POST /q/webauthn/callback`: Trigger a login"
-msgstr " `POST /q/webauthn/callback` :触发一次登录"
+msgid ""
+"This uses the challenge cookie set by the login challenge and clears it. It\n"
+"also uses your link:{webauthn-api}/io/quarkus/security/webauthn/WebAuthnUserProvider.html[`WebAuthnUserProvider`] to find and update the credentials, and sets up\n"
+"the <<configuration-reference,session cookie>> to log you in."
+msgstr ""
+
+#: _guides/security-webauthn.adoc
+msgid "This is only enabled if the `quarkus.webauthn.enable-login-endpoint` configuration is set to `true`."
+msgstr ""
 
 #. type: Title ===
 #: _guides/security-webauthn.adoc
@@ -544,11 +596,27 @@ msgstr "登出"
 msgid "`GET /q/webauthn/logout`: Logs you out"
 msgstr " `GET /q/webauthn/logout` :将你的信息记录下来"
 
+#: _guides/security-webauthn.adoc
+msgid "This will clear the <<configuration-reference,session cookie>> to log you out."
+msgstr ""
+
 #. type: Plain text
 #: _guides/security-webauthn.adoc
 #, fuzzy
 msgid "This returns a 302 redirect to the root URI of your application."
 msgstr "这将返回一个302重定向到你的应用程序的根URI。"
+
+#: _guides/security-webauthn.adoc
+msgid "Related Origins"
+msgstr ""
+
+#: _guides/security-webauthn.adoc
+msgid "`GET /.well-known/webauthn`: Retreives the list of https://passkeys.dev/docs/advanced/related-origins/[related origins]."
+msgstr ""
+
+#: _guides/security-webauthn.adoc
+msgid "This defaults to the current origin on which Quarkus is deployed, but can be <<quarkus-security-webauthn_quarkus-webauthn-origins,configured>>."
+msgstr ""
 
 #. type: Title ==
 #: _guides/security-webauthn.adoc
@@ -563,6 +631,20 @@ msgid ""
 "a JavaScript library to help you talk to the WebAuthn endpoints, at `/q/webauthn/webauthn.js`. You can set it up like this:"
 msgstr "由于在浏览器中设置 WebAuthn 需要大量 JavaScript，Quarkus WebAuthn 扩展随附了一个 JavaScript 库，以帮助你与 WebAuthn 端点对话，网址是 `/q/webauthn/webauthn.js` 。你可以这样设置"
 
+#: _guides/security-webauthn.adoc
+msgid "Or, if you need to customise the endpoints:"
+msgstr ""
+
+#: _guides/security-webauthn.adoc
+msgid "CSRF considerations"
+msgstr ""
+
+#: _guides/security-webauthn.adoc
+msgid ""
+"If you use the endpoints provided by Quarkus, they will not be protected by xdoc:security-csrf-prevention.adoc[CSRF], but\n"
+"if you define your own endpoints and use this JavaScript library to access them you will need to configure CSRF via headers:"
+msgstr ""
+
 #. type: Title ===
 #: _guides/security-webauthn.adoc
 #, fuzzy, no-wrap
@@ -570,11 +652,10 @@ msgid "Invoke registration"
 msgstr "调用注册"
 
 #: _guides/security-webauthn.adoc
-#, fuzzy
 msgid ""
-"The `webAuthn.register` method invokes the registration challenge endpoint, then calls the authenticator and invokes the callback endpoint\n"
+"The `webAuthn.register` method invokes the registration challenge endpoint, then calls the authenticator and invokes the registration endpoint\n"
 "for that registration, and returns a https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise[Promise object]:"
-msgstr "`webAuthn.register` 方法会调用注册挑战端点，然后调用验证器，调用该注册的回调端点，并返回一个 link:https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise[Promise 对象] ："
+msgstr ""
 
 #. type: Title ===
 #: _guides/security-webauthn.adoc
@@ -583,11 +664,14 @@ msgid "Invoke login"
 msgstr "调用登录"
 
 #: _guides/security-webauthn.adoc
-#, fuzzy
 msgid ""
-"The `webAuthn.login` method invokes the login challenge endpoint, then calls the authenticator and invokes the callback endpoint\n"
+"The `webAuthn.login` method invokes the login challenge endpoint, then calls the authenticator and invokes the login endpoint\n"
 "for that login, and returns a https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise[Promise object]:"
-msgstr "`webAuthn.login` 方法调用登录挑战端点，然后调用身份验证器并调用该登录的回调端点，并返回一个 link:https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise[Promise 对象] ："
+msgstr ""
+
+#: _guides/security-webauthn.adoc
+msgid "The username is optional, in the case of https://www.w3.org/TR/webauthn-3/#discoverable-credential[Discoverable Credentials] (with PassKeys)"
+msgstr ""
 
 #. type: Title ===
 #: _guides/security-webauthn.adoc
@@ -596,13 +680,12 @@ msgid "Only invoke the registration challenge and authenticator"
 msgstr "只调用注册挑战和认证器"
 
 #: _guides/security-webauthn.adoc
-#, fuzzy
 msgid ""
-"The `webAuthn.registerOnly` method invokes the registration challenge endpoint, then calls the authenticator and returns\n"
+"The `webAuthn.registerClientSteps` method invokes the registration challenge endpoint, then calls the authenticator and returns\n"
 "a https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise[Promise object] containing a\n"
-"JSON object suitable for being sent to the callback endpoint. You can use that JSON object in order to store the credentials\n"
+"JSON object suitable for being sent to the registration endpoint. You can use that JSON object in order to store the credentials\n"
 "in hidden form `input` elements, for example, and send it as part of a regular HTML form:"
-msgstr "`webAuthn.registerOnly` 方法会调用注册挑战端点，然后调用验证器并返回一个 link:https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise[Promise 对象] ，其中包含一个适合发送到回调端点的 JSON 对象。例如，您可以使用该 JSON 对象将凭证存储在隐藏表单 `input` 元素中，然后作为普通 HTML 表单的一部分发送："
+msgstr ""
 
 #. type: Title ===
 #: _guides/security-webauthn.adoc
@@ -611,13 +694,12 @@ msgid "Only invoke the login challenge and authenticator"
 msgstr "只调用注册挑战和认证器"
 
 #: _guides/security-webauthn.adoc
-#, fuzzy
 msgid ""
-"The `webAuthn.loginOnly` method invokes the login challenge endpoint, then calls the authenticator and returns\n"
+"The `webAuthn.loginClientSteps` method invokes the login challenge endpoint, then calls the authenticator and returns\n"
 "a https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise[Promise object] containing a\n"
-"JSON object suitable for being sent to the callback endpoint. You can use that JSON object in order to store the credentials\n"
+"JSON object suitable for being sent to the login endpoint. You can use that JSON object in order to store the credentials\n"
 "in hidden form `input` elements, for example, and send it as part of a regular HTML form:"
-msgstr "`webAuthn.loginOnly` 方法会调用登录挑战端点，然后调用验证器并返回一个 link:https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise[Promise 对象] ，该对象包含一个适合发送到回调端点的 JSON 对象。例如，您可以使用该 JSON 对象在隐藏表单 `input` 元素中存储凭据，并将其作为普通 HTML 表单的一部分发送："
+msgstr ""
 
 #. type: Title ==
 #: _guides/security-webauthn.adoc
@@ -626,50 +708,75 @@ msgid "Handling login and registration endpoints yourself"
 msgstr "自己处理登录和注册端点"
 
 #: _guides/security-webauthn.adoc
-#, fuzzy
 msgid ""
 "Sometimes, you will want to ask for more data than just a username in order to register a user,\n"
-"or you want to deal with login and registration with custom validation, and so the WebAuthn callback\n"
-"endpoint is not enough."
-msgstr "有时，为了注册用户，除了用户名之外，您还需要输入更多的数据，或者您想通过自定义验证来处理登录和注册，因此 WebAuthn 回调端点是不够的。"
+"or you want to deal with login and registration with custom validation, and so the default WebAuthn login\n"
+"and registration endpoints are not enough."
+msgstr ""
 
 #: _guides/security-webauthn.adoc
-#, fuzzy
 msgid ""
-"In this case, you can use the `WebAuthn.loginOnly` and `WebAuthn.registerOnly` methods from the JavaScript\n"
+"In this case, you can use the `WebAuthn.loginClientSteps` and `WebAuthn.registerClientSteps` methods from the JavaScript\n"
 "library, store the authenticator data in hidden form elements, and send them as part of your form payload\n"
 "to the server to your custom login or registration endpoints."
-msgstr "在这种情况下，您可以使用 JavaScript 库中的 `WebAuthn.loginOnly` 和 `WebAuthn.registerOnly` 方法，将验证器数据存储在隐藏的表单元素中，然后作为表单有效载荷的一部分发送到服务器上的自定义登录或注册端点。"
+msgstr ""
 
 #: _guides/security-webauthn.adoc
-#, fuzzy
 msgid ""
-"If you are storing them in form input elements, you can then use the `WebAuthnLoginResponse` and\n"
-"`WebAuthnRegistrationResponse` classes, mark them as `@BeanParam` and then use the `WebAuthnSecurity.login`\n"
-"and `WebAuthnSecurity.register` methods to replace the `/q/webauthn/callback` endpoint. This even\n"
-"allows you to create two separate endpoints for handling login and registration at different endpoints."
-msgstr "如果将它们存储在表单输入元素中，则可以使用 `WebAuthnLoginResponse` 和 `WebAuthnRegistrationResponse` 类，将它们标记为 `@BeanParam` ，然后使用 `WebAuthnSecurity.login` 和 `WebAuthnSecurity.register` 方法替换 `/q/webauthn/callback` 端点。这样甚至可以创建两个独立的端点，在不同的端点处理登录和注册。"
+"If you are storing them in form input elements, you can then use the link:{webauthn-api}/io/quarkus/security/webauthn/WebAuthnLoginResponse.html[`WebAuthnLoginResponse`] and\n"
+"link:{webauthn-api}/io/quarkus/security/webauthn/WebAuthnRegistrationResponse.html[`WebAuthnRegistrationResponse`] classes,\n"
+"mark them as `@BeanParam` and then use the\n"
+"link:{webauthn-api}/io/quarkus/security/webauthn/WebAuthnSecurity.html#login(io.quarkus.security.webauthn.WebAuthnLoginResponse,io.vertx.ext.web.RoutingContext)[`WebAuthnSecurity.login`]\n"
+"and link:{webauthn-api}/io/quarkus/security/webauthn/WebAuthnSecurity.html#register(io.quarkus.security.webauthn.WebAuthnRegisterResponse,io.vertx.ext.web.RoutingContext)[`WebAuthnSecurity.register`]\n"
+"methods to replace the `/q/webauthn/login` and `/q/webauthn/register` endpoints."
+msgstr ""
 
 #: _guides/security-webauthn.adoc
-#, fuzzy
 msgid ""
-"In most cases you can keep using the `/q/webauthn/login` and `/q/webauthn/register` challenge-initiating\n"
+"In most cases you can keep using the `/q/webauthn/login-options-challenge` and `/q/webauthn/register-options-challenge` challenge-initiating\n"
 "endpoints, because this is not where custom logic is required."
-msgstr "在大多数情况下，您可以继续使用 `/q/webauthn/login` 和 `/q/webauthn/register` 挑战发起端点，因为这里不需要自定义逻辑。"
+msgstr ""
 
 #: _guides/security-webauthn.adoc
-#, fuzzy
-msgid "For example, here's how you can handle a custom login and register action:"
-msgstr "例如，下面是如何处理自定义登录和注册操作："
-
-#: _guides/security-webauthn.adoc
-#, fuzzy
 msgid ""
-"The `WebAuthnSecurity` methods do not set or read the user cookie, so you will have to take care\n"
+"In this case, the registration flow is a little different because you will write your own registration endpoint\n"
+"which will handle storing of the credentials and setting up the session cookie:"
+msgstr ""
+
+#: _guides/security-webauthn.adoc
+msgid ""
+"Similarly, the login flow is a little different because you will write your own login endpoint\n"
+"which will handle updating the credentials and setting up the session cookie:"
+msgstr ""
+
+#: _guides/security-webauthn.adoc
+msgid ""
+"If you handle user and credential creation and logins yourself in your endpoints, you only need\n"
+"to provide a read-only view of your entities in your link:{webauthn-api}/io/quarkus/security/webauthn/WebAuthnUserProvider.html[`WebAuthnUserProvider`], so you can skip\n"
+"the `store` and `update` methods:"
+msgstr ""
+
+#: _guides/security-webauthn.adoc
+msgid ""
+"When setting up your own login and registration endpoints, you don't need to enable the default endpoints, so you can\n"
+"remove the `quarkus.webauthn.enable-login-endpoint` and `quarkus.webauthn.enable-registration-endpoint` configuration."
+msgstr ""
+
+#: _guides/security-webauthn.adoc
+msgid ""
+"Thankfully, you can use the link:{webauthn-api}/io/quarkus/security/webauthn/WebAuthnSecurity.html[`WebAuthnSecurity`] bean to handle the WebAuthn-specific part of\n"
+"your registration and login endpoints, and focus on your own logic:"
+msgstr ""
+
+#: _guides/security-webauthn.adoc
+msgid ""
+"The link:{webauthn-api}/io/quarkus/security/webauthn/WebAuthnSecurity.html[`WebAuthnSecurity`]\n"
+"methods do not set or read the <<configuration-reference,session cookie>>, so you will have to take care\n"
 "of it yourself, but it allows you to use other means of storing the user, such as JWT. You can use the\n"
-"`rememberUser(String userName, RoutingContext ctx)` and `logout(RoutingContext ctx)` methods on the same\n"
-"`WebAuthnSecurity` class if you want to manually set up login cookies."
-msgstr "`WebAuthnSecurity` 方法不会设置或读取用户 cookie，因此您必须自行处理，但它允许您使用其他方式存储用户，如 JWT。如果要手动设置登录 cookie，可以在同一个 `WebAuthnSecurity` 类上使用 `rememberUser(String userName, RoutingContext ctx)` 和 `logout(RoutingContext ctx)` 方法。"
+"link:{webauthn-api}/io/quarkus/security/webauthn/WebAuthnSecurity.html#rememberUser(java.lang.String,io.vertx.ext.web.RoutingContext)[`WebAuthnSecurity.rememberUser`]\n"
+" and link:{webauthn-api}/io/quarkus/security/webauthn/WebAuthnSecurity.html#logout(io.vertx.ext.web.RoutingContext)[`WebAuthnSecurity.logout`]\n"
+" methods on the same link:{webauthn-api}/io/quarkus/security/webauthn/WebAuthnSecurity.html[`WebAuthnSecurity`] class if you want to manually set up login cookies."
+msgstr ""
 
 #. type: Title ==
 #: _guides/security-webauthn.adoc
@@ -678,19 +785,18 @@ msgid "Blocking version"
 msgstr "封锁版本"
 
 #: _guides/security-webauthn.adoc
-#, fuzzy
 msgid ""
-"If you're using a blocking data access to the database, you can safely block on the `WebAuthnSecurity` methods,\n"
+"If you're using a blocking data access to the database, you can safely block on the\n"
+"link:{webauthn-api}/io/quarkus/security/webauthn/WebAuthnSecurity.html[`WebAuthnSecurity`] methods,\n"
 "with `.await().indefinitely()`, because nothing is async in the `register` and `login` methods, besides the\n"
-"data access with your `WebAuthnUserProvider`."
-msgstr "如果使用阻塞数据访问数据库，则可以通过 `.await().indefinitely()` 安全地阻塞 `WebAuthnSecurity` 方法，因为 `register` 和 `login` 方法中除了使用 `WebAuthnUserProvider` 访问数据外，没有任何异步内容。"
+"data access with your link:{webauthn-api}/io/quarkus/security/webauthn/WebAuthnUserProvider.html[`WebAuthnUserProvider`]."
+msgstr ""
 
 #: _guides/security-webauthn.adoc
-#, fuzzy
 msgid ""
-"You will have to add the `@Blocking` annotation on your `WebAuthnUserProvider` class in order to tell the\n"
+"You will have to add the `@Blocking` annotation on your link:{webauthn-api}/io/quarkus/security/webauthn/WebAuthnUserProvider.html[`WebAuthnUserProvider`] class in order for the\n"
 "Quarkus WebAuthn endpoints to defer those calls to the worker pool."
-msgstr "您必须在 `WebAuthnUserProvider` 类上添加 `@Blocking` 注解，以便告诉 Quarkus WebAuthn 端点将这些调用推迟到 Worker 池。"
+msgstr ""
 
 #: _guides/security-webauthn.adoc
 #, fuzzy
@@ -698,11 +804,10 @@ msgid "Virtual-Threads version"
 msgstr "虚拟线程版本"
 
 #: _guides/security-webauthn.adoc
-#, fuzzy
 msgid ""
-"You will have to add the `@RunOnVirtualThread` annotation on your `WebAuthnUserProvider` class in order to tell the\n"
-"Quarkus WebAuthn endpoints to defer those calls to virtual threads."
-msgstr "您必须在 `WebAuthnUserProvider` 类上添加 `@RunOnVirtualThread` 注解，以便告诉 Quarkus WebAuthn 端点将这些调用推迟到虚拟线程。"
+"You will have to add the `@RunOnVirtualThread` annotation on your link:{webauthn-api}/io/quarkus/security/webauthn/WebAuthnUserProvider.html[`WebAuthnUserProvider`] class in order to tell the\n"
+"Quarkus WebAuthn endpoints to defer those calls to the worker pool."
+msgstr ""
 
 #. type: Title ==
 #: _guides/security-webauthn.adoc
@@ -718,21 +823,21 @@ msgid ""
 msgstr "测试 WebAuthn 可能比较复杂，因为通常需要硬件令牌，这也是我们开发 `quarkus-test-security-webauthn` 辅助库的原因："
 
 #: _guides/security-webauthn.adoc
-#, fuzzy
 msgid ""
-"With this, you can use `WebAuthnHardware` to emulate an authenticator token, as well as the\n"
-"`WebAuthnEndpointHelper` helper methods in order to invoke the WebAuthn endpoints, or even fill your form\n"
+"With this, you can use link:{webauthn-test-api}/io/quarkus/test/security/webauthn/WebAuthnHardware.html[`WebAuthnHardware`]\n"
+"to emulate an authenticator token, as well as the\n"
+"link:{webauthn-test-api}/io/quarkus/test/security/webauthn/WebAuthnEndpointHelper.html[`WebAuthnEndpointHelper`]\n"
+"helper methods in order to invoke the WebAuthn endpoints, or even fill your form\n"
 "data for custom endpoints:"
-msgstr "这样，您就可以使用 `WebAuthnHardware` 来模拟验证器令牌，以及使用 `WebAuthnEndpointHelper` 辅助方法来调用 WebAuthn 端点，甚至为自定义端点填充表单数据："
+msgstr ""
 
 #: _guides/security-webauthn.adoc
-#, fuzzy
 msgid ""
 "For this test, since we're testing both the provided callback endpoint, which updates users\n"
-"in its `WebAuthnUserProvider` and the manual `LoginResource` endpoint, which deals with users\n"
-"manually, we need to override the `WebAuthnUserProvider` with one that doesn't update the\n"
+"in its link:{webauthn-api}/io/quarkus/security/webauthn/WebAuthnUserProvider.html[`WebAuthnUserProvider`] and the manual `LoginResource` endpoint, which deals with users\n"
+"manually, we need to override the link:{webauthn-api}/io/quarkus/security/webauthn/WebAuthnUserProvider.html[`WebAuthnUserProvider`] with one that doesn't update the\n"
 "`scooby` user:"
-msgstr "在本次测试中，我们既要测试提供的回调端点（更新 `WebAuthnUserProvider` 中的用户），又要测试手动端点（手动处理用户） `LoginResource` ，因此我们需要用一个不更新 `scooby` 用户的端点覆盖 `WebAuthnUserProvider` ："
+msgstr ""
 
 #. type: Title ==
 #: _guides/security-webauthn.adoc
