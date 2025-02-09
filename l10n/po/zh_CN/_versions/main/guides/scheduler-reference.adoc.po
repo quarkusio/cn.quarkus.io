@@ -573,16 +573,15 @@ msgid "How to use multiple scheduler implementations"
 msgstr "如何使用多个调度程序实现"
 
 #: _versions/main/guides/scheduler-reference.adoc
-#, fuzzy
 msgid ""
 "In some cases, it might be useful to choose a scheduler implementation used to execute a scheduled method.\n"
 "However, only one `Scheduler` implementation is used for all scheduled methods by default.\n"
-"For example, the `quarkus-quartz` extension provides an implementation that supports clustering but it also removes the simple in-memory implementation from the game.\n"
+"For example, the `quarkus-quartz` extension provides an implementation that supports clustering, but it also removes the simple in-memory implementation from the game.\n"
 "Now, if clustering is enabled then it's not possible to define a scheduled method that would be executed locally on a single node.\n"
 "Nevertheless, if you set the `quarkus.scheduler.use-composite-scheduler` config property to `true` then a composite `Scheduler` is used instead.\n"
 "This means that multiple scheduler implementations are kept running side by side.\n"
-"Furthermore, it's possible to chose a specific implementation used to execute a scheduled method using `@Scheduled#executeWith()`."
-msgstr "在某些情况下，选择用于执行计划方法的调度程序实现可能很有用。不过，所有调度方法默认只使用一种 `Scheduler` 实现。例如， `quarkus-quartz` 扩展提供了一种支持聚类的实现，但同时也删除了游戏中简单的内存中实现。现在，如果启用了集群，就无法定义在单个节点上本地执行的计划方法。不过，如果将 `quarkus.scheduler.use-composite-scheduler` 配置属性设置为 `true` ，那么就会使用复合 `Scheduler` 。这意味着多个调度程序实现可以并行运行。此外，还可以使用 `@Scheduled#executeWith()` 选择用于执行调度方法的特定实现。"
+"Furthermore, it's possible to choose a specific implementation used to execute a scheduled method using `@Scheduled#executeWith()`."
+msgstr ""
 
 #: _versions/main/guides/scheduler-reference.adoc
 #, fuzzy
@@ -659,6 +658,44 @@ msgstr "你可以用quarkus.scheduler.overdue-grace-period为isOverdue()配置�
 #, fuzzy
 msgid "A CDI event is fired synchronously and asynchronously when the scheduler or a scheduled job is paused/resumed. The payload is `io.quarkus.scheduler.SchedulerPaused`, `io.quarkus.scheduler.SchedulerResumed`, `io.quarkus.scheduler.ScheduledJobPaused` and `io.quarkus.scheduler.ScheduledJobResumed` respectively."
 msgstr "当调度器或预定作业暂停/恢复时，CDI事件被同步和异步触发。其有效载荷分别为 `io.quarkus.scheduler.SchedulerPaused` , `io.quarkus.scheduler.SchedulerResumed` , `io.quarkus.scheduler.ScheduledJobPaused` 和 `io.quarkus.scheduler.ScheduledJobResumed` 。"
+
+#: _versions/main/guides/scheduler-reference.adoc
+msgid "Scheduling Long-Running Tasks"
+msgstr ""
+
+#: _versions/main/guides/scheduler-reference.adoc
+msgid "Executing a long-running task might yield a warning message similar to the following:"
+msgstr ""
+
+#: _versions/main/guides/scheduler-reference.adoc
+msgid "This is happening because the default worker thread pool is coming from Vert.x which guards against threads being blocked for far too long."
+msgstr ""
+
+#: _versions/main/guides/scheduler-reference.adoc
+msgid "The amount of time for which a Vert.x worker thread can be blocked is also https://quarkus.io/guides/all-config#quarkus-vertx_quarkus-vertx-max-worker-execute-time[configurable]."
+msgstr ""
+
+#: _versions/main/guides/scheduler-reference.adoc
+msgid ""
+"Therefore, a proper way to execute long tasks is to offload them from the scheduled method to a custom executor service.\n"
+"Here's an example of such setup for a long-running task that we do not expect to execute often:"
+msgstr ""
+
+#: _versions/main/guides/scheduler-reference.adoc
+msgid "Create a fitting executor. In this case, a new thread is created per scheduled task and stopped once the task finishes."
+msgstr ""
+
+#: _versions/main/guides/scheduler-reference.adoc
+msgid "`@PreDestroy` callback is used to shut down the executor service."
+msgstr ""
+
+#: _versions/main/guides/scheduler-reference.adoc
+msgid "Scheduled method only delegates the job to the custom executor - this prevent Vert.x thread from being blocked."
+msgstr ""
+
+#: _versions/main/guides/scheduler-reference.adoc
+msgid "The bean implements `Runnable`, a format we can directly pass to the executor service as a parameter."
+msgstr ""
 
 #. type: Block title
 #: _versions/main/guides/scheduler-reference.adoc
