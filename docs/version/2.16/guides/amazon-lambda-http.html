@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="cn">
+
+
+
+
+
+
+
+<head>
+  <title>带有RESTEasy Reactive、Undertow或Reactive Routes的Amazon Lambda - 2.16 - Quarkus</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
+  script-src 'self' 'unsafe-inline' 'unsafe-eval'
+      
+      https://assets.adobedtm.com
+      js.bizographics.com
+      https://www.redhat.com
+      https://static.redhat.com
+      https://app.requestly.io/
+      jsonip.com
+      https://ajax.googleapis.com
+      https://use.fontawesome.com
+      http://www.youtube.com
+      http://www.googleadservices.com
+      https://googleads.g.doubleclick.net
+      https://giscus.app
+      https://analytics.ossupstream.org/
+      https://app.mailjet.com;
+
+  style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
+  img-src 'self' * data:; 
+  media-src 'self'; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  base-uri 'none'; 
+  object-src 'none'; 
+  form-action 'none'; 
+  font-src 'self' https://use.fontawesome.com https://fonts.gstatic.com;" />
+  <script id="adobe_dtm" src="https://www.redhat.com/dtm.js" type="text/javascript"></script>
+  <script src="/assets/javascript/highlight.pack.js" type="text/javascript"></script>
+  <META HTTP-EQUIV='X-XSS-Protection' CONTENT="1; mode=block">
+  <META HTTP-EQUIV='X-Content-Type-Options' CONTENT="nosniff">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Quarkus: Supersonic Subatomic Java">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@QuarkusIO"> 
+  <meta name="twitter:creator" content="@QuarkusIO">
+  <meta property="og:url" content="https://quarkus.io/version/2.16/guides/amazon-lambda-http" />
+  <meta property="og:title" content="带有RESTEasy Reactive、Undertow或Reactive Routes的Amazon Lambda - 2.16" />
+  <meta property="og:description" content="Quarkus: Supersonic Subatomic Java" />
+  <meta property="og:image" content="https://quarkus.io/assets/images/quarkus_card.png" />
+  
+  <link rel="canonical" href="https://quarkus.io/guides/amazon-lambda-http">
+  <link rel="shortcut icon" type="image/png" href="/favicon.ico" >
+  <link rel="stylesheet" href="/guides/stylesheet/config.css" />
+  <link rel="stylesheet" href="/assets/css/main.css?2021-07-29" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.2/css/all.css" crossorigin="anonymous">
+  <link rel="alternate" type="application/rss+xml"  href="/feed.xml" title="Quarkus">
+  <script src="/assets/javascript/hl.js" type="text/javascript"></script>
+  
+  
+  
+  
+  <link rel="alternate" hreflang="en" href="https://quarkus.io/version/2.16/guides/amazon-lambda-http" />
+  
+  <link rel="alternate" hreflang="pt-br" href="https://pt.quarkus.io/version/2.16/guides/amazon-lambda-http" />
+  
+  <link rel="alternate" hreflang="es" href="https://es.quarkus.io/version/2.16/guides/amazon-lambda-http" />
+  
+  <link rel="alternate" hreflang="zh" href="https://cn.quarkus.io/version/2.16/guides/amazon-lambda-http" />
+  
+  <link rel="alternate" hreflang="ja" href="https://ja.quarkus.io/version/2.16/guides/amazon-lambda-http" />
+  
+  <link rel="alternate" hreflang="x-default" href="https://quarkus.io/" />  
+  <script src="/assets/javascript/tracking.js"></script>
+  
+  <script src="/assets/javascript/colormode.js" type="text/javascript"></script>
+
+</head>
+
+<body class="guides">
+
+  
+
+
+<div class="grid-wrapper communitysite">
+  <div class="grid__item width-12-12">The <a href="https://quarkus.io/version/2.16/guides/amazon-lambda-http">English version of quarkus.io</a> is the official project site. Translated sites are community supported on a best-effort basis.</div>
+</div>
+
+
+  <div class="nav-wrapper">
+  <div class="grid-wrapper">
+    <div class="width-12-12">
+      <input type="checkbox" id="checkbox" />
+      <nav id="main-nav" class="main-nav">
+        <div class="logo-wrapper">
+           <a href="/"><img src="/assets/images/quarkus_logo_horizontal_rgb_600px_reverse.png" class="project-logo" title="Quarkus"></a>
+        </div>
+    <label class="nav-toggle" for="checkbox"> <i class="fa fa-bars"></i>
+</label>
+    <ul id="menu" class="menu">
+      <li class="dropdown">
+        <span href="/about/">Why<i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/about" class="">QUARKUS是什么？</a></li>
+          <li><a href="/developer-joy" class="">开发者的乐趣 </a></li>
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES 原生</a></li>
+          <li><a href="/standards" class="">标准</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">容器优先 </a></li>          
+        </ul>
+      </li>
+      <li class="dropdown">
+        <span href="/learn/">学习 <i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/get-started" class="">入门</a></li>
+          <li><a href="/guides" class="active" >指南</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
+          <li><a href="/qtips" class="">"Q" TIP视频</a></li>          
+          <li><a href="/books" class="">书籍</a></li>
+          </ul>
+      </li>
+      <li class="dropdown">
+        <span href="https://quarkus.io/extensions/">扩展<i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          
+          <!-- Note that quarkus.io is hardcoded here, because it is the only url which supports extensions -->
+<li><a href="https://quarkus.io/extensions/" class="">浏览扩展</a></li>
+          <li><a href="/faq/#what-is-a-quarkus-extension" class="">使用扩展</a></li>
+          <li><a href="/guides/writing-extensions" class="" >创建扩展</a></li>
+          <li><a href="https://hub.quarkiverse.io" class="">SHARE EXTENSIONS</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <span href="/community/">社区 <i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/support/" class="">支持</a></li>
+          <li><a href="/blog" class="" >博客</a></li>
+          <li><a href="/discussion" class="">讨论</a></li>
+          <li><a href="/working-groups" class="">WORKING GROUPS</a></li>
+          <li><a href="/insights" class="" >播客</a></li>
+          <li><a href="/events" class="">活动</a></li>
+          <li><a href="/newsletter" class="">新闻</a></li>
+          <li><a href="https://github.com/orgs/quarkusio/projects/13/views/1" class="">路线图</a></li>
+          </ul>
+      </li>
+      <li>
+        <a href="https://code.quarkus.io" class="button-cta secondary
+white">开始编码</a>
+      </li>
+      <li class="dropdown">
+        <span href="/language/"><div class="fas fa-globe langicon"></div><i class="fas fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="https://quarkus.io/version/2.16/guides/amazon-lambda-http" >OFFICIAL (ENGLISH)</a></li>
+          <li><a href="https://pt.quarkus.io/version/2.16/guides/amazon-lambda-http">PORTUGUÊS (BR)</a></li>
+          <li><a href="https://es.quarkus.io/version/2.16/guides/amazon-lambda-http">ESPAÑOL</a></li>
+          <li><a href="https://cn.quarkus.io/version/2.16/guides/amazon-lambda-http">简体中文</a></li>
+          <li><a href="https://ja.quarkus.io/version/2.16/guides/amazon-lambda-http">日本語</a></li>
+          </ul>
+      </li>
+      <li>
+        <span href="#" class="modeswitcher" id='theme-toggle'><i class="fas
+fa-sun"></i><i class="fas fa-moon"></i><i class="fas fa-cog"></i></span>
+      </li>
+    </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+  <div class="content">
+    
+
+
+
+
+
+<section class="full-width-version-bg flexfilterbar guides">
+  <div class="guideflexcontainer">
+    <div class="docslink">
+      <a class="returnlink" href="/version/2.16/guides/">返回指南目录</a>
+    </div>
+    <div class="flexlabel">
+      <label>选择指南版本</label>
+    </div>
+    <div class="guidepulldown version">
+    <select id="guide-version-dropdown">
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <option value="3.2" >3.2</option>
+        
+        
+        
+        <option value="2.16" selected>2.16</option>
+        
+        
+        
+        <option value="2.13" >2.13</option>
+        </select>
+    </div>
+  </div>
+</section>
+
+<div class="guide">
+  <div class="grid-wrapper">
+    <div class="grid__item width-8-12 width-12-12-m">
+      <h1 class="text-caps">带有RESTEasy Reactive、Undertow或Reactive Routes的Amazon Lambda </h1>
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>通过Quarkus，您可以使用 <a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api.html">AWS Gateway HTTP API</a> 或 <a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-rest-api.html">AWS Gateway REST API</a> 将您喜欢的Java HTTP框架部署为Amazon Lambda。这意味着你可以将用RESTEasy Reactive（JAX-RS）、Undertow（servlet）、Reactive Routes、 <a href="funqy-http.html">Funqy HTTP</a> 或任何其他Quarkus HTTP框架编写的微服务部署为AWS Lambda。</p>
+</div>
+<div class="paragraph">
+<p>你可以将你的Lambda部署为一个纯Java jar，或者你可以将你的项目编译为一个原生镜像，并以较少的内存占用和启动时间来部署。我们的集成还可以生成SAM部署文件，这些文件可以被 <a href="https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html">亚马逊的SAM框架</a> 来使用。</p>
+</div>
+<div class="paragraph">
+<p>Quarkus对每个网关API都有一个不同的扩展。HTTP网关API是在 <code>quarkus-amazon-lambda-http</code> 扩展中实现的。REST网关API是在 <code>quarkus-amazon-lambda-rest</code> 扩展中实现的。如果你对使用哪种网关产品感到困惑，亚马逊有一个 <a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-vs-rest.html">很好的指南</a> 来帮助你做这个决定。</p>
+</div>
+<div class="paragraph">
+<p>与大多数Quarkus扩展一样，Quarkus AWS Lambda HTTP/REST扩展支持实时编码。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>这项技术被认为是preview。</p>
+</div>
+<div class="paragraph">
+<p>在 <em>preview(预览)</em> 中，不保证向后兼容和在生态系统中的存在。具体的改进可能需要改变配置或API，并且正在计划变得 <em>稳定</em> 。欢迎在我们的 <a href="https://groups.google.com/d/forum/quarkus-dev">邮件列表</a> 中提供反馈，或在我们的 <a href="https://github.com/quarkusio/quarkus/issues">GitHub问题列表</a> 中提出问题。</p>
+</div>
+<div class="paragraph">
+<p>For a full list of possible statuses, check our <a href="https://quarkus.io/faq/#what-are-the-extension-statuses">FAQ entry</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="prerequisites"><a class="anchor" href="#prerequisites"></a>先决条件</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>要完成这个指南，你需要：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>大概30 minutes</p>
+</li>
+<li>
+<p>编辑器</p>
+</li>
+<li>
+<p>安装JDK 11以上版本并正确配置了 <code>JAVA_HOME</code></p>
+</li>
+<li>
+<p>Apache Maven 3.8.6</p>
+</li>
+<li>
+<p>如果你愿意的话，还可以选择使用<a href="cli-tooling">Quarkus CLI</a></p>
+</li>
+<li>
+<p>如果你想构建原生可执行程序，可以选择安装Mandrel或者GraalVM，并<a href="building-native-image#configuring-graalvm">正确配置</a>(或者使用Docker在容器中进行构建)</p>
+</li>
+<li>
+<p><a href="https://aws.amazon.com">An Amazon AWS account</a></p>
+</li>
+<li>
+<p><a href="https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html">AWS SAM CLI</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="getting-started"><a class="anchor" href="#getting-started"></a>入门指南</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>本指南将引导您通过Maven原型生成一个Java项目示例。随后，还将介绍项目的结构，以便您能够调整现有的项目以使用Amazon Lambda。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-aws-bits"><a class="anchor" href="#installing-aws-bits"></a>安装AWS位</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>安装所有的AWS位可能是本指南中最困难的事情。请确保你遵循安装AWS SAM CLI的所有步骤。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-the-maven-deployment-project"><a class="anchor" href="#creating-the-maven-deployment-project"></a>创建Maven部署项目</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>使用我们的Maven 原型创建Quarkus AWS Lambda Maven项目。</p>
+</div>
+<div class="paragraph">
+<p>如果你想使用AWS Gateway HTTP API，请用这个脚本生成你的项目：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn archetype:generate \
+       -DarchetypeGroupId=io.quarkus \
+       -DarchetypeArtifactId=quarkus-amazon-lambda-http-archetype \
+       -DarchetypeVersion=2.16.12.Final</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>如果你想使用AWS Gateway REST API，请用这个脚本生成你的项目：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn archetype:generate \
+       -DarchetypeGroupId=io.quarkus \
+       -DarchetypeArtifactId=quarkus-amazon-lambda-rest-archetype \
+       -DarchetypeVersion=2.16.12.Final</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="build-and-deploy"><a class="anchor" href="#build-and-deploy"></a>构建和部署</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>构建项目。</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-sync-cli">
+<div class="title">CLI</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">quarkus build</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-maven">
+<div class="title">Maven</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw install</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这将编译代码并运行生成的项目中包含的单元测试。单元测试和其他的Java项目一样，不需要运行在Amazon上。Quarkus开发模式也可以通过这个扩展来提供。</p>
+</div>
+<div class="paragraph">
+<p>如果你想构建一个本地可执行文件，请确保你已经正确安装了GraalVM，并且只需向构建添加一个 <code>native</code> 属性</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-sync-cli">
+<div class="title">CLI</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">quarkus build --native</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-maven">
+<div class="title">Maven</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw install -Dnative</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+如果你在非Linux系统上进行构建，你还需要传入一个属性，指示quarkus使用Docker构建，因为Amazon Lambda需要Linux二进制文件。你可以通过将 <code>-Dquarkus.native.container-build=true</code> 传给你的构建命令来实现。不过，这需要你在本地安装了Docker。
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock primary asciidoc-tabs-sync-cli">
+<div class="title">CLI</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">quarkus build --native --no-tests -Dquarkus.native.container-build=true
+# The --no-tests flag is required only on Windows and macOS.</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-maven">
+<div class="title">Maven</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw install -Dnative -DskipTests -Dquarkus.native.container-build=true</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="extra-build-generated-files"><a class="anchor" href="#extra-build-generated-files"></a>构建额外生成的文件</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>运行构建后，你所使用的Quarkus lambda扩展会生成一些额外的文件。对于Maven，这些文件位于构建目录： <code>target/</code> 中，对于Gradle，则位于 <code>build/</code> 中。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>function.zip</code> - lambda deployment file</p>
+</li>
+<li>
+<p><code>sam.jvm.yaml</code> - sam cli deployment script</p>
+</li>
+<li>
+<p><code>sam.native.yaml</code> - sam cli deployment script for native</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="live-coding-and-simulating-aws-lambda-environment-locally"><a class="anchor" href="#live-coding-and-simulating-aws-lambda-environment-locally"></a>实时编码和本地模拟AWS Lambda环境</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>在开发和测试模式下，Quarkus会启动一个模拟的AWS Lambda事件服务器，该服务器将HTTP请求转换为相应的API Gateway事件类型，并将其发布到底层的Quarkus HTTP lambda环境进行处理。这尽可能在本地模拟AWS Lambda环境，而不需要Docker和SAM CLI等工具。</p>
+</div>
+<div class="paragraph">
+<p>当使用Quarkus开发模式时，只需对 <code><a href="http://localhost:8080" class="bare">http://localhost:8080</a></code> 调用HTTP请求，就像通常测试REST端点时所做的那样。这个请求将访问模拟事件服务器，并将被转换为API Gateway json消息，被Quarkus Lambda Poll循环所消费。</p>
+</div>
+<div class="paragraph">
+<p>为了测试，Quarkus在端口8081下启动了一个单独的模拟事件服务器。Rest Assured的默认端口被Quarkus自动设置为8081，所以你不必担心设置这个。</p>
+</div>
+<div class="paragraph">
+<p>如果你想在你的测试中模拟更复杂的API Gateway事件，那么请使用API Gateway json事件手动对 <code><a href="http://localhost:8080/_lambda_" class="bare">http://localhost:8080/_lambda_</a></code> (测试模式下的8081端口)做一个HTTP POST。这些事件将被直接放在Quarkus Lambda轮询循环中进行处理。下面是一个例子：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.equalTo;
+
+import com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPEvent;
+
+import io.quarkus.test.junit.QuarkusTest;
+
+@QuarkusTest
+public class AmazonLambdaSimpleTestCase {
+    @Test
+    public void testJaxrsCognitoJWTSecurityContext() throws Exception {
+        APIGatewayV2HTTPEvent request = request("/security/username");
+        request.getRequestContext().setAuthorizer(new APIGatewayV2HTTPEvent.RequestContext.Authorizer());
+        request.getRequestContext().getAuthorizer().setJwt(new APIGatewayV2HTTPEvent.RequestContext.Authorizer.JWT());
+        request.getRequestContext().getAuthorizer().getJwt().setClaims(new HashMap&lt;&gt;());
+        request.getRequestContext().getAuthorizer().getJwt().getClaims().put("cognito:username", "Bill");
+
+        given()
+                .contentType("application/json")
+                .accept("application/json")
+                .body(request)
+                .when()
+                .post("/_lambda_")
+                .then()
+                .statusCode(200)
+                .body("body", equalTo("Bill"));
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>上面的例子模拟向你的HTTP Lambda发送一个带有HTTP请求的Cognito 主体。</p>
+</div>
+<div class="paragraph">
+<p>如果你想为AWS HTTP API手工编码原始事件，AWS Lambda库有请求事件类型，是 <code>com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPEvent</code> ，响应事件类型是 <code>com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPResponse</code> 。这与 <code>quarkus-amazon-lambda-http</code> 扩展和AWS HTTP API相对应。</p>
+</div>
+<div class="paragraph">
+<p>如果你想为AWS REST API手工编码原始事件，Quarkus有自己的实现： <code>io.quarkus.amazon.lambda.http.model.AwsProxyRequest</code> 和 <code>io.quarkus.amazon.lambda.http.model.AwsProxyResponse</code> 。这与 <code>quarkus-amazon-lambda-rest</code> 扩展和AWS REST API相对应。</p>
+</div>
+<div class="paragraph">
+<p>也会为 <code>@NativeImageTest</code> 和 <code>@QuarkusIntegrationTest</code> 测试启动模拟事件服务器，因此其也会与本地二进制文件一起工作。所有这些都为SAM CLI本地测试提供了类似的功能，而没有Docker的开销。</p>
+</div>
+<div class="paragraph">
+<p>最后，如果端口8080或端口8081在你的电脑上不可用，你可以使用application.properties修改开发和测试模式的端口</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">quarkus.lambda.mock-event-server.dev-port=8082
+quarkus.lambda.mock-event-server.test-port=8083</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>端口值为零将导致随机分配端口。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="simulate-amazon-lambda-deployment-with-sam-cli"><a class="anchor" href="#simulate-amazon-lambda-deployment-with-sam-cli"></a>用SAM CLI模拟Amazon Lambda部署</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>AWS SAM CLI允许你在模拟的Lambda环境中的笔记本电脑上，本地运行你的lambda。这需要安装Docker。在构建了Maven项目后，执行这个命令：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">sam local start-api --template target/sam.jvm.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这将启动一个模仿亚马逊的Lambda部署环境的Docker容器。一旦环境启动了，你就可以在你的浏览器中调用lambda示例，方法是去：</p>
+</div>
+<div class="paragraph">
+<p><a href="http://127.0.0.1:3000/hello" class="bare">http://127.0.0.1:3000/hello</a></p>
+</div>
+<div class="paragraph">
+<p>在控制台，你会看到lambda的启动信息。这个特定的部署启动了一个JVM，并将你的lambda作为纯Java加载。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploy-to-aws"><a class="anchor" href="#deploy-to-aws"></a>部署到AWS</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">sam deploy -t target/sam.jvm.yaml -g</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>回答所有的问题，你的lambda将被部署，必要的钩子将被设置到API网关。如果一切部署成功，你的微服务的根URL将被输出到控制台。类似这样：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Key                 LambdaHttpApi
+Description         URL for application
+Value               https://234asdf234as.execute-api.us-east-1.amazonaws.com/</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>Value</code> 属性是你的lambda的根URL。把它复制到你的浏览器，并在末尾添加 <code>hello</code> 。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+对二进制类型的响应将会使用base64自动编码。这与使用 <code>quarkus:dev</code> 的行为不同，后者将返回原始字节。亚马逊的API有额外的限制，要求base64编码。一般来说，客户端代码会自动处理这种编码，但在某些自定义情况下，你应该知道你可能需要手动管理这种编码。
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploying-a-native-executable"><a class="anchor" href="#deploying-a-native-executable"></a>部署一个本地可执行文件</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>要部署一个本地可执行文件，你必须用GraalVM构建它。</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-sync-cli">
+<div class="title">CLI</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">quarkus build --native --no-tests -Dquarkus.native.container-build=true
+# The --no-tests flag is required only on Windows and macOS.</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-maven">
+<div class="title">Maven</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw install -Dnative -DskipTests -Dquarkus.native.container-build=true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>然后你可以使用sam local在本地测试可执行文件</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">sam local start-api --template target/sam.native.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>要部署到AWS Lambda：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">sam deploy -t target/sam.native.yaml -g</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="examine-the-pom"><a class="anchor" href="#examine-the-pom"></a>检查POM</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>除了包含 <code>quarkus-amazon-lambda-http</code> 扩展（如果你要部署AWS Gateway HTTP API）或 <code>quarkus-amazon-lambda-rest</code> 扩展（如果你要部署AWS Gateway REST API）外，POM没有什么特别之处。这些扩展会自动生成你的lambda部署可能需要的一切。</p>
+</div>
+<div class="paragraph">
+<p>另外，至少在生成的Maven原型 <code>pom.xml</code> 中， <code>quarkus-resteasy-reactive</code> 、 <code>quarkus-reactive-routes</code> 和 <code>quarkus-undertow</code> 依赖项都是可选的。选择你想使用的HTTP框架（JAX-RS、Reactive Routes和/或Servlet），并删除其他依赖项以缩小部署规模。</p>
+</div>
+<div class="sect2">
+<h3 id="examine-sam-yaml"><a class="anchor" href="#examine-sam-yaml"></a>检查sam.yaml</h3>
+<div class="paragraph">
+<p><code>sam.yaml</code> 语法已经超出了本文档的范围。有几件事情必须强调，以防你要制作你自己的自定义 <code>sam.yaml</code> 部署文件。</p>
+</div>
+<div class="paragraph">
+<p>首先需要注意的是，对于纯Java lambda部署，需要一个特定的处理程序类。不要改变Lambda处理程序的名称。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">     Properties:
+        Handler: io.quarkus.amazon.lambda.runtime.QuarkusStreamHandler::handleRequest
+        Runtime: java11</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这个处理程序是lambda运行时和你正在使用的Quarkus HTTP框架（JAX-RS、Servlet等）之间的桥梁。</p>
+</div>
+<div class="paragraph">
+<p>如果你想使用原生，那么必须为本地GraalVM部署设置一个环境变量。如果你看一下 <code>sam.native.yaml</code> ，你会看到这个变量：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">        Environment:
+          Variables:
+            DISABLE_SIGNAL_HANDLERS: true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这个环境变量解决了Quarkus和Amazon Lambda Custom Runtime环境之间的一些不兼容问题。</p>
+</div>
+<div class="paragraph">
+<p>最后，对于AWS Gateway REST API的部署，有一件特别的事情。该API假定HTTP响应体是文本，除非你通过配置明确告诉它哪些媒体类型是二进制。为了使事情更简单，Quarkus扩展强制对所有的HTTP响应信息进行二进制（base 64）编码， <code>sam.yaml</code> 文件必须配置API网关，以假设所有的媒体类型都是二进制：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">  Globals:
+    Api:
+      EndpointConfiguration: REGIONAL
+      BinaryMediaTypes:
+        - "*/*"</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="injectable-aws-context-variables"><a class="anchor" href="#injectable-aws-context-variables"></a>可注入的AWS上下文变量</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>如果您使用RESTEasy Reactive和JAX-RS，您可以使用JAX-RS <code>@Context</code> 注解将各种AWS上下文变量注入到JAX-RS资源类中，或者注入到带有CDI <code>@Inject</code> 注解的任何其他地方。</p>
+</div>
+<div class="paragraph">
+<p>对于AWS HTTP API，你可以注入AWS变量 <code>com.amazonaws.services.lambda.runtime.Context</code> 和 <code>com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPEvent</code> 。下面是一个例子：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import javax.ws.rs.core.Context;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPEvent;
+
+
+@Path("/myresource")
+public class MyResource {
+    @GET
+    public String ctx(@Context com.amazonaws.services.lambda.runtime.Context ctx) { }
+
+    @GET
+    public String event(@Context APIGatewayV2HTTPEvent event) { }
+
+    @GET
+    public String requestContext(@Context APIGatewayV2HTTPEvent.RequestContext req) { }
+
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>对于AWS REST API，你可以注入AWS变量 <code>com.amazonaws.services.lambda.runtime.Context</code> 和 <code>io.quarkus.amazon.lambda.http.model.AwsProxyRequestContext</code> 。下面是一个例子：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import javax.ws.rs.core.Context;
+import io.quarkus.amazon.lambda.http.model.AwsProxyRequestContext;
+import io.quarkus.amazon.lambda.http.model.AwsProxyRequest;
+
+
+@Path("/myresource")
+public class MyResource {
+    @GET
+    public String ctx(@Context com.amazonaws.services.lambda.runtime.Context ctx) { }
+
+    @GET
+    public String reqContext(@Context AwsProxyRequestContext req) { }
+
+    @GET
+    public String req(@Context AwsProxyRequest req) { }
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tracing-with-aws-xray-and-graalvm"><a class="anchor" href="#tracing-with-aws-xray-and-graalvm"></a>使用AWS XRay和GraalVM进行追踪</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>如果你正在构建原生镜像，并希望在你的lambda中使用 <a href="https://aws.amazon.com/xray">AWS X-Ray 追踪</a> ，你将需要在你的pom中把 <code>quarkus-amazon-lambda-xray</code> 作为一个依赖项来包括。AWS X-Ray库与GraalVM并不完全兼容，因此我们不得不做一些整合工作来使其可以正常工作。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="security-integration"><a class="anchor" href="#security-integration"></a>安全集成</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>当你在API网关上调用一个HTTP请求时，网关会把这个HTTP请求转换成一个JSON事件文档，并转发给Quarkus Lambda。Quarkus Lambda解析这个json，并将其转换为HTTP请求的内部表示，这样它就可以被Quarkus支持的任何HTTP框架（JAX-RS、servlet、Reactive Routes）所消费。</p>
+</div>
+<div class="paragraph">
+<p>API Gateway支持许多不同的方式来对你的HTTP端点进行安全调用，这些端点是由Lambda和Quarkus支持的。如果你启用了它，Quarkus会自动解析 <a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html">事件json文档</a> 的相关部分，查找基于安全的元数据，并在内部注册一个 <code>java.security.Principal</code> ，通过注入 <code>javax.ws.rs.core.SecurityContext</code> ，通过Servlet中的 <code>HttpServletRequest.getUserPrincipal()</code> ，以及Reactive Routes中的 <code>RouteContext.user()</code> ，可以在JAX-RS中进行查找。如果你了解更多的安全信息， <code>Principal</code> 对象可以被类型转化为一个能给你更多信息的类。</p>
+</div>
+<div class="paragraph">
+<p>要启用这一安全特性，请将此添加到你的 <code>application.properties</code> 文件中：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>quarkus.lambda-http.enable-security=true</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>下面是它的映射方式：</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. HTTP <code>quarkus-amazon-lambda-http</code> </caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">认证类型</th>
+<th class="tableblock halign-left valign-top">主体类</th>
+<th class="tableblock halign-left valign-top">主体名的Json路径</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cognito JWT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.quarkus.amazon.lambda.http.CognitoPrincipal</code> </p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>requestContext.authorizer.jwt.claims.cognito:username</code> </p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IAM</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.quarkus.amazon.lambda.http.IAMPrincipal</code> </p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>requestContext.authorizer.iam.userId</code> </p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">自定义Lambda</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.quarkus.amazon.lambda.http.CustomPrincipal</code> </p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>requestContext.authorizer.lambda.principalId</code> </p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. REST <code>quarkus-amazon-lambda-rest</code> </caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">认证类型</th>
+<th class="tableblock halign-left valign-top">主体类</th>
+<th class="tableblock halign-left valign-top">主体名的Json路径</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cognito</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.quarkus.amazon.lambda.http.CognitoPrincipal</code> </p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>requestContext.authorizer.claims.cognito:username</code> </p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IAM</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.quarkus.amazon.lambda.http.IAMPrincipal</code> </p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>requestContext.identity.user</code> </p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">自定义Lambda</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.quarkus.amazon.lambda.http.CustomPrincipal</code> </p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>requestContext.authorizer.principalId</code> </p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>If the <code>cognito:groups</code> claim is present, then Quarkus will extract and map those groups
+to Quarkus roles which can then be used in authorization with annotations like <code>@RolesAllowed</code>.
+If you do not want to map <code>cognito:groups</code> to Quarkus roles, then you must explicitly disable it
+in configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>quarkus.lambda-http.map-cognito-to-roles=false</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can also specify a different Cognito claim to extract roles from:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>quarkus.lambda-http.cognito-role-claim=cognito:roles</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default, it expects roles in a space delimited list enclosed in brackets i.e. <code>[ user admin ]</code>.
+You can specify the regular expression to use to find individual roles in the claim string too:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>quarkus.lambda-http.cognito-claim-matcher=[^\[\] \t]+</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="custom-security-integration"><a class="anchor" href="#custom-security-integration"></a>自定义安全集成</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>对AWS安全的默认支持只是将主体名称映射到Quarkus安全API，并没有对声明、角色或权限进行映射。你可以使用 <code>io.quarkus.amazon.lambda.http.LambdaIdentityProvider</code> 接口的实现来完全控制lambda HTTP事件中的安全元数据是如何被映射到Quarkus安全API的。通过实现这个接口，你可以做一些事情，比如为你的主体定义角色映射，或者发布由IAM或Cognito或你自定义的Lambda安全集成提供的额外的属性。</p>
+</div>
+<div class="listingblock">
+<div class="title">HTTP <code>quarkus-amazon-lambda-http</code> </div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package io.quarkus.amazon.lambda.http;
+
+/**
+ * Helper interface that removes some boilerplate for creating
+ * an IdentityProvider that processes APIGatewayV2HTTPEvent
+ */
+public interface LambdaIdentityProvider extends IdentityProvider&lt;LambdaAuthenticationRequest&gt; {
+    @Override
+    default public Class&lt;LambdaAuthenticationRequest&gt; getRequestType() {
+        return LambdaAuthenticationRequest.class;
+    }
+
+    @Override
+    default Uni&lt;SecurityIdentity&gt; authenticate(LambdaAuthenticationRequest request, AuthenticationRequestContext context) {
+        APIGatewayV2HTTPEvent event = request.getEvent();
+        SecurityIdentity identity = authenticate(event);
+        if (identity == null) {
+            return Uni.createFrom().optional(Optional.empty());
+        }
+        return Uni.createFrom().item(identity);
+    }
+
+    /**
+     * You must override this method unless you directly override
+     * IdentityProvider.authenticate
+     *
+     * @param event
+     * @return
+     */
+    default SecurityIdentity authenticate(APIGatewayV2HTTPEvent event) {
+        throw new IllegalStateException("You must override this method or IdentityProvider.authenticate");
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>对于HTTP，要覆盖的重要方法是 <code>LambdaIdentityProvider.authenticate(APIGatewayV2HTTPEvent event)</code> 。为此，你将根据你从 <code>APIGatewayV2HTTPEvent</code> 映射安全数据的方式来分配一个SecurityIdentity</p>
+</div>
+<div class="listingblock">
+<div class="title">REST <code>quarkus-amazon-lambda-rest</code> </div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package io.quarkus.amazon.lambda.http;
+
+import java.util.Optional;
+
+import com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPEvent;
+
+import io.quarkus.amazon.lambda.http.model.AwsProxyRequest;
+import io.quarkus.security.identity.AuthenticationRequestContext;
+import io.quarkus.security.identity.IdentityProvider;
+import io.quarkus.security.identity.SecurityIdentity;
+import io.smallrye.mutiny.Uni;
+
+/**
+ * Helper interface that removes some boilerplate for creating
+ * an IdentityProvider that processes APIGatewayV2HTTPEvent
+ */
+public interface LambdaIdentityProvider extends IdentityProvider&lt;LambdaAuthenticationRequest&gt; {
+...
+
+    /**
+     * You must override this method unless you directly override
+     * IdentityProvider.authenticate
+     *
+     * @param event
+     * @return
+     */
+    default SecurityIdentity authenticate(AwsProxyRequest event) {
+        throw new IllegalStateException("You must override this method or IdentityProvider.authenticate");
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>对于REST，要覆盖的重要方法是 <code>LambdaIdentityProvider.authenticate(AwsProxyRequest event)</code> 。为此，你将根据你从 <code>AwsProxyRequest</code> 映射安全数据的方式来分配一个SecurityIdentity。</p>
+</div>
+<div class="paragraph">
+<p>您实现的提供者必须是一个CDI bean。这里是一个例子:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme;
+
+import java.security.Principal;
+
+import javax.enterprise.context.ApplicationScoped;
+
+import com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPEvent;
+
+import io.quarkus.amazon.lambda.http.LambdaIdentityProvider;
+import io.quarkus.security.identity.SecurityIdentity;
+import io.quarkus.security.runtime.QuarkusPrincipal;
+import io.quarkus.security.runtime.QuarkusSecurityIdentity;
+
+@ApplicationScoped
+public class CustomSecurityProvider implements LambdaIdentityProvider {
+    @Override
+    public SecurityIdentity authenticate(APIGatewayV2HTTPEvent event) {
+        if (event.getHeaders() == null || !event.getHeaders().containsKey("x-user"))
+            return null;
+        Principal principal = new QuarkusPrincipal(event.getHeaders().get("x-user"));
+        QuarkusSecurityIdentity.Builder builder = QuarkusSecurityIdentity.builder();
+        builder.setPrincipal(principal);
+        return builder.build();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>下面是同样的例子，但是使用了AWS Gateway REST API:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme;
+
+import java.security.Principal;
+
+import javax.enterprise.context.ApplicationScoped;
+
+import io.quarkus.amazon.lambda.http.model.AwsProxyRequest;
+
+import io.quarkus.amazon.lambda.http.LambdaIdentityProvider;
+import io.quarkus.security.identity.SecurityIdentity;
+import io.quarkus.security.runtime.QuarkusPrincipal;
+import io.quarkus.security.runtime.QuarkusSecurityIdentity;
+
+@ApplicationScoped
+public class CustomSecurityProvider implements LambdaIdentityProvider {
+    @Override
+    public SecurityIdentity authenticate(AwsProxyRequest event) {
+        if (event.getMultiValueHeaders() == null || !event.getMultiValueHeaders().containsKey("x-user"))
+            return null;
+        Principal principal = new QuarkusPrincipal(event.getMultiValueHeaders().getFirst("x-user"));
+        QuarkusSecurityIdentity.Builder builder = QuarkusSecurityIdentity.builder();
+        builder.setPrincipal(principal);
+        return builder.build();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Quarkus应该自动发现这个实现并使用它，而不是前面讨论的默认实现。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="simple-sam-local-principal"><a class="anchor" href="#simple-sam-local-principal"></a>简单的SAM本地主体</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>如果你使用 <code>sam local</code> 测试你的应用程序，你可以通过设置 <code>QUARKUS_AWS_LAMBDA_FORCE_USER_NAME</code> 环境变量来硬编码一个主体名，以便在应用程序运行时使用</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="snapstart"><a class="anchor" href="#snapstart"></a>SnapStart</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To optimize your application for Lambda SnapStart, check <a href="amazon-snapstart">the SnapStart Configuration Documentation</a>.</p>
+</div>
+</div>
+</div>
+    </div>
+    <div class="grid__item width-4-12 width-12-12-m tocwrapper">
+      <div class="hide-mobile toc"><ul class="sectlevel1">
+<li><a href="#prerequisites">先决条件</a></li>
+<li><a href="#getting-started">入门指南</a></li>
+<li><a href="#installing-aws-bits">安装AWS位</a></li>
+<li><a href="#creating-the-maven-deployment-project">创建Maven部署项目</a></li>
+<li><a href="#build-and-deploy">构建和部署</a></li>
+<li><a href="#extra-build-generated-files">构建额外生成的文件</a></li>
+<li><a href="#live-coding-and-simulating-aws-lambda-environment-locally">实时编码和本地模拟AWS Lambda环境</a></li>
+<li><a href="#simulate-amazon-lambda-deployment-with-sam-cli">用SAM CLI模拟Amazon Lambda部署</a></li>
+<li><a href="#deploy-to-aws">部署到AWS</a></li>
+<li><a href="#deploying-a-native-executable">部署一个本地可执行文件</a></li>
+<li><a href="#examine-the-pom">检查POM</a>
+<ul class="sectlevel2">
+<li><a href="#examine-sam-yaml">检查sam.yaml</a></li>
+</ul>
+</li>
+<li><a href="#injectable-aws-context-variables">可注入的AWS上下文变量</a></li>
+<li><a href="#tracing-with-aws-xray-and-graalvm">使用AWS XRay和GraalVM进行追踪</a></li>
+<li><a href="#security-integration">安全集成</a></li>
+<li><a href="#custom-security-integration">自定义安全集成</a></li>
+<li><a href="#simple-sam-local-principal">简单的SAM本地主体</a></li>
+<li><a href="#snapstart">SnapStart</a></li>
+</ul></div>
+    </div>
+  </div>
+  </div>
+
+  </div>
+
+  <div class="content project-footer">
+  <div class="footer-section">
+    <div class="logo-wrapper">
+      <a href="/"><img src="/assets/images/quarkus_logo_horizontal_rgb_reverse.svg" class="project-logo" title="Quarkus"></a>
+    </div>
+  </div>
+  <div class="grid-wrapper">
+    <p class="grid__item width-3-12">Quarkus is open. All dependencies of this project are available under the <a href='https://www.apache.org/licenses/LICENSE-2.0' target='_blank'>Apache Software License 2.0</a> or compatible license.<br /><br />This website was built with <a href='https://jekyllrb.com/' target='_blank'>Jekyll</a>, is hosted on <a href='https://pages.github.com/' target='_blank'>GitHub Pages</a> and is completely open source. If you want to make it better, <a href='https://github.com/quarkusio/quarkusio.github.io' target='_blank'>fork the website</a> and show us what you’ve got.</p>
+
+    
+      <div class="width-1-12 project-links">
+        <span>Navigation</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="/" target="_blank">Home</a></li>
+          
+          
+          
+            <li><a href="/about" target="_blank">About</a></li>
+          
+          
+          
+            <li><a href="/blog" target="_blank">博客</a></li>
+          
+          
+          
+            <li><a href="/insights" target="_blank">Podcast</a></li>
+          
+          
+          
+            <li><a href="/events" target="_blank">活动</a></li>
+          
+          
+          
+            <li><a href="/newsletter" target="_blank">新闻</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
+          
+          
+          
+            <li><a href="https://github.com/orgs/quarkusio/projects/13/views/1" target="_blank">路线图</a></li>
+          
+          
+          
+            <li><a href="/security" target="_blank">Security&nbsp;policy</a></li>
+          
+          
+          
+            <li><a href="/usage" target="_blank">Usage</a></li>
+          
+          
+          
+            <li><a href="/brand" target="_blank">Brand</a></li>
+          
+          
+          
+            <li><a href="/desktopwallpapers" target="_blank">Wallpapers</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-1-12 project-links">
+        <span>Follow Us</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="https://x.com/quarkusio" target="_blank">X</a></li>
+          
+          
+          
+            <li><a href="https://bsky.app/profile/quarkus.io" target="_blank">Bluesky</a></li>
+          
+          
+          
+            <li><a rel="me" href="https://fosstodon.org/@quarkusio" target="_blank">Mastodon</a></li>
+            
+          
+          
+            <li><a href="https://www.facebook.com/quarkusio" target="_blank">Facebook</a></li>
+          
+          
+          
+            <li><a href="https://www.linkedin.com/company/quarkusio/" target="_blank">Linkedin</a></li>
+          
+          
+          
+            <li><a href="https://www.youtube.com/channel/UCaW8QG_QoIk_FnjLgr5eOqg" target="_blank">Youtube</a></li>
+          
+          
+          
+            <li><a href="https://github.com/quarkusio" target="_blank">GitHub</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-2-12 project-links">
+        <span>Get Help</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="/support" target="_blank">Support</a></li>
+          
+          
+          
+            <li><a href="/guides" target="_blank">Guides</a></li>
+          
+          
+          
+            <li><a href="/faq" target="_blank">FAQ</a></li>
+          
+          
+          
+            <li><a href="/get-started" target="_blank">开始体验</a></li>
+          
+          
+          
+            <li><a href="https://stackoverflow.com/questions/tagged/quarkus" target="_blank">Stack Overflow</a></li>
+          
+          
+          
+            <li><a href="https://github.com/quarkusio/quarkus/discussions" target="_blank">Discussions</a></li>
+          
+          
+          
+            <li><a href="https://groups.google.com/forum/#!forum/quarkus-dev" target="_blank">Development mailing list</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-1-12 project-links">
+        <span>Languages</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="https://quarkus.io/" target="_blank">English</a></li>
+          
+          
+          
+            <li><a href="https://pt.quarkus.io/" target="_blank">Português&nbsp;(Brasileiro)</a></li>
+          
+          
+          
+            <li><a href="https://es.quarkus.io/" target="_blank">Español</a></li>
+          
+          
+          
+            <li><a href="https://cn.quarkus.io/" target="_blank">简体中文</a></li>
+          
+          
+          
+            <li><a href="https://ja.quarkus.io/" target="_blank">日本語</a></li>
+          
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="width-4-12 more-links">
+        <span>Quarkus is made of community projects</span>
+        <ul class="footer-links">
+          
+            <li><a blah href="https://vertx.io/" target="_blank">Eclipse Vert.x</a></li>
+          
+            <li><a blah href="https://smallrye.io" target="_blank">SmallRye</a></li>
+          
+            <li><a blah href="https://hibernate.org" target="_blank">Hibernate</a></li>
+          
+            <li><a blah href="https://netty.io" target="_blank">Netty</a></li>
+          
+            <li><a blah href="https://resteasy.github.io" target="_blank">RESTEasy</a></li>
+          
+            <li><a blah href="https://camel.apache.org" target="_blank">Apache Camel</a></li>
+          
+            <li><a blah href="https://microprofile.io" target="_blank">Eclipse MicroProfile</a></li>
+          
+            <li><a blah href="https://code.quarkus.io/" target="_blank">And many more...</a></li>
+          
+        </ul>
+      </div>
+    
+  </div>
+</div>
+
+  <div class="content redhat-footer">
+  <div class="grid-wrapper">
+    <span class="licence">
+      <i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i> <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank">CC by 3.0</a> | <a href="https://www.redhat.com/en/about/privacy-policy">Privacy Policy</a>
+    </span>
+    <span class="redhat">
+      Sponsored by
+    </span>
+    <span class="redhat-logo">
+      <a href="https://www.redhat.com/" target="_blank"><img src="/assets/images/redhat_reversed.svg"></a>
+    </span>
+  </div>
+</div>
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha384-8gBf6Y4YYq7Jx97PIqmTwLPin4hxIzQw5aDmUg/DDhul9fFpbbLcLh3nTIIDJKhx" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="/assets/javascript/mobile-nav.js"></script>
+  <script type="text/javascript" src="/assets/javascript/scroll-down.js"></script>
+  <script src="/assets/javascript/satellite.js" type="text/javascript"></script>
+  <script src="/guides/javascript/config.js" type="text/javascript"></script>
+  <script src="/assets/javascript/guides-version-dropdown.js" type="text/javascript"></script>
+  <script src="/assets/javascript/back-to-top.js" type="text/javascript"></script>
+  <script src="/assets/javascript/clipboard.min.js" type="text/javascript"></script>
+  <script src="/assets/javascript/copy.js" type="text/javascript"></script>
+  <script src="/assets/javascript/asciidoc-tabs.js" type="text/javascript"></script>
+  <script src="/assets/javascript/future-date.js" type="text/javascript"></script>
+</body>
+
+</html>
