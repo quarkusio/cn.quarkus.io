@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="cn">
+
+
+
+
+
+
+
+<head>
+  <title>使用Spring Boot属性API访问应用程序属性 - 3.2 - Quarkus</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
+  script-src 'self' 'unsafe-inline' 'unsafe-eval'
+      
+      https://assets.adobedtm.com
+      js.bizographics.com
+      https://www.redhat.com
+      https://static.redhat.com
+      https://app.requestly.io/
+      jsonip.com
+      https://ajax.googleapis.com
+      https://use.fontawesome.com
+      http://www.youtube.com
+      http://www.googleadservices.com
+      https://googleads.g.doubleclick.net
+      https://giscus.app
+      https://analytics.ossupstream.org/
+      https://app.mailjet.com;
+
+  style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
+  img-src 'self' * data:; 
+  media-src 'self'; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  base-uri 'none'; 
+  object-src 'none'; 
+  form-action 'none'; 
+  font-src 'self' https://use.fontawesome.com https://fonts.gstatic.com;" />
+  <script id="adobe_dtm" src="https://www.redhat.com/dtm.js" type="text/javascript"></script>
+  <script src="/assets/javascript/highlight.pack.js" type="text/javascript"></script>
+  <META HTTP-EQUIV='X-XSS-Protection' CONTENT="1; mode=block">
+  <META HTTP-EQUIV='X-Content-Type-Options' CONTENT="nosniff">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Quarkus: Supersonic Subatomic Java">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@QuarkusIO"> 
+  <meta name="twitter:creator" content="@QuarkusIO">
+  <meta property="og:url" content="https://quarkus.io/version/3.2/guides/spring-boot-properties" />
+  <meta property="og:title" content="使用Spring Boot属性API访问应用程序属性 - 3.2" />
+  <meta property="og:description" content="Quarkus: Supersonic Subatomic Java" />
+  <meta property="og:image" content="https://quarkus.io/assets/images/quarkus_card.png" />
+  
+  <link rel="canonical" href="https://quarkus.io/guides/spring-boot-properties">
+  <link rel="shortcut icon" type="image/png" href="/favicon.ico" >
+  <link rel="stylesheet" href="/guides/stylesheet/config.css" />
+  <link rel="stylesheet" href="/assets/css/main.css?2021-07-29" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.2/css/all.css" crossorigin="anonymous">
+  <link rel="alternate" type="application/rss+xml"  href="/feed.xml" title="Quarkus">
+  <script src="/assets/javascript/hl.js" type="text/javascript"></script>
+  
+  
+  
+  
+  <link rel="alternate" hreflang="en" href="https://quarkus.io/version/3.2/guides/spring-boot-properties" />
+  
+  <link rel="alternate" hreflang="pt-br" href="https://pt.quarkus.io/version/3.2/guides/spring-boot-properties" />
+  
+  <link rel="alternate" hreflang="es" href="https://es.quarkus.io/version/3.2/guides/spring-boot-properties" />
+  
+  <link rel="alternate" hreflang="zh" href="https://cn.quarkus.io/version/3.2/guides/spring-boot-properties" />
+  
+  <link rel="alternate" hreflang="ja" href="https://ja.quarkus.io/version/3.2/guides/spring-boot-properties" />
+  
+  <link rel="alternate" hreflang="x-default" href="https://quarkus.io/" />  
+  <script src="/assets/javascript/tracking.js"></script>
+  
+  <script src="/assets/javascript/colormode.js" type="text/javascript"></script>
+
+</head>
+
+<body class="guides">
+
+  
+
+
+<div class="grid-wrapper communitysite">
+  <div class="grid__item width-12-12">The <a href="https://quarkus.io/version/3.2/guides/spring-boot-properties">English version of quarkus.io</a> is the official project site. Translated sites are community supported on a best-effort basis.</div>
+</div>
+
+
+  <div class="nav-wrapper">
+  <div class="grid-wrapper">
+    <div class="width-12-12">
+      <input type="checkbox" id="checkbox" />
+      <nav id="main-nav" class="main-nav">
+        <div class="logo-wrapper">
+           <a href="/"><img src="/assets/images/quarkus_logo_horizontal_rgb_600px_reverse.png" class="project-logo" title="Quarkus"></a>
+        </div>
+    <label class="nav-toggle" for="checkbox"> <i class="fa fa-bars"></i>
+</label>
+    <ul id="menu" class="menu">
+      <li class="dropdown">
+        <span href="/about/">Why<i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/about" class="">QUARKUS是什么？</a></li>
+          <li><a href="/developer-joy" class="">开发者的乐趣 </a></li>
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES 原生</a></li>
+          <li><a href="/standards" class="">标准</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">容器优先 </a></li>          
+        </ul>
+      </li>
+      <li class="dropdown">
+        <span href="/learn/">学习 <i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/get-started" class="">入门</a></li>
+          <li><a href="/guides" class="active" >指南</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
+          <li><a href="/qtips" class="">"Q" TIP视频</a></li>          
+          <li><a href="/books" class="">书籍</a></li>
+          </ul>
+      </li>
+      <li class="dropdown">
+        <span href="https://quarkus.io/extensions/">扩展<i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          
+          <!-- Note that quarkus.io is hardcoded here, because it is the only url which supports extensions -->
+<li><a href="https://quarkus.io/extensions/" class="">浏览扩展</a></li>
+          <li><a href="/faq/#what-is-a-quarkus-extension" class="">使用扩展</a></li>
+          <li><a href="/guides/writing-extensions" class="" >创建扩展</a></li>
+          <li><a href="https://hub.quarkiverse.io" class="">SHARE EXTENSIONS</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <span href="/community/">社区 <i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/support/" class="">支持</a></li>
+          <li><a href="/blog" class="" >博客</a></li>
+          <li><a href="/discussion" class="">讨论</a></li>
+          <li><a href="/working-groups" class="">WORKING GROUPS</a></li>
+          <li><a href="/insights" class="" >播客</a></li>
+          <li><a href="/events" class="">活动</a></li>
+          <li><a href="/newsletter" class="">新闻</a></li>
+          <li><a href="https://github.com/orgs/quarkusio/projects/13/views/1" class="">路线图</a></li>
+          </ul>
+      </li>
+      <li>
+        <a href="https://code.quarkus.io" class="button-cta secondary
+white">开始编码</a>
+      </li>
+      <li class="dropdown">
+        <span href="/language/"><div class="fas fa-globe langicon"></div><i class="fas fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="https://quarkus.io/version/3.2/guides/spring-boot-properties" >OFFICIAL (ENGLISH)</a></li>
+          <li><a href="https://pt.quarkus.io/version/3.2/guides/spring-boot-properties">PORTUGUÊS (BR)</a></li>
+          <li><a href="https://es.quarkus.io/version/3.2/guides/spring-boot-properties">ESPAÑOL</a></li>
+          <li><a href="https://cn.quarkus.io/version/3.2/guides/spring-boot-properties">简体中文</a></li>
+          <li><a href="https://ja.quarkus.io/version/3.2/guides/spring-boot-properties">日本語</a></li>
+          </ul>
+      </li>
+      <li>
+        <span href="#" class="modeswitcher" id='theme-toggle'><i class="fas
+fa-sun"></i><i class="fas fa-moon"></i><i class="fas fa-cog"></i></span>
+      </li>
+    </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+  <div class="content">
+    
+
+
+
+
+
+<section class="full-width-version-bg flexfilterbar guides">
+  <div class="guideflexcontainer">
+    <div class="docslink">
+      <a class="returnlink" href="/version/3.2/guides/">返回指南目录</a>
+    </div>
+    <div class="flexlabel">
+      <label>选择指南版本</label>
+    </div>
+    <div class="guidepulldown version">
+    <select id="guide-version-dropdown">
+      
+        
+        
+        <option value="main" >Main - SNAPSHOT</option>
+        
+        
+        
+        <option value="latest" >3.19.1 - Latest</option>
+        
+        
+        
+        <option value="3.15" >3.15</option>
+        
+        
+        
+        <option value="3.8" >3.8</option>
+        
+        
+        
+        <option value="3.2" selected>3.2</option>
+        
+        
+        
+        <option value="2.16" >2.16</option>
+        
+        
+        
+        <option value="2.13" >2.13</option>
+        </select>
+    </div>
+  </div>
+</section>
+
+<div class="guide">
+  <div class="grid-wrapper">
+    <div class="grid__item width-8-12 width-12-12-m">
+      <h1 class="text-caps">使用Spring Boot属性API访问应用程序属性 </h1>
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you prefer to use Spring Boot <code>@ConfigurationProperties</code> annotated class to access application properties instead of
+<a href="config-mappings#config-mappings"><code>@ConfigMapping</code></a> or a MicroProfile <code>@ConfigProperty</code> approach, you can do that with this extension.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Spring Boot <code>@ConfigurationProperties</code> 有一些限制。例如，不支持 <code>Map</code> 注入。你可以考虑使用 <a href="config-mappings.html">将配置映射到对象</a> 。
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="prerequisites"><a class="anchor" href="#prerequisites"></a>先决条件</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>完成这个指南，你需要:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>大概15分钟</p>
+</li>
+<li>
+<p>编辑器</p>
+</li>
+<li>
+<p>安装JDK 11以上版本并正确配置了 <code>JAVA_HOME</code></p>
+</li>
+<li>
+<p>Apache Maven 3.9.3</p>
+</li>
+<li>
+<p>如果你愿意的话，还可以选择使用<a href="cli-tooling">Quarkus CLI</a></p>
+</li>
+<li>
+<p>如果你想构建原生可执行程序，可以选择安装Mandrel或者GraalVM，并<a href="building-native-image#configuring-graalvm">正确配置</a>(或者使用Docker在容器中进行构建)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="solution"><a class="anchor" href="#solution"></a>解决方案</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>我们建议您按照下一节的说明逐步创建应用程序。然而，您可以直接转到已完成的示例。</p>
+</div>
+<div class="paragraph">
+<p>克隆 Git 仓库： <code>git clone -b 3.2 <a href="https://github.com/quarkusio/quarkus-quickstarts.git" class="bare">https://github.com/quarkusio/quarkus-quickstarts.git</a></code> ，或者下载 <a href="https://github.com/quarkusio/quarkus-quickstarts/archive/3.2.zip">存档</a> 。</p>
+</div>
+<div class="paragraph">
+<p>The solution is located in the <code>spring-boot-properties-quickstart</code> <a href="https://github.com/quarkusio/quarkus-quickstarts/tree/3.2/spring-boot-properties-quickstart">directory</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-the-maven-project"><a class="anchor" href="#creating-the-maven-project"></a>创建Maven项目</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>首先，我们需要一个新的项目。使用以下命令创建一个新的项目:</p>
+</div>
+<div class="sidebarblock primary asciidoc-tabs-sync-cli">
+<div class="content">
+<div class="title">CLI</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">quarkus create app org.acme:spring-boot-properties-quickstart \
+    --extension='resteasy-reactive,spring-boot-properties' \
+    --no-code
+cd spring-boot-properties-quickstart</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>创建Grade项目，请添加 <code>--gradle</code> 或者 <code>--gradle-kotlin-dsl</code> 参数。</p>
+</div>
+<div class="paragraph">
+<p>For more information about how to install and use the Quarkus CLI, see the <a href="cli-tooling">Quarkus CLI</a> guide.</p>
+</div>
+</div>
+</div>
+<div class="sidebarblock secondary asciidoc-tabs-sync-maven">
+<div class="content">
+<div class="title">Maven</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn io.quarkus.platform:quarkus-maven-plugin:3.2.12.Final:create \
+    -DprojectGroupId=org.acme \
+    -DprojectArtifactId=spring-boot-properties-quickstart \
+    -Dextensions='resteasy-reactive,spring-boot-properties' \
+    -DnoCode
+cd spring-boot-properties-quickstart</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>创建Grade项目，请添加 <code>-DbuildTool=gradle</code> 或者 <code>-DbuildTool=gradle-kotlin-dsl</code> 参数。</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>该命令生成一个项目并导入了 <code>spring-boot-properties</code> 扩展。</p>
+</div>
+<div class="paragraph">
+<p>如果你已经配置了你的Quarkus项目，你可以在项目的根目录下运行以下命令，并将 <code>spring-boot-properties</code> 扩展添加到你的项目中:</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-sync-cli">
+<div class="title">CLI</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">quarkus extension add 'spring-boot-properties'</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-maven">
+<div class="title">Maven</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw quarkus:add-extension -Dextensions='spring-boot-properties'</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-gradle">
+<div class="title">Gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./gradlew addExtension --extensions='spring-boot-properties'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这会将以下内容添加到你的构建文件中:</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-target-sync-cli asciidoc-tabs-target-sync-maven">
+<div class="title">pom.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-spring-boot-properties&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-target-sync-gradle">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-gradle hljs" data-lang="gradle">implementation("io.quarkus:quarkus-spring-boot-properties")</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="greetingcontroller"><a class="anchor" href="#greetingcontroller"></a>GreetingController</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>First, create a <code>GreetingResource</code> Jakarta REST resource in the
+<code>src/main/java/org/acme/spring/boot/properties/GreetingResource.java</code> file that looks like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.spring.boot.properties;
+
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+
+@Path("/hello")
+public class GreetingResource {
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String hello() {
+        return "hello";
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="injecting-properties"><a class="anchor" href="#injecting-properties"></a>注入属性</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>创建一个包含消息字段的 <code>src/main/java/org/acme/spring/boot/properties/GreetingProperties.java</code> 类:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.spring.boot.properties;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+@ConfigurationProperties("greeting")
+public class GreetingProperties {
+
+    public String text;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在这里 <code>text</code> 字段是公共的，但它也可以是一个带有getter和setter的私有字段，或者只是一个接口中的公共getter。因为 <code>text</code> 没有默认值，所以它被认为是必需的，除非它被定义在一个配置文件中（默认为 <code>application.properties</code> ），否则你的应用程序将无法启动。在你的 <code>src/main/resources/application.properties</code> 文件中定义该属性:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># Your configuration properties
+greeting.text = hello</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>现在，修改 <code>GreetingResource</code> 以使用 <code>GreetingProperties</code> :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.spring.boot.properties;
+
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+
+@Path("/greeting")
+public class GreetingResource {
+
+    @Inject
+    GreetingProperties properties;
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String hello() {
+        return properties.text;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>运行测试以验证应用程序是否仍能正常运行。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="package-and-run-the-application"><a class="anchor" href="#package-and-run-the-application"></a>打包并运行该应用程序</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>在开发模式下运行该应用程序:</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-sync-cli">
+<div class="title">CLI</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">quarkus dev</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-maven">
+<div class="title">Maven</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw quarkus:dev</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-gradle">
+<div class="title">Gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./gradlew --console=plain quarkusDev</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在你的浏览器中打开 <a href="http://localhost:8080/greeting" class="bare">http://localhost:8080/greeting</a> 网页。</p>
+</div>
+<div class="paragraph">
+<p>更改配置文件的内容将会立即得到反馈。</p>
+</div>
+<div class="paragraph">
+<p>像往常一样，该应用程序可以用以下方式打包：</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-sync-cli">
+<div class="title">CLI</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">quarkus build</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-maven">
+<div class="title">Maven</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw install</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-gradle">
+<div class="title">Gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./gradlew build</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>并使用 <code>java -jar target/quarkus-app/quarkus-run.jar</code> 命令运行该应用程序。</p>
+</div>
+<div class="paragraph">
+<p>你也可以通过以下命令生成本地可执行文件:</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-sync-cli">
+<div class="title">CLI</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">quarkus build --native</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-maven">
+<div class="title">Maven</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw install -Dnative</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-gradle">
+<div class="title">Gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./gradlew build -Dquarkus.package.type=native</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="default-values"><a class="anchor" href="#default-values"></a>默认值</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>现在，让我们为greeting 添加一个后缀，我们将为其设置一个默认值。</p>
+</div>
+<div class="paragraph">
+<p>具有默认值的属性可以像其他属性一样在配置文件中被配置。然而，如果该属性没有在配置文件中被定义，则将使用默认值。</p>
+</div>
+<div class="paragraph">
+<p>继续在 <code>GreetingProperties</code> 类中添加新的字段:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.spring.boot.properties;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+@ConfigurationProperties("greeting")
+public class GreetingProperties {
+
+    public String text;
+
+    public String suffix = "!";
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>并更新 <code>GreetingResource</code> 及其对应的 <code>GreetingResourceTest</code> :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.spring.boot.properties;
+
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+
+@Path("/greeting")
+public class GreetingResource {
+
+    @Inject
+    GreetingProperties properties;
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String hello() {
+        return properties.text + properties.suffix;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.spring.boot.properties;
+
+import io.quarkus.test.junit.QuarkusTest;
+import org.junit.jupiter.api.Test;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.is;
+
+@QuarkusTest
+public class GreetingResourceTest {
+
+    @Test
+    public void testHelloEndpoint() {
+        given()
+          .when().get("/greeting")
+          .then()
+             .statusCode(200)
+             .body(is("hello!"));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>运行该测试以验证更改。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="optional-values"><a class="anchor" href="#optional-values"></a>可选值</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>具有可选值的属性处于标准属性和具有默认值属性之间的中间地带。尽管在配置文件中缺少一个属性不会导致你的应用程序启动失败，但它还是没有被设置一个值。我们使用 <code>java.util.Optional</code> 类型来定义这种属性。</p>
+</div>
+<div class="paragraph">
+<p>在 <code>GreetingProperties</code> 中添加一个可选的 <code>name</code> 属性:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.spring.boot.properties;
+
+import java.util.Optional;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+@ConfigurationProperties("greeting")
+public class GreetingProperties {
+
+    public String text;
+
+    public String suffix = "!";
+
+    public Optional&lt;String&gt; name;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>并更新 <code>GreetingResource</code> 及其对应的 <code>GreetingResourceTest</code> :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.spring.boot.properties;
+
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+
+@Path("/greeting")
+public class GreetingResource {
+
+    @Inject
+    GreetingProperties properties;
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String hello() {
+        return properties.text + ", " + properties.name.orElse("You") + properties.suffix;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.spring.boot.properties;
+
+import io.quarkus.test.junit.QuarkusTest;
+import org.junit.jupiter.api.Test;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.is;
+
+@QuarkusTest
+public class GreetingResourceTest {
+
+    @Test
+    public void testHelloEndpoint() {
+        given()
+          .when().get("/greeting")
+          .then()
+             .statusCode(200)
+             .body(is("hello, You!"));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>运行该测试以验证更改。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="grouping-properties"><a class="anchor" href="#grouping-properties"></a>分组属性</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>现在，在我们的 <code>GreetingProperties</code> 类中有三个属性。虽然 <code>name</code> 可以更多地被认为是运行时属性（也许在将来可以被作为HTTP查询参数进行传递），而 <code>text</code> 和 <code>suffix</code> 被用于定义一个消息模板。让我们将这两个属性作为一组放在一个独立的内部类中:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.spring.boot.properties;
+
+import java.util.Optional;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+@ConfigurationProperties("greeting")
+public class GreetingProperties {
+
+    public Message message;
+
+    public Optional&lt;String&gt; name;
+
+    public static class Message {
+
+        public String text;
+
+        public String suffix = "!";
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这里 <code>Message</code> 属性类被定义为一个内部类，但它也可以作为一个顶层类。</p>
+</div>
+<div class="paragraph">
+<p>这样的属性分组可以为你的配置带来更加丰富的结构。当属性的数量增加时，这尤其有用。</p>
+</div>
+<div class="paragraph">
+<p>因为有了额外的类，我们的属性名也发生了改变。让我们更新一下属性配置文件和 <code>GreetingResource</code> 类。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># Your configuration properties
+greeting.message.text = hello</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.spring.boot.properties;
+
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+
+@Path("/greeting")
+public class GreetingResource {
+
+    @Inject
+    GreetingProperties properties;
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String hello() {
+        return properties.message.text + ", " + properties.name.orElse("You") + properties.message.suffix;
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="more-spring-guides"><a class="anchor" href="#more-spring-guides"></a>更多 Spring 指南</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Quarkus拥有更多的Spring兼容特性。获取更多细节请参阅以下指南:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="spring-di.html">Quarkus - Spring DI 扩展</a></p>
+</li>
+<li>
+<p><a href="spring-web.html">Quarkus - Spring Web 扩展</a></p>
+</li>
+<li>
+<p><a href="spring-data-jpa">Quarkus - Spring Data JPA 扩展</a></p>
+</li>
+<li>
+<p><a href="spring-data-rest">Quarkus - Spring Data REST 扩展</a></p>
+</li>
+<li>
+<p><a href="spring-security">Quarkus - Spring Security 扩展</a></p>
+</li>
+<li>
+<p><a href="spring-cloud-config-client">Quarkus - 从Spring Cloud Config Server 中读取配置</a></p>
+</li>
+<li>
+<p><a href="spring-cache">Quarkus - Spring Cache 扩展</a></p>
+</li>
+<li>
+<p><a href="spring-scheduled">Quarkus - Spring Scheduled 扩展</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+    </div>
+    <div class="grid__item width-4-12 width-12-12-m tocwrapper">
+      <div class="hide-mobile toc"><ul class="sectlevel1">
+<li><a href="#prerequisites">先决条件</a></li>
+<li><a href="#solution">解决方案</a></li>
+<li><a href="#creating-the-maven-project">创建Maven项目</a></li>
+<li><a href="#greetingcontroller">GreetingController</a></li>
+<li><a href="#injecting-properties">注入属性</a></li>
+<li><a href="#package-and-run-the-application">打包并运行该应用程序</a></li>
+<li><a href="#default-values">默认值</a></li>
+<li><a href="#optional-values">可选值</a></li>
+<li><a href="#grouping-properties">分组属性</a></li>
+<li><a href="#more-spring-guides">更多 Spring 指南</a></li>
+</ul></div>
+    </div>
+  </div>
+  </div>
+
+  </div>
+
+  <div class="content project-footer">
+  <div class="footer-section">
+    <div class="logo-wrapper">
+      <a href="/"><img src="/assets/images/quarkus_logo_horizontal_rgb_reverse.svg" class="project-logo" title="Quarkus"></a>
+    </div>
+  </div>
+  <div class="grid-wrapper">
+    <p class="grid__item width-3-12">Quarkus is open. All dependencies of this project are available under the <a href='https://www.apache.org/licenses/LICENSE-2.0' target='_blank'>Apache Software License 2.0</a> or compatible license.<br /><br />This website was built with <a href='https://jekyllrb.com/' target='_blank'>Jekyll</a>, is hosted on <a href='https://pages.github.com/' target='_blank'>GitHub Pages</a> and is completely open source. If you want to make it better, <a href='https://github.com/quarkusio/quarkusio.github.io' target='_blank'>fork the website</a> and show us what you’ve got.</p>
+
+    
+      <div class="width-1-12 project-links">
+        <span>Navigation</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="/" target="_blank">Home</a></li>
+          
+          
+          
+            <li><a href="/about" target="_blank">About</a></li>
+          
+          
+          
+            <li><a href="/blog" target="_blank">博客</a></li>
+          
+          
+          
+            <li><a href="/insights" target="_blank">Podcast</a></li>
+          
+          
+          
+            <li><a href="/events" target="_blank">活动</a></li>
+          
+          
+          
+            <li><a href="/newsletter" target="_blank">新闻</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
+          
+          
+          
+            <li><a href="https://github.com/orgs/quarkusio/projects/13/views/1" target="_blank">路线图</a></li>
+          
+          
+          
+            <li><a href="/security" target="_blank">Security&nbsp;policy</a></li>
+          
+          
+          
+            <li><a href="/usage" target="_blank">Usage</a></li>
+          
+          
+          
+            <li><a href="/brand" target="_blank">Brand</a></li>
+          
+          
+          
+            <li><a href="/desktopwallpapers" target="_blank">Wallpapers</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-1-12 project-links">
+        <span>Follow Us</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="https://x.com/quarkusio" target="_blank">X</a></li>
+          
+          
+          
+            <li><a href="https://bsky.app/profile/quarkus.io" target="_blank">Bluesky</a></li>
+          
+          
+          
+            <li><a rel="me" href="https://fosstodon.org/@quarkusio" target="_blank">Mastodon</a></li>
+            
+          
+          
+            <li><a href="https://www.facebook.com/quarkusio" target="_blank">Facebook</a></li>
+          
+          
+          
+            <li><a href="https://www.linkedin.com/company/quarkusio/" target="_blank">Linkedin</a></li>
+          
+          
+          
+            <li><a href="https://www.youtube.com/channel/UCaW8QG_QoIk_FnjLgr5eOqg" target="_blank">Youtube</a></li>
+          
+          
+          
+            <li><a href="https://github.com/quarkusio" target="_blank">GitHub</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-2-12 project-links">
+        <span>Get Help</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="/support" target="_blank">Support</a></li>
+          
+          
+          
+            <li><a href="/guides" target="_blank">Guides</a></li>
+          
+          
+          
+            <li><a href="/faq" target="_blank">FAQ</a></li>
+          
+          
+          
+            <li><a href="/get-started" target="_blank">开始体验</a></li>
+          
+          
+          
+            <li><a href="https://stackoverflow.com/questions/tagged/quarkus" target="_blank">Stack Overflow</a></li>
+          
+          
+          
+            <li><a href="https://github.com/quarkusio/quarkus/discussions" target="_blank">Discussions</a></li>
+          
+          
+          
+            <li><a href="https://groups.google.com/forum/#!forum/quarkus-dev" target="_blank">Development mailing list</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-1-12 project-links">
+        <span>Languages</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="https://quarkus.io/" target="_blank">English</a></li>
+          
+          
+          
+            <li><a href="https://pt.quarkus.io/" target="_blank">Português&nbsp;(Brasileiro)</a></li>
+          
+          
+          
+            <li><a href="https://es.quarkus.io/" target="_blank">Español</a></li>
+          
+          
+          
+            <li><a href="https://cn.quarkus.io/" target="_blank">简体中文</a></li>
+          
+          
+          
+            <li><a href="https://ja.quarkus.io/" target="_blank">日本語</a></li>
+          
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="width-4-12 more-links">
+        <span>Quarkus is made of community projects</span>
+        <ul class="footer-links">
+          
+            <li><a blah href="https://vertx.io/" target="_blank">Eclipse Vert.x</a></li>
+          
+            <li><a blah href="https://smallrye.io" target="_blank">SmallRye</a></li>
+          
+            <li><a blah href="https://hibernate.org" target="_blank">Hibernate</a></li>
+          
+            <li><a blah href="https://netty.io" target="_blank">Netty</a></li>
+          
+            <li><a blah href="https://resteasy.github.io" target="_blank">RESTEasy</a></li>
+          
+            <li><a blah href="https://camel.apache.org" target="_blank">Apache Camel</a></li>
+          
+            <li><a blah href="https://microprofile.io" target="_blank">Eclipse MicroProfile</a></li>
+          
+            <li><a blah href="https://code.quarkus.io/" target="_blank">And many more...</a></li>
+          
+        </ul>
+      </div>
+    
+  </div>
+</div>
+
+  <div class="content redhat-footer">
+  <div class="grid-wrapper">
+    <span class="licence">
+      <i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i> <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank">CC by 3.0</a> | <a href="https://www.redhat.com/en/about/privacy-policy">Privacy Policy</a>
+    </span>
+    <span class="redhat">
+      Sponsored by
+    </span>
+    <span class="redhat-logo">
+      <a href="https://www.redhat.com/" target="_blank"><img src="/assets/images/redhat_reversed.svg"></a>
+    </span>
+  </div>
+</div>
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha384-8gBf6Y4YYq7Jx97PIqmTwLPin4hxIzQw5aDmUg/DDhul9fFpbbLcLh3nTIIDJKhx" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="/assets/javascript/mobile-nav.js"></script>
+  <script type="text/javascript" src="/assets/javascript/scroll-down.js"></script>
+  <script src="/assets/javascript/satellite.js" type="text/javascript"></script>
+  <script src="/guides/javascript/config.js" type="text/javascript"></script>
+  <script src="/assets/javascript/guides-version-dropdown.js" type="text/javascript"></script>
+  <script src="/assets/javascript/back-to-top.js" type="text/javascript"></script>
+  <script src="/assets/javascript/clipboard.min.js" type="text/javascript"></script>
+  <script src="/assets/javascript/copy.js" type="text/javascript"></script>
+  <script src="/assets/javascript/asciidoc-tabs.js" type="text/javascript"></script>
+  <script src="/assets/javascript/future-date.js" type="text/javascript"></script>
+</body>
+
+</html>

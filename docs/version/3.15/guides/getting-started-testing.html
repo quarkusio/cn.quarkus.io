@@ -1,0 +1,2645 @@
+<!DOCTYPE html>
+<html lang="cn">
+
+
+
+
+
+
+
+<head>
+  <title>测试你的应用程序 - 3.15 - Quarkus</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
+  script-src 'self' 'unsafe-inline' 'unsafe-eval'
+      
+      https://assets.adobedtm.com
+      js.bizographics.com
+      https://www.redhat.com
+      https://static.redhat.com
+      https://app.requestly.io/
+      jsonip.com
+      https://ajax.googleapis.com
+      https://use.fontawesome.com
+      http://www.youtube.com
+      http://www.googleadservices.com
+      https://googleads.g.doubleclick.net
+      https://giscus.app
+      https://analytics.ossupstream.org/
+      https://app.mailjet.com;
+
+  style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
+  img-src 'self' * data:; 
+  media-src 'self'; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  base-uri 'none'; 
+  object-src 'none'; 
+  form-action 'none'; 
+  font-src 'self' https://use.fontawesome.com https://fonts.gstatic.com;" />
+  <script id="adobe_dtm" src="https://www.redhat.com/dtm.js" type="text/javascript"></script>
+  <script src="/assets/javascript/highlight.pack.js" type="text/javascript"></script>
+  <META HTTP-EQUIV='X-XSS-Protection' CONTENT="1; mode=block">
+  <META HTTP-EQUIV='X-Content-Type-Options' CONTENT="nosniff">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Quarkus: Supersonic Subatomic Java">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@QuarkusIO"> 
+  <meta name="twitter:creator" content="@QuarkusIO">
+  <meta property="og:url" content="https://quarkus.io/version/3.15/guides/getting-started-testing" />
+  <meta property="og:title" content="测试你的应用程序 - 3.15" />
+  <meta property="og:description" content="Quarkus: Supersonic Subatomic Java" />
+  <meta property="og:image" content="https://quarkus.io/assets/images/quarkus_card.png" />
+  
+  <link rel="canonical" href="https://quarkus.io/guides/getting-started-testing">
+  <link rel="shortcut icon" type="image/png" href="/favicon.ico" >
+  <link rel="stylesheet" href="/guides/stylesheet/config.css" />
+  <link rel="stylesheet" href="/assets/css/main.css?2021-07-29" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.2/css/all.css" crossorigin="anonymous">
+  <link rel="alternate" type="application/rss+xml"  href="/feed.xml" title="Quarkus">
+  <script src="/assets/javascript/hl.js" type="text/javascript"></script>
+  
+  
+  
+  
+  <link rel="alternate" hreflang="en" href="https://quarkus.io/version/3.15/guides/getting-started-testing" />
+  
+  <link rel="alternate" hreflang="pt-br" href="https://pt.quarkus.io/version/3.15/guides/getting-started-testing" />
+  
+  <link rel="alternate" hreflang="es" href="https://es.quarkus.io/version/3.15/guides/getting-started-testing" />
+  
+  <link rel="alternate" hreflang="zh" href="https://cn.quarkus.io/version/3.15/guides/getting-started-testing" />
+  
+  <link rel="alternate" hreflang="ja" href="https://ja.quarkus.io/version/3.15/guides/getting-started-testing" />
+  
+  <link rel="alternate" hreflang="x-default" href="https://quarkus.io/" />  
+  <script src="/assets/javascript/tracking.js"></script>
+  
+  <script src="/assets/javascript/colormode.js" type="text/javascript"></script>
+
+</head>
+
+<body class="guides">
+
+  
+
+
+<div class="grid-wrapper communitysite">
+  <div class="grid__item width-12-12">The <a href="https://quarkus.io/version/3.15/guides/getting-started-testing">English version of quarkus.io</a> is the official project site. Translated sites are community supported on a best-effort basis.</div>
+</div>
+
+
+  <div class="nav-wrapper">
+  <div class="grid-wrapper">
+    <div class="width-12-12">
+      <input type="checkbox" id="checkbox" />
+      <nav id="main-nav" class="main-nav">
+        <div class="logo-wrapper">
+           <a href="/"><img src="/assets/images/quarkus_logo_horizontal_rgb_600px_reverse.png" class="project-logo" title="Quarkus"></a>
+        </div>
+    <label class="nav-toggle" for="checkbox"> <i class="fa fa-bars"></i>
+</label>
+    <ul id="menu" class="menu">
+      <li class="dropdown">
+        <span href="/about/">Why<i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/about" class="">QUARKUS是什么？</a></li>
+          <li><a href="/developer-joy" class="">开发者的乐趣 </a></li>
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES 原生</a></li>
+          <li><a href="/standards" class="">标准</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">容器优先 </a></li>          
+        </ul>
+      </li>
+      <li class="dropdown">
+        <span href="/learn/">学习 <i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/get-started" class="">入门</a></li>
+          <li><a href="/guides" class="active" >指南</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
+          <li><a href="/qtips" class="">"Q" TIP视频</a></li>          
+          <li><a href="/books" class="">书籍</a></li>
+          </ul>
+      </li>
+      <li class="dropdown">
+        <span href="https://quarkus.io/extensions/">扩展<i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          
+          <!-- Note that quarkus.io is hardcoded here, because it is the only url which supports extensions -->
+<li><a href="https://quarkus.io/extensions/" class="">浏览扩展</a></li>
+          <li><a href="/faq/#what-is-a-quarkus-extension" class="">使用扩展</a></li>
+          <li><a href="/guides/writing-extensions" class="" >创建扩展</a></li>
+          <li><a href="https://hub.quarkiverse.io" class="">SHARE EXTENSIONS</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <span href="/community/">社区 <i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/support/" class="">支持</a></li>
+          <li><a href="/blog" class="" >博客</a></li>
+          <li><a href="/discussion" class="">讨论</a></li>
+          <li><a href="/working-groups" class="">WORKING GROUPS</a></li>
+          <li><a href="/insights" class="" >播客</a></li>
+          <li><a href="/events" class="">活动</a></li>
+          <li><a href="/newsletter" class="">新闻</a></li>
+          <li><a href="https://github.com/orgs/quarkusio/projects/13/views/1" class="">路线图</a></li>
+          </ul>
+      </li>
+      <li>
+        <a href="https://code.quarkus.io" class="button-cta secondary
+white">开始编码</a>
+      </li>
+      <li class="dropdown">
+        <span href="/language/"><div class="fas fa-globe langicon"></div><i class="fas fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="https://quarkus.io/version/3.15/guides/getting-started-testing" >OFFICIAL (ENGLISH)</a></li>
+          <li><a href="https://pt.quarkus.io/version/3.15/guides/getting-started-testing">PORTUGUÊS (BR)</a></li>
+          <li><a href="https://es.quarkus.io/version/3.15/guides/getting-started-testing">ESPAÑOL</a></li>
+          <li><a href="https://cn.quarkus.io/version/3.15/guides/getting-started-testing">简体中文</a></li>
+          <li><a href="https://ja.quarkus.io/version/3.15/guides/getting-started-testing">日本語</a></li>
+          </ul>
+      </li>
+      <li>
+        <span href="#" class="modeswitcher" id='theme-toggle'><i class="fas
+fa-sun"></i><i class="fas fa-moon"></i><i class="fas fa-cog"></i></span>
+      </li>
+    </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+  <div class="content">
+    
+
+
+
+
+
+<section class="full-width-version-bg flexfilterbar guides">
+  <div class="guideflexcontainer">
+    <div class="docslink">
+      <a class="returnlink" href="/version/3.15/guides/">返回指南目录</a>
+    </div>
+    <div class="flexlabel">
+      <label>选择指南版本</label>
+    </div>
+    <div class="guidepulldown version">
+    <select id="guide-version-dropdown">
+      
+        
+        
+        <option value="main" >Main - SNAPSHOT</option>
+        
+        
+        
+        <option value="latest" >3.19.1 - Latest</option>
+        
+        
+        
+        <option value="3.15" selected>3.15</option>
+        
+        
+        
+        <option value="3.8" >3.8</option>
+        
+        
+        
+        <option value="3.2" >3.2</option>
+        
+        
+        
+        <option value="2.16" >2.16</option>
+        
+        
+        
+        <option value="2.13" >2.13</option>
+        </select>
+    </div>
+  </div>
+</section>
+
+<div class="guide">
+  <div class="grid-wrapper">
+    <div class="grid__item width-8-12 width-12-12-m">
+      <h1 class="text-caps">测试你的应用程序 </h1>
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>学习如何测试您的Quarkus应用程序。本指南包括：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>在JVM模式下测试</p>
+</li>
+<li>
+<p>在本地模式下测试</p>
+</li>
+<li>
+<p>将资源注入测试中</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="prerequisites"><a class="anchor" href="#prerequisites"></a>1. 先决条件</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>要完成这个指南，你需要：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>大概15分钟</p>
+</li>
+<li>
+<p>编辑器</p>
+</li>
+<li>
+<p>JDK 17+ installed with <code>JAVA_HOME</code> configured appropriately</p>
+</li>
+<li>
+<p>Apache Maven 3.9.8</p>
+</li>
+<li>
+<p>如果你愿意的话，还可以选择使用<a href="cli-tooling">Quarkus CLI</a></p>
+</li>
+<li>
+<p>如果你想构建原生可执行程序，可以选择安装Mandrel或者GraalVM，并<a href="building-native-image#configuring-graalvm">正确配置</a>(或者使用Docker在容器中进行构建)</p>
+</li>
+<li>
+<p>来自 <a href="getting-started.html">《入门指南》</a>  的完整的greeter应用程序</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="architecture"><a class="anchor" href="#architecture"></a>2. 应用结构</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>在本指南中，我们对作为入门指南的一部分而创建的初始测试进行扩展。我们涵盖了注入测试以及如何测试本地可执行文件。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Quarkus支持持续测试，但这是 <a href="continuous-testing.html">持续测试指南</a> 所讨论的。
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="solution"><a class="anchor" href="#solution"></a>3. 解决方案</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>我们建议您按照下一节的说明逐步创建应用程序。然而，您可以直接转到已完成的示例。</p>
+</div>
+<div class="paragraph">
+<p>克隆 Git 仓库: <code>git clone -b 3.15 <a href="https://github.com/quarkusio/quarkus-quickstarts.git" class="bare">https://github.com/quarkusio/quarkus-quickstarts.git</a></code> ，或下载一个 <a href="https://github.com/quarkusio/quarkus-quickstarts/archive/3.15.zip">存档</a> 。</p>
+</div>
+<div class="paragraph">
+<p>The solution is located in the <code>getting-started-testing</code> <a href="https://github.com/quarkusio/quarkus-quickstarts/tree/3.15/getting-started-testing">directory</a>.</p>
+</div>
+<div class="paragraph">
+<p>本指南假设您已经准备好了 <code>getting-started</code> 目录中的应用。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="recap-of-http-based-testing-in-jvm-mode"><a class="anchor" href="#recap-of-http-based-testing-in-jvm-mode"></a>4. 对JVM模式中基于HTTP的测试的回顾</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>如果您已从入门的例子开始，那您应该已经有了一个完成的测试例子，包括正确的安装了工具。</p>
+</div>
+<div class="paragraph">
+<p>在您的构建文件中应该有2个测试依赖：</p>
+</div>
+<div class="sidebarblock primary asciidoc-tabs-sync-maven">
+<div class="content">
+<div class="title">Maven</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-junit5&lt;/artifactId&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;io.rest-assured&lt;/groupId&gt;
+    &lt;artifactId&gt;rest-assured&lt;/artifactId&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sidebarblock secondary asciidoc-tabs-sync-gradle">
+<div class="content">
+<div class="title">Gradle</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">dependencies {
+    testImplementation("io.quarkus:quarkus-junit5")
+    testImplementation("io.rest-assured:rest-assured")
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p><code>quarkus-junit5</code> 是测试所必需的，因为它提供 <code>@QuarkusTest</code> 注解来控制测试框架。而 <code>rest-assured</code> 不是必需的，但它是测试HTTP节点的一种便捷方式，我们还集成对自动设置正确URL的支持，因此不需要配置。</p>
+</div>
+<div class="paragraph">
+<p>因为我们使用的是JUnit 5，所以必须设置 <a href="https://maven.apache.org/surefire/maven-surefire-plugin/">Surefire Maven插件</a> 的版本，因为默认版本不支持Junit 5：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
+    &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+    &lt;version&gt;${surefire-plugin.version}&lt;/version&gt;
+    &lt;configuration&gt;
+       &lt;systemPropertyVariables&gt;
+          &lt;java.util.logging.manager&gt;org.jboss.logmanager.LogManager&lt;/java.util.logging.manager&gt;
+          &lt;maven.home&gt;${maven.home}&lt;/maven.home&gt;
+       &lt;/systemPropertyVariables&gt;
+    &lt;/configuration&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>我们还设置了 <code>java.util.logging.manager</code> 系统属性，以确保测试使用正确的日志管理器。同时设置 <code>maven.home</code> 属性，以确保 <code>${maven.home}/conf/settings.xml</code> 的自定义配置被设置（如果有的话）。</p>
+</div>
+<div class="paragraph">
+<p>该项目还应该包含一个简单的测试：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.getting.started.testing;
+
+import io.quarkus.test.junit.QuarkusTest;
+import org.junit.jupiter.api.Test;
+
+import java.util.UUID;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.is;
+
+@QuarkusTest
+public class GreetingResourceTest {
+
+    @Test
+    public void testHelloEndpoint() {
+        given()
+          .when().get("/hello")
+          .then()
+             .statusCode(200)
+             .body(is("hello"));
+    }
+
+    @Test
+    public void testGreetingEndpoint() {
+        String uuid = UUID.randomUUID().toString();
+        given()
+          .pathParam("name", uuid)
+          .when().get("/hello/greeting/{name}")
+          .then()
+            .statusCode(200)
+            .body(is("hello " + uuid));
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>该测试使用HTTP来直接测试我们的REST节点。当运行测试时，应用程序将在测试运行前被启动。</p>
+</div>
+<div class="sect2">
+<h3 id="controlling-the-test-port"><a class="anchor" href="#controlling-the-test-port"></a>4.1. 控制测试端口</h3>
+<div class="paragraph">
+<p>虽然Quarkus默认会监听端口 <code>8080</code> ，但当运行测试时，它会默认设为 <code>8081</code> 。这允许您在运行测试的同时让应用程序并行运行。</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="title">改变测试端口</div>
+<div class="paragraph">
+<p>您可以通过 <code>quarkus.http.test-port</code> 和 <code>quarkus.http.test-ssl-port</code> 来配置用于HTTP和HTTPS测试的端口：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.http.test-port=8083
+quarkus.http.test-ssl-port=8446</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>设置为 <code>0</code> 则会使用随机端口（由操作系统分配）。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Quarkus还提供了RestAssured集成用以在测试运行前更新RestAssured使用的默认端口，因而不需要额外的配置。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="controlling-http-interaction-timeout"><a class="anchor" href="#controlling-http-interaction-timeout"></a>4.2. 控制HTTP交互超时时间</h3>
+<div class="paragraph">
+<p>当在您的测试中使用REST Assured时，连接和响应超时默认设置为30秒。可以通过 <code>quarkus.http.test-timeout</code> 属性覆盖该设置：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.http.test-timeout=10s</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="injecting-a-uri"><a class="anchor" href="#injecting-a-uri"></a>4.3. 注入URI</h3>
+<div class="paragraph">
+<p>也可以直接将URL注入测试中，从而可以更容易的使用不同的客户端。可通过 <code>@TestHTTPResource</code> 注解完成。</p>
+</div>
+<div class="paragraph">
+<p>让我们写一个简单的测试来演示如何加载一些静态资源。首先创建一个简单的HTML文件 <code>src/main/resources/META-INF/resources/index.html</code> ：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;Testing Guide&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        Information about testing
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>我们将创建一个简单的测试以确保这个文件被正确的加载：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.getting.started.testing;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import io.quarkus.test.common.http.TestHTTPResource;
+import io.quarkus.test.junit.QuarkusTest;
+
+@QuarkusTest
+public class StaticContentTest {
+
+    @TestHTTPResource("index.html") <i class="conum" data-value="1"></i><b>(1)</b>
+    URL url;
+
+    @Test
+    public void testIndexHtml() throws IOException {
+        try (InputStream in = url.openStream()) {
+            String contents = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+            Assertions.assertTrue(contents.contains("&lt;title&gt;Testing Guide&lt;/title&gt;"));
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>该注解允许您将URL直接注入为Quarkus实例，注解的值将是URL的路径</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>目前为止 <code>@TestHTTPResource</code> 允许您注入 <code>URI</code> 、 <code>URL</code> 以及 <code>String</code> 的URL表示。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-a-specific-endpoint"><a class="anchor" href="#testing-a-specific-endpoint"></a>5. 测试特定的节点</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Both RESTassured and <code>@TestHTTPResource</code> allow you to specify the endpoint class you are testing rather than hard coding
+a path. This currently supports both Jakarta REST endpoints, Servlets and Reactive Routes. This makes it a lot easier to see exactly which endpoints
+a given test is testing.</p>
+</div>
+<div class="paragraph">
+<p>为了演示这些例子的目的，这里将假设我们有一个类似于下面的节点：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Path("/hello")
+public class GreetingResource {
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String hello() {
+        return "hello";
+    }
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This currently does not support the <code>@ApplicationPath()</code> annotation to set the Jakarta REST context path. Use the
+<code>quarkus.resteasy.path</code> config value instead if you want a custom context path.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="testhttpresource"><a class="anchor" href="#testhttpresource"></a>5.1. TestHTTPResource</h3>
+<div class="paragraph">
+<p>您可以使用 <code>io.quarkus.test.common.http.TestHTTPEndpoint</code> 注释来指定节点路径，该路径会从提供的节点中提取。如果您还为 <code>TestHTTPResource</code> 节点指定了另外的值，它将被附加到节点路径后。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.getting.started.testing;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import io.quarkus.test.common.http.TestHTTPEndpoint;
+import io.quarkus.test.common.http.TestHTTPResource;
+import io.quarkus.test.junit.QuarkusTest;
+
+@QuarkusTest
+public class StaticContentTest {
+
+    @TestHTTPEndpoint(GreetingResource.class)  <i class="conum" data-value="1"></i><b>(1)</b>
+    @TestHTTPResource
+    URL url;
+
+    @Test
+    public void testIndexHtml() throws IOException {
+        try (InputStream in = url.openStream()) {
+            String contents = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+            Assertions.assertEquals("hello", contents);
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>因为 <code>GreetingResource</code> 用到了注解 <code>@Path("/hello")</code> ，注入的URL会以 <code>/hello</code> 结束。</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="restassured"><a class="anchor" href="#restassured"></a>5.2. RESTassured</h3>
+<div class="paragraph">
+<p>为了控制RESTassured基础路径（即作为每个请求根路径的默认路径），您可以使用 <code>io.quarkus.test.common.http.TestHTTPEndpoint</code> 注解。可以在类或方法层面上使用。为了测试greeting资源类，我们可以这样做：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.getting.started.testing;
+
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.common.http.TestHTTPEndpoint;
+import org.junit.jupiter.api.Test;
+
+import java.util.UUID;
+
+import static io.restassured.RestAssured.when;
+import static org.hamcrest.CoreMatchers.is;
+
+@QuarkusTest
+@TestHTTPEndpoint(GreetingResource.class) <i class="conum" data-value="1"></i><b>(1)</b>
+public class GreetingResourceTest {
+
+    @Test
+    public void testHelloEndpoint() {
+        when().get()    <i class="conum" data-value="2"></i><b>(2)</b>
+          .then()
+             .statusCode(200)
+             .body(is("hello"));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>这将使RESTAssured在所有请求之前加上 <code>/hello</code> 。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>注意我们不需要在此指定路径，因为 <code>/hello</code> 是这个测试的默认路径</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="injection-into-tests"><a class="anchor" href="#injection-into-tests"></a>6. 注入测试</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>到目前为止，我们只涉及了通过HTTP节点测试应用程序的集成式测试，但如果我们想做单元测试并直接测试我们的Bean又该怎么办？</p>
+</div>
+<div class="paragraph">
+<p>Quarkus支持这种方式。它允许使用 <code>@Inject</code> 注解来将CDI Bean注入您的测试中（事实上，Quarkus中的测试是完整的CDI Bean，所以您可以使用所有的CDI功能）。让我们创建一个简单的测试，直接测试greeting服务，而非使用HTTP：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.getting.started.testing;
+
+import jakarta.inject.Inject;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import io.quarkus.test.junit.QuarkusTest;
+
+@QuarkusTest
+public class GreetingServiceTest {
+
+    @Inject <i class="conum" data-value="1"></i><b>(1)</b>
+    GreetingService service;
+
+    @Test
+    public void testGreetingService() {
+        Assertions.assertEquals("hello Quarkus", service.greeting("Quarkus"));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>GreetingService</code> bean将被注入到测试类中</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="applying-interceptors-to-tests"><a class="anchor" href="#applying-interceptors-to-tests"></a>7. 在测试中使用拦截器</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>如上所述，Quarkus测试实际上是完整的CDI Bean，因此您可以自由的使用CDI拦截器。举个例子，如果您想让测试方法在事务上下文中运行，您可以将 <code>@Transactional</code> 注解加到该方法上，之后事务拦截器将会处理。</p>
+</div>
+<div class="paragraph">
+<p>除此以外，您还可以创建您自己的测试 stereotypes。例如，我们可以创建一个 <code>@TransactionalQuarkusTest</code> ，如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@QuarkusTest
+@Stereotype
+@Transactional
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface TransactionalQuarkusTest {
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>如果我们将这个注解应用于测试类，那它就类似于我们同时应用了 <code>@QuarkusTest</code> 和 <code>@Transactional</code> 注解一样，例如：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@TransactionalQuarkusTest
+public class TestStereotypeTestCase {
+
+    @Inject
+    UserTransaction userTransaction;
+
+    @Test
+    public void testUserTransaction() throws Exception {
+        Assertions.assertEquals(Status.STATUS_ACTIVE, userTransaction.getStatus());
+    }
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tests-and-transactions"><a class="anchor" href="#tests-and-transactions"></a>8. 测试与事务</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>您可以在测试中使用标准的Quarkus <code>@Transactional</code> 注解，但这意味着您的测试对数据库的改变将是持久的。如果您想在测试结束时回滚所做的任何改变，您可以使用 <code>io.quarkus.test.TestTransaction</code> 注释。这将在一个事务中运行测试方法，但一旦测试方法完成，事务就会回滚从而以恢复所有数据库变化。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="enrichment-via-quarkustestcallback"><a class="anchor" href="#enrichment-via-quarkustestcallback"></a>9. 通过QuarkusTest*Callback来增强</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>作为拦截器的替代或补充，您可以通过实现以下回调接口来增强 <strong>所有</strong> 的 <code>@QuarkusTest</code> 类：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>io.quarkus.test.junit.callback.QuarkusTestBeforeClassCallback</code></p>
+</li>
+<li>
+<p><code>io.quarkus.test.junit.callback.QuarkusTestAfterConstructCallback</code></p>
+</li>
+<li>
+<p><code>io.quarkus.test.junit.callback.QuarkusTestBeforeEachCallback</code></p>
+</li>
+<li>
+<p><code>io.quarkus.test.junit.callback.QuarkusTestBeforeEachCallback</code></p>
+</li>
+<li>
+<p><code>io.quarkus.test.junit.callback.QuarkusTestAfterEachCallback</code></p>
+</li>
+<li>
+<p><code>io.quarkus.test.junit.callback.QuarkusTestAfterEachCallback</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Optionally, you can enable these callbacks also for the <code>@QuarkusIntegrationTest</code> tests if the property <code>quarkus.test.enable-callbacks-for-integration-tests</code> is <code>true</code>.</p>
+</div>
+<div class="paragraph">
+<p>这种回调实现必须作为java "服务提供者(service provider) "注册，从而被 <code>java.util.ServiceLoader</code> 来加载。</p>
+</div>
+<div class="paragraph">
+<p>例如下面的回调例子：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.getting.started.testing;
+
+import io.quarkus.test.junit.callback.QuarkusTestBeforeEachCallback;
+import io.quarkus.test.junit.callback.QuarkusTestMethodContext;
+
+public class MyQuarkusTestBeforeEachCallback implements QuarkusTestBeforeEachCallback {
+
+    @Override
+    public void beforeEach(QuarkusTestMethodContext context) {
+        System.out.println("Executing " + context.getTestMethod());
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>该回调类必须通过 <code>src/main/resources/META-INF/services/io.quarkus.test.junit.callback.QuarkusTestBeforeEachCallback</code> 注册，具体如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">org.acme.getting.started.testing.MyQuarkusTestBeforeEachCallback</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+可以从测试类或方法中读取注解，从而控制回调应做什么。
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+While it is possible to use JUnit Jupiter callback interfaces like <code>BeforeEachCallback</code>, you might run into classloading issues because Quarkus has
+         to run tests in a custom classloader which JUnit is not aware of.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing_different_profiles"><a class="anchor" href="#testing_different_profiles"></a>10. 测试不同的Profiles</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>到目前为止，在我们所有的例子中，我们只为所有的测试启动Quarkus一次。在第一个测试运行之前，Quarkus会启动，然后所有测试都会在这次启动中运行，最后Quarkus会关闭。这使得测试体验非常快，但是它有一点局限性，因为您无法测试不同的配置。</p>
+</div>
+<div class="paragraph">
+<p>为了解决这个问题，Quarkus支持测试profile。如果一个测试有一个与之前运行的测试不同的profile，那么Quarkus将被停止，并在运行对应的测试之前使用新的profile启动。这显然会有些许变慢，因为它在测试时间上增加了一个停止/启动周期，但同时也提供了很大的灵活性。</p>
+</div>
+<div class="paragraph">
+<p>为了减少Quarkus需要重启的次数， <code>io.quarkus.test.junit.util.QuarkusTestProfileAwareClassOrderer</code> 被注册为全局 <code>ClassOrderer</code> ，如 <a href="https://junit.org/junit5/docs/current/user-guide/#writing-tests-test-execution-order-classes">JUnit 5用户指南</a> 中所述。这个orderer的行为可以通过 <code>junit-platform.properties</code> （更多细节见源代码或javadoc）来配置。它也可以通过配置另一个由JUnit 5所提供的ClassOrderer，甚至是您自己的自定义Orderer来完全禁用。+ 请注意，从JUnit 5.8.2开始 <a href="https://github.com/junit-team/junit5/issues/2794">只能有一个 <code>junit-platform.properties</code> 被使用，如果超过一个就会有警告记录</a> 。如果您遇到这样的警告，您可以通过从classpath中移除Quarkus提供的 <code>junit-platform.properties</code> 来删除它们：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-junit5&lt;/artifactId&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+    &lt;exclusions&gt;
+        &lt;exclusion&gt;
+            &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+            &lt;artifactId&gt;quarkus-junit5-properties&lt;/artifactId&gt;
+        &lt;/exclusion&gt;
+    &lt;/exclusions&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="writing-a-profile"><a class="anchor" href="#writing-a-profile"></a>10.1. 编写Profile</h3>
+<div class="paragraph">
+<p>为了实现一个测试profile，我们需要实现 <code>io.quarkus.test.junit.QuarkusTestProfile</code> ：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.getting.started.testing;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import jakarta.enterprise.inject.Produces;
+
+import io.quarkus.test.junit.QuarkusTestProfile;
+import io.quarkus.test.junit.QuarkusTestProfile.TestResourceEntry;
+
+public class MockGreetingProfile implements QuarkusTestProfile { <i class="conum" data-value="1"></i><b>(1)</b>
+
+    /**
+     * Returns additional config to be applied to the test. This
+     * will override any existing config (including in application.properties),
+     * however existing config will be merged with this (i.e. application.properties
+     * config will still take effect, unless a specific config key has been overridden).
+     *
+     * Here we are changing the Jakarta REST root path.
+     */
+    @Override
+    public Map&lt;String, String&gt; getConfigOverrides() {
+        return Collections.singletonMap("quarkus.resteasy.path","/api");
+    }
+
+    /**
+     * Returns enabled alternatives.
+     *
+     * This has the same effect as setting the 'quarkus.arc.selected-alternatives' config key,
+     * however it may be more convenient.
+     */
+    @Override
+    public Set&lt;Class&lt;?&gt;&gt; getEnabledAlternatives() {
+        return Collections.singleton(MockGreetingService.class);
+    }
+
+    /**
+     * Allows the default config profile to be overridden. This basically just sets the quarkus.test.profile system
+     * property before the test is run.
+     *
+     * Here we are setting the profile to test-mocked
+     */
+    @Override
+    public String getConfigProfile() {
+        return "test-mocked";
+    }
+
+    /**
+     * Additional {@link QuarkusTestResourceLifecycleManager} classes (along with their init params) to be used from this
+     * specific test profile.
+     *
+     * If this method is not overridden, then only the {@link QuarkusTestResourceLifecycleManager} classes enabled via the {@link io.quarkus.test.common.QuarkusTestResource} class
+     * annotation will be used for the tests using this profile (which is the same behavior as tests that don't use a profile at all).
+     */
+    @Override
+    public List&lt;TestResourceEntry&gt; testResources() {
+        return Collections.singletonList(new TestResourceEntry(CustomWireMockServerManager.class));
+    }
+
+
+    /**
+     * If this returns true then only the test resources returned from {@link #testResources()} will be started,
+     * global annotated test resources will be ignored.
+     */
+    @Override
+    public boolean disableGlobalTestResources() {
+        return false;
+    }
+
+    /**
+     * The tags this profile is associated with.
+     * When the {@code quarkus.test.profile.tags} System property is set (its value is a comma separated list of strings)
+     * then Quarkus will only execute tests that are annotated with a {@code @TestProfile} that has at least one of the
+     * supplied (via the aforementioned system property) tags.
+     */
+    @Override
+    public Set&lt;String&gt; tags() {
+        return Collections.emptySet();
+    }
+
+    /**
+     * The command line parameters that are passed to the main method on startup.
+     */
+    @Override
+    public String[] commandLineParameters() {
+        return new String[0];
+    }
+
+    /**
+     * If the main method should be run.
+     */
+    @Override
+    public boolean runMainMethod() {
+        return false;
+    }
+
+    /**
+     * If this method returns true then all {@code StartupEvent} and {@code ShutdownEvent} observers declared on application
+     * beans should be disabled.
+     */
+    @Override
+    public boolean disableApplicationLifecycleObservers() {
+        return false;
+    }
+
+    @Produces <i class="conum" data-value="2"></i><b>(2)</b>
+    public ExternalService mockExternalService() {
+       return new ExternalService("mock");
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>所有这些方法都有默认的实现，所以只要覆盖您需要覆盖的方法就可以。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>If a test profile implementation declares a CDI bean (via producer method/field or nested static class) then this bean is only taken into account if the test profile is used, i.e. it&#8217;s ignored for any other test profile.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>现在我们已经定义了我们自己的profile，我们需要在我们的测试类中引入它。我们通过在测试类中注解 <code>@TestProfile(MockGreetingProfile.class)</code> 来做到这一点。</p>
+</div>
+<div class="paragraph">
+<p>所有的测试profile配置都存储在一个单一的类中，这使得我们很容易知道之前的测试是否以相同的配置运行。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="running-specific-tests"><a class="anchor" href="#running-specific-tests"></a>10.2. 运行特定的测试</h3>
+<div class="paragraph">
+<p>Quarkus提供了将测试限制在具有特定 <code>@TestProfile</code> 注释的测试中执行的能力。这是通过联合利用 <code>QuarkusTestProfile</code> 的 <code>tags</code> 方法和 <code>quarkus.test.profile.tags</code> 系统属性来实现的。</p>
+</div>
+<div class="paragraph">
+<p>本质上，任何至少有一个标签与 <code>quarkus.test.profile.tags</code> 的值相匹配的 <code>QuarkusTestProfile</code> 将被认为是激活的，并且所有被激活的profiles中注解了 <code>@TestProfile</code> 的测试将被运行，而其余的将被跳过。这在下面的例子中得到了最好的体现。</p>
+</div>
+<div class="paragraph">
+<p>首先让我们定义这么几个 <code>QuarkusTestProfile</code> 实现：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class Profiles {
+
+    public static class NoTags implements QuarkusTestProfile {
+
+    }
+
+    public static class SingleTag implements QuarkusTestProfile {
+        @Override
+        public Set&lt;String&gt; tags() {
+            return Set.of("test1");
+        }
+    }
+
+    public static class MultipleTags implements QuarkusTestProfile {
+        @Override
+        public Set&lt;String&gt; tags() {
+            return Set.of("test1", "test2");
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>现在让我们假设有以下测试：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@QuarkusTest
+public class NoQuarkusProfileTest {
+
+    @Test
+    public void test() {
+        // test something
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@QuarkusTest
+@TestProfile(Profiles.NoTags.class)
+public class NoTagsTest {
+
+    @Test
+    public void test() {
+        // test something
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@QuarkusTest
+@TestProfile(Profiles.SingleTag.class)
+public class SingleTagTest {
+
+    @Test
+    public void test() {
+        // test something
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@QuarkusTest
+@TestProfile(Profiles.MultipleTags.class)
+public class MultipleTagsTest {
+
+    @Test
+    public void test() {
+        // test something
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>让我们考虑以下场景：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>quarkus.test.profile.tags</code> 未被设置。所有的测试都将被执行。</p>
+</li>
+<li>
+<p><code>quarkus.test.profile.tags=foo</code> :在这种情况下，所欧测试都不会被执行，因为在 <code>QuarkusTestProfile</code> 实现上定义的标签中没有一个与 <code>quarkus.test.profile.tags</code> 的值相匹配。注意， <code>NoQuarkusProfileTest</code> 也不会被执行，因为它没有 <code>@TestProfile</code> 注解。</p>
+</li>
+<li>
+<p><code>quarkus.test.profile.tags=test1</code> :在这种情况下， <code>SingleTagTest</code> 和 <code>MultipleTagsTest</code> 将被运行，因为它们各自的 <code>QuarkusTestProfile</code> 实现的标签与 <code>quarkus.test.profile.tags</code> 的值一致。</p>
+</li>
+<li>
+<p><code>quarkus.test.profile.tags=test1,test3</code> :这种情况下，执行的测试与前一种情况相同。</p>
+</li>
+<li>
+<p><code>quarkus.test.profile.tags=test2,test3</code> :在这种情况下，只有 <code>MultipleTagsTest</code> 会被运行，因为 <code>MultipleTagsTest</code> 是唯一一个 <code>tags</code> 方法与 <code>quarkus.test.profile.tags</code> 的值相匹配的 <code>QuarkusTestProfile</code> 实现。</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mock-support"><a class="anchor" href="#mock-support"></a>11. Mock支持</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Quarkus支持使用两种不同的方法来mock对象。您可以使用CDI alternatives来mock出所有测试类的Bean，也可以使用 <code>QuarkusMock</code> 来mock出每个测试类的Bean。</p>
+</div>
+<div class="sect2">
+<h3 id="cdi-alternative-mechanism"><a class="anchor" href="#cdi-alternative-mechanism"></a>11.1. CDI <code>@Alternative</code> 机制。</h3>
+<div class="paragraph">
+<p>要使用这个方法，只需用 <code>src/test/java</code> 目录中的一个类来覆盖您想mock的Bean，并在Bean上加上 <code>@Alternative</code> 和 <code>@Priority(1)</code> 注解。另外，也可以使用 <code>io.quarkus.test.Mock</code> stereotype注释。这个内置的stereotype声明了 <code>@Alternative</code> 、 <code>@Priority(1)</code> 和 <code>@Dependent</code> 。例如，如果我有以下的服务：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@ApplicationScoped
+public class ExternalService {
+
+    public String service() {
+        return "external";
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>我可以在 <code>src/test/java</code> 中用以下类来mock它：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Mock
+@ApplicationScoped <i class="conum" data-value="1"></i><b>(1)</b>
+public class MockExternalService extends ExternalService {
+
+    @Override
+    public String service() {
+        return "mock";
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>对 <code>@Mock</code> stereotype上声明的 <code>@Dependent</code> 范围的覆盖。</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>注意，alternative要放置于 <code>src/test/java</code> 目录中而不是 <code>src/main/java</code> ，否则它将不仅仅只是在测试时生效。</p>
+</div>
+<div class="paragraph">
+<p>另外需要注意的是，目前这种方法不能用于本地镜像测试，因为这需要将测试用的alternatives加入本地镜像中。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="quarkus_mock"><a class="anchor" href="#quarkus_mock"></a>11.2. 使用QuarkusMock进行mock</h3>
+<div class="paragraph">
+<p><code>io.quarkus.test.junit.QuarkusMock</code> 类可以被用来临时mock任何正常scope的bean。如果您在 <code>@BeforeAll</code> 方法中使用这个方法，mock将对当前类的所有测试生效，而如果您在测试方法中使用这个方法，mock将只在当前测试方法范围内生效。</p>
+</div>
+<div class="paragraph">
+<p>该方法可以用于任何正常scope的CDI Bean（例如： <code>@ApplicationScoped</code> , <code>@RequestScoped</code> 等，基本上是除了 <code>@Singleton</code> 和 <code>@Dependent</code> 以外的scope ）。</p>
+</div>
+<div class="paragraph">
+<p>示例用法如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@QuarkusTest
+public class MockTestCase {
+
+    @Inject
+    MockableBean1 mockableBean1;
+
+    @Inject
+    MockableBean2 mockableBean2;
+
+    @BeforeAll
+    public static void setup() {
+        MockableBean1 mock = Mockito.mock(MockableBean1.class);
+        Mockito.when(mock.greet("Stuart")).thenReturn("A mock for Stuart");
+        QuarkusMock.installMockForType(mock, MockableBean1.class);  <i class="conum" data-value="1"></i><b>(1)</b>
+    }
+
+    @Test
+    public void testBeforeAll() {
+        Assertions.assertEquals("A mock for Stuart", mockableBean1.greet("Stuart"));
+        Assertions.assertEquals("Hello Stuart", mockableBean2.greet("Stuart"));
+    }
+
+    @Test
+    public void testPerTestMock() {
+        QuarkusMock.installMockForInstance(new BonjourGreeter(), mockableBean2); <i class="conum" data-value="2"></i><b>(2)</b>
+        Assertions.assertEquals("A mock for Stuart", mockableBean1.greet("Stuart"));
+        Assertions.assertEquals("Bonjour Stuart", mockableBean2.greet("Stuart"));
+    }
+
+    @ApplicationScoped
+    public static class MockableBean1 {
+
+        public String greet(String name) {
+            return "Hello " + name;
+        }
+    }
+
+    @ApplicationScoped
+    public static class MockableBean2 {
+
+        public String greet(String name) {
+            return "Hello " + name;
+        }
+    }
+
+    public static class BonjourGreeter extends MockableBean2 {
+        @Override
+        public String greet(String name) {
+            return "Bonjour " + name;
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>由于注入的实例在这里不可用，我们使用了 <code>installMockForType</code> ，这个mock用在于所有两个测试方法中</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>我们使用 <code>installMockForInstance</code> 以取代注入的bean，它在整个测试方法的持续时间内生效。</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>请注意，这里并不依赖Mockito，您可以使用任何您喜欢的mocking库，甚至可以手动覆盖对象以提供您需要的行为。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Using <code>@Inject</code> will get you a CDI proxy to the mock instance you install, which is not suitable for passing to methods such as <code>Mockito.verify</code>
+which want the mock instance itself.
+So if you need to call methods such as <code>verify</code> you should hang on to the mock instance in your test, or use <code>@io.quarkus.test.InjectMock</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="further-simplification-with-injectmock"><a class="anchor" href="#further-simplification-with-injectmock"></a>11.2.1. 使用 <code>@InjectMock</code> 进行进一步简化</h4>
+<div class="paragraph">
+<p>Building on the features provided by <code>QuarkusMock</code>, Quarkus also allows users to effortlessly take advantage of <a href="https://site.mockito.org/">Mockito</a> for mocking the beans supported by <code>QuarkusMock</code>.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This functionality is available with the <code>@io.quarkus.test.InjectMock</code> annotation <strong>only if</strong> the <code>quarkus-junit5-mockito</code> dependency is present:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-junit5-mockito&lt;/artifactId&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>使用 <code>@InjectMock</code> ，前面的例子可以写成下面形式：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@QuarkusTest
+public class MockTestCase {
+
+    @InjectMock
+    MockableBean1 mockableBean1; <i class="conum" data-value="1"></i><b>(1)</b>
+
+    @InjectMock
+    MockableBean2 mockableBean2;
+
+    @BeforeEach
+    public void setup() {
+        Mockito.when(mockableBean1.greet("Stuart")).thenReturn("A mock for Stuart"); <i class="conum" data-value="2"></i><b>(2)</b>
+    }
+
+    @Test
+    public void firstTest() {
+        Assertions.assertEquals("A mock for Stuart", mockableBean1.greet("Stuart"));
+        Assertions.assertEquals(null, mockableBean2.greet("Stuart")); <i class="conum" data-value="3"></i><b>(3)</b>
+    }
+
+    @Test
+    public void secondTest() {
+        Mockito.when(mockableBean2.greet("Stuart")).thenReturn("Bonjour Stuart"); <i class="conum" data-value="4"></i><b>(4)</b>
+        Assertions.assertEquals("A mock for Stuart", mockableBean1.greet("Stuart"));
+        Assertions.assertEquals("Bonjour Stuart", mockableBean2.greet("Stuart"));
+    }
+
+    @ApplicationScoped
+    public static class MockableBean1 {
+
+        public String greet(String name) {
+            return "Hello " + name;
+        }
+    }
+
+    @ApplicationScoped
+    public static class MockableBean2 {
+
+        public String greet(String name) {
+            return "Hello " + name;
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>@InjectMock</code> results in a Mockito mock being created, which is then available in test methods of the test class (other test classes are <strong>not</strong> affected by this)</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><code>mockableBean1</code> 被mockito配置并可以为类的每个测试方法所用</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>由于 <code>mockableBean2</code> mock还没有被配置，它将返回默认的Mockito响应。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>在这个测试中， <code>mockableBean2</code> 进行了配置，所以它返回配置好的响应。</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>尽管上面的测试很好地展示了 <code>@InjectMock</code> 的能力，但它并不能很好地表示一个真实的测试案例。在一个真实的测试案例中，我们很可能会配置一个mock，然后测试一个使用了mocked Bean的Bean。下面是一个例子：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@QuarkusTest
+public class MockGreetingServiceTest {
+
+    @InjectMock
+    GreetingService greetingService;
+
+    @Test
+    public void testGreeting() {
+        when(greetingService.greet()).thenReturn("hi");
+        given()
+                .when().get("/greeting")
+                .then()
+                .statusCode(200)
+                .body(is("hi")); <i class="conum" data-value="1"></i><b>(1)</b>
+    }
+
+    @Path("greeting")
+    public static class GreetingResource {
+
+        final GreetingService greetingService;
+
+        public GreetingResource(GreetingService greetingService) {
+            this.greetingService = greetingService;
+        }
+
+        @GET
+        @Produces("text/plain")
+        public String greet() {
+            return greetingService.greet();
+        }
+    }
+
+    @ApplicationScoped
+    public static class GreetingService {
+        public String greet(){
+            return "hello";
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>由于我们将 <code>greetingService</code> 配置为一个mock，那么在使用了 <code>GreetingService</code> Bean的 <code>GreetingResource</code> 中，我们得到的是mock的响应，而不是正常的 <code>GreetingService</code> Bean的响应</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>By default, the <code>@InjectMock</code> annotation can be used for any normal CDI scoped bean (e.g. <code>@ApplicationScoped</code>, <code>@RequestScoped</code>).
+Mocking <code>@Singleton</code> beans can be performed by adding the <code>@MockitoConfig(convertScopes = true)</code> annotation.
+This will convert the <code>@Singleton</code> bean to an <code>@ApplicationScoped</code> bean for the test.</p>
+</div>
+<div class="paragraph">
+<p>这是一个高级选项，只有在您完全了解改变Bean scope的后果时才可以执行。</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="using-spies-instead-of-mocks-with-injectspy"><a class="anchor" href="#using-spies-instead-of-mocks-with-injectspy"></a>11.2.2. 通过 <code>@InjectSpy</code> 用Spies来代替Mocks</h4>
+<div class="paragraph">
+<p>基于 <code>InjectMock</code> 所提供的功能，Quarkus还允许用户很容易利用 <a href="https://site.mockito.org/">Mockito</a> 来对 <code>QuarkusMock</code> 所支持的bean进行spy操作。这个功能可以通过 <code>@io.quarkus.test.junit.mockito.InjectSpy</code> 注解来实现，该注解通过 <code>quarkus-junit5-mockito</code> 依赖导入。</p>
+</div>
+<div class="paragraph">
+<p>Sometimes when testing you only need to verify that a certain logical path was taken, or you only need to stub out a single method&#8217;s response while still executing the rest of the methods on the Spied clone. Please see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#13">Mockito documentation - Spying on real objects</a> for more details on Spy partial mocks.
+In either of those situations a Spy of the object is preferable.
+Using <code>@InjectSpy</code>, the previous example could be written as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@QuarkusTest
+public class SpyGreetingServiceTest {
+
+    @InjectSpy
+    GreetingService greetingService;
+
+    @Test
+    public void testDefaultGreeting() {
+        given()
+                .when().get("/greeting")
+                .then()
+                .statusCode(200)
+                .body(is("hello"));
+
+        Mockito.verify(greetingService, Mockito.times(1)).greet(); <i class="conum" data-value="1"></i><b>(1)</b>
+    }
+
+    @Test
+    public void testOverrideGreeting() {
+        doReturn("hi").when(greetingService).greet(); <i class="conum" data-value="2"></i><b>(2)</b>
+        given()
+                .when().get("/greeting")
+                .then()
+                .statusCode(200)
+                .body(is("hi")); <i class="conum" data-value="3"></i><b>(3)</b>
+    }
+
+    @Path("greeting")
+    public static class GreetingResource {
+
+        final GreetingService greetingService;
+
+        public GreetingResource(GreetingService greetingService) {
+            this.greetingService = greetingService;
+        }
+
+        @GET
+        @Produces("text/plain")
+        public String greet() {
+            return greetingService.greet();
+        }
+    }
+
+    @ApplicationScoped
+    public static class GreetingService {
+        public String greet(){
+            return "hello";
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>我们没有覆盖这个值，而只是想确保我们的 <code>GreetingService</code> 上的greet方法被这个测试所调用。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Here we are telling the Spy to return "hi" instead of "hello". When the <code>GreetingResource</code> requests the greeting from <code>GreetingService</code> we get the mocked response instead of the response of the regular <code>GreetingService</code> bean. Sometimes it&#8217;s impossible or impractical to use <code>when(Object)</code> for stubbing spies. Therefore when using spies please consider <code>doReturn|Answer|Throw()</code> family of methods for stubbing.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>这里我们正在验证从Spy那里得到了mock响应。</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="using-injectmock-with-restclient"><a class="anchor" href="#using-injectmock-with-restclient"></a>11.2.3. 使用 <code>@InjectMock</code> 与 <code>@RestClient</code></h4>
+<div class="paragraph">
+<p>The <code>@RegisterRestClient</code> registers the implementation of the REST Client at runtime, and because the bean needs to be a regular scope, you have to annotate your interface with <code>@ApplicationScoped</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Path("/")
+@ApplicationScoped
+@RegisterRestClient
+public interface GreetingService {
+
+    @GET
+    @Path("/hello")
+    @Produces(MediaType.TEXT_PLAIN)
+    String hello();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>对于测试类，这里有一个例子：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@QuarkusTest
+public class GreetingResourceTest {
+
+    @InjectMock
+    @RestClient <i class="conum" data-value="1"></i><b>(1)</b>
+    GreetingService greetingService;
+
+    @Test
+    public void testHelloEndpoint() {
+        Mockito.when(greetingService.hello()).thenReturn("hello from mockito");
+
+        given()
+          .when().get("/hello")
+          .then()
+             .statusCode(200)
+             .body(is("hello from mockito"));
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>这里表示这个注入点使用了 <code>RestClient</code> 的实例。</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="mocking-with-panache"><a class="anchor" href="#mocking-with-panache"></a>11.3. 使用Panache mock</h3>
+<div class="paragraph">
+<p>如果您使用 <code>quarkus-hibernate-orm-panache</code> 或 <code>quarkus-mongodb-panache</code> 扩展，请查看 <a href="hibernate-orm-panache.html#mocking">Hibernate ORM with Panache Mocking</a> 和 <a href="mongodb-panache.html#mocking">MongoDB with Panache Mocking</a> 文档，以了解mock数据访问的最简单方式。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-security"><a class="anchor" href="#testing-security"></a>12. 测试安全性</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>如果您正在使用Quarkus Security，请查看 <a href="security-testing.html">测试安全</a> 部分，了解如何轻松测试应用程序的安全功能。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="quarkus-test-resource"><a class="anchor" href="#quarkus-test-resource"></a>13. 在Quarkus应用程序启动之前启动服务</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>一个很常见的需求是在Quarkus应用程序启动测试之前，启动一些您的Quarkus应用程序所依赖的服务。为了解决这个需求，Quarkus提供了 <code>@io.quarkus.test.common.QuarkusTestResource</code> 和 <code>io.quarkus.test.common.QuarkusTestResourceLifecycleManager</code> 。</p>
+</div>
+<div class="paragraph">
+<p>By simply annotating any test in the test suite with <code>@QuarkusTestResource</code>, Quarkus will run the corresponding <code>QuarkusTestResourceLifecycleManager</code> before any tests are run.
+A test suite is also free to utilize multiple <code>@QuarkusTestResource</code> annotations, in which case all the corresponding <code>QuarkusTestResourceLifecycleManager</code> objects will be run before the tests.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+测试资源是全局性的，即使它们被定义在一个测试类或自定义profile上，这意味着它们将全部被激活从而用于所有的测试，尽管我们删除了重复的测试。如果您只想针对一个测试类或测试profile启用某一个测试资源，您可以使用 <code>@QuarkusTestResource(restrictToAnnotatedClass = true)</code> 。
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+When using multiple test resources, they can be started concurrently. For that you need to set <code>@QuarkusTestResource(parallel = true)</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Quarkus提供了一些开箱即用的 <code>QuarkusTestResourceLifecycleManager</code> （见 <code>io.quarkus.test.h2.H2DatabaseTestResource</code> ，它启动了一个H2数据库；或 <code>io.quarkus.test.kubernetes.client.KubernetesServerTestResource</code> ，它启动了一个模拟的Kubernetes API服务器），但创建自定义的实现来满足特定的应用需求也是很常见的。常见的情况包括使用 <a href="https://www.testcontainers.org/">Testcontainers</a> 启动docker容器（例子 <a href="https://github.com/quarkusio/quarkus/blob/main/test-framework/keycloak-server/src/main/java/io/quarkus/test/keycloak/server/KeycloakTestResourceLifecycleManager.java">见这里</a> ），或使用 <a href="http://wiremock.org/">Wiremock</a> 启动一个模拟的HTTP服务器（例子 <a href="https://github.com/geoand/quarkus-test-demo/blob/main/src/test/java/org/acme/getting/started/country/WiremockCountries.java">见这里</a> ）。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+As <code>QuarkusTestResourceLifecycleManager</code> is not a CDI Bean, classes that implement it can&#8217;t have fields injected with <code>@Inject</code>. You can use <code>String propertyName = ConfigProvider.getConfig().getValue("quarkus.my-config-group.myconfig", String.class);</code>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="altering-the-test-class"><a class="anchor" href="#altering-the-test-class"></a>13.1. 改动测试类</h3>
+<div class="paragraph">
+<p>When creating a custom <code>QuarkusTestResourceLifecycleManager</code> that needs to inject something into the test class, the <code>inject</code> methods can be used.
+If for example you have a test like the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@QuarkusTest
+@QuarkusTestResource(MyWireMockResource.class)
+public class MyTest {
+
+    @InjectWireMock // this a custom annotation you are defining in your own application
+    WireMockServer wireMockServer;
+
+    @Test
+    public someTest() {
+        // control wiremock in some way and perform test
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>为了使 <code>MyWireMockResource</code> 注入 <code>wireMockServer</code> 字段，可按以下代码片断中的 <code>inject</code> 方法进行：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class MyWireMockResource implements QuarkusTestResourceLifecycleManager {
+
+    WireMockServer wireMockServer;
+
+    @Override
+    public Map&lt;String, String&gt; start() {
+        wireMockServer = new WireMockServer(8090);
+        wireMockServer.start();
+
+        // create some stubs
+
+        return Map.of("some.service.url", "localhost:" + wireMockServer.port());
+    }
+
+    @Override
+    public synchronized void stop() {
+        if (wireMockServer != null) {
+            wireMockServer.stop();
+            wireMockServer = null;
+        }
+    }
+
+    @Override
+    public void inject(TestInjector testInjector) {
+        testInjector.injectIntoFields(wireMockServer, new TestInjector.AnnotatedAndMatchesType(InjectWireMock.class, WireMockServer.class));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+值得一提的是，这种对测试类的注入并不在CDI的控制之下，而是发生在CDI对测试类进行了所有必要的注入之后。
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="annotation-based-test-resources"><a class="anchor" href="#annotation-based-test-resources"></a>13.2. 基于注解的测试资源</h3>
+<div class="paragraph">
+<p>我们也可以编写使用注解来启用和配置的测试资源。这可以通过在一个注解上使用 <code>@QuarkusTestResource</code> 来启用，该注解将被用来启用和配置测试资源。</p>
+</div>
+<div class="paragraph">
+<p>例如，下面代码定义了 <code>@WithKubernetesTestServer</code> 注释，您可以在您的测试上使用它来激活 <code>KubernetesServerTestResource</code> ，但只针对被注释的测试类。您也可以把它们加入到您的 <code>QuarkusTestProfile</code> 测试profile中。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@QuarkusTestResource(KubernetesServerTestResource.class)
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface WithKubernetesTestServer {
+    /**
+     * Start it with HTTPS
+     */
+    boolean https() default false;
+
+    /**
+     * Start it in CRUD mode
+     */
+    boolean crud() default true;
+
+    /**
+     * Port to use, defaults to any available port
+     */
+    int port() default 0;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>KubernetesServerTestResource</code> 类必须实现 <code>QuarkusTestResourceConfigurableLifecycleManager</code> 接口，以便使用前面的注解进行配置：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class KubernetesServerTestResource
+        implements QuarkusTestResourceConfigurableLifecycleManager&lt;WithKubernetesTestServer&gt; {
+
+    private boolean https = false;
+    private boolean crud = true;
+    private int port = 0;
+
+    @Override
+    public void init(WithKubernetesTestServer annotation) {
+        this.https = annotation.https();
+        this.crud = annotation.crud();
+        this.port = annotation.port();
+    }
+
+    // ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you want to make the annotation repeatable, the containing annotation type must be annotated with <code>@QuarkusTestResourceRepeatable</code>.
+For example, this would define a repeatable <code>@WithRepeatableTestResource</code> annotation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@QuarkusTestResource(KubernetesServerTestResource.class)
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@Repeatable(WithRepeatableTestResource.List.class)
+public @interface WithRepeatableTestResource {
+
+    String key() default "";
+
+    @Target(ElementType.TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    @QuarkusTestResourceRepeatable(WithRepeatableTestResource.class)
+    @interface List {
+        WithRepeatableTestResource[] value();
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hang-detection"><a class="anchor" href="#hang-detection"></a>14. 挂起侦测</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>@QuarkusTest</code> 支持挂起侦测，以帮助诊断任何意外的挂起。如果在指定的时间内没有进展（即没有调用JUnit回调），那么Quarkus将打印一个堆栈跟踪到控制台以帮助诊断挂起。这个超时的默认值是10分钟。</p>
+</div>
+<div class="paragraph">
+<p>不会有进一步的动作执行，测试将继续正常进行（通常直到CI超时），但是打印出来的堆栈信息应该有助于诊断为什么构建失败了。您可以用 <code>quarkus.test.hang-detection-timeout</code> 系统属性来控制这个超时值（您也可以在application.properties中设置这个值，但是在Quarkus启动之前它不会被读取，所以Quarkus启动的默认超时时间将是10分钟）。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="native-executable-testing"><a class="anchor" href="#native-executable-testing"></a>15. 本地可执行程序测试</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>您也可以使用 <code>@QuarkusIntegrationTest</code> 来测试本地可执行文件。除了注入测试（本地可执行文件在一个单独的非JVM进程中运行，所以它实际上是不可能做到的）以外，该特性支持本指南中提到的所有功能。</p>
+</div>
+<div class="paragraph">
+<p>这在《 <a href="building-native-image.html">本地可执行文件指南》</a> 中有所涉及。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="quarkus-integration-test"><a class="anchor" href="#quarkus-integration-test"></a>16. 使用@QuarkusIntegrationTest</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>@QuarkusIntegrationTest</code> should be used to launch and test the artifact produced by the Quarkus build, and supports testing a jar (of whichever type), a native image or container image.
+Put simply, this means that if the result of a Quarkus build (<code>mvn package</code> or <code>gradle build</code>) is a jar, that jar will be launched as <code>java -jar &#8230;&#8203;</code> and tests run against it.
+If instead a native image was built, then the application is launched as <code>./application &#8230;&#8203;</code> and again the tests run against the running application.
+Finally, if a container image was created during the build (by including the <code>quarkus-container-image-jib</code>, <code>quarkus-container-image-docker</code>, or <code>container-image-podman</code> extensions and having the
+<code>quarkus.container-image.build=true</code> property configured), then a container is created and run (this requires the <code>docker</code> or <code>podman</code> executable being present).</p>
+</div>
+<div class="paragraph">
+<p>This is a black box test that supports the same set features and has the same limitations.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>由于用 <code>@QuarkusIntegrationTest</code> 注释的测试是对构建结果的测试，它应该作为集成测试套件的一部分来运行&#8212;&#8203;即如果使用Maven，则设置 <code>-DskipITs=false</code>，而如果使用Gradle，则通过 <code>quarkusIntTest</code> 任务。如果与 <code>@QuarkusTest</code> 在同一阶段运行，这些测试将 <strong>无法</strong> 工作，因为Quarkus还没有产生出最终的artifact。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><code>pom.xml</code> 文件包括：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
+    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+    &lt;artifactId&gt;maven-failsafe-plugin&lt;/artifactId&gt;
+    &lt;version&gt;${surefire-plugin.version}&lt;/version&gt;
+    &lt;executions&gt;
+        &lt;execution&gt;
+            &lt;goals&gt;
+                &lt;goal&gt;integration-test&lt;/goal&gt;
+                &lt;goal&gt;verify&lt;/goal&gt;
+            &lt;/goals&gt;
+            &lt;configuration&gt;
+                &lt;systemPropertyVariables&gt;
+                    &lt;native.image.path&gt;${project.build.directory}/${project.build.finalName}-runner&lt;/native.image.path&gt;
+                    &lt;java.util.logging.manager&gt;org.jboss.logmanager.LogManager&lt;/java.util.logging.manager&gt;
+                    &lt;maven.home&gt;${maven.home}&lt;/maven.home&gt;
+                &lt;/systemPropertyVariables&gt;
+            &lt;/configuration&gt;
+        &lt;/execution&gt;
+    &lt;/executions&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这将通知failsafe-maven-plugin去运行继承测试。</p>
+</div>
+<div class="paragraph">
+<p>然后，打开 <code>src/test/java/org/acme/quickstart/GreetingResourceIT.java</code> 。它包含了：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.quickstart;
+
+
+import io.quarkus.test.junit.QuarkusIntegrationTest;
+
+@QuarkusIntegrationTest <i class="conum" data-value="1"></i><b>(1)</b>
+public class GreetingResourceIT extends GreetingResourceTest { <i class="conum" data-value="2"></i><b>(2)</b>
+
+    // Run the same tests
+
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>这里使用另一个测试runner来通过本地文件在测试之前启动应用。该执行文件通过  <em>Failsafe Maven Plugin</em> 来获取。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>为了方便起见，我们扩展了之前的测试，但您也可以实现您自己的测试。</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>更多的信息可以在 <a href="building-native-image#testing-the-native-executable">Testing the native executable Guide</a> 里找到。</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>When the application is tested using <code>@QuarkusIntegrationTest</code> it is launched using the <code>prod</code> configuration profile, but this can be changed using the <code>quarkus.test.integration-test-profile</code> property.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>While adding test-specific configuration properties using <code>src/test/resources/application.properties</code> (note there&#8217;s <code>test</code>, not <code>main</code>)
+is possible for unit tests, it&#8217;s not possible for integration tests.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="launching-containers"><a class="anchor" href="#launching-containers"></a>16.1. 启动容器</h3>
+<div class="paragraph">
+<p>当 <code>@QuarkusIntegrationTest</code> 启动一个容器时（因为应用程序在构建时将 <code>quarkus.container-image.build</code> 设置为 <code>true</code> ），该容器会在一个可预测的容器网络上启动。这有利于编写需要启动服务以支持应用程序的集成测试。这意味着 <code>@QuarkusIntegrationTest</code> 能够与通过 <a href="dev-services.html">Dev Services</a> 启动的容器一起开箱即用，但这也意味着它能够使用 <a href="#quarkus-test-resource">QuarkusTestLifecycleManager</a> 资源来启动额外的容器。这可以通过让您的 <code>QuarkusTestLifecycleManager</code> 实现 <code>io.quarkus.test.common.DevServicesContext.ContextAware</code> 来获得。一个简单的例子：</p>
+</div>
+<div class="paragraph">
+<p>运行要测试资源的容器，例如通过Testcontainers启用的PostgreSQL，会从容器的网络中分配到一个IP地址。使用容器网络中的 "公共 "IP和 "未映射 "的端口号来连接到服务。Testcontainers库通常在不遵从容器网络规则的情况下返回连接字符串，所以需要额外的代码来为Quarkus提供 "正确的 "连接字符串，以使用容器网络中的IP和 <em>未映射</em> 的端口号。</p>
+</div>
+<div class="paragraph">
+<p>下面的例子展示了在PostgreSQL上的使用，但这个方法也适用于所有的容器。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.quarkus.test.common.DevServicesContext;
+import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
+
+import org.testcontainers.containers.JdbcDatabaseContainer;
+import org.testcontainers.containers.PostgreSQLContainer;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+public class CustomResource implements QuarkusTestResourceLifecycleManager, DevServicesContext.ContextAware {
+
+    private Optional&lt;String&gt; containerNetworkId;
+    private JdbcDatabaseContainer container;
+
+    @Override
+    public void setIntegrationTestContext(DevServicesContext context) {
+        containerNetworkId = context.containerNetworkId();
+    }
+
+    @Override
+    public Map&lt;String, String&gt; start() {
+        // start a container making sure to call withNetworkMode() with the value of containerNetworkId if present
+        container = new PostgreSQLContainer&lt;&gt;("postgres:latest").withLogConsumer(outputFrame -&gt; {});
+
+        // apply the network to the container
+        containerNetworkId.ifPresent(container::withNetworkMode);
+
+        // start container before retrieving its URL or other properties
+        container.start();
+
+        String jdbcUrl = container.getJdbcUrl();
+        if (containerNetworkId.isPresent()) {
+            // Replace hostname + port in the provided JDBC URL with the hostname of the Docker container
+            // running PostgreSQL and the listening port.
+            jdbcUrl = fixJdbcUrl(jdbcUrl);
+        }
+
+        // return a map containing the configuration the application needs to use the service
+        return ImmutableMap.of(
+            "quarkus.datasource.username", container.getUsername(),
+            "quarkus.datasource.password", container.getPassword(),
+            "quarkus.datasource.jdbc.url", jdbcUrl);
+    }
+
+    private String fixJdbcUrl(String jdbcUrl) {
+        // Part of the JDBC URL to replace
+        String hostPort = container.getHost() + ':' + container.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT);
+
+        // Host/IP on the container network plus the unmapped port
+        String networkHostPort =
+            container.getCurrentContainerInfo().getConfig().getHostName()
+            + ':'
+            + PostgreSQLContainer.POSTGRESQL_PORT;
+
+        return jdbcUrl.replace(hostPort, networkHostPort);
+    }
+
+    @Override
+    public void stop() {
+        // close container
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>CustomResource</code> 将在 <code>@QuarkusIntegrationTest</code> 上通过使用 <code>@QuarkusTestResource</code> 激活，就如本文档对应部分所述。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="executing-against-a-running-application"><a class="anchor" href="#executing-against-a-running-application"></a>16.2. 对正在运行的应用程序执行测试</h3>
+<div class="paragraph">
+<p><code>@QuarkusIntegrationTest</code> 支持对已经在运行的应用程序实例执行测试。这可以通过在运行测试时设置 <code>quarkus.http.test-host</code> 属性来实现。</p>
+</div>
+<div class="paragraph">
+<p>这方面的一个例子是下面的Maven命令，该命令强制 <code>@QuarkusIntegrationTest</code> 对位于 <code><a href="http://1.2.3.4:4321">http://1.2.3.4:4321</a></code> 节点执行测试 :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw verify -Dquarkus.http.test-host=1.2.3.4 -Dquarkus.http.test-port=4321</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To test against a running instance that only accepts SSL/TLS connection (example: <code><a href="https://1.2.3.4:4321" class="bare">https://1.2.3.4:4321</a></code>) set the system property <code>quarkus.http.test-ssl-enabled</code> to <code>true</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mixing-quarkustest-with-other-type-of-tests"><a class="anchor" href="#mixing-quarkustest-with-other-type-of-tests"></a>17. 混合使用 <code>@QuarkusTest</code> 与其他类型的测试</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>在一次执行中（例如在一次Maven Surefire Plugin执行中），将注释为 <code>@QuarkusTest</code> 的测试与注释为 <code>@QuarkusDevModeTest</code> 、 <code>@QuarkusProdModeTest</code> 或 <code>@QuarkusUnitTest</code> 的测试混合执行是不被允许的，但是后三者可以共存。</p>
+</div>
+<div class="paragraph">
+<p>这个限制的原因是 <code>@QuarkusTest</code> 会在测试执行的整个生命周期内启动一个Quarkus服务器，从而防止其他测试启动自己的Quarkus服务器。</p>
+</div>
+<div class="paragraph">
+<p>为缓解这一限制， <code>@QuarkusTest</code> 注解定义了一个 JUnit 5 的 <code>@Tag</code> : <code>io.quarkus.test.junit.QuarkusTest</code> 。您可以使用该标记在特定的执行中隔离 <code>@QuarkusTest</code> 测试，例如使用Maven Surefire插件：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
+    &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+    &lt;version&gt;${surefire-plugin.version}&lt;/version&gt;
+    &lt;executions&gt;
+        &lt;execution&gt;
+            &lt;id&gt;default-test&lt;/id&gt;
+            &lt;goals&gt;
+                &lt;goal&gt;test&lt;/goal&gt;
+            &lt;/goals&gt;
+            &lt;configuration&gt;
+                &lt;excludedGroups&gt;io.quarkus.test.junit.QuarkusTest&lt;/excludedGroups&gt;
+            &lt;/configuration&gt;
+        &lt;/execution&gt;
+        &lt;execution&gt;
+            &lt;id&gt;quarkus-test&lt;/id&gt;
+            &lt;goals&gt;
+                &lt;goal&gt;test&lt;/goal&gt;
+            &lt;/goals&gt;
+            &lt;configuration&gt;
+                &lt;groups&gt;io.quarkus.test.junit.QuarkusTest&lt;/groups&gt;
+            &lt;/configuration&gt;
+        &lt;/execution&gt;
+    &lt;/executions&gt;
+    &lt;configuration&gt;
+        &lt;systemProperties&gt;
+            &lt;java.util.logging.manager&gt;org.jboss.logmanager.LogManager&lt;/java.util.logging.manager&gt;
+        &lt;/systemProperties&gt;
+    &lt;/configuration&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="test-from-ide"><a class="anchor" href="#test-from-ide"></a>18. 从IDE中运行 <code>@QuarkusTest</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>大多数IDE都提供了将选定的类直接作为JUnit测试运行的可能性。为了做到这点，您需要在您选择的IDE的设置中设置一些属性：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>java.util.logging.manager</code> (见 <a href="logging.html">日志指南</a> )</p>
+</li>
+<li>
+<p><code>maven.home</code> (仅当 <code>${maven.home}/conf/settings.xml</code> 中有自定义设置时，见<a href="maven-tooling.html">Maven指南</a> )</p>
+</li>
+<li>
+<p><code>maven.settings</code> (以备在测试中使用自定义的 <code>settings.xml</code> 文件)</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="eclipse-separate-jre-definition"><a class="anchor" href="#eclipse-separate-jre-definition"></a>18.1. Eclipse中独立的JRE定义</h3>
+<div class="paragraph">
+<p>将您当前的 "已安装的JRE "定义复制为一个新的定义，在这里您会将其作为新的虚拟机参数配置来添加属性：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>-Djava.util.logging.manager=org.jboss.logmanager.LogManager</code></p>
+</li>
+<li>
+<p><code>-Dmaven.home=&lt;path-to-your-maven-installation&gt;</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>使用这个JRE定义作为您的Quarkus项目的目标运行时，该运行时将被用于所有 "作为JUnit运行(Run as JUnit) "的配置。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="vscode-run-with-configuration"><a class="anchor" href="#vscode-run-with-configuration"></a>18.2. VSCode "run with "配置</h3>
+<div class="paragraph">
+<p>在您的项目根目录或工作区的 <code>settings.json</code> 文件中，针对测试配置添加以下配置项目：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">"java.test.config": [
+    {
+        "name": "quarkusConfiguration",
+        "vmargs": [ "-Djava.util.logging.manager=org.jboss.logmanager.LogManager -Dmaven.home=&lt;path-to-your-maven-installation&gt; ..." ],
+        ...
+    },
+  ...
+]</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="intellij-idea-junit-template"><a class="anchor" href="#intellij-idea-junit-template"></a>18.3. IntelliJ IDEA JUnit模板</h3>
+<div class="paragraph">
+<p>在IntelliJ中不需要任何改动，因为IDE会从 <code>pom.xml</code> 中的surefire插件配置中选择 <code>systemPropertyVariables</code> 。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-dev-services"><a class="anchor" href="#testing-dev-services"></a>19. 测试开发服务</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>默认情况下，测试应该只与 <a href="dev-services.html">开发服务</a> 一起工作，然而在一些用例中，您可能需要访问测试中自动配置的属性。</p>
+</div>
+<div class="paragraph">
+<p>您可以使用 <code>io.quarkus.test.common.DevServicesContext</code> 来达到目的，它可以直接注入到任何 <code>@QuarkusTest</code> 或 <code>@QuarkusIntegrationTest</code> 中。您所需要做的就是定义一个类型为 <code>DevServicesContext</code> 的字段，然后它就会自动被注入。使用该方法，您可以检索到任何已经设置的属性。一般来说，这被用来直接连接到测试本身的资源，例如，连接到kafka来发送消息到被测试的应用程序。</p>
+</div>
+<div class="paragraph">
+<p>该注入也支持在实现了 <code>io.quarkus.test.common.DevServicesContext.ContextAware</code> 的对象中。如果您有一个实现了 <code>io.quarkus.test.common.DevServicesContext.ContextAware</code> 的字段，Quarkus将调用 <code>setIntegrationTestContext</code> 方法来将上下文传入这个对象中。这将允许客户端逻辑被允许封装在一个实用类中。</p>
+</div>
+<div class="paragraph">
+<p><code>QuarkusTestResourceLifecycleManager</code> 实现也可以实现 <code>ContextAware</code> 接口，以获得对这些属性的访问，这允许您在Quarkus启动之前来配置资源（例如，配置一个KeyCloak实例，向数据库添加数据等）。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>对于将应用程序作为容器启动的 <code>@QuarkusIntegrationTest</code> 测试，<code>io.quarkus.test.common.DevServicesContext</code> 也提供了对应用容器所启动的容器网络id的访问(通过 <code>containerNetworkId</code> 方法)。这可以被 <code>QuarkusTestResourceLifecycleManager</code> 使用来启动一些应用程序需要通信的其他容器。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-components"><a class="anchor" href="#testing-components"></a>20. Testing Components</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Quarkus provides the <code>QuarkusComponentTestExtension</code>, a JUnit extension to ease the testing of components and mocking of their dependencies.
+This JUnit extension is available in the <code>quarkus-junit5-component</code> dependency.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s have a component <code>Foo</code> - a CDI bean with two injection points.</p>
+</div>
+<div class="listingblock">
+<div class="title"><code>Foo</code> component</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+
+@ApplicationScoped <i class="conum" data-value="1"></i><b>(1)</b>
+public class Foo {
+
+    @Inject
+    Charlie charlie; <i class="conum" data-value="2"></i><b>(2)</b>
+
+    @ConfigProperty(name = "bar")
+    boolean bar; <i class="conum" data-value="3"></i><b>(3)</b>
+
+    public String ping() {
+        return bar ? charlie.ping() : "nok";
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>Foo</code> is an <code>@ApplicationScoped</code> CDI bean.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><code>Foo</code> depends on <code>Charlie</code> which declares a method <code>ping()</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td><code>Foo</code> depends on the config property <code>bar</code>. <code>@Inject</code> is not needed for this injection point because it also declares a CDI qualifier - this is a Quarkus-specific feature.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Then a component test could look like:</p>
+</div>
+<div class="listingblock">
+<div class="title">Simple component test</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import jakarta.inject.Inject;
+import io.quarkus.test.InjectMock;
+import io.quarkus.test.component.TestConfigProperty;
+import io.quarkus.test.component.QuarkusComponentTest;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+@QuarkusComponentTest <i class="conum" data-value="1"></i><b>(1)</b>
+@TestConfigProperty(key = "bar", value = "true") <i class="conum" data-value="2"></i><b>(2)</b>
+public class FooTest {
+
+    @Inject
+    Foo foo; <i class="conum" data-value="3"></i><b>(3)</b>
+
+    @InjectMock
+    Charlie charlieMock; <i class="conum" data-value="4"></i><b>(4)</b>
+
+    @Test
+    public void testPing() {
+        Mockito.when(charlieMock.ping()).thenReturn("OK"); <i class="conum" data-value="5"></i><b>(5)</b>
+        assertEquals("OK", foo.ping());
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <code>QuarkusComponentTest</code> annotation registers the JUnit extension.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Sets a configuration property for the test.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The test injects the component under the test. The types of all fields annotated with <code>@Inject</code> are considered the component types under test. You can also specify additional component classes via <code>@QuarkusComponentTest#value()</code>. Furthermore, the static nested classes declared on the test class are components too.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>The test also injects a mock for <code>Charlie</code>. <code>Charlie</code> is an <em>unsatisfied</em> dependency for which a synthetic <code>@Singleton</code> bean is registered automatically. The injected reference is an "unconfigured" Mockito mock.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>We can leverage the Mockito API in a test method to configure the behavior.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>You can find more examples and hints in the <a href="testing-components">testing components reference guide</a>.</p>
+</div>
+</div>
+</div>
+    </div>
+    <div class="grid__item width-4-12 width-12-12-m tocwrapper">
+      <div class="hide-mobile toc"><ul class="sectlevel1">
+<li><a href="#prerequisites">1. 先决条件</a></li>
+<li><a href="#architecture">2. 应用结构</a></li>
+<li><a href="#solution">3. 解决方案</a></li>
+<li><a href="#recap-of-http-based-testing-in-jvm-mode">4. 对JVM模式中基于HTTP的测试的回顾</a>
+<ul class="sectlevel2">
+<li><a href="#controlling-the-test-port">4.1. 控制测试端口</a></li>
+<li><a href="#controlling-http-interaction-timeout">4.2. 控制HTTP交互超时时间</a></li>
+<li><a href="#injecting-a-uri">4.3. 注入URI</a></li>
+</ul>
+</li>
+<li><a href="#testing-a-specific-endpoint">5. 测试特定的节点</a>
+<ul class="sectlevel2">
+<li><a href="#testhttpresource">5.1. TestHTTPResource</a></li>
+<li><a href="#restassured">5.2. RESTassured</a></li>
+</ul>
+</li>
+<li><a href="#injection-into-tests">6. 注入测试</a></li>
+<li><a href="#applying-interceptors-to-tests">7. 在测试中使用拦截器</a></li>
+<li><a href="#tests-and-transactions">8. 测试与事务</a></li>
+<li><a href="#enrichment-via-quarkustestcallback">9. 通过QuarkusTest*Callback来增强</a></li>
+<li><a href="#testing_different_profiles">10. 测试不同的Profiles</a>
+<ul class="sectlevel2">
+<li><a href="#writing-a-profile">10.1. 编写Profile</a></li>
+<li><a href="#running-specific-tests">10.2. 运行特定的测试</a></li>
+</ul>
+</li>
+<li><a href="#mock-support">11. Mock支持</a>
+<ul class="sectlevel2">
+<li><a href="#cdi-alternative-mechanism">11.1. CDI <code>@Alternative</code> 机制。</a></li>
+<li><a href="#quarkus_mock">11.2. 使用QuarkusMock进行mock</a></li>
+<li><a href="#mocking-with-panache">11.3. 使用Panache mock</a></li>
+</ul>
+</li>
+<li><a href="#testing-security">12. 测试安全性</a></li>
+<li><a href="#quarkus-test-resource">13. 在Quarkus应用程序启动之前启动服务</a>
+<ul class="sectlevel2">
+<li><a href="#altering-the-test-class">13.1. 改动测试类</a></li>
+<li><a href="#annotation-based-test-resources">13.2. 基于注解的测试资源</a></li>
+</ul>
+</li>
+<li><a href="#hang-detection">14. 挂起侦测</a></li>
+<li><a href="#native-executable-testing">15. 本地可执行程序测试</a></li>
+<li><a href="#quarkus-integration-test">16. 使用@QuarkusIntegrationTest</a>
+<ul class="sectlevel2">
+<li><a href="#launching-containers">16.1. 启动容器</a></li>
+<li><a href="#executing-against-a-running-application">16.2. 对正在运行的应用程序执行测试</a></li>
+</ul>
+</li>
+<li><a href="#mixing-quarkustest-with-other-type-of-tests">17. 混合使用 <code>@QuarkusTest</code> 与其他类型的测试</a></li>
+<li><a href="#test-from-ide">18. 从IDE中运行 <code>@QuarkusTest</code></a>
+<ul class="sectlevel2">
+<li><a href="#eclipse-separate-jre-definition">18.1. Eclipse中独立的JRE定义</a></li>
+<li><a href="#vscode-run-with-configuration">18.2. VSCode "run with "配置</a></li>
+<li><a href="#intellij-idea-junit-template">18.3. IntelliJ IDEA JUnit模板</a></li>
+</ul>
+</li>
+<li><a href="#testing-dev-services">19. 测试开发服务</a></li>
+<li><a href="#testing-components">20. Testing Components</a></li>
+</ul></div>
+    </div>
+  </div>
+  <h2>Related content</h2>
+  <div class="grid-wrapper relations">
+    <div class="grid__item width-6-12 width-12-12-m">
+      <h3>On the same topics</h3>
+      <ul class="related-content">
+      
+        
+        <li class="guide"><a href="/version/3.15/guides/continuous-testing">持续测试</a></li>
+      
+        
+        <li class="guide"><a href="/version/3.15/guides/tests-with-coverage">测量你的测试的覆盖率</a></li>
+      
+        
+        <li class="guide"><a href="/version/3.15/guides/testing-components">Testing components</a></li>
+      
+        
+        <li class="guide"><a href="/version/3.15/guides/cli-tooling">Building Quarkus apps with Quarkus Command Line Interface (CLI)</a></li>
+      
+        
+        <li class="guide"><a href="/version/3.15/guides/upx">Compressing native executables using UPX</a></li>
+      
+        
+        <li class="tutorial"><a href="/version/3.15/guides/getting-started">创建你的第一个应用程序</a></li>
+      
+        
+        <li class="howto"><a href="/version/3.15/guides/security-openid-connect-dev-services">Dev Services and Dev UI for OpenID Connect (OIDC)</a></li>
+      
+        
+        <li class="guide"><a href="/version/3.15/guides/amqp-dev-services">AMQP的开发服务</a></li>
+      
+        
+        <li class="guide"><a href="/version/3.15/guides/apicurio-registry-dev-services">Apicurio注册表的开发服务</a></li>
+      
+        
+        <li class="guide"><a href="/version/3.15/guides/databases-dev-services">Dev Services for Databases</a></li>
+      
+        
+        <li class="guide"><a href="/version/3.15/guides/elasticsearch-dev-services">Dev Services for Elasticsearch</a></li>
+      
+        
+        <li class="guide"><a href="/version/3.15/guides/infinispan-dev-services">Dev Services for Infinispan</a></li>
+      
+        
+        <li class="guide"><a href="/version/3.15/guides/kafka-dev-services">Kafka开发服务（Dev Services）</a></li>
+      
+        
+        <li class="guide"><a href="/version/3.15/guides/kubernetes-dev-services">Dev Services for Kubernetes</a></li>
+      
+        
+        <li class="guide"><a href="/version/3.15/guides/pulsar-dev-services">Dev Services for Pulsar</a></li>
+      
+        
+        <li class="guide"><a href="/version/3.15/guides/rabbitmq-dev-services">Dev Services for RabbitMQ</a></li>
+      
+        
+        <li class="guide"><a href="/version/3.15/guides/redis-dev-services">Redis的Dev Services</a></li>
+      
+        
+        <li class="guide"><a href="/version/3.15/guides/dev-services">Dev Services Overview</a></li>
+      
+        
+        <li class="guide"><a href="/version/3.15/guides/dev-ui">Dev UI for extension developers</a></li>
+      
+        
+        <li class="tutorial"><a href="/version/3.15/guides/getting-started-reactive">响应式入门</a></li>
+      </ul>
+    </div>
+    </div>
+  </div>
+
+  </div>
+
+  <div class="content project-footer">
+  <div class="footer-section">
+    <div class="logo-wrapper">
+      <a href="/"><img src="/assets/images/quarkus_logo_horizontal_rgb_reverse.svg" class="project-logo" title="Quarkus"></a>
+    </div>
+  </div>
+  <div class="grid-wrapper">
+    <p class="grid__item width-3-12">Quarkus is open. All dependencies of this project are available under the <a href='https://www.apache.org/licenses/LICENSE-2.0' target='_blank'>Apache Software License 2.0</a> or compatible license.<br /><br />This website was built with <a href='https://jekyllrb.com/' target='_blank'>Jekyll</a>, is hosted on <a href='https://pages.github.com/' target='_blank'>GitHub Pages</a> and is completely open source. If you want to make it better, <a href='https://github.com/quarkusio/quarkusio.github.io' target='_blank'>fork the website</a> and show us what you’ve got.</p>
+
+    
+      <div class="width-1-12 project-links">
+        <span>Navigation</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="/" target="_blank">Home</a></li>
+          
+          
+          
+            <li><a href="/about" target="_blank">About</a></li>
+          
+          
+          
+            <li><a href="/blog" target="_blank">博客</a></li>
+          
+          
+          
+            <li><a href="/insights" target="_blank">Podcast</a></li>
+          
+          
+          
+            <li><a href="/events" target="_blank">活动</a></li>
+          
+          
+          
+            <li><a href="/newsletter" target="_blank">新闻</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
+          
+          
+          
+            <li><a href="https://github.com/orgs/quarkusio/projects/13/views/1" target="_blank">路线图</a></li>
+          
+          
+          
+            <li><a href="/security" target="_blank">Security&nbsp;policy</a></li>
+          
+          
+          
+            <li><a href="/usage" target="_blank">Usage</a></li>
+          
+          
+          
+            <li><a href="/brand" target="_blank">Brand</a></li>
+          
+          
+          
+            <li><a href="/desktopwallpapers" target="_blank">Wallpapers</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-1-12 project-links">
+        <span>Follow Us</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="https://x.com/quarkusio" target="_blank">X</a></li>
+          
+          
+          
+            <li><a href="https://bsky.app/profile/quarkus.io" target="_blank">Bluesky</a></li>
+          
+          
+          
+            <li><a rel="me" href="https://fosstodon.org/@quarkusio" target="_blank">Mastodon</a></li>
+            
+          
+          
+            <li><a href="https://www.facebook.com/quarkusio" target="_blank">Facebook</a></li>
+          
+          
+          
+            <li><a href="https://www.linkedin.com/company/quarkusio/" target="_blank">Linkedin</a></li>
+          
+          
+          
+            <li><a href="https://www.youtube.com/channel/UCaW8QG_QoIk_FnjLgr5eOqg" target="_blank">Youtube</a></li>
+          
+          
+          
+            <li><a href="https://github.com/quarkusio" target="_blank">GitHub</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-2-12 project-links">
+        <span>Get Help</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="/support" target="_blank">Support</a></li>
+          
+          
+          
+            <li><a href="/guides" target="_blank">Guides</a></li>
+          
+          
+          
+            <li><a href="/faq" target="_blank">FAQ</a></li>
+          
+          
+          
+            <li><a href="/get-started" target="_blank">开始体验</a></li>
+          
+          
+          
+            <li><a href="https://stackoverflow.com/questions/tagged/quarkus" target="_blank">Stack Overflow</a></li>
+          
+          
+          
+            <li><a href="https://github.com/quarkusio/quarkus/discussions" target="_blank">Discussions</a></li>
+          
+          
+          
+            <li><a href="https://groups.google.com/forum/#!forum/quarkus-dev" target="_blank">Development mailing list</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-1-12 project-links">
+        <span>Languages</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="https://quarkus.io/" target="_blank">English</a></li>
+          
+          
+          
+            <li><a href="https://pt.quarkus.io/" target="_blank">Português&nbsp;(Brasileiro)</a></li>
+          
+          
+          
+            <li><a href="https://es.quarkus.io/" target="_blank">Español</a></li>
+          
+          
+          
+            <li><a href="https://cn.quarkus.io/" target="_blank">简体中文</a></li>
+          
+          
+          
+            <li><a href="https://ja.quarkus.io/" target="_blank">日本語</a></li>
+          
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="width-4-12 more-links">
+        <span>Quarkus is made of community projects</span>
+        <ul class="footer-links">
+          
+            <li><a blah href="https://vertx.io/" target="_blank">Eclipse Vert.x</a></li>
+          
+            <li><a blah href="https://smallrye.io" target="_blank">SmallRye</a></li>
+          
+            <li><a blah href="https://hibernate.org" target="_blank">Hibernate</a></li>
+          
+            <li><a blah href="https://netty.io" target="_blank">Netty</a></li>
+          
+            <li><a blah href="https://resteasy.github.io" target="_blank">RESTEasy</a></li>
+          
+            <li><a blah href="https://camel.apache.org" target="_blank">Apache Camel</a></li>
+          
+            <li><a blah href="https://microprofile.io" target="_blank">Eclipse MicroProfile</a></li>
+          
+            <li><a blah href="https://code.quarkus.io/" target="_blank">And many more...</a></li>
+          
+        </ul>
+      </div>
+    
+  </div>
+</div>
+
+  <div class="content redhat-footer">
+  <div class="grid-wrapper">
+    <span class="licence">
+      <i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i> <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank">CC by 3.0</a> | <a href="https://www.redhat.com/en/about/privacy-policy">Privacy Policy</a>
+    </span>
+    <span class="redhat">
+      Sponsored by
+    </span>
+    <span class="redhat-logo">
+      <a href="https://www.redhat.com/" target="_blank"><img src="/assets/images/redhat_reversed.svg"></a>
+    </span>
+  </div>
+</div>
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha384-8gBf6Y4YYq7Jx97PIqmTwLPin4hxIzQw5aDmUg/DDhul9fFpbbLcLh3nTIIDJKhx" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="/assets/javascript/mobile-nav.js"></script>
+  <script type="text/javascript" src="/assets/javascript/scroll-down.js"></script>
+  <script src="/assets/javascript/satellite.js" type="text/javascript"></script>
+  <script src="/guides/javascript/config.js" type="text/javascript"></script>
+  <script src="/assets/javascript/guides-version-dropdown.js" type="text/javascript"></script>
+  <script src="/assets/javascript/back-to-top.js" type="text/javascript"></script>
+  <script src="/assets/javascript/clipboard.min.js" type="text/javascript"></script>
+  <script src="/assets/javascript/copy.js" type="text/javascript"></script>
+  <script src="/assets/javascript/asciidoc-tabs.js" type="text/javascript"></script>
+  <script src="/assets/javascript/future-date.js" type="text/javascript"></script>
+</body>
+
+</html>

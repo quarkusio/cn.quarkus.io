@@ -1,0 +1,3421 @@
+<!DOCTYPE html>
+<html lang="cn">
+
+
+
+
+
+
+
+<head>
+  <title>Guides - 2.13 - Quarkus</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
+  script-src 'self' 'unsafe-inline' 'unsafe-eval'
+      
+      https://assets.adobedtm.com
+      js.bizographics.com
+      https://www.redhat.com
+      https://static.redhat.com
+      https://app.requestly.io/
+      jsonip.com
+      https://ajax.googleapis.com
+      https://use.fontawesome.com
+      http://www.youtube.com
+      http://www.googleadservices.com
+      https://googleads.g.doubleclick.net
+      https://giscus.app
+      https://analytics.ossupstream.org/
+      https://app.mailjet.com;
+
+  style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
+  img-src 'self' * data:; 
+  media-src 'self'; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  base-uri 'none'; 
+  object-src 'none'; 
+  form-action 'none'; 
+  font-src 'self' https://use.fontawesome.com https://fonts.gstatic.com;" />
+  <script id="adobe_dtm" src="https://www.redhat.com/dtm.js" type="text/javascript"></script>
+  <script src="/assets/javascript/highlight.pack.js" type="text/javascript"></script>
+  <META HTTP-EQUIV='X-XSS-Protection' CONTENT="1; mode=block">
+  <META HTTP-EQUIV='X-Content-Type-Options' CONTENT="nosniff">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Quarkus: Supersonic Subatomic Java">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@QuarkusIO"> 
+  <meta name="twitter:creator" content="@QuarkusIO">
+  <meta property="og:url" content="https://quarkus.io/version/2.13/guides/" />
+  <meta property="og:title" content="Guides - 2.13" />
+  <meta property="og:description" content="Quarkus: Supersonic Subatomic Java" />
+  <meta property="og:image" content="https://quarkus.io/assets/images/quarkus_card.png" />
+  
+  <link rel="canonical" href="https://quarkus.io/version/2.13/guides/">
+  <link rel="shortcut icon" type="image/png" href="/favicon.ico" >
+  <link rel="stylesheet" href="/guides/stylesheet/config.css" />
+  <link rel="stylesheet" href="/assets/css/main.css?2021-07-29" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.2/css/all.css" crossorigin="anonymous">
+  <link rel="alternate" type="application/rss+xml"  href="/feed.xml" title="Quarkus">
+  <script src="/assets/javascript/hl.js" type="text/javascript"></script>
+  
+  
+  
+  
+  <link rel="alternate" hreflang="en" href="https://quarkus.io/version/2.13/guides/" />
+  
+  <link rel="alternate" hreflang="pt-br" href="https://pt.quarkus.io/version/2.13/guides/" />
+  
+  <link rel="alternate" hreflang="es" href="https://es.quarkus.io/version/2.13/guides/" />
+  
+  <link rel="alternate" hreflang="zh" href="https://cn.quarkus.io/version/2.13/guides/" />
+  
+  <link rel="alternate" hreflang="ja" href="https://ja.quarkus.io/version/2.13/guides/" />
+  
+  <link rel="alternate" hreflang="x-default" href="https://quarkus.io/" />  
+  <script src="/assets/javascript/tracking.js"></script>
+  
+    
+    <link rel="preconnect" href="https://search.quarkus.io" crossorigin />
+    <script src="/assets/javascript/search-wc.js" type="module" blocking="render"></script>
+  
+  <script src="/assets/javascript/colormode.js" type="text/javascript"></script>
+
+</head>
+
+<body class="documentation">
+
+  
+
+
+<div class="grid-wrapper communitysite">
+  <div class="grid__item width-12-12">The <a href="https://quarkus.io/version/2.13/guides/">English version of quarkus.io</a> is the official project site. Translated sites are community supported on a best-effort basis.</div>
+</div>
+
+
+  <div class="nav-wrapper">
+  <div class="grid-wrapper">
+    <div class="width-12-12">
+      <input type="checkbox" id="checkbox" />
+      <nav id="main-nav" class="main-nav">
+        <div class="logo-wrapper">
+           <a href="/"><img src="/assets/images/quarkus_logo_horizontal_rgb_600px_reverse.png" class="project-logo" title="Quarkus"></a>
+        </div>
+    <label class="nav-toggle" for="checkbox"> <i class="fa fa-bars"></i>
+</label>
+    <ul id="menu" class="menu">
+      <li class="dropdown">
+        <span href="/about/">Why<i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/about" class="">QUARKUS是什么？</a></li>
+          <li><a href="/developer-joy" class="">开发者的乐趣 </a></li>
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES 原生</a></li>
+          <li><a href="/standards" class="">标准</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">容器优先 </a></li>          
+        </ul>
+      </li>
+      <li class="dropdown">
+        <span href="/learn/">学习 <i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/get-started" class="">入门</a></li>
+          <li><a href="/guides" class="active" >指南</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
+          <li><a href="/qtips" class="">"Q" TIP视频</a></li>          
+          <li><a href="/books" class="">书籍</a></li>
+          </ul>
+      </li>
+      <li class="dropdown">
+        <span href="https://quarkus.io/extensions/">扩展<i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          
+          <!-- Note that quarkus.io is hardcoded here, because it is the only url which supports extensions -->
+<li><a href="https://quarkus.io/extensions/" class="">浏览扩展</a></li>
+          <li><a href="/faq/#what-is-a-quarkus-extension" class="">使用扩展</a></li>
+          <li><a href="/guides/writing-extensions" class="" >创建扩展</a></li>
+          <li><a href="https://hub.quarkiverse.io" class="">SHARE EXTENSIONS</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <span href="/community/">社区 <i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/support/" class="">支持</a></li>
+          <li><a href="/blog" class="" >博客</a></li>
+          <li><a href="/discussion" class="">讨论</a></li>
+          <li><a href="/working-groups" class="">WORKING GROUPS</a></li>
+          <li><a href="/insights" class="" >播客</a></li>
+          <li><a href="/events" class="">活动</a></li>
+          <li><a href="/newsletter" class="">新闻</a></li>
+          <li><a href="https://github.com/orgs/quarkusio/projects/13/views/1" class="">路线图</a></li>
+          </ul>
+      </li>
+      <li>
+        <a href="https://code.quarkus.io" class="button-cta secondary
+white">开始编码</a>
+      </li>
+      <li class="dropdown">
+        <span href="/language/"><div class="fas fa-globe langicon"></div><i class="fas fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="https://quarkus.io/version/2.13/guides/" >OFFICIAL (ENGLISH)</a></li>
+          <li><a href="https://pt.quarkus.io/version/2.13/guides/">PORTUGUÊS (BR)</a></li>
+          <li><a href="https://es.quarkus.io/version/2.13/guides/">ESPAÑOL</a></li>
+          <li><a href="https://cn.quarkus.io/version/2.13/guides/">简体中文</a></li>
+          <li><a href="https://ja.quarkus.io/version/2.13/guides/">日本語</a></li>
+          </ul>
+      </li>
+      <li>
+        <span href="#" class="modeswitcher" id='theme-toggle'><i class="fas
+fa-sun"></i><i class="fas fa-moon"></i><i class="fas fa-cog"></i></span>
+      </li>
+    </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+  <div class="content">
+    
+
+
+<a id="backToTop"><i class="fas fa-chevron-up"></i></a>
+
+
+
+
+  
+  
+
+
+<div id="guides-app"
+     data-search-api-server=""
+     data-quarkus-version="2.13"
+     data-language="cn"
+     data-initial-timeout="1500"
+     data-more-timeout="2500"
+     data-min-chars="2">
+    <section class="full-width-version-bg flexfilterbar">
+      <div class="flexcontainer">
+        <div class="search">
+          <input v-model="text" type="text" placeholder="关键词" />
+        </div>
+        <div class="flexlabel">
+          <label>By Version</label>
+        </div>
+        <div class="pulldown version">
+          <select id="guidesindex-version-dropdown">
+          
+          <option value="main" >Main - SNAPSHOT</option>
+          
+          <option value="latest" >3.19.1 - Latest</option>
+          
+          <option value="3.15" >3.15</option>
+          
+          <option value="3.8" >3.8</option>
+          
+          <option value="3.2" >3.2</option>
+          
+          <option value="2.16" >2.16</option>
+          
+          <option value="2.13" selected>2.13</option>
+          
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <div>
+      <h1 class="title">Guides</h1>
+    </div>
+    <div class="grid-wrapper guides" id="docs">
+        <div :class="`grid__item width-6-12 width-12-12-m guide-categories callout-wrapper ${!loading && hasHits ? 'hidden' : ''}`">
+            <h3>View Category</h3>
+            <ul>
+                
+                <li>
+                    <a href="#getting-started">入门指南</a>
+                </li>
+                
+                <li>
+                    <a href="#core">核心</a>
+                </li>
+                
+                <li>
+                    <a href="#web">网络</a>
+                </li>
+                
+                <li>
+                    <a href="#data">数据</a>
+                </li>
+                
+                <li>
+                    <a href="#messaging">消息传递</a>
+                </li>
+                
+                <li>
+                    <a href="#security">安全</a>
+                </li>
+                
+                <li>
+                    <a href="#business-automation">业务自动化</a>
+                </li>
+                
+                <li>
+                    <a href="#integration">集成</a>
+                </li>
+                
+                <li>
+                    <a href="#command-line">命令行应用</a>
+                </li>
+                
+                <li>
+                    <a href="#cloud">云</a>
+                </li>
+                
+                <li>
+                    <a href="#observability">可观察性</a>
+                </li>
+                
+                <li>
+                    <a href="#serialization">序列化</a>
+                </li>
+                
+                <li>
+                    <a href="#tooling">工具</a>
+                </li>
+                
+                <li>
+                    <a href="#compatibility">兼容</a>
+                </li>
+                
+                <li>
+                    <a href="#miscellaneous">杂项</a>
+                </li>
+                
+                <li>
+                    <a href="#alternative-languages">替代语言</a>
+                </li>
+                
+                <li>
+                    <a href="#writing-extensions">编写扩展</a>
+                </li>
+                
+                <li>
+                    <a href="#architecture">架构</a>
+                </li>
+                
+            </ul>
+        </div>
+
+        <div class="grid__item width-6-12 width-12-12-m callout-wrapper">
+            <div class="grid-wrapper callout">
+                <div class="grid__item width-12-12">
+                    <h3>Quarkus速查手册</h3>
+                </div>
+                <div class="grid__item col">
+                    <a href="https://lordofthejars.github.io/quarkus-cheat-sheet/" target="_blank">
+                        <span class="col-icon"><i class="far fa-file-pdf"></i></span>
+                        <span class="col-link">下载所有速查手册PDF文档</span>
+                    </a>
+                </div>
+                <div class="grid__item col">
+                    <a href="https://developers.redhat.com/search?t=quarkus&f=type%7Echeat_sheet" target="_blank">在Red Hat Developers网站下载更多速查手册<i class="fas fa-external-link-alt"></i></a>
+                </div>
+            </div>
+        </div>
+        <div v-if="hasInput" class="grid__item width-12-12 click-cards vuejs"
+             :class="{ empty: !loading && !hasHits, 'vuejs-enabled': true, loading: loading }">
+            <Transition name="fade-in">
+                <div v-if="!loading && !hasHits" class="empty-placeholder">
+                    对不起，没有与检索匹配的指南。请更改搜索关键字后重试。
+                </div>
+            </Transition>
+            <ul class="list results">
+                <li>
+                    <ul class="grid-wrapper list-item">
+                        
+                        <li class="card" v-for="hit in searchHits">
+                            <a :href="hit.url" :target="hit.url.startsWith('http') ? '_blank' : ''"></a>
+                            <p class="title" v-html="hit.title"></p>
+                            <div class="description" v-html="hit.summary"></div>
+                            <div class="content-highlights">
+                                <p v-for="contentLine in hit.content" v-html="contentLine"></p>
+                            </div>
+                            <div class="origin" v-if="hit.url.startsWith('http')">
+                                <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25"/>
+                                <span>Quarkiverse Hub</span>
+                            </div>
+                        </li>
+                        
+                    </ul>
+                </li>
+            </ul>
+            <Transition name="fade-in">
+                <div v-if="loading" class="loading-placeholder">
+                    加载中...
+                </div>
+            </Transition>
+        </div>
+    <!-- Static content displayed when there is no input in the search form or Javascript is disabled,
+         but also used as a source of data for cards displayed by the vue.js app. -->
+      <div v-else class="grid__item width-12-12 click-cards">
+        <ul class="list">
+        
+          <li>
+            <h3 id="getting-started">入门指南</h3>
+            <ul class="grid-wrapper list-item">
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/getting-started" ></a>
+                  <p class="title">指导您完成第一个应用</p>
+                  <div class="description"><p>了解如何创建您的第一个Quarkus应用程序。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/getting-started-reactive" ></a>
+                  <p class="title">响应式入门</p>
+                  <div class="description"><p>了解有关使用Quarkus开发响应式应用程序的更多信息。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/building-native-image" ></a>
+                  <p class="title">构建原生可执行文件</p>
+                  <div class="description"><p>用GraalVM或Mandrel构建原生可执行文件。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/tooling" ></a>
+                  <p class="title">使用我们的工具</p>
+                  <div class="description"><p>探索Quarkus开发者工具链，让Quarkus开发如此快速和愉快。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/ide-tooling" ></a>
+                  <p class="title">在你喜欢的IDE中使用Quarkus扩展工具</p>
+                  <div class="description"><p>了解更多关于Quarkus在IDE中的整合。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+            </ul>
+          </li>
+        
+          <li>
+            <h3 id="core">核心</h3>
+            <ul class="grid-wrapper list-item">
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/config" ></a>
+                  <p class="title">配置你的应用程序</p>
+                  <div class="description"><p>在你的代码中将值硬编码是行不通的（即使我们在某些时候都会这样做;-)）。在本指南中，我们学习如何配置你的应用程序。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/config-reference" ></a>
+                  <p class="title">配置参考</p>
+                  <div class="description"><p>了解更多关于如何配置你的Quarkus应用程序。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/config-mappings" ></a>
+                  <p class="title">将配置映射到对象</p>
+                  <div class="description"><p>将多个配置属性分组到一个对象中。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/config-extending-support" ></a>
+                  <p class="title">扩展配置支持</p>
+                  <div class="description"><p>扩展和定制配置。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/config-yaml" ></a>
+                  <p class="title">YAML Configuration</p>
+                  <div class="description"><p>YAML 作为配置源。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/all-config" ></a>
+                  <p class="title">所有配置属性</p>
+                  <div class="description"><p>列出每个扩展的所有配置属性</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/lifecycle" ></a>
+                  <p class="title">应用程序的初始化和终止</p>
+                  <div class="description"><p>你经常需要在应用程序启动时执行自定义动作，在应用程序停止时清理一切。本指南解释了如何在应用程序停止或启动时获得通知。</p>
+</div>
+                  <div class="keywords">lifecycle event</div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/cdi" ></a>
+                  <p class="title">Introduction to CDI</p>
+                  <div class="description"><p>Quarkus DI解决方案是基于 <a href="https://docs.jboss.org/cdi/spec/2.0/cdi-spec">Java的上下文和依赖注入 2.0</a> 规范。本指南解释了CDI的基础知识。</p>
+</div>
+                  <div class="keywords">qualifier event interceptor observer arc</div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/cdi-reference" ></a>
+                  <p class="title">CDI Reference</p>
+                  <div class="description"><p>更深入地了解Quarkus对CDI的实现。</p>
+</div>
+                  <div class="keywords">arc</div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/mutiny-primer" ></a>
+                  <p class="title">Mutiny, Reactive for Bare Mortals</p>
+                  <div class="description"><p>了解更多关于如何用Quarkus开发响应式应用程序的信息。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/getting-started-testing" ></a>
+                  <p class="title">测试您的应用程序</p>
+                  <div class="description"><p>本指南包括：</p>
+<ul>
+  <li>在JVM模式下的测试</li>
+  <li>在原生模式下的测试</li>
+  <li>将资源注入测试</li>
+</ul>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/continuous-testing" ></a>
+                  <p class="title">持续测试</p>
+                  <div class="description"><p>通过持续测试获得早期测试反馈。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/dev-services" ></a>
+                  <p class="title">使用开发服务的自动服务设置</p>
+                  <div class="description"><p>所有支持开发服务的扩展及其配置选项的列表。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/logging" ></a>
+                  <p class="title">配置日志</p>
+                  <div class="description"><p>本指南解释了日志记录以及如何配置它。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/command-mode-reference" ></a>
+                  <p class="title">命令模式参考</p>
+                  <div class="description"><p>本参考指南解释了如何用Quarkus开发命令行应用程序。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/context-propagation" ></a>
+                  <p class="title">事务和安全上下文传播</p>
+                  <div class="description"><p>了解更多关于如何利用SmallRye Context Propagation传递上下文信息的信息。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/native-and-ssl" ></a>
+                  <p class="title">在原生可执行文件中使用SSL</p>
+                  <div class="description"><p>在本指南中，我们将讨论如何让你的原生可执行文件支持SSL，因为原生可执行文件并不支持开箱即用。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/quarkus-runtime-base-image" ></a>
+                  <p class="title">原生可执行文件的基本运行时镜像</p>
+                  <div class="description"><p>了解更多关于Quarkus用于原生可执行文件的基本运行时镜像，以及如何调整它。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/upx" ></a>
+                  <p class="title">用UPX压缩原生可执行文件</p>
+                  <div class="description"><p>了解你如何用UPX减少你的原生可执行文件的大小。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/writing-native-applications-tips" ></a>
+                  <p class="title">编写原生应用程序</p>
+                  <div class="description"><p>本指南收集了一些提示，帮助你解决将应用程序编译为原生可执行文件时遇到的问题。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/native-reference" ></a>
+                  <p class="title">原生参考</p>
+                  <div class="description"><p>更详细地探讨如何调试原生可执行文件。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+            </ul>
+          </li>
+        
+          <li>
+            <h3 id="web">网络</h3>
+            <ul class="grid-wrapper list-item">
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/rest-json" ></a>
+                  <p class="title">编写REST JSON服务的介绍</p>
+                  <div class="description"><p>JSON现在是微服务之间的通用语言。在本指南中，我们看看如何让你的REST服务消费和提供JSON有效载荷。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/resteasy-reactive" ></a>
+                  <p class="title">编写REST服务参考</p>
+                  <div class="description"><p>了解如何使用JAX-RS和RESTEasy Reactive开发高度可扩展的REST服务。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/rest-client-reactive" ></a>
+                  <p class="title">使用REST客户端（包括JSON）</p>
+                  <div class="description"><p>本指南解释了如何使用RESTEasy Reactive REST客户端。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/resteasy-reactive-migration" ></a>
+                  <p class="title">从RESTEasy 指令式迁移到RESTEasy 响应式</p>
+                  <div class="description"><p>本指南介绍了如何将一个应用从RESTEasy 指令式迁移到RESTEasy 响应式。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/rest-data-panache" ></a>
+                  <p class="title">编写简单的REST CRUD服务</p>
+                  <div class="description"><p>运用Panache来操作Hibernate ORM REST数据，简化了基于JAX-RS和Hibernate ORM的CRUD应用程序的创建。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/validation" ></a>
+                  <p class="title">用Hibernate验证器进行验证</p>
+                  <div class="description"><p>本指南包括如何在REST服务中使用Hibernate验证器/Bean验证。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/rest-client-multipart" ></a>
+                  <p class="title">使用Multipart的REST客户端</p>
+                  <div class="description"><p>本指南介绍如何使用RESTEasy REST客户端发送多部分REST请求，通常是为了上传文档。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/websockets" ></a>
+                  <p class="title">使用WebSockets</p>
+                  <div class="description"><p>本指南解释了你的Quarkus应用程序如何利用网络套接字来创建交互式网络应用。因为它是典型的网络套接字应用程序，我们将创建一个简单的聊天应用程序。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/openapi-swaggerui" ></a>
+                  <p class="title">使用OpenAPI和Swagger UI</p>
+                  <div class="description"><p>本指南解释了如何使用OpenAPI扩展来生成OpenAPI描述符，并获得一个Swagger UI前端来测试你的REST端点。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/resteasy" ></a>
+                  <p class="title">用RESTEasy Classic开发REST服务</p>
+                  <div class="description"><p>本指南解释了如何使用RESTEasy REST客户端，以便用很少的精力与REST API（JSON和其他）进行交互。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/rest-client" ></a>
+                  <p class="title">使用RESTEasy Classic REST客户端（包括JSON）。</p>
+                  <div class="description"><p>本指南解释了如何使用RESTEasy REST客户端，以便用很少的精力与REST API（JSON和其他）进行交互。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/http-reference" ></a>
+                  <p class="title">HTTP Reference Documentation</p>
+                  <div class="description"><p>了解更多关于配置Quarkus基于Vert.x的HTTP层的信息–如果你使用servlets的话，还有Undertow。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/smallrye-fault-tolerance" ></a>
+                  <p class="title">使用容错技术</p>
+                  <div class="description"><p>本指南展示了你的Quarkus应用程序如何通过SmallRye容错扩展来利用SmallRye容错规范。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/reactive-routes" ></a>
+                  <p class="title">使用响应式路由</p>
+                  <div class="description"><p>本指南演示了如何使用响应式路由。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/smallrye-graphql" ></a>
+                  <p class="title">实施GraphQL服务</p>
+                  <div class="description"><p>本指南解释了如何利用SmallRye GraphQL来实现GraphQL服务。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/smallrye-graphql-client" ></a>
+                  <p class="title">消费GraphQL服务</p>
+                  <div class="description"><p>本指南解释了如何利用SmallRye GraphQL客户端来消费GraphQL服务。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+            </ul>
+          </li>
+        
+          <li>
+            <h3 id="data">数据</h3>
+            <ul class="grid-wrapper list-item">
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/datasource" ></a>
+                  <p class="title">配置你的数据源</p>
+                  <div class="description"><p>使用Quarkus，你可以很容易地配置一个数据源，如果需要的话，也可以配置若干个。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/databases-dev-services" ></a>
+                  <p class="title">Database Dev Services</p>
+                  <div class="description"><p>Automatically start database containers with Dev Services.</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/hibernate-orm" ></a>
+                  <p class="title">使用Hibernate ORM和JPA</p>
+                  <div class="description"><p>Hibernate ORM是事实上的JPA实现，为你提供了对象关系映射器的全部功能。它在Quarkus中工作得很好。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/hibernate-orm-panache" ></a>
+                  <p class="title">使用Panache简化Hibernate ORM</p>
+                  <div class="description"><p>Hibernate ORM是事实上的JPA实现，提供了全方位的对象关系映射支持。
+它支持编写复杂的映射，但编写简单常用的映射却不够简便。
+Panache专注于简化Hibernate ORM实体，让你的Quarkus开发有趣。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/hibernate-orm-panache-kotlin" ></a>
+                  <p class="title">用Panache和Kotlin简化Hibernate ORM</p>
+                  <div class="description"><p>这将解释在Kotlin项目中使用Hibernate ORM与Panache的具体细节。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/hibernate-search-orm-elasticsearch" ></a>
+                  <p class="title">Hibernate Search + Elasticsearch</p>
+                  <div class="description"><p>Hibernate Search允许你在Elasticsearch集群中索引你的实体，并在你所有基于Hibernate ORM的应用程序中轻松提供全文搜索。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/transaction" ></a>
+                  <p class="title">使用事务</p>
+                  <div class="description"><p>Quarkus自带一个事务管理器，并使用它来协调和暴露事务给你的应用程序。每个处理持久性的扩展都会为你与它集成。而且你将通过CDI明确地与事务进行交互。本指南将指导你完成这一切。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/blaze-persistence" ></a>
+                  <p class="title">使用Blaze-Persistence</p>
+                  <div class="description"><p>本指南解释了如何使用Blaze-Persistence来简化你的数据和DTO层。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/validation" ></a>
+                  <p class="title">用Hibernate验证器进行验证</p>
+                  <div class="description"><p>本指南包括如何在REST服务中使用Hibernate验证器/Bean验证。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/cache" ></a>
+                  <p class="title">缓存你的应用程序数据</p>
+                  <div class="description"><p>本指南解释了如何使用简单的注解来缓存CDI Bean中昂贵的方法调用。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/flyway" ></a>
+                  <p class="title">用Flyway进行模式迁移</p>
+                  <div class="description"><p>本指南包括如何使用Flyway扩展来管理你的模式迁移。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/liquibase" ></a>
+                  <p class="title">用Liquibase进行模式迁移</p>
+                  <div class="description"><p>本指南涵盖了如何使用Liquibase扩展来管理你的模式迁移。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/reactive-sql-clients" ></a>
+                  <p class="title">响应式SQL客户端</p>
+                  <div class="description"><p>本指南涵盖了如何在Quarkus中使用响应式SQL客户端。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/hibernate-reactive" ></a>
+                  <p class="title">使用Hibernate响应式</p>
+                  <div class="description"><p>Reactive API for Hibernate ORM</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/hibernate-reactive-panache" ></a>
+                  <p class="title">使用Panache简化Hibernate Reactive</p>
+                  <div class="description"><p>基于Hibernate 响应式的简化响应式ORM层。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/infinispan-client" ></a>
+                  <p class="title">使用Infinispan客户端</p>
+                  <div class="description"><p>Infinispan是一个内存中的数据网格，允许在应用程序进程之外的服务器中运行。这个扩展提供了功能，允许在Quarkus中运行时可以连接到所述服务器的客户端。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/elasticsearch" ></a>
+                  <p class="title">Elasticsearch Clients</p>
+                  <div class="description"><p>本指南涵盖了如何使用低级或高级的REST客户端来使用Elasticsearch集群。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/elasticsearch-dev-services" ></a>
+                  <p class="title">Elasticsearch Dev Services</p>
+                  <div class="description"><p>在开发和测试模式下自动启动Elasticsearch。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/mongodb" ></a>
+                  <p class="title">MongoDB Client</p>
+                  <div class="description"><p>本指南包括如何在Quarkus中使用MongoDB。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/liquibase-mongodb" ></a>
+                  <p class="title">Liquibase MongoDB</p>
+                  <div class="description"><p>用Liquibase管理你的MongoDB模式迁移。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/mongodb-panache" ></a>
+                  <p class="title">MongoDB with Panache</p>
+                  <div class="description"><p>本指南涵盖了MongoDB使用活动记录和存储库的用法。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/mongodb-panache-kotlin" ></a>
+                  <p class="title">使用Panache和Kotlin的MongoDB</p>
+                  <div class="description"><p>本指南涵盖了在Kotlin项目中使用活动记录和存储库的MongoDB的用法。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/redis" ></a>
+                  <p class="title">Redis客户端</p>
+                  <div class="description"><p>本指南包括如何在Quarkus中使用Redis数据存储。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/redis-reference" ></a>
+                  <p class="title">Redis Reference</p>
+                  <div class="description"><p>了解如何根据自己的需要定制Redis客户端。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/redis-dev-services" ></a>
+                  <p class="title">Redis Dev Services</p>
+                  <div class="description"><p>在开发和测试模式下自动启动Redis。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-neo4j/dev/index.html" target="_blank"></a>
+                  <p class="title">Neo4j Client</p>
+                  <div class="description"><p>本指南介绍了如何在Quarkus中使用Neo4j图数据库。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/cassandra" ></a>
+                  <p class="title">Apache Cassandra Client</p>
+                  <div class="description"><p>本指南包括如何在Quarkus中使用Apache Cassandra NoSQL数据库。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-amazon-services/1.x/amazon-dynamodb.html" target="_blank"></a>
+                  <p class="title">Amazon DynamoDB</p>
+                  <div class="description"><p>本指南包括如何在Quarkus中使用Amazon DynamoDB数据库。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-amazon-services/1.x/amazon-s3.html" target="_blank"></a>
+                  <p class="title">Amazon S3</p>
+                  <div class="description"><p>本指南包括如何在Quarkus中使用Amazon S3云存储。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-google-cloud-services/main/bigquery.html" target="_blank"></a>
+                  <p class="title">Google Cloud BigQuery</p>
+                  <div class="description"><p>本指南包括如何在Quarkus中使用GCP BigQuery。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-google-cloud-services/main/bigtable.html" target="_blank"></a>
+                  <p class="title">Google Cloud Bigtable</p>
+                  <div class="description"><p>本指南包括如何在Quarkus中使用GCP Bigtable。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-google-cloud-services/main/firestore.html" target="_blank"></a>
+                  <p class="title">Google Cloud Firestore</p>
+                  <div class="description"><p>本指南包括如何在Quarkus中使用GCP Firestore。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-google-cloud-services/main/spanner.html" target="_blank"></a>
+                  <p class="title">Google Cloud Spanner</p>
+                  <div class="description"><p>本指南包括如何在Quarkus中使用GCP Spanner。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-google-cloud-services/main/storage.html" target="_blank"></a>
+                  <p class="title">Google Cloud Storage</p>
+                  <div class="description"><p>本指南包括如何在Quarkus中使用GCP存储。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/software-transactional-memory" ></a>
+                  <p class="title">使用软件事务性内存</p>
+                  <div class="description"><p>本指南涵盖了软件事务性内存（STM）的使用。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/lra" ></a>
+                  <p class="title">使用LRA（长期运行的活动）。</p>
+                  <div class="description"><p>本指南涵盖了使用LRA来协调跨服务的活动。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+            </ul>
+          </li>
+        
+          <li>
+            <h3 id="messaging">消息传递</h3>
+            <ul class="grid-wrapper list-item">
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/kafka-reactive-getting-started" ></a>
+                  <p class="title">开始使用Apache Kafka的SmallRye响应式消息传递。</p>
+                  <div class="description"><p>本指南演示了您的Quarkus应用程序如何利用SmallRye响应式消息传递与Apache Kafka进行交互。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/kafka" ></a>
+                  <p class="title">Apache Kafka参考指南</p>
+                  <div class="description"><p>本参考指南深入介绍了Apache Kafka和Smallrye响应式消息传递框架。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/kafka-dev-services" ></a>
+                  <p class="title">Apache Kafka Dev Services</p>
+                  <div class="description"><p>在开发和测试模式下自动启动Apache Kafka。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/kafka-schema-registry-avro" ></a>
+                  <p class="title">使用Apache Kafka与模式仓库和Avro</p>
+                  <div class="description"><p>使用Apache Kafka，Avro序列化记录，并连接到一个模式注册中心。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/apicurio-registry-dev-services" ></a>
+                  <p class="title">Apicurio Registry Dev Services</p>
+                  <div class="description"><p>在开发和测试模式下自动启动Apicurio仓库。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/amqp" ></a>
+                  <p class="title">使用AMQP与响应式消息传递</p>
+                  <div class="description"><p>本指南展示了你的Quarkus应用程序如何利用SmallRye响应式消息传递与AMQP进行交互。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/amqp-reference" ></a>
+                  <p class="title">AMQP Reference</p>
+                  <div class="description"><p>SmallRye响应式消息传递和AMQP的参考指南。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/amqp-dev-services" ></a>
+                  <p class="title">AMQP Dev Services</p>
+                  <div class="description"><p>在开发和测试模式下自动启动AMQP。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/rabbitmq" ></a>
+                  <p class="title">使用RabbitMQ与响应式消息传递</p>
+                  <div class="description"><p>本指南演示了您的 Quarkus 应用程序如何利用 SmallRye响应式消息传递与RabbitMQ进行交互。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/rabbitmq-reference" ></a>
+                  <p class="title">RabbitMQ Reference</p>
+                  <div class="description"><p>SmallRye响应式消息传递和RabbitMQ的参考指南。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/rabbitmq-dev-services" ></a>
+                  <p class="title">RabbitMQ Dev Services</p>
+                  <div class="description"><p>在开发和测试模式下自动启动 RabbitMQ。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-reactive-messaging-http/dev/reactive-messaging-http.html" target="_blank"></a>
+                  <p class="title">将 HTTP 与响应式消息结合使用</p>
+                  <div class="description"><p>本指南演示您的 Quarkus 应用程序如何利用 SmallRye Reactive Messaging 来使用和生成 HTTP 消息。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-reactive-messaging-http/dev/reactive-messaging-websocket.html" target="_blank"></a>
+                  <p class="title">使用WebSockets与响应式消息传递</p>
+                  <div class="description"><p>本指南演示了您的Quarkus应用程序如何利用SmallRye响应式消息通过WebSockets来消费和产生消息。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/kafka-streams" ></a>
+                  <p class="title">使用Apache Kafka Streams</p>
+                  <div class="description"><p>本指南展示了你的Quarkus应用如何利用Apache Kafka Streams API来实现基于Apache Kafka的流处理应用。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/reactive-event-bus" ></a>
+                  <p class="title">使用事件总线</p>
+                  <div class="description"><p>本指南解释了不同的Bean如何使用事件总线进行交互。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/jms" ></a>
+                  <p class="title">使用JMS</p>
+                  <div class="description"><p>本指南演示了你的Quarkus应用程序如何使用AMQP 1.0的Apache Qpid JMS，或使用Apache ActiveMQ Artemis JMS进行JMS信息传递。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-google-cloud-services/main/pubsub.html" target="_blank"></a>
+                  <p class="title">Google Cloud PubSub</p>
+                  <div class="description"><p>本指南包括如何在Quarkus中使用GCP PubSub。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+            </ul>
+          </li>
+        
+          <li>
+            <h3 id="security">安全</h3>
+            <ul class="grid-wrapper list-item">
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/security" ></a>
+                  <p class="title">安全概述</p>
+                  <div class="description"><p>本指南是Quarkus中一切安全问题的入口。</p>
+</div>
+                  <div class="keywords">security</div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/security-getting-started" ></a>
+                  <p class="title">Security with Basic authentication and JPA</p>
+                  <div class="description"><p>This guide demonstrates how to get started with Quarkus security using Basic authentication and a database to store your user identities with Hibernate ORM.</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/security-authorization" ></a>
+                  <p class="title">网络端点的授权</p>
+                  <div class="description"><p>用授权来保护你的网络端点。</p>
+</div>
+                  <div class="keywords">security</div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/security-built-in-authentication" ></a>
+                  <p class="title">内置的认证支持</p>
+                  <div class="description"><p>了解更多关于Quarkus如何处理认证的信息。</p>
+</div>
+                  <div class="keywords">security</div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/security-customization" ></a>
+                  <p class="title">安全定制</p>
+                  <div class="description"><p>自定义Quarkus的安全层行为。</p>
+</div>
+                  <div class="keywords">security</div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/security-testing" ></a>
+                  <p class="title">安全测试</p>
+                  <div class="description"><p>测试你的Quarkus应用程序的安全性。</p>
+</div>
+                  <div class="keywords">security</div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/security-properties" ></a>
+                  <p class="title">使用.properties文件的安全性</p>
+                  <div class="description"><p>本指南展示了你的Quarkus应用程序如何使用.properties文件来存储你的用户身份。</p>
+</div>
+                  <div class="keywords">security</div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/security-jdbc" ></a>
+                  <p class="title">使用JDBC的安全性</p>
+                  <div class="description"><p>本指南展示了你的Quarkus应用程序如何使用数据库来存储你的用户身份。</p>
+</div>
+                  <div class="keywords">security</div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/security-ldap" ></a>
+                  <p class="title">使用LDAP的安全性</p>
+                  <div class="description"><p>本指南展示了你的Quarkus应用程序如何使用LDAP目录来存储你的用户身份。</p>
+</div>
+                  <div class="keywords">security</div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/security-openid-connect" ></a>
+                  <p class="title">使用OpenID Connect（OIDC）来保护服务应用</p>
+                  <div class="description"><p>本指南演示了如何使用OpenID Connect扩展来保护你的Quarkus JAX-RS服务应用程序，使用Bearer令牌授权，其中令牌由OpenID Connect提供者（如Keycloak）出具。</p>
+</div>
+                  <div class="keywords">sso,jwt,security</div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/security-openid-connect-web-authentication" ></a>
+                  <p class="title">使用OpenID Connect（OIDC）来保护网络应用程序</p>
+                  <div class="description"><p>本指南演示了如何使用OpenID Connect扩展来保护你的Quarkus JAX-RS网络应用程序，使用授权代码流和OpenID Connect提供者，如Keycloak。</p>
+</div>
+                  <div class="keywords">sso,security</div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/security-openid-connect-multitenancy" ></a>
+                  <p class="title">使用OpenID Connect（OIDC）多租户</p>
+                  <div class="description"><p>本指南演示了你的OpenID Connect应用程序如何支持多租户，这样你就可以从一个应用程序中为多个租户提供服务。</p>
+</div>
+                  <div class="keywords">sso,security</div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/security-keycloak-authorization" ></a>
+                  <p class="title">使用OpenID Connect（OIDC）和Keycloak来集中授权</p>
+                  <div class="description"><p>本指南展示了你的Quarkus应用程序如何使用Keycloak授权服务来授权访问受保护的资源。</p>
+</div>
+                  <div class="keywords">sso,security</div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/security-openid-connect-client" ></a>
+                  <p class="title">使用OpenID Connect（OIDC）和OAuth2客户端和过滤器</p>
+                  <div class="description"><p>本指南解释了如何使用OpenID Connect和OAuth2客户端和过滤器来获取、刷新和传播访问令牌。</p>
+</div>
+                  <div class="keywords">sso,security</div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/security-openid-connect-client-reference" ></a>
+                  <p class="title">OpenID Connect (OIDC) and OAuth2 Client and Filters Reference</p>
+                  <div class="description"><p>Reference guide for OpenID Connect and OAuth2 Client and Filters.</p>
+</div>
+                  <div class="keywords">sso,security</div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/security-openid-connect-providers" ></a>
+                  <p class="title">配置知名的OpenID Connect（OIDC）提供者</p>
+                  <div class="description"><p>本指南解释了如何配置Quarkus来验证著名的OpenID Connect提供者，如GitHub、谷歌、微软、苹果…</p>
+</div>
+                  <div class="keywords">sso,security</div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/security-openid-connect-dev-services" ></a>
+                  <p class="title">OpenID Connect（OIDC）开发服务</p>
+                  <div class="description"><p>在开发和测试模式下自动启动Keycloak或其他提供者。</p>
+</div>
+                  <div class="keywords">security</div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/security-keycloak-admin-client" ></a>
+                  <p class="title">Keycloak Admin Client</p>
+                  <div class="description"><p>Inject a preconfigured Keycloak Admin Client.</p>
+</div>
+                  <div class="keywords">security</div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/security-jwt" ></a>
+                  <p class="title">使用 JWT RBAC</p>
+                  <div class="description"><p>本指南解释了您的应用程序如何利用SmallRye JWT来验证JWT令牌并为JAX-RS端点提供安全访问。</p>
+</div>
+                  <div class="keywords">security</div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/security-jwt-build" ></a>
+                  <p class="title">建立、签署和加密JSON网络令牌(JWT)</p>
+                  <div class="description"><p>本指南解释了您的应用程序如何利用流畅且可配置的SmallRye JWT构建API构建、签署和/或加密JWT令牌。</p>
+</div>
+                  <div class="keywords">jwt,security</div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/security-oauth2" ></a>
+                  <p class="title">使用OAuth2 RBAC</p>
+                  <div class="description"><p>本指南解释了你的Quarkus应用程序如何利用OAuth2令牌来提供对JAX-RS端点的安全访问。</p>
+</div>
+                  <div class="keywords">security</div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-vault/dev/index.html" target="_blank"></a>
+                  <p class="title">使用Vault</p>
+                  <div class="description"><p>本指南解释了如何使用HashiCorp Vault在Quarkus中安全地存储您的凭证。</p>
+</div>
+                  <div class="keywords">security</div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-vault/dev/vault-transit.html" target="_blank"></a>
+                  <p class="title">使用Vault Transit保密引擎</p>
+                  <div class="description"><p>本指南解释了如何使用HashiCorp Vault进行 “加密即服务”。</p>
+</div>
+                  <div class="keywords">security</div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-vault/dev/vault-datasource.html" target="_blank"></a>
+                  <p class="title">在数据库中使用HashiCorp Vault</p>
+                  <div class="description"><p>将你的数据库凭证存储在Vault中，对其进行保密。</p>
+</div>
+                  <div class="keywords">security</div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-vault/dev/vault-auth.html" target="_blank"></a>
+                  <p class="title">与HashiCorp Vault的认证合作</p>
+                  <div class="description"><p>本指南解释了Quarkus支持的各种方法来验证您的Vault。</p>
+</div>
+                  <div class="keywords">security</div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-vault/dev/vault-pki.html" target="_blank"></a>
+                  <p class="title">使用HashiCorp Vault的PKI加密引擎</p>
+                  <div class="description"><p>用Vault的PKI加密引擎生成X.509证书。</p>
+</div>
+                  <div class="keywords">security</div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/credentials-provider" ></a>
+                  <p class="title">证书提供者</p>
+                  <div class="description"><p>本指南解释了如何使用Vault凭证提供者或实现你自己的自定义凭证。</p>
+</div>
+                  <div class="keywords">security</div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/security-webauthn" ></a>
+                  <p class="title">使用WebAuthn的安全性</p>
+                  <div class="description"><p>本指南演示了你的Quarkus应用程序如何使用WebAuthn认证来代替密码。</p>
+</div>
+                  <div class="keywords">security,webauthn</div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/security-csrf-prevention" ></a>
+                  <p class="title">Cross Site Request Forgery (CSRF) prevention</p>
+                  <div class="description"><p>This guide demonstrates how to add a RESTEasy Reactive filter to help prevent CSRF attacks.</p>
+</div>
+                  <div class="keywords">security,csrf</div>
+                  
+              </li>
+            
+            </ul>
+          </li>
+        
+          <li>
+            <h3 id="business-automation">业务自动化</h3>
+            <ul class="grid-wrapper list-item">
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/kogito" ></a>
+                  <p class="title">使用Kogito为应用程序添加业务自动化功能</p>
+                  <div class="description"><p>本指南演示了你的Quarkus应用程序如何使用Kogito来添加业务自动化，从而为其提供业务流程和规则。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/kogito-dmn" ></a>
+                  <p class="title">使用Kogito DMN支持为应用程序添加决策自动化功能</p>
+                  <div class="description"><p>使用Kogito来增加业务自动化，并通过DMN决策支持为其提供动力。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/kogito-drl" ></a>
+                  <p class="title">使用Kogito为应用程序添加规则引擎功能</p>
+                  <div class="description"><p>使用Kogito来添加带有规则的DRL文件。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/kogito-pmml" ></a>
+                  <p class="title">使用Kogito为应用程序添加预测功能</p>
+                  <div class="description"><p>使用Kogito来添加业务自动化，为其提供预测的动力。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/kogito-dev-services" ></a>
+                  <p class="title">Kogito Dev Services</p>
+                  <div class="description"><p>在开发和测试模式下自动启动Kogito。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/optaplanner" ></a>
+                  <p class="title">使用人工智能来优化OptaPlanner的日程安排</p>
+                  <div class="description"><p>本指南将引导你完成用OptaPlanner的约束解决人工智能（AI）创建Quarkus应用程序的过程。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+            </ul>
+          </li>
+        
+          <li>
+            <h3 id="integration">集成</h3>
+            <ul class="grid-wrapper list-item">
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/camel" ></a>
+                  <p class="title">Apache Camel</p>
+                  <div class="description"><p>本指南包括与Apache Camel的系统集成</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+            </ul>
+          </li>
+        
+          <li>
+            <h3 id="command-line">命令行应用</h3>
+            <ul class="grid-wrapper list-item">
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/command-mode-reference" ></a>
+                  <p class="title">命令模式参考</p>
+                  <div class="description"><p>本参考指南解释了如何用Quarkus开发命令行应用程序。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/picocli" ></a>
+                  <p class="title">Picocli</p>
+                  <div class="description"><p>用Picocli扩展简化了命令行应用程序的创建。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/scripting" ></a>
+                  <p class="title">jbang整合</p>
+                  <div class="description"><p>用jbang轻松实现基于Quarkus的脚本。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+            </ul>
+          </li>
+        
+          <li>
+            <h3 id="cloud">云</h3>
+            <ul class="grid-wrapper list-item">
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/stork" ></a>
+                  <p class="title">Service discovery and load balancing with Stork</p>
+                  <div class="description"><p>Learn how to use SmallRye Stork for service discovery and load balancing.</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/stork-kubernetes" ></a>
+                  <p class="title">Using Stork with Kubernetes</p>
+                  <div class="description"><p>Learn how to use SmallRye Stork in a Kubernetes environment.</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/stork-reference" ></a>
+                  <p class="title">Stork Reference</p>
+                  <div class="description"><p>更深入地了解如何配置和使用SmallRye Stork。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/container-image" ></a>
+                  <p class="title">构建容器镜像</p>
+                  <div class="description"><p>了解如何使用Jib、S2I或Docker构建和推送容器镜像，作为Quarkus构建的一部分。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/podman" ></a>
+                  <p class="title">Using Podman</p>
+                  <div class="description"><p>Use Podman instead of Docker for running containers.</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/deploying-to-kubernetes" ></a>
+                  <p class="title">在Kubernetes上部署Quarkus应用程序</p>
+                  <div class="description"><p>本指南涵盖了如何在Kubernetes上部署一个原生应用程序。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/deploying-to-openshift" ></a>
+                  <p class="title">在OpenShift上部署Quarkus应用程序</p>
+                  <div class="description"><p>本指南涵盖了如何在OpenShift上部署一个原生应用程序。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/kubernetes-config" ></a>
+                  <p class="title">消费Kubernetes ConfigMaps</p>
+                  <div class="description"><p>使用ConfigMaps作为Quarkus应用程序的配置源。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/kubernetes-client" ></a>
+                  <p class="title">使用Kubernetes客户端与Kubernetes集群互动</p>
+                  <div class="description"><p>本指南演示了如何使用Fabric8 Kubernetes客户端与你的Kubernetes集群互动。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/deploying-to-azure-cloud" ></a>
+                  <p class="title">部署到微软Azure云</p>
+                  <div class="description"><p>本指南解释了如何将Quarkus应用程序部署到Microsoft Azure云中。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/azure-functions-http" ></a>
+                  <p class="title">使用Vert.x Web、Servlet或RESTEasy的Azure Functions（无服务器）</p>
+                  <div class="description"><p>本指南介绍了如何将Vert.x Web、Servlet或RESTEasy微服务部署为Azure Function。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/amazon-lambda" ></a>
+                  <p class="title">Amazon Lambda</p>
+                  <div class="description"><p>本指南解释了如何部署基于Quarkus的Amazon Lambdas。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/amazon-lambda-http" ></a>
+                  <p class="title">带有Vert.x Web、Servlet或RESTEasy的Amazon Lambda</p>
+                  <div class="description"><p>本指南介绍了如何将Vert.x Web、Servlet或RESTEasy微服务部署为Amazon Lambda。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/deploying-to-google-cloud" ></a>
+                  <p class="title">部署到谷歌云</p>
+                  <div class="description"><p>本指南解释了如何将Quarkus应用程序部署到谷歌云。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/gcp-functions" ></a>
+                  <p class="title">Google Cloud Functions</p>
+                  <div class="description"><p>本指南解释了如何部署基于Quarkus的Google Cloud Functions。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/gcp-functions-http" ></a>
+                  <p class="title">使用Vert.x Web、Servlet或RESTEasy的Google Cloud Functions</p>
+                  <div class="description"><p>本指南介绍了如何将Vert.x Web、Servlet或RESTEasy微服务部署为Google Cloud Function。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/deploying-to-heroku" ></a>
+                  <p class="title">部署到Heroku</p>
+                  <div class="description"><p>在Heroku上部署你的Quarkus应用程序。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/funqy" ></a>
+                  <p class="title">Quarkus Funqy</p>
+                  <div class="description"><p>本指南解释了Funqy框架的基础知识，这是一个简单的可移植的跨供应商的云功能API。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/funqy-http" ></a>
+                  <p class="title">Quarkus Funqy HTTP</p>
+                  <div class="description"><p>本指南解释了Funqy的HTTP绑定。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/funqy-amazon-lambda" ></a>
+                  <p class="title">Quarkus Funqy Amazon Lambdas</p>
+                  <div class="description"><p>本指南解释了Funqy的Amazon Lambda绑定。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/funqy-amazon-lambda-http" ></a>
+                  <p class="title">Quarkus Funqy Amazon Lambdas HTTP</p>
+                  <div class="description"><p>本指南解释了Funqy的Amazon Lambda HTTP绑定。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/funqy-knative-events" ></a>
+                  <p class="title">Quarkus Funqy Knative Events</p>
+                  <div class="description"><p>本指南解释了Funqy的Knative Events绑定。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/funqy-azure-functions-http" ></a>
+                  <p class="title">Quarkus Funqy Azure Functions HTTP</p>
+                  <div class="description"><p>本指南解释了Funqy的Azure Functions HTTP绑定。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/funqy-gcp-functions" ></a>
+                  <p class="title">Quarkus Funqy Google Cloud Platform</p>
+                  <div class="description"><p>本指南解释了Funqy的Google Cloud Platform Functions绑定。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/funqy-gcp-functions-http" ></a>
+                  <p class="title">Quarkus Funqy Google Cloud Platform HTTP</p>
+                  <div class="description"><p>本指南解释了Funqy的Google Cloud Platform Functions HTTP绑定。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-amazon-services/1.x/amazon-dynamodb.html" target="_blank"></a>
+                  <p class="title">Amazon DynamoDB</p>
+                  <div class="description"><p>本指南包括如何在Quarkus中使用Amazon DynamoDB数据库。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-amazon-services/1.x/amazon-kms.html" target="_blank"></a>
+                  <p class="title">Amazon KMS</p>
+                  <div class="description"><p>本指南介绍了如何在Quarkus中使用亚马逊密钥管理服务。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-amazon-services/1.x/amazon-iam.html" target="_blank"></a>
+                  <p class="title">Amazon IAM</p>
+                  <div class="description"><p>本指南包括如何在Quarkus中使用亚马逊身份和访问管理。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-amazon-services/1.x/amazon-s3.html" target="_blank"></a>
+                  <p class="title">Amazon S3</p>
+                  <div class="description"><p>本指南包括如何在Quarkus中使用Amazon S3云存储。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-amazon-services/1.x/amazon-ses.html" target="_blank"></a>
+                  <p class="title">Amazon SES</p>
+                  <div class="description"><p>本指南包括如何在Quarkus中使用亚马逊简单电子邮件服务。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-amazon-services/1.x/amazon-sns.html" target="_blank"></a>
+                  <p class="title">Amazon SNS</p>
+                  <div class="description"><p>本指南包括如何在Quarkus中使用亚马逊简单通知服务。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-amazon-services/1.x/amazon-sqs.html" target="_blank"></a>
+                  <p class="title">Amazon SQS</p>
+                  <div class="description"><p>本指南涵盖了如何在Quarkus中使用Amazon Simple Queue Service。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-amazon-services/1.x/amazon-ssm.html" target="_blank"></a>
+                  <p class="title">Amazon SSM</p>
+                  <div class="description"><p>本指南包括如何在Quarkus中使用AWS系统管理器。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-google-cloud-services/main/index.html" target="_blank"></a>
+                  <p class="title">Access Google Cloud services</p>
+                  <div class="description"><p>本指南包括如何使用多种GCP服务。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+            </ul>
+          </li>
+        
+          <li>
+            <h3 id="observability">可观察性</h3>
+            <ul class="grid-wrapper list-item">
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/smallrye-health" ></a>
+                  <p class="title">使用健康检查</p>
+                  <div class="description"><p>本指南展示了您的Quarkus应用程序如何利用SmallRye Health扩展。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/opentelemetry" ></a>
+                  <p class="title">使用OpenTelemetry</p>
+                  <div class="description"><p>本指南解释了你的Quarkus应用程序如何利用OpenTelemetry来为交互式Web应用程序提供分布式跟踪。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/opentracing" ></a>
+                  <p class="title">使用OpenTracing</p>
+                  <div class="description"><p>本指南解释了你的Quarkus应用程序如何利用OpenTracing来为交互式网络应用程序提供分布式跟踪。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/micrometer" ></a>
+                  <p class="title">用Micrometer收集指标</p>
+                  <div class="description"><p>本指南展示了你的Quarkus应用程序如何使用Micrometer扩展来收集指标。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/smallrye-metrics" ></a>
+                  <p class="title">用SmallRye Metrics收集指标</p>
+                  <div class="description"><p>本指南展示了你的Quarkus应用程序如何利用SmallRye Metrics扩展。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/smallrye-fault-tolerance" ></a>
+                  <p class="title">使用容错技术</p>
+                  <div class="description"><p>本指南展示了你的Quarkus应用程序如何利用SmallRye容错扩展。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-logging-sentry/dev/index.html" target="_blank"></a>
+                  <p class="title">使用Sentry来监控你的日志</p>
+                  <div class="description"><p>本指南解释了如何使用Sentry来监控你的应用程序，并在发生异常时得到通知。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/centralized-log-management" ></a>
+                  <p class="title">集中的日志管理</p>
+                  <div class="description"><p>本指南解释了如何使用Graylog扩展日志格式（GELF）用Logstash或Fluentd集中管理你的日志。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+            </ul>
+          </li>
+        
+          <li>
+            <h3 id="serialization">序列化</h3>
+            <ul class="grid-wrapper list-item">
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/rest-json" ></a>
+                  <p class="title">编写REST JSON服务</p>
+                  <div class="description"><p>JSON现在是微服务之间的通用语言。在本指南中，我们看看如何让你的REST服务消费和提供JSON有效载荷。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/grpc" ></a>
+                  <p class="title">gRPC</p>
+                  <div class="description"><p>一切gRPC的总入口。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/grpc-getting-started" ></a>
+                  <p class="title">开始使用gRPC</p>
+                  <div class="description"><p>本指南解释了如何在你的Quarkus应用程序中开始使用gRPC。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/grpc-service-implementation" ></a>
+                  <p class="title">实现gRPC服务</p>
+                  <div class="description"><p>本指南解释了如何在你的Quarkus应用程序中实现gRPC服务。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/grpc-service-consumption" ></a>
+                  <p class="title">消费gRPC服务</p>
+                  <div class="description"><p>本指南解释了如何在你的Quarkus应用程序中消费gRPC服务。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+            </ul>
+          </li>
+        
+          <li>
+            <h3 id="tooling">工具</h3>
+            <ul class="grid-wrapper list-item">
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/cli-tooling" ></a>
+                  <p class="title">使用Quarkus CLI</p>
+                  <div class="description"><p>使用Quarkus CLI来创建、构建、运行和管理Quarkus项目的扩展。</p>
+</div>
+                  <div class="keywords">cli</div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/maven-tooling" ></a>
+                  <p class="title">用Maven构建应用程序</p>
+                  <div class="description"><p>本指南涵盖了以下内容：</p>
+<ul>
+  <li>Maven配置</li>
+  <li>创建新项目</li>
+  <li>处理扩展</li>
+  <li>开发模式</li>
+  <li>调试</li>
+  <li>在IDE中导入</li>
+  <li>构建原生可执行文件</li>
+  <li>构建容器友好型可执行文件</li>
+</ul>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/gradle-tooling" ></a>
+                  <p class="title">用Gradle构建应用程序</p>
+                  <div class="description"><p>本指南涵盖了以下内容：</p>
+<ul>
+  <li>Gradle配置</li>
+  <li>创建新项目</li>
+  <li>处理扩展</li>
+  <li>开发模式</li>
+  <li>调试</li>
+  <li>在你的IDE中导入</li>
+  <li>构建原生可执行文件</li>
+  <li>构建容器友好型可执行文件</li>
+</ul>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/jreleaser" ></a>
+                  <p class="title">用JReleaser发布你的Quarkus应用程序</p>
+                  <div class="description"><p>了解如何利用JReleaser简化Quarkus应用程序的发布过程。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/tests-with-coverage" ></a>
+                  <p class="title">测量你的测试的覆盖率</p>
+                  <div class="description"><p>本指南解释了如何测量你的Quarkus应用程序的测试覆盖率。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/reaugmentation" ></a>
+                  <p class="title">重新增强Quarkus应用程序</p>
+                  <div class="description"><p>使用易变的jars来重建具有不同构建时间配置的应用程序。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+            </ul>
+          </li>
+        
+          <li>
+            <h3 id="compatibility">兼容</h3>
+            <ul class="grid-wrapper list-item">
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/spring-di" ></a>
+                  <p class="title">使用Quarkus Extension for Spring DI API</p>
+                  <div class="description"><p>虽然我们鼓励你使用CDI注解进行注入，但Quarkus以spring-di扩展的形式为Spring依赖注入提供了一个兼容层。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/spring-web" ></a>
+                  <p class="title">使用Quarkus Extension for Spring Web API</p>
+                  <div class="description"><p>虽然我们鼓励你使用JAX-RS注解来定义REST端点，但Quarkus以spring-web扩展的形式为Spring Web提供了一个兼容层。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/spring-data-jpa" ></a>
+                  <p class="title">使用Quarkus Extension for Spring Data JPA API</p>
+                  <div class="description"><p>虽然我们鼓励你使用Hibernate ORM与Panache作为你的数据层，但Quarkus以spring-data-jpa扩展的形式为Spring Data JPA提供了一个兼容层。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/spring-data-rest" ></a>
+                  <p class="title">用Spring Data编写简单的CRUD应用程序</p>
+                  <div class="description"><p>Spring Data REST简化了基于我们Spring Data兼容层的CRUD应用程序的创建。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/spring-security" ></a>
+                  <p class="title">使用Quarkus Extension for Spring Security API</p>
+                  <div class="description"><p>虽然我们鼓励你使用Quarkus安全层来保护你的应用程序，但Quarkus以spring-security扩展的形式为Spring Security提供了一个兼容层。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/spring-cache" ></a>
+                  <p class="title">使用Quarkus Extension for Spring Cache</p>
+                  <div class="description"><p>虽然我们鼓励你使用Cache扩展来进行应用级缓存，但Quarkus以spring-cache扩展的形式为Spring Cache提供了一个兼容层。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/spring-scheduled" ></a>
+                  <p class="title">使用Quarkus Extension for Spring Scheduled</p>
+                  <div class="description"><p>虽然我们鼓励你使用Scheduler或Quartz扩展来安排任务，但Quarkus以spring-scheduled扩展的形式为Spring Scheduled提供了一个兼容层。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/spring-boot-properties" ></a>
+                  <p class="title">使用Spring Boot的ConfigurationProperties</p>
+                  <div class="description"><p>使用Spring Boot的 <code class="language-plaintext highlighter-rouge">@ConfigurationProperties</code> ，代替MicroProfile配置注解</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/spring-cloud-config-client" ></a>
+                  <p class="title">使用Quarkus Extension for Spring Cloud Config</p>
+                  <div class="description"><p>Quarkus以spring-cloud-config-client扩展的形式为Spring Cloud Config提供了一个兼容层。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+            </ul>
+          </li>
+        
+          <li>
+            <h3 id="miscellaneous">杂项</h3>
+            <ul class="grid-wrapper list-item">
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/scheduler" ></a>
+                  <p class="title">安排周期性任务</p>
+                  <div class="description"><p>现代应用程序经常需要定期运行特定的任务。在本指南中，你将学习如何安排定期任务。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/scheduler-reference" ></a>
+                  <p class="title">Scheduler Reference</p>
+                  <div class="description"><p>了解更多关于Scheduler扩展的信息。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/quartz" ></a>
+                  <p class="title">用Quartz调度集群任务</p>
+                  <div class="description"><p>你的计划任务需要集群支持？本指南解释了如何使用Quartz扩展来实现这一点。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/mailer" ></a>
+                  <p class="title">使用SMTP发送邮件</p>
+                  <div class="description"><p>了解更多关于如何使用我们的响应式电子邮件客户端从Quarkus应用程序发送电子邮件。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/mailer-reference" ></a>
+                  <p class="title">Mailer Reference Guide</p>
+                  <div class="description"><p>本参考指南更详细地解释了Quarkus Mailer的配置和使用。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/qute" ></a>
+                  <p class="title">用Qute进行模板设计</p>
+                  <div class="description"><p>了解更多关于如何利用Qute模板引擎在你的应用程序中使用模板。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/qute-reference" ></a>
+                  <p class="title">Qute Reference Guide</p>
+                  <div class="description"><p>了解你需要知道的关于Qute模板引擎的一切。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-tika/dev/index.html" target="_blank"></a>
+                  <p class="title">用Apache Tika提取内容</p>
+                  <div class="description"><p>了解更多关于如何使用Apache Tika工具包从文档中提取内容。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/vertx" ></a>
+                  <p class="title">使用Vert.x</p>
+                  <div class="description"><p>本指南解释了如何在Quarkus中使用Vert.x来构建响应式应用程序。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/vertx-reference" ></a>
+                  <p class="title">Vert.x参考指南</p>
+                  <div class="description"><p>本参考指南提供了关于Quarkus使用的Vert.x实例的使用和配置的高级细节。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-jgit/dev/index.html" target="_blank"></a>
+                  <p class="title">用JGit访问Git存储库</p>
+                  <div class="description"><p>本指南解释了如何用JGit访问Git仓库。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-config-extensions/dev/consul.html" target="_blank"></a>
+                  <p class="title">从Consul中消费配置</p>
+                  <div class="description"><p>本指南解释了你的Quarkus应用程序如何在运行时从Consul读取配置属性。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/performance-measure" ></a>
+                  <p class="title">衡量性能</p>
+                  <div class="description"><p>本指南解释了如何最好地测量Quarkus应用程序的占用空间。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-google-cloud-services/main/secretmanager.html" target="_blank"></a>
+                  <p class="title">从谷歌云秘密管理器中消费配置</p>
+                  <div class="description"><p>本指南介绍了如何在Quarkus中使用GCP Secret Manager直接或通过 <code class="language-plaintext highlighter-rouge">application.properties</code> 来使用配置属性。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+                  <div class="origin">
+                      <img src="/assets/images/quarkiverse_icon_default.svg" width="25" height="25" />
+                      <span>Quarkiverse Hub</span>
+                  </div>
+                  
+              </li>
+            
+            </ul>
+          </li>
+        
+          <li>
+            <h3 id="alternative-languages">替代语言</h3>
+            <ul class="grid-wrapper list-item">
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/kotlin" ></a>
+                  <p class="title">使用Kotlin</p>
+                  <div class="description"><p>本指南解释了如何使用Kotlin。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/hibernate-orm-panache-kotlin" ></a>
+                  <p class="title">用Panache和Kotlin简化Hibernate ORM</p>
+                  <div class="description"><p>这将解释在Kotlin项目中使用Hibernate ORM与Panache的具体细节。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/mongodb-panache-kotlin" ></a>
+                  <p class="title">使用Panache和Kotlin的MongoDB</p>
+                  <div class="description"><p>本指南涵盖了在Kotlin项目中使用活动记录和存储库的MongoDB的用法。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+            </ul>
+          </li>
+        
+          <li>
+            <h3 id="writing-extensions">编写扩展</h3>
+            <ul class="grid-wrapper list-item">
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/building-my-first-extension" ></a>
+                  <p class="title">构建我的第一个扩展</p>
+                  <div class="description"><p>一步一步地学习如何构建一个简单的扩展。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/cdi-integration" ></a>
+                  <p class="title">CDI Integration</p>
+                  <div class="description"><p>了解如何将你的扩展与Quarkus的CDI容器集成。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/dev-ui" ></a>
+                  <p class="title">为开发用户界面做出贡献</p>
+                  <div class="description"><p>了解如何让你的扩展为Dev UI贡献功能。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/all-builditems" ></a>
+                  <p class="title">所有BuildItems</p>
+                  <div class="description"><p>探索你可以在你的扩展中消费/提供的所有BuildItems。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/capabilities" ></a>
+                  <p class="title">功能</p>
+                  <div class="description"><p>在Quarkus中如何实现和使用功能。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/extension-metadata" ></a>
+                  <p class="title">Extension metadata</p>
+                  <div class="description"><p>Learn more about Quarkus extensions metadata</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/conditional-extension-dependencies" ></a>
+                  <p class="title">条件性扩展的依赖性</p>
+                  <div class="description"><p>基于特定条件触发包含附加扩展。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/writing-extensions" ></a>
+                  <p class="title">编写您自己的扩展</p>
+                  <div class="description"><p>Quarkus扩展通过将尽可能多的工作推给构建操作来优化你的应用程序。本指南解释了Quarkus扩展的基本原理，并指导你编写你自己的扩展。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/extension-codestart" ></a>
+                  <p class="title">为扩展编写Codestart</p>
+                  <div class="description"><p>当用户在 code.quarkus.io 和所有Quarkus工具上生成Quarkus应用程序时，为扩展提供初始代码。本指南解释如何为扩展创建和配置Codestart。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/writing-native-applications-tips" ></a>
+                  <p class="title">编写原生应用程序</p>
+                  <div class="description"><p>本指南收集了一些提示，帮助你解决将应用程序编译为原生可执行文件时遇到的问题。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+            </ul>
+          </li>
+        
+          <li>
+            <h3 id="architecture">架构</h3>
+            <ul class="grid-wrapper list-item">
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/quarkus-reactive-architecture" ></a>
+                  <p class="title">Quarkus Reactive Architecture</p>
+                  <div class="description"><p>了解关于Quarkus响应式架构的更多信息。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/virtual-threads" ></a>
+                  <p class="title">Virtual Threads support</p>
+                  <div class="description"><p>Learn how to benefit from Java 19 virtual threads when writing REST services in Quarkus.</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/class-loading-reference" ></a>
+                  <p class="title">类加载参考</p>
+                  <div class="description"><p>了解关于Quarkus类加载基础设施的更多信息。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/platform" ></a>
+                  <p class="title">理解平台概念</p>
+                  <div class="description"><p>了解更多关于Quarkus 世界中我们称之为平台的东西。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/extension-registry-user" ></a>
+                  <p class="title">Quarkus Extension Registry</p>
+                  <div class="description"><p>了解更多关于扩展仓库的概念，以及如何使用自己的扩展仓库。</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+              
+              
+              <li class="card">
+                  <a href="/version/2.13/guides/dev-mode-differences" ></a>
+                  <p class="title">开发模式的差异</p>
+                  <div class="description"><p>开发模式与生产应用程序有何不同</p>
+</div>
+                  <div class="keywords"></div>
+                  
+              </li>
+            
+            </ul>
+          </li>
+        
+        </ul>
+        <div class="empty-list">对不起，没有与检索匹配的指南。请更改搜索关键字后重试。</div>
+      </div>
+    </div>
+</div>
+<script src="/assets/javascript/guides-app.js" type="module"></script>
+  
+
+
+  </div>
+
+  <div class="content project-footer">
+  <div class="footer-section">
+    <div class="logo-wrapper">
+      <a href="/"><img src="/assets/images/quarkus_logo_horizontal_rgb_reverse.svg" class="project-logo" title="Quarkus"></a>
+    </div>
+  </div>
+  <div class="grid-wrapper">
+    <p class="grid__item width-3-12">Quarkus is open. All dependencies of this project are available under the <a href='https://www.apache.org/licenses/LICENSE-2.0' target='_blank'>Apache Software License 2.0</a> or compatible license.<br /><br />This website was built with <a href='https://jekyllrb.com/' target='_blank'>Jekyll</a>, is hosted on <a href='https://pages.github.com/' target='_blank'>GitHub Pages</a> and is completely open source. If you want to make it better, <a href='https://github.com/quarkusio/quarkusio.github.io' target='_blank'>fork the website</a> and show us what you’ve got.</p>
+
+    
+      <div class="width-1-12 project-links">
+        <span>Navigation</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="/" target="_blank">Home</a></li>
+          
+          
+          
+            <li><a href="/about" target="_blank">About</a></li>
+          
+          
+          
+            <li><a href="/blog" target="_blank">博客</a></li>
+          
+          
+          
+            <li><a href="/insights" target="_blank">Podcast</a></li>
+          
+          
+          
+            <li><a href="/events" target="_blank">活动</a></li>
+          
+          
+          
+            <li><a href="/newsletter" target="_blank">新闻</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
+          
+          
+          
+            <li><a href="https://github.com/orgs/quarkusio/projects/13/views/1" target="_blank">路线图</a></li>
+          
+          
+          
+            <li><a href="/security" target="_blank">Security&nbsp;policy</a></li>
+          
+          
+          
+            <li><a href="/usage" target="_blank">Usage</a></li>
+          
+          
+          
+            <li><a href="/brand" target="_blank">Brand</a></li>
+          
+          
+          
+            <li><a href="/desktopwallpapers" target="_blank">Wallpapers</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-1-12 project-links">
+        <span>Follow Us</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="https://x.com/quarkusio" target="_blank">X</a></li>
+          
+          
+          
+            <li><a href="https://bsky.app/profile/quarkus.io" target="_blank">Bluesky</a></li>
+          
+          
+          
+            <li><a rel="me" href="https://fosstodon.org/@quarkusio" target="_blank">Mastodon</a></li>
+            
+          
+          
+            <li><a href="https://www.facebook.com/quarkusio" target="_blank">Facebook</a></li>
+          
+          
+          
+            <li><a href="https://www.linkedin.com/company/quarkusio/" target="_blank">Linkedin</a></li>
+          
+          
+          
+            <li><a href="https://www.youtube.com/channel/UCaW8QG_QoIk_FnjLgr5eOqg" target="_blank">Youtube</a></li>
+          
+          
+          
+            <li><a href="https://github.com/quarkusio" target="_blank">GitHub</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-2-12 project-links">
+        <span>Get Help</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="/support" target="_blank">Support</a></li>
+          
+          
+          
+            <li><a href="/guides" target="_blank">Guides</a></li>
+          
+          
+          
+            <li><a href="/faq" target="_blank">FAQ</a></li>
+          
+          
+          
+            <li><a href="/get-started" target="_blank">开始体验</a></li>
+          
+          
+          
+            <li><a href="https://stackoverflow.com/questions/tagged/quarkus" target="_blank">Stack Overflow</a></li>
+          
+          
+          
+            <li><a href="https://github.com/quarkusio/quarkus/discussions" target="_blank">Discussions</a></li>
+          
+          
+          
+            <li><a href="https://groups.google.com/forum/#!forum/quarkus-dev" target="_blank">Development mailing list</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-1-12 project-links">
+        <span>Languages</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="https://quarkus.io/" target="_blank">English</a></li>
+          
+          
+          
+            <li><a href="https://pt.quarkus.io/" target="_blank">Português&nbsp;(Brasileiro)</a></li>
+          
+          
+          
+            <li><a href="https://es.quarkus.io/" target="_blank">Español</a></li>
+          
+          
+          
+            <li><a href="https://cn.quarkus.io/" target="_blank">简体中文</a></li>
+          
+          
+          
+            <li><a href="https://ja.quarkus.io/" target="_blank">日本語</a></li>
+          
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="width-4-12 more-links">
+        <span>Quarkus is made of community projects</span>
+        <ul class="footer-links">
+          
+            <li><a blah href="https://vertx.io/" target="_blank">Eclipse Vert.x</a></li>
+          
+            <li><a blah href="https://smallrye.io" target="_blank">SmallRye</a></li>
+          
+            <li><a blah href="https://hibernate.org" target="_blank">Hibernate</a></li>
+          
+            <li><a blah href="https://netty.io" target="_blank">Netty</a></li>
+          
+            <li><a blah href="https://resteasy.github.io" target="_blank">RESTEasy</a></li>
+          
+            <li><a blah href="https://camel.apache.org" target="_blank">Apache Camel</a></li>
+          
+            <li><a blah href="https://microprofile.io" target="_blank">Eclipse MicroProfile</a></li>
+          
+            <li><a blah href="https://code.quarkus.io/" target="_blank">And many more...</a></li>
+          
+        </ul>
+      </div>
+    
+  </div>
+</div>
+
+  <div class="content redhat-footer">
+  <div class="grid-wrapper">
+    <span class="licence">
+      <i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i> <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank">CC by 3.0</a> | <a href="https://www.redhat.com/en/about/privacy-policy">Privacy Policy</a>
+    </span>
+    <span class="redhat">
+      Sponsored by
+    </span>
+    <span class="redhat-logo">
+      <a href="https://www.redhat.com/" target="_blank"><img src="/assets/images/redhat_reversed.svg"></a>
+    </span>
+  </div>
+</div>
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha384-8gBf6Y4YYq7Jx97PIqmTwLPin4hxIzQw5aDmUg/DDhul9fFpbbLcLh3nTIIDJKhx" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="/assets/javascript/mobile-nav.js"></script>
+  <script type="text/javascript" src="/assets/javascript/scroll-down.js"></script>
+  <script src="/assets/javascript/satellite.js" type="text/javascript"></script>
+  <script src="/guides/javascript/config.js" type="text/javascript"></script>
+  <script src="/assets/javascript/guides-version-dropdown.js" type="text/javascript"></script>
+  <script src="/assets/javascript/back-to-top.js" type="text/javascript"></script>
+  <script src="/assets/javascript/clipboard.min.js" type="text/javascript"></script>
+  <script src="/assets/javascript/copy.js" type="text/javascript"></script>
+  <script src="/assets/javascript/asciidoc-tabs.js" type="text/javascript"></script>
+  <script src="/assets/javascript/future-date.js" type="text/javascript"></script>
+</body>
+
+</html>

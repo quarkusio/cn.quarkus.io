@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="cn">
+
+
+
+
+
+
+
+<head>
+  <title>响应式入门 - 3.8 - Quarkus</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
+  script-src 'self' 'unsafe-inline' 'unsafe-eval'
+      
+      https://assets.adobedtm.com
+      js.bizographics.com
+      https://www.redhat.com
+      https://static.redhat.com
+      https://app.requestly.io/
+      jsonip.com
+      https://ajax.googleapis.com
+      https://use.fontawesome.com
+      http://www.youtube.com
+      http://www.googleadservices.com
+      https://googleads.g.doubleclick.net
+      https://giscus.app
+      https://analytics.ossupstream.org/
+      https://app.mailjet.com;
+
+  style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
+  img-src 'self' * data:; 
+  media-src 'self'; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  base-uri 'none'; 
+  object-src 'none'; 
+  form-action 'none'; 
+  font-src 'self' https://use.fontawesome.com https://fonts.gstatic.com;" />
+  <script id="adobe_dtm" src="https://www.redhat.com/dtm.js" type="text/javascript"></script>
+  <script src="/assets/javascript/highlight.pack.js" type="text/javascript"></script>
+  <META HTTP-EQUIV='X-XSS-Protection' CONTENT="1; mode=block">
+  <META HTTP-EQUIV='X-Content-Type-Options' CONTENT="nosniff">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Quarkus: Supersonic Subatomic Java">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@QuarkusIO"> 
+  <meta name="twitter:creator" content="@QuarkusIO">
+  <meta property="og:url" content="https://quarkus.io/version/3.8/guides/getting-started-reactive" />
+  <meta property="og:title" content="响应式入门 - 3.8" />
+  <meta property="og:description" content="Quarkus: Supersonic Subatomic Java" />
+  <meta property="og:image" content="https://quarkus.io/assets/images/quarkus_card.png" />
+  
+  <link rel="canonical" href="https://quarkus.io/guides/getting-started-reactive">
+  <link rel="shortcut icon" type="image/png" href="/favicon.ico" >
+  <link rel="stylesheet" href="/guides/stylesheet/config.css" />
+  <link rel="stylesheet" href="/assets/css/main.css?2021-07-29" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.2/css/all.css" crossorigin="anonymous">
+  <link rel="alternate" type="application/rss+xml"  href="/feed.xml" title="Quarkus">
+  <script src="/assets/javascript/hl.js" type="text/javascript"></script>
+  
+  
+  
+  
+  <link rel="alternate" hreflang="en" href="https://quarkus.io/version/3.8/guides/getting-started-reactive" />
+  
+  <link rel="alternate" hreflang="pt-br" href="https://pt.quarkus.io/version/3.8/guides/getting-started-reactive" />
+  
+  <link rel="alternate" hreflang="es" href="https://es.quarkus.io/version/3.8/guides/getting-started-reactive" />
+  
+  <link rel="alternate" hreflang="zh" href="https://cn.quarkus.io/version/3.8/guides/getting-started-reactive" />
+  
+  <link rel="alternate" hreflang="ja" href="https://ja.quarkus.io/version/3.8/guides/getting-started-reactive" />
+  
+  <link rel="alternate" hreflang="x-default" href="https://quarkus.io/" />  
+  <script src="/assets/javascript/tracking.js"></script>
+  
+  <script src="/assets/javascript/colormode.js" type="text/javascript"></script>
+
+</head>
+
+<body class="guides">
+
+  
+
+
+<div class="grid-wrapper communitysite">
+  <div class="grid__item width-12-12">The <a href="https://quarkus.io/version/3.8/guides/getting-started-reactive">English version of quarkus.io</a> is the official project site. Translated sites are community supported on a best-effort basis.</div>
+</div>
+
+
+  <div class="nav-wrapper">
+  <div class="grid-wrapper">
+    <div class="width-12-12">
+      <input type="checkbox" id="checkbox" />
+      <nav id="main-nav" class="main-nav">
+        <div class="logo-wrapper">
+           <a href="/"><img src="/assets/images/quarkus_logo_horizontal_rgb_600px_reverse.png" class="project-logo" title="Quarkus"></a>
+        </div>
+    <label class="nav-toggle" for="checkbox"> <i class="fa fa-bars"></i>
+</label>
+    <ul id="menu" class="menu">
+      <li class="dropdown">
+        <span href="/about/">Why<i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/about" class="">QUARKUS是什么？</a></li>
+          <li><a href="/developer-joy" class="">开发者的乐趣 </a></li>
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES 原生</a></li>
+          <li><a href="/standards" class="">标准</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">容器优先 </a></li>          
+        </ul>
+      </li>
+      <li class="dropdown">
+        <span href="/learn/">学习 <i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/get-started" class="">入门</a></li>
+          <li><a href="/guides" class="active" >指南</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
+          <li><a href="/qtips" class="">"Q" TIP视频</a></li>          
+          <li><a href="/books" class="">书籍</a></li>
+          </ul>
+      </li>
+      <li class="dropdown">
+        <span href="https://quarkus.io/extensions/">扩展<i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          
+          <!-- Note that quarkus.io is hardcoded here, because it is the only url which supports extensions -->
+<li><a href="https://quarkus.io/extensions/" class="">浏览扩展</a></li>
+          <li><a href="/faq/#what-is-a-quarkus-extension" class="">使用扩展</a></li>
+          <li><a href="/guides/writing-extensions" class="" >创建扩展</a></li>
+          <li><a href="https://hub.quarkiverse.io" class="">SHARE EXTENSIONS</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <span href="/community/">社区 <i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/support/" class="">支持</a></li>
+          <li><a href="/blog" class="" >博客</a></li>
+          <li><a href="/discussion" class="">讨论</a></li>
+          <li><a href="/working-groups" class="">WORKING GROUPS</a></li>
+          <li><a href="/insights" class="" >播客</a></li>
+          <li><a href="/events" class="">活动</a></li>
+          <li><a href="/newsletter" class="">新闻</a></li>
+          <li><a href="https://github.com/orgs/quarkusio/projects/13/views/1" class="">路线图</a></li>
+          </ul>
+      </li>
+      <li>
+        <a href="https://code.quarkus.io" class="button-cta secondary
+white">开始编码</a>
+      </li>
+      <li class="dropdown">
+        <span href="/language/"><div class="fas fa-globe langicon"></div><i class="fas fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="https://quarkus.io/version/3.8/guides/getting-started-reactive" >OFFICIAL (ENGLISH)</a></li>
+          <li><a href="https://pt.quarkus.io/version/3.8/guides/getting-started-reactive">PORTUGUÊS (BR)</a></li>
+          <li><a href="https://es.quarkus.io/version/3.8/guides/getting-started-reactive">ESPAÑOL</a></li>
+          <li><a href="https://cn.quarkus.io/version/3.8/guides/getting-started-reactive">简体中文</a></li>
+          <li><a href="https://ja.quarkus.io/version/3.8/guides/getting-started-reactive">日本語</a></li>
+          </ul>
+      </li>
+      <li>
+        <span href="#" class="modeswitcher" id='theme-toggle'><i class="fas
+fa-sun"></i><i class="fas fa-moon"></i><i class="fas fa-cog"></i></span>
+      </li>
+    </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+  <div class="content">
+    
+
+
+
+
+
+<section class="full-width-version-bg flexfilterbar guides">
+  <div class="guideflexcontainer">
+    <div class="docslink">
+      <a class="returnlink" href="/version/3.8/guides/">返回指南目录</a>
+    </div>
+    <div class="flexlabel">
+      <label>选择指南版本</label>
+    </div>
+    <div class="guidepulldown version">
+    <select id="guide-version-dropdown">
+      
+        
+        
+        <option value="main" >Main - SNAPSHOT</option>
+        
+        
+        
+        <option value="latest" >3.19.1 - Latest</option>
+        
+        
+        
+        <option value="3.15" >3.15</option>
+        
+        
+        
+        <option value="3.8" selected>3.8</option>
+        
+        
+        
+        <option value="3.2" >3.2</option>
+        
+        
+        
+        <option value="2.16" >2.16</option>
+        
+        
+        
+        <option value="2.13" >2.13</option>
+        </select>
+    </div>
+  </div>
+</section>
+
+<div class="guide">
+  <div class="grid-wrapper">
+    <div class="grid__item width-8-12 width-12-12-m">
+      <h1 class="text-caps">响应式入门 </h1>
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>Reactive</em> 是一组用于构建健壮、高效且并发的应用程序和系统的原则。 这些原则使您可以处理比传统方法更多的负载，同时更有效地使用资源（CPU 和内存），同时还可以优雅地对故障做出反应。</p>
+</div>
+<div class="paragraph">
+<p>Quarkus是一个 <em>Reactive</em> 框架。 从一开始，<em>Reactive</em> 就一直是Quarkus架构的基本原则。 它包括许多反应式功能，并提供广泛的生态系统。</p>
+</div>
+<div class="paragraph">
+<p>本指南不是一篇关于 <em>Reactive</em> 是什么以及Quarkus如何实现响应式架构的深入文章。 如果你想阅读更多关于这些主题的信息，请参考 <a href="quarkus-reactive-architecture">响应式架构指南</a>，它提供了Quarkus响应式生态系统的概述。</p>
+</div>
+<div class="paragraph">
+<p>在本指南中，我们将带您开始了解Quarkus的一些响应式功能。 我们将实现一个简单的 CRUD 应用程序。 这部分与 <a href="hibernate-orm-panache">Hibernate与Panache指南</a>不同，它使用了Quarkus的响应式功能。</p>
+</div>
+<div class="paragraph">
+<p>本指南将帮助您：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>使用 Quarkus 引导响应式 CRUD 应用程序</p>
+</li>
+<li>
+<p>将 Hibernate Reactive 与 Panache 结合使用，以响应式方式与数据库进行交互</p>
+</li>
+<li>
+<p>使用 RESTEasy Reactive 实现 HTTP API，同时强制执行响应式原则</p>
+</li>
+<li>
+<p>打包和运行应用程序</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="prerequisites"><a class="anchor" href="#prerequisites"></a>先决条件</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>要完成这个指南，你需要：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>大概15分钟</p>
+</li>
+<li>
+<p>编辑器</p>
+</li>
+<li>
+<p>JDK 17+ installed with <code>JAVA_HOME</code> configured appropriately</p>
+</li>
+<li>
+<p>Apache Maven 3.9.6</p>
+</li>
+<li>
+<p>如果你愿意的话，还可以选择使用<a href="cli-tooling">Quarkus CLI</a></p>
+</li>
+<li>
+<p>如果你想构建原生可执行程序，可以选择安装Mandrel或者GraalVM，并<a href="building-native-image#configuring-graalvm">正确配置</a>(或者使用Docker在容器中进行构建)</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+验证Maven正在使用您期望的Java版本。如果安装了多个JDK，请确保Maven使用的是适当的版本。你可以通过运行 <code>mvn --version</code> 来验证Maven使用的是哪个JDK
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="imperative-vs-reactive-a-question-of-threads"><a class="anchor" href="#imperative-vs-reactive-a-question-of-threads"></a>指令式与响应式：线程的问题</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>如上所述，在本指南中，我们将实现一个响应式CRUD应用程序。但您可能想知道，与传统的、指令式的模式相比，它有什么不同和好处。</p>
+</div>
+<div class="paragraph">
+<p>为了更好地理解这种对比，我们需要解释响应式执行模型和指令式执行模型之间的区别。理解 <em>Reactive</em> 不仅仅是一种不同的执行模型是必要的，而且这一区别对于理解本指南是必要的。</p>
+</div>
+<div class="paragraph">
+<p>在传统的指令式方法中，框架分配一个线程来处理请求。因此，请求的整个处理都运行在这个工作线程上。这个模型的扩展性不太好。事实上，要处理多个并发请求，你需要多个线程。因此，应用程序的并发性受到线程数量的限制。此外，只要您的代码与远程服务交互，这些线程就会被阻塞。因此，这会导致资源的低效使用，因为您可能需要更多的线程，而每个线程在映射到OS线程时，在内存和CPU方面都有成本。</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/blocking-threads.png" alt="Imperative Execution Model and Worker Threads" width="50%">
+</div>
+</div>
+<div class="paragraph">
+<p>另一方面，响应式模型依赖于非阻塞 I/O和不同的执行模型。非阻塞I/O提供了一种处理并发I/O的有效方法。最小数量的线程称为I/O线程，可以处理许多并发I/O。使用这样的模型，请求处理不会委托给工作线程，而是直接使用这些I/O线程。它节省了内存和CPU，因为不需要创建工作线程来处理请求。它还改善了并发性，因为它消除了对线程数量的限制。最后，它还改善了响应时间，因为它减少了线程开关的数量。</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/reactive-thread.png" alt="Reactive Execution Model and I/O Threads" width="50%">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="from-sequential-to-continuation-style"><a class="anchor" href="#from-sequential-to-continuation-style"></a>从顺序到延续风格</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>因此，使用响应式执行模型，请求是使用I/O线程处理的。但这还不是全部。一个I/O线程可以处理多个并发请求。如何实现？这是一个技巧，也是响应式和指令式之间最重要的区别之一。</p>
+</div>
+<div class="paragraph">
+<p>当处理请求需要与远程服务(如HTTP API或数据库)交互时，它不会在等待响应时阻塞执行。相反，它调度I/O操作并附加一个延续，即请求处理剩余的代码。这种延续可以作为回调传递 (与I/O结果一起调用的函数)，或者使用更高级的结构，诸如响应式编程或协同程序。不管延续是如何表示的，最基本的方面是释放I/O线程，因此，这个线程可以用来处理另一个请求。当计划的I/O完成时，I/O线程执行延续，并继续处理挂起的请求。</p>
+</div>
+<div class="paragraph">
+<p>因此，与I/O阻塞执行的指令式模型不同，响应式切换到基于延续的设计，其中I/O线程被释放，而延续在I/O完成时被调用。因此，I/O线程可以处理多个并发请求，从而提高应用程序的整体并发性。</p>
+</div>
+<div class="paragraph">
+<p>但是，有一个问题。我们需要一种方法来编写延续传递代码。有很多方法可以做到这一点。在Quarkus，我们提出：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Mutiny - 一个直观的事件驱动的响应式编程库</p>
+</li>
+<li>
+<p>Kotlin co-routines - 一种以顺序方式编写异步代码的方法</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>在本指南中，我们将使用Mutiny。想要了解更多关于Mutiny的信息，请查看 <a href="mutiny-primer">Mutiny文档</a>。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Loom项目很快就会加入到JDK中，它提出了一个基于虚拟线程的模型。一旦在全局范围内可用，Quarkus架构就可以支持Loom。
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="bootstrapping-the-reactive-fruits-application"><a class="anchor" href="#bootstrapping-the-reactive-fruits-application"></a>启动响应式水果应用程序</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>考虑到这一点，让我们看看如何使用Quarkus开发一个CRUD应用程序，它将使用I/O线程处理HTTP请求，与数据库交互，处理结果，并编写HTTP响应，换句话说：一个响应式CRUD应用程序。</p>
+</div>
+<div class="paragraph">
+<p>虽然我们建议您按照步骤操作，但您可以在 <a href="https://github.com/quarkusio/quarkus-quickstarts/tree/main/hibernate-reactive-panache-quickstart上找到最终的解决方案。" class="bare">https://github.com/quarkusio/quarkus-quickstarts/tree/main/hibernate-reactive-panache-quickstart上找到最终的解决方案。</a></p>
+</div>
+<div class="paragraph">
+<p>首先，访问 <a href="https://code.quarkus.io">code.quarkus.io</a> 并选择以下扩展：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>RESTEasy Reactive Jackson</p>
+</li>
+<li>
+<p>Hibernate Reactive with Panache</p>
+</li>
+<li>
+<p>Reactive PostgreSQL client</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/reactive-guide-code.png" alt="Extensions to select in https://code.quarkus.io" width="90%">
+</div>
+</div>
+<div class="paragraph">
+<p>最后一个扩展是PostgreSQL的响应式数据库驱动程序。Hibernate响应式使用该驱动程序与数据库交互，而不会阻塞调用线程。</p>
+</div>
+<div class="paragraph">
+<p>选中后，单击 "Generate your application"，下载压缩文件，解压缩并在您喜欢的IDE中打开代码。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="reactive-panache-entity"><a class="anchor" href="#reactive-panache-entity"></a>响应式Panache实体</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>让我们从 <code>Fruit</code> 实体开始。创建 <code>src/main/java/org/acme/hibernate/orm/panache/Fruit.java</code> 文件，内容如下:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.hibernate.orm.panache;
+
+import jakarta.persistence.Cacheable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+
+import io.quarkus.hibernate.reactive.panache.PanacheEntity;  <i class="conum" data-value="1"></i><b>(1)</b>
+
+@Entity
+@Cacheable
+public class Fruit extends PanacheEntity {
+
+	 @Column(length = 40, unique = true)
+	 public String name;
+
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>确保你导入了 <code>PanacheEntity</code> 的响应式类库。</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>这个类代表 <code>Fruits</code>。它是一个简单的实体，只有一个字段 (<code>name</code>)。注意，它使用的是 <code>io.quarkus.hibernate.reactive.panache.PanacheEntity</code>，是 <code>PanacheEntity</code> 的响应式类库。因此，Hibernate在幕后使用我们前面描述的执行模型。它与数据库交互而不阻塞线程。此外，这个响应式的 <code>PanacheEntity</code> 提出了一个响应式API。我们将使用这个API来实现REST端点。</p>
+</div>
+<div class="paragraph">
+<p>在进行下一步之前，请打开 <code>src/main/resource/application.properties</code> 文件并添加下面这一段内容到该文件：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.datasource.db-kind=postgresql
+quarkus.hibernate-orm.database.generation=drop-and-create</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>它指示应用程序使用PostgreSQL数据库，并处理数据库模式的生成。</p>
+</div>
+<div class="paragraph">
+<p>在同一个目录中，创建一个 <code>import.sql</code> 文件，它插入了一些水果数据，所以我们不会在dev模式中面对一个空数据库开始：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">INSERT INTO fruit(id, name) VALUES (1, 'Cherry');
+INSERT INTO fruit(id, name) VALUES (2, 'Apple');
+INSERT INTO fruit(id, name) VALUES (3, 'Banana');
+ALTER SEQUENCE fruit_seq RESTART WITH 4;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在终端中，使用：<code>./mvnw quarkus:dev</code>。Quarkus会自动为您启动一个数据库实例并配置应用程序。现在我们只需要实现HTTP端点。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="reactive-resource"><a class="anchor" href="#reactive-resource"></a>响应式资源</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>由于与数据库的交互是非阻塞的和异步的，我们需要使用异步构造来实现我们的HTTP资源。Quarkus使用Mutiny作为其核心响应式编程模型。因此，它支持从HTTP端点返回Mutiny类型 (<code>Uni</code> and <code>Multi</code>) 。此外，水果Panache实例使用这些类型公开方法，因此我们只需要实现 <em>glue</em>。</p>
+</div>
+<div class="paragraph">
+<p>创建 <code>src/main/java/org/acme/hibernate/orm/panache/FruitResource.java</code> 文件，内容如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.hibernate.orm.panache;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.Path;
+
+@Path("/fruits")
+@ApplicationScoped
+public class FruitResource {
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>让我们从 <code>getAll</code> 方法开始。 <code>getAll</code> 方法返回存储在数据库中的所有水果对象。在 <code>FruitResource</code> 中，添加以下代码：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@GET
+public Uni&lt;List&lt;Fruit&gt;&gt; get() {
+    return Fruit.listAll(Sort.by("name"));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>打开 <a href="http://localhost:8080/fruits" class="bare">http://localhost:8080/fruits</a> 调用这个方法：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">[{"id":2,"name":"Apple"},{"id":3,"name":"Banana"},{"id":1,"name":"Cherry"},{"id":4,"name":"peach"}]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>我们得到了预期的JSON数组。RESTEasy Reactive自动将列表映射到JSON数组，除非另有指示。</p>
+</div>
+<div class="paragraph">
+<p>看看返回类型，它返回 <code>List&lt;Fruit&gt;</code> 的 <code>Uni</code> 。<code>Uni</code> 是一个异步类型。这有点像未来。它是一个占位符，稍后将获得它的值条目 (item) 。当它接收条目(Mutiny说它 <em>输出</em> 的条目)时，你可以附加一些行为。这就是我们表示延续的方式：获取一个uni，当uni输出它的条目时，执行其余的处理。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+响应式程序开发者可能会想为什么我们不能直接返回水果流。在处理数据库时，这往往不是一个好主意。关系数据库不能很好地处理流。这是协议不是为这个用例设计的问题。因此，要从数据库流输出行，您需要保持一个连接（有时是一个事务）打开，直到所有行都被消耗掉。如果您的用户很慢，那么您就违反了数据库的黄金法则：不要保持连接太长时间。实际上，可用连接的数量相当少，并且让使用者保持这些连接太长时间将极大地降低应用程序的并发性。所以，如果可能的话，使用 <code>Uni&lt;List&lt;T&gt;&gt;</code> 并加载内容。如果有大量结果，则实现分页。
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>让我们用 <code>getSingle</code> 继续我们的API：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@GET
+@Path("/{id}")
+public Uni&lt;Fruit&gt; getSingle(Long id) {
+    return Fruit.findById(id);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在本例中，我们使用 <code>Fruit.findById</code> 来检索水果。当数据库检索到该行时，它将返回一个 <code>Uni</code>。</p>
+</div>
+<div class="paragraph">
+<p><code>create</code> 方法允许向数据库中添加新水果记录：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@POST
+public Uni&lt;RestResponse&lt;Fruit&gt;&gt; create(Fruit fruit) {
+    return Panache.withTransaction(fruit::persist).replaceWith(RestResponse.status(CREATED, fruit));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这代码要更复杂一些。想要写入数据库，我们需要一个事务。因此我们使用 <code>Panache.withTransaction</code> 来获取一个（异步），然后调用 <code>persist</code> 方法。 <code>persist</code> 方法返回一个 发出`fruit`插入到数据库中结果的`Uni`。一旦插入完成（它起到延续的作用），我们就会创建一个 <code>201 CREATED</code> 的HTTP响应。RESTEasy Reactive会自动将请求体读取为JSON并创建 <code>Fruit</code> 实例。</p>
+</div>
+<div class="paragraph">
+<p>如果在您的机器安装了 <a href="https://curl.se/">curl</a>命令，便可以尝试使用端点：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">&gt; curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"name":"peach"}' \
+  http://localhost:8080/fruits</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>遵循相同的思路，您可以实现其他CRUD方法。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-and-running"><a class="anchor" href="#testing-and-running"></a>测试和运行</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>测试响应式应用程序与测试非响应式应用程序类似：使用HTTP端点并验证HTTP响应。应用程序是响应式的这一事实并没有改变任何事情。</p>
+</div>
+<div class="paragraph">
+<p>在 <a href="https://github.com/quarkusio/quarkus-quickstarts/blob/main/hibernate-reactive-panache-quickstart/src/test/java/org/acme/hibernate/orm/panache/FruitsEndpointTest.java">FruitsEndpointTest.java</a>中，您可以看到如何实现水果应用程序的测试。</p>
+</div>
+<div class="paragraph">
+<p>打包和运行应用程序也不会改变。</p>
+</div>
+<div class="paragraph">
+<p>您可以像往常一样使用以下命令：</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-sync-cli">
+<div class="title">CLI</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">quarkus build</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-maven">
+<div class="title">Maven</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw install</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-gradle">
+<div class="title">Gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./gradlew build</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>或者构建一个原生可执行文件：</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-sync-cli">
+<div class="title">CLI</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">quarkus build --native</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-maven">
+<div class="title">Maven</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw install -Dnative</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-gradle">
+<div class="title">Gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./gradlew build -Dquarkus.package.type=native</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>还可以将应用程序打包在容器中。</p>
+</div>
+<div class="paragraph">
+<p>要运行应用程序，不要忘记启动数据库并为应用程序提供配置。</p>
+</div>
+<div class="paragraph">
+<p>例如，你可以使用Docker来运行你的数据库：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">docker run -it --rm=true \
+    --name postgres-quarkus -e POSTGRES_USER=quarkus \
+    -e POSTGRES_PASSWORD=quarkus -e POSTGRES_DB=fruits \
+    -p 5432:5432 postgres:14.1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>然后，使用以下命令启动应用程序：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java \
+   -Dquarkus.datasource.reactive.url=postgresql://localhost/fruits \
+   -Dquarkus.datasource.username=quarkus \
+   -Dquarkus.datasource.password=quarkus \
+   -jar target/quarkus-app/quarkus-run.jar</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>或者，如果你将你的应用打包为原生可执行文件，使用：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./target/getting-started-with-reactive-runner \
+  -Dquarkus.datasource.reactive.url=postgresql://localhost/fruits \
+  -Dquarkus.datasource.username=quarkus \
+  -Dquarkus.datasource.password=quarkus</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>数据源指南中描述了这些传递给应用程序的参数。还有其他方法可以配置应用程序——请查看 <a href="config-reference#configuration_sources">配置指南</a>来了解各种可能性（例如`env`变量，`.env`文件等）。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="going-further"><a class="anchor" href="#going-further"></a>进一步探索</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>本指南简要介绍了Quarkus提供的一些响应式特性。Quarkus是一个响应式框架，因此提供了许多响应式特性。</p>
+</div>
+<div class="paragraph">
+<p>如果你想继续这个话题，请检查：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="quarkus-reactive-architecture">Quarkus响应式架构</a></p>
+</li>
+<li>
+<p><a href="mutiny-primer">Mutiny - 一个直观的响应式编程库</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+    </div>
+    <div class="grid__item width-4-12 width-12-12-m tocwrapper">
+      <div class="hide-mobile toc"><ul class="sectlevel1">
+<li><a href="#prerequisites">先决条件</a></li>
+<li><a href="#imperative-vs-reactive-a-question-of-threads">指令式与响应式：线程的问题</a></li>
+<li><a href="#from-sequential-to-continuation-style">从顺序到延续风格</a></li>
+<li><a href="#bootstrapping-the-reactive-fruits-application">启动响应式水果应用程序</a></li>
+<li><a href="#reactive-panache-entity">响应式Panache实体</a></li>
+<li><a href="#reactive-resource">响应式资源</a></li>
+<li><a href="#testing-and-running">测试和运行</a></li>
+<li><a href="#going-further">进一步探索</a></li>
+</ul></div>
+    </div>
+  </div>
+  <h2>Related content</h2>
+  <div class="grid-wrapper relations">
+    <div class="grid__item width-6-12 width-12-12-m">
+      <h3>On the same topics</h3>
+      <ul class="related-content">
+      
+        
+        <li class="reference"><a href="/version/3.8/guides/datasource">Configure data sources in Quarkus</a></li>
+      
+        
+        <li class="tutorial"><a href="/version/3.8/guides/getting-started">创建你的第一个应用程序</a></li>
+      
+        
+        <li class="guide"><a href="/version/3.8/guides/mutiny-primer">Mutiny - Async for bare mortal</a></li>
+      
+        
+        <li class="guide"><a href="/version/3.8/guides/quarkus-reactive-architecture">Quarkus Reactive Architecture</a></li>
+      
+        
+        <li class="guide"><a href="/version/3.8/guides/reactive-sql-clients">响应式SQL客户端</a></li>
+      
+        
+        <li class="guide"><a href="/version/3.8/guides/getting-started-testing">测试您的应用程序</a></li>
+      
+        
+        <li class="tutorial"><a href="/version/3.8/guides/getting-started-dev-services">Your second Quarkus application</a></li>
+      </ul>
+    </div>
+    </div>
+  </div>
+
+  </div>
+
+  <div class="content project-footer">
+  <div class="footer-section">
+    <div class="logo-wrapper">
+      <a href="/"><img src="/assets/images/quarkus_logo_horizontal_rgb_reverse.svg" class="project-logo" title="Quarkus"></a>
+    </div>
+  </div>
+  <div class="grid-wrapper">
+    <p class="grid__item width-3-12">Quarkus is open. All dependencies of this project are available under the <a href='https://www.apache.org/licenses/LICENSE-2.0' target='_blank'>Apache Software License 2.0</a> or compatible license.<br /><br />This website was built with <a href='https://jekyllrb.com/' target='_blank'>Jekyll</a>, is hosted on <a href='https://pages.github.com/' target='_blank'>GitHub Pages</a> and is completely open source. If you want to make it better, <a href='https://github.com/quarkusio/quarkusio.github.io' target='_blank'>fork the website</a> and show us what you’ve got.</p>
+
+    
+      <div class="width-1-12 project-links">
+        <span>Navigation</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="/" target="_blank">Home</a></li>
+          
+          
+          
+            <li><a href="/about" target="_blank">About</a></li>
+          
+          
+          
+            <li><a href="/blog" target="_blank">博客</a></li>
+          
+          
+          
+            <li><a href="/insights" target="_blank">Podcast</a></li>
+          
+          
+          
+            <li><a href="/events" target="_blank">活动</a></li>
+          
+          
+          
+            <li><a href="/newsletter" target="_blank">新闻</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
+          
+          
+          
+            <li><a href="https://github.com/orgs/quarkusio/projects/13/views/1" target="_blank">路线图</a></li>
+          
+          
+          
+            <li><a href="/security" target="_blank">Security&nbsp;policy</a></li>
+          
+          
+          
+            <li><a href="/usage" target="_blank">Usage</a></li>
+          
+          
+          
+            <li><a href="/brand" target="_blank">Brand</a></li>
+          
+          
+          
+            <li><a href="/desktopwallpapers" target="_blank">Wallpapers</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-1-12 project-links">
+        <span>Follow Us</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="https://x.com/quarkusio" target="_blank">X</a></li>
+          
+          
+          
+            <li><a href="https://bsky.app/profile/quarkus.io" target="_blank">Bluesky</a></li>
+          
+          
+          
+            <li><a rel="me" href="https://fosstodon.org/@quarkusio" target="_blank">Mastodon</a></li>
+            
+          
+          
+            <li><a href="https://www.facebook.com/quarkusio" target="_blank">Facebook</a></li>
+          
+          
+          
+            <li><a href="https://www.linkedin.com/company/quarkusio/" target="_blank">Linkedin</a></li>
+          
+          
+          
+            <li><a href="https://www.youtube.com/channel/UCaW8QG_QoIk_FnjLgr5eOqg" target="_blank">Youtube</a></li>
+          
+          
+          
+            <li><a href="https://github.com/quarkusio" target="_blank">GitHub</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-2-12 project-links">
+        <span>Get Help</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="/support" target="_blank">Support</a></li>
+          
+          
+          
+            <li><a href="/guides" target="_blank">Guides</a></li>
+          
+          
+          
+            <li><a href="/faq" target="_blank">FAQ</a></li>
+          
+          
+          
+            <li><a href="/get-started" target="_blank">开始体验</a></li>
+          
+          
+          
+            <li><a href="https://stackoverflow.com/questions/tagged/quarkus" target="_blank">Stack Overflow</a></li>
+          
+          
+          
+            <li><a href="https://github.com/quarkusio/quarkus/discussions" target="_blank">Discussions</a></li>
+          
+          
+          
+            <li><a href="https://groups.google.com/forum/#!forum/quarkus-dev" target="_blank">Development mailing list</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-1-12 project-links">
+        <span>Languages</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="https://quarkus.io/" target="_blank">English</a></li>
+          
+          
+          
+            <li><a href="https://pt.quarkus.io/" target="_blank">Português&nbsp;(Brasileiro)</a></li>
+          
+          
+          
+            <li><a href="https://es.quarkus.io/" target="_blank">Español</a></li>
+          
+          
+          
+            <li><a href="https://cn.quarkus.io/" target="_blank">简体中文</a></li>
+          
+          
+          
+            <li><a href="https://ja.quarkus.io/" target="_blank">日本語</a></li>
+          
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="width-4-12 more-links">
+        <span>Quarkus is made of community projects</span>
+        <ul class="footer-links">
+          
+            <li><a blah href="https://vertx.io/" target="_blank">Eclipse Vert.x</a></li>
+          
+            <li><a blah href="https://smallrye.io" target="_blank">SmallRye</a></li>
+          
+            <li><a blah href="https://hibernate.org" target="_blank">Hibernate</a></li>
+          
+            <li><a blah href="https://netty.io" target="_blank">Netty</a></li>
+          
+            <li><a blah href="https://resteasy.github.io" target="_blank">RESTEasy</a></li>
+          
+            <li><a blah href="https://camel.apache.org" target="_blank">Apache Camel</a></li>
+          
+            <li><a blah href="https://microprofile.io" target="_blank">Eclipse MicroProfile</a></li>
+          
+            <li><a blah href="https://code.quarkus.io/" target="_blank">And many more...</a></li>
+          
+        </ul>
+      </div>
+    
+  </div>
+</div>
+
+  <div class="content redhat-footer">
+  <div class="grid-wrapper">
+    <span class="licence">
+      <i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i> <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank">CC by 3.0</a> | <a href="https://www.redhat.com/en/about/privacy-policy">Privacy Policy</a>
+    </span>
+    <span class="redhat">
+      Sponsored by
+    </span>
+    <span class="redhat-logo">
+      <a href="https://www.redhat.com/" target="_blank"><img src="/assets/images/redhat_reversed.svg"></a>
+    </span>
+  </div>
+</div>
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha384-8gBf6Y4YYq7Jx97PIqmTwLPin4hxIzQw5aDmUg/DDhul9fFpbbLcLh3nTIIDJKhx" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="/assets/javascript/mobile-nav.js"></script>
+  <script type="text/javascript" src="/assets/javascript/scroll-down.js"></script>
+  <script src="/assets/javascript/satellite.js" type="text/javascript"></script>
+  <script src="/guides/javascript/config.js" type="text/javascript"></script>
+  <script src="/assets/javascript/guides-version-dropdown.js" type="text/javascript"></script>
+  <script src="/assets/javascript/back-to-top.js" type="text/javascript"></script>
+  <script src="/assets/javascript/clipboard.min.js" type="text/javascript"></script>
+  <script src="/assets/javascript/copy.js" type="text/javascript"></script>
+  <script src="/assets/javascript/asciidoc-tabs.js" type="text/javascript"></script>
+  <script src="/assets/javascript/future-date.js" type="text/javascript"></script>
+</body>
+
+</html>

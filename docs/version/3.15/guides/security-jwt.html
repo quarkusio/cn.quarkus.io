@@ -1,0 +1,2404 @@
+<!DOCTYPE html>
+<html lang="cn">
+
+
+
+
+
+
+
+<head>
+  <title>使用JWT RBAC - 3.15 - Quarkus</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
+  script-src 'self' 'unsafe-inline' 'unsafe-eval'
+      
+      https://assets.adobedtm.com
+      js.bizographics.com
+      https://www.redhat.com
+      https://static.redhat.com
+      https://app.requestly.io/
+      jsonip.com
+      https://ajax.googleapis.com
+      https://use.fontawesome.com
+      http://www.youtube.com
+      http://www.googleadservices.com
+      https://googleads.g.doubleclick.net
+      https://giscus.app
+      https://analytics.ossupstream.org/
+      https://app.mailjet.com;
+
+  style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
+  img-src 'self' * data:; 
+  media-src 'self'; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  base-uri 'none'; 
+  object-src 'none'; 
+  form-action 'none'; 
+  font-src 'self' https://use.fontawesome.com https://fonts.gstatic.com;" />
+  <script id="adobe_dtm" src="https://www.redhat.com/dtm.js" type="text/javascript"></script>
+  <script src="/assets/javascript/highlight.pack.js" type="text/javascript"></script>
+  <META HTTP-EQUIV='X-XSS-Protection' CONTENT="1; mode=block">
+  <META HTTP-EQUIV='X-Content-Type-Options' CONTENT="nosniff">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Quarkus: Supersonic Subatomic Java">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@QuarkusIO"> 
+  <meta name="twitter:creator" content="@QuarkusIO">
+  <meta property="og:url" content="https://quarkus.io/version/3.15/guides/security-jwt" />
+  <meta property="og:title" content="使用JWT RBAC - 3.15" />
+  <meta property="og:description" content="Quarkus: Supersonic Subatomic Java" />
+  <meta property="og:image" content="https://quarkus.io/assets/images/quarkus_card.png" />
+  
+  <link rel="canonical" href="https://quarkus.io/guides/security-jwt">
+  <link rel="shortcut icon" type="image/png" href="/favicon.ico" >
+  <link rel="stylesheet" href="/guides/stylesheet/config.css" />
+  <link rel="stylesheet" href="/assets/css/main.css?2021-07-29" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.2/css/all.css" crossorigin="anonymous">
+  <link rel="alternate" type="application/rss+xml"  href="/feed.xml" title="Quarkus">
+  <script src="/assets/javascript/hl.js" type="text/javascript"></script>
+  
+  
+  
+  
+  <link rel="alternate" hreflang="en" href="https://quarkus.io/version/3.15/guides/security-jwt" />
+  
+  <link rel="alternate" hreflang="pt-br" href="https://pt.quarkus.io/version/3.15/guides/security-jwt" />
+  
+  <link rel="alternate" hreflang="es" href="https://es.quarkus.io/version/3.15/guides/security-jwt" />
+  
+  <link rel="alternate" hreflang="zh" href="https://cn.quarkus.io/version/3.15/guides/security-jwt" />
+  
+  <link rel="alternate" hreflang="ja" href="https://ja.quarkus.io/version/3.15/guides/security-jwt" />
+  
+  <link rel="alternate" hreflang="x-default" href="https://quarkus.io/" />  
+  <script src="/assets/javascript/tracking.js"></script>
+  
+  <script src="/assets/javascript/colormode.js" type="text/javascript"></script>
+
+</head>
+
+<body class="guides">
+
+  
+
+
+<div class="grid-wrapper communitysite">
+  <div class="grid__item width-12-12">The <a href="https://quarkus.io/version/3.15/guides/security-jwt">English version of quarkus.io</a> is the official project site. Translated sites are community supported on a best-effort basis.</div>
+</div>
+
+
+  <div class="nav-wrapper">
+  <div class="grid-wrapper">
+    <div class="width-12-12">
+      <input type="checkbox" id="checkbox" />
+      <nav id="main-nav" class="main-nav">
+        <div class="logo-wrapper">
+           <a href="/"><img src="/assets/images/quarkus_logo_horizontal_rgb_600px_reverse.png" class="project-logo" title="Quarkus"></a>
+        </div>
+    <label class="nav-toggle" for="checkbox"> <i class="fa fa-bars"></i>
+</label>
+    <ul id="menu" class="menu">
+      <li class="dropdown">
+        <span href="/about/">Why<i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/about" class="">QUARKUS是什么？</a></li>
+          <li><a href="/developer-joy" class="">开发者的乐趣 </a></li>
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES 原生</a></li>
+          <li><a href="/standards" class="">标准</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">容器优先 </a></li>          
+        </ul>
+      </li>
+      <li class="dropdown">
+        <span href="/learn/">学习 <i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/get-started" class="">入门</a></li>
+          <li><a href="/guides" class="active" >指南</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
+          <li><a href="/qtips" class="">"Q" TIP视频</a></li>          
+          <li><a href="/books" class="">书籍</a></li>
+          </ul>
+      </li>
+      <li class="dropdown">
+        <span href="https://quarkus.io/extensions/">扩展<i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          
+          <!-- Note that quarkus.io is hardcoded here, because it is the only url which supports extensions -->
+<li><a href="https://quarkus.io/extensions/" class="">浏览扩展</a></li>
+          <li><a href="/faq/#what-is-a-quarkus-extension" class="">使用扩展</a></li>
+          <li><a href="/guides/writing-extensions" class="" >创建扩展</a></li>
+          <li><a href="https://hub.quarkiverse.io" class="">SHARE EXTENSIONS</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <span href="/community/">社区 <i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/support/" class="">支持</a></li>
+          <li><a href="/blog" class="" >博客</a></li>
+          <li><a href="/discussion" class="">讨论</a></li>
+          <li><a href="/working-groups" class="">WORKING GROUPS</a></li>
+          <li><a href="/insights" class="" >播客</a></li>
+          <li><a href="/events" class="">活动</a></li>
+          <li><a href="/newsletter" class="">新闻</a></li>
+          <li><a href="https://github.com/orgs/quarkusio/projects/13/views/1" class="">路线图</a></li>
+          </ul>
+      </li>
+      <li>
+        <a href="https://code.quarkus.io" class="button-cta secondary
+white">开始编码</a>
+      </li>
+      <li class="dropdown">
+        <span href="/language/"><div class="fas fa-globe langicon"></div><i class="fas fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="https://quarkus.io/version/3.15/guides/security-jwt" >OFFICIAL (ENGLISH)</a></li>
+          <li><a href="https://pt.quarkus.io/version/3.15/guides/security-jwt">PORTUGUÊS (BR)</a></li>
+          <li><a href="https://es.quarkus.io/version/3.15/guides/security-jwt">ESPAÑOL</a></li>
+          <li><a href="https://cn.quarkus.io/version/3.15/guides/security-jwt">简体中文</a></li>
+          <li><a href="https://ja.quarkus.io/version/3.15/guides/security-jwt">日本語</a></li>
+          </ul>
+      </li>
+      <li>
+        <span href="#" class="modeswitcher" id='theme-toggle'><i class="fas
+fa-sun"></i><i class="fas fa-moon"></i><i class="fas fa-cog"></i></span>
+      </li>
+    </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+  <div class="content">
+    
+
+
+
+
+
+<section class="full-width-version-bg flexfilterbar guides">
+  <div class="guideflexcontainer">
+    <div class="docslink">
+      <a class="returnlink" href="/version/3.15/guides/">返回指南目录</a>
+    </div>
+    <div class="flexlabel">
+      <label>选择指南版本</label>
+    </div>
+    <div class="guidepulldown version">
+    <select id="guide-version-dropdown">
+      
+        
+        
+        <option value="main" >Main - SNAPSHOT</option>
+        
+        
+        
+        <option value="latest" >3.19.1 - Latest</option>
+        
+        
+        
+        <option value="3.15" selected>3.15</option>
+        
+        
+        
+        <option value="3.8" >3.8</option>
+        
+        
+        
+        <option value="3.2" >3.2</option>
+        
+        
+        
+        <option value="2.16" >2.16</option>
+        
+        
+        
+        <option value="2.13" >2.13</option>
+        </select>
+    </div>
+  </div>
+</section>
+
+<div class="guide">
+  <div class="grid-wrapper">
+    <div class="grid__item width-8-12 width-12-12-m">
+      <h1 class="text-caps">使用JWT RBAC </h1>
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>本指南旨在阐述如何在你的Quarkus应用程序中使用 <a href="https://github.com/smallrye/smallrye-jwt/">SmallRye JWT</a>来验证 <a href="https://tools.ietf.org/html/rfc7519">JSON Web Token</a>，并将它们呈现为MicroProfile JWT 的 <code>org.eclipse.microprofile.jwt.JsonWebToken</code> ，然后使用不记名令牌验证(Bearer Token Authorization)和 <a href="https://en.wikipedia.org/wiki/Role-based_access_control">基于角色的访问控制</a>来保证对Quarkus HTTP端点的安全访问。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Quarkus OpenID Connect <code>quarkus-oidc</code> extension also supports Bearer Token Authorization and uses <code>smallrye-jwt</code> to represent the bearer tokens as <code>JsonWebToken</code>.
+For more information, read the <a href="security-oidc-bearer-token-authentication">OIDC Bearer token authentication</a> guide.
+OpenID Connect extension has to be used if the Quarkus application needs to authenticate the users using OIDC Authorization Code Flow.
+For more information, see <a href="security-oidc-code-flow-authentication">OIDC code flow mechanism for protecting web applications</a>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="prerequisites"><a class="anchor" href="#prerequisites"></a>先决条件</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>要完成这个指南，你需要：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>大概15分钟</p>
+</li>
+<li>
+<p>编辑器</p>
+</li>
+<li>
+<p>JDK 17+ installed with <code>JAVA_HOME</code> configured appropriately</p>
+</li>
+<li>
+<p>Apache Maven 3.9.8</p>
+</li>
+<li>
+<p>如果你愿意的话，还可以选择使用<a href="cli-tooling">Quarkus CLI</a></p>
+</li>
+<li>
+<p>如果你想构建原生可执行程序，可以选择安装Mandrel或者GraalVM，并<a href="building-native-image#configuring-graalvm">正确配置</a>(或者使用Docker在容器中进行构建)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="quickstart"><a class="anchor" href="#quickstart"></a>快速入门</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="solution"><a class="anchor" href="#solution"></a>解决方案</h3>
+<div class="paragraph">
+<p>我们建议您按照下面几节的说明，一步一步地创建应用程序。不过，您可以直接跳到已完成的例子。</p>
+</div>
+<div class="paragraph">
+<p>克隆 Git 仓库: <code>git clone -b 3.15 <a href="https://github.com/quarkusio/quarkus-quickstarts.git" class="bare">https://github.com/quarkusio/quarkus-quickstarts.git</a></code> ，或下载一个 <a href="https://github.com/quarkusio/quarkus-quickstarts/archive/3.15.zip">存档</a> 。</p>
+</div>
+<div class="paragraph">
+<p>The solution is located in the <code>security-jwt-quickstart</code> <a href="https://github.com/quarkusio/quarkus-quickstarts/tree/3.15/security-jwt-quickstart">directory</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="creating-the-maven-project"><a class="anchor" href="#creating-the-maven-project"></a>创建Maven项目</h3>
+<div class="paragraph">
+<p>First, create a new project with the following command:</p>
+</div>
+<div class="sidebarblock primary asciidoc-tabs-sync-cli">
+<div class="content">
+<div class="title">CLI</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">quarkus create app org.acme:security-jwt-quickstart \
+    --extension='rest-jackson,smallrye-jwt,smallrye-jwt-build' \
+    --no-code
+cd security-jwt-quickstart</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>创建Grade项目，请添加 <code>--gradle</code> 或者 <code>--gradle-kotlin-dsl</code> 参数。</p>
+</div>
+<div class="paragraph">
+<p>For more information about how to install and use the Quarkus CLI, see the <a href="cli-tooling">Quarkus CLI</a> guide.</p>
+</div>
+</div>
+</div>
+<div class="sidebarblock secondary asciidoc-tabs-sync-maven">
+<div class="content">
+<div class="title">Maven</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn io.quarkus.platform:quarkus-maven-plugin:3.15.3.1:create \
+    -DprojectGroupId=org.acme \
+    -DprojectArtifactId=security-jwt-quickstart \
+    -Dextensions='rest-jackson,smallrye-jwt,smallrye-jwt-build' \
+    -DnoCode
+cd security-jwt-quickstart</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>创建Grade项目，请添加 <code>-DbuildTool=gradle</code> 或者 <code>-DbuildTool=gradle-kotlin-dsl</code> 参数。</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>For Windows users:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If using cmd, (don&#8217;t use backward slash <code>\</code> and put everything on the same line)</p>
+</li>
+<li>
+<p>If using Powershell, wrap <code>-D</code> parameters in double quotes e.g. <code>"-DprojectArtifactId=security-jwt-quickstart"</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>该命令生成Maven项目并导入 <code>smallrye-jwt</code> 扩展，其中包括MicroProfile JWT RBAC支持。</p>
+</div>
+<div class="paragraph">
+<p>如果你已经配置了你的Quarkus项目，你可以通过在你的项目基础目录下运行以下命令，将 <code>smallrye-jwt</code> 扩展到你的项目。</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-sync-cli">
+<div class="title">CLI</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">quarkus extension add smallrye-jwt,smallrye-jwt-build</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-maven">
+<div class="title">Maven</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw quarkus:add-extension -Dextensions='smallrye-jwt,smallrye-jwt-build'</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-gradle">
+<div class="title">Gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./gradlew addExtension --extensions='smallrye-jwt,smallrye-jwt-build'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这将在您的构建文件中添加以下内容：</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-target-sync-cli asciidoc-tabs-target-sync-maven">
+<div class="title">pom.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-smallrye-jwt&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-smallrye-jwt-build&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-target-sync-gradle">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-gradle hljs" data-lang="gradle">implementation("io.quarkus:quarkus-smallrye-jwt")
+implementation("io.quarkus:quarkus-smallrye-jwt-build")</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="examine-the-jakarta-rest-resource"><a class="anchor" href="#examine-the-jakarta-rest-resource"></a>Examine the Jakarta REST resource</h3>
+<div class="paragraph">
+<p>在 <code>src/main/java/org/acme/security/jwt/TokenSecuredResource.java</code> 里，创建一个REST端点，内容如下:</p>
+</div>
+<div class="listingblock">
+<div class="title">REST Endpoint V1</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.security.jwt;
+
+import jakarta.annotation.security.PermitAll;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.InternalServerErrorException;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.SecurityContext;
+
+import org.eclipse.microprofile.jwt.JsonWebToken;
+
+@Path("/secured")
+public class TokenSecuredResource {
+
+    @Inject
+    JsonWebToken jwt; <i class="conum" data-value="1"></i><b>(1)</b>
+
+    @GET
+    @Path("permit-all")
+    @PermitAll <i class="conum" data-value="2"></i><b>(2)</b>
+    @Produces(MediaType.TEXT_PLAIN)
+    public String hello(@Context SecurityContext ctx) {
+        return getResponseString(ctx); <i class="conum" data-value="3"></i><b>(3)</b>
+    }
+
+    private String getResponseString(SecurityContext ctx) {
+        String name;
+        if (ctx.getUserPrincipal() == null) { <i class="conum" data-value="4"></i><b>(4)</b>
+            name = "anonymous";
+        } else if (!ctx.getUserPrincipal().getName().equals(jwt.getName())) { <i class="conum" data-value="5"></i><b>(5)</b>
+            throw new InternalServerErrorException("Principal and JsonWebToken names do not match");
+        } else {
+            name = ctx.getUserPrincipal().getName(); <i class="conum" data-value="6"></i><b>(6)</b>
+        }
+        return String.format("hello %s,"
+            + " isHttps: %s,"
+            + " authScheme: %s,"
+            + " hasJWT: %s",
+            name, ctx.isSecure(), ctx.getAuthenticationScheme(), hasJwt()); <i class="conum" data-value="7"></i><b>(7)</b>
+    }
+
+    private boolean hasJwt() {
+        return jwt.getClaimNames() != null;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>这里我们注入JsonWebToken接口，这是java.security.Principal接口的扩展，提供了对与当前认证令牌authenticated token相关声明的访问。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>@PermitAll is a Jakarta common security annotation that indicates that the given endpoint is accessible by any caller, authenticated or not.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Here we inject the Jakarta REST SecurityContext to inspect the security state of the call and use a <code>getResponseString()</code> function to populate a response string.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>在这里，我们通过检查请求用户/呼叫者 <code>Principal</code> 是否是null值，如果是则不安全。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>这里我们检查Principal和JsonWebToken是否有相同的名字，因为JsonWebToken代表了当前的Principal。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>这里我们得到了Principal的名字。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
+<td>当我们建立的回复时使用调用者的名字，和 <code>isSecure()</code> 和 <code>getAuthenticationScheme()</code> 这两个 <code>SecurityContext</code> 的状态，以及是否注入了非空的 <code>JsonWebToken</code> 。</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="run-the-application"><a class="anchor" href="#run-the-application"></a>运行应用程序</h3>
+<div class="paragraph">
+<p>现在我们准备运行我们的应用程序。使用：</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-sync-cli">
+<div class="title">CLI</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">quarkus dev</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-maven">
+<div class="title">Maven</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw quarkus:dev</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-gradle">
+<div class="title">Gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./gradlew --console=plain quarkusDev</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>而你应该看到类似的输出：</p>
+</div>
+<div class="listingblock">
+<div class="title">quarkus:dev 输出</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">[INFO] Scanning for projects...
+[INFO]
+[INFO] ----------------------&lt; org.acme:security-jwt-quickstart &gt;-----------------------
+[INFO] Building security-jwt-quickstart 1.0.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+...
+Listening for transport dt_socket at address: 5005
+2020-07-15 16:09:50,883 INFO  [io.quarkus] (Quarkus Main Thread) security-jwt-quickstart 1.0.0-SNAPSHOT on JVM (powered by Quarkus 999-SNAPSHOT) started in 1.073s. Listening on: http://0.0.0.0:8080
+2020-07-15 16:09:50,885 INFO  [io.quarkus] (Quarkus Main Thread) Profile dev activated. Live Coding activated.
+2020-07-15 16:09:50,885 INFO  [io.quarkus] (Quarkus Main Thread) Installed features: [cdi, mutiny, rest, rest-jackson, security, smallrye-context-propagation, smallrye-jwt, vertx, vertx-web]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>现在，REST端点正在运行，我们可以使用curl这样的命令行工具来访问它：</p>
+</div>
+<div class="listingblock">
+<div class="title">用curl命令访问/secured/permit-all</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">$ curl http://127.0.0.1:8080/secured/permit-all; echo
+hello anonymous, isHttps: false, authScheme: null, hasJWT: false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>我们在请求中没有提供任何JWT，所以我们不会期望有任何安全状态被终端看到，而响应也与此一致：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>用户名称是匿名的</p>
+</li>
+<li>
+<p>isHttps为false，因为没有使用https</p>
+</li>
+<li>
+<p>authScheme为null</p>
+</li>
+<li>
+<p>hasJWT为false</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>使用Ctrl-C来停止Quarkus服务器。</p>
+</div>
+<div class="paragraph">
+<p>所以，现在让我们真正让一些东西变得安全。看看下面的新端点方法 <code>helloRolesAllowed</code> ：</p>
+</div>
+<div class="listingblock">
+<div class="title">REST Endpoint V2</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.security.jwt;
+
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.InternalServerErrorException;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.SecurityContext;
+
+import org.eclipse.microprofile.jwt.JsonWebToken;
+
+@Path("/secured")
+public class TokenSecuredResource {
+
+    @Inject
+    JsonWebToken jwt; <i class="conum" data-value="1"></i><b>(1)</b>
+
+    @GET
+    @Path("permit-all")
+    @PermitAll
+    @Produces(MediaType.TEXT_PLAIN)
+    public String hello(@Context SecurityContext ctx) {
+        return getResponseString(ctx);
+    }
+
+    @GET
+    @Path("roles-allowed") <i class="conum" data-value="2"></i><b>(2)</b>
+    @RolesAllowed({ "User", "Admin" }) <i class="conum" data-value="3"></i><b>(3)</b>
+    @Produces(MediaType.TEXT_PLAIN)
+    public String helloRolesAllowed(@Context SecurityContext ctx) {
+        return getResponseString(ctx) + ", birthdate: " + jwt.getClaim("birthdate").toString(); <i class="conum" data-value="4"></i><b>(4)</b>
+    }
+
+    private String getResponseString(SecurityContext ctx) {
+        String name;
+        if (ctx.getUserPrincipal() == null) {
+            name = "anonymous";
+        } else if (!ctx.getUserPrincipal().getName().equals(jwt.getName())) {
+            throw new InternalServerErrorException("Principal and JsonWebToken names do not match");
+        } else {
+            name = ctx.getUserPrincipal().getName();
+        }
+        return String.format("hello %s,"
+            + " isHttps: %s,"
+            + " authScheme: %s,"
+            + " hasJWT: %s",
+            name, ctx.isSecure(), ctx.getAuthenticationScheme(), hasJwt());
+    }
+
+    private boolean hasJwt() {
+        return jwt.getClaimNames() != null;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>在这里，我们注入 <code>JsonWebToken</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>这个新的endpoint将位于/secured/roles-allowed</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td><code>@RolesAllowed</code> is a Jakarta common security annotation that indicates that the given endpoint is accessible by a caller if
+they have either a "User" or "Admin" role assigned.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>在这里，我们以与 <code>hello</code> 方法相同的方式建立回复，但也通过直接调用注入的 <code>JsonWebToken</code> ，添加JWT <code>birthdate</code> 要求的值。</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>After you make this addition to your <code>TokenSecuredResource</code>, rerun the <code>./mvnw compile quarkus:dev</code> command, and then try <code>curl -v <a href="http://127.0.0.1:8080/secured/roles-allowed" class="bare">http://127.0.0.1:8080/secured/roles-allowed</a>; echo</code> to attempt to access the new endpoint.</p>
+</div>
+<div class="paragraph">
+<p>Your output should be as follows:</p>
+</div>
+<div class="listingblock">
+<div class="title">用curl 命令访问/secured/roles-allowed</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">$ curl -v http://127.0.0.1:8080/secured/roles-allowed; echo
+*   Trying 127.0.0.1...
+* TCP_NODELAY set
+* Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+&gt; GET /secured/roles-allowed HTTP/1.1
+&gt; Host: 127.0.0.1:8080
+&gt; User-Agent: curl/7.54.0
+&gt; Accept: */*
+&gt;
+&lt; HTTP/1.1 401 Unauthorized
+&lt; Connection: keep-alive
+&lt; Content-Type: text/html;charset=UTF-8
+&lt; Content-Length: 14
+&lt; Date: Sun, 03 Mar 2019 16:32:34 GMT
+&lt;
+* Connection #0 to host 127.0.0.1 left intact</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>很好，我们在请求中没有提供任何JWT，所以我们应该不能够访问这个端点，而我们确实没有。相反，我们收到了一个HTTP 401 Unauthorized错误。我们需要获得并传入一个有效的JWT来访问该端点。这有两个步骤，1）用如何验证JWT的信息配置我们的SmallRye JWT扩展；2）用适当的声明(claim)生成一个匹配的JWT。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="configuring-the-smallrye-jwt-extension-security-information"><a class="anchor" href="#configuring-the-smallrye-jwt-extension-security-information"></a>配置SmallRye JWT扩展安全信息</h3>
+<div class="paragraph">
+<p>创建一个 <code>security-jwt-quickstart/src/main/resources/application.properties</code> ，内容如下:</p>
+</div>
+<div class="listingblock">
+<div class="title">TokenSecuredResource的application.properties</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">mp.jwt.verify.publickey.location=publicKey.pem <i class="conum" data-value="1"></i><b>(1)</b>
+mp.jwt.verify.issuer=https://example.com/issuer <i class="conum" data-value="2"></i><b>(2)</b>
+
+quarkus.native.resources.includes=publicKey.pem <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>We are setting public key location to point to a classpath <code>publicKey.pem</code> location. We will add this key in part B, <a href="#add-public-key">添加公钥</a>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>我们将发行者issuer设置为URL字符串 <code><a href="https://example.com/issuer" class="bare">https://example.com/issuer</a></code> .</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>我们将公钥作为一种资源纳入本地可执行文件。</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="add-public-key"><a class="anchor" href="#add-public-key"></a>添加公钥</h3>
+<div class="paragraph">
+<p>这个 <a href="https://tools.ietf.org/html/rfc7519">JWT规范</a> 定义了人们可以使用的JWTs的各种安全级别。MicroProfile JWT RBAC规范要求JWTs用RSA-256签名算法进行签名。这反过来又需要一个RSA公钥对。在REST终端服务器端，你需要配置RSA公钥的位置，用来验证与请求一起发送的JWT。之前配置的 <code>mp.jwt.verify.publickey.location=publicKey.pem</code> ，意思是公钥要能在classpath上作为 <code>publicKey.pem</code> 文件能找到。为了达到这个目的，请将以下内容复制到 <code>security-jwt-quickstart/src/main/resources/publicKey.pem</code> 文件中。</p>
+</div>
+<div class="listingblock">
+<div class="title">RSA公钥PEM格式内容</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlivFI8qB4D0y2jy0CfEq
+Fyy46R0o7S8TKpsx5xbHKoU1VWg6QkQm+ntyIv1p4kE1sPEQO73+HY8+Bzs75XwR
+TYL1BmR1w8J5hmjVWjc6R2BTBGAYRPFRhor3kpM6ni2SPmNNhurEAHw7TaqszP5e
+UF/F9+KEBWkwVta+PZ37bwqSE4sCb1soZFrVz/UT/LF4tYpuVYt3YbqToZ3pZOZ9
+AX2o1GCG3xwOjkc4x0W7ezbQZdC9iftPxVHR8irOijJRRjcPDtA6vPKpzLl6CyYn
+sIYPd99ltwxTHjr3npfv/3Lw50bAkbT4HeLFxTx4flEoZLKO/g0bAoV2uqBhkA9x
+nQIDAQAB
+-----END PUBLIC KEY-----</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="generating-a-jwt"><a class="anchor" href="#generating-a-jwt"></a>生成一个JWT</h3>
+<div class="paragraph">
+<p>Often one obtains a JWT from an identity manager like <a href="https://www.keycloak.org/">Keycloak</a>, but for this quickstart we will generate our own using the JWT generation API provided by <code>smallrye-jwt</code>.
+For more information, see <a href="security-jwt-build">Generate JWT tokens with SmallRye JWT</a>.</p>
+</div>
+<div class="paragraph">
+<p>从以下列表中拷贝代码，并将其放入 <code>security-jwt-quickstart/src/test/java/org/acme/security/jwt/GenerateToken.java</code> ：</p>
+</div>
+<div class="listingblock">
+<div class="title">GenerateToken主驱动类</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.security.jwt;
+
+import java.util.Arrays;
+import java.util.HashSet;
+
+import org.eclipse.microprofile.jwt.Claims;
+
+import io.smallrye.jwt.build.Jwt;
+
+public class GenerateToken {
+    /**
+     * Generate JWT token
+     */
+    public static void main(String[] args) {
+        String token =
+           Jwt.issuer("https://example.com/issuer") <i class="conum" data-value="1"></i><b>(1)</b>
+             .upn("jdoe@quarkus.io") <i class="conum" data-value="2"></i><b>(2)</b>
+             .groups(new HashSet&lt;&gt;(Arrays.asList("User", "Admin"))) <i class="conum" data-value="3"></i><b>(3)</b>
+             .claim(Claims.birthdate.name(), "2001-07-13") <i class="conum" data-value="4"></i><b>(4)</b>
+           .sign();
+        System.out.println(token);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>这个 <code>iss</code> 声明(claim)是JWT的发行者。这需要与服务器端的 <code>mp.jwt.verify.issuer</code> 符合。一遍使令牌被接受为有效的。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>这个 <code>upn</code> 声明(claim)被MicroProfile JWT RBAC规范定义为首选声明，用做为被container security APIs所能见的 <code>Principal</code> 。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>这个 <code>group</code> 声明(claim)提供了与JWT bearer相关的group和最高级别的role。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>这个 <code>birthday</code> 声明(claim)，它可以被认为是一个敏感的声明，所以你可能要考虑对这些声明进行加密， <a href="smallrye-jwt-build.html">见用SmallRye JWT生成JWT令牌</a> 。</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>注意为了使这段代码工作，我们需要RSA私钥的内容，它与我们在TokenSecuredResource应用程序中的公钥相对应。将以下PEM内容放入 <code>security-jwt-quickstart/src/test/resources/privateKey.pem</code> ：</p>
+</div>
+<div class="listingblock">
+<div class="title">RSA私钥PEM格式的内容</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">-----BEGIN PRIVATE KEY-----
+MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCWK8UjyoHgPTLa
+PLQJ8SoXLLjpHSjtLxMqmzHnFscqhTVVaDpCRCb6e3Ii/WniQTWw8RA7vf4djz4H
+OzvlfBFNgvUGZHXDwnmGaNVaNzpHYFMEYBhE8VGGiveSkzqeLZI+Y02G6sQAfDtN
+qqzM/l5QX8X34oQFaTBW1r49nftvCpITiwJvWyhkWtXP9RP8sXi1im5Vi3dhupOh
+nelk5n0BfajUYIbfHA6ORzjHRbt7NtBl0L2J+0/FUdHyKs6KMlFGNw8O0Dq88qnM
+uXoLJiewhg9332W3DFMeOveel+//cvDnRsCRtPgd4sXFPHh+UShkso7+DRsChXa6
+oGGQD3GdAgMBAAECggEAAjfTSZwMHwvIXIDZB+yP+pemg4ryt84iMlbofclQV8hv
+6TsI4UGwcbKxFOM5VSYxbNOisb80qasb929gixsyBjsQ8284bhPJR7r0q8h1C+jY
+URA6S4pk8d/LmFakXwG9Tz6YPo3pJziuh48lzkFTk0xW2Dp4SLwtAptZY/+ZXyJ6
+96QXDrZKSSM99Jh9s7a0ST66WoxSS0UC51ak+Keb0KJ1jz4bIJ2C3r4rYlSu4hHB
+Y73GfkWORtQuyUDa9yDOem0/z0nr6pp+pBSXPLHADsqvZiIhxD/O0Xk5I6/zVHB3
+zuoQqLERk0WvA8FXz2o8AYwcQRY2g30eX9kU4uDQAQKBgQDmf7KGImUGitsEPepF
+KH5yLWYWqghHx6wfV+fdbBxoqn9WlwcQ7JbynIiVx8MX8/1lLCCe8v41ypu/eLtP
+iY1ev2IKdrUStvYRSsFigRkuPHUo1ajsGHQd+ucTDf58mn7kRLW1JGMeGxo/t32B
+m96Af6AiPWPEJuVfgGV0iwg+HQKBgQCmyPzL9M2rhYZn1AozRUguvlpmJHU2DpqS
+34Q+7x2Ghf7MgBUhqE0t3FAOxEC7IYBwHmeYOvFR8ZkVRKNF4gbnF9RtLdz0DMEG
+5qsMnvJUSQbNB1yVjUCnDAtElqiFRlQ/k0LgYkjKDY7LfciZl9uJRl0OSYeX/qG2
+tRW09tOpgQKBgBSGkpM3RN/MRayfBtmZvYjVWh3yjkI2GbHA1jj1g6IebLB9SnfL
+WbXJErCj1U+wvoPf5hfBc7m+jRgD3Eo86YXibQyZfY5pFIh9q7Ll5CQl5hj4zc4Y
+b16sFR+xQ1Q9Pcd+BuBWmSz5JOE/qcF869dthgkGhnfVLt/OQzqZluZRAoGAXQ09
+nT0TkmKIvlza5Af/YbTqEpq8mlBDhTYXPlWCD4+qvMWpBII1rSSBtftgcgca9XLB
+MXmRMbqtQeRtg4u7dishZVh1MeP7vbHsNLppUQT9Ol6lFPsd2xUpJDc6BkFat62d
+Xjr3iWNPC9E9nhPPdCNBv7reX7q81obpeXFMXgECgYEAmk2Qlus3OV0tfoNRqNpe
+Mb0teduf2+h3xaI1XDIzPVtZF35ELY/RkAHlmWRT4PCdR0zXDidE67L6XdJyecSt
+FdOUH8z5qUraVVebRFvJqf/oGsXc4+ex1ZKUTbY0wqY1y9E39yvB3MaTmZFuuqk8
+f3cg+fr8aou7pr9SHhJlZCU=
+-----END PRIVATE KEY-----</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>我们将使用一个 <code>smallrye.jwt.sign.key.location</code> 属性来指向这个私人签名钥匙。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title">用OpenSSL生成密钥</div>
+<div class="paragraph">
+<p>也可以使用OpenSSL命令行工具生成一个公钥和私钥对。</p>
+</div>
+<div class="listingblock">
+<div class="title">用于生成密钥的openssl命令</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">openssl genrsa -out rsaPrivateKey.pem 2048
+openssl rsa -pubout -in rsaPrivateKey.pem -out publicKey.pem</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>生成私钥后需要一个额外的步骤，以便将其转换为PKCS#8格式。</p>
+</div>
+<div class="listingblock">
+<div class="title">openssl转换私钥的命令</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">openssl pkcs8 -topk8 -nocrypt -inform pem -in rsaPrivateKey.pem -outform pem -out privateKey.pem</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>你可以使用生成的这对密钥，而不是本快速入门中使用的密钥。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>现在我们可以生成一个JWT，然后与 <code>TokenSecuredResource</code> 端点一起使用。要做到这一点，运行以下命令：</p>
+</div>
+<div class="listingblock">
+<div class="title">JWT生成输出样本</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">$ mvn exec:java -Dexec.mainClass=org.acme.security.jwt.GenerateToken -Dexec.classpathScope=test -Dsmallrye.jwt.sign.key.location=privateKey.pem
+
+eyJraWQiOiJcL3ByaXZhdGVLZXkucGVtIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJqZG9lLXVzaW5nLWp3dC1yYmFjIiwiYXVkIjoidXNpbmctand0LXJiYWMiLCJ1cG4iOiJqZG9lQHF1YXJrdXMuaW8iLCJiaXJ0aGRhdGUiOiIyMDAxLTA3LTEzIiwiYXV0aF90aW1lIjoxNTUxNjU5Njc2LCJpc3MiOiJodHRwczpcL1wvcXVhcmt1cy5pb1wvdXNpbmctand0LXJiYWMiLCJyb2xlTWFwcGluZ3MiOnsiZ3JvdXAyIjoiR3JvdXAyTWFwcGVkUm9sZSIsImdyb3VwMSI6Ikdyb3VwMU1hcHBlZFJvbGUifSwiZ3JvdXBzIjpbIkVjaG9lciIsIlRlc3RlciIsIlN1YnNjcmliZXIiLCJncm91cDIiXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamRvZSIsImV4cCI6MTU1MTY1OTk3NiwiaWF0IjoxNTUxNjU5Njc2LCJqdGkiOiJhLTEyMyJ9.O9tx_wNNS4qdpFhxeD1e7v4aBNWz1FCq0UV8qmXd7dW9xM4hA5TO-ZREk3ApMrL7_rnX8z81qGPIo_R8IfHDyNaI1SLD56gVX-NaOLS2OjfcbO3zOWJPKR_BoZkYACtMoqlWgIwIRC-wJKUJU025dHZiNL0FWO4PjwuCz8hpZYXIuRscfFhXKrDX1fh3jDhTsOEFfu67ACd85f3BdX9pe-ayKSVLh_RSbTbBPeyoYPE59FW7H5-i8IE-Gqu838Hz0i38ksEJFI25eR-AJ6_PSUD0_-TV3NjXhF3bFIeT4VSaIZcpibekoJg0cQm-4ApPEcPLdgTejYHA-mupb8hSwg</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>JWT字符串是Base64 URL编码的字符串，有3个部分，由'.'字符分隔。第一部分 - JWT头，第二部分 - JWT要求，第三部分 - JWT签名。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="finally-secured-access-to-securedroles-allowed"><a class="anchor" href="#finally-secured-access-to-securedroles-allowed"></a>最后，安全访问/secured/roles-allowed</h3>
+<div class="paragraph">
+<p>现在让我们用它来向/secured/roles-allowed端点发出一个安全请求。确保你的Quarkus服务器仍然运行在开发模式下，然后运行以下命令，确保使用你在上一步中生成的JWT：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -H "Authorization: Bearer eyJraWQiOiJcL3ByaXZhdGVLZXkucGVtIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJqZG9lLXVzaW5nLWp3dC1yYmFjIiwiYXVkIjoidXNpbmctand0LXJiYWMiLCJ1cG4iOiJqZG9lQHF1YXJrdXMuaW8iLCJiaXJ0aGRhdGUiOiIyMDAxLTA3LTEzIiwiYXV0aF90aW1lIjoxNTUxNjUyMDkxLCJpc3MiOiJodHRwczpcL1wvcXVhcmt1cy5pb1wvdXNpbmctand0LXJiYWMiLCJyb2xlTWFwcGluZ3MiOnsiZ3JvdXAyIjoiR3JvdXAyTWFwcGVkUm9sZSIsImdyb3VwMSI6Ikdyb3VwMU1hcHBlZFJvbGUifSwiZ3JvdXBzIjpbIkVjaG9lciIsIlRlc3RlciIsIlN1YnNjcmliZXIiLCJncm91cDIiXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamRvZSIsImV4cCI6MTU1MTY1MjM5MSwiaWF0IjoxNTUxNjUyMDkxLCJqdGkiOiJhLTEyMyJ9.aPA4Rlc4kw7n_OZZRRk25xZydJy_J_3BRR8ryYLyHTO1o68_aNWWQCgpnAuOW64svPhPnLYYnQzK-l2vHX34B64JySyBD4y_vRObGmdwH_SEufBAWZV7mkG3Y4mTKT3_4EWNu4VH92IhdnkGI4GJB6yHAEzlQI6EdSOa4Nq8Gp4uPGqHsUZTJrA3uIW0TbNshFBm47-oVM3ZUrBz57JKtr0e9jv0HjPQWyvbzx1HuxZd6eA8ow8xzvooKXFxoSFCMnxotd3wagvYQ9ysBa89bgzL-lhjWtusuMFDUVYwFqADE7oOSOD4Vtclgq8svznBQ-YpfTHfb9QEcofMlpyjNA" http://127.0.0.1:8080/secured/roles-allowed; echo</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">用curl命令带上所需的JWT来访问/secured/roles-allowed</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">$ curl -H "Authorization: Bearer eyJraWQ..." http://127.0.0.1:8080/secured/roles-allowed; echo
+hello jdoe@quarkus.io, isHttps: false, authScheme: Bearer, hasJWT: true, birthdate: 2001-07-13</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>成功了!我们现在有：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>一个非匿名的呼叫者的名字是 <a href="mailto:jdoe@quarkus.io">jdoe@quarkus.io</a></p>
+</li>
+<li>
+<p>一个不记名(bearer)的认证方案</p>
+</li>
+<li>
+<p>一个非空的JsonWebToken</p>
+</li>
+<li>
+<p>birthdate声明(claim)的值</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="using-the-jsonwebtoken-and-claim-injection"><a class="anchor" href="#using-the-jsonwebtoken-and-claim-injection"></a>使用JsonWebToken和声明(claim)注入</h3>
+<div class="paragraph">
+<p>Now that we can generate a JWT to access our secured REST endpoints, let&#8217;s see what more we can do with the <code>JsonWebToken</code>
+interface and the JWT claims. The <code>org.eclipse.microprofile.jwt.JsonWebToken</code> interface extends the <code>java.security.Principal</code>
+interface, and is in fact the type of the object that is returned by the <code>jakarta.ws.rs.core.SecurityContext#getUserPrincipal()</code> call we
+used previously. This means that code that does not use CDI but does have access to the REST container <code>SecurityContext</code> can get
+hold of the caller <code>JsonWebToken</code> interface by casting the <code>SecurityContext#getUserPrincipal()</code>.</p>
+</div>
+<div class="paragraph">
+<p>这个 <code>JsonWebToken</code> 接口定义了用于访问底层JWT中的声明(claims)的方法。它为MicroProfile JWT RBAC规范所要求的共同声明(common claims)以及JWT中可能存在的任何的声明提供访问器。</p>
+</div>
+<div class="paragraph">
+<p>所有的JWT声明(claims)也可以被注入。让我们用另一个端点/secured/roles-allowed-admin来扩展我们的 <code>TokenSecuredResource</code> ，它使用注入的 <code>birthdate</code> （而不是从 <code>JsonWebToken</code> 得来）：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.security.jwt;
+
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.InternalServerErrorException;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.SecurityContext;
+
+import org.eclipse.microprofile.jwt.Claim;
+import org.eclipse.microprofile.jwt.Claims;
+import org.eclipse.microprofile.jwt.JsonWebToken;
+
+@Path("/secured")
+@RequestScoped <i class="conum" data-value="1"></i><b>(1)</b>
+public class TokenSecuredResource {
+
+    @Inject
+    JsonWebToken jwt; <i class="conum" data-value="2"></i><b>(2)</b>
+    @Inject
+    @Claim(standard = Claims.birthdate)
+    String birthdate; <i class="conum" data-value="3"></i><b>(3)</b>
+
+    @GET
+    @Path("permit-all")
+    @PermitAll
+    @Produces(MediaType.TEXT_PLAIN)
+    public String hello(@Context SecurityContext ctx) {
+        return getResponseString(ctx);
+    }
+
+    @GET
+    @Path("roles-allowed")
+    @RolesAllowed({ "User", "Admin" })
+    @Produces(MediaType.TEXT_PLAIN)
+    public String helloRolesAllowed(@Context SecurityContext ctx) {
+        return getResponseString(ctx) + ", birthdate: " + jwt.getClaim("birthdate").toString();
+    }
+
+    @GET
+    @Path("roles-allowed-admin")
+    @RolesAllowed("Admin")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String helloRolesAllowedAdmin(@Context SecurityContext ctx) {
+        return getResponseString(ctx) + ", birthdate: " + birthdate; <i class="conum" data-value="4"></i><b>(4)</b>
+    }
+
+    private String getResponseString(SecurityContext ctx) {
+        String name;
+        if (ctx.getUserPrincipal() == null) {
+            name = "anonymous";
+        } else if (!ctx.getUserPrincipal().getName().equals(jwt.getName())) {
+            throw new InternalServerErrorException("Principal and JsonWebToken names do not match");
+        } else {
+            name = ctx.getUserPrincipal().getName();
+        }
+        return String.format("hello %s,"
+            + " isHttps: %s,"
+            + " authScheme: %s,"
+            + " hasJWT: %s",
+            name, ctx.isSecure(), ctx.getAuthenticationScheme(), hasJwt());
+    }
+
+    private boolean hasJwt() {
+        return jwt.getClaimNames() != null;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>RequestScoped</code> scope is required to support an injection of the <code>birthday</code> claim as <code>String</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>这里我们注入JsonWebToken。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>在这里，我们把 <code>birthday</code> 的声明(claim)作为 <code>String</code> 注入 - 这就是为什么现在需要 <code>@RequestScoped</code> 范围。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>在这里，我们使用注入的 <code>birthday</code> 声明(claim)来建立最终的回复。</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>现在再次生成令牌并运行：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -H "Authorization: Bearer eyJraWQiOiJcL3ByaXZhdGVLZXkucGVtIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJqZG9lLXVzaW5nLWp3dC1yYmFjIiwiYXVkIjoidXNpbmctand0LXJiYWMiLCJ1cG4iOiJqZG9lQHF1YXJrdXMuaW8iLCJiaXJ0aGRhdGUiOiIyMDAxLTA3LTEzIiwiYXV0aF90aW1lIjoxNTUxNjUyMDkxLCJpc3MiOiJodHRwczpcL1wvcXVhcmt1cy5pb1wvdXNpbmctand0LXJiYWMiLCJyb2xlTWFwcGluZ3MiOnsiZ3JvdXAyIjoiR3JvdXAyTWFwcGVkUm9sZSIsImdyb3VwMSI6Ikdyb3VwMU1hcHBlZFJvbGUifSwiZ3JvdXBzIjpbIkVjaG9lciIsIlRlc3RlciIsIlN1YnNjcmliZXIiLCJncm91cDIiXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiamRvZSIsImV4cCI6MTU1MTY1MjM5MSwiaWF0IjoxNTUxNjUyMDkxLCJqdGkiOiJhLTEyMyJ9.aPA4Rlc4kw7n_OZZRRk25xZydJy_J_3BRR8ryYLyHTO1o68_aNWWQCgpnAuOW64svPhPnLYYnQzK-l2vHX34B64JySyBD4y_vRObGmdwH_SEufBAWZV7mkG3Y4mTKT3_4EWNu4VH92IhdnkGI4GJB6yHAEzlQI6EdSOa4Nq8Gp4uPGqHsUZTJrA3uIW0TbNshFBm47-oVM3ZUrBz57JKtr0e9jv0HjPQWyvbzx1HuxZd6eA8ow8xzvooKXFxoSFCMnxotd3wagvYQ9ysBa89bgzL-lhjWtusuMFDUVYwFqADE7oOSOD4Vtclgq8svznBQ-YpfTHfb9QEcofMlpyjNA" http://127.0.0.1:8080/secured/roles-allowed-admin; echo</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">$ curl -H "Authorization: Bearer eyJraWQ..." http://127.0.0.1:8080/secured/roles-allowed-admin; echo
+hello jdoe@quarkus.io, isHttps: false, authScheme: Bearer, hasJWT: true, birthdate: 2001-07-13</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="package-and-run-the-application"><a class="anchor" href="#package-and-run-the-application"></a>打包并运行该应用程序</h3>
+<div class="paragraph">
+<p>像往常一样，该应用程序能够使用以下方式进行打包:</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-sync-cli">
+<div class="title">CLI</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">quarkus build</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-maven">
+<div class="title">Maven</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw install</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-gradle">
+<div class="title">Gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./gradlew build</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>执行程序使用 <code>java -jar target/quarkus-app/quarkus-run.jar</code> ：</p>
+</div>
+<div class="listingblock">
+<div class="title">Runner jar的例子</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">$ java -jar target/quarkus-app/quarkus-run.jar
+2019-03-28 14:27:48,839 INFO  [io.quarkus] (main) Quarkus 3.15.3.1 started in 0.796s. Listening on: http://[::]:8080
+2019-03-28 14:27:48,841 INFO  [io.quarkus] (main) Installed features: [cdi, rest, rest-jackson, security, smallrye-jwt]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>你也可以通过以下命令生成本地可执行文件:</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-sync-cli">
+<div class="title">CLI</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">quarkus build --native</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-maven">
+<div class="title">Maven</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw install -Dnative</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-gradle">
+<div class="title">Gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./gradlew build -Dquarkus.native.enabled=true</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Native Executable的例子</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">[INFO] Scanning for projects...
+...
+[security-jwt-quickstart-runner:25602]     universe:     493.17 ms
+[security-jwt-quickstart-runner:25602]      (parse):     660.41 ms
+[security-jwt-quickstart-runner:25602]     (inline):   1,431.10 ms
+[security-jwt-quickstart-runner:25602]    (compile):   7,301.78 ms
+[security-jwt-quickstart-runner:25602]      compile:  10,542.16 ms
+[security-jwt-quickstart-runner:25602]        image:   2,797.62 ms
+[security-jwt-quickstart-runner:25602]        write:     988.24 ms
+[security-jwt-quickstart-runner:25602]      [total]:  43,778.16 ms
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  51.500 s
+[INFO] Finished at: 2019-03-28T14:30:56-07:00
+[INFO] ------------------------------------------------------------------------
+
+$ ./target/security-jwt-quickstart-runner
+2019-03-28 14:31:37,315 INFO  [io.quarkus] (main) Quarkus 0.12.0 started in 0.006s. Listening on: http://[::]:8080
+2019-03-28 14:31:37,316 INFO  [io.quarkus] (main) Installed features: [cdi, rest, rest-jackson, security, smallrye-jwt]</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="explore-the-solution"><a class="anchor" href="#explore-the-solution"></a>探索解决方案</h3>
+<div class="paragraph">
+<p>The solution repository located in the <code>security-jwt-quickstart</code> <a href="https://github.com/quarkusio/quarkus-quickstarts/tree/3.15/security-jwt-quickstart">directory</a> contains all the versions we have worked through in this quickstart guide as well as some additional endpoints that illustrate subresources with injection of <code>JsonWebToken</code>s and their claims into those using the CDI APIs.
+We suggest that you check out the quickstart solutions and explore the <code>security-jwt-quickstart</code> directory to learn more about the SmallRye JWT extension features.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="reference-guide"><a class="anchor" href="#reference-guide"></a>参考指南</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="supported-injection-scopes"><a class="anchor" href="#supported-injection-scopes"></a>支持的注射范围</h3>
+<div class="paragraph">
+<p>这里 <code>@ApplicationScoped</code> , <code>@Singleton</code> 和 <code>@RequestScoped</code> 外层Bean注入作用域在注入 <code>org.eclipse.microprofile.jwt.JsonWebToken</code> 时都是被支持的， <code>@RequestScoped</code> 作用域对 <code>JsonWebToken</code> 强制执行，以确保当前令牌被呈现。</p>
+</div>
+<div class="paragraph">
+<p>然而，当单个令牌要求被注入为简单的类型，例如 <code>String</code> ，必须使用 <code>@RequestScoped</code> ：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.security.jwt;
+
+import jakarta.inject.Inject;
+import org.eclipse.microprofile.jwt.Claim;
+import org.eclipse.microprofile.jwt.Claims;
+
+@Path("/secured")
+@RequestScoped
+public class TokenSecuredResource {
+
+    @Inject
+    @Claim(standard = Claims.birthdate)
+    String birthdate;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>请注意，你也可以使用注入的 <code>JsonWebToken</code> 来访问各个声明(claims)，在这种情况下，设置 <code>@RequestScoped</code> 是没有必要的。</p>
+</div>
+<div class="paragraph">
+<p>请参阅 <a href="https://download.eclipse.org/microprofile/microprofile-jwt-auth-1.2/microprofile-jwt-auth-spec-1.2.html#_cdi_injection_requirements">MP JWT CDI注入要求</a> 以了解更多细节。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="supported-public-key-formats"><a class="anchor" href="#supported-public-key-formats"></a>支持的公钥格式</h3>
+<div class="paragraph">
+<p>公钥可以采用以下任何一种格式，按优先顺序排列：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>公钥密码学标准#8（PKCS#8） PEM</p>
+</li>
+<li>
+<p>JSON网络密钥（JWK）</p>
+</li>
+<li>
+<p>JSON网络密钥集(JWKS)</p>
+</li>
+<li>
+<p>JSON Web Key (JWK) Base64 URL 编码</p>
+</li>
+<li>
+<p>JSON网络密钥集（JWKS）Base64 URL编码</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="dealing-with-the-verification-keys"><a class="anchor" href="#dealing-with-the-verification-keys"></a>处理验证密钥</h3>
+<div class="paragraph">
+<p>如果你需要使用非对称RSA或椭圆曲线（EC）密钥来验证令牌签名，那么请使用 <code>mp.jwt.verify.publickey.location</code> 属性来参考本地或远程验证密钥。</p>
+</div>
+<div class="paragraph">
+<p>使用 <code>mp.jwt.verify.publickey.algorithm</code> 来定制验证算法（默认为 <code>RS256</code> ），例如，在使用EC密钥时，将其设置为 <code>ES256</code> 。</p>
+</div>
+<div class="paragraph">
+<p>如果你需要使用对称密匙验证令牌签名，那么必须使用 <code>JSON Web Key</code> （JWK）或 <code>JSON Web Key Set</code> （JWK Set）格式来呈现这个密匙，例如：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+ "keys": [
+   {
+     "kty":"oct",
+     "kid":"secretKey",
+     "k":"AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
+   }
+ ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这个密匙JWK也需要用 <code>smallrye.jwt.verify.key.location</code> 。 <code>smallrye.jwt.verify.algorithm</code> 应该设置为 <code>HS256</code> / <code>HS384</code> / <code>HS512</code> 。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="jwt-parser"><a class="anchor" href="#jwt-parser"></a>用JWTParser解析和验证JsonWebToken</h3>
+<div class="paragraph">
+<p>如果JWT令牌不能被注入，例如，如果它被嵌入到服务请求的有效载荷中，或者服务端点在带外获得它，那么人们可以使用 <code>JWTParser</code> ：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.eclipse.microprofile.jwt.JsonWebToken;
+import io.smallrye.jwt.auth.principal.JWTParser;
+...
+@Inject JWTParser parser;
+
+String token = getTokenFromOidcServer();
+
+// Parse and verify the token
+JsonWebToken jwt = parser.parse(token);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>你也可以用它来定制令牌的验证或解密方式。例如，可以提供一个本地 <code>SecretKey</code> ：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.security.jwt;
+
+import io.smallrye.jwt.auth.principal.ParseException;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.CookieParam;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.NewCookie;
+import jakarta.ws.rs.core.Response;
+import org.eclipse.microprofile.jwt.JsonWebToken;
+import io.smallrye.jwt.auth.principal.JWTParser;
+import io.smallrye.jwt.build.Jwt;
+
+@Path("/secured")
+public class SecuredResource {
+    private static final String SECRET = "AyM1SysPpbyDfgZld3umj1qzKObwVMko";
+
+    @Inject
+    JWTParser parser;
+
+    @GET
+    @Produces("text/plain")
+    public Response getUserName(@CookieParam("jwt") String jwtCookie) throws ParseException {
+        if (jwtCookie == null) {
+            // Create a JWT token signed using the 'HS256' algorithm
+            String newJwtCookie = Jwt.upn("Alice").signWithSecret(SECRET);
+            // or create a JWT token encrypted using the 'A256KW' algorithm
+            // Jwt.upn("alice").encryptWithSecret(secret);
+            return Response.ok("Alice").cookie(new NewCookie("jwt", newJwtCookie)).build();
+        } else {
+            // All mp.jwt and smallrye.jwt properties are still effective, only the verification key is customized.
+            JsonWebToken jwt = parser.verify(jwtCookie, SECRET);
+            // or jwt = parser.decrypt(jwtCookie, secret);
+            return Response.ok(jwt.getName()).build();
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Please also see the <a href="#add-smallrye-jwt">How to Add SmallRye JWT directly</a> section about using <code>JWTParser</code> without the <code>HTTP</code> support provided by <code>quarkus-smallrye-jwt</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="token-decryption"><a class="anchor" href="#token-decryption"></a>令牌解密</h3>
+<div class="paragraph">
+<p>If your application needs to accept the tokens with the encrypted claims or the encrypted inner-signed claims, all you have to do is set
+<code>smallrye.jwt.decrypt.key.location</code> pointing to the decryption key.</p>
+</div>
+<div class="paragraph">
+<p>If this is the only key property that is set, the incoming token is expected to contain the encrypted claims only.
+If either <code>mp.jwt.verify.publickey</code> or <code>mp.jwt.verify.publickey.location</code> verification properties are also set then the incoming token is expected to contain the encrypted inner-signed token.</p>
+</div>
+<div class="paragraph">
+<p>请参阅 <a href="smallrye-jwt-build.html">使用SmallRye JWT生成JWT令牌</a> ，了解如何快速生成加密的或内部签名然后加密的令牌。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="custom-factories"><a class="anchor" href="#custom-factories"></a>定制工厂</h3>
+<div class="paragraph">
+<p><code>io.smallrye.jwt.auth.principal.DefaultJWTCallerPrincipalFactory</code> 默认用于解析和验证JWT令牌，并将其转换为 <code>JsonWebToken</code>。它使用 <code>MP JWT</code> <code>smallrye-jwt</code> 这些在 <code>Configuration</code> 中列出的属性来验证和定制JWT令牌。</p>
+</div>
+<div class="paragraph">
+<p>如果你需要提供你自己的工厂，例如，避免再次验证已经被防火墙验证过的令牌，那么你可以通过提供 <code>META-INF/services/io.smallrye.jwt.auth.principal.JWTCallerPrincipalFactory</code> 资源来使用 <code>ServiceLoader</code> 机制，或者干脆像这样有一个 <code>Alternative</code> CDI bean 实现：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import jakarta.annotation.Priority;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Alternative;
+import org.jose4j.jwt.JwtClaims;
+import org.jose4j.jwt.consumer.InvalidJwtException;
+import io.smallrye.jwt.auth.principal.DefaultJWTCallerPrincipal;
+import io.smallrye.jwt.auth.principal.JWTAuthContextInfo;
+import io.smallrye.jwt.auth.principal.JWTCallerPrincipal;
+import io.smallrye.jwt.auth.principal.JWTCallerPrincipalFactory;
+import io.smallrye.jwt.auth.principal.ParseException;
+
+@ApplicationScoped
+@Alternative
+@Priority(1)
+public class TestJWTCallerPrincipalFactory extends JWTCallerPrincipalFactory {
+
+    @Override
+    public JWTCallerPrincipal parse(String token, JWTAuthContextInfo authContextInfo) throws ParseException {
+        try {
+            // Token has already been verified, parse the token claims only
+            String json = new String(Base64.getUrlDecoder().decode(token.split("\\.")[1]), StandardCharsets.UTF_8);
+            return new DefaultJWTCallerPrincipal(JwtClaims.parse(json));
+        } catch (InvalidJwtException ex) {
+            throw new ParseException(ex.getMessage());
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="blocking-calls"><a class="anchor" href="#blocking-calls"></a>Blocking calls</h3>
+<div class="paragraph">
+<p><code>quarkus-smallrye-jwt</code> extension uses <a href="https://github.com/smallrye/smallrye-jwt">SmallRye JWT</a> library which is currently not reactive.</p>
+</div>
+<div class="paragraph">
+<p>What it means from the perspective of <code>quarkus-smallrye-jwt</code> which operates as part of the reactive Quarkus security architecture, is that an IO thread entering the <a href="https://github.com/smallrye/smallrye-jwt">SmallRye JWT</a> verification or decryption code might block in one of the following cases:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Default key resolver refreshes <code>JsonWebKey</code> set containing the keys which involves a remote call to the OIDC endpoint</p>
+</li>
+<li>
+<p>Custom key resolver such as <code>AWS Application Load Balancer</code> (<code>ALB</code>) key resolver, resolves the keys against the AWS ALB key endpoint using the current token&#8217;s key identifier header value</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In such cases, if the connections are slow, for example, it may take more than 3 seconds to get a response from the key endpoint, the current event loop thread will most likely block.</p>
+</div>
+<div class="paragraph">
+<p>To prevent it, set <code>quarkus.smallrye-jwt.blocking-authentication=true</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="token-propagation"><a class="anchor" href="#token-propagation"></a>令牌传播</h3>
+<div class="paragraph">
+<p>Please see the <a href="security-openid-connect-client-reference#token-propagation-rest">Token Propagation</a> section about the Bearer access token propagation to the downstream services.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="integration-testing"><a class="anchor" href="#integration-testing"></a>测试</h3>
+<div class="sect3">
+<h4 id="integration-testing-wiremock"><a class="anchor" href="#integration-testing-wiremock"></a>Wiremock</h4>
+<div class="paragraph">
+<p>If you configure <code>mp.jwt.verify.publickey.location</code> to point to HTTPS or HTTP based JsonWebKey (JWK) set then you can use the same approach as described in the <a href="security-oidc-bearer-token-authentication#bearer-token-integration-testing">OpenID Connect Bearer Token Integration testing</a> <code>Wiremock</code> section but only change the <code>application.properties</code> to use MP JWT configuration properties instead:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># keycloak.url is set by OidcWiremockTestResource
+mp.jwt.verify.publickey.location=${keycloak.url}/realms/quarkus/protocol/openid-connect/certs
+mp.jwt.verify.issuer=${keycloak.url}/realms/quarkus</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="integration-testing-keycloak"><a class="anchor" href="#integration-testing-keycloak"></a>Keycloak</h4>
+<div class="paragraph">
+<p>If you work with Keycloak and configure <code>mp.jwt.verify.publickey.location</code> to point to HTTPS or HTTP based JsonWebKey (JWK) set then you can use the same approach as described in the <a href="security-oidc-bearer-token-authentication#bearer-token-integration-testing">OpenID Connect Bearer Token Integration testing</a> Keycloak section but only change the <code>application.properties</code> to use MP JWT configuration properties instead:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># keycloak.url is set by DevServices for Keycloak
+mp.jwt.verify.publickey.location=${keycloak.url}/realms/quarkus/protocol/openid-connect/certs
+mp.jwt.verify.issuer=${keycloak.url}/realms/quarkus</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the tokens issued by Keycloak have an <code>iss</code> (issuer) claim set to the realm endpoint address.</p>
+</div>
+<div class="paragraph">
+<p>If your Quarkus application is running in a docker container, it may share a network interface with a Keycloak docker container launched by DevServices for Keycloak, with the Quarkus application and Keycloak communicating with each other via an internal shared docker network.</p>
+</div>
+<div class="paragraph">
+<p>In such cases, use the following configuration instead:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># keycloak.url is set by DevServices for Keycloak,
+# Quarkus will access it via an internal shared docker network interface.
+mp.jwt.verify.publickey.location=${keycloak.url}/realms/quarkus/protocol/openid-connect/certs
+
+# Issuer is set to the docker bridge localhost endpoint address represented by the `client.quarkus.oidc.auth-server-url` property
+mp.jwt.verify.issuer=${client.quarkus.oidc.auth-server-url}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="integration-testing-public-key"><a class="anchor" href="#integration-testing-public-key"></a>本地公钥</h4>
+<div class="paragraph">
+<p>You can use the same approach as described in the <a href="security-oidc-bearer-token-authentication#bearer-token-integration-testing">OpenID Connect Bearer Token Integration testing</a> <code>Local Public Key</code> section but only change the <code>application.properties</code> to use MP JWT configuration properties instead:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">mp.jwt.verify.publickey=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlivFI8qB4D0y2jy0CfEqFyy46R0o7S8TKpsx5xbHKoU1VWg6QkQm+ntyIv1p4kE1sPEQO73+HY8+Bzs75XwRTYL1BmR1w8J5hmjVWjc6R2BTBGAYRPFRhor3kpM6ni2SPmNNhurEAHw7TaqszP5eUF/F9+KEBWkwVta+PZ37bwqSE4sCb1soZFrVz/UT/LF4tYpuVYt3YbqToZ3pZOZ9AX2o1GCG3xwOjkc4x0W7ezbQZdC9iftPxVHR8irOijJRRjcPDtA6vPKpzLl6CyYnsIYPd99ltwxTHjr3npfv/3Lw50bAkbT4HeLFxTx4flEoZLKO/g0bAoV2uqBhkA9xnQIDAQAB
+# set it to the issuer value which is used to generate the tokens
+mp.jwt.verify.issuer=${keycloak.url}/realms/quarkus
+
+# required to sign the tokens
+smallrye.jwt.sign.key.location=privateKey.pem</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="integration-testing-security-annotation"><a class="anchor" href="#integration-testing-security-annotation"></a>TestSecurity注解</h4>
+<div class="paragraph">
+<p>添加以下依赖关系：</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-target-sync-cli asciidoc-tabs-target-sync-maven">
+<div class="title">pom.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-test-security-jwt&lt;/artifactId&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-target-sync-gradle">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-gradle hljs" data-lang="gradle">testImplementation("io.quarkus:quarkus-test-security-jwt")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>并写一个像这样的测试代码：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import static org.hamcrest.Matchers.is;
+import org.junit.jupiter.api.Test;
+import io.quarkus.test.common.http.TestHTTPEndpoint;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
+import io.quarkus.test.security.jwt.Claim;
+import io.quarkus.test.security.jwt.JwtSecurity;
+import io.restassured.RestAssured;
+
+@QuarkusTest
+@TestHTTPEndpoint(ProtectedResource.class)
+public class TestSecurityAuthTest {
+
+    @Test
+    @TestSecurity(user = "userJwt", roles = "viewer")
+    public void testJwt() {
+        RestAssured.when().get("test-security-jwt").then()
+                .body(is("userJwt:viewer"));
+    }
+
+    @Test
+    @TestSecurity(user = "userJwt", roles = "viewer")
+    @JwtSecurity(claims = {
+            @Claim(key = "email", value = "user@gmail.com")
+    })
+    public void testJwtWithClaims() {
+        RestAssured.when().get("test-security-jwt-claims").then()
+                .body(is("userJwt:viewer:user@gmail.com"));
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>其中 <code>ProtectedResource</code> 类可能看起来像这样：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Path("/web-app")
+@Authenticated
+public class ProtectedResource {
+
+    @Inject
+    JsonWebToken accessToken;
+
+    @GET
+    @Path("test-security-jwt")
+    public String testSecurityOidc() {
+        return accessToken.getName() + ":" + accessToken.getGroups().iterator().next();
+    }
+
+    @GET
+    @Path("test-security-jwt-claims")
+    public String testSecurityOidcUserInfoMetadata() {
+        return accessToken.getName() + ":" + accessToken.getGroups().iterator().next()
+                + ":" + accessToken.getClaim("email");
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>请注意，必须始终使用 <code>@TestSecurity</code> 注解，并且其 <code>user</code> 属性作为 <code>JsonWebToken.getName()</code> ， <code>roles</code> 属性-作为 <code>JsonWebToken.getGroups()</code> 。 <code>@JwtSecurity</code> 注释是可选的，可以用来设置额外的标记要求。</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><code>@TestSecurity</code> and <code>@JwtSecurity</code> can be combined in a meta-annotation, as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ ElementType.METHOD })
+    @TestSecurity(user = "userOidc", roles = "viewer")
+    @OidcSecurity(introspectionRequired = true,
+        introspection = {
+            @TokenIntrospection(key = "email", value = "user@gmail.com")
+        }
+    )
+    public @interface TestSecurityMetaAnnotation {
+
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is particularly useful if the same set of security settings needs to be used in multiple test methods.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="how-to-check-the-errors-in-the-logs"><a class="anchor" href="#how-to-check-the-errors-in-the-logs"></a>如何检查日志中的错误</h3>
+<div class="paragraph">
+<p>请启用 <code>io.quarkus.smallrye.jwt.runtime.auth.MpJwtValidator</code> <code>TRACE</code> 级日志，以查看有关令牌验证或解密错误的更多细节：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.log.category."io.quarkus.smallrye.jwt.runtime.auth.MpJwtValidator".level=TRACE
+quarkus.log.category."io.quarkus.smallrye.jwt.runtime.auth.MpJwtValidator".min-level=TRACE</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="proactive-authentication"><a class="anchor" href="#proactive-authentication"></a>主动认证</h3>
+<div class="paragraph">
+<p>If you&#8217;d like to skip the token verification when the public endpoint methods are invoked, disable the <a href="security-proactive-authentication">proactive authentication</a>.</p>
+</div>
+<div class="paragraph">
+<p>请注意，如果没有进行令牌验证，你就不能在公共方法中使用注入的 <code>JsonWebToken</code> 。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="add-smallrye-jwt"><a class="anchor" href="#add-smallrye-jwt"></a>如何直接添加SmallRye JWT</h3>
+<div class="paragraph">
+<p>To <a href="#jwt-parser">parse and verify JsonWebToken with JWTParser</a>, use <code>smallrye-jwt</code> instead of <code>quarkus-smallrye-jwt</code> directly for the following situations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>You work with Quarkus extensions that do not support <code>HTTP</code>, such as <code>Quarkus GRPC</code>.</p>
+</li>
+<li>
+<p>You provide an extension-specific <code>HTTP</code>, the support of which conflicts with the support of those offered by <code>quarkus-smallrye-jwt</code> and <code>Vert.x HTTP</code>, such as <code>Quarkus AWS Lambda</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Start with adding the <code>smallrye-jwt</code> dependency:</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-target-sync-cli asciidoc-tabs-target-sync-maven">
+<div class="title">pom.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.smallrye&lt;/groupId&gt;
+    &lt;artifactId&gt;smallrye-jwt&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-target-sync-gradle">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-gradle hljs" data-lang="gradle">implementation("io.smallrye:smallrye-jwt")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>并更新 <code>application.properties</code> ，以获得所有由 <code>smallrye-jwt</code> 提供的CDI生产者，包括如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.index-dependency.smallrye-jwt.group-id=io.smallrye
+quarkus.index-dependency.smallrye-jwt.artifact-id=smallrye-jwt</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuration-reference"><a class="anchor" href="#configuration-reference"></a>配置参考</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="quarkus-configuration"><a class="anchor" href="#quarkus-configuration"></a>Quarkus配置</h3>
+<div class="paragraph">
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> Configuration property fixed at build time - All other configuration properties are overridable at runtime <input type="search" id="config-search-0" placeholder="FILTER CONFIGURATION" disabled></p>
+</div>
+<table class="tableblock frame-all grid-all stretch configuration-reference searchable configuration-reference-all-rows">
+<colgroup>
+<col style="width: 80%;">
+<col style="width: 10%;">
+<col style="width: 10%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock"><span class="header-title">Configuration property</span></p></th>
+<th class="tableblock halign-left valign-middle"><p class="tableblock">类型</p></th>
+<th class="tableblock halign-left valign-middle"><p class="tableblock">默认</p></th>
+</tr>
+<tr class="row-collapsible row-collapsed row-with-desc odd">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-jwt_quarkus-smallrye-jwt-enabled"></a> <span class="property-path"><a href="#quarkus-smallrye-jwt_quarkus-smallrye-jwt-enabled"><code>quarkus.smallrye-jwt.enabled</code></a></span></p>
+</div>
+<div id="conf-collapsible-desc-1" class="openblock description description-collapsed">
+<div class="content">
+<div class="paragraph">
+<p>The MP-JWT configuration object</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-30438">QUARKUS_SMALLRYE_JWT_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30438" title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+</div>
+</div>
+<div class="paragraph description-decoration">
+<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><code>true</code> </p></td>
+</tr>
+<tr class="row-collapsible row-collapsed row-with-desc">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-jwt_quarkus-smallrye-jwt-rsa-sig-provider"></a> <span class="property-path"><a href="#quarkus-smallrye-jwt_quarkus-smallrye-jwt-rsa-sig-provider"><code>quarkus.smallrye-jwt.rsa-sig-provider</code></a></span></p>
+</div>
+<div id="conf-collapsible-desc-2" class="openblock description description-collapsed">
+<div class="content">
+<div class="paragraph">
+<p>The name of the <code>java.security.Provider</code> that supports SHA256withRSA signatures</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-30439">QUARKUS_SMALLRYE_JWT_RSA_SIG_PROVIDER</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30439" title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+</div>
+</div>
+<div class="paragraph description-decoration">
+<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><code>SunRsaSign</code></p></td>
+</tr>
+<tr class="row-collapsible row-collapsed row-with-desc odd">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="quarkus-smallrye-jwt_quarkus-smallrye-jwt-blocking-authentication"></a> <span class="property-path"><a href="#quarkus-smallrye-jwt_quarkus-smallrye-jwt-blocking-authentication"><code>quarkus.smallrye-jwt.blocking-authentication</code></a></span></p>
+</div>
+<div id="conf-collapsible-desc-3" class="openblock description description-collapsed">
+<div class="content">
+<div class="paragraph">
+<p>Enable this property if fetching the remote keys can be a time-consuming operation. Do not enable it if you use the local keys.</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-30440">QUARKUS_SMALLRYE_JWT_BLOCKING_AUTHENTICATION</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30440" title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+</div>
+</div>
+<div class="paragraph description-decoration">
+<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><code>false</code> </p></td>
+</tr>
+<tr class="row-collapsible row-collapsed row-with-desc">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="quarkus-smallrye-jwt_quarkus-smallrye-jwt-silent"></a> <span class="property-path"><a href="#quarkus-smallrye-jwt_quarkus-smallrye-jwt-silent"><code>quarkus.smallrye-jwt.silent</code></a></span></p>
+</div>
+<div id="conf-collapsible-desc-4" class="openblock description description-collapsed">
+<div class="content">
+<div class="paragraph">
+<p>Always create HTTP 401 challenge, even for requests containing no authentication credentials. JWT authentication mechanism will return HTTP 401 when an authentication challenge is required. However if it is used alongside one of the interactive authentication mechanisms then returning HTTP 401 to the users accessing the application from a browser may not be desired. If you prefer you can request that JWT authentication mechanism does not create a challenge in such cases by setting this property to 'true'.</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-30441">QUARKUS_SMALLRYE_JWT_SILENT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30441" title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+</div>
+</div>
+<div class="paragraph description-decoration">
+<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><code>false</code> </p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="microprofile-jwt-configuration"><a class="anchor" href="#microprofile-jwt-configuration"></a>MicroProfile JWT配置</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property Name</th>
+<th class="tableblock halign-left valign-top">默认</th>
+<th class="tableblock halign-left valign-top">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mp.jwt.verify.publickey</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>mp.jwt.verify.publickey</code> config property allows the Public Key text itself to be supplied as a string.  The Public Key will be parsed from the supplied string in the order defined in the <a href="#supported-public-key-formats">支持的公钥格式</a> section.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mp.jwt.verify.publickey.location</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">配置属性允许指定公钥的外部或内部位置。该值可以是一个相对路径或一个URL。如果该值指向一个基于HTTPS的JWK集，那么为了让它在本地模式下工作， <code>quarkus.ssl.native</code> 属性也必须被设置为 <code>true</code> ，更多细节请参见 <a href="native-and-ssl.html">使用SSL与本地可执行程序</a> 。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mp.jwt.verify.publickey.algorithm</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>RS256</code></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">签名算法。将其设置为 <code>ES256</code> ，以支持椭圆曲线签名算法。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mp.jwt.decrypt.key.location</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">配置属性允许指定私人解密密钥的外部或内部位置。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mp.jwt.verify.issuer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">配置属性指定了服务器将接受为有效的JWT的 <code>iss</code> （签发者）声明的值。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mp.jwt.verify.audiences</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">逗号分隔的列表，其中列出了一个令牌的 <code>aud</code> 声明可能包含的受众。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mp.jwt.verify.clock.skew</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>60</code></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clock skew in seconds used during the token expiration and age verification. An expired token is accepted if the current time is within the number of seconds specified by this property after the token expiration time. The default value is 60 seconds.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mp.jwt.verify.token.age</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>none</code></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of seconds that must not elapse since the token <code>iat</code> (issued at) time.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mp.jwt.token.header</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>Authorization</code></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">如果使用另一个header（如 <code>Cookie</code> ）来传递令牌，则设置此属性。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mp.jwt.token.cookie</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">包含令牌的cookie的名称。只有当 <code>mp.jwt.token.header</code> 被设置为 <code>Cookie</code> ，该属性才会有效。</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="additional-smallrye-jwt-configuration"><a class="anchor" href="#additional-smallrye-jwt-configuration"></a>额外的SmallRye JWT配置</h3>
+<div class="paragraph">
+<p>SmallRye JWT提供了更多的属性，可以用来定制令牌的处理:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property Name</th>
+<th class="tableblock halign-left valign-top">默认</th>
+<th class="tableblock halign-left valign-top">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.verify.key.location</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NONE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">验证密钥的位置，可以指向公钥和秘钥。秘密密钥只能是JWK格式。注意，如果设置了这个属性，<code>mp.jwt.verify.publickey.location</code> 将被忽略。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.verify.algorithm</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">签名算法。此属性只能用于设置所需的对称算法，如 <code>HS256</code> 。对于设置非对称算法，如已被弃用的 <code>ES256</code> - 请使用 <code>mp.jwt.verify.publickey.algorithm</code> 代替。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.verify.key-format</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>ANY</code></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">将此属性设置为特定的密钥格式，如 <code>PEM_KEY</code> , <code>PEM_CERTIFICATE</code> , <code>JWK</code> 或 <code>JWK_BASE64URL</code> ，以优化验证密钥的加载方式。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.verify.key-provider</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>DEFAULT</code></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">By default, PEM, JWK or JWK key sets can be read from the local file system or fetched from URIs as required by MicroProfile JWT specification. Set this property to <code>AWS_ALB</code> to support an AWS Application Load Balancer verification key resolution.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.verify.relax-key-validation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">放宽密钥验证，将此属性设置为 <code>true</code> ，将允许长度小于2048比特的公共RSA密钥。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.verify.certificate-thumbprint</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">如果此属性被启用，那么签名的令牌必须包含 <code>x5t</code> 或 <code>x5t#S256</code> X509Certificate的thumbprint headers。在这种情况下，验证密钥只能是JWK或PEM证书密钥格式。JWK密钥必须有一个 <code>x5c</code>（Base64编码的X509Certificate）属性设置。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.token.header</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>Authorization</code></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">如果使用另一个header，如 <code>Cookie</code> ，来传递令牌，则设置此属性。此属性已被废弃—请使用 <code>mp.jwt.token.header</code> 。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.key-cache-size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>100</code> </code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Key cache size. Use this property, as well as <code>smallrye.jwt.key-cache-time-to-live</code>, to control the key cache when a key provider such as <code>AWS_ALB</code> is configured with <code>smallrye.jwt.verify.key-provider=AWS_ALB</code> for resolving the keys dynamically.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.key-cache-time-to-live</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>10</code> </code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Key cache entry time-to-live in minutes. Use this property, as well as <code>smallrye.jwt.key-cache-size</code>, to control the key cache when a key provider such as <code>AWS_ALB</code> is configured with <code>smallrye.jwt.verify.key-provider=AWS_ALB</code> for resolving the keys dynamically.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.token.cookie</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the cookie containing a token. This property will be effective only if <code>smallrye.jwt.token.header</code> is set to <code>Cookie</code>. This property is deprecated - use <code>mp.jwt.token.cookie</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.always-check-authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">如果将此属性设置为 <code>true</code> ，<code>Authorization</code> header也会被检查，即使 <code>smallrye.jwt.token.header</code> 被设置为 <code>Cookie</code> ，但又不存在名称为 <code>smallrye.jwt.token.cookie</code> 的cookie。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.token.schemes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>Bearer</code></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">逗号分隔的列表，其中包含一个可替代的单一或多个schemes，例如， <code>DPoP</code> 。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.token.kid</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">密钥标识符。如果它被设置，那么验证JWK密钥以及每个JWT标记必须有一个匹配的 <code>kid</code> header。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.time-to-live</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JWT可能被发布使用的最大秒数。实际上，JWT的到期日和签发日期之间的差异不得超过这个值。将此属性设置为非正值，可以取消对令牌具有有效的 <code>iat</code>（签发日期）声明的要求。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.require.named-principal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>true</code> </code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">如果一个应用程序依赖于 <code>java.security.Principal</code> ，返回一个名称，那么一个标记必须有一个 <code>upn</code> 、 <code>preferred_username</code> 或 <code>sub</code> 的声明集。如果应用程序代码没有这些要求来可靠地处理非空的 <code>Principal</code> 名称，设置此属性将导致SmallRye JWT抛出一个异常。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.path.sub</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">包含subject名称的声明的路径。它从顶级的JSON对象开始，可以包含多个段，每个段只代表一个JSON对象名称，例如： <code>realms/subject</code> 。如果一个标记没有 <code>sub</code> 声明，但在一个不同的声明里设置了subject，则可以使用这个属性。在命名空间限定的声明上使用双引号。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.claims.sub</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">当当前令牌没有可用的标准或自定义 <code>sub</code> 声明时，此属性可用于设置默认的sub声明值。如果没有设置 <code>upn</code> 或 <code>preferred_username</code> 或 <code>sub</code> 声明，该属性可有效地用于自定义 <code>java.security.Principal</code> 名称。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.path.groups</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">到包含组的声明的路径。它从顶级的JSON对象开始，可以包含多个段，每个段只代表一个JSON对象的名称，例如： <code>realm/groups</code> 。如果一个标记没有 <code>groups</code> 的声明，但在一个不同的声明中设置了组，就可以使用这个属性。在命名空间限定的声明上使用双引号。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.groups-separator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>space</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">分隔符，用于分割一个可能包含多个组值的字符串。只有当 <code>smallrye.jwt.path.groups</code> 属性指向一个值为字符串的自定义声明时，它才会被使用。默认值是一个单一的空格，因为一个标准的OAuth2 <code>scope</code> 声明可能包含一个空格分隔的序列。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.claims.groups</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">当当前令牌没有可用的标准或自定义的组声明时，此属性可用于设置默认组声明值。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.jwks.refresh-interval</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>60</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JWK缓存刷新时间间隔，单位是分钟。它将被忽略，除非 <code>mp.jwt.verify.publickey.location</code> 指向基于HTTP或HTTPS URL的JWK设置，并且没有从JWK HTTPS端点返回具有正 <code>max-age</code> 参数值的HTTP <code>Cache-Control</code> 响应header。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.jwks.forced-refresh-interval</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>30</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">强制刷新JWK缓存的时间间隔，以分钟为单位，用于限制强制刷新尝试的频率，这可能发生在令牌验证失败时，因为缓存中没有能与当前令牌带 <code>kid</code> 属性的JWK密钥，相匹配的 <code>kid</code> header。除非 <code>mp.jwt.verify.publickey.location</code> 指向基于HTTP或HTTPS URL的JWK集，否则它将被忽略。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.expiration.grace</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Expiration grace in seconds. By default an expired token will still be accepted if the current time is no more than 1 min after the token expiry time. This property is deprecated. Use <code>mp.jwt.verify.clock.skew</code> instead.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.verify.aud</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">逗号分隔的列表，列出了令牌 <code>aud</code> 声明可能包含的受众。该属性已被废弃—请使用 <code>mp.jwt.verify.audiences</code> 。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.required.claims</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">一个token必须包含逗号分隔的声明(claims)列表。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.decrypt.key.location</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Config property allows for an external or internal location of Private Decryption Key to be specified. This property is deprecated - use <code>mp.jwt.decrypt.key.location</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.decrypt.algorithm</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>RSA_OAEP</code></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">解密算法。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.decrypt.key</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">以字符串形式提供的解密密钥。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.token.decryption.kid</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">解密密钥标识符。如果它被设置，那么解密JWK密钥以及每个JWT标记必须有一个匹配的 <code>kid</code> header。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.client.tls.certificate.path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">如果需要通过 <code>HTTPS</code> 获取密钥，则需要配置 TLS 信任证书的路径。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.client.tls.trust-all</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">信任所有的主机名。如果钥匙必须通过 <code>HTTPS</code> 获得，并且该属性被设置为 <code>true</code> ，那么所有的主机名都被默认信任。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.client.tls.hosts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">受信任的主机名的集合。如果钥匙必须通过 <code>HTTPS</code> 获得，并且 <code>smallrye.jwt.client.tls.trust-all</code> 被设置为 <code>false</code> ，那么这个属性可以用来配置可信的主机名。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.http.proxy.host</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTTP代理主机。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.http.proxy.port</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>80</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTTP代理端口。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.keystore.type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>JKS</code></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">如果 <code>mp.jwt.verify.publickey.location</code> 或 <code>mp.jwt.decrypt.key.location</code> 指向一个 <code>KeyStore</code> 文件，这个属性可以用来定制一个密钥库类型。如果没有设置，那么文件名将被检查以确定密钥库类型，默认为 <code>JKS</code> 。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.keystore.provider</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">如果 <code>mp.jwt.verify.publickey.location</code> 或 <code>mp.jwt.decrypt.key.location</code> 指向一个 <code>KeyStore</code> 文件，该属性可用于定制一个 <code>KeyStore</code> 提供者。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.keystore.password</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Keystore密码。如果有 <code>mp.jwt.verify.publickey.location</code> 或 <code>mp.jwt.decrypt.key.location</code> ，则此属性必须被设置。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.keystore.verify.key.alias</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">这个属性必须被设置，以确定一个公共验证密钥，如果 <code>mp.jwt.verify.publickey.location</code> 指向 <code>KeyStore</code> 文件，该密钥将从所匹配的证书中的 <code>KeyStore</code> 中提取。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.keystore.decrypt.key.alias</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">如果 <code>mp.jwt.decrypt.key.location</code> 指向 <code>KeyStore</code> 文件，则必须将此属性设置为标识专用解密密钥。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.keystore.decrypt.key.password</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">如果 <code>mp.jwt.decrypt.key.location</code> 指向 <code>KeyStore</code> 文件时，并且 <code>KeyStore</code> 中的专用解密密钥的密码与 <code>smallrye.jwt.keystore.password</code> 不同，则可以设置此属性。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.resolve-remote-keys-at-startup</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set this property to true to resolve the remote keys at the application startup.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="references"><a class="anchor" href="#references"></a>参考文献</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://download.eclipse.org/microprofile/microprofile-jwt-auth-1.2/microprofile-jwt-auth-spec-1.2.html">MP JWT 1.2 HTML</a></p>
+</li>
+<li>
+<p><a href="https://download.eclipse.org/microprofile/microprofile-jwt-auth-1.2/microprofile-jwt-auth-spec-1.2.pdf">MP JWT 1.2 PDF</a></p>
+</li>
+<li>
+<p><a href="https://github.com/smallrye/smallrye-jwt">SmallRye JWT</a></p>
+</li>
+<li>
+<p><a href="https://tools.ietf.org/html/rfc7519">JSON网络令牌</a></p>
+</li>
+<li>
+<p><a href="https://tools.ietf.org/html/rfc7515">JSON网络签名</a></p>
+</li>
+<li>
+<p><a href="https://tools.ietf.org/html/rfc7516">JSON网络加密</a></p>
+</li>
+<li>
+<p><a href="https://tools.ietf.org/html/rfc7518">JSON网络算法</a></p>
+</li>
+<li>
+<p><a href="security-jwt-build">使用 SmallRye JWT Build 对 JWT 令牌进行签名和加密</a></p>
+</li>
+<li>
+<p><a href="security-authentication-mechanisms#combining-authentication-mechanisms">Combining authentication mechanisms</a></p>
+</li>
+<li>
+<p><a href="security-overview">Quarkus Security overview</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+    </div>
+    <div class="grid__item width-4-12 width-12-12-m tocwrapper">
+      <div class="hide-mobile toc"><ul class="sectlevel1">
+<li><a href="#prerequisites">先决条件</a></li>
+<li><a href="#quickstart">快速入门</a>
+<ul class="sectlevel2">
+<li><a href="#solution">解决方案</a></li>
+<li><a href="#creating-the-maven-project">创建Maven项目</a></li>
+<li><a href="#examine-the-jakarta-rest-resource">Examine the Jakarta REST resource</a></li>
+<li><a href="#run-the-application">运行应用程序</a></li>
+<li><a href="#configuring-the-smallrye-jwt-extension-security-information">配置SmallRye JWT扩展安全信息</a></li>
+<li><a href="#add-public-key">添加公钥</a></li>
+<li><a href="#generating-a-jwt">生成一个JWT</a></li>
+<li><a href="#finally-secured-access-to-securedroles-allowed">最后，安全访问/secured/roles-allowed</a></li>
+<li><a href="#using-the-jsonwebtoken-and-claim-injection">使用JsonWebToken和声明(claim)注入</a></li>
+<li><a href="#package-and-run-the-application">打包并运行该应用程序</a></li>
+<li><a href="#explore-the-solution">探索解决方案</a></li>
+</ul>
+</li>
+<li><a href="#reference-guide">参考指南</a>
+<ul class="sectlevel2">
+<li><a href="#supported-injection-scopes">支持的注射范围</a></li>
+<li><a href="#supported-public-key-formats">支持的公钥格式</a></li>
+<li><a href="#dealing-with-the-verification-keys">处理验证密钥</a></li>
+<li><a href="#jwt-parser">用JWTParser解析和验证JsonWebToken</a></li>
+<li><a href="#token-decryption">令牌解密</a></li>
+<li><a href="#custom-factories">定制工厂</a></li>
+<li><a href="#blocking-calls">Blocking calls</a></li>
+<li><a href="#token-propagation">令牌传播</a></li>
+<li><a href="#integration-testing">测试</a></li>
+<li><a href="#how-to-check-the-errors-in-the-logs">如何检查日志中的错误</a></li>
+<li><a href="#proactive-authentication">主动认证</a></li>
+<li><a href="#add-smallrye-jwt">如何直接添加SmallRye JWT</a></li>
+</ul>
+</li>
+<li><a href="#configuration-reference">配置参考</a>
+<ul class="sectlevel2">
+<li><a href="#quarkus-configuration">Quarkus配置</a></li>
+<li><a href="#microprofile-jwt-configuration">MicroProfile JWT配置</a></li>
+<li><a href="#additional-smallrye-jwt-configuration">额外的SmallRye JWT配置</a></li>
+</ul>
+</li>
+<li><a href="#references">参考文献</a></li>
+</ul></div>
+    </div>
+  </div>
+  <h2>Related content</h2>
+  <div class="grid-wrapper relations">
+    <div class="grid__item width-6-12 width-12-12-m">
+      <h3>On the same topics</h3>
+      <ul class="related-content">
+      
+        
+        <li class="guide"><a href="/version/3.15/guides/security-jwt-build">Build, Sign and Encrypt JSON Web Tokens</a></li>
+      
+        
+        <li class="concepts"><a href="/version/3.15/guides/security-authentication-mechanisms">Authentication mechanisms in Quarkus</a></li>
+      
+        
+        <li class="reference"><a href="/version/3.15/guides/security-authorize-web-endpoints-reference">Authorization of web endpoints</a></li>
+      
+        
+        <li class="concepts"><a href="/version/3.15/guides/security-basic-authentication">Basic authentication</a></li>
+      
+        
+        <li class="concepts"><a href="/version/3.15/guides/security-openid-connect-providers">Configuring Well-Known OpenID Connect Providers</a></li>
+      
+        
+        <li class="guide"><a href="/version/3.15/guides/security-csrf-prevention">Cross-Site Request Forgery Prevention</a></li>
+      
+        
+        <li class="howto"><a href="/version/3.15/guides/security-openid-connect-dev-services">Dev Services and Dev UI for OpenID Connect (OIDC)</a></li>
+      
+        
+        <li class="howto"><a href="/version/3.15/guides/security-basic-authentication-howto">Enable Basic authentication</a></li>
+      
+        
+        <li class="tutorial"><a href="/version/3.15/guides/security-getting-started-tutorial">Getting started with Security by using Basic authentication and Jakarta Persistence</a></li>
+      
+        
+        <li class="concepts"><a href="/version/3.15/guides/security-identity-providers">身份提供者（Identity Providers）</a></li>
+      
+        
+        <li class="reference"><a href="/version/3.15/guides/security-openid-connect-client-reference">OpenID Connect (OIDC) and OAuth2 client and filters</a></li>
+      
+        
+        <li class="concepts"><a href="/version/3.15/guides/security-oidc-bearer-token-authentication">OpenID Connect (OIDC) Bearer token authentication</a></li>
+      
+        
+        <li class="reference"><a href="/version/3.15/guides/security-oidc-configuration-properties-reference">OpenID Connect (OIDC) configuration properties</a></li>
+      
+        
+        <li class="concepts"><a href="/version/3.15/guides/security-oidc-code-flow-authentication">OpenID Connect authorization code flow mechanism for protecting web applications</a></li>
+      
+        
+        <li class="tutorial"><a href="/version/3.15/guides/security-openid-connect-client">OpenID Connect client and token propagation quickstart</a></li>
+      
+        
+        <li class="concepts"><a href="/version/3.15/guides/security-proactive-authentication">主动认证</a></li>
+      
+        
+        <li class="tutorial"><a href="/version/3.15/guides/security-oidc-bearer-token-authentication-tutorial">Protect a service application by using OpenID Connect (OIDC) Bearer token authentication</a></li>
+      
+        
+        <li class="tutorial"><a href="/version/3.15/guides/security-oidc-code-flow-authentication-tutorial">Protect a web application by using OpenID Connect (OIDC) authorization code flow</a></li>
+      
+        
+        <li class="concepts"><a href="/version/3.15/guides/security-architecture">Quarkus Security architecture</a></li>
+      
+        
+        <li class="concepts"><a href="/version/3.15/guides/security-overview">Quarkus Security overview</a></li>
+      </ul>
+    </div>
+    </div>
+  </div>
+
+  </div>
+
+  <div class="content project-footer">
+  <div class="footer-section">
+    <div class="logo-wrapper">
+      <a href="/"><img src="/assets/images/quarkus_logo_horizontal_rgb_reverse.svg" class="project-logo" title="Quarkus"></a>
+    </div>
+  </div>
+  <div class="grid-wrapper">
+    <p class="grid__item width-3-12">Quarkus is open. All dependencies of this project are available under the <a href='https://www.apache.org/licenses/LICENSE-2.0' target='_blank'>Apache Software License 2.0</a> or compatible license.<br /><br />This website was built with <a href='https://jekyllrb.com/' target='_blank'>Jekyll</a>, is hosted on <a href='https://pages.github.com/' target='_blank'>GitHub Pages</a> and is completely open source. If you want to make it better, <a href='https://github.com/quarkusio/quarkusio.github.io' target='_blank'>fork the website</a> and show us what you’ve got.</p>
+
+    
+      <div class="width-1-12 project-links">
+        <span>Navigation</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="/" target="_blank">Home</a></li>
+          
+          
+          
+            <li><a href="/about" target="_blank">About</a></li>
+          
+          
+          
+            <li><a href="/blog" target="_blank">博客</a></li>
+          
+          
+          
+            <li><a href="/insights" target="_blank">Podcast</a></li>
+          
+          
+          
+            <li><a href="/events" target="_blank">活动</a></li>
+          
+          
+          
+            <li><a href="/newsletter" target="_blank">新闻</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
+          
+          
+          
+            <li><a href="https://github.com/orgs/quarkusio/projects/13/views/1" target="_blank">路线图</a></li>
+          
+          
+          
+            <li><a href="/security" target="_blank">Security&nbsp;policy</a></li>
+          
+          
+          
+            <li><a href="/usage" target="_blank">Usage</a></li>
+          
+          
+          
+            <li><a href="/brand" target="_blank">Brand</a></li>
+          
+          
+          
+            <li><a href="/desktopwallpapers" target="_blank">Wallpapers</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-1-12 project-links">
+        <span>Follow Us</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="https://x.com/quarkusio" target="_blank">X</a></li>
+          
+          
+          
+            <li><a href="https://bsky.app/profile/quarkus.io" target="_blank">Bluesky</a></li>
+          
+          
+          
+            <li><a rel="me" href="https://fosstodon.org/@quarkusio" target="_blank">Mastodon</a></li>
+            
+          
+          
+            <li><a href="https://www.facebook.com/quarkusio" target="_blank">Facebook</a></li>
+          
+          
+          
+            <li><a href="https://www.linkedin.com/company/quarkusio/" target="_blank">Linkedin</a></li>
+          
+          
+          
+            <li><a href="https://www.youtube.com/channel/UCaW8QG_QoIk_FnjLgr5eOqg" target="_blank">Youtube</a></li>
+          
+          
+          
+            <li><a href="https://github.com/quarkusio" target="_blank">GitHub</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-2-12 project-links">
+        <span>Get Help</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="/support" target="_blank">Support</a></li>
+          
+          
+          
+            <li><a href="/guides" target="_blank">Guides</a></li>
+          
+          
+          
+            <li><a href="/faq" target="_blank">FAQ</a></li>
+          
+          
+          
+            <li><a href="/get-started" target="_blank">开始体验</a></li>
+          
+          
+          
+            <li><a href="https://stackoverflow.com/questions/tagged/quarkus" target="_blank">Stack Overflow</a></li>
+          
+          
+          
+            <li><a href="https://github.com/quarkusio/quarkus/discussions" target="_blank">Discussions</a></li>
+          
+          
+          
+            <li><a href="https://groups.google.com/forum/#!forum/quarkus-dev" target="_blank">Development mailing list</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-1-12 project-links">
+        <span>Languages</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="https://quarkus.io/" target="_blank">English</a></li>
+          
+          
+          
+            <li><a href="https://pt.quarkus.io/" target="_blank">Português&nbsp;(Brasileiro)</a></li>
+          
+          
+          
+            <li><a href="https://es.quarkus.io/" target="_blank">Español</a></li>
+          
+          
+          
+            <li><a href="https://cn.quarkus.io/" target="_blank">简体中文</a></li>
+          
+          
+          
+            <li><a href="https://ja.quarkus.io/" target="_blank">日本語</a></li>
+          
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="width-4-12 more-links">
+        <span>Quarkus is made of community projects</span>
+        <ul class="footer-links">
+          
+            <li><a blah href="https://vertx.io/" target="_blank">Eclipse Vert.x</a></li>
+          
+            <li><a blah href="https://smallrye.io" target="_blank">SmallRye</a></li>
+          
+            <li><a blah href="https://hibernate.org" target="_blank">Hibernate</a></li>
+          
+            <li><a blah href="https://netty.io" target="_blank">Netty</a></li>
+          
+            <li><a blah href="https://resteasy.github.io" target="_blank">RESTEasy</a></li>
+          
+            <li><a blah href="https://camel.apache.org" target="_blank">Apache Camel</a></li>
+          
+            <li><a blah href="https://microprofile.io" target="_blank">Eclipse MicroProfile</a></li>
+          
+            <li><a blah href="https://code.quarkus.io/" target="_blank">And many more...</a></li>
+          
+        </ul>
+      </div>
+    
+  </div>
+</div>
+
+  <div class="content redhat-footer">
+  <div class="grid-wrapper">
+    <span class="licence">
+      <i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i> <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank">CC by 3.0</a> | <a href="https://www.redhat.com/en/about/privacy-policy">Privacy Policy</a>
+    </span>
+    <span class="redhat">
+      Sponsored by
+    </span>
+    <span class="redhat-logo">
+      <a href="https://www.redhat.com/" target="_blank"><img src="/assets/images/redhat_reversed.svg"></a>
+    </span>
+  </div>
+</div>
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha384-8gBf6Y4YYq7Jx97PIqmTwLPin4hxIzQw5aDmUg/DDhul9fFpbbLcLh3nTIIDJKhx" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="/assets/javascript/mobile-nav.js"></script>
+  <script type="text/javascript" src="/assets/javascript/scroll-down.js"></script>
+  <script src="/assets/javascript/satellite.js" type="text/javascript"></script>
+  <script src="/guides/javascript/config.js" type="text/javascript"></script>
+  <script src="/assets/javascript/guides-version-dropdown.js" type="text/javascript"></script>
+  <script src="/assets/javascript/back-to-top.js" type="text/javascript"></script>
+  <script src="/assets/javascript/clipboard.min.js" type="text/javascript"></script>
+  <script src="/assets/javascript/copy.js" type="text/javascript"></script>
+  <script src="/assets/javascript/asciidoc-tabs.js" type="text/javascript"></script>
+  <script src="/assets/javascript/future-date.js" type="text/javascript"></script>
+</body>
+
+</html>

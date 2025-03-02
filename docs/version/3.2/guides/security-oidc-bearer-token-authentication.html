@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="cn">
+
+
+
+
+
+
+
+<head>
+  <title>OpenID Connect (OIDC) Bearer token authentication - 3.2 - Quarkus</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
+  script-src 'self' 'unsafe-inline' 'unsafe-eval'
+      
+      https://assets.adobedtm.com
+      js.bizographics.com
+      https://www.redhat.com
+      https://static.redhat.com
+      https://app.requestly.io/
+      jsonip.com
+      https://ajax.googleapis.com
+      https://use.fontawesome.com
+      http://www.youtube.com
+      http://www.googleadservices.com
+      https://googleads.g.doubleclick.net
+      https://giscus.app
+      https://analytics.ossupstream.org/
+      https://app.mailjet.com;
+
+  style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
+  img-src 'self' * data:; 
+  media-src 'self'; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  base-uri 'none'; 
+  object-src 'none'; 
+  form-action 'none'; 
+  font-src 'self' https://use.fontawesome.com https://fonts.gstatic.com;" />
+  <script id="adobe_dtm" src="https://www.redhat.com/dtm.js" type="text/javascript"></script>
+  <script src="/assets/javascript/highlight.pack.js" type="text/javascript"></script>
+  <META HTTP-EQUIV='X-XSS-Protection' CONTENT="1; mode=block">
+  <META HTTP-EQUIV='X-Content-Type-Options' CONTENT="nosniff">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Quarkus: Supersonic Subatomic Java">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@QuarkusIO"> 
+  <meta name="twitter:creator" content="@QuarkusIO">
+  <meta property="og:url" content="https://quarkus.io/version/3.2/guides/security-oidc-bearer-token-authentication" />
+  <meta property="og:title" content="OpenID Connect (OIDC) Bearer token authentication - 3.2" />
+  <meta property="og:description" content="Quarkus: Supersonic Subatomic Java" />
+  <meta property="og:image" content="https://quarkus.io/assets/images/quarkus_card.png" />
+  
+  <link rel="canonical" href="https://quarkus.io/guides/security-oidc-bearer-token-authentication">
+  <link rel="shortcut icon" type="image/png" href="/favicon.ico" >
+  <link rel="stylesheet" href="/guides/stylesheet/config.css" />
+  <link rel="stylesheet" href="/assets/css/main.css?2021-07-29" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.2/css/all.css" crossorigin="anonymous">
+  <link rel="alternate" type="application/rss+xml"  href="/feed.xml" title="Quarkus">
+  <script src="/assets/javascript/hl.js" type="text/javascript"></script>
+  
+  
+  
+  
+  <link rel="alternate" hreflang="en" href="https://quarkus.io/version/3.2/guides/security-oidc-bearer-token-authentication" />
+  
+  <link rel="alternate" hreflang="pt-br" href="https://pt.quarkus.io/version/3.2/guides/security-oidc-bearer-token-authentication" />
+  
+  <link rel="alternate" hreflang="es" href="https://es.quarkus.io/version/3.2/guides/security-oidc-bearer-token-authentication" />
+  
+  <link rel="alternate" hreflang="zh" href="https://cn.quarkus.io/version/3.2/guides/security-oidc-bearer-token-authentication" />
+  
+  <link rel="alternate" hreflang="ja" href="https://ja.quarkus.io/version/3.2/guides/security-oidc-bearer-token-authentication" />
+  
+  <link rel="alternate" hreflang="x-default" href="https://quarkus.io/" />  
+  <script src="/assets/javascript/tracking.js"></script>
+  
+  <script src="/assets/javascript/colormode.js" type="text/javascript"></script>
+
+</head>
+
+<body class="guides">
+
+  
+
+
+<div class="grid-wrapper communitysite">
+  <div class="grid__item width-12-12">The <a href="https://quarkus.io/version/3.2/guides/security-oidc-bearer-token-authentication">English version of quarkus.io</a> is the official project site. Translated sites are community supported on a best-effort basis.</div>
+</div>
+
+
+  <div class="nav-wrapper">
+  <div class="grid-wrapper">
+    <div class="width-12-12">
+      <input type="checkbox" id="checkbox" />
+      <nav id="main-nav" class="main-nav">
+        <div class="logo-wrapper">
+           <a href="/"><img src="/assets/images/quarkus_logo_horizontal_rgb_600px_reverse.png" class="project-logo" title="Quarkus"></a>
+        </div>
+    <label class="nav-toggle" for="checkbox"> <i class="fa fa-bars"></i>
+</label>
+    <ul id="menu" class="menu">
+      <li class="dropdown">
+        <span href="/about/">Why<i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/about" class="">QUARKUS是什么？</a></li>
+          <li><a href="/developer-joy" class="">开发者的乐趣 </a></li>
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES 原生</a></li>
+          <li><a href="/standards" class="">标准</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">容器优先 </a></li>          
+        </ul>
+      </li>
+      <li class="dropdown">
+        <span href="/learn/">学习 <i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/get-started" class="">入门</a></li>
+          <li><a href="/guides" class="active" >指南</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
+          <li><a href="/qtips" class="">"Q" TIP视频</a></li>          
+          <li><a href="/books" class="">书籍</a></li>
+          </ul>
+      </li>
+      <li class="dropdown">
+        <span href="https://quarkus.io/extensions/">扩展<i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          
+          <!-- Note that quarkus.io is hardcoded here, because it is the only url which supports extensions -->
+<li><a href="https://quarkus.io/extensions/" class="">浏览扩展</a></li>
+          <li><a href="/faq/#what-is-a-quarkus-extension" class="">使用扩展</a></li>
+          <li><a href="/guides/writing-extensions" class="" >创建扩展</a></li>
+          <li><a href="https://hub.quarkiverse.io" class="">SHARE EXTENSIONS</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <span href="/community/">社区 <i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/support/" class="">支持</a></li>
+          <li><a href="/blog" class="" >博客</a></li>
+          <li><a href="/discussion" class="">讨论</a></li>
+          <li><a href="/working-groups" class="">WORKING GROUPS</a></li>
+          <li><a href="/insights" class="" >播客</a></li>
+          <li><a href="/events" class="">活动</a></li>
+          <li><a href="/newsletter" class="">新闻</a></li>
+          <li><a href="https://github.com/orgs/quarkusio/projects/13/views/1" class="">路线图</a></li>
+          </ul>
+      </li>
+      <li>
+        <a href="https://code.quarkus.io" class="button-cta secondary
+white">开始编码</a>
+      </li>
+      <li class="dropdown">
+        <span href="/language/"><div class="fas fa-globe langicon"></div><i class="fas fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="https://quarkus.io/version/3.2/guides/security-oidc-bearer-token-authentication" >OFFICIAL (ENGLISH)</a></li>
+          <li><a href="https://pt.quarkus.io/version/3.2/guides/security-oidc-bearer-token-authentication">PORTUGUÊS (BR)</a></li>
+          <li><a href="https://es.quarkus.io/version/3.2/guides/security-oidc-bearer-token-authentication">ESPAÑOL</a></li>
+          <li><a href="https://cn.quarkus.io/version/3.2/guides/security-oidc-bearer-token-authentication">简体中文</a></li>
+          <li><a href="https://ja.quarkus.io/version/3.2/guides/security-oidc-bearer-token-authentication">日本語</a></li>
+          </ul>
+      </li>
+      <li>
+        <span href="#" class="modeswitcher" id='theme-toggle'><i class="fas
+fa-sun"></i><i class="fas fa-moon"></i><i class="fas fa-cog"></i></span>
+      </li>
+    </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+  <div class="content">
+    
+
+
+
+
+
+<section class="full-width-version-bg flexfilterbar guides">
+  <div class="guideflexcontainer">
+    <div class="docslink">
+      <a class="returnlink" href="/version/3.2/guides/">返回指南目录</a>
+    </div>
+    <div class="flexlabel">
+      <label>选择指南版本</label>
+    </div>
+    <div class="guidepulldown version">
+    <select id="guide-version-dropdown">
+      
+        
+        
+        <option value="main" >Main - SNAPSHOT</option>
+        
+        
+        
+        <option value="latest" >3.19.1 - Latest</option>
+        
+        
+        
+        <option value="3.15" >3.15</option>
+        
+        
+        
+        <option value="3.8" >3.8</option>
+        
+        
+        
+        <option value="3.2" selected>3.2</option>
+        
+        
+        
+        
+        
+        
+        </select>
+    </div>
+  </div>
+</section>
+
+<div class="guide">
+  <div class="grid-wrapper">
+    <div class="grid__item width-8-12 width-12-12-m">
+      <h1 class="text-caps">OpenID Connect (OIDC) Bearer token authentication </h1>
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Secure HTTP access to Jakarta REST (formerly known as JAX-RS) endpoints in your application with Bearer token authentication by using the Quarkus OpenID Connect (OIDC) extension.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="overview-of-the-bearer-token-authentication-mechanism-in-quarkus"><a class="anchor" href="#overview-of-the-bearer-token-authentication-mechanism-in-quarkus"></a>Overview of the Bearer token authentication mechanism in Quarkus</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Quarkus supports the Bearer token authentication mechanism through the Quarkus OpenID Connect (OIDC) extension.</p>
+</div>
+<div class="paragraph">
+<p>The bearer tokens are issued by OIDC and OAuth 2.0 compliant authorization servers, such as <a href="https://www.keycloak.org">Keycloak</a>.</p>
+</div>
+<div class="paragraph">
+<p>Bearer token authentication is the process of authorizing HTTP requests based on the existence and validity of a bearer token.
+The bearer token provides information about the subject of the call, which is used to determine whether or not an HTTP resource can be accessed.</p>
+</div>
+<div class="paragraph">
+<p>The following diagrams outline the Bearer token authentication mechanism in Quarkus:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/security-bearer-token-authorization-mechanism-1.png" alt="Bearer token authentication" width="60%">
+</div>
+<div class="title">Figure 1. Bearer token authentication mechanism in Quarkus with Single-page application</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The Quarkus service retrieves verification keys from the OpenID Connect provider. The verification keys are used to verify the bearer access token signatures.</p>
+</li>
+<li>
+<p>The Quarkus user accesses the Single-page application.</p>
+</li>
+<li>
+<p>The Single-page application uses Authorization Code Flow to authenticate the user and retrieve tokens from the OpenID Connect provider.</p>
+</li>
+<li>
+<p>The Single-page application uses the access token to retrieve the service data from the Quarkus service.</p>
+</li>
+<li>
+<p>The Quarkus service verifies the bearer access token signature using the verification keys, checks the token expiry date and other claims, allows the request to proceed if the token is valid, and returns the service response to the Single-page application.</p>
+</li>
+<li>
+<p>The Single-page application returns the same data to the Quarkus user.</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/security-bearer-token-authorization-mechanism-2.png" alt="Bearer token authentication" width="60%">
+</div>
+<div class="title">Figure 2. Bearer token authentication mechanism in Quarkus with Java or command line client</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The Quarkus service retrieves verification keys from the OpenID Connect provider. The verification keys are used to verify the bearer access token signatures.</p>
+</li>
+<li>
+<p>The Client uses <code>client_credentials</code> that requires client ID and secret or password grant, which also requires client ID, secret, user name, and password to retrieve the access token from the OpenID Connect provider.</p>
+</li>
+<li>
+<p>The Client uses the access token to retrieve the service data from the Quarkus service.</p>
+</li>
+<li>
+<p>The Quarkus service verifies the bearer access token signature using the verification keys, checks the token expiry date and other claims, allows the request to proceed if the token is valid, and returns the service response to the Client.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>If you need to authenticate and authorize the users using OpenID Connect Authorization Code Flow, see <a href="security-oidc-code-flow-authentication">OIDC code flow mechanism for protecting web applications</a>.
+Also, if you use Keycloak and bearer tokens, see <a href="security-keycloak-authorization">Using Keycloak to Centralize Authorization</a>.</p>
+</div>
+<div class="paragraph">
+<p>To learn about how you can protect service applications by using OIDC Bearer token authentication, see <a href="security-oidc-bearer-token-authentication-tutorial">OIDC Bearer token authentication tutorial</a>.</p>
+</div>
+<div class="paragraph">
+<p>If you want to protect web applications by using OIDC authorization code flow authentication, see <a href="security-oidc-code-flow-authentication-concept">OIDC authorization code flow authentication</a>.</p>
+</div>
+<div class="paragraph">
+<p>For information about how to support multiple tenants, see <a href="security-openid-connect-multitenancy">Using OpenID Connect Multi-Tenancy</a>.</p>
+</div>
+<div class="sect2">
+<h3 id="accessing-jwt-claims"><a class="anchor" href="#accessing-jwt-claims"></a>访问JWT声明</h3>
+<div class="paragraph">
+<p>如果你需要访问JWT令牌声明，那么你要注入 <code>JsonWebToken</code> ：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.security.openid.connect;
+
+import org.eclipse.microprofile.jwt.JsonWebToken;
+import jakarta.inject.Inject;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+
+@Path("/api/admin")
+public class AdminResource {
+
+    @Inject
+    JsonWebToken jwt;
+
+    @GET
+    @RolesAllowed("admin")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String admin() {
+        return "Access for subject " + jwt.getSubject() + " is granted";
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在 <code>@ApplicationScoped</code> , <code>@Singleton</code> 和 <code>@RequestScoped</code> 范围上下文中支持注入 <code>JsonWebToken</code> ，但是如果单个声明被注入为简单类型，则需要使用 <code>@RequestScoped</code> ，更多细节请参见 <a href="security-jwt.html#supported-injection-scopes">JsonWebToken和声明所支持注入范围(Injection Scopes)</a> 。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="user-info"><a class="anchor" href="#user-info"></a>用户信息</h3>
+<div class="paragraph">
+<p>Set <code>quarkus.oidc.authentication.user-info-required=true</code> if a UserInfo JSON object from the OIDC userinfo endpoint has to be requested.
+A request will be sent to the OpenID Provider UserInfo endpoint and  an <code>io.quarkus.oidc.UserInfo</code> (a simple <code>jakarta.json.JsonObject</code> wrapper) object will be created.
+<code>io.quarkus.oidc.UserInfo</code> can be either injected or accessed as a SecurityIdentity <code>userinfo</code> attribute.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="config-metadata"><a class="anchor" href="#config-metadata"></a>配置元数据</h3>
+<div class="paragraph">
+<p>当前租户发现的 <a href="https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata">OpenID Connect配置元数据</a> 由 <code>io.quarkus.oidc.OidcConfigurationMetadata</code> 表示，可以作为 <code>SecurityIdentity</code> <code>configuration-metadata</code> 属性注入或访问。</p>
+</div>
+<div class="paragraph">
+<p>如果端点是公开的，则默认租户的 <code>OidcConfigurationMetadata</code> 会被注入。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="token-claims-and-securityidentity-roles"><a class="anchor" href="#token-claims-and-securityidentity-roles"></a>令牌声明(Token Claims)和安全身份角色(SecurityIdentity Roles)</h3>
+<div class="paragraph">
+<p>安全身份(SecurityIdentity)角色可以从经过验证的JWT访问令牌中映射出来，具体如下:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>如果 <code>quarkus.oidc.roles.role-claim-path</code> 属性被设置，并且找到匹配的数组或字符串声明，那么角色将从这些声明中提取。例如， <code>customroles</code> , <code>customroles/array</code> , <code>scope</code> , <code>"http://namespace-qualified-custom-claim"/roles</code> , <code>"http://namespace-qualified-roles"</code> , 等等。</p>
+</li>
+<li>
+<p>如果存在 <code>groups</code> 声明，则这个声明的值会被使用</p>
+</li>
+<li>
+<p>如果 <code>realm_access/roles</code> 或 <code>resource_access/client_id/roles</code> （其中 <code>client_id</code> 是 <code>quarkus.oidc.client-id</code> 属性的值）声明是存在的，那么它的值会被使用。该检查支持由Keycloak发行的令牌</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>如果令牌是不透明的（二进制），那么将使用来自远程令牌自省(token introspection)响应的 <code>scope</code> 属性。</p>
+</div>
+<div class="paragraph">
+<p>如果使用UserInfo为角色的来源，那么要设置 <code>quarkus.oidc.authentication.user-info-required=true</code> 和 <code>quarkus.oidc.roles.source=userinfo</code> ，如果需要的话，设置 <code>quarkus.oidc.roles.role-claim-path</code> 。</p>
+</div>
+<div class="paragraph">
+<p>Additionally, a custom <code>SecurityIdentityAugmentor</code> can also be used to add the roles as documented in <a href="security-customization#security-identity-customization">Security Identity Customization</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="token-verification-introspection"><a class="anchor" href="#token-verification-introspection"></a>代币验证(Token Verification)和自省(Introspection)</h3>
+<div class="paragraph">
+<p>如果令牌是 JWT 令牌，则默认情况下，将使用从 OpenID Connect 提供程序的 JWK 端点检索到的本地 <code>JsonWebKeySet</code> 中的 <code>JsonWebKey</code>（JWK） 密钥对其进行验证。令牌的密钥标识符 <code>kid</code> 标头值( header value)将用于查找匹配的 JWK 密钥。 如果本地没有匹配的 <code>JWK</code> 可用，则 <code>JsonWebKeySet</code> 将通过从JWK端点获取当前密钥集来刷新。<code>JsonWebKeySet</code> 刷新只能在 <code>quarkus.oidc.token.forced-jwk-refresh-interval</code>（默认值为10分钟）过期后重复。 如果在刷新后没有匹配的“JWK”可用，则 JWT 令牌将发送到 OpenID Connect 提供程序的令牌自检终结点。</p>
+</div>
+<div class="paragraph">
+<p>如果令牌是不透明的（可以是二进制令牌或加密的JWT令牌），那么它将总是被发送到OpenID Connect提供者的令牌自省端点。</p>
+</div>
+<div class="paragraph">
+<p>如果你只使用JWT令牌，并且期望一个匹配的 <code>JsonWebKey</code> ，那么你应该禁用令牌自省：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.oidc.token.allow-jwt-introspection=false
+quarkus.oidc.token.allow-opaque-token-introspection=false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>然而，在某些情况下，JWT令牌必须只通过自省来验证。它可以通过配置一个自省端点地址来强制进行，例如，在Keycloak的情况下，你可以这样做：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.oidc.auth-server-url=http://localhost:8180/realms/quarkus
+quarkus.oidc.discovery-enabled=false
+# Token Introspection endpoint: http://localhost:8180/realms/quarkus/protocol/openid-connect/tokens/introspect
+quarkus.oidc.introspection-path=/protocol/openid-connect/tokens/introspect</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An advantage of this indirect enforcement of JWT tokens being only introspected remotely is that two remote call are avoided: a remote OIDC metadata discovery call followed by another remote call fetching the verification keys which will not be used, while its disavantage is that the users need to know the introspection endpoint address and configure it manually.</p>
+</div>
+<div class="paragraph">
+<p>The alternative approach is to allow discovering the OIDC metadata (which is a default option) but require that only the remote JWT introspection is performed:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.oidc.auth-server-url=http://localhost:8180/realms/quarkus
+quarkus.oidc.token.require-jwt-introspection-only=true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An advantage of this approach is that the configuration is simple and easy to understand, while its disavantage is that a remote OIDC metadata discovery call is required to discover an introspection endpoint address (though the verification keys will also not be fetched).</p>
+</div>
+<div class="paragraph">
+<p>Note that <code>io.quarkus.oidc.TokenIntrospection</code> (a simple <code>jakarta.json.JsonObject</code> wrapper) object will be created and can be either injected or accessed as a SecurityIdentity <code>introspection</code> attribute if either JWT or opaque token has been successfully introspected.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="token-introspection-userinfo-cache"><a class="anchor" href="#token-introspection-userinfo-cache"></a>Token Introspection and UserInfo Cache</h3>
+<div class="paragraph">
+<p>所有不透明的、有时是JWT不记名的访问令牌都必须进行远程自省。如果还需要 <code>UserInfo</code> ，那么相同的访问令牌将被用来再次远程调用OpenID Connect Provider。因此，如果需要 <code>UserInfo</code> ，并且当前的访问令牌是不透明的，那么对于每一个这样的令牌，将进行两次远程调用&#8212;&#8203;一次是反省，一次是用它来获取UserInfo，如果令牌是JWT，那么通常只需要一次远程调用&#8212;&#8203;用它来获取UserInfo。</p>
+</div>
+<div class="paragraph">
+<p>每一个传入的不记名流(bearer flow)或授权码流(code flow)访问令牌要进行多达2次的远程呼叫，其开销有时会是个问题。</p>
+</div>
+<div class="paragraph">
+<p>如果在你的生产中有这种情况，那么可以建议将令牌自省和 <code>UserInfo</code> 数据缓存一小段时间，例如，3或5分钟。</p>
+</div>
+<div class="paragraph">
+<p><code>quarkus-oidc</code> 提供 <code>quarkus.oidc.TokenIntrospectionCache</code> 和 <code>quarkus.oidc.UserInfoCache</code> 接口，可用于实现 <code>@ApplicationScoped</code> 缓存实现，可用于存储和检索 <code>quarkus.oidc.TokenIntrospection</code> 和/或 <code>quarkus.oidc.UserInfo</code> 对象，例如：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@ApplicationScoped
+@Alternative
+@Priority(1)
+public class CustomIntrospectionUserInfoCache implements TokenIntrospectionCache, UserInfoCache {
+...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>每个OIDC租户可以允许或拒绝存储其 <code>quarkus.oidc.TokenIntrospection</code> 和/或 <code>quarkus.oidc.UserInfo</code> 数据，其属性为布尔值 <code>quarkus.oidc."tenant".allow-token-introspection-cache</code> 和 <code>quarkus.oidc."tenant".allow-user-info-cache</code> 。</p>
+</div>
+<div class="paragraph">
+<p>此外， <code>quarkus-oidc</code> 提供了一个简单的基于内存的默认令牌缓存，该缓存同时实现了 <code>quarkus.oidc.TokenIntrospectionCache</code> 和 <code>quarkus.oidc.UserInfoCache</code> 接口。</p>
+</div>
+<div class="paragraph">
+<p>它可以按以下方式激活和配置:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># 'max-size' is 0 by default so the cache can be activated by setting 'max-size' to a positive value.
+quarkus.oidc.token-cache.max-size=1000
+# 'time-to-live' specifies how long a cache entry can be valid for and will be used by a cleanup timer.
+quarkus.oidc.token-cache.time-to-live=3M
+# 'clean-up-timer-interval' is not set by default so the cleanup timer can be activated by setting 'clean-up-timer-interval'.
+quarkus.oidc.token-cache.clean-up-timer-interval=1M</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>默认的缓存使用一个令牌作为密钥，每个条目可以有 <code>TokenIntrospection</code> 和/或 <code>UserInfo</code> 。它只保留最多数量的条目 <code>max-size</code> 。如果要添加一个新的条目时，缓存已经满了，那么将试图通过删除一个过期的条目来为它找到一个空间。此外，清理计时器，如果被激活，将定期检查过期的条目并将其删除。</p>
+</div>
+<div class="paragraph">
+<p>请尝试使用默认的缓存实现或注册一个自定义的缓存。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="jwt-claim-verification"><a class="anchor" href="#jwt-claim-verification"></a>JSON Web Token Claim Verification</h3>
+<div class="paragraph">
+<p>一旦无记名JWT令牌的签名被验证，其 <code>expires at</code> ( <code>exp</code> )声明会被检查，接下来也会验证 <code>iss</code> ( <code>issuer</code> )声明的值。</p>
+</div>
+<div class="paragraph">
+<p>默认情况下， <code>iss</code> 声明的值会与 <code>issuer</code> 属性进行比较，该属性有可能会在众所周知的提供者配置中找到。但是，如果 <code>quarkus.oidc.token.issuer</code> 属性被设置，那么 <code>iss</code> 声明的值将与它进行比较。</p>
+</div>
+<div class="paragraph">
+<p>在某些情况下，这种 <code>iss</code> 声明验证可能不起作用。例如，如果发现的 <code>issuer</code> 属性包含一个内部 HTTP/IP地址，而令牌 <code>iss</code> 声明值包含一个外部 HTTP/IP地址。或者当发现的 <code>issuer</code> 属性包含模板租户变量，但令牌 <code>iss</code> 声明值有完整的租户特定发行人(tenant-specific issuer )的值。</p>
+</div>
+<div class="paragraph">
+<p>在这种情况下，你可能要考虑通过设置 <code>quarkus.oidc.token.issuer=any</code> ，来跳过发行人验证。请注意，不建议这样做，除非没有其他选择，否则应避免这样做：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>如果你使用Keycloak，并观察到由于不同的主机地址导致发行人验证错误，那么用 <code>KEYCLOAK_FRONTEND_URL</code> 属性配置Keycloak，以确保使用相同的主机地址。</p>
+</li>
+<li>
+<p>If the <code>iss</code> property is tenant specific in a multi-tenant deployment then you can use the <code>SecurityIdentity</code> <code>tenant-id</code> attribute to check the issuer is correct in the endpoint itself or the custom Jakarta REST filter, for example:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import jakarta.inject.Inject;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerRequestFilter;
+import jakarta.ws.rs.ext.Provider;
+
+import org.eclipse.microprofile.jwt.JsonWebToken;
+import io.quarkus.oidc.OidcConfigurationMetadata;
+import io.quarkus.security.identity.SecurityIdentity;
+
+@Provider
+public class IssuerValidator implements ContainerRequestFilter {
+    @Inject
+    OidcConfigurationMetadata configMetadata;
+
+    @Inject JsonWebToken jwt;
+    @Inject SecurityIdentity identity;
+
+    public void filter(ContainerRequestContext requestContext) {
+        String issuer = configMetadata.getIssuer().replace("{tenant-id}", identity.getAttribute("tenant-id"));
+        if (!issuer.equals(jwt.getIssuer())) {
+            requestContext.abortWith(Response.status(401).build());
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>注意，建议使用 <code>quarkus.oidc.token.audience</code> 属性来验证令牌 <code>aud</code> ( <code>audience</code> )声明的值。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="single-page-applications"><a class="anchor" href="#single-page-applications"></a>单页应用程序</h3>
+<div class="paragraph">
+<p>单页应用程序（SPA）通常使用 <code>XMLHttpRequest</code> （XHR）和OpenID Connect提供商提供的Java Script实用程序代码来获取不记名令牌，并使用它来访问Quarkus <code>service</code> 应用程序。</p>
+</div>
+<div class="paragraph">
+<p>例如，以下是你如何使用 <code>keycloak.js</code> 来验证用户并从SPA中刷新过期的令牌：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;keycloak-spa&lt;/title&gt;
+    &lt;script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"&gt;&lt;/script&gt;
+    &lt;script src="http://localhost:8180/js/keycloak.js"&gt;&lt;/script&gt;
+    &lt;script&gt;
+        var keycloak = new Keycloak();
+        keycloak.init({onLoad: 'login-required'}).success(function () {
+            console.log('User is now authenticated.');
+        }).error(function () {
+            window.location.reload();
+        });
+        function makeAjaxRequest() {
+            axios.get("/api/hello", {
+                headers: {
+                    'Authorization': 'Bearer ' + keycloak.token
+                }
+            })
+            .then( function (response) {
+                console.log("Response: ", response.status);
+            }).catch(function (error) {
+                console.log('refreshing');
+                keycloak.updateToken(5).then(function () {
+                    console.log('Token refreshed');
+                }).catch(function () {
+                    console.log('Failed to refresh token');
+                    window.location.reload();
+                });
+            });
+    }
+    &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;button onclick="makeAjaxRequest()"&gt;Request&lt;/button&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cross-origin-resource-sharing"><a class="anchor" href="#cross-origin-resource-sharing"></a>跨域资源共享(CORS)</h3>
+<div class="paragraph">
+<p>如果你打算从运行在不同域的单页应用中使用你的OpenID Connect <code>service</code> 应用程序，你将需要配置CORS（跨源资源共享）。请阅读 <a href="http-reference.html#cors-filter">HTTP CORS文档</a> 以了解更多细节。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="provider-endpoint-configuration"><a class="anchor" href="#provider-endpoint-configuration"></a>提供者端点配置</h3>
+<div class="paragraph">
+<p>OIDC <code>service</code> 应用程序需要知道OpenID Connect提供者的令牌、 <code>JsonWebKey</code> (JWK)集以及可能的 <code>UserInfo</code> 和自省端点地址。</p>
+</div>
+<div class="paragraph">
+<p>默认情况下，它们是通过在配置的 <code>quarkus.oidc.auth-server-url</code> 中，添加一个 <code>/.well-known/openid-configuration</code> 路径来发现的。</p>
+</div>
+<div class="paragraph">
+<p>另外，如果发现端点不可用，或者你想节省发现端点的往返开销，你可以禁用发现，用相对路径值配置它们，比如说：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.oidc.auth-server-url=http://localhost:8180/realms/quarkus
+quarkus.oidc.discovery-enabled=false
+# Token endpoint: http://localhost:8180/realms/quarkus/protocol/openid-connect/token
+quarkus.oidc.token-path=/protocol/openid-connect/token
+# JWK set endpoint: http://localhost:8180/realms/quarkus/protocol/openid-connect/certs
+quarkus.oidc.jwks-path=/protocol/openid-connect/certs
+# UserInfo endpoint: http://localhost:8180/realms/quarkus/protocol/openid-connect/userinfo
+quarkus.oidc.user-info-path=/protocol/openid-connect/userinfo
+# Token Introspection endpoint: http://localhost:8180/realms/quarkus/protocol/openid-connect/tokens/introspect
+quarkus.oidc.introspection-path=/protocol/openid-connect/tokens/introspect</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="token-propagation"><a class="anchor" href="#token-propagation"></a>令牌传播</h3>
+<div class="paragraph">
+<p>关于承载访问令牌向下游服务的传播，请参见 <a href="security-openid-connect-client.html#token-propagation">令牌</a> 传播部分。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="oidc-provider-authentication"><a class="anchor" href="#oidc-provider-authentication"></a>Oidc Provider Client Authentication</h3>
+<div class="paragraph">
+<p><code>quarkus.oidc.runtime.OidcProviderClient</code> is used when a remote request to an OpenID Connect Provider has to be done. If the bearer token has to be introspected then <code>OidcProviderClient</code> has to authenticate to the OpenID Connect Provider. Please see <a href="security-oidc-code-flow-authentication#oidc-provider-client-authentication">OidcProviderClient Authentication</a> for more information about all the supported authentication options.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="integration-testing"><a class="anchor" href="#integration-testing"></a>测试</h3>
+<div class="paragraph">
+<p>首先在你的测试项目中添加以下依赖项：</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-target-sync-cli asciidoc-tabs-target-sync-maven">
+<div class="title">pom.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.rest-assured&lt;/groupId&gt;
+    &lt;artifactId&gt;rest-assured&lt;/artifactId&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-junit5&lt;/artifactId&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-target-sync-gradle">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-gradle hljs" data-lang="gradle">testImplementation("io.rest-assured:rest-assured")
+testImplementation("io.quarkus:quarkus-junit5")</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="integration-testing-wiremock"><a class="anchor" href="#integration-testing-wiremock"></a>Wiremock</h4>
+<div class="paragraph">
+<p>在你的测试项目中添加以下依赖项：</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-target-sync-cli asciidoc-tabs-target-sync-maven">
+<div class="title">pom.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-test-oidc-server&lt;/artifactId&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-target-sync-gradle">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-gradle hljs" data-lang="gradle">testImplementation("io.quarkus:quarkus-test-oidc-server")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>准备好REST测试端点，设置 <code>application.properties</code> ，例如：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># keycloak.url is set by OidcWiremockTestResource
+quarkus.oidc.auth-server-url=${keycloak.url}/realms/quarkus/
+quarkus.oidc.client-id=quarkus-service-app
+quarkus.oidc.application-type=service</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>并最终写出测试代码，例如：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import static org.hamcrest.Matchers.equalTo;
+
+import java.util.Set;
+
+import org.junit.jupiter.api.Test;
+
+import io.quarkus.test.common.QuarkusTestResource;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.oidc.server.OidcWiremockTestResource;
+import io.restassured.RestAssured;
+import io.smallrye.jwt.build.Jwt;
+
+@QuarkusTest
+@QuarkusTestResource(OidcWiremockTestResource.class)
+public class BearerTokenAuthorizationTest {
+
+    @Test
+    public void testBearerToken() {
+        RestAssured.given().auth().oauth2(getAccessToken("alice", Set.of("user")))
+            .when().get("/api/users/me")
+            .then()
+            .statusCode(200)
+            // the test endpoint returns the name extracted from the injected SecurityIdentity Principal
+            .body("userName", equalTo("alice"));
+    }
+
+    private String getAccessToken(String userName, Set&lt;String&gt; groups) {
+        return Jwt.preferredUserName(userName)
+                .groups(groups)
+                .issuer("https://server.example.com")
+                .audience("https://service.example.com")
+                .sign();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>请注意， <code>quarkus-test-oidc-server</code> 扩展包括一个 <code>JSON Web Key</code> ( <code>JWK</code> ) 格式的签名 RSA 私钥文件，并通过 <code>smallrye.jwt.sign.key.location</code> 配置属性指向它。它允许使用一个无参数的 <code>sign()</code> 操作来签署令牌。</p>
+</div>
+<div class="paragraph">
+<p>Testing your <code>quarkus-oidc</code> <code>service</code> application with <code>OidcWiremockTestResource</code> provides the best coverage as even the communication channel is tested against the Wiremock HTTP stubs.
+<code>OidcWiremockTestResource</code> will be enhanced going forward to support more complex bearer token test scenarios.</p>
+</div>
+<div class="paragraph">
+<p>如果一个测试需要立即定义Wiremock存根(stubs)，而目前 <code>OidcWiremockTestResource</code> 不支持，可以通过注入测试类的 <code>WireMockServer</code> 实例来实现，例如:</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><code>OidcWiremockTestResource</code> 不适用于针对Docker容器的 <code>@QuarkusIntegrationTest</code> ，因为Wiremock服务器在运行测试的JVM中运行，无法被在Docker容器中运行的Quarkus应用程序访问。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package io.quarkus.it.keycloak;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.matching;
+import static org.hamcrest.Matchers.equalTo;
+
+import org.junit.jupiter.api.Test;
+
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
+
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.oidc.server.OidcWireMock;
+import io.restassured.RestAssured;
+
+@QuarkusTest
+public class CustomOidcWireMockStubTest {
+
+    @OidcWireMock
+    WireMockServer wireMockServer;
+
+    @Test
+    public void testInvalidBearerToken() {
+        wireMockServer.stubFor(WireMock.post("/auth/realms/quarkus/protocol/openid-connect/token/introspect")
+                .withRequestBody(matching(".*token=invalid_token.*"))
+                .willReturn(WireMock.aResponse().withStatus(400)));
+
+        RestAssured.given().auth().oauth2("invalid_token").when()
+                .get("/api/users/me/bearer")
+                .then()
+                .statusCode(401)
+                .header("WWW-Authenticate", equalTo("Bearer"));
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="integration-testing-keycloak-devservices"><a class="anchor" href="#integration-testing-keycloak-devservices"></a>为Keycloak提供的开发服务</h4>
+<div class="paragraph">
+<p>建议使用 <a href="security-openid-connect-dev-services.html">Keycloak开发服务</a> 进行针对Keycloak的集成测试。 <code>Keycloak开发服务</code> 将启动和初始化一个测试容器：它将创建一个 <code>quarkus</code> 领域，一个 <code>quarkus-app</code> 客户端（ <code>secret</code> 秘密）并添加 <code>alice</code> （ <code>admin</code> 和 <code>user</code> 角色）和 <code>bob</code> （ <code>user</code> 角色）用户，其中所有这些属性都可以被定制。</p>
+</div>
+<div class="paragraph">
+<p>首先，你需要添加以下依赖关系：</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-target-sync-cli asciidoc-tabs-target-sync-maven">
+<div class="title">pom.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-test-keycloak-server&lt;/artifactId&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-target-sync-gradle">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-gradle hljs" data-lang="gradle">testImplementation("io.quarkus:quarkus-test-keycloak-server")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>其中提供了一个实用类 <code>io.quarkus.test.keycloak.client.KeycloakTestClient</code> ，你可以在测试中使用它来获取访问令牌。</p>
+</div>
+<div class="paragraph">
+<p>接下来准备你的 <code>application.properties</code> 。你可以从一个完全空的 <code>application.properties</code> 开始，因为 <code>Keycloak开发服务</code> 将注册指向运行中的测试容器的 <code>quarkus.oidc.auth-server-url</code> ，以及 <code>quarkus.oidc.client-id=quarkus-app</code> 和 <code>quarkus.oidc.credentials.secret=secret</code> 。</p>
+</div>
+<div class="paragraph">
+<p>但是如果你已经配置了所需的 <code>quarkus-oidc</code> 属性，那么你只需要将 <code>quarkus.oidc.auth-server-url</code> 与 <code>Keycloak开发服务</code> 的 <code>prod</code> 配置文件联系起来，以启动一个容器，例如：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">%prod.quarkus.oidc.auth-server-url=http://localhost:8180/realms/quarkus</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>如果在运行测试前必须将自定义领域文件导入Keycloak，那么你可以按以下方式配置 <code>Keycloak开发服务</code> ：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">%prod.quarkus.oidc.auth-server-url=http://localhost:8180/realms/quarkus
+quarkus.keycloak.devservices.realm-path=quarkus-realm.json</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>最后编写你的测试，它将在JVM模式下执行：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.security.openid.connect;
+
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.keycloak.client.KeycloakTestClient;
+import io.restassured.RestAssured;
+import org.junit.jupiter.api.Test;
+
+@QuarkusTest
+public class BearerTokenAuthenticationTest {
+
+    KeycloakTestClient keycloakClient = new KeycloakTestClient();
+
+    @Test
+    public void testAdminAccess() {
+        RestAssured.given().auth().oauth2(getAccessToken("alice"))
+                .when().get("/api/admin")
+                .then()
+                .statusCode(200);
+        RestAssured.given().auth().oauth2(getAccessToken("bob"))
+                .when().get("/api/admin")
+                .then()
+                .statusCode(403);
+    }
+
+    protected String getAccessToken(String userName) {
+        return keycloakClient.getAccessToken(userName);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在原生模式(native mode)下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.security.openid.connect;
+
+import io.quarkus.test.junit.QuarkusIntegrationTest;
+
+@QuarkusIntegrationTest
+public class NativeBearerTokenAuthenticationIT extends BearerTokenAuthenticationTest {
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>请参阅 <a href="security-openid-connect-dev-services.html">Keycloak开发服务</a> ，来了解更多关于它的初始化和配置方式的信息。</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="integration-testing-keycloak"><a class="anchor" href="#integration-testing-keycloak"></a>KeycloakTestResourceLifecycleManager</h4>
+<div class="paragraph">
+<p>If you need to do some integration testing against Keycloak then you are encouraged to do it with <a href="#integration-testing-keycloak-devservices">Dev Services For Keycloak</a>.
+Use <code>KeycloakTestResourceLifecycleManager</code> for your tests only if there is a good reason not to use <code>Dev Services for Keycloak</code>.</p>
+</div>
+<div class="paragraph">
+<p>首先要添加以下依赖关系：</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-target-sync-cli asciidoc-tabs-target-sync-maven">
+<div class="title">pom.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-test-keycloak-server&lt;/artifactId&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-target-sync-gradle">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-gradle hljs" data-lang="gradle">testImplementation("io.quarkus:quarkus-test-keycloak-server")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>它提供了 <code>io.quarkus.test.keycloak.server.KeycloakTestResourceLifecycleManager</code> - 一个 <code>io.quarkus.test.common.QuarkusTestResourceLifecycleManager</code> 的实现，用来启动一个Keycloak容器。</p>
+</div>
+<div class="paragraph">
+<p>并按以下方式配置Maven Surefire插件：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
+    &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+    &lt;configuration&gt;
+        &lt;systemPropertyVariables&gt;
+            &lt;!-- or, alternatively, configure 'keycloak.version' --&gt;
+            &lt;keycloak.docker.image&gt;${keycloak.docker.image}&lt;/keycloak.docker.image&gt;
+            &lt;!--
+              Disable HTTPS if required:
+              &lt;keycloak.use.https&gt;false&lt;/keycloak.use.https&gt;
+            --&gt;
+        &lt;/systemPropertyVariables&gt;
+    &lt;/configuration&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>(在原生image中测试时也是如此 <code>maven.failsafe.plugin</code> )。</p>
+</div>
+<div class="paragraph">
+<p>准备好REST测试端点，设置 <code>application.properties</code> ，例如：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># keycloak.url is set by KeycloakTestResourceLifecycleManager
+quarkus.oidc.auth-server-url=${keycloak.url}/realms/quarkus/
+quarkus.oidc.client-id=quarkus-service-app
+quarkus.oidc.credentials=secret
+quarkus.oidc.application-type=service</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>并最终写出测试代码，例如：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import static io.quarkus.test.keycloak.server.KeycloakTestResourceLifecycleManager.getAccessToken;
+import static org.hamcrest.Matchers.equalTo;
+
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Test;
+
+import io.quarkus.test.common.QuarkusTestResource;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.keycloak.server.KeycloakTestResourceLifecycleManager;
+import io.restassured.RestAssured;
+
+@QuarkusTest
+@QuarkusTestResource(KeycloakTestResourceLifecycleManager.class)
+public class BearerTokenAuthorizationTest {
+
+    @Test
+    public void testBearerToken() {
+        RestAssured.given().auth().oauth2(getAccessToken("alice"))))
+            .when().get("/api/users/preferredUserName")
+            .then()
+            .statusCode(200)
+            // the test endpoint returns the name extracted from the injected SecurityIdentity Principal
+            .body("userName", equalTo("alice"));
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>KeycloakTestResourceLifecycleManager</code> 注册 <code>alice</code> 和 <code>admin</code> 用户。默认情况下，用户 <code>alice</code> 仅具有 <code>user</code> 角色 - 可以使用 <code>keycloak.token.user-roles</code> 系统属性对其进行自定义。默认情况下，用户 <code>admin</code> 具有 <code>用户</code> 和 <code>admin</code> 角色 - 可以使用 <code>keycloak.token.admin-roles</code> 系统属性对其进行自定义。</p>
+</div>
+<div class="paragraph">
+<p>默认情况下， <code>KeycloakTestResourceLifecycleManager</code> 使用HTTPS来初始化Keycloak实例，可以用 <code>keycloak.use.https=false</code> 来禁用。默认的领域(realm)名称是 <code>quarkus</code> ，客户端ID - <code>quarkus-service-app</code> - 如果需要，可以设置 <code>keycloak.realm</code> 和 <code>keycloak.service.client</code> 系统属性来定制数值。</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="integration-testing-public-key"><a class="anchor" href="#integration-testing-public-key"></a>本地公钥</h4>
+<div class="paragraph">
+<p>你也可以使用一个本地内嵌的公钥来测试你的 <code>quarkus-oidc</code> <code>service</code> 应用程序:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.oidc.client-id=test
+quarkus.oidc.public-key=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlivFI8qB4D0y2jy0CfEqFyy46R0o7S8TKpsx5xbHKoU1VWg6QkQm+ntyIv1p4kE1sPEQO73+HY8+Bzs75XwRTYL1BmR1w8J5hmjVWjc6R2BTBGAYRPFRhor3kpM6ni2SPmNNhurEAHw7TaqszP5eUF/F9+KEBWkwVta+PZ37bwqSE4sCb1soZFrVz/UT/LF4tYpuVYt3YbqToZ3pZOZ9AX2o1GCG3xwOjkc4x0W7ezbQZdC9iftPxVHR8irOijJRRjcPDtA6vPKpzLl6CyYnsIYPd99ltwxTHjr3npfv/3Lw50bAkbT4HeLFxTx4flEoZLKO/g0bAoV2uqBhkA9xnQIDAQAB
+
+smallrye.jwt.sign.key.location=/privateKey.pem</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>从 <code>main</code> Quarkus资源库中的 <code>integration-tests/oidc-tenancy</code> 中复制 <code>privateKey.pem</code> ，并使用类似于上面 <code>Wiremock</code> 部分的测试代码来生成JWT令牌。如果愿意，你可以使用你自己的测试密钥。</p>
+</div>
+<div class="paragraph">
+<p>与Wiremock方法相比，这种方法提供了更有限的覆盖范围&#8212;&#8203;例如，远程通信代码没有被覆盖。</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="integration-testing-security-annotation"><a class="anchor" href="#integration-testing-security-annotation"></a>TestSecurity注解</h4>
+<div class="paragraph">
+<p>你可以使用 <code>@TestSecurity</code> 和 <code>@OidcSecurity</code> 注解来测试 <code>service</code> 应用程序端点代码，该代码依赖于注入的 <code>JsonWebToken</code> 以及 <code>UserInfo</code> 和 <code>OidcConfigurationMetadata</code> 。</p>
+</div>
+<div class="paragraph">
+<p>添加以下依赖关系：</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-target-sync-cli asciidoc-tabs-target-sync-maven">
+<div class="title">pom.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-test-security-oidc&lt;/artifactId&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-target-sync-gradle">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-gradle hljs" data-lang="gradle">testImplementation("io.quarkus:quarkus-test-security-oidc")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>并写一个像这样的测试代码：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import static org.hamcrest.Matchers.is;
+import org.junit.jupiter.api.Test;
+import io.quarkus.test.common.http.TestHTTPEndpoint;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
+import io.quarkus.test.security.oidc.Claim;
+import io.quarkus.test.security.oidc.ConfigMetadata;
+import io.quarkus.test.security.oidc.OidcSecurity;
+import io.quarkus.test.security.oidc.OidcConfigurationMetadata;
+import io.quarkus.test.security.oidc.UserInfo;
+import io.restassured.RestAssured;
+
+@QuarkusTest
+@TestHTTPEndpoint(ProtectedResource.class)
+public class TestSecurityAuthTest {
+
+    @Test
+    @TestSecurity(user = "userOidc", roles = "viewer")
+    public void testOidc() {
+        RestAssured.when().get("test-security-oidc").then()
+                .body(is("userOidc:viewer"));
+    }
+
+    @Test
+    @TestSecurity(user = "userOidc", roles = "viewer")
+    @OidcSecurity(claims = {
+            @Claim(key = "email", value = "user@gmail.com")
+    }, userinfo = {
+            @UserInfo(key = "sub", value = "subject")
+    }, config = {
+            @ConfigMetadata(key = "issuer", value = "issuer")
+    })
+    public void testOidcWithClaimsUserInfoAndMetadata() {
+        RestAssured.when().get("test-security-oidc-claims-userinfo-metadata").then()
+                .body(is("userOidc:viewer:user@gmail.com:subject:issuer"));
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>其中 <code>ProtectedResource</code> 类可能看起来像这样：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.quarkus.oidc.OidcConfigurationMetadata;
+import io.quarkus.oidc.UserInfo;
+import org.eclipse.microprofile.jwt.JsonWebToken;
+
+@Path("/service")
+@Authenticated
+public class ProtectedResource {
+
+    @Inject
+    JsonWebToken accessToken;
+    @Inject
+    UserInfo userInfo;
+    @Inject
+    OidcConfigurationMetadata configMetadata;
+
+    @GET
+    @Path("test-security-oidc")
+    public String testSecurityOidc() {
+        return accessToken.getName() + ":" + accessToken.getGroups().iterator().next();
+    }
+
+    @GET
+    @Path("test-security-oidc-claims-userinfo-metadata")
+    public String testSecurityOidcWithClaimsUserInfoMetadata() {
+        return accessToken.getName() + ":" + accessToken.getGroups().iterator().next()
+                + ":" + accessToken.getClaim("email")
+                + ":" + userInfo.getString("sub")
+                + ":" + configMetadata.get("issuer");
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>请注意，必须始终使用 <code>@TestSecurity</code> 注解，其 <code>user</code> 属性将作为 <code>JsonWebToken.getName()</code> 和 <code>roles</code> 属性-作为 <code>JsonWebToken.getGroups()</code> 。 <code>@OidcSecurity</code> 注解是可选的，可用于设置额外的标记要求，以及 <code>UserInfo</code> 和 <code>OidcConfigurationMetadata</code> 属性。此外，如果配置了 <code>quarkus.oidc.token.issuer</code> 属性，那么它将被用作 <code>OidcConfigurationMetadata</code> <code>issuer</code> 属性的值。</p>
+</div>
+<div class="paragraph">
+<p>如果你用不透明的令牌，那么你可以按以下方式测试它们：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import static org.hamcrest.Matchers.is;
+import org.junit.jupiter.api.Test;
+import io.quarkus.test.common.http.TestHTTPEndpoint;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
+import io.quarkus.test.security.oidc.OidcSecurity;
+import io.quarkus.test.security.oidc.TokenIntrospection;
+import io.restassured.RestAssured;
+
+@QuarkusTest
+@TestHTTPEndpoint(ProtectedResource.class)
+public class TestSecurityAuthTest {
+
+    @Test
+    @TestSecurity(user = "userOidc", roles = "viewer")
+    @OidcSecurity(introspectionRequired = true,
+        introspection = {
+            @TokenIntrospection(key = "email", value = "user@gmail.com")
+        }
+    )
+    public void testOidcWithClaimsUserInfoAndMetadata() {
+        RestAssured.when().get("test-security-oidc-claims-userinfo-metadata").then()
+                .body(is("userOidc:viewer:userOidc:viewer"));
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>其中 <code>ProtectedResource</code> 类可能看起来像这样：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.quarkus.oidc.TokenIntrospection;
+import io.quarkus.security.identity.SecurityIdentity;
+
+@Path("/service")
+@Authenticated
+public class ProtectedResource {
+
+    @Inject
+    SecurityIdentity securityIdentity;
+    @Inject
+    TokenIntrospection introspection;
+
+    @GET
+    @Path("test-security-oidc-opaque-token")
+    public String testSecurityOidcOpaqueToken() {
+        return securityIdentity.getPrincipal().getName() + ":" + securityIdentity.getRoles().iterator().next()
+            + ":" + introspection.getString("username")
+            + ":" + introspection.getString("scope")
+            + ":" + introspection.getString("email");
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>请注意， <code>@TestSecurity</code> <code>user</code> 和 <code>roles</code> 属性可作为 <code>TokenIntrospection</code> <code>username</code> 和 <code>scope</code> 属性，你可以使用 <code>io.quarkus.test.security.oidc.TokenIntrospection</code> 来添加额外的自省响应属性，如 <code>email</code> ，等等。</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><code>@TestSecurity</code> and <code>@OidcSecurity</code> can be combined in a meta-annotation, for example like so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ ElementType.METHOD })
+    @TestSecurity(user = "userOidc", roles = "viewer")
+    @OidcSecurity(introspectionRequired = true,
+        introspection = {
+            @TokenIntrospection(key = "email", value = "user@gmail.com")
+        }
+    )
+    public @interface TestSecurityMetaAnnotation {
+
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is particularly useful if the same set of security settings needs to be used in multiple test methods.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="how-to-check-the-errors-in-the-logs"><a class="anchor" href="#how-to-check-the-errors-in-the-logs"></a>如何检查日志中的错误</h3>
+<div class="paragraph">
+<p>请启用 <code>io.quarkus.oidc.runtime.OidcProvider</code> <code>TRACE</code> 级日志，以查看有关令牌验证错误的更多细节：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.log.category."io.quarkus.oidc.runtime.OidcProvider".level=TRACE
+quarkus.log.category."io.quarkus.oidc.runtime.OidcProvider".min-level=TRACE</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>请启用 <code>io.quarkus.oidc.runtime.OidcRecorder</code> <code>TRACE</code> 级日志，以查看关于OidcProvider客户端初始化错误的更多细节：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.log.category."io.quarkus.oidc.runtime.OidcRecorder".level=TRACE
+quarkus.log.category."io.quarkus.oidc.runtime.OidcRecorder".min-level=TRACE</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="external-and-internal-access-to-openid-connect-provider"><a class="anchor" href="#external-and-internal-access-to-openid-connect-provider"></a>外部和内部访问OpenID Connect的提供者</h3>
+<div class="paragraph">
+<p>Note that the OpenID Connect Provider externally accessible token and other endpoints may have different HTTP(S) URLs compared to the URLs auto-discovered or configured relative to <code>quarkus.oidc.auth-server-url</code> internal URL. For example, if your SPA acquires a token from an external token endpoint address and sends it to Quarkus as a bearer token then an issuer verification failure may be reported by the endpoint.</p>
+</div>
+<div class="paragraph">
+<p>在这种情况下，如果你使用Keycloak，那么请用 <code>KEYCLOAK_FRONTEND_URL</code> 系统属性设置为外部可访问的基本URL来启动它。如果你使用其他Openid Connect提供商，那么请查看你的提供商的文档。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="how-to-use-client-id-property"><a class="anchor" href="#how-to-use-client-id-property"></a>如何使用 <code>client-id</code> 属性</h3>
+<div class="paragraph">
+<p><code>quarkus.oidc.client-id</code> 属性标识请求当前持有者令牌的 OpenID Connect Client。它可以是在浏览器中运行的SPA应用程序，也可以是Quarkus <code>web-app</code> 机密客户端应用程序，将访问令牌传播到Quarkus <code>service</code> 的应用程序。</p>
+</div>
+<div class="paragraph">
+<p>如果 <code>service</code> 应用程序被期望是远程自省令牌&#8212;&#8203;对于不透明的令牌来说总是这样，那么这个属性是必需的。如果只使用本地Json Web Key令牌验证，那么该属性是可选的。</p>
+</div>
+<div class="paragraph">
+<p>尽管如此，即使端点不需要访问远程自省端点，也鼓励设置该属性。其背后的原因是： <code>client-id</code> ，如果设置了这个属性，就可以用来验证令牌受众，当令牌验证失败时，也会包含在日志中，以便更好地追踪发放给特定客户的令牌，并在较长的时间内进行分析。</p>
+</div>
+<div class="paragraph">
+<p>例如，如果你的OpenID Connect提供商设置了一个令牌受众，那么建议采用以下配置模式：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># Set client-id
+quarkus.oidc.client-id=quarkus-app
+# Token audience claim must contain 'quarkus-app'
+quarkus.oidc.token.audience=${quarkus.oidc.client-id}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>如果你设置了 <code>quarkus.oidc.client-id</code> ，但你的端点不需要远程访问OpenID Connect提供者的一个端点（自省、令牌获取等），那么就不要设置带有 <code>quarkus.oidc.credentials</code> 或类似属性的客户秘钥，因为它不会被使用。</p>
+</div>
+<div class="paragraph">
+<p>注意Quarkus <code>web-app</code> 应用程序总是需要 <code>quarkus.oidc.client-id</code> 属性。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="references"><a class="anchor" href="#references"></a>参考文献</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="security-oidc-configuration-properties-reference">OIDC configuration properties</a></p>
+</li>
+<li>
+<p><a href="security-oidc-bearer-token-authentication-tutorial">Protect a service application by using OIDC Bearer token authentication</a></p>
+</li>
+<li>
+<p><a href="security-protect-service-applications-by-using-oidc-bearer-authentication-how-to">Protect service applications by using OIDC Bearer token authentication</a></p>
+</li>
+<li>
+<p><a href="https://www.keycloak.org/documentation.html">Keycloak Documentation</a></p>
+</li>
+<li>
+<p><a href="https://openid.net/connect/">OpenID Connect</a></p>
+</li>
+<li>
+<p><a href="https://tools.ietf.org/html/rfc7519">JSON Web Token</a></p>
+</li>
+<li>
+<p><a href="security-openid-connect-client.html">Quarkus - 使用OpenID Connect，OAuth2客户端和过滤器的参考指南</a></p>
+</li>
+<li>
+<p><a href="security-openid-connect-dev-services">Dev Services for Keycloak</a></p>
+</li>
+<li>
+<p><a href="security-jwt-build">使用 SmallRye JWT Build 对 JWT 令牌进行签名和加密</a></p>
+</li>
+<li>
+<p><a href="security-authentication-mechanisms#oidc-jwt-oauth2-comparison">Choosing between OpenID Connect, SmallRye JWT, and OAuth2 authentication mechanisms</a></p>
+</li>
+<li>
+<p><a href="security-authentication-mechanisms#combining-authentication-mechanisms">Combining authentication mechanisms</a></p>
+</li>
+<li>
+<p><a href="security-overview">Quarkus Security overview</a></p>
+</li>
+<li>
+<p><a href="security-keycloak-admin-client">Quarkus Keycloak Admin Client</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+    </div>
+    <div class="grid__item width-4-12 width-12-12-m tocwrapper">
+      <div class="hide-mobile toc"><ul class="sectlevel1">
+<li><a href="#overview-of-the-bearer-token-authentication-mechanism-in-quarkus">Overview of the Bearer token authentication mechanism in Quarkus</a>
+<ul class="sectlevel2">
+<li><a href="#accessing-jwt-claims">访问JWT声明</a></li>
+<li><a href="#user-info">用户信息</a></li>
+<li><a href="#config-metadata">配置元数据</a></li>
+<li><a href="#token-claims-and-securityidentity-roles">令牌声明(Token Claims)和安全身份角色(SecurityIdentity Roles)</a></li>
+<li><a href="#token-verification-introspection">代币验证(Token Verification)和自省(Introspection)</a></li>
+<li><a href="#token-introspection-userinfo-cache">Token Introspection and UserInfo Cache</a></li>
+<li><a href="#jwt-claim-verification">JSON Web Token Claim Verification</a></li>
+<li><a href="#single-page-applications">单页应用程序</a></li>
+<li><a href="#cross-origin-resource-sharing">跨域资源共享(CORS)</a></li>
+<li><a href="#provider-endpoint-configuration">提供者端点配置</a></li>
+<li><a href="#token-propagation">令牌传播</a></li>
+<li><a href="#oidc-provider-authentication">Oidc Provider Client Authentication</a></li>
+<li><a href="#integration-testing">测试</a></li>
+<li><a href="#how-to-check-the-errors-in-the-logs">如何检查日志中的错误</a></li>
+<li><a href="#external-and-internal-access-to-openid-connect-provider">外部和内部访问OpenID Connect的提供者</a></li>
+<li><a href="#how-to-use-client-id-property">如何使用 <code>client-id</code> 属性</a></li>
+</ul>
+</li>
+<li><a href="#references">参考文献</a></li>
+</ul></div>
+    </div>
+  </div>
+  </div>
+
+  </div>
+
+  <div class="content project-footer">
+  <div class="footer-section">
+    <div class="logo-wrapper">
+      <a href="/"><img src="/assets/images/quarkus_logo_horizontal_rgb_reverse.svg" class="project-logo" title="Quarkus"></a>
+    </div>
+  </div>
+  <div class="grid-wrapper">
+    <p class="grid__item width-3-12">Quarkus is open. All dependencies of this project are available under the <a href='https://www.apache.org/licenses/LICENSE-2.0' target='_blank'>Apache Software License 2.0</a> or compatible license.<br /><br />This website was built with <a href='https://jekyllrb.com/' target='_blank'>Jekyll</a>, is hosted on <a href='https://pages.github.com/' target='_blank'>GitHub Pages</a> and is completely open source. If you want to make it better, <a href='https://github.com/quarkusio/quarkusio.github.io' target='_blank'>fork the website</a> and show us what you’ve got.</p>
+
+    
+      <div class="width-1-12 project-links">
+        <span>Navigation</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="/" target="_blank">Home</a></li>
+          
+          
+          
+            <li><a href="/about" target="_blank">About</a></li>
+          
+          
+          
+            <li><a href="/blog" target="_blank">博客</a></li>
+          
+          
+          
+            <li><a href="/insights" target="_blank">Podcast</a></li>
+          
+          
+          
+            <li><a href="/events" target="_blank">活动</a></li>
+          
+          
+          
+            <li><a href="/newsletter" target="_blank">新闻</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
+          
+          
+          
+            <li><a href="https://github.com/orgs/quarkusio/projects/13/views/1" target="_blank">路线图</a></li>
+          
+          
+          
+            <li><a href="/security" target="_blank">Security&nbsp;policy</a></li>
+          
+          
+          
+            <li><a href="/usage" target="_blank">Usage</a></li>
+          
+          
+          
+            <li><a href="/brand" target="_blank">Brand</a></li>
+          
+          
+          
+            <li><a href="/desktopwallpapers" target="_blank">Wallpapers</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-1-12 project-links">
+        <span>Follow Us</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="https://x.com/quarkusio" target="_blank">X</a></li>
+          
+          
+          
+            <li><a href="https://bsky.app/profile/quarkus.io" target="_blank">Bluesky</a></li>
+          
+          
+          
+            <li><a rel="me" href="https://fosstodon.org/@quarkusio" target="_blank">Mastodon</a></li>
+            
+          
+          
+            <li><a href="https://www.facebook.com/quarkusio" target="_blank">Facebook</a></li>
+          
+          
+          
+            <li><a href="https://www.linkedin.com/company/quarkusio/" target="_blank">Linkedin</a></li>
+          
+          
+          
+            <li><a href="https://www.youtube.com/channel/UCaW8QG_QoIk_FnjLgr5eOqg" target="_blank">Youtube</a></li>
+          
+          
+          
+            <li><a href="https://github.com/quarkusio" target="_blank">GitHub</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-2-12 project-links">
+        <span>Get Help</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="/support" target="_blank">Support</a></li>
+          
+          
+          
+            <li><a href="/guides" target="_blank">Guides</a></li>
+          
+          
+          
+            <li><a href="/faq" target="_blank">FAQ</a></li>
+          
+          
+          
+            <li><a href="/get-started" target="_blank">开始体验</a></li>
+          
+          
+          
+            <li><a href="https://stackoverflow.com/questions/tagged/quarkus" target="_blank">Stack Overflow</a></li>
+          
+          
+          
+            <li><a href="https://github.com/quarkusio/quarkus/discussions" target="_blank">Discussions</a></li>
+          
+          
+          
+            <li><a href="https://groups.google.com/forum/#!forum/quarkus-dev" target="_blank">Development mailing list</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-1-12 project-links">
+        <span>Languages</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="https://quarkus.io/" target="_blank">English</a></li>
+          
+          
+          
+            <li><a href="https://pt.quarkus.io/" target="_blank">Português&nbsp;(Brasileiro)</a></li>
+          
+          
+          
+            <li><a href="https://es.quarkus.io/" target="_blank">Español</a></li>
+          
+          
+          
+            <li><a href="https://cn.quarkus.io/" target="_blank">简体中文</a></li>
+          
+          
+          
+            <li><a href="https://ja.quarkus.io/" target="_blank">日本語</a></li>
+          
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="width-4-12 more-links">
+        <span>Quarkus is made of community projects</span>
+        <ul class="footer-links">
+          
+            <li><a blah href="https://vertx.io/" target="_blank">Eclipse Vert.x</a></li>
+          
+            <li><a blah href="https://smallrye.io" target="_blank">SmallRye</a></li>
+          
+            <li><a blah href="https://hibernate.org" target="_blank">Hibernate</a></li>
+          
+            <li><a blah href="https://netty.io" target="_blank">Netty</a></li>
+          
+            <li><a blah href="https://resteasy.github.io" target="_blank">RESTEasy</a></li>
+          
+            <li><a blah href="https://camel.apache.org" target="_blank">Apache Camel</a></li>
+          
+            <li><a blah href="https://microprofile.io" target="_blank">Eclipse MicroProfile</a></li>
+          
+            <li><a blah href="https://code.quarkus.io/" target="_blank">And many more...</a></li>
+          
+        </ul>
+      </div>
+    
+  </div>
+</div>
+
+  <div class="content redhat-footer">
+  <div class="grid-wrapper">
+    <span class="licence">
+      <i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i> <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank">CC by 3.0</a> | <a href="https://www.redhat.com/en/about/privacy-policy">Privacy Policy</a>
+    </span>
+    <span class="redhat">
+      Sponsored by
+    </span>
+    <span class="redhat-logo">
+      <a href="https://www.redhat.com/" target="_blank"><img src="/assets/images/redhat_reversed.svg"></a>
+    </span>
+  </div>
+</div>
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha384-8gBf6Y4YYq7Jx97PIqmTwLPin4hxIzQw5aDmUg/DDhul9fFpbbLcLh3nTIIDJKhx" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="/assets/javascript/mobile-nav.js"></script>
+  <script type="text/javascript" src="/assets/javascript/scroll-down.js"></script>
+  <script src="/assets/javascript/satellite.js" type="text/javascript"></script>
+  <script src="/guides/javascript/config.js" type="text/javascript"></script>
+  <script src="/assets/javascript/guides-version-dropdown.js" type="text/javascript"></script>
+  <script src="/assets/javascript/back-to-top.js" type="text/javascript"></script>
+  <script src="/assets/javascript/clipboard.min.js" type="text/javascript"></script>
+  <script src="/assets/javascript/copy.js" type="text/javascript"></script>
+  <script src="/assets/javascript/asciidoc-tabs.js" type="text/javascript"></script>
+  <script src="/assets/javascript/future-date.js" type="text/javascript"></script>
+</body>
+
+</html>

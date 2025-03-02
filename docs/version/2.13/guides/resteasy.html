@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="cn">
+
+
+
+
+
+
+
+<head>
+  <title>RESTEasy Classic - 2.13 - Quarkus</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
+  script-src 'self' 'unsafe-inline' 'unsafe-eval'
+      
+      https://assets.adobedtm.com
+      js.bizographics.com
+      https://www.redhat.com
+      https://static.redhat.com
+      https://app.requestly.io/
+      jsonip.com
+      https://ajax.googleapis.com
+      https://use.fontawesome.com
+      http://www.youtube.com
+      http://www.googleadservices.com
+      https://googleads.g.doubleclick.net
+      https://giscus.app
+      https://analytics.ossupstream.org/
+      https://app.mailjet.com;
+
+  style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
+  img-src 'self' * data:; 
+  media-src 'self'; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  base-uri 'none'; 
+  object-src 'none'; 
+  form-action 'none'; 
+  font-src 'self' https://use.fontawesome.com https://fonts.gstatic.com;" />
+  <script id="adobe_dtm" src="https://www.redhat.com/dtm.js" type="text/javascript"></script>
+  <script src="/assets/javascript/highlight.pack.js" type="text/javascript"></script>
+  <META HTTP-EQUIV='X-XSS-Protection' CONTENT="1; mode=block">
+  <META HTTP-EQUIV='X-Content-Type-Options' CONTENT="nosniff">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Quarkus: Supersonic Subatomic Java">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@QuarkusIO"> 
+  <meta name="twitter:creator" content="@QuarkusIO">
+  <meta property="og:url" content="https://quarkus.io/version/2.13/guides/resteasy" />
+  <meta property="og:title" content="RESTEasy Classic - 2.13" />
+  <meta property="og:description" content="Quarkus: Supersonic Subatomic Java" />
+  <meta property="og:image" content="https://quarkus.io/assets/images/quarkus_card.png" />
+  
+  <link rel="canonical" href="https://quarkus.io/guides/resteasy">
+  <link rel="shortcut icon" type="image/png" href="/favicon.ico" >
+  <link rel="stylesheet" href="/guides/stylesheet/config.css" />
+  <link rel="stylesheet" href="/assets/css/main.css?2021-07-29" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.2/css/all.css" crossorigin="anonymous">
+  <link rel="alternate" type="application/rss+xml"  href="/feed.xml" title="Quarkus">
+  <script src="/assets/javascript/hl.js" type="text/javascript"></script>
+  
+  
+  
+  
+  <link rel="alternate" hreflang="en" href="https://quarkus.io/version/2.13/guides/resteasy" />
+  
+  <link rel="alternate" hreflang="pt-br" href="https://pt.quarkus.io/version/2.13/guides/resteasy" />
+  
+  <link rel="alternate" hreflang="es" href="https://es.quarkus.io/version/2.13/guides/resteasy" />
+  
+  <link rel="alternate" hreflang="zh" href="https://cn.quarkus.io/version/2.13/guides/resteasy" />
+  
+  <link rel="alternate" hreflang="ja" href="https://ja.quarkus.io/version/2.13/guides/resteasy" />
+  
+  <link rel="alternate" hreflang="x-default" href="https://quarkus.io/" />  
+  <script src="/assets/javascript/tracking.js"></script>
+  
+  <script src="/assets/javascript/colormode.js" type="text/javascript"></script>
+
+</head>
+
+<body class="guides">
+
+  
+
+
+<div class="grid-wrapper communitysite">
+  <div class="grid__item width-12-12">The <a href="https://quarkus.io/version/2.13/guides/resteasy">English version of quarkus.io</a> is the official project site. Translated sites are community supported on a best-effort basis.</div>
+</div>
+
+
+  <div class="nav-wrapper">
+  <div class="grid-wrapper">
+    <div class="width-12-12">
+      <input type="checkbox" id="checkbox" />
+      <nav id="main-nav" class="main-nav">
+        <div class="logo-wrapper">
+           <a href="/"><img src="/assets/images/quarkus_logo_horizontal_rgb_600px_reverse.png" class="project-logo" title="Quarkus"></a>
+        </div>
+    <label class="nav-toggle" for="checkbox"> <i class="fa fa-bars"></i>
+</label>
+    <ul id="menu" class="menu">
+      <li class="dropdown">
+        <span href="/about/">Why<i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/about" class="">QUARKUS是什么？</a></li>
+          <li><a href="/developer-joy" class="">开发者的乐趣 </a></li>
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES 原生</a></li>
+          <li><a href="/standards" class="">标准</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">容器优先 </a></li>          
+        </ul>
+      </li>
+      <li class="dropdown">
+        <span href="/learn/">学习 <i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/get-started" class="">入门</a></li>
+          <li><a href="/guides" class="active" >指南</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
+          <li><a href="/qtips" class="">"Q" TIP视频</a></li>          
+          <li><a href="/books" class="">书籍</a></li>
+          </ul>
+      </li>
+      <li class="dropdown">
+        <span href="https://quarkus.io/extensions/">扩展<i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          
+          <!-- Note that quarkus.io is hardcoded here, because it is the only url which supports extensions -->
+<li><a href="https://quarkus.io/extensions/" class="">浏览扩展</a></li>
+          <li><a href="/faq/#what-is-a-quarkus-extension" class="">使用扩展</a></li>
+          <li><a href="/guides/writing-extensions" class="" >创建扩展</a></li>
+          <li><a href="https://hub.quarkiverse.io" class="">SHARE EXTENSIONS</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <span href="/community/">社区 <i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/support/" class="">支持</a></li>
+          <li><a href="/blog" class="" >博客</a></li>
+          <li><a href="/discussion" class="">讨论</a></li>
+          <li><a href="/working-groups" class="">WORKING GROUPS</a></li>
+          <li><a href="/insights" class="" >播客</a></li>
+          <li><a href="/events" class="">活动</a></li>
+          <li><a href="/newsletter" class="">新闻</a></li>
+          <li><a href="https://github.com/orgs/quarkusio/projects/13/views/1" class="">路线图</a></li>
+          </ul>
+      </li>
+      <li>
+        <a href="https://code.quarkus.io" class="button-cta secondary
+white">开始编码</a>
+      </li>
+      <li class="dropdown">
+        <span href="/language/"><div class="fas fa-globe langicon"></div><i class="fas fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="https://quarkus.io/version/2.13/guides/resteasy" >OFFICIAL (ENGLISH)</a></li>
+          <li><a href="https://pt.quarkus.io/version/2.13/guides/resteasy">PORTUGUÊS (BR)</a></li>
+          <li><a href="https://es.quarkus.io/version/2.13/guides/resteasy">ESPAÑOL</a></li>
+          <li><a href="https://cn.quarkus.io/version/2.13/guides/resteasy">简体中文</a></li>
+          <li><a href="https://ja.quarkus.io/version/2.13/guides/resteasy">日本語</a></li>
+          </ul>
+      </li>
+      <li>
+        <span href="#" class="modeswitcher" id='theme-toggle'><i class="fas
+fa-sun"></i><i class="fas fa-moon"></i><i class="fas fa-cog"></i></span>
+      </li>
+    </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+  <div class="content">
+    
+
+
+
+
+
+<section class="full-width-version-bg flexfilterbar guides">
+  <div class="guideflexcontainer">
+    <div class="docslink">
+      <a class="returnlink" href="/version/2.13/guides/">返回指南目录</a>
+    </div>
+    <div class="flexlabel">
+      <label>选择指南版本</label>
+    </div>
+    <div class="guidepulldown version">
+    <select id="guide-version-dropdown">
+      
+        
+        
+        <option value="main" >Main - SNAPSHOT</option>
+        
+        
+        
+        <option value="latest" >3.19.1 - Latest</option>
+        
+        
+        
+        <option value="3.15" >3.15</option>
+        
+        
+        
+        <option value="3.8" >3.8</option>
+        
+        
+        
+        <option value="3.2" >3.2</option>
+        
+        
+        
+        <option value="2.16" >2.16</option>
+        
+        
+        
+        <option value="2.13" selected>2.13</option>
+        </select>
+    </div>
+  </div>
+</section>
+
+<div class="guide">
+  <div class="grid-wrapper">
+    <div class="grid__item width-8-12 width-12-12-m">
+      <h1 class="text-caps">RESTEasy Classic </h1>
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This guide is about <a href="https://resteasy.dev">RESTEasy Classic</a> which used to be the default JAX-RS implementation until Quarkus 2.8.</p>
+</div>
+<div class="paragraph">
+<p>It is now recommended to use RESTEasy Reactive, which supports equally well traditional blocking workloads and reactive workloads.
+For more information about RESTEasy Reactive,
+please see the <a href="rest-json">introductory REST JSON guide</a> or the more detailed <a href="resteasy-reactive">RESTEasy Reactive guide</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+there is another guide if you need a <a href="rest-client">REST client based on RESTEasy Classic</a> (including support for JSON).
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="architecture"><a class="anchor" href="#architecture"></a>架构</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>本指南中构建的应用程序非常简单：用户可以使用一个表单在列表中添加元素并更新列表。</p>
+</div>
+<div class="paragraph">
+<p>浏览器和服务器之间的所有信息都被格式化为JSON。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-the-maven-project"><a class="anchor" href="#creating-the-maven-project"></a>创建Maven项目</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>首先，我们需要一个新的项目。使用以下命令创建一个新的项目:</p>
+</div>
+<div class="sidebarblock primary asciidoc-tabs-sync-cli">
+<div class="content">
+<div class="title">CLI</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">quarkus create app org.acme:rest-json-quickstart \
+    --stream=2.13 \
+    --extension='resteasy-jackson' \
+    --no-code
+cd rest-json-quickstart</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>创建Grade项目，请添加 <code>--gradle</code> 或者 <code>--gradle-kotlin-dsl</code> 参数。</p>
+</div>
+<div class="paragraph">
+<p><em>关于如何安装并使用Quarkus CLI的更多信息，请参考<a href="cli-tooling">Quarkus CLI指南</a>。</em></p>
+</div>
+</div>
+</div>
+<div class="sidebarblock secondary asciidoc-tabs-sync-maven">
+<div class="content">
+<div class="title">Maven</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn io.quarkus.platform:quarkus-maven-plugin:2.13.9.Final:create \
+    -DplatformVersion=2.13.9.Final \
+    -DprojectGroupId=org.acme \
+    -DprojectArtifactId=rest-json-quickstart \
+    -Dextensions='resteasy-jackson' \
+    -DnoCode
+cd rest-json-quickstart</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>创建Grade项目，请添加 <code>-DbuildTool=gradle</code> 或者 <code>-DbuildTool=gradle-kotlin-dsl</code> 参数。</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>This command generates a new project importing the RESTEasy/JAX-RS and <a href="https://github.com/FasterXML/jackson">Jackson</a> extensions,
+and in particular adds the following dependency:</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-target-sync-cli asciidoc-tabs-target-sync-maven">
+<div class="title">pom.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-resteasy-jackson&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-target-sync-gradle">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-gradle hljs" data-lang="gradle">implementation("io.quarkus:quarkus-resteasy-jackson")</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>为了提高用户体验，Quarkus注册了三个Jackson <a href="https://github.com/FasterXML/jackson-modules-java8">Java 8模块</a> ，所以你不需要手动操作。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Quarkus also supports <a href="https://eclipse-ee4j.github.io/jsonb-api/">JSON-B</a> so, if you prefer JSON-B over Jackson, you can create a project relying on the RESTEasy JSON-B extension instead:</p>
+</div>
+<div class="sidebarblock primary asciidoc-tabs-sync-cli">
+<div class="content">
+<div class="title">CLI</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">quarkus create app org.acme:rest-json-quickstart \
+    --stream=2.13 \
+    --extension='resteasy-jsonb' \
+    --no-code
+cd rest-json-quickstart</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>创建Grade项目，请添加 <code>--gradle</code> 或者 <code>--gradle-kotlin-dsl</code> 参数。</p>
+</div>
+<div class="paragraph">
+<p><em>关于如何安装并使用Quarkus CLI的更多信息，请参考<a href="cli-tooling">Quarkus CLI指南</a>。</em></p>
+</div>
+</div>
+</div>
+<div class="sidebarblock secondary asciidoc-tabs-sync-maven">
+<div class="content">
+<div class="title">Maven</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn io.quarkus.platform:quarkus-maven-plugin:2.13.9.Final:create \
+    -DplatformVersion=2.13.9.Final \
+    -DprojectGroupId=org.acme \
+    -DprojectArtifactId=rest-json-quickstart \
+    -Dextensions='resteasy-jsonb' \
+    -DnoCode
+cd rest-json-quickstart</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>创建Grade项目，请添加 <code>-DbuildTool=gradle</code> 或者 <code>-DbuildTool=gradle-kotlin-dsl</code> 参数。</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>This command generates a new project importing the RESTEasy/JAX-RS and <a href="https://eclipse-ee4j.github.io/jsonb-api/">JSON-B</a> extensions,
+and in particular adds the following dependency:</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-target-sync-cli asciidoc-tabs-target-sync-maven">
+<div class="title">pom.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-resteasy-jsonb&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-target-sync-gradle">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-gradle hljs" data-lang="gradle">implementation("io.quarkus:quarkus-resteasy-jsonb")</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-your-first-json-rest-service"><a class="anchor" href="#creating-your-first-json-rest-service"></a>创建你的第一个JSON REST服务</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>在这个例子中，我们将创建一个应用程序来管理fruit列表。</p>
+</div>
+<div class="paragraph">
+<p>首先，让我们创建 <code>Fruit</code> 实体类，如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.rest.json;
+
+public class Fruit {
+
+    public String name;
+    public String description;
+
+    public Fruit() {
+    }
+
+    public Fruit(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这非常的简单。需要注意的一件事是， JSON 序列化层需要具有默认构造函数。</p>
+</div>
+<div class="paragraph">
+<p>现在，创建 <code>org.acme.rest.json.FruitResource</code> 类，如下所示。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.rest.json;
+
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Set;
+
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+
+@Path("/fruits")
+public class FruitResource {
+
+    private Set&lt;Fruit&gt; fruits = Collections.newSetFromMap(Collections.synchronizedMap(new LinkedHashMap&lt;&gt;()));
+
+    public FruitResource() {
+        fruits.add(new Fruit("Apple", "Winter fruit"));
+        fruits.add(new Fruit("Pineapple", "Tropical fruit"));
+    }
+
+    @GET
+    public Set&lt;Fruit&gt; list() {
+        return fruits;
+    }
+
+    @POST
+    public Set&lt;Fruit&gt; add(Fruit fruit) {
+        fruits.add(fruit);
+        return fruits;
+    }
+
+    @DELETE
+    public Set&lt;Fruit&gt; delete(Fruit fruit) {
+        fruits.removeIf(existingFruit -&gt; existingFruit.name.contentEquals(fruit.name));
+        return fruits;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The implementation is pretty straightforward, and you just need to define your endpoints using the JAX-RS annotations.</p>
+</div>
+<div class="paragraph">
+<p><code>Fruit</code> 对象将被 <a href="https://eclipse-ee4j.github.io/jsonb-api/">JSON-B</a> 或 <a href="https://github.com/FasterXML/jackson">Jackson</a> 自动序列化/反序列化，这取决于你在初始化项目时选择的扩展。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>When a JSON extension is installed such as <code>quarkus-resteasy-jackson</code> or <code>quarkus-resteasy-jsonb</code>, Quarkus will use the <code>application/json</code> media type
+by default for most return values, unless the media type is explicitly set via
+<code>@Produces</code> or <code>@Consumes</code> annotations (there are some exceptions for well known types, such as <code>String</code> and <code>File</code>, which default to <code>text/plain</code> and <code>application/octet-stream</code>
+respectively).</p>
+</div>
+<div class="paragraph">
+<p>If you don&#8217;t want JSON by default you can set <code>quarkus.resteasy-json.default-json=false</code> and the default will change back to being auto-negotiated. If you set this
+you will need to add <code>@Produces(MediaType.APPLICATION_JSON)</code> and <code>@Consumes(MediaType.APPLICATION_JSON)</code> to your endpoints in order to use JSON.</p>
+</div>
+<div class="paragraph">
+<p>If you don&#8217;t rely on the JSON default, it is heavily recommended to annotate your endpoints with the <code>@Produces</code> and <code>@Consumes</code> annotations to define precisely the expected content-types.
+It will allow to narrow down the number of JAX-RS providers (which can be seen as converters) included in the native executable.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="json"><a class="anchor" href="#json"></a>配置JSON支持</h3>
+<div class="sect3">
+<h4 id="jackson"><a class="anchor" href="#jackson"></a>Jackson</h4>
+<div class="paragraph">
+<p>在Quarkus中，通过CDI获得的默认Jackson <code>ObjectMapper</code> （并由Quarkus扩展使用）被配置为忽略未知属性（通过禁用 <code>DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES</code> 功能）。</p>
+</div>
+<div class="paragraph">
+<p>You can restore the default behavior of Jackson by setting <code>quarkus.jackson.fail-on-unknown-properties=true</code> in your <code>application.properties</code>
+or on a per-class basis via <code>@JsonIgnoreProperties(ignoreUnknown = false)</code>.</p>
+</div>
+<div class="paragraph">
+<p>此外， <code>ObjectMapper</code> 被配置为ISO-8601的日期和时间格式（通过禁用 <code>SerializationFeature.WRITE_DATES_AS_TIMESTAMPS</code> 功能）。</p>
+</div>
+<div class="paragraph">
+<p>Jackson的默认行为可以通过在你的 <code>application.properties</code> 中设置 <code>quarkus.jackson.write-dates-as-timestamps=true</code> 来设置。如果你想改变单个字段的默认行为，你可以使用 <code>@JsonFormat</code> 注解。</p>
+</div>
+<div class="paragraph">
+<p>另外，Quarkus使得通过CDI beans来配置各种Jackson设置变得非常容易。最简单的（也是建议的）方法是定义一个类型为 <code>io.quarkus.jackson.ObjectMapperCustomizer</code> 的CDI Bean，在其中可以使用任何Jackson配置。</p>
+</div>
+<div class="paragraph">
+<p>需要注册自定义模块的示例如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import com.fasterxml.jackson.databind.ObjectMapper;
+import io.quarkus.jackson.ObjectMapperCustomizer;
+import javax.inject.Singleton;
+
+@Singleton
+public class RegisterCustomModuleCustomizer implements ObjectMapperCustomizer {
+
+    public void customize(ObjectMapper mapper) {
+        mapper.registerModule(new CustomModule());
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>如果用户选择的话，他们甚至可以提供自己的 <code>ObjectMapper</code> bean。如果这样做，在产生 <code>ObjectMapper</code> 的CDI生产者中，手动注入和应用所有 <code>io.quarkus.jackson.ObjectMapperCustomizer</code> Bean是非常重要的。如果不这样做，就会阻止各种扩展所提供的Jackson特定的自定义功能被应用。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import com.fasterxml.jackson.databind.ObjectMapper;
+import io.quarkus.jackson.ObjectMapperCustomizer;
+
+import javax.enterprise.inject.Instance;
+import javax.inject.Singleton;
+
+public class CustomObjectMapper {
+
+    // Replaces the CDI producer for ObjectMapper built into Quarkus
+    @Singleton
+    ObjectMapper objectMapper(Instance&lt;ObjectMapperCustomizer&gt; customizers) {
+        ObjectMapper mapper = myObjectMapper(); // Custom `ObjectMapper`
+
+        // Apply all ObjectMapperCustomizer beans (incl. Quarkus)
+        for (ObjectMapperCustomizer customizer : customizers) {
+            customizer.customize(mapper);
+        }
+
+        return mapper;
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="json-b"><a class="anchor" href="#json-b"></a>JSON-B</h4>
+<div class="paragraph">
+<p>如上所述，Quarkus通过使用 <code>quarkus-resteasy-jsonb</code> 扩展提供了使用JSON-B而不是Jackson的选项。</p>
+</div>
+<div class="paragraph">
+<p>按照上一节所述的相同方法，JSON-B可以使用 <code>io.quarkus.jsonb.JsonbConfigCustomizer</code> bean进行配置。</p>
+</div>
+<div class="paragraph">
+<p>例如，如果需要使用 JSON-B 注册类型为 <code>com.example.Foo</code> 的名为 <code>FooSerializer</code> 的自定义序列化程序，则添加如下所示的 bean 就足够了：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.quarkus.jsonb.JsonbConfigCustomizer;
+import javax.inject.Singleton;
+import javax.json.bind.JsonbConfig;
+import javax.json.bind.serializer.JsonbSerializer;
+
+@Singleton
+public class FooSerializerRegistrationCustomizer implements JsonbConfigCustomizer {
+
+    public void customize(JsonbConfig config) {
+        config.withSerializers(new FooSerializer());
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>一个更高级的选择是直接提供一个 <code>javax.json.bind.JsonbConfig</code> 的bean（具有 <code>Dependent</code> 范围），或者在极端情况下，提供一个 <code>javax.json.bind.Jsonb</code> 的bean（具有 <code>Singleton</code> 范围）。如果采用后一种方法，那么在产成 <code>javax.json.bind.Jsonb</code> 的CDI生产者中手动注入和应用所有 <code>io.quarkus.jsonb.JsonbConfigCustomizer</code> Bean是非常重要的。如果不这样做，就会阻止由各种扩展提供的JSON-B特定的自定义功能被应用。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.quarkus.jsonb.JsonbConfigCustomizer;
+
+import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Instance;
+import javax.json.bind.JsonbConfig;
+
+public class CustomJsonbConfig {
+
+    // Replaces the CDI producer for JsonbConfig built into Quarkus
+    @Dependent
+    JsonbConfig jsonConfig(Instance&lt;JsonbConfigCustomizer&gt; customizers) {
+        JsonbConfig config = myJsonbConfig(); // Custom `JsonbConfig`
+
+        // Apply all JsonbConfigCustomizer beans (incl. Quarkus)
+        for (JsonbConfigCustomizer customizer : customizers) {
+            customizer.customize(config);
+        }
+
+        return config;
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="links"><a class="anchor" href="#links"></a>JSON Hypertext Application Language (HAL) support</h3>
+<div class="paragraph">
+<p>The <a href="https://tools.ietf.org/id/draft-kelly-json-hal-01.html">HAL</a> standard is a simple format to represent web links.</p>
+</div>
+<div class="paragraph">
+<p>To enable the HAL support, add the <code>quarkus-hal</code> extension to your project. Also, as HAL needs JSON support, you need to add either the <code>quarkus-resteasy-jsonb</code> or the <code>quarkus-resteasy-jackson</code> extension.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Table Context object</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">GAV</th>
+<th class="tableblock halign-left valign-top">Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.quarkus:quarkus-hal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://tools.ietf.org/id/draft-kelly-json-hal-01.html">HAL</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>After adding the extensions, we can now annotate the REST resources to produce the media type <code>application/hal+json</code> (or use RestMediaType.APPLICATION_HAL_JSON). For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Path("/records")
+public class RecordsResource {
+
+    @GET
+    @Produces({ MediaType.APPLICATION_JSON, "application/hal+json" })
+    @LinkResource(entityClassName = "org.acme.Record", rel = "list")
+    public List&lt;TestRecord&gt; getAll() {
+        // ...
+    }
+
+    @GET
+    @Path("/first")
+    @Produces({ MediaType.APPLICATION_JSON, "application/hal+json" })
+    @LinkResource(rel = "first")
+    public TestRecord getFirst() {
+        // ...
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, the endpoints <code>/records</code> and <code>/records/first</code> will accept the media type both <code>json</code> and <code>hal+json</code> to print the records in Hal format.</p>
+</div>
+<div class="paragraph">
+<p>For example, if we invoke the <code>/records</code> endpoint using curl to return a list of records, the HAL format will look like as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">&amp; curl -H "Accept:application/hal+json" -i localhost:8080/records
+{
+    "_embedded": {
+        "items": [
+            {
+                "id": 1,
+                "slug": "first",
+                "value": "First value",
+                "_links": {
+                    "list": {
+                        "href": "http://localhost:8081/records"
+                    },
+                    "first": {
+                        "href": "http://localhost:8081/records/first"
+                    }
+                }
+            },
+            {
+                "id": 2,
+                "slug": "second",
+                "value": "Second value",
+                "_links": {
+                    "list": {
+                        "href": "http://localhost:8081/records"
+                    },
+                    "first": {
+                        "href": "http://localhost:8081/records/first"
+                    }
+                }
+            }
+        ]
+    },
+    "_links": {
+        "list": {
+            "href": "http://localhost:8081/records"
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When we call a resource <code>/records/first</code> that returns only one instance, then the output is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">&amp; curl -H "Accept:application/hal+json" -i localhost:8080/records/first
+{
+    "id": 1,
+    "slug": "first",
+    "value": "First value",
+    "_links": {
+        "list": {
+            "href": "http://localhost:8081/records"
+        },
+        "first": {
+            "href": "http://localhost:8081/records/first"
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-a-frontend"><a class="anchor" href="#creating-a-frontend"></a>创建一个网页</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>现在让我们添加一个简单的网页来与我们的 <code>FruitResource</code> 进行交互。Quarkus自动提供位于 <code>META-INF/resources</code> 目录下的静态资源。在 <code>src/main/resources/META-INF/resources</code> 目录中，添加一个 <code>fruits.html</code> 文件，其中包含这个https://github.com/quarkusio/quarkus-quickstarts/blob/main/rest-json-quickstart/src/main/resources/META-INF/resources/fruits.html[fruits.html] 文件的内容。</p>
+</div>
+<div class="paragraph">
+<p>现在你可以与你的REST服务进行交互：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>启动Quarkus：</p>
+<div class="listingblock primary asciidoc-tabs-sync-cli">
+<div class="title">CLI</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">quarkus dev</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-maven">
+<div class="title">Maven</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw quarkus:dev</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-gradle">
+<div class="title">Gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./gradlew --console=plain quarkusDev</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>打开浏览器访问 <code>&lt;a href="http://localhost:8080/fruits.html" class="bare"&gt;<a href="http://localhost:8080/fruits.html&lt;/a&gt" class="bare">http://localhost:8080/fruits.html&lt;/a&gt</a>;</code> </p>
+</li>
+<li>
+<p>通过表格添加新的fruits到列表中</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="building-a-native-executable"><a class="anchor" href="#building-a-native-executable"></a>构建一个本地可执行文件</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>你可以使用常用命令构建本机可执行文件：</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-sync-cli">
+<div class="title">CLI</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">quarkus build --native</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-maven">
+<div class="title">Maven</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw install -Dnative</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-gradle">
+<div class="title">Gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./gradlew build -Dquarkus.package.type=native</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>运行它就像执行 <code>./target/rest-json-quickstart-1.0.0-SNAPSHOT-runner</code> 一样简单。</p>
+</div>
+<div class="paragraph">
+<p>然后你可以使用的浏览器访问 <code>&lt;a href="http://localhost:8080/fruits.html" class="bare"&gt;<a href="http://localhost:8080/fruits.html&lt;/a&gt" class="bare">http://localhost:8080/fruits.html&lt;/a&gt</a>;</code> 来使用你的应用程序。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="about-serialization"><a class="anchor" href="#about-serialization"></a>关于序列化</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>JSON序列化库使用Java反射来获取一个对象的属性并将其序列化。</p>
+</div>
+<div class="paragraph">
+<p>当使用GraalVM的本地可执行文件时，需要注册所有将与反射一起使用的类。好消息是，Quarkus在大多数时候都会为你做这项工作。到目前为止，我们还没有注册任何类，甚至没有注册 <code>Fruit</code> ，并且一切正常。</p>
+</div>
+<div class="paragraph">
+<p>当Quarkus能够从REST方法中推断出序列化的类型时，它会发挥一些作用。当你有以下的REST方法时，Quarkus确定 <code>Fruit</code> 将被序列化：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-JAVA hljs" data-lang="JAVA">@GET
+public List&lt;Fruit&gt; list() {
+    // ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Quarkus通过在构建时分析REST方法自动为你执行此操，这就是为什么我们在本指南的第一部分不需要任何反射注册。</p>
+</div>
+<div class="paragraph">
+<p>JAX-RS世界中另一个常见的模式是使用 <code>Response</code> 对象。 <code>Response</code> 有一些很好的好处：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>你可以根据你的方法中发生的情况，返回不同的实体类型（例如， <code>Legume</code> 或 <code>Error</code> ）。</p>
+</li>
+<li>
+<p>你可以设置 <code>Response</code> 的属性（在出现错误的情况下，会想到状态）。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>你的 REST 方法如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-JAVA hljs" data-lang="JAVA">@GET
+public Response list() {
+    // ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Quarkus不可能在构建时确定 <code>Response</code> 中包含的类型，因为该信息不可用。在这种情况下，Quarkus将无法自动注册反映所需的类。</p>
+</div>
+<div class="paragraph">
+<p>这将我们引向下一节。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="using-response"><a class="anchor" href="#using-response"></a>使用Response</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>让我们创建一个将被序列化为 JSON 的 <code>Legume</code> 类，遵循与我们的 <code>Fruit</code> 类相同的模型：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-JAVA hljs" data-lang="JAVA">package org.acme.rest.json;
+
+public class Legume {
+
+    public String name;
+    public String description;
+
+    public Legume() {
+    }
+
+    public Legume(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>现在让我们创建一个 <code>LegumeResource</code> REST服务，它只有一个返回legumes类列表的方法。</p>
+</div>
+<div class="paragraph">
+<p>该方法返回一个 <code>Response</code> ，而不是一个 <code>Legume</code> 列表。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-JAVA hljs" data-lang="JAVA">package org.acme.rest.json;
+
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+@Path("/legumes")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+public class LegumeResource {
+
+    private Set&lt;Legume&gt; legumes = Collections.synchronizedSet(new LinkedHashSet&lt;&gt;());
+
+    public LegumeResource() {
+        legumes.add(new Legume("Carrot", "Root vegetable, usually orange"));
+        legumes.add(new Legume("Zucchini", "Summer squash"));
+    }
+
+    @GET
+    public Response list() {
+        return Response.ok(legumes).build();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>现在让我们添加一个简单的网页来显示我们的legumes列表。在 <code>src/main/resources/META-INF/resources</code> 目录中，添加一个 <code>legumes.html</code> 文件，其中包含这个https://github.com/quarkusio/quarkus-quickstarts/blob/main/rest-json-quickstart/src/main/resources/META-INF/resources/legumes.html[legumes.html] 文件的内容。</p>
+</div>
+<div class="paragraph">
+<p>Open a browser to <a href="http://localhost:8080/legumes.html" class="bare">http://localhost:8080/legumes.html</a>, and you will see our list of legumes.</p>
+</div>
+<div class="paragraph">
+<p>有趣的部分是在将应用程序作为本机可执行文件运行时开始的：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>创建本地可执行文件。</p>
+<div class="listingblock primary asciidoc-tabs-sync-cli">
+<div class="title">CLI</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">quarkus build --native</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-maven">
+<div class="title">Maven</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw install -Dnative</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-gradle">
+<div class="title">Gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./gradlew build -Dquarkus.package.type=native</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>用以下方式执行它 <code>./target/rest-json-quickstart-1.0.0-SNAPSHOT-runner</code> </p>
+</li>
+<li>
+<p>打开浏览器，访问 <a href="http://localhost:8080/legumes.html" class="bare">http://localhost:8080/legumes.html</a> </p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>那里没有legumes。</p>
+</div>
+<div class="paragraph">
+<p>As mentioned above, the issue is that Quarkus was not able to determine the <code>Legume</code> class will require some reflection by analyzing the REST endpoints.
+The JSON serialization library tries to get the list of fields of <code>Legume</code> and gets an empty list, so it does not serialize the fields' data.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>目前，当JSON-B或Jackson尝试获取一个类的字段列表时，如果该类没有注册反射，则不会抛出异常。GraalVM将简单地返回一个空的字段列表。</p>
+</div>
+<div class="paragraph">
+<p>希望这在将来会有所改变，使错误更加明显。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>我们可以通过在我们的 <code>Legume</code> 类上添加 <code>@RegisterForReflection</code> 注解来手动注册 <code>Legume</code> 进行反射：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-JAVA hljs" data-lang="JAVA">import io.quarkus.runtime.annotations.RegisterForReflection;
+
+@RegisterForReflection
+public class Legume {
+    // ...
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<code>@RegisterForReflection</code> 注解用于指导Quarkus在native编译过程中保留该类和其成员。关于 <code>@RegisterForReflection</code> 注解的更多细节可以在 <a href="writing-native-applications-tips.html#registerForReflection">native应用程序提示</a> 页面找到。
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>让我们这样做，并遵循与之前相同的步骤：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>点击 <code>Ctrl+C</code> ，停止应用程序。</p>
+</li>
+<li>
+<p>创建本地可执行文件。</p>
+<div class="listingblock primary asciidoc-tabs-sync-cli">
+<div class="title">CLI</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">quarkus build --native</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-maven">
+<div class="title">Maven</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw install -Dnative</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-gradle">
+<div class="title">Gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./gradlew build -Dquarkus.package.type=native</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>用以下方式执行它 <code>./target/rest-json-quickstart-1.0.0-SNAPSHOT-runner</code> </p>
+</li>
+<li>
+<p>打开浏览器，访问 <a href="http://localhost:8080/legumes.html" class="bare">http://localhost:8080/legumes.html</a> </p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>这一次，你可以看到我们的legumes列表。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="reactive"><a class="anchor" href="#reactive"></a>响应式</h2>
+<div class="sectionbody">
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>For reactive workloads, please always use <a href="resteasy-reactive">RESTEasy Reactive</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>你可以返回 <em>响应式类型</em> 来处理异步处理。Quarkus推荐使用 <a href="https://smallrye.io/smallrye-mutiny">Mutiny</a> 来编写响应式和异步代码。</p>
+</div>
+<div class="paragraph">
+<p>To integrate Mutiny and RESTEasy, you need to add the <code>quarkus-resteasy-mutiny</code> dependency to your project:</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-target-sync-cli asciidoc-tabs-target-sync-maven">
+<div class="title">pom.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-resteasy-mutiny&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-target-sync-gradle">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-gradle hljs" data-lang="gradle">implementation("io.quarkus:quarkus-resteasy-mutiny")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, your endpoint can return <code>Uni</code> or <code>Multi</code> instances:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@GET
+@Path("/{name}")
+public Uni&lt;Fruit&gt; getOne(@PathParam String name) {
+    return findByName(name);
+}
+
+@GET
+public Multi&lt;Fruit&gt; getAll() {
+    return findAll();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>当你有一个单一的结果时，使用 <code>Uni</code> 。当你有多个可能被异步发射的项目时，使用 <code>Multi</code> 。</p>
+</div>
+<div class="paragraph">
+<p>您可以使用 <code>Uni</code> 和 <code>Response</code> 返回异步 HTTP 响应：<code>Uni&lt;Response&gt;</code>。</p>
+</div>
+<div class="paragraph">
+<p>有关 Mutiny 的更多详细信息，请参见外部参考：<a href="mutiny-primer">Mutiny - 一个直观的响应式编程库</a>。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="http-filters-and-interceptors"><a class="anchor" href="#http-filters-and-interceptors"></a>HTTP filters and interceptors</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Both HTTP request and response can be intercepted by providing <code>ContainerRequestFilter</code> or <code>ContainerResponseFilter</code>
+implementations respectively. These filters are suitable for processing the metadata associated with a message: HTTP
+headers, query parameters, media type, and other metadata. They also have the capability to abort the request
+processing, for instance when the user does not have the permissions to access the endpoint.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s use <code>ContainerRequestFilter</code> to add logging capability to our service. We can do that by implementing
+<code>ContainerRequestFilter</code> and annotating it with the <code>@Provider</code> annotation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.rest.json;
+
+import io.vertx.core.http.HttpServerRequest;
+import org.jboss.logging.Logger;
+
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.ext.Provider;
+
+@Provider
+public class LoggingFilter implements ContainerRequestFilter {
+
+    private static final Logger LOG = Logger.getLogger(LoggingFilter.class);
+
+    @Context
+    UriInfo info;
+
+    @Context
+    HttpServerRequest request;
+
+    @Override
+    public void filter(ContainerRequestContext context) {
+
+        final String method = context.getMethod();
+        final String path = info.getPath();
+        final String address = request.remoteAddress().toString();
+
+        LOG.infof("Request %s %s from IP %s", method, path, address);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, whenever a REST method is invoked, the request will be logged into the console:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">2019-06-05 12:44:26,526 INFO  [org.acm.res.jso.LoggingFilter] (executor-thread-1) Request GET /legumes from IP 127.0.0.1
+2019-06-05 12:49:19,623 INFO  [org.acm.res.jso.LoggingFilter] (executor-thread-1) Request GET /fruits from IP 0:0:0:0:0:0:0:1
+2019-06-05 12:50:44,019 INFO  [org.acm.res.jso.LoggingFilter] (executor-thread-1) Request POST /fruits from IP 0:0:0:0:0:0:0:1
+2019-06-05 12:51:04,485 INFO  [org.acm.res.jso.LoggingFilter] (executor-thread-1) Request GET /fruits from IP 127.0.0.1</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="cors-filter"><a class="anchor" href="#cors-filter"></a>CORS filter</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://en.wikipedia.org/wiki/Cross-origin_resource_sharing">Cross-origin resource sharing</a> (CORS) is a mechanism that
+allows restricted resources on a web page to be requested from another domain outside the domain from which the first resource
+was served.</p>
+</div>
+<div class="paragraph">
+<p>Quarkus comes with a CORS filter. Read the <a href="http-reference#cors-filter">HTTP Reference Documentation</a> to learn
+how to use it.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="gzip-support"><a class="anchor" href="#gzip-support"></a>GZip Support</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Quarkus comes with GZip support (even though it is not enabled by default). The following configuration knobs allow to configure GZip support.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.resteasy.gzip.enabled=true <i class="conum" data-value="1"></i><b>(1)</b>
+quarkus.resteasy.gzip.max-input=10M <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Enable Gzip support.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Configure the upper limit on deflated request body. This is useful to mitigate potential attacks by limiting their reach. The default value is <code>10M</code>.
+This configuration option would recognize strings in this format (shown as a regular expression): <code>[0-9]+[KkMmGgTtPpEeZzYy]?</code>. If no suffix is given, assume bytes.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Once GZip support has been enabled you can use it on an endpoint by adding the <code>@org.jboss.resteasy.annotations.GZIP</code> annotation to your endpoint method.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The configuration property <code>quarkus.http.enable-compression</code> has no effect on compression support of RESTEasy Classic endpoints.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="multipart-support"><a class="anchor" href="#multipart-support"></a>Multipart Support</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>RESTEasy supports multipart via the <a href="https://docs.jboss.org/resteasy/docs/4.5.6.Final/userguide/html/Multipart.html">RESTEasy Multipart Provider</a>.</p>
+</div>
+<div class="paragraph">
+<p>Quarkus provides an extension called <code>quarkus-resteasy-multipart</code> to make things easier for you.</p>
+</div>
+<div class="paragraph">
+<p>This extension slightly differs from the RESTEasy default behavior as the default charset (if none is specified in your request) is UTF-8 rather than US-ASCII.</p>
+</div>
+<div class="paragraph">
+<p>You can configure this behavior with the following configuration properties:</p>
+</div>
+<div class="paragraph">
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> Configuration property fixed at build time - All other configuration properties are overridable at runtime <input type="search" id="config-search-0" placeholder="FILTER CONFIGURATION" disabled></p>
+</div>
+<table class="tableblock frame-all grid-all stretch configuration-reference searchable configuration-reference-all-rows">
+<colgroup>
+<col style="width: 80%;">
+<col style="width: 10%;">
+<col style="width: 10%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock"><a id="quarkus-resteasy-multipart_configuration"></a><a href="#quarkus-resteasy-multipart_configuration">Configuration property</a></p></th>
+<th class="tableblock halign-left valign-middle"><p class="tableblock">类型</p></th>
+<th class="tableblock halign-left valign-middle"><p class="tableblock">默认值</p></th>
+</tr>
+<tr class="row-collapsible row-collapsed row-with-desc odd">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="quarkus-resteasy-multipart_quarkus.resteasy.multipart.input-part.default-charset"></a><code><a href="#quarkus-resteasy-multipart_quarkus.resteasy.multipart.input-part.default-charset">quarkus.resteasy.multipart.input-part.default-charset</a></code></p>
+</div>
+<div id="conf-collapsible-desc-1" class="openblock description description-collapsed">
+<div class="content">
+<div class="paragraph">
+<p>Default charset.
+Note that the default value is UTF-8 which is different from RESTEasy&#8217;s default value US-ASCII.</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-14393">QUARKUS_RESTEASY_MULTIPART_INPUT_PART_DEFAULT_CHARSET</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-14393" title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+</div>
+</div>
+<div class="paragraph description-decoration">
+<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html">Charset</a></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><code>UTF-8</code></p></td>
+</tr>
+<tr class="row-collapsible row-collapsed row-with-desc">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="quarkus-resteasy-multipart_quarkus.resteasy.multipart.input-part.default-content-type"></a><code><a href="#quarkus-resteasy-multipart_quarkus.resteasy.multipart.input-part.default-content-type">quarkus.resteasy.multipart.input-part.default-content-type</a></code></p>
+</div>
+<div id="conf-collapsible-desc-2" class="openblock description description-collapsed">
+<div class="content">
+<div class="paragraph">
+<p>The default content-type.</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-14394">QUARKUS_RESTEASY_MULTIPART_INPUT_PART_DEFAULT_CONTENT_TYPE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-14394" title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+</div>
+</div>
+<div class="paragraph description-decoration">
+<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><code>text/plain</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="servlet-compatibility"><a class="anchor" href="#servlet-compatibility"></a>Servlet compatibility</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In Quarkus, RESTEasy can either run directly on top of the Vert.x HTTP server, or on top of Undertow if you have any servlet dependency.</p>
+</div>
+<div class="paragraph">
+<p>As a result, certain classes, such as <code>HttpServletRequest</code> are not always available for injection. Most use-cases for this particular
+class are covered by JAX-RS equivalents, except for getting the remote client&#8217;s IP. RESTEasy comes with a replacement API which you can inject:
+<a href="https://docs.jboss.org/resteasy/docs/4.5.6.Final/javadocs/org/jboss/resteasy/spi/HttpRequest.html"><code>HttpRequest</code></a>, which has the methods
+<a href="https://docs.jboss.org/resteasy/docs/4.5.6.Final/javadocs/org/jboss/resteasy/spi/HttpRequest.html#getRemoteAddress--"><code>getRemoteAddress()</code></a>
+and <a href="https://docs.jboss.org/resteasy/docs/4.5.6.Final/javadocs/org/jboss/resteasy/spi/HttpRequest.html#getRemoteHost--"><code>getRemoteHost()</code></a>
+to solve this problem.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="resteasy-and-rest-client-interactions"><a class="anchor" href="#resteasy-and-rest-client-interactions"></a>RESTEasy and REST Client interactions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In Quarkus, the RESTEasy extension and <a href="rest-client">the REST Client extension</a> share the same infrastructure.
+One important consequence of this consideration is that they share the same list of providers (in the JAX-RS meaning of the word).</p>
+</div>
+<div class="paragraph">
+<p>For instance, if you declare a <code>WriterInterceptor</code>, it will by default intercept both the servers calls and the client calls,
+which might not be the desired behavior.</p>
+</div>
+<div class="paragraph">
+<p>However, you can change this default behavior and constrain a provider to:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>only consider <strong>server</strong> calls by adding the <code>@ConstrainedTo(RuntimeType.SERVER)</code> annotation to your provider;</p>
+</li>
+<li>
+<p>only consider <strong>client</strong> calls by adding the <code>@ConstrainedTo(RuntimeType.CLIENT)</code> annotation to your provider.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="whats-different-from-jakarta-ee-development"><a class="anchor" href="#whats-different-from-jakarta-ee-development"></a>What&#8217;s Different from Jakarta EE Development</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="no-need-for-application-class"><a class="anchor" href="#no-need-for-application-class"></a>No Need for <code>Application</code> Class</h3>
+<div class="paragraph">
+<p>Configuration via an application-supplied subclass of <code>Application</code> is supported, but not required.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="only-a-single-jax-rs-application"><a class="anchor" href="#only-a-single-jax-rs-application"></a>Only a single JAX-RS application</h3>
+<div class="paragraph">
+<p>In contrast to JAX-RS (and RESTeasy) running in a standard servlet-container, Quarkus only supports the deployment of a single JAX-RS application.
+If multiple JAX-RS <code>Application</code> classes are defined, the build will fail with the message <code>Multiple classes have been annotated with @ApplicationPath which is currently not supported</code>.</p>
+</div>
+<div class="paragraph">
+<p>If multiple JAX-RS applications are defined, the property <code>quarkus.resteasy.ignore-application-classes=true</code> can be used to ignore all explicit <code>Application</code> classes. This makes all resource-classes available via the application-path as defined by <code>quarkus.resteasy.path</code> (default: <code>/</code>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="support-limitations-of-jax-rs-application"><a class="anchor" href="#support-limitations-of-jax-rs-application"></a>Support limitations of JAX-RS application</h3>
+<div class="paragraph">
+<p>The RESTEasy extension doesn&#8217;t support the method <code>getProperties()</code> of the class <code>javax.ws.rs.core.Application</code>. Moreover, it only relies on the methods <code>getClasses()</code> and <code>getSingletons()</code> to filter out the annotated resource, provider and feature classes.
+It doesn&#8217;t filter out the built-in resource, provider and feature classes and also the resource, provider and feature classes registered by the other extensions.
+Finally, the objects returned by the method <code>getSingletons()</code> are ignored, only the classes are taken into account to filter out the resource, provider and feature classes, in other words the method <code>getSingletons()</code> is actually managed the same way as <code>getClasses()</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="lifecycle-of-resources"><a class="anchor" href="#lifecycle-of-resources"></a>Lifecycle of Resources</h3>
+<div class="paragraph">
+<p>In Quarkus all JAX-RS resources are treated as CDI beans.
+It&#8217;s possible to inject other beans via <code>@Inject</code>, bind interceptors using bindings such as <code>@Transactional</code>, define <code>@PostConstruct</code> callbacks, etc.</p>
+</div>
+<div class="paragraph">
+<p>If there is no scope annotation declared on the resource class then the scope is defaulted.
+The default scope can be controlled through the <code>quarkus.resteasy.singleton-resources</code> property.
+If set to <code>true</code> (default) then a <strong>single instance</strong> of a resource class is created to service all requests (as defined by <code>@javax.inject.Singleton</code>).
+If set to <code>false</code> then a <strong>new instance</strong> of the resource class is created per each request.
+An explicit CDI scope annotation (<code>@RequestScoped</code>, <code>@ApplicationScoped</code>, etc.) always overrides the default behavior and specifies the lifecycle of resource instances.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="includeexclude-jax-rs-classes-with-build-time-conditions"><a class="anchor" href="#includeexclude-jax-rs-classes-with-build-time-conditions"></a>Include/Exclude JAX-RS classes with build time conditions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Quarkus enables the inclusion or exclusion of JAX-RS Resources, Providers and Features directly thanks to build time conditions in the same that it does for CDI beans.
+Thus, the various JAX-RS classes can be annotated with profile conditions (<code>@io.quarkus.arc.profile.IfBuildProfile</code> or <code>@io.quarkus.arc.profile.UnlessBuildProfile</code>) and/or with property conditions (<code>io.quarkus.arc.properties.IfBuildProperty</code> or <code>io.quarkus.arc.properties.UnlessBuildProperty</code>) to indicate to Quarkus at build time under which conditions these JAX-RS classes should be included.</p>
+</div>
+<div class="paragraph">
+<p>In the following example, Quarkus includes the endpoint <code>sayHello</code> if and only if the build profile <code>app1</code> has been enabled.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@IfBuildProfile("app1")
+public class ResourceForApp1Only {
+
+    @GET
+    @Path("sayHello")
+    public String sayHello() {
+        return "hello";
+     }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Please note that if a JAX-RS Application has been detected and the method <code>getClasses()</code> and/or <code>getSingletons()</code> has/have been overridden, Quarkus will ignore the build time conditions and consider only what has been defined in the JAX-RS Application.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="conclusion"><a class="anchor" href="#conclusion"></a>解决方案</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>使用 Quarkus 创建 JSON REST 服务很容易，因为它依赖于经过验证且众所周知的技术。</p>
+</div>
+<div class="paragraph">
+<p>像往常一样，当您将应用程序作为本机可执行文件运行时，Quarkus 进一步简化了内部工作。</p>
+</div>
+<div class="paragraph">
+<p>只有一件事要记住：如果您使用 <code>Response</code> 并且 Quarkus 无法确定被序列化的 bean，则需要使用 <code>@RegisterForReflection</code> 注解它们。</p>
+</div>
+</div>
+</div>
+    </div>
+    <div class="grid__item width-4-12 width-12-12-m tocwrapper">
+      <div class="hide-mobile toc"><ul class="sectlevel1">
+<li><a href="#architecture">架构</a></li>
+<li><a href="#creating-the-maven-project">创建Maven项目</a></li>
+<li><a href="#creating-your-first-json-rest-service">创建你的第一个JSON REST服务</a>
+<ul class="sectlevel2">
+<li><a href="#json">配置JSON支持</a></li>
+<li><a href="#links">JSON Hypertext Application Language (HAL) support</a></li>
+</ul>
+</li>
+<li><a href="#creating-a-frontend">创建一个网页</a></li>
+<li><a href="#building-a-native-executable">构建一个本地可执行文件</a></li>
+<li><a href="#about-serialization">关于序列化</a></li>
+<li><a href="#using-response">使用Response</a></li>
+<li><a href="#reactive">响应式</a></li>
+<li><a href="#http-filters-and-interceptors">HTTP filters and interceptors</a></li>
+<li><a href="#cors-filter">CORS filter</a></li>
+<li><a href="#gzip-support">GZip Support</a></li>
+<li><a href="#multipart-support">Multipart Support</a></li>
+<li><a href="#servlet-compatibility">Servlet compatibility</a></li>
+<li><a href="#resteasy-and-rest-client-interactions">RESTEasy and REST Client interactions</a></li>
+<li><a href="#whats-different-from-jakarta-ee-development">What&#8217;s Different from Jakarta EE Development</a>
+<ul class="sectlevel2">
+<li><a href="#no-need-for-application-class">No Need for <code>Application</code> Class</a></li>
+<li><a href="#only-a-single-jax-rs-application">Only a single JAX-RS application</a></li>
+<li><a href="#support-limitations-of-jax-rs-application">Support limitations of JAX-RS application</a></li>
+<li><a href="#lifecycle-of-resources">Lifecycle of Resources</a></li>
+</ul>
+</li>
+<li><a href="#includeexclude-jax-rs-classes-with-build-time-conditions">Include/Exclude JAX-RS classes with build time conditions</a></li>
+<li><a href="#conclusion">解决方案</a></li>
+</ul></div>
+    </div>
+  </div>
+  </div>
+
+  </div>
+
+  <div class="content project-footer">
+  <div class="footer-section">
+    <div class="logo-wrapper">
+      <a href="/"><img src="/assets/images/quarkus_logo_horizontal_rgb_reverse.svg" class="project-logo" title="Quarkus"></a>
+    </div>
+  </div>
+  <div class="grid-wrapper">
+    <p class="grid__item width-3-12">Quarkus is open. All dependencies of this project are available under the <a href='https://www.apache.org/licenses/LICENSE-2.0' target='_blank'>Apache Software License 2.0</a> or compatible license.<br /><br />This website was built with <a href='https://jekyllrb.com/' target='_blank'>Jekyll</a>, is hosted on <a href='https://pages.github.com/' target='_blank'>GitHub Pages</a> and is completely open source. If you want to make it better, <a href='https://github.com/quarkusio/quarkusio.github.io' target='_blank'>fork the website</a> and show us what you’ve got.</p>
+
+    
+      <div class="width-1-12 project-links">
+        <span>Navigation</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="/" target="_blank">Home</a></li>
+          
+          
+          
+            <li><a href="/about" target="_blank">About</a></li>
+          
+          
+          
+            <li><a href="/blog" target="_blank">博客</a></li>
+          
+          
+          
+            <li><a href="/insights" target="_blank">Podcast</a></li>
+          
+          
+          
+            <li><a href="/events" target="_blank">活动</a></li>
+          
+          
+          
+            <li><a href="/newsletter" target="_blank">新闻</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
+          
+          
+          
+            <li><a href="https://github.com/orgs/quarkusio/projects/13/views/1" target="_blank">路线图</a></li>
+          
+          
+          
+            <li><a href="/security" target="_blank">Security&nbsp;policy</a></li>
+          
+          
+          
+            <li><a href="/usage" target="_blank">Usage</a></li>
+          
+          
+          
+            <li><a href="/brand" target="_blank">Brand</a></li>
+          
+          
+          
+            <li><a href="/desktopwallpapers" target="_blank">Wallpapers</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-1-12 project-links">
+        <span>Follow Us</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="https://x.com/quarkusio" target="_blank">X</a></li>
+          
+          
+          
+            <li><a href="https://bsky.app/profile/quarkus.io" target="_blank">Bluesky</a></li>
+          
+          
+          
+            <li><a rel="me" href="https://fosstodon.org/@quarkusio" target="_blank">Mastodon</a></li>
+            
+          
+          
+            <li><a href="https://www.facebook.com/quarkusio" target="_blank">Facebook</a></li>
+          
+          
+          
+            <li><a href="https://www.linkedin.com/company/quarkusio/" target="_blank">Linkedin</a></li>
+          
+          
+          
+            <li><a href="https://www.youtube.com/channel/UCaW8QG_QoIk_FnjLgr5eOqg" target="_blank">Youtube</a></li>
+          
+          
+          
+            <li><a href="https://github.com/quarkusio" target="_blank">GitHub</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-2-12 project-links">
+        <span>Get Help</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="/support" target="_blank">Support</a></li>
+          
+          
+          
+            <li><a href="/guides" target="_blank">Guides</a></li>
+          
+          
+          
+            <li><a href="/faq" target="_blank">FAQ</a></li>
+          
+          
+          
+            <li><a href="/get-started" target="_blank">开始体验</a></li>
+          
+          
+          
+            <li><a href="https://stackoverflow.com/questions/tagged/quarkus" target="_blank">Stack Overflow</a></li>
+          
+          
+          
+            <li><a href="https://github.com/quarkusio/quarkus/discussions" target="_blank">Discussions</a></li>
+          
+          
+          
+            <li><a href="https://groups.google.com/forum/#!forum/quarkus-dev" target="_blank">Development mailing list</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-1-12 project-links">
+        <span>Languages</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="https://quarkus.io/" target="_blank">English</a></li>
+          
+          
+          
+            <li><a href="https://pt.quarkus.io/" target="_blank">Português&nbsp;(Brasileiro)</a></li>
+          
+          
+          
+            <li><a href="https://es.quarkus.io/" target="_blank">Español</a></li>
+          
+          
+          
+            <li><a href="https://cn.quarkus.io/" target="_blank">简体中文</a></li>
+          
+          
+          
+            <li><a href="https://ja.quarkus.io/" target="_blank">日本語</a></li>
+          
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="width-4-12 more-links">
+        <span>Quarkus is made of community projects</span>
+        <ul class="footer-links">
+          
+            <li><a blah href="https://vertx.io/" target="_blank">Eclipse Vert.x</a></li>
+          
+            <li><a blah href="https://smallrye.io" target="_blank">SmallRye</a></li>
+          
+            <li><a blah href="https://hibernate.org" target="_blank">Hibernate</a></li>
+          
+            <li><a blah href="https://netty.io" target="_blank">Netty</a></li>
+          
+            <li><a blah href="https://resteasy.github.io" target="_blank">RESTEasy</a></li>
+          
+            <li><a blah href="https://camel.apache.org" target="_blank">Apache Camel</a></li>
+          
+            <li><a blah href="https://microprofile.io" target="_blank">Eclipse MicroProfile</a></li>
+          
+            <li><a blah href="https://code.quarkus.io/" target="_blank">And many more...</a></li>
+          
+        </ul>
+      </div>
+    
+  </div>
+</div>
+
+  <div class="content redhat-footer">
+  <div class="grid-wrapper">
+    <span class="licence">
+      <i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i> <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank">CC by 3.0</a> | <a href="https://www.redhat.com/en/about/privacy-policy">Privacy Policy</a>
+    </span>
+    <span class="redhat">
+      Sponsored by
+    </span>
+    <span class="redhat-logo">
+      <a href="https://www.redhat.com/" target="_blank"><img src="/assets/images/redhat_reversed.svg"></a>
+    </span>
+  </div>
+</div>
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha384-8gBf6Y4YYq7Jx97PIqmTwLPin4hxIzQw5aDmUg/DDhul9fFpbbLcLh3nTIIDJKhx" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="/assets/javascript/mobile-nav.js"></script>
+  <script type="text/javascript" src="/assets/javascript/scroll-down.js"></script>
+  <script src="/assets/javascript/satellite.js" type="text/javascript"></script>
+  <script src="/guides/javascript/config.js" type="text/javascript"></script>
+  <script src="/assets/javascript/guides-version-dropdown.js" type="text/javascript"></script>
+  <script src="/assets/javascript/back-to-top.js" type="text/javascript"></script>
+  <script src="/assets/javascript/clipboard.min.js" type="text/javascript"></script>
+  <script src="/assets/javascript/copy.js" type="text/javascript"></script>
+  <script src="/assets/javascript/asciidoc-tabs.js" type="text/javascript"></script>
+  <script src="/assets/javascript/future-date.js" type="text/javascript"></script>
+</body>
+
+</html>

@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="cn">
+
+
+
+
+
+
+
+<head>
+  <title>在Quarkus应用程序中使用Eclipse Vert.x API - 2.16 - Quarkus</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
+  script-src 'self' 'unsafe-inline' 'unsafe-eval'
+      
+      https://assets.adobedtm.com
+      js.bizographics.com
+      https://www.redhat.com
+      https://static.redhat.com
+      https://app.requestly.io/
+      jsonip.com
+      https://ajax.googleapis.com
+      https://use.fontawesome.com
+      http://www.youtube.com
+      http://www.googleadservices.com
+      https://googleads.g.doubleclick.net
+      https://giscus.app
+      https://analytics.ossupstream.org/
+      https://app.mailjet.com;
+
+  style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
+  img-src 'self' * data:; 
+  media-src 'self'; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  base-uri 'none'; 
+  object-src 'none'; 
+  form-action 'none'; 
+  font-src 'self' https://use.fontawesome.com https://fonts.gstatic.com;" />
+  <script id="adobe_dtm" src="https://www.redhat.com/dtm.js" type="text/javascript"></script>
+  <script src="/assets/javascript/highlight.pack.js" type="text/javascript"></script>
+  <META HTTP-EQUIV='X-XSS-Protection' CONTENT="1; mode=block">
+  <META HTTP-EQUIV='X-Content-Type-Options' CONTENT="nosniff">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Quarkus: Supersonic Subatomic Java">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@QuarkusIO"> 
+  <meta name="twitter:creator" content="@QuarkusIO">
+  <meta property="og:url" content="https://quarkus.io/version/2.16/guides/vertx" />
+  <meta property="og:title" content="在Quarkus应用程序中使用Eclipse Vert.x API - 2.16" />
+  <meta property="og:description" content="Quarkus: Supersonic Subatomic Java" />
+  <meta property="og:image" content="https://quarkus.io/assets/images/quarkus_card.png" />
+  
+  <link rel="canonical" href="https://quarkus.io/guides/vertx">
+  <link rel="shortcut icon" type="image/png" href="/favicon.ico" >
+  <link rel="stylesheet" href="/guides/stylesheet/config.css" />
+  <link rel="stylesheet" href="/assets/css/main.css?2021-07-29" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.2/css/all.css" crossorigin="anonymous">
+  <link rel="alternate" type="application/rss+xml"  href="/feed.xml" title="Quarkus">
+  <script src="/assets/javascript/hl.js" type="text/javascript"></script>
+  
+  
+  
+  
+  <link rel="alternate" hreflang="en" href="https://quarkus.io/version/2.16/guides/vertx" />
+  
+  <link rel="alternate" hreflang="pt-br" href="https://pt.quarkus.io/version/2.16/guides/vertx" />
+  
+  <link rel="alternate" hreflang="es" href="https://es.quarkus.io/version/2.16/guides/vertx" />
+  
+  <link rel="alternate" hreflang="zh" href="https://cn.quarkus.io/version/2.16/guides/vertx" />
+  
+  <link rel="alternate" hreflang="ja" href="https://ja.quarkus.io/version/2.16/guides/vertx" />
+  
+  <link rel="alternate" hreflang="x-default" href="https://quarkus.io/" />  
+  <script src="/assets/javascript/tracking.js"></script>
+  
+  <script src="/assets/javascript/colormode.js" type="text/javascript"></script>
+
+</head>
+
+<body class="guides">
+
+  
+
+
+<div class="grid-wrapper communitysite">
+  <div class="grid__item width-12-12">The <a href="https://quarkus.io/version/2.16/guides/vertx">English version of quarkus.io</a> is the official project site. Translated sites are community supported on a best-effort basis.</div>
+</div>
+
+
+  <div class="nav-wrapper">
+  <div class="grid-wrapper">
+    <div class="width-12-12">
+      <input type="checkbox" id="checkbox" />
+      <nav id="main-nav" class="main-nav">
+        <div class="logo-wrapper">
+           <a href="/"><img src="/assets/images/quarkus_logo_horizontal_rgb_600px_reverse.png" class="project-logo" title="Quarkus"></a>
+        </div>
+    <label class="nav-toggle" for="checkbox"> <i class="fa fa-bars"></i>
+</label>
+    <ul id="menu" class="menu">
+      <li class="dropdown">
+        <span href="/about/">Why<i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/about" class="">QUARKUS是什么？</a></li>
+          <li><a href="/developer-joy" class="">开发者的乐趣 </a></li>
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES 原生</a></li>
+          <li><a href="/standards" class="">标准</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">容器优先 </a></li>          
+        </ul>
+      </li>
+      <li class="dropdown">
+        <span href="/learn/">学习 <i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/get-started" class="">入门</a></li>
+          <li><a href="/guides" class="active" >指南</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
+          <li><a href="/qtips" class="">"Q" TIP视频</a></li>          
+          <li><a href="/books" class="">书籍</a></li>
+          </ul>
+      </li>
+      <li class="dropdown">
+        <span href="https://quarkus.io/extensions/">扩展<i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          
+          <!-- Note that quarkus.io is hardcoded here, because it is the only url which supports extensions -->
+<li><a href="https://quarkus.io/extensions/" class="">浏览扩展</a></li>
+          <li><a href="/faq/#what-is-a-quarkus-extension" class="">使用扩展</a></li>
+          <li><a href="/guides/writing-extensions" class="" >创建扩展</a></li>
+          <li><a href="https://hub.quarkiverse.io" class="">SHARE EXTENSIONS</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <span href="/community/">社区 <i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/support/" class="">支持</a></li>
+          <li><a href="/blog" class="" >博客</a></li>
+          <li><a href="/discussion" class="">讨论</a></li>
+          <li><a href="/working-groups" class="">WORKING GROUPS</a></li>
+          <li><a href="/insights" class="" >播客</a></li>
+          <li><a href="/events" class="">活动</a></li>
+          <li><a href="/newsletter" class="">新闻</a></li>
+          <li><a href="https://github.com/orgs/quarkusio/projects/13/views/1" class="">路线图</a></li>
+          </ul>
+      </li>
+      <li>
+        <a href="https://code.quarkus.io" class="button-cta secondary
+white">开始编码</a>
+      </li>
+      <li class="dropdown">
+        <span href="/language/"><div class="fas fa-globe langicon"></div><i class="fas fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="https://quarkus.io/version/2.16/guides/vertx" >OFFICIAL (ENGLISH)</a></li>
+          <li><a href="https://pt.quarkus.io/version/2.16/guides/vertx">PORTUGUÊS (BR)</a></li>
+          <li><a href="https://es.quarkus.io/version/2.16/guides/vertx">ESPAÑOL</a></li>
+          <li><a href="https://cn.quarkus.io/version/2.16/guides/vertx">简体中文</a></li>
+          <li><a href="https://ja.quarkus.io/version/2.16/guides/vertx">日本語</a></li>
+          </ul>
+      </li>
+      <li>
+        <span href="#" class="modeswitcher" id='theme-toggle'><i class="fas
+fa-sun"></i><i class="fas fa-moon"></i><i class="fas fa-cog"></i></span>
+      </li>
+    </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+  <div class="content">
+    
+
+
+
+
+
+<section class="full-width-version-bg flexfilterbar guides">
+  <div class="guideflexcontainer">
+    <div class="docslink">
+      <a class="returnlink" href="/version/2.16/guides/">返回指南目录</a>
+    </div>
+    <div class="flexlabel">
+      <label>选择指南版本</label>
+    </div>
+    <div class="guidepulldown version">
+    <select id="guide-version-dropdown">
+      
+        
+        
+        <option value="main" >Main - SNAPSHOT</option>
+        
+        
+        
+        <option value="latest" >3.19.1 - Latest</option>
+        
+        
+        
+        <option value="3.15" >3.15</option>
+        
+        
+        
+        <option value="3.8" >3.8</option>
+        
+        
+        
+        <option value="3.2" >3.2</option>
+        
+        
+        
+        <option value="2.16" selected>2.16</option>
+        
+        
+        
+        <option value="2.13" >2.13</option>
+        </select>
+    </div>
+  </div>
+</section>
+
+<div class="guide">
+  <div class="grid-wrapper">
+    <div class="grid__item width-8-12 width-12-12-m">
+      <h1 class="text-caps">在Quarkus应用程序中使用Eclipse Vert.x API </h1>
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://vertx.io">Vert.x</a> 是一个用于构建响应式应用程序的工具集。正如 <a href="quarkus-reactive-architecture.html">Quarkus响应式架构</a> 中所描述的，下面，Quarkus将使用Vert.x。</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/quarkus-reactive-core.png" alt="Quarkus Reactive Core" width="50%">
+</div>
+</div>
+<div class="paragraph">
+<p>Quarkus应用程序能够访问和使用Vert.x APIs。</p>
+</div>
+<div class="paragraph">
+<p>该指南介绍如何使用以下方法构建 Quarkus 应用程序:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>被管理的 Vert.x 实例</p>
+</li>
+<li>
+<p>Vert.x 事件总线</p>
+</li>
+<li>
+<p>Vert.x 网络客户端</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>这是一项介绍性的指南。 <a href="vertx-reference.html">Vert.x参考指南</a> 涵盖了更多的高级功能，例如 verticles 和 本地传输 (native transports) 。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="architecture"><a class="anchor" href="#architecture"></a>应用结构</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>我们将构建一个简单应用程序 它包含四个暴露出的端点:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>/vertx/lorem</code> 返回一个小文件的内容</p>
+</li>
+<li>
+<p><code>/vertx/book</code> 返回一个大文件的内容（一本书）</p>
+</li>
+<li>
+<p><code>/vertx/hello</code> 使用Vert.x事件总线来生成响应</p>
+</li>
+<li>
+<p><code>/vertx/web</code> 使用Vert.x Web客户端从维基百科中检索数据</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/quarkus-vertx-guide-architecture.png" alt="Architecture of the Vert.x guide" width="50%">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="solution"><a class="anchor" href="#solution"></a>解决方案</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>我们建议你按照下一节的说明逐步创建应用程序。然而，你也可以直接转到已完成的示例。</p>
+</div>
+<div class="paragraph">
+<p>克隆 Git 仓库: <code>git clone <a href="https://github.com/quarkusio/quarkus-quickstarts.git" class="bare">https://github.com/quarkusio/quarkus-quickstarts.git</a></code> ，或下载一个 <a href="https://github.com/quarkusio/quarkus-quickstarts/archive/2.16.zip">存档</a> 。</p>
+</div>
+<div class="paragraph">
+<p>该解决方案位于 <code>vertx-quickstart</code> <a href="https://github.com/quarkusio/quarkus-quickstarts/tree/2.16/vertx-quickstart">目录</a>中。</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="title">Mutiny</div>
+<div class="paragraph">
+<p>该指南使用Mutiny API。如果你不熟悉Mutiny，请查看 <a href="mutiny-primer.html">Mutiny - 一个直观的、响应式的编程库</a> 。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="bootstrapping-the-application"><a class="anchor" href="#bootstrapping-the-application"></a>引导启动该应用程序</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>点击 <a href="https://code.quarkus.io/?a=quarkus-getting-started-vertx&amp;nc=true&amp;e=resteasy-reactive-jackson&amp;e=vertx">这个链接</a> 来配置你的应用程序。它选择了几个扩展:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>resteasy-reactive-jackson</code> ，它也带来了 <code>resteasy-reactive</code> 。我们将使用它来暴露出我们的HTTP端点。</p>
+</li>
+<li>
+<p><code>vertx</code> ，它提供了对底层管理的Vert.x的访问</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>点击 <code>生成你的应用程序</code> 按钮，下载压缩文件并解压。然后，在你喜欢的编辑器中打开该项目。</p>
+</div>
+<div class="paragraph">
+<p>如果你打开生成的构建文件，你可以看到以下选定的扩展:</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-target-sync-cli asciidoc-tabs-target-sync-maven">
+<div class="title">pom.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+  &lt;artifactId&gt;quarkus-resteasy-reactive-jackson&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+  &lt;artifactId&gt;quarkus-vertx&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-target-sync-gradle">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-gradle hljs" data-lang="gradle">implementation("io.quarkus:quarkus-resteasy-reactive-jackson")
+implementation("io.quarkus:quarkus-vertx")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在你的构建文件中，添加以下依赖项:</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-target-sync-cli asciidoc-tabs-target-sync-maven">
+<div class="title">pom.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;io.smallrye.reactive&lt;/groupId&gt;
+  &lt;artifactId&gt;smallrye-mutiny-vertx-web-client&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-target-sync-gradle">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-gradle hljs" data-lang="gradle">implementation("io.smallrye.reactive:smallrye-mutiny-vertx-web-client")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>该依赖项提供了Vert.x Web客户端，我们将用它来实现 <code>/web</code> 端点。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="accessing-the-managed-vert-x-instance"><a class="anchor" href="#accessing-the-managed-vert-x-instance"></a>访问被管理的Vert.x实例</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>创建 <code>src/main/java/org/acme/VertxResource.java</code> 文件。它将包含我们的HTTP端点。</p>
+</div>
+<div class="paragraph">
+<p>在该文件中，拷贝以下代码:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme;
+
+import io.smallrye.mutiny.Uni;
+import io.vertx.mutiny.core.Vertx;
+
+import java.nio.charset.StandardCharsets;
+
+import javax.inject.Inject;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+
+@Path("/vertx")                        <i class="conum" data-value="1"></i><b>(1)</b>
+public class VertxResource {
+
+    private final Vertx vertx;
+
+    @Inject                             <i class="conum" data-value="2"></i><b>(2)</b>
+    public VertxResource(Vertx vertx) { <i class="conum" data-value="3"></i><b>(3)</b>
+        this.vertx = vertx;             <i class="conum" data-value="4"></i><b>(4)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>声明HTTP根路径。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>我们使用构造函数注入的方式来接收被管理的Vert.x实例。当然 字段注入也被允许。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>接收Vert.x实例作为构造函数的参数</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>将被管理的Vert.x实例存储到一个字段当中。</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>有了这些，我们就可以开始实现端点了。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="using-vert-x-core-api"><a class="anchor" href="#using-vert-x-core-api"></a>使用Vert.x核心API</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>被注入的Vert.x实例提供了一组你可以使用的API。我们在本节中要使用的是Vert.x文件系统。它提供了一个非阻塞的API来访问文件。</p>
+</div>
+<div class="paragraph">
+<p>在 <code>src/main/resource</code> 目录中，创建一个包含以下内容的 <code>lorem.txt</code> 文件:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>接着，在 <code>VertxResource</code> 文件中添加以下方法:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@GET                                                                                   <i class="conum" data-value="1"></i><b>(1)</b>
+@Path("/lorem")
+public Uni&lt;String&gt; readShortFile() {                                                   <i class="conum" data-value="2"></i><b>(2)</b>
+    return vertx.fileSystem().readFile("lorem.txt")                                    <i class="conum" data-value="3"></i><b>(3)</b>
+            .onItem().transform(content -&gt; content.toString(StandardCharsets.UTF_8));  <i class="conum" data-value="4"></i><b>(4)</b>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>该端点处理路径 <code>/lorem</code> 上的 HTTP <code>GET</code> 请求（因此完整路径是 <code>vertx/lorem</code> ）</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>由于Vert.x API是异步的，我们的方法返回一个 <code>Uni</code> 对象 。当Uni所代表的异步操作完成后，内容将会被写入HTTP响应中。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>我们使用Vert.x文件系统API来读取创建的文件</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>一旦文件被读取，其内容就被存储在一个内存缓冲区内。我们将这个缓冲区的内容转换为一个字符串。</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>在终端中，切换到项目根目录下 运行以下命令:</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-sync-cli">
+<div class="title">CLI</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">quarkus dev</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-maven">
+<div class="title">Maven</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw quarkus:dev</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-sync-gradle">
+<div class="title">Gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./gradlew --console=plain quarkusDev</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在另外一个终端中，运行:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">&gt; curl http://localhost:8080/vertx/lorem</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>你应该会在控制台中看到打印的文件内容。</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Quarkus提供了其他方式来处理静态文件。这是专为该指南制作的一个例子。
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="using-vert-x-stream-capability"><a class="anchor" href="#using-vert-x-stream-capability"></a>使用Vert.x流的功能</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>读取文件并将内容存储在内存中适用于小文件，但不适用于大文件。在本节中，我们将带领你了解如何使用 Vert.x 流功能。</p>
+</div>
+<div class="paragraph">
+<p>首先，下载 <a href="https://www.gutenberg.org/files/2600/2600-0.txt">《战争与和平</a> 》，并将其存储在 <code>src/main/resources/book.txt</code> 。这是一个3.2Mb的文件，虽然不是很大，但说明了流的用途。这一次，我们将不会把文件的内容堆积在内存中并一次性写入，而是逐块读取，并把这些块逐一写入到HTTP响应中。</p>
+</div>
+<div class="paragraph">
+<p>因此，你的项目中应该包含以下文件:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">.
+├── mvnw
+├── mvnw.cmd
+├── pom.xml
+├── README.md
+├── src
+│  └── main
+│     ├── docker
+│     │  ├── ...
+│     ├── java
+│     │  └── org
+│     │     └── acme
+│     │        └── VertxResource.java
+│     └── resources
+│        ├── application.properties
+│        ├── book.txt
+│        └── lorem.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Add the following imports to the <code>src/main/java/org/acme/VertxResource.java</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.smallrye.mutiny.Multi;
+import io.vertx.core.file.OpenOptions;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>将以下方法添加到 <code>VertxResource</code> 类中:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@GET
+@Path("/book")
+public Multi&lt;String&gt; readLargeFile() {                                               <i class="conum" data-value="1"></i><b>(1)</b>
+    return vertx.fileSystem().open("book.txt",                                       <i class="conum" data-value="2"></i><b>(2)</b>
+                    new OpenOptions().setRead(true)
+            )
+            .onItem().transformToMulti(file -&gt; file.toMulti())                       <i class="conum" data-value="3"></i><b>(3)</b>
+            .onItem().transform(content -&gt; content.toString(StandardCharsets.UTF_8) <i class="conum" data-value="4"></i><b>(4)</b>
+                    + "\n------------\n");                                           <i class="conum" data-value="5"></i><b>(5)</b>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>这一次，我们返回一个Multi类型的对象，因为我们想要流式地处理这些块</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>我们使用 <code>open</code> 方法打开该文件。它返回一个 <code>Uni&lt;AsyncFile&gt;</code> 类型的对象</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>当文件被打开时，我们获得到一个 <code>Multi</code> ，它包含了块的内容。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>对于每个块，我们生成一个字符串</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>为了直观地看到响应中的分块，我们添加了一个分隔符</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>接着，在终端中，运行以下命令:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">&gt; curl http://localhost:8080/vertx/book</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>它应该获取到书籍的内容。在输出中，你应该会看到像这样包含分隔符的内容:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">...
+The little princess had also left the tea table and followed Hélène.
+
+“Wait a moment, I’ll get my work.... Now then, what
+------------
+ are you
+thinking of?” she went on, turning to Prince Hippolyte. “Fetch me my
+workbag.”
+...</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="using-the-event-bus"><a class="anchor" href="#using-the-event-bus"></a>使用事件总线</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Vert.x 的核心特点之一是 <a href="https://vertx.io/docs/vertx-core/java/#event_bus">事件总线</a>。它为你的应用程序提供了基于消息的主干。因此，你可以使用异步消息传递的方式在组件之间进行交互，并且将你的组件解耦。您可以向单个消费者发送消息，或分派给多个消费者，亦或是实现请求-响应的交互，在其中发送消息（请求）并期许响应。这是我们将在本节中使用的内容。我们的 <code>VertxResource</code>  将向问候地址发送一条包含姓名的消息。另一个组件将会接收到这条消息并生成 "hello $name" 的响应。 <code>VertxResource</code> 将收到响应并将其作为 HTTP 响应进行返回。</p>
+</div>
+<div class="paragraph">
+<p>So, first, add the following imports to the <code>src/main/java/org/acme/VertxResource.java</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.vertx.mutiny.core.eventbus.EventBus;
+import javax.ws.rs.QueryParam;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, let&#8217;s extend our <code>VertxResource</code> class with the following code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Inject
+EventBus bus;                                                   <i class="conum" data-value="1"></i><b>(1)</b>
+
+@GET
+@Path("/hello")
+public Uni&lt;String&gt; hello(@QueryParam("name") String name) {     <i class="conum" data-value="2"></i><b>(2)</b>
+    return bus.&lt;String&gt;request("greetings", name)               <i class="conum" data-value="3"></i><b>(3)</b>
+            .onItem().transform(response -&gt; response.body());   <i class="conum" data-value="4"></i><b>(4)</b>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Inject the event bus. Alternatively you can use <code>vertx.eventBus()</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>We receive a <em>name</em> as a query parameter</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>We use the <code>request</code> method to initiate the request-reply interaction. We send the name to the "greetings" address.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>When the response is received, we extract the body and return it as the HTTP response</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>现在，我们需要另一侧: 接收姓名并回复的组件。
+使用以下内容创建 <code>src/main/java/org/acme/GreetingService.java</code> 文件:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme;
+
+import io.quarkus.vertx.ConsumeEvent;
+
+import javax.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped                          <i class="conum" data-value="1"></i><b>(1)</b>
+public class GreetingService {
+
+    @ConsumeEvent("greetings")              <i class="conum" data-value="2"></i><b>(2)</b>
+    public String hello(String name) {      <i class="conum" data-value="3"></i><b>(3)</b>
+        return "Hello " + name;             <i class="conum" data-value="4"></i><b>(4)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Declaring a CDI Bean in the Application scope. Quarkus will create a single instance of this class.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Use the <code>@ConsumeEvent</code> annotation to declare a consumer. It is possible to use the Vert.x API <a href="https://vertx.io/docs/vertx-core/java/#_acknowledging_messages_sending_replies">directly</a> too.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Receive the message payload as a method parameter. The returned object will be the reply.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Return the response. This response is sent back to the <code>VertxResource</code> class</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>让我们试试这个。
+在终端中，运行以下命令:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">&gt; curl "http://localhost:8080/vertx/hello?name=bob"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>你应该会收到预期的 <code>Hello bob</code> 消息。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="using-vert-x-clients"><a class="anchor" href="#using-vert-x-clients"></a>使用Vert.x客户端</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>到目前为止，我们已经使用了 Vert.x 核心 API。 Vert.x 提供的不仅仅是这些。它提供了一个广阔的生态系统。在本节中，我们将会带你了解如何使用 Vert.x Web 客户端 - 一个响应式 HTTP 客户端。</p>
+</div>
+<div class="paragraph">
+<p>注意，部分 Quarkus 扩展正在封装 Vert.x 客户端并为您管理它们。如响应式数据源、Redis、邮件等&#8230;&#8203;  但Web 客户端，并不在此行列之内。</p>
+</div>
+<div class="paragraph">
+<p>请记住，在本指南的开头，我们将 <code>smallrye-mutiny-vertx-web-client</code> 作为依赖项添加到了我们的 pom.xml 文件中。现在，是时候使用它了。</p>
+</div>
+<div class="paragraph">
+<p>First, add the following imports to the <code>src/main/java/org/acme/VertxResource.java</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.vertx.core.json.JsonArray;
+import io.vertx.mutiny.ext.web.client.HttpResponse;
+import io.vertx.mutiny.ext.web.client.WebClient;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, we need to create an instance of <code>WebClient</code>.
+Extend the <code>VertxResource</code> class with the <code>client</code> field and the creation of the web client in the constructor:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">private final Vertx vertx;
+private final WebClient client;            <i class="conum" data-value="1"></i><b>(1)</b>
+
+@Inject
+public VertxResource(Vertx vertx) {
+    this.vertx = vertx;
+    this.client = WebClient.create(vertx); <i class="conum" data-value="2"></i><b>(2)</b>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Store the <code>WebClient</code>, so we will be able to use it in our HTTP endpoint</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Create the <code>WebClient</code>. Be sure to use the <code>io.vertx.mutiny.ext.web.client.WebClient</code> class</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>现在，让我们实现一个新的 HTTP 端点，它通过查询 Wikipedia API 以检索不同语言有关 Quarkus 的页面。
+将以下方法添加到 <code>VertxResource</code> 类中:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">private static final String URL = "https://en.wikipedia.org/w/api.php?action=parse&amp;page=Quarkus&amp;format=json&amp;prop=langlinks";
+
+@GET
+@Path("/web")
+public Uni&lt;JsonArray&gt; retrieveDataFromWikipedia() {                     <i class="conum" data-value="1"></i><b>(1)</b>
+    return client.getAbs(URL).send()                                    <i class="conum" data-value="2"></i><b>(2)</b>
+            .onItem().transform(HttpResponse::bodyAsJsonObject)         <i class="conum" data-value="3"></i><b>(3)</b>
+            .onItem().transform(json -&gt; json.getJsonObject("parse")     <i class="conum" data-value="4"></i><b>(4)</b>
+                                        .getJsonArray("langlinks"));
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>This endpoint returns a JSON Array. Vert.x provides a convenient way to manipulate JSON Object and Array. More details about these in <a href="vertx-reference#using-vert-x-json">the reference guide</a>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Send a <code>GET</code> request to the Wikipedia API</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Once the response is received, extract it as a JSON Object</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Extract the <code>langlinks</code> array from the response.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>接着，使用以下命令请求该端点:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">&gt; curl http://localhost:8080/vertx/web
+[{"lang":"de","url":"https://de.wikipedia.org/wiki/Quarkus","langname":"German","autonym":"Deutsch","*":"Quarkus"},{"lang":"fr","url":"https://fr.wikipedia.org/wiki/Quarkus","langname":"French","autonym":"français","*":"Quarkus"}]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>该响应表明，除了英文页面，维基百科上还有关于 Quarkus 的德文和法文页面。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="going-further"><a class="anchor" href="#going-further"></a>进一步探索</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>本指南介绍了如何在 Quarkus 应用程序中使用 Vert.x API。这只是一个简短的概述。如果你想了解更多信息，请查看 <a href="vertx-reference">Quarkus 中有关 Vert.x 的参考指南</a>。</p>
+</div>
+<div class="paragraph">
+<p>正如我们所见，事件总线是 Vert.x 应用程序之间的连接桥梁。 Quarkus 集成了它，因此不同的bean之间能够以异步消息的方式进行交互。这部分内容包含在 <a href="reactive-event-bus">事件总线文档</a> 中。</p>
+</div>
+<div class="paragraph">
+<p>Learn how to implement highly performant, low-overhead database applications on Quarkus with the <a href="reactive-sql-clients">Reactive SQL Clients</a>.</p>
+</div>
+</div>
+</div>
+    </div>
+    <div class="grid__item width-4-12 width-12-12-m tocwrapper">
+      <div class="hide-mobile toc"><ul class="sectlevel1">
+<li><a href="#architecture">应用结构</a></li>
+<li><a href="#solution">解决方案</a></li>
+<li><a href="#bootstrapping-the-application">引导启动该应用程序</a></li>
+<li><a href="#accessing-the-managed-vert-x-instance">访问被管理的Vert.x实例</a></li>
+<li><a href="#using-vert-x-core-api">使用Vert.x核心API</a></li>
+<li><a href="#using-vert-x-stream-capability">使用Vert.x流的功能</a></li>
+<li><a href="#using-the-event-bus">使用事件总线</a></li>
+<li><a href="#using-vert-x-clients">使用Vert.x客户端</a></li>
+<li><a href="#going-further">进一步探索</a></li>
+</ul></div>
+    </div>
+  </div>
+  </div>
+
+  </div>
+
+  <div class="content project-footer">
+  <div class="footer-section">
+    <div class="logo-wrapper">
+      <a href="/"><img src="/assets/images/quarkus_logo_horizontal_rgb_reverse.svg" class="project-logo" title="Quarkus"></a>
+    </div>
+  </div>
+  <div class="grid-wrapper">
+    <p class="grid__item width-3-12">Quarkus is open. All dependencies of this project are available under the <a href='https://www.apache.org/licenses/LICENSE-2.0' target='_blank'>Apache Software License 2.0</a> or compatible license.<br /><br />This website was built with <a href='https://jekyllrb.com/' target='_blank'>Jekyll</a>, is hosted on <a href='https://pages.github.com/' target='_blank'>GitHub Pages</a> and is completely open source. If you want to make it better, <a href='https://github.com/quarkusio/quarkusio.github.io' target='_blank'>fork the website</a> and show us what you’ve got.</p>
+
+    
+      <div class="width-1-12 project-links">
+        <span>Navigation</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="/" target="_blank">Home</a></li>
+          
+          
+          
+            <li><a href="/about" target="_blank">About</a></li>
+          
+          
+          
+            <li><a href="/blog" target="_blank">博客</a></li>
+          
+          
+          
+            <li><a href="/insights" target="_blank">Podcast</a></li>
+          
+          
+          
+            <li><a href="/events" target="_blank">活动</a></li>
+          
+          
+          
+            <li><a href="/newsletter" target="_blank">新闻</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
+          
+          
+          
+            <li><a href="https://github.com/orgs/quarkusio/projects/13/views/1" target="_blank">路线图</a></li>
+          
+          
+          
+            <li><a href="/security" target="_blank">Security&nbsp;policy</a></li>
+          
+          
+          
+            <li><a href="/usage" target="_blank">Usage</a></li>
+          
+          
+          
+            <li><a href="/brand" target="_blank">Brand</a></li>
+          
+          
+          
+            <li><a href="/desktopwallpapers" target="_blank">Wallpapers</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-1-12 project-links">
+        <span>Follow Us</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="https://x.com/quarkusio" target="_blank">X</a></li>
+          
+          
+          
+            <li><a href="https://bsky.app/profile/quarkus.io" target="_blank">Bluesky</a></li>
+          
+          
+          
+            <li><a rel="me" href="https://fosstodon.org/@quarkusio" target="_blank">Mastodon</a></li>
+            
+          
+          
+            <li><a href="https://www.facebook.com/quarkusio" target="_blank">Facebook</a></li>
+          
+          
+          
+            <li><a href="https://www.linkedin.com/company/quarkusio/" target="_blank">Linkedin</a></li>
+          
+          
+          
+            <li><a href="https://www.youtube.com/channel/UCaW8QG_QoIk_FnjLgr5eOqg" target="_blank">Youtube</a></li>
+          
+          
+          
+            <li><a href="https://github.com/quarkusio" target="_blank">GitHub</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-2-12 project-links">
+        <span>Get Help</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="/support" target="_blank">Support</a></li>
+          
+          
+          
+            <li><a href="/guides" target="_blank">Guides</a></li>
+          
+          
+          
+            <li><a href="/faq" target="_blank">FAQ</a></li>
+          
+          
+          
+            <li><a href="/get-started" target="_blank">开始体验</a></li>
+          
+          
+          
+            <li><a href="https://stackoverflow.com/questions/tagged/quarkus" target="_blank">Stack Overflow</a></li>
+          
+          
+          
+            <li><a href="https://github.com/quarkusio/quarkus/discussions" target="_blank">Discussions</a></li>
+          
+          
+          
+            <li><a href="https://groups.google.com/forum/#!forum/quarkus-dev" target="_blank">Development mailing list</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-1-12 project-links">
+        <span>Languages</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="https://quarkus.io/" target="_blank">English</a></li>
+          
+          
+          
+            <li><a href="https://pt.quarkus.io/" target="_blank">Português&nbsp;(Brasileiro)</a></li>
+          
+          
+          
+            <li><a href="https://es.quarkus.io/" target="_blank">Español</a></li>
+          
+          
+          
+            <li><a href="https://cn.quarkus.io/" target="_blank">简体中文</a></li>
+          
+          
+          
+            <li><a href="https://ja.quarkus.io/" target="_blank">日本語</a></li>
+          
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="width-4-12 more-links">
+        <span>Quarkus is made of community projects</span>
+        <ul class="footer-links">
+          
+            <li><a blah href="https://vertx.io/" target="_blank">Eclipse Vert.x</a></li>
+          
+            <li><a blah href="https://smallrye.io" target="_blank">SmallRye</a></li>
+          
+            <li><a blah href="https://hibernate.org" target="_blank">Hibernate</a></li>
+          
+            <li><a blah href="https://netty.io" target="_blank">Netty</a></li>
+          
+            <li><a blah href="https://resteasy.github.io" target="_blank">RESTEasy</a></li>
+          
+            <li><a blah href="https://camel.apache.org" target="_blank">Apache Camel</a></li>
+          
+            <li><a blah href="https://microprofile.io" target="_blank">Eclipse MicroProfile</a></li>
+          
+            <li><a blah href="https://code.quarkus.io/" target="_blank">And many more...</a></li>
+          
+        </ul>
+      </div>
+    
+  </div>
+</div>
+
+  <div class="content redhat-footer">
+  <div class="grid-wrapper">
+    <span class="licence">
+      <i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i> <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank">CC by 3.0</a> | <a href="https://www.redhat.com/en/about/privacy-policy">Privacy Policy</a>
+    </span>
+    <span class="redhat">
+      Sponsored by
+    </span>
+    <span class="redhat-logo">
+      <a href="https://www.redhat.com/" target="_blank"><img src="/assets/images/redhat_reversed.svg"></a>
+    </span>
+  </div>
+</div>
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha384-8gBf6Y4YYq7Jx97PIqmTwLPin4hxIzQw5aDmUg/DDhul9fFpbbLcLh3nTIIDJKhx" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="/assets/javascript/mobile-nav.js"></script>
+  <script type="text/javascript" src="/assets/javascript/scroll-down.js"></script>
+  <script src="/assets/javascript/satellite.js" type="text/javascript"></script>
+  <script src="/guides/javascript/config.js" type="text/javascript"></script>
+  <script src="/assets/javascript/guides-version-dropdown.js" type="text/javascript"></script>
+  <script src="/assets/javascript/back-to-top.js" type="text/javascript"></script>
+  <script src="/assets/javascript/clipboard.min.js" type="text/javascript"></script>
+  <script src="/assets/javascript/copy.js" type="text/javascript"></script>
+  <script src="/assets/javascript/asciidoc-tabs.js" type="text/javascript"></script>
+  <script src="/assets/javascript/future-date.js" type="text/javascript"></script>
+</body>
+
+</html>

@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="cn">
+
+
+
+
+
+
+
+<head>
+  <title>Quarkus Security overview - 2.16 - Quarkus</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
+  script-src 'self' 'unsafe-inline' 'unsafe-eval'
+      
+      https://assets.adobedtm.com
+      js.bizographics.com
+      https://www.redhat.com
+      https://static.redhat.com
+      https://app.requestly.io/
+      jsonip.com
+      https://ajax.googleapis.com
+      https://use.fontawesome.com
+      http://www.youtube.com
+      http://www.googleadservices.com
+      https://googleads.g.doubleclick.net
+      https://giscus.app
+      https://analytics.ossupstream.org/
+      https://app.mailjet.com;
+
+  style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
+  img-src 'self' * data:; 
+  media-src 'self'; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  base-uri 'none'; 
+  object-src 'none'; 
+  form-action 'none'; 
+  font-src 'self' https://use.fontawesome.com https://fonts.gstatic.com;" />
+  <script id="adobe_dtm" src="https://www.redhat.com/dtm.js" type="text/javascript"></script>
+  <script src="/assets/javascript/highlight.pack.js" type="text/javascript"></script>
+  <META HTTP-EQUIV='X-XSS-Protection' CONTENT="1; mode=block">
+  <META HTTP-EQUIV='X-Content-Type-Options' CONTENT="nosniff">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Quarkus: Supersonic Subatomic Java">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@QuarkusIO"> 
+  <meta name="twitter:creator" content="@QuarkusIO">
+  <meta property="og:url" content="https://quarkus.io/version/2.16/guides/security-overview-concept" />
+  <meta property="og:title" content="Quarkus Security overview - 2.16" />
+  <meta property="og:description" content="Quarkus: Supersonic Subatomic Java" />
+  <meta property="og:image" content="https://quarkus.io/assets/images/quarkus_card.png" />
+  
+  <link rel="canonical" href="https://quarkus.io/guides/security-overview-concept">
+  <link rel="shortcut icon" type="image/png" href="/favicon.ico" >
+  <link rel="stylesheet" href="/guides/stylesheet/config.css" />
+  <link rel="stylesheet" href="/assets/css/main.css?2021-07-29" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.2/css/all.css" crossorigin="anonymous">
+  <link rel="alternate" type="application/rss+xml"  href="/feed.xml" title="Quarkus">
+  <script src="/assets/javascript/hl.js" type="text/javascript"></script>
+  
+  
+  
+  
+  <link rel="alternate" hreflang="en" href="https://quarkus.io/version/2.16/guides/security-overview-concept" />
+  
+  <link rel="alternate" hreflang="pt-br" href="https://pt.quarkus.io/version/2.16/guides/security-overview-concept" />
+  
+  <link rel="alternate" hreflang="es" href="https://es.quarkus.io/version/2.16/guides/security-overview-concept" />
+  
+  <link rel="alternate" hreflang="zh" href="https://cn.quarkus.io/version/2.16/guides/security-overview-concept" />
+  
+  <link rel="alternate" hreflang="ja" href="https://ja.quarkus.io/version/2.16/guides/security-overview-concept" />
+  
+  <link rel="alternate" hreflang="x-default" href="https://quarkus.io/" />  
+  <script src="/assets/javascript/tracking.js"></script>
+  
+  <script src="/assets/javascript/colormode.js" type="text/javascript"></script>
+
+</head>
+
+<body class="guides">
+
+  
+
+
+<div class="grid-wrapper communitysite">
+  <div class="grid__item width-12-12">The <a href="https://quarkus.io/version/2.16/guides/security-overview-concept">English version of quarkus.io</a> is the official project site. Translated sites are community supported on a best-effort basis.</div>
+</div>
+
+
+  <div class="nav-wrapper">
+  <div class="grid-wrapper">
+    <div class="width-12-12">
+      <input type="checkbox" id="checkbox" />
+      <nav id="main-nav" class="main-nav">
+        <div class="logo-wrapper">
+           <a href="/"><img src="/assets/images/quarkus_logo_horizontal_rgb_600px_reverse.png" class="project-logo" title="Quarkus"></a>
+        </div>
+    <label class="nav-toggle" for="checkbox"> <i class="fa fa-bars"></i>
+</label>
+    <ul id="menu" class="menu">
+      <li class="dropdown">
+        <span href="/about/">Why<i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/about" class="">QUARKUS是什么？</a></li>
+          <li><a href="/developer-joy" class="">开发者的乐趣 </a></li>
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES 原生</a></li>
+          <li><a href="/standards" class="">标准</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">容器优先 </a></li>          
+        </ul>
+      </li>
+      <li class="dropdown">
+        <span href="/learn/">学习 <i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/get-started" class="">入门</a></li>
+          <li><a href="/guides" class="active" >指南</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
+          <li><a href="/qtips" class="">"Q" TIP视频</a></li>          
+          <li><a href="/books" class="">书籍</a></li>
+          </ul>
+      </li>
+      <li class="dropdown">
+        <span href="https://quarkus.io/extensions/">扩展<i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          
+          <!-- Note that quarkus.io is hardcoded here, because it is the only url which supports extensions -->
+<li><a href="https://quarkus.io/extensions/" class="">浏览扩展</a></li>
+          <li><a href="/faq/#what-is-a-quarkus-extension" class="">使用扩展</a></li>
+          <li><a href="/guides/writing-extensions" class="" >创建扩展</a></li>
+          <li><a href="https://hub.quarkiverse.io" class="">SHARE EXTENSIONS</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <span href="/community/">社区 <i class="fas
+fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="/support/" class="">支持</a></li>
+          <li><a href="/blog" class="" >博客</a></li>
+          <li><a href="/discussion" class="">讨论</a></li>
+          <li><a href="/working-groups" class="">WORKING GROUPS</a></li>
+          <li><a href="/insights" class="" >播客</a></li>
+          <li><a href="/events" class="">活动</a></li>
+          <li><a href="/newsletter" class="">新闻</a></li>
+          <li><a href="https://github.com/orgs/quarkusio/projects/13/views/1" class="">路线图</a></li>
+          </ul>
+      </li>
+      <li>
+        <a href="https://code.quarkus.io" class="button-cta secondary
+white">开始编码</a>
+      </li>
+      <li class="dropdown">
+        <span href="/language/"><div class="fas fa-globe langicon"></div><i class="fas fa-chevron-down"></i></span>
+        <ul class="submenu">
+          <li><a href="https://quarkus.io/version/2.16/guides/security-overview-concept" >OFFICIAL (ENGLISH)</a></li>
+          <li><a href="https://pt.quarkus.io/version/2.16/guides/security-overview-concept">PORTUGUÊS (BR)</a></li>
+          <li><a href="https://es.quarkus.io/version/2.16/guides/security-overview-concept">ESPAÑOL</a></li>
+          <li><a href="https://cn.quarkus.io/version/2.16/guides/security-overview-concept">简体中文</a></li>
+          <li><a href="https://ja.quarkus.io/version/2.16/guides/security-overview-concept">日本語</a></li>
+          </ul>
+      </li>
+      <li>
+        <span href="#" class="modeswitcher" id='theme-toggle'><i class="fas
+fa-sun"></i><i class="fas fa-moon"></i><i class="fas fa-cog"></i></span>
+      </li>
+    </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+  <div class="content">
+    
+
+
+
+
+
+<section class="full-width-version-bg flexfilterbar guides">
+  <div class="guideflexcontainer">
+    <div class="docslink">
+      <a class="returnlink" href="/version/2.16/guides/">返回指南目录</a>
+    </div>
+    <div class="flexlabel">
+      <label>选择指南版本</label>
+    </div>
+    <div class="guidepulldown version">
+    <select id="guide-version-dropdown">
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <option value="2.16" selected>2.16</option>
+        
+        
+        
+        </select>
+    </div>
+  </div>
+</section>
+
+<div class="guide">
+  <div class="grid-wrapper">
+    <div class="grid__item width-8-12 width-12-12-m">
+      <h1 class="text-caps">Quarkus Security overview </h1>
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Quarkus Security是一个框架，它提供了架构、多种认证和授权机制以及其他工具，用来为开发者提供构建达到生产级别安全性质量保证的Quarkus应用程序。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="getting-started-with-quarkus-security"><a class="anchor" href="#getting-started-with-quarkus-security"></a>开始使用Quarkus Security</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>在您开始在您的Quarkus应用程序中建立安全机制之前，请回顾一下概述信息，了解Quarkus Security架构以及Quarkus支持的不同认证和授权机制。</p>
+</div>
+<div class="paragraph">
+<p>To get started with security in Quarkus, we recommend that you first combine the Quarkus built-in <a href="security-basic-authentication-concept">Basic HTTP authentication</a> with the JPA identity provider to enable role-based access control (RBAC).
+Complete the steps in the <a href="security-basic-authentication-tutorial">Secure a Quarkus application with Basic authentication</a> tutorial.
+After you have successfully secured your Quarkus application with basic HTTP authentication, you can increase the security further by adding more advanced authentication mechanisms, for example, OpenID Connect (OIDC) authentication.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="security-architecture"><a class="anchor" href="#security-architecture"></a>安全架构</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>HttpAuthenticationMechanism</code> 接口是Quarkus 保护HTTP 程序安全的主要入口机制。</p>
+</div>
+<div class="paragraph">
+<p>Quarkus Security使用 <code>HttpAuthenticationMechanism</code> 从HTTP请求中提取认证凭证，并委托给 <code>IdentityProvider</code> 来完成这些凭证到 <code>SecurityIdentity</code> 的转换。例如，凭证可能来自于HTTP <code>Authorization</code> 头、客户端HTTPS证书或cookies。</p>
+</div>
+<div class="paragraph">
+<p><code>IdentityProvider</code> 会验证认证凭证并将其映射到 <code>SecurityIdentity</code> ，其中包含用户名、角色、原始认证凭证和其他属性。</p>
+</div>
+<div class="paragraph">
+<p>对于每个认证资源，您可以注入一个 <code>SecurityIdentity</code> 实例来获得认证的身份信息。</p>
+</div>
+<div class="paragraph">
+<p>在其他一些情况下，您可能有相同信息或部分相同信息的其他不同表示，如JAX-RS的 <code>SecurityContext</code> ，或JWT的 <code>JsonWebToken</code> 。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="authentication-mechanisms"><a class="anchor" href="#authentication-mechanisms"></a>认证机制</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Quarkus supports multiple authentication mechanisms</p>
+</div>
+<div class="sect2">
+<h3 id="basic-and-form-http-authentication"><a class="anchor" href="#basic-and-form-http-authentication"></a>Basic and Form HTTP authentication</h3>
+<div class="paragraph">
+<p><a href="security-basic-authentication-concept">Basic HTTP Authentication</a> and <a href="security-built-in-authentication-support-concept#form-auth">Form HTTP authentication</a> are the core authentication mechanisms supported in Quarkus.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="webauthn-authentication"><a class="anchor" href="#webauthn-authentication"></a>WebAuthn认证机制</h3>
+<div class="paragraph">
+<p><a href="https://webauthn.guide/">WebAuthn</a> 是一种旨在取代密码的认证机制。简而言之，每当您写一个注册新用户或提供登录的服务，您就可以使用WebAuthn来代替使用密码的方式。更多信息，请参阅 <a href="security-webauthn.html">使用WebAuthn 认证机制保护 Quarkus 应用程序</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="mutual-tls-mtls-authentication"><a class="anchor" href="#mutual-tls-mtls-authentication"></a>TLS互认证</h3>
+<div class="paragraph">
+<p>Quarkus provides mutual TLS (mTLS) authentication so that you can authenticate users based on their X.509 certificates.
+For more information, see <a href="security-built-in-authentication-support-concept#mutual-tls">mutual TLS authentication</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="openid-connect-authentication"><a class="anchor" href="#openid-connect-authentication"></a>OpenID Connect authentication</h3>
+<div class="paragraph">
+<p>OpenID Connect（OIDC）是一个身份层，它工作在OAuth 2.0协议之上。OIDC使客户端应用程序能够根据OIDC提供者进行的认证来验证用户的身份，并获取用户的基本信息。</p>
+</div>
+<div class="paragraph">
+<p><code>quarkus-oidc</code> 扩展提供了一个响应式的、可互操作的、支持多租户的OIDC适配器，以支持 <code>Bearer Token</code> 和 <code>Authorization Code Flow</code> 认证机制。<code>Bearer Token</code> 机制从HTTP header中提取token。 <code>Authorization Code Flow</code> 机制将用户重定向到OIDC提供者来认证用户身份，并在用户被重定向回Quarkus后，通过将提供的代码授权与ID、访问和刷新token进行交换来完成认证过程。</p>
+</div>
+<div class="paragraph">
+<p>您可以使用可刷新的 <code>JWK</code> 密钥集验证ID和访问 <code>JWT</code> token。但JWT和不透明（二进制）token都可以被远程自省(introspect)。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>通过 <code>Quarkus OIDC</code> 扩展， <code>Bearer</code> 和 <code>Authorization Code Flow</code> 认证机制都使用 <a href="#smallrye-jwt">SmallRye JWT</a> 来将Microprofile JWT <code>org.eclipse.microprofile.jwt.JsonWebToken</code> 表示为JWTtoken。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="additional-quarkus-resources-for-oidc-authentication"><a class="anchor" href="#additional-quarkus-resources-for-oidc-authentication"></a>用于OIDC认证的其他Quarkus资源</h4>
+<div class="paragraph">
+<p>关于可以应用于保护Quarkus程序的OIDC认证和授权的更多方式，请看以下更详细的资源：</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">OIDC topic</th>
+<th class="tableblock halign-left valign-top">Quarkus information resource</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bearer Token authentication mechanism</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">关于Bearer Token认证机制的信息，请参见 <a href="security-openid-connect.html">使用OpenID Connect保护应用程序服务</a> 。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Authorization Code Flow authentication mechanism</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="security-openid-connect-web-authentication">OpenID Connect (OIDC) authorization code flow mechanism</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Multiple tenants that can support Bearer Token or Authorization Code Flow mechanisms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="security-openid-connect-multitenancy.html">使用OpenID连接（OIDC）多租户</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">使用Keycloak进行集中授权</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="security-keycloak-authorization.html">使用OpenID连接（OIDC）和Keycloak来集中授权</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">以编程方式配置Keycloak</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="security-keycloak-admin-client">Using the Keycloak admin client</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>如果您想在运行时启用Quarkus OIDC扩展，那么在构建时设置 <code>quarkus.oidc.tenant-enabled=false</code> ，并在运行时使用系统属性重新启用它。更多关于管理多租户OIDC部署中各个租户配置的信息，请参见 <a href="security-openid-connect-multitenancy.html#disable-tenant">禁用租户配置</a> 。</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="openid-connect-client-and-filters"><a class="anchor" href="#openid-connect-client-and-filters"></a>OpenID Connect client and filters</h3>
+<div class="paragraph">
+<p>The <code>quarkus-oidc-client</code> extension provides <code>OidcClient</code> for acquiring and refreshing access tokens from OpenID Connect and OAuth2 providers that support the following token grants:
+* <code>client-credentials</code>
+* <code>password</code>
+* <code>refresh_token</code></p>
+</div>
+<div class="paragraph">
+<p><code>quarkus-oidc-client-filter</code> 扩展依赖于 <code>quarkus-oidc-client</code> 扩展，并提供 JAX-RS <code>OidcClientRequestFilter</code> ，它将由 <code>OidcClient</code> 获得的访问token设置为 HTTP <code>Authorization</code> 头的 <code>Bearer</code> scheme值。这个过滤器可以与注入当前 Quarkus 节点的 MP RestClient 实现一起被注册，但它与这个服务节点的认证要求无关。例如，它可以是一个公共节点，也可以用mTLS保护。</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>在这种情况下，您不需要通过使用Quarkus OpenID Connect适配器来保护您的Quarkus节点。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><code>quarkus-oidc-token-propagation</code> 扩展依赖于 <code>quarkus-oidc</code> 扩展，并提供 JAX-RS  <code>TokenCredentialRequestFilter</code> ，它将 OpenID Connect Bearer 或 Authorization Code Flow 访问token设置为 HTTP <code>Authorization</code> 头的 <code>Bearer</code> scheme值。这个过滤器可以与注入当前 Quarkus 节点的 MP RestClient 实现一起被注册，并且Quarkus节点本身必须用Quarkus OpenID Connect适配器来保护。这个过滤器可以用来将访问token传播到下游服务中。</p>
+</div>
+<div class="paragraph">
+<p>更多信息请参见《 <a href="security-openid-connect-client.html">使用OpenID Connect客户端和token传递quickstart</a> 》和 《 link:security-openid-connect-client-reference.htmlOpenID Connect (OIDC) 和 OAuth2 客户端以及过滤器参考] 》指南。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="smallrye-jwt"><a class="anchor" href="#smallrye-jwt"></a>SmallRye JWT authentication</h3>
+<div class="paragraph">
+<p><code>quarkus-smallrye-jwt</code> 提供Microprofile JWT 1.2.1的实现和更多的选项来验证签名和加密的 <code>JWT</code> token，并将其表示为 <code>org.eclipse.microprofile.jwt.JsonWebToken</code>。</p>
+</div>
+<div class="paragraph">
+<p><code>quarkus-smallrye-jwt</code> 提供了一个替代 <code>quarkus-oidc</code> Bearer Token认证机制的方法，并且目前只能验证使用PEM密钥或可刷新的 <code>JWK</code> 密钥集的 <code>JWT</code> token。此外，<code>quarkus-smallrye-jwt</code> 还提供了 JWT generation API`，以便轻松创建 <code>signed</code> 、 <code>inner-signed</code> 和 <code>encrypted</code> <code>JWT</code> token。</p>
+</div>
+<div class="paragraph">
+<p>更多信息请参见《 <a href="security-jwt.html">使用SmallRye JWT RBAC</a> 》指南。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="oauth2-authentication"><a class="anchor" href="#oauth2-authentication"></a>OAuth2 认证机制</h3>
+<div class="paragraph">
+<p><code>quarkus-elytron-security-oauth2</code> 提供了一个替代 <code>quarkus-oidc</code> Bearer Token认证机制的方法。它基于 <code>Elytron</code> 并且主要是为了对不透明的token进行远程自我检查。更多信息请参见 <a href="security-oauth2.html">使用OAuth2</a> 指南。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="oidc-jwt-oauth2-comparison"><a class="anchor" href="#oidc-jwt-oauth2-comparison"></a>在OpenID Connect、SmallRye JWT和OAuth2扩展之间做出选择</h3>
+<div class="paragraph">
+<p>使用以下信息来帮助您决定使用哪种认证机制来保护您的Quarkus应用程序：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>quarkus-oidc</code> 扩展需要一个OpenID Connect提供者，如Keycloak，用以验证Bearer tokens或用Authorization Code flow验证终端用户。在这两种情况下 <code>quarkus-oidc</code> 需要连接到这个OpenID Connect提供者。</p>
+</li>
+<li>
+<p>如果用户认证需要是使用Authorization Code flow或者您需要支持多租户，请使用 <code>quarkus-oidc</code> 。 <code>quarkus-oidc</code> 也可以通过Authorization Code Flow 和 Bearer access tokens来请求用户信息。</p>
+</li>
+<li>
+<p>当需要验证Bearer tokens时，您可以使用 <code>quarkus-oidc</code> , <code>quarkus-smallrye-jwt</code> 和 <code>quarkus-elytron-security-oauth2</code> 。</p>
+</li>
+<li>
+<p>如果您有JWT格式的 Bearer tokens，那么这三个扩展都可以使用。 <code>quarkus-oidc</code> 和 <code>quarkus-smallrye-jwt</code> 都支持在OpenID Connect提供者旋转密钥时刷新JsonWebKey（JWK）集，因此，如果必须避免远程token自查或提供者不支持，则应使用 <code>quarkus-oidc</code> 或 <code>quarkus-smallrye-jwt</code> 来验证JWTtoken。</p>
+</li>
+<li>
+<p>如果您需要进行JWT tokens远程自查，您可以使用 <code>quarkus-oidc</code> 或 <code>quarkus-elytron-security-oauth2</code> ，因为它们支持通过使用远程自查来验证不透明或二进制token。 <code>quarkus-smallrye-jwt</code> 不支持对不透明或JWT token进行远程自查，而是依赖于通常从OpenID Connect提供者那里检索的本地可用密钥。</p>
+</li>
+<li>
+<p><code>quarkus-oidc</code> 和 <code>quarkus-smallrye-jwt</code> 支持将JWT和不透明的token都注入到节点代码中。注入的JWT token可以提供更丰富的用户信息。所有的扩展都可以将 token 以 <code>Principal</code> 的形式注入。</p>
+</li>
+<li>
+<p><code>quarkus-smallrye-jwt</code> 比 <code>quarkus-oidc</code> 支持更多的密钥格式。后者只使用属于JWK集的JWK格式的密钥，反之前者还支持PEM密钥。</p>
+</li>
+<li>
+<p><code>quarkus-smallrye-jwt</code> 不仅可以在本地处理有签名的 token ，而且还可以处理内部签名并加密(inner-signed-and-encrypted)和单纯加密的 token 。事实上， <code>quarkus-oidc</code> 和 <code>quarkus-elytron-security-oauth2</code> 也可以验证这样的 token ，但只能把它们当作不透明的 token ，并通过远程自查来验证。</p>
+</li>
+<li>
+<p>如果您需要一个轻量级的库来进行不透明或JWT token 的远程自查，请使用 <code>quarkus-elytron-security-oauth2</code> 。</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>请注意，选择使用不透明 token 还是JWT token 格式通常是由架构考虑驱动的。不透明 token 通常比JWT token 短得多，但它们需要在提供者的数据库中维护大部分的 token 相关状态。不透明 token 实际上就是数据库指针。JWT token 比不透明 token 要长得多，但提供者通过将大部分 token 相关状态存储为 token 声明并对其进行签名或加密从而有效地将其委托给客户端。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>下表提供了每种认证机制的选项摘要：</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"></th>
+<th class="tableblock halign-left valign-top">quarkus-oidc</th>
+<th class="tableblock halign-left valign-top">quarkus-smallrye-jwt</th>
+<th class="tableblock halign-left valign-top">quarkus-elytron-security-oauth2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">需要进行Bearer JWT验证</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">本地验证或自查</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">本地验证</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">自查</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">需要进行不透明Bearer token验证</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">自查</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">不</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">自查</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">刷新 <code>JsonWebKey</code> 集以验证JWT tokens</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">是</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">是</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">不</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represent token as <code>Principal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">是</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">是</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">是</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">将JWT注入为MP Json Web Token（JWT）</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">是</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">是</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">不</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Authorization Code Flow</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">是</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">不</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">不</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">多租户</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">是</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">不</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">不</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">支持UserInfo</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">是</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">不</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">不</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">支持Pem密钥格式</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">不</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">是</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">不</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">支持SecretKey</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">不</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">以JsonWebKey (JWK) 格式</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">不</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Inner-Signed/Encrypted 或 Encrypted tokens</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">自查</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">本地验证</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">自查</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">自定义token验证</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">不</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">使用注入的JWT Parser</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">不</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">接受JWT作为cookie</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">不</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">是</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">不</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="identity-providers"><a class="anchor" href="#identity-providers"></a>身份提供者（Identity Providers）</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>JPA <code>IdentityProvider</code> 创建了一个 <code>SecurityIdentity</code> 实例，在用户认证过程中，它被用来验证和授权访问请求以保证您的Quarkus应用程序安全。</p>
+</div>
+<div class="paragraph">
+<p><code>IdentityProvider</code> 将 <code>HttpAuthenticationMechanism</code> 提供的认证凭证转换为 <code>SecurityIdentity</code> 实例。</p>
+</div>
+<div class="paragraph">
+<p>一些扩展如 <code>OIDC</code> 、 <code>OAuth2</code> 以及 <code>SmallRye JWT</code> 有内联的 <code>IdentityProvider</code> 实现来针对支持的认证流程的。例如， <code>quarkus-oidc</code> 使用它自己的 <code>IdentityProvider</code> 来将token转换为 <code>SecurityIdentity</code> 实例。</p>
+</div>
+<div class="paragraph">
+<p>如果您使用基于 <code>Basic</code> 或 <code>Form</code> HTTP的认证，那么您必须添加一个 <code>IdentityProvider</code> 实例，它可以将用户名和密码转换成 <code>SecurityIdentity</code> 实例。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>关于基于 <code>Basic</code> 或 <code>Form</code> HTTP的认证的更多信息，请参阅一下资料：</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="security-basic-authentication-tutorial">Secure a Quarkus application with Basic authentication</a></p>
+</li>
+<li>
+<p><a href="security-jdbc">Using security with JDBC</a></p>
+</li>
+<li>
+<p><a href="security-ldap">Using security with an LDAP realm</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="authorization"><a class="anchor" href="#authorization"></a>授权</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Quarkus also supports role-based access control (RBAC).
+For more information about RBAC and other authorization options in Quarkus, see <a href="security-authorize-web-endpoints-reference">Security authorization</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="quarkus-security-customization"><a class="anchor" href="#quarkus-security-customization"></a>Quarkus Security customization</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Quarkus Security是高度可定制的。您可以定制Quarkus的以下核心安全组件：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>HttpAuthenticationMechanism</code></p>
+</li>
+<li>
+<p><code>IdentityProvider</code></p>
+</li>
+<li>
+<p><code>SecurityidentityAugmentor</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>关于定制Quarkus Security包括响应式Security的更多信息，以及如何注册一个安全提供者，请参见 <a href="security-customization.html">安全定制</a> 。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="combining-authentication-mechanisms"><a class="anchor" href="#combining-authentication-mechanisms"></a>组合认证机制</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>如果用户证书是由不同的来源提供的，您可以使用组合认证机制。例如，您可以结合内置的 <code>Basic</code> 和 <code>quarkus-oidc</code> <code>Bearer</code> 认证机制。</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>但结合 <code>quarkus-oidc</code> <code>Bearer</code> 和 <code>smallrye-jwt</code> 认证机制是不允许的，因为两者都试图验证从HTTP <code>Authorization Bearer</code> scheme中提取的token。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="path-specific-authentication-mechanisms"><a class="anchor" href="#path-specific-authentication-mechanisms"></a>特定路径认证机制</h3>
+<div class="paragraph">
+<p>以下配置示例演示了如何强制要求对一个给定的请求路径选择一个认证机制：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.http.auth.permission.basic-or-bearer.paths=/service
+quarkus.http.auth.permission.basic-or-bearer.policy=authenticated
+
+quarkus.http.auth.permission.basic.paths=/basic-only
+quarkus.http.auth.permission.basic.policy=authenticated
+quarkus.http.auth.permission.basic.auth-mechanism=basic
+
+quarkus.http.auth.permission.bearer.paths=/bearer-only
+quarkus.http.auth.permission.bearer.policy=authenticated
+quarkus.http.auth.permission.bearer.auth-mechanism=bearer</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>auth-mechanism</code> 属性值必须与 HttpAuthenticationMechanism 支持的认证方案相匹配，如 <code>basic</code> 或 <code>bearer</code> 或 <code>form</code> 等等。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="proactive-authentication"><a class="anchor" href="#proactive-authentication"></a>主动认证</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>By default, Quarkus does proactive authentication, which means that all incoming requests with credentials are authenticated regardless of whether the target page requires authentication.
+For more information, see <a href="security-built-in-authentication-support-concept#proactive-authentication">Proactive authentication</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="secure-connections-with-ssltls"><a class="anchor" href="#secure-connections-with-ssltls"></a>使用SSL/TLS的安全连接</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For more information about how Quarkus supports secure connections with SSL/TLS, see the <a href="http-reference#ssl">HTTP reference</a> information.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="cross-origin-resource-sharing"><a class="anchor" href="#cross-origin-resource-sharing"></a>Cross-Origin 资源共享</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>如果您打算让您的Quarkus应用程序可以被运行在不同区域的另一个应用程序访问，您将需要配置CORS（Cross-Origin资源共享）。请阅读 <a href="http-reference.html#cors-filter">TTP reference</a> 以了解更多关于Quarkus所提供的CORS过滤器信息。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="cross-site-request-forgery-csrf-prevention"><a class="anchor" href="#cross-site-request-forgery-csrf-prevention"></a>防止跨站请求伪造</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Quarkus Security提供的RESTEasy Reactive过滤器可以保护您的应用程序免遭 <a href="https://owasp.org/www-community/attacks/csrf">跨站请求伪造</a> 攻击。请阅读《 <a href="security-csrf-prevention.html">跨站请求伪造预防</a> 指南》以了解更多信息。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="samesite-cookies"><a class="anchor" href="#samesite-cookies"></a>SameSite cookies</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>您可以在Quarkus终端设置的任何cookie中添加 <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite">SameSite</a> cookie属性的信息，请参见 <a href="http-reference.html#same-site-cookie">SameSite</a> 以了解更多信息。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="secret-engines"><a class="anchor" href="#secret-engines"></a>秘密引擎</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>秘密引擎是存储、生成或加密数据的组件。</p>
+</div>
+<div class="paragraph">
+<p>Quarkus提供了非常全面的HashiCorp Vault支持，请参见 <a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-vault/dev/index.html">Quarkus和HashiCorp Vault</a> 文档以了解更多信息。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="secure-serialization"><a class="anchor" href="#secure-serialization"></a>安全序列化</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>如果您的Quarkus Security架构包含RESTEasy Reactive和Jackson时，Quarkus可以根据配置的安全性限制包含在JSON序列化中的字段。详情请参见 <a href="resteasy-reactive.html#secure-serialization">RESTEasy Reactive文档</a> 。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="secure-auto-generated-resources-by-rest-data-with-panache"><a class="anchor" href="#secure-auto-generated-resources-by-rest-data-with-panache"></a>Secure auto-generated resources by REST Data with Panache</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you&#8217;re using the REST Data with Panache extension to auto-generate your resources, you can still use the Security annotations within the package <code>javax.annotation.security</code>.
+For more information, see <a href="rest-data-panache#securing-endpoints">Securing auto-generated resources</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="national-vulnerability-database"><a class="anchor" href="#national-vulnerability-database"></a>国家安全漏洞数据库</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>大多数Quarkus标签已经在美国 <a href="https://nvd.nist.gov">国家漏洞数据库</a> （NVD）中使用通用平台条目（Common Platform Enumeration，CPE）名称格式注册。所有注册的Quarkus CPE名称都可以通过 <a href="https://nvd.nist.gov/products/cpe/search/results?namingFormat=2.3&amp;keyword=quarkus">这个搜索查询</a> 找到。</p>
+</div>
+<div class="paragraph">
+<p>如果NVE数据库针对一个Quarkus tag标记了一个CVE，那么一个提供了这个CVE更多细节的链接就会被添加到给定的CPE名录下。</p>
+</div>
+<div class="paragraph">
+<p>NVD CPE团队会定期更新列表，但如果您遇到一个异常，请在 <a href="https://github.com/quarkusio/quarkus/issues/2611">quarkusio</a> 仓库中创建一个issue来报告细节。</p>
+</div>
+<div class="paragraph">
+<p>您可以通过使用Maven <a href="https://jeremylong.github.io/DependencyCheck/dependency-check-maven/">OWASP依赖性检查插件</a> 在应用构建时用NVD feed来检测漏洞。</p>
+</div>
+<div class="paragraph">
+<p>要在Quarkus Maven项目中添加OWASP依赖性检查插件，请在 <code>pom.xml</code> 文件中添加以下XML配置：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
+    &lt;groupId&gt;org.owasp&lt;/groupId&gt;
+    &lt;artifactId&gt;dependency-check-maven&lt;/artifactId&gt;
+    &lt;version&gt;${owasp-dependency-check-plugin.version}&lt;/version&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Set the <code>owasp-dependency-check-plugin.version</code> value to <code>7.4.4</code> or later.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>您可以像这样配置该插件：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
+    &lt;groupId&gt;org.owasp&lt;/groupId&gt;
+    &lt;artifactId&gt;dependency-check-maven&lt;/artifactId&gt;
+    &lt;version&gt;${owasp-dependency-check-plugin.version}&lt;/version&gt;
+    &lt;configuration&gt;
+        &lt;!-- Fail only when detecting High Vulnerability issues --&gt;
+        &lt;failBuildOnCVSS&gt;7&lt;/failBuildOnCVSS&gt;
+        &lt;suppressionFiles&gt;
+            &lt;suppressionFile&gt;${project.basedir}/dependency-cpe-suppression.xml&lt;/suppressionFile&gt;
+        &lt;/suppressionFiles&gt;
+    &lt;/configuration&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To detect less severe issues, adjust the value of <code>failBuildOnCVSS</code> to suppress the false positives, as demonstrated in the following code sample:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.2.xsd"&gt;
+    &lt;!--
+        This is a CPE suppression file for the maven dependency check plugin.
+        Each CPE that is found by error (false positive) needs to be suppressed for a specific jar using its' GAV.
+        See https://jeremylong.github.io/DependencyCheck/general/suppression.html
+     --&gt;
+    &lt;suppress&gt;
+        &lt;notes&gt;
+            &lt;![CDATA[
+                Suppress the false positive CPE for netty-tcnative-classes to netty
+            ]]&gt;
+        &lt;/notes&gt;
+        &lt;gav regex="true"&gt;^io\.netty:netty-tcnative-classes.*:.*$&lt;/gav&gt;
+        &lt;cpe&gt;cpe:/a:netty:netty&lt;/cpe&gt;
+    &lt;/suppress&gt;
+    &lt;suppress&gt;
+        &lt;notes&gt;
+            &lt;![CDATA[
+                Suppress the false positive CPE for Quarkus Mutiny to mutiny:mutiny
+            ]]&gt;
+        &lt;/notes&gt;
+        &lt;gav regex="true"&gt;^io\.quarkus:quarkus-mutiny.*:.*$&lt;/gav&gt;
+        &lt;cpe&gt;cpe:/a:mutiny:mutiny&lt;/cpe&gt;
+    &lt;/suppress&gt;
+    &lt;suppress&gt;
+        &lt;notes&gt;
+            &lt;![CDATA[
+                Suppress the false positive CPE for Smallrye Mutiny to mutiny:mutiny
+            ]]&gt;
+        &lt;/notes&gt;
+        &lt;gav regex="true"&gt;^io\.smallrye.reactive:mutiny.*:.*$&lt;/gav&gt;
+        &lt;cpe&gt;cpe:/a:mutiny:mutiny&lt;/cpe&gt;
+    &lt;/suppress&gt;
+    &lt;suppress&gt;
+        &lt;notes&gt;
+            &lt;![CDATA[
+                Suppress the false positive CPE for Smallrye Mutiny to mutiny:mutiny
+            ]]&gt;
+        &lt;/notes&gt;
+        &lt;gav regex="true"&gt;^io\.smallrye.reactive:smallrye-mutiny.*:.*$&lt;/gav&gt;
+        &lt;cpe&gt;cpe:/a:mutiny:mutiny&lt;/cpe&gt;
+    &lt;/suppress&gt;
+    &lt;suppress&gt;
+        &lt;notes&gt;
+            &lt;![CDATA[
+                Suppress the false positive CPE for Smallrye Mutiny to mutiny:mutiny
+            ]]&gt;
+        &lt;/notes&gt;
+        &lt;gav regex="true"&gt;^io\.smallrye.reactive:vertx-mutiny.*:.*$&lt;/gav&gt;
+        &lt;cpe&gt;cpe:/a:mutiny:mutiny&lt;/cpe&gt;
+    &lt;/suppress&gt;
+    &lt;suppress&gt;
+        &lt;notes&gt;
+            &lt;![CDATA[
+                Suppress the false positive CPE for graal-sdk to GraalVM (the JVM distribution)
+            ]]&gt;
+        &lt;/notes&gt;
+        &lt;gav regex="true"&gt;^org\.graalvm\.sdk:g like this
+    &lt;/suppress&gt;
+&lt;/suppressions&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>确保您会检查和更新这个suppression列表以保证结果是及时更新的。
+您可以选择通过添加过期属性来对单个的suppression项目应用一个时间限制，如下面所示：</p>
+</div>
+<div class="paragraph">
+<p><code>&lt;suppress until="2022-01-01Z"&gt;&#8230;&#8203;&lt;/suppress&gt;</code>
+如果需要您可以调整过期时间。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="quarkus-security-testing"><a class="anchor" href="#quarkus-security-testing"></a>Quarkus Security testing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>当测试Quarkus Security的时候，请确保您已经在 <code>application.properties</code> 设置了 <code>IdentityProvider</code> 以及对应的用户名、密码以及角色。请参见 <a href="security-testing.html#configuring-user-information">设置用户信息</a> 以了解更多关于测试Quarkus Security的信息。</p>
+</div>
+</div>
+</div>
+    </div>
+    <div class="grid__item width-4-12 width-12-12-m tocwrapper">
+      <div class="hide-mobile toc"><ul class="sectlevel1">
+<li><a href="#getting-started-with-quarkus-security">开始使用Quarkus Security</a></li>
+<li><a href="#security-architecture">安全架构</a></li>
+<li><a href="#authentication-mechanisms">认证机制</a>
+<ul class="sectlevel2">
+<li><a href="#basic-and-form-http-authentication">Basic and Form HTTP authentication</a></li>
+<li><a href="#webauthn-authentication">WebAuthn认证机制</a></li>
+<li><a href="#mutual-tls-mtls-authentication">TLS互认证</a></li>
+<li><a href="#openid-connect-authentication">OpenID Connect authentication</a></li>
+<li><a href="#openid-connect-client-and-filters">OpenID Connect client and filters</a></li>
+<li><a href="#smallrye-jwt">SmallRye JWT authentication</a></li>
+<li><a href="#oauth2-authentication">OAuth2 认证机制</a></li>
+<li><a href="#oidc-jwt-oauth2-comparison">在OpenID Connect、SmallRye JWT和OAuth2扩展之间做出选择</a></li>
+</ul>
+</li>
+<li><a href="#identity-providers">身份提供者（Identity Providers）</a></li>
+<li><a href="#authorization">授权</a></li>
+<li><a href="#quarkus-security-customization">Quarkus Security customization</a></li>
+<li><a href="#combining-authentication-mechanisms">组合认证机制</a>
+<ul class="sectlevel2">
+<li><a href="#path-specific-authentication-mechanisms">特定路径认证机制</a></li>
+</ul>
+</li>
+<li><a href="#proactive-authentication">主动认证</a></li>
+<li><a href="#secure-connections-with-ssltls">使用SSL/TLS的安全连接</a></li>
+<li><a href="#cross-origin-resource-sharing">Cross-Origin 资源共享</a></li>
+<li><a href="#cross-site-request-forgery-csrf-prevention">防止跨站请求伪造</a></li>
+<li><a href="#samesite-cookies">SameSite cookies</a></li>
+<li><a href="#secret-engines">秘密引擎</a></li>
+<li><a href="#secure-serialization">安全序列化</a></li>
+<li><a href="#secure-auto-generated-resources-by-rest-data-with-panache">Secure auto-generated resources by REST Data with Panache</a></li>
+<li><a href="#national-vulnerability-database">国家安全漏洞数据库</a></li>
+<li><a href="#quarkus-security-testing">Quarkus Security testing</a></li>
+</ul></div>
+    </div>
+  </div>
+  </div>
+
+  </div>
+
+  <div class="content project-footer">
+  <div class="footer-section">
+    <div class="logo-wrapper">
+      <a href="/"><img src="/assets/images/quarkus_logo_horizontal_rgb_reverse.svg" class="project-logo" title="Quarkus"></a>
+    </div>
+  </div>
+  <div class="grid-wrapper">
+    <p class="grid__item width-3-12">Quarkus is open. All dependencies of this project are available under the <a href='https://www.apache.org/licenses/LICENSE-2.0' target='_blank'>Apache Software License 2.0</a> or compatible license.<br /><br />This website was built with <a href='https://jekyllrb.com/' target='_blank'>Jekyll</a>, is hosted on <a href='https://pages.github.com/' target='_blank'>GitHub Pages</a> and is completely open source. If you want to make it better, <a href='https://github.com/quarkusio/quarkusio.github.io' target='_blank'>fork the website</a> and show us what you’ve got.</p>
+
+    
+      <div class="width-1-12 project-links">
+        <span>Navigation</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="/" target="_blank">Home</a></li>
+          
+          
+          
+            <li><a href="/about" target="_blank">About</a></li>
+          
+          
+          
+            <li><a href="/blog" target="_blank">博客</a></li>
+          
+          
+          
+            <li><a href="/insights" target="_blank">Podcast</a></li>
+          
+          
+          
+            <li><a href="/events" target="_blank">活动</a></li>
+          
+          
+          
+            <li><a href="/newsletter" target="_blank">新闻</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
+          
+          
+          
+            <li><a href="https://github.com/orgs/quarkusio/projects/13/views/1" target="_blank">路线图</a></li>
+          
+          
+          
+            <li><a href="/security" target="_blank">Security&nbsp;policy</a></li>
+          
+          
+          
+            <li><a href="/usage" target="_blank">Usage</a></li>
+          
+          
+          
+            <li><a href="/brand" target="_blank">Brand</a></li>
+          
+          
+          
+            <li><a href="/desktopwallpapers" target="_blank">Wallpapers</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-1-12 project-links">
+        <span>Follow Us</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="https://x.com/quarkusio" target="_blank">X</a></li>
+          
+          
+          
+            <li><a href="https://bsky.app/profile/quarkus.io" target="_blank">Bluesky</a></li>
+          
+          
+          
+            <li><a rel="me" href="https://fosstodon.org/@quarkusio" target="_blank">Mastodon</a></li>
+            
+          
+          
+            <li><a href="https://www.facebook.com/quarkusio" target="_blank">Facebook</a></li>
+          
+          
+          
+            <li><a href="https://www.linkedin.com/company/quarkusio/" target="_blank">Linkedin</a></li>
+          
+          
+          
+            <li><a href="https://www.youtube.com/channel/UCaW8QG_QoIk_FnjLgr5eOqg" target="_blank">Youtube</a></li>
+          
+          
+          
+            <li><a href="https://github.com/quarkusio" target="_blank">GitHub</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-2-12 project-links">
+        <span>Get Help</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="/support" target="_blank">Support</a></li>
+          
+          
+          
+            <li><a href="/guides" target="_blank">Guides</a></li>
+          
+          
+          
+            <li><a href="/faq" target="_blank">FAQ</a></li>
+          
+          
+          
+            <li><a href="/get-started" target="_blank">开始体验</a></li>
+          
+          
+          
+            <li><a href="https://stackoverflow.com/questions/tagged/quarkus" target="_blank">Stack Overflow</a></li>
+          
+          
+          
+            <li><a href="https://github.com/quarkusio/quarkus/discussions" target="_blank">Discussions</a></li>
+          
+          
+          
+            <li><a href="https://groups.google.com/forum/#!forum/quarkus-dev" target="_blank">Development mailing list</a></li>
+          
+          
+        </ul>
+      </div>
+    
+      <div class="width-1-12 project-links">
+        <span>Languages</span>
+        <ul class="footer-links">
+          
+          
+            <li><a href="https://quarkus.io/" target="_blank">English</a></li>
+          
+          
+          
+            <li><a href="https://pt.quarkus.io/" target="_blank">Português&nbsp;(Brasileiro)</a></li>
+          
+          
+          
+            <li><a href="https://es.quarkus.io/" target="_blank">Español</a></li>
+          
+          
+          
+            <li><a href="https://cn.quarkus.io/" target="_blank">简体中文</a></li>
+          
+          
+          
+            <li><a href="https://ja.quarkus.io/" target="_blank">日本語</a></li>
+          
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="width-4-12 more-links">
+        <span>Quarkus is made of community projects</span>
+        <ul class="footer-links">
+          
+            <li><a blah href="https://vertx.io/" target="_blank">Eclipse Vert.x</a></li>
+          
+            <li><a blah href="https://smallrye.io" target="_blank">SmallRye</a></li>
+          
+            <li><a blah href="https://hibernate.org" target="_blank">Hibernate</a></li>
+          
+            <li><a blah href="https://netty.io" target="_blank">Netty</a></li>
+          
+            <li><a blah href="https://resteasy.github.io" target="_blank">RESTEasy</a></li>
+          
+            <li><a blah href="https://camel.apache.org" target="_blank">Apache Camel</a></li>
+          
+            <li><a blah href="https://microprofile.io" target="_blank">Eclipse MicroProfile</a></li>
+          
+            <li><a blah href="https://code.quarkus.io/" target="_blank">And many more...</a></li>
+          
+        </ul>
+      </div>
+    
+  </div>
+</div>
+
+  <div class="content redhat-footer">
+  <div class="grid-wrapper">
+    <span class="licence">
+      <i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i> <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank">CC by 3.0</a> | <a href="https://www.redhat.com/en/about/privacy-policy">Privacy Policy</a>
+    </span>
+    <span class="redhat">
+      Sponsored by
+    </span>
+    <span class="redhat-logo">
+      <a href="https://www.redhat.com/" target="_blank"><img src="/assets/images/redhat_reversed.svg"></a>
+    </span>
+  </div>
+</div>
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha384-8gBf6Y4YYq7Jx97PIqmTwLPin4hxIzQw5aDmUg/DDhul9fFpbbLcLh3nTIIDJKhx" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="/assets/javascript/mobile-nav.js"></script>
+  <script type="text/javascript" src="/assets/javascript/scroll-down.js"></script>
+  <script src="/assets/javascript/satellite.js" type="text/javascript"></script>
+  <script src="/guides/javascript/config.js" type="text/javascript"></script>
+  <script src="/assets/javascript/guides-version-dropdown.js" type="text/javascript"></script>
+  <script src="/assets/javascript/back-to-top.js" type="text/javascript"></script>
+  <script src="/assets/javascript/clipboard.min.js" type="text/javascript"></script>
+  <script src="/assets/javascript/copy.js" type="text/javascript"></script>
+  <script src="/assets/javascript/asciidoc-tabs.js" type="text/javascript"></script>
+  <script src="/assets/javascript/future-date.js" type="text/javascript"></script>
+</body>
+
+</html>
