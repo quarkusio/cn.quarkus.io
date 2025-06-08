@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2025-06-01 08:16+0000\n"
+"POT-Creation-Date: 2025-06-08 08:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,8 +19,8 @@ msgstr ""
 #. type: Hash Value: working-groups board-url
 #: upstream/_data/wg.yaml:0
 #, fuzzy, no-wrap
-msgid "https://github.com/orgs/quarkusio/projects/28"
-msgstr "https://github.com/orgs/quarkusio/projects/28"
+msgid "https://github.com/orgs/quarkusio/projects/30"
+msgstr "https://github.com/orgs/quarkusio/projects/30"
 
 #. type: Hash Value: working-groups lts
 #: upstream/_data/wg.yaml:0
@@ -28,11 +28,262 @@ msgstr "https://github.com/orgs/quarkusio/projects/28"
 msgid "false"
 msgstr "false"
 
+#. type: Hash Value: working-groups discussion
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20.2330.20Test.20Classloading.20chatter/"
+msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20.2330.20Test.20Classloading.20chatter/"
+
 #. type: Hash Value: working-groups last-activity
 #: upstream/_data/wg.yaml:0
 #, no-wrap
-msgid "2025-05-30"
+msgid "2025-06-06"
 msgstr ""
+
+#. type: Hash Value: working-groups last-update
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid ""
+"In the last month, the WG - Test classloading successfully closed significant issues related to classloader behavior, including fixing ServiceLoader errors and NullPointerExceptions that impacted test discovery. However, several issues were opened, focusing on recurring ServiceConfigurationErrors and additional classloader-related concerns. The team also initiated communications with the first blog detailing test classloading changes. This ongoing work aims to enhance Quarkus's test environment by ensuring proper classloader interactions and minimizing errors during testing.\n"
+"(This status update was automatically generated using AI.)\n"
+msgstr ""
+
+#. type: Hash Value: working-groups last-update-date
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "2025-04-28"
+msgstr ""
+
+#. type: Hash Value: working-groups point-of-contact
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "@holly-cummins (@<strong>Holly Cummins</strong>  on Zulip)"
+msgstr "@holly-cummins (@Holly<strong>Cummins</strong>on Zulip)"
+
+#. type: Hash Value: working-groups proposal
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "https://github.com/quarkusio/quarkus/discussions/41867"
+msgstr "https://github.com/quarkusio/quarkus/discussions/41867"
+
+#. type: Hash Value: working-groups readme
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid ""
+"<p>At the moment, Quarkus tests are invoked using one classloader, and then executed in a different classloader. This mostly works well, but means some use cases don't work: extensions cannot manipulate test classes in the same way that they do normal application classes. For example, anything run via a JUnit @TestTemplate test case will see the un-transformed class.</p>\n"
+"<p>It also means we have extra user-facing complexity, such as the QuarkusTest*Callbacks](https://quarkus.io/guides/getting-started-testing#enrichment-via-quarkustestcallback):</p>\n"
+"<blockquote>\n"
+"<p>While it is possible to use JUnit Jupiter callback interfaces like BeforeEachCallback, you might run into classloading issues because Quarkus has to run tests in a custom classloader which JUnit is not aware of.</p>\n"
+"</blockquote>\n"
+"<p>A final benefit is a reduction in the internal complexity of our code. Hopping between classloaders during test execution takes a lot of work, and adds a lot of code! It also is brittle in places. For example, because the hop between classloaders relies on serialization in some cases, it's becoming harder to do as the JVM tightens up security restrictions. We used to rely on xstream, but that stopped working in Java 17. In https://github.com/quarkusio/quarkus/pull/40601, @dmlloyd moved us to use the JBoss Serializer, which works better, but might still be affected by future restrictions on class access.</p>\n"
+"<p>The goal of this working group is to allow test classes to fully participate in the 'quarkification' of classes. The mechanism for this is probably just to load the test classes with the classloader we intend to run them with, so that JUnit sees the 'correct' version of the class.</p>\n"
+"<ul>\n"
+"<li>Point of contact: @holly-cummins (@<strong>Holly Cummins</strong>  on Zulip)</li>\n"
+"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/41867</li>\n"
+"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20.2330.20Test.20Classloading.20chatter/\">Zulip topic</a></li>\n"
+"</ul>\n"
+msgstr ""
+"<p>目前，Quarkus 测试使用一个类加载器调用，然后在另一个类加载器中执行。这在大多数情况下运行良好，但也意味着某些用例无法运行：扩展无法像操作普通应用程序类那样操作测试类。例如，通过 JUnit @TestTemplate 测试用例运行的任何程序都将看到未转换的类。</p>\n"
+"<p>这也意味着我们有额外的面向用户的复杂性，例如 QuarkusTest*Callbacks](https://quarkus.io/guides/getting-started-testing#enrichment-via-quarkustestcallback) ：</p>\n"
+"<blockquote>\n"
+"<p>虽然可以使用 JUnit Jupiter 回调接口（如 BeforeEachCallback），但可能会遇到类加载问题，因为 Quarkus 必须在 JUnit 不知道的自定义类加载器中运行测试。</p>\n"
+"</blockquote>\n"
+"<p>最后一个好处是降低了代码的内部复杂性。在测试执行过程中，在类加载器之间跳来跳去会耗费大量工作，并增加大量代码！而且在某些地方还很脆弱。例如，由于类加载器之间的跳转在某些情况下依赖于序列化，随着 JVM 收紧安全限制，这种跳转变得越来越难。我们曾经依赖 xstream，但在 Java 17 中它已停止工作。在 https://github.com/quarkusio/quarkus/pull/40601 中，@dmlloyd 让我们使用 JBoss Serializer，它的效果更好，但仍可能受到未来类访问限制的影响。</p>\n"
+"<p>该工作组的目标是允许测试类完全参与类的 \"夸克化\"。其机制可能只是用我们打算运行的类加载器加载测试类，以便让 JUnit 看到类的 \"正确 \"版本。</p>\n"
+"<ul>\n"
+"<li>联系人：@holly-cummins （Zulip 上的 @Holly<strong>Cummins）</strong></li>\n"
+"<li>建议： https://github.com/quarkusio/quarkus/discussions/41867</li>\n"
+"<li>讨论：<a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20.2330.20Test.20Classloading.20chatter/\">Zulip 主题</a></li>\n"
+"</ul>\n"
+
+#. type: Hash Value: working-groups short-description
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "The goal of this working group is to rewrite Quarkus's test classloading, so that tests are run in the same classloader as the application under tests, and Quarkus extensions can do \"Quarkus-y\" manipulations of test classes.\n"
+msgstr ""
+
+#. type: Hash Value: working-groups status
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "on track"
+msgstr "未离题"
+
+#. type: Hash Value: working-groups title
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "Test classloading"
+msgstr "测试类加载"
+
+#. type: Hash Value: working-groups board-url
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "https://github.com/orgs/quarkusio/projects/43"
+msgstr "https://github.com/orgs/quarkusio/projects/43"
+
+#. type: Hash Value: working-groups deliverable
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "TBD"
+msgstr "待定"
+
+#. type: Hash Value: working-groups discussion
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/Gizmo.202.2Ex.20WG.20chat"
+msgstr ""
+
+#. type: Hash Value: working-groups last-update
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid ""
+"In the past month, the WG - Gizmo 2 successfully closed numerous issues, including improvements in error handling, support for instance field initializers, and updates to annotation handling. Key enhancements were made to Lambda singleton implementations and field check validations. Concurrently, several new issues were opened, still addressing challenges in error messaging, generic type handling, and improvements to operational efficiencies. The group remains focused on optimizing the Gizmo 2 framework while ensuring robust functionality and user experience.\n"
+"(This status update was automatically generated using AI.)\n"
+msgstr ""
+
+#. type: Hash Value: working-groups point-of-contact
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "@mkouba (@<strong>Martin Kouba</strong>  on Zulip)"
+msgstr "@mkouba（@Martin<strong>Kouba</strong>on Zulip）"
+
+#. type: Hash Value: working-groups proposal
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "https://github.com/quarkusio/quarkus/discussions/46627"
+msgstr "https://github.com/quarkusio/quarkus/discussions/46627"
+
+#. type: Hash Value: working-groups readme
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid ""
+"<p>This _working group aims to make the <a href=\"https://github.com/dmlloyd/gizmo/tree/gizmo2\">Gizmo 2 POC</a> production-ready and integrate it into Quarkus core.</p>\n"
+"<ul>\n"
+"<li>Point of contact: @mkouba (@<strong>Martin Kouba</strong>  on Zulip)</li>\n"
+"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/46627</li>\n"
+"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/Gizmo.202.2Ex.20WG.20chat\">Zulip topic</a></li>\n"
+"<li>Deliverable: TBD</li>\n"
+"</ul>\n"
+msgstr ""
+
+#. type: Hash Value: working-groups short-description
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "Gizmo 2 related tasks\n"
+msgstr ""
+
+#. type: Hash Value: working-groups title
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "Gizmo 2"
+msgstr "小玩意 2"
+
+#. type: Hash Value: working-groups board-url
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "https://github.com/orgs/quarkusio/projects/38"
+msgstr "https://github.com/orgs/quarkusio/projects/38"
+
+#. type: Hash Value: working-groups last-activity
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "2025-06-03"
+msgstr ""
+
+#. type: Hash Value: working-groups last-update
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid ""
+"Started working on full list of repos and infrastructure that needs clarifying. Can't share it publically yet due to red hat infrastructure details but will soon share.\n"
+"Marking as risk as deadline april 1st is looming and still things to define. \n"
+"There is a Quarkus f2f meeting next week that could clarify/move things forward and start to share more publically as things get moved over from internal IT.\n"
+msgstr ""
+"已开始编制需要澄清的软件仓库和基础架构的完整列表。由于红帽基础架构的细节问题，目前还不能公开分享，但很快就会分享。\n"
+"由于 4 月 1 日的最后期限迫在眉睫，还有很多事情需要确定，因此将其标记为风险。 \n"
+"下周将举行 Quarkus F2F 会议，会议将明确/推进事情的进展，并开始更公开地分享从内部 IT 转移过来的事情。\n"
+
+#. type: Hash Value: working-groups last-update-date
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "2025-02-25"
+msgstr "2025-02-25"
+
+#. type: Hash Value: working-groups readme
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid ""
+"<p>from Discussion at https://github.com/quarkusio/quarkus/discussions/43013</p>\n"
+"<p>We started the move of Quarkus to a foundation <a href=\"https://quarkus.io/blog/quarkus-in-a-foundation/\">earlier this year</a> and recently <a href=\"https://quarkus.io/blog/quarkus-moving-to-commonhaus/\">set the direction</a> towards <a href=\"https://www.commonhaus.org/\">CommonHaus</a> and during the summer break the CommonHaus council <a href=\"https://github.com/commonhaus/foundation/pull/183\">approved our request</a> to join.</p>\n"
+"<p>Thus, now the real work starts, and it's just fitting we set up a working group for the effort getting Quarkus to CommonHaus foundation.</p>\n"
+"<h1>Goal</h1>\n"
+"<p>Two parts</p>\n"
+"<ul>\n"
+"<li>setup Quarkus to have transparent and open governance</li>\n"
+"<li>Go through the few but important requirements for a CommonHaus project.</li>\n"
+"</ul>\n"
+"<h1>Initial work items/questions:</h1>\n"
+"<p>Current known list, but not limited to:</p>\n"
+"<ul>\n"
+"<li>identify design communication channels (i.e. #41973)</li>\n"
+"<li>which repositories / code will move</li>\n"
+"<li>impact (if any) on quarkiverse projects</li>\n"
+"<li>how will trademarks work/change</li>\n"
+"<li>identify running services and setup/maintain them (registry.quarkus.io, code.quarkus.io etc.)</li>\n"
+"<li>add required metadata/files to the various repositories</li>\n"
+"</ul>\n"
+"<h1>Tracking</h1>\n"
+"<p>We will use the working group board to track publicly all the known relevant work and questions.For the few exception cases where, for legal or personal constraints, the work must happen in private, we will post the outcome and results in public places (like a GitHub discussion of a GitHub issue tracked on the working group board).</p>\n"
+"<h1>When will this working group be done?</h1>\n"
+"<p>When Quarkus has an active working governance model in place and all major work items around setting up Quarkus at CommonHaus are completed - after that, its expected things will just be iteratively improved, and the dedicated working group will not be needed (others might start to continue more specific efforts).</p>\n"
+"<p>The majority of the work must be done before the end of December 2024. The latest deadline for CommonHaus is April 2025, when the bootstrap period of CommonHaus ends.</p>\n"
+msgstr ""
+"<p>来自 https://github.com/quarkusio/quarkus/discussions/43013 的讨论</p>\n"
+"<p><a href=\"https://quarkus.io/blog/quarkus-in-a-foundation/\">今年年初</a>，我们开始将 Quarkus 迁移到基金会，并在最近<a href=\"https://quarkus.io/blog/quarkus-moving-to-commonhaus/\">确定了</a> <a href=\"https://www.commonhaus.org/\">CommonHaus</a> <a href=\"https://github.com/commonhaus/foundation/pull/183\">的</a> <a href=\"https://quarkus.io/blog/quarkus-moving-to-commonhaus/\">方向</a>，在暑假期间，CommonHaus 理事会<a href=\"https://github.com/commonhaus/foundation/pull/183\">批准了我们的</a>加入<a href=\"https://github.com/commonhaus/foundation/pull/183\">请求</a>。</p>\n"
+"<p>因此，现在真正的工作开始了，我们成立一个工作小组，为 Quarkus 加入 CommonHaus 基金会而努力。</p>\n"
+"<h1>目标</h1>\n"
+"<p>两个部分</p>\n"
+"<ul>\n"
+"<li>建立夸克软件透明、开放的管理机制</li>\n"
+"<li>了解 CommonHaus 项目的一些重要要求。</li>\n"
+"</ul>\n"
+"<h1>初步工作项目/问题：</h1>\n"
+"<p>目前已知的清单，但不限于此：</p>\n"
+"<ul>\n"
+"<li>确定设计交流渠道（即 #41973）</li>\n"
+"<li>哪些资源库/代码将移动</li>\n"
+"<li>对夸克宇宙项目的影响（如果有的话</li>\n"
+"<li>商标将如何工作/更改</li>\n"
+"<li>确定运行中的服务并设置/维护它们（registry.quarkus.io、code.quarkus.io 等）</li>\n"
+"<li>向各种资源库添加所需的元数据/文件</li>\n"
+"</ul>\n"
+"<h1>跟踪</h1>\n"
+"<p>我们将使用工作组板块公开跟踪所有已知的相关工作和问题。对于少数例外情况，即由于法律或个人限制，工作必须私下进行，我们将在公共场所发布结果和成果（如在工作组板块上跟踪的 GitHub 问题的 GitHub 讨论）。</p>\n"
+"<h1>工作组何时完成工作？</h1>\n"
+"<p>当 Quarkus 有了一个积极的工作管理模式，并且在 CommonHaus 建立 Quarkus 的所有主要工作项目都已完成时--在那之后，预计事情将只是迭代改进，而不需要专门的工作组（其他人可能会开始继续更具体的工作）。</p>\n"
+"<p>大部分工作必须在 2024 年 12 月底之前完成。CommonHaus的最晚期限为2025年4月，届时CommonHaus的引导期将结束。</p>\n"
+
+#. type: Hash Value: working-groups short-description
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "Work needed around moving Quarkus to foundation and streamline open governance.\n"
+msgstr ""
+
+#. type: Hash Value: working-groups status
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "staled"
+msgstr "石沉大海"
+
+#. type: Hash Value: working-groups title
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "Quarkus to the CommonHaus Foundation"
+msgstr "Quarkus 加入 CommonHaus 基金会"
+
+#. type: Hash Value: working-groups board-url
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "https://github.com/orgs/quarkusio/projects/28"
+msgstr "https://github.com/orgs/quarkusio/projects/28"
 
 #. type: Hash Value: working-groups last-update
 #: upstream/_data/wg.yaml:0
@@ -78,12 +329,6 @@ msgstr ""
 msgid "This WG focuses on defining the issues we would like to have in the next-to-be LTS (Quarkus 3.14/3.15)\n"
 msgstr ""
 
-#. type: Hash Value: working-groups status
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "on track"
-msgstr "未离题"
-
 #. type: Hash Value: working-groups title
 #: upstream/_data/wg.yaml:0
 #, fuzzy, no-wrap
@@ -100,6 +345,12 @@ msgstr ""
 #: upstream/_data/wg.yaml:0
 #, no-wrap
 msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev"
+msgstr ""
+
+#. type: Hash Value: working-groups last-activity
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "2025-06-02"
 msgstr ""
 
 #. type: Hash Value: working-groups last-update
@@ -152,155 +403,6 @@ msgstr ""
 #, no-wrap
 msgid "Dev Services Lifecycle"
 msgstr ""
-
-#. type: Hash Value: working-groups board-url
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "https://github.com/orgs/quarkusio/projects/43"
-msgstr "https://github.com/orgs/quarkusio/projects/43"
-
-#. type: Hash Value: working-groups deliverable
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "TBD"
-msgstr "待定"
-
-#. type: Hash Value: working-groups discussion
-#: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/Gizmo.202.2Ex.20WG.20chat"
-msgstr ""
-
-#. type: Hash Value: working-groups last-activity
-#: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid "2025-05-29"
-msgstr ""
-
-#. type: Hash Value: working-groups last-update
-#: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid ""
-"In the past month, the WG - Gizmo 2 successfully closed numerous issues, including improvements in error handling, support for instance field initializers, and updates to annotation handling. Key enhancements were made to Lambda singleton implementations and field check validations. Concurrently, several new issues were opened, still addressing challenges in error messaging, generic type handling, and improvements to operational efficiencies. The group remains focused on optimizing the Gizmo 2 framework while ensuring robust functionality and user experience.\n"
-"(This status update was automatically generated using AI.)\n"
-msgstr ""
-
-#. type: Hash Value: working-groups last-update-date
-#: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid "2025-04-28"
-msgstr ""
-
-#. type: Hash Value: working-groups point-of-contact
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "@mkouba (@<strong>Martin Kouba</strong>  on Zulip)"
-msgstr "@mkouba（@Martin<strong>Kouba</strong>on Zulip）"
-
-#. type: Hash Value: working-groups proposal
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "https://github.com/quarkusio/quarkus/discussions/46627"
-msgstr "https://github.com/quarkusio/quarkus/discussions/46627"
-
-#. type: Hash Value: working-groups readme
-#: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid ""
-"<p>This _working group aims to make the <a href=\"https://github.com/dmlloyd/gizmo/tree/gizmo2\">Gizmo 2 POC</a> production-ready and integrate it into Quarkus core.</p>\n"
-"<ul>\n"
-"<li>Point of contact: @mkouba (@<strong>Martin Kouba</strong>  on Zulip)</li>\n"
-"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/46627</li>\n"
-"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/Gizmo.202.2Ex.20WG.20chat\">Zulip topic</a></li>\n"
-"<li>Deliverable: TBD</li>\n"
-"</ul>\n"
-msgstr ""
-
-#. type: Hash Value: working-groups short-description
-#: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid "Gizmo 2 related tasks\n"
-msgstr ""
-
-#. type: Hash Value: working-groups title
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "Gizmo 2"
-msgstr "小玩意 2"
-
-#. type: Hash Value: working-groups board-url
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "https://github.com/orgs/quarkusio/projects/30"
-msgstr "https://github.com/orgs/quarkusio/projects/30"
-
-#. type: Hash Value: working-groups discussion
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20.2330.20Test.20Classloading.20chatter/"
-msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20.2330.20Test.20Classloading.20chatter/"
-
-#. type: Hash Value: working-groups last-update
-#: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid ""
-"In the last month, the WG - Test classloading successfully closed significant issues related to classloader behavior, including fixing ServiceLoader errors and NullPointerExceptions that impacted test discovery. However, several issues were opened, focusing on recurring ServiceConfigurationErrors and additional classloader-related concerns. The team also initiated communications with the first blog detailing test classloading changes. This ongoing work aims to enhance Quarkus's test environment by ensuring proper classloader interactions and minimizing errors during testing.\n"
-"(This status update was automatically generated using AI.)\n"
-msgstr ""
-
-#. type: Hash Value: working-groups point-of-contact
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "@holly-cummins (@<strong>Holly Cummins</strong>  on Zulip)"
-msgstr "@holly-cummins (@Holly<strong>Cummins</strong>on Zulip)"
-
-#. type: Hash Value: working-groups proposal
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "https://github.com/quarkusio/quarkus/discussions/41867"
-msgstr "https://github.com/quarkusio/quarkus/discussions/41867"
-
-#. type: Hash Value: working-groups readme
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid ""
-"<p>At the moment, Quarkus tests are invoked using one classloader, and then executed in a different classloader. This mostly works well, but means some use cases don't work: extensions cannot manipulate test classes in the same way that they do normal application classes. For example, anything run via a JUnit @TestTemplate test case will see the un-transformed class.</p>\n"
-"<p>It also means we have extra user-facing complexity, such as the QuarkusTest*Callbacks](https://quarkus.io/guides/getting-started-testing#enrichment-via-quarkustestcallback):</p>\n"
-"<blockquote>\n"
-"<p>While it is possible to use JUnit Jupiter callback interfaces like BeforeEachCallback, you might run into classloading issues because Quarkus has to run tests in a custom classloader which JUnit is not aware of.</p>\n"
-"</blockquote>\n"
-"<p>A final benefit is a reduction in the internal complexity of our code. Hopping between classloaders during test execution takes a lot of work, and adds a lot of code! It also is brittle in places. For example, because the hop between classloaders relies on serialization in some cases, it's becoming harder to do as the JVM tightens up security restrictions. We used to rely on xstream, but that stopped working in Java 17. In https://github.com/quarkusio/quarkus/pull/40601, @dmlloyd moved us to use the JBoss Serializer, which works better, but might still be affected by future restrictions on class access.</p>\n"
-"<p>The goal of this working group is to allow test classes to fully participate in the 'quarkification' of classes. The mechanism for this is probably just to load the test classes with the classloader we intend to run them with, so that JUnit sees the 'correct' version of the class.</p>\n"
-"<ul>\n"
-"<li>Point of contact: @holly-cummins (@<strong>Holly Cummins</strong>  on Zulip)</li>\n"
-"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/41867</li>\n"
-"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20.2330.20Test.20Classloading.20chatter/\">Zulip topic</a></li>\n"
-"</ul>\n"
-msgstr ""
-"<p>目前，Quarkus 测试使用一个类加载器调用，然后在另一个类加载器中执行。这在大多数情况下运行良好，但也意味着某些用例无法运行：扩展无法像操作普通应用程序类那样操作测试类。例如，通过 JUnit @TestTemplate 测试用例运行的任何程序都将看到未转换的类。</p>\n"
-"<p>这也意味着我们有额外的面向用户的复杂性，例如 QuarkusTest*Callbacks](https://quarkus.io/guides/getting-started-testing#enrichment-via-quarkustestcallback) ：</p>\n"
-"<blockquote>\n"
-"<p>虽然可以使用 JUnit Jupiter 回调接口（如 BeforeEachCallback），但可能会遇到类加载问题，因为 Quarkus 必须在 JUnit 不知道的自定义类加载器中运行测试。</p>\n"
-"</blockquote>\n"
-"<p>最后一个好处是降低了代码的内部复杂性。在测试执行过程中，在类加载器之间跳来跳去会耗费大量工作，并增加大量代码！而且在某些地方还很脆弱。例如，由于类加载器之间的跳转在某些情况下依赖于序列化，随着 JVM 收紧安全限制，这种跳转变得越来越难。我们曾经依赖 xstream，但在 Java 17 中它已停止工作。在 https://github.com/quarkusio/quarkus/pull/40601 中，@dmlloyd 让我们使用 JBoss Serializer，它的效果更好，但仍可能受到未来类访问限制的影响。</p>\n"
-"<p>该工作组的目标是允许测试类完全参与类的 \"夸克化\"。其机制可能只是用我们打算运行的类加载器加载测试类，以便让 JUnit 看到类的 \"正确 \"版本。</p>\n"
-"<ul>\n"
-"<li>联系人：@holly-cummins （Zulip 上的 @Holly<strong>Cummins）</strong></li>\n"
-"<li>建议： https://github.com/quarkusio/quarkus/discussions/41867</li>\n"
-"<li>讨论：<a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20.2330.20Test.20Classloading.20chatter/\">Zulip 主题</a></li>\n"
-"</ul>\n"
-
-#. type: Hash Value: working-groups short-description
-#: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid "The goal of this working group is to rewrite Quarkus's test classloading, so that tests are run in the same classloader as the application under tests, and Quarkus extensions can do \"Quarkus-y\" manipulations of test classes.\n"
-msgstr ""
-
-#. type: Hash Value: working-groups title
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "Test classloading"
-msgstr "测试类加载"
 
 #. type: Hash Value: working-groups board-url
 #: upstream/_data/wg.yaml:0
@@ -391,12 +493,6 @@ msgstr ""
 #, no-wrap
 msgid "The goal of this working group is to improve quarkus-oidc by: implementing crucial new security features, continuing with improving the way OIDC requests can be intercepted, prioritizing some other open issues, such as using JWT bearer client authentication to complete the authorization code flow\n"
 msgstr ""
-
-#. type: Hash Value: working-groups status
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "staled"
-msgstr "石沉大海"
 
 #. type: Hash Value: working-groups title
 #: upstream/_data/wg.yaml:0
@@ -1113,101 +1209,9 @@ msgstr ""
 msgid "Docker file generation"
 msgstr "生成 Docker 文件"
 
-#. type: Hash Value: working-groups board-url
-#: upstream/_data/wg.yaml:0
 #, fuzzy, no-wrap
-msgid "https://github.com/orgs/quarkusio/projects/38"
-msgstr "https://github.com/orgs/quarkusio/projects/38"
-
-#. type: Hash Value: working-groups last-activity
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "2024-10-28"
-msgstr "2024-10-28"
-
-#. type: Hash Value: working-groups last-update
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid ""
-"Started working on full list of repos and infrastructure that needs clarifying. Can't share it publically yet due to red hat infrastructure details but will soon share.\n"
-"Marking as risk as deadline april 1st is looming and still things to define. \n"
-"There is a Quarkus f2f meeting next week that could clarify/move things forward and start to share more publically as things get moved over from internal IT.\n"
-msgstr ""
-"已开始编制需要澄清的软件仓库和基础架构的完整列表。由于红帽基础架构的细节问题，目前还不能公开分享，但很快就会分享。\n"
-"由于 4 月 1 日的最后期限迫在眉睫，还有很多事情需要确定，因此将其标记为风险。 \n"
-"下周将举行 Quarkus F2F 会议，会议将明确/推进事情的进展，并开始更公开地分享从内部 IT 转移过来的事情。\n"
-
-#. type: Hash Value: working-groups last-update-date
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "2025-02-25"
-msgstr "2025-02-25"
-
-#. type: Hash Value: working-groups readme
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid ""
-"<p>from Discussion at https://github.com/quarkusio/quarkus/discussions/43013</p>\n"
-"<p>We started the move of Quarkus to a foundation <a href=\"https://quarkus.io/blog/quarkus-in-a-foundation/\">earlier this year</a> and recently <a href=\"https://quarkus.io/blog/quarkus-moving-to-commonhaus/\">set the direction</a> towards <a href=\"https://www.commonhaus.org/\">CommonHaus</a> and during the summer break the CommonHaus council <a href=\"https://github.com/commonhaus/foundation/pull/183\">approved our request</a> to join.</p>\n"
-"<p>Thus, now the real work starts, and it's just fitting we set up a working group for the effort getting Quarkus to CommonHaus foundation.</p>\n"
-"<h1>Goal</h1>\n"
-"<p>Two parts</p>\n"
-"<ul>\n"
-"<li>setup Quarkus to have transparent and open governance</li>\n"
-"<li>Go through the few but important requirements for a CommonHaus project.</li>\n"
-"</ul>\n"
-"<h1>Initial work items/questions:</h1>\n"
-"<p>Current known list, but not limited to:</p>\n"
-"<ul>\n"
-"<li>identify design communication channels (i.e. #41973)</li>\n"
-"<li>which repositories / code will move</li>\n"
-"<li>impact (if any) on quarkiverse projects</li>\n"
-"<li>how will trademarks work/change</li>\n"
-"<li>identify running services and setup/maintain them (registry.quarkus.io, code.quarkus.io etc.)</li>\n"
-"<li>add required metadata/files to the various repositories</li>\n"
-"</ul>\n"
-"<h1>Tracking</h1>\n"
-"<p>We will use the working group board to track publicly all the known relevant work and questions.For the few exception cases where, for legal or personal constraints, the work must happen in private, we will post the outcome and results in public places (like a GitHub discussion of a GitHub issue tracked on the working group board).</p>\n"
-"<h1>When will this working group be done?</h1>\n"
-"<p>When Quarkus has an active working governance model in place and all major work items around setting up Quarkus at CommonHaus are completed - after that, its expected things will just be iteratively improved, and the dedicated working group will not be needed (others might start to continue more specific efforts).</p>\n"
-"<p>The majority of the work must be done before the end of December 2024. The latest deadline for CommonHaus is April 2025, when the bootstrap period of CommonHaus ends.</p>\n"
-msgstr ""
-"<p>来自 https://github.com/quarkusio/quarkus/discussions/43013 的讨论</p>\n"
-"<p><a href=\"https://quarkus.io/blog/quarkus-in-a-foundation/\">今年年初</a>，我们开始将 Quarkus 迁移到基金会，并在最近<a href=\"https://quarkus.io/blog/quarkus-moving-to-commonhaus/\">确定了</a> <a href=\"https://www.commonhaus.org/\">CommonHaus</a> <a href=\"https://github.com/commonhaus/foundation/pull/183\">的</a> <a href=\"https://quarkus.io/blog/quarkus-moving-to-commonhaus/\">方向</a>，在暑假期间，CommonHaus 理事会<a href=\"https://github.com/commonhaus/foundation/pull/183\">批准了我们的</a>加入<a href=\"https://github.com/commonhaus/foundation/pull/183\">请求</a>。</p>\n"
-"<p>因此，现在真正的工作开始了，我们成立一个工作小组，为 Quarkus 加入 CommonHaus 基金会而努力。</p>\n"
-"<h1>目标</h1>\n"
-"<p>两个部分</p>\n"
-"<ul>\n"
-"<li>建立夸克软件透明、开放的管理机制</li>\n"
-"<li>了解 CommonHaus 项目的一些重要要求。</li>\n"
-"</ul>\n"
-"<h1>初步工作项目/问题：</h1>\n"
-"<p>目前已知的清单，但不限于此：</p>\n"
-"<ul>\n"
-"<li>确定设计交流渠道（即 #41973）</li>\n"
-"<li>哪些资源库/代码将移动</li>\n"
-"<li>对夸克宇宙项目的影响（如果有的话</li>\n"
-"<li>商标将如何工作/更改</li>\n"
-"<li>确定运行中的服务并设置/维护它们（registry.quarkus.io、code.quarkus.io 等）</li>\n"
-"<li>向各种资源库添加所需的元数据/文件</li>\n"
-"</ul>\n"
-"<h1>跟踪</h1>\n"
-"<p>我们将使用工作组板块公开跟踪所有已知的相关工作和问题。对于少数例外情况，即由于法律或个人限制，工作必须私下进行，我们将在公共场所发布结果和成果（如在工作组板块上跟踪的 GitHub 问题的 GitHub 讨论）。</p>\n"
-"<h1>工作组何时完成工作？</h1>\n"
-"<p>当 Quarkus 有了一个积极的工作管理模式，并且在 CommonHaus 建立 Quarkus 的所有主要工作项目都已完成时--在那之后，预计事情将只是迭代改进，而不需要专门的工作组（其他人可能会开始继续更具体的工作）。</p>\n"
-"<p>大部分工作必须在 2024 年 12 月底之前完成。CommonHaus的最晚期限为2025年4月，届时CommonHaus的引导期将结束。</p>\n"
-
-#. type: Hash Value: working-groups short-description
-#: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid "Work needed around moving Quarkus to foundation and streamline open governance.\n"
-msgstr ""
-
-#. type: Hash Value: working-groups title
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "Quarkus to the CommonHaus Foundation"
-msgstr "Quarkus 加入 CommonHaus 基金会"
+#~ msgid "2024-10-28"
+#~ msgstr "2024-10-28"
 
 #, fuzzy, no-wrap
 #~ msgid "It just started, but already lots of progress.\n"
