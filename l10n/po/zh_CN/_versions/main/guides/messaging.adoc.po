@@ -706,16 +706,39 @@ msgid ""
 msgstr "为了确保行为的一致性，Quarkus Messaging 在通过入站或出站连接器发送消息时禁止传播任何上下文。这意味着通过发射器捕获的上下文不会传播到出站通道，传入通道也不会通过激活上下文（如请求上下文）来调度消息。可以使用 `quarkus.messaging.connector-context-propagation` 配置属性，通过列出要传播的上下文类型来配置这种行为。例如， `quarkus.messaging.connector-context-propagation=CDI` 只传播 CDI 上下文。"
 
 #: _versions/main/guides/messaging.adoc
-#, fuzzy
-msgid "<<internal-channels>> however do propagate the context, as they are part of the same application and the context is not lost."
-msgstr "<<internal-channels>> 但是，由于它们属于同一个应用程序，因此会传播上下文，上下文不会丢失。"
+msgid "Context Propagation with Emitters"
+msgstr ""
+
+#: _versions/main/guides/messaging.adoc
+msgid "When using messaging emitters, the context is not propagated by default."
+msgstr ""
+
+#: _versions/main/guides/messaging.adoc
+msgid "In some scenarios, you might want to propagate the caller context to the message processing stage, using <<internal-channels,internal channels>>."
+msgstr ""
+
+#: _versions/main/guides/messaging.adoc
+msgid ""
+"Quarkus provides `ContextualEmitter`, a drop in replacement for `MutinyEmitter` and `Emitter`, that allows you to propagate the context when sending messages.\n"
+"You can use the context propagation annotation `@CurrentThreadContext` to configure the contexts that will be propagated from an _emitter_ method.\n"
+"The annotation configures the contexts that will be captured and propagated from that method,\n"
+"and needs to be present on the propagator method, i.e. the caller of the emitter, not the processing method."
+msgstr ""
+
+#: _versions/main/guides/messaging.adoc
+msgid "Let `RequestScopedBean` a request-scoped bean, `ContextualEmitter` can be used to dispatch messages locally through the internal channel `app`:"
+msgstr ""
 
 #: _versions/main/guides/messaging.adoc
 #, fuzzy
+msgid "Then the request-scoped bean can be accessed in the message processing stage, regardless of the <<execution_model>>:"
+msgstr "这样，就可以在消息处理阶段访问请求作用域 Bean，而无需考虑 <<execution_model>> ："
+
+#: _versions/main/guides/messaging.adoc
 msgid ""
-"For example, you might want to propagate the caller context from an incoming HTTP request to the message processing stage.\n"
-"For emitters, it is recommended to use the `MutinyEmitter`, as it exposes methods such as `sendAndAwait` that makes sure to wait until a message processing is terminated."
-msgstr "例如，您可能希望将传入 HTTP 请求的调用者上下文传播到消息处理阶段。对于发射器，建议使用 `MutinyEmitter` ，因为它提供了 `sendAndAwait` 等方法，可以确保等待消息处理结束。"
+"You can also use the `@CurrentThreadContext` annotation to control which contexts are propagated.\n"
+"The following example shows how to avoid propagating any context to the message processing stage:"
+msgstr ""
 
 #: _versions/main/guides/messaging.adoc
 #, fuzzy
@@ -729,37 +752,6 @@ msgstr "与 RequestScoped 上下文绑定的执行上下文（在上一个示例
 #, fuzzy
 msgid "For more information check the xref:context-propagation.adoc#context-propagation-for-cdi[Context Propagation] guide."
 msgstr "更多信息，请查看 xref:context-propagation.adoc#context-propagation-for-cdi[上下文传播] 指南。"
-
-#: _versions/main/guides/messaging.adoc
-#, fuzzy
-msgid "For example, let `RequestScopedBean` a request-scoped bean, `MutinyEmitter` can be used to dispatch messages locally through the internal channel `app`:"
-msgstr "例如，让 `RequestScopedBean` 一个请求作用域的 Bean， `MutinyEmitter` 可用于通过内部通道 `app` 在本地分派消息："
-
-#: _versions/main/guides/messaging.adoc
-#, fuzzy
-msgid "Then the request-scoped bean can be accessed in the message processing stage, regardless of the <<execution_model>>:"
-msgstr "这样，就可以在消息处理阶段访问请求作用域 Bean，而无需考虑 <<execution_model>> ："
-
-#: _versions/main/guides/messaging.adoc
-#, fuzzy
-msgid ""
-"You can use the context propagation annotation `@CurrentThreadContext` to configure the contexts that will be propagated from an _emitter_ method.\n"
-"The annotation configures the contexts that will be captured and propagated from that method,\n"
-"and needs to be present on the propagator method, i.e. the caller of the emitter, not the processing method."
-msgstr "您可以使用上下文传播注解 `@CurrentThreadContext` 来配置将从 _发射器_ 方法中传播的上下文。该注解配置了将从该方法捕获和传播的上下文，并且需要在传播者方法（即发射器的调用者，而非处理方法）中存在。"
-
-#: _versions/main/guides/messaging.adoc
-#, fuzzy
-msgid ""
-"Because Quarkus Messaging dispatches messages on link:https://smallrye.io/smallrye-reactive-messaging/latest/concepts/message-context[message context],\n"
-"propagation plans with cleared or not propagated contexts can lead to race conditions using emitters in <<internal-channels,internal channels>>.\n"
-"It is recommended to use `ContextualEmitter` to ensure the context propagation plan is applied correctly."
-msgstr "由于 Quarkus Messaging 根据 link:https://smallrye.io/smallrye-reactive-messaging/latest/concepts/message-context[消息上下文] 分派消息，因此上下文已清除或未传播的传播计划可能会导致在 xref:internal-channels[内部通道] 中使用发射器时出现竞赛条件。建议使用 `ContextualEmitter` 来确保正确应用上下文传播计划。"
-
-#: _versions/main/guides/messaging.adoc
-#, fuzzy
-msgid "The following example shows how to avoid propagating any context to the message processing stage:"
-msgstr "下面的示例展示了如何避免将任何上下文传播到消息处理阶段："
 
 #: _versions/main/guides/messaging.adoc
 #, fuzzy
