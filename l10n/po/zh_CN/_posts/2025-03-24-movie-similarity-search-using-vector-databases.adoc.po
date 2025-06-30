@@ -7,253 +7,303 @@ msgstr ""
 "X-Generator: jekyll-l10n\n"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "Movie similarity search using vector databases"
-msgstr ""
+msgstr "使用向量数据库进行电影相似性搜索"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "Shows how to create a movie similarity search system using a vector database and Quarkus LangChain4j"
-msgstr ""
+msgstr "展示如何使用矢量数据库和 Quarkus LangChain4j 创建电影相似性搜索系统"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
 msgid "Introduction"
 msgstr "简介"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid ""
 "With LLMs becoming increasingly popular we often see them being used even for tasks that are not directly related to text generation.\n"
 "Such case is using LLMs for recommendation systems. In this post we'll see how you can build such a system using https://docs.quarkiverse.io/quarkus-langchain4j/dev/index.html[Quarkus LangChain4j]\n"
 "but without using LLMs. More specifically we'll create a simple movie similarity search system using a vector database. The role\n"
 "of https://docs.quarkiverse.io/quarkus-langchain4j/dev/index.html[Quarkus LangChain4j] in this story is to abstract the underlying vector database through the `EmbeddingStore` interface."
-msgstr ""
+msgstr "随着 LLM 越来越流行，我们经常看到它们甚至被用于与文本生成没有直接关系的任务。将 LLMs 用于推荐系统就是这种情况。在这篇文章中，我们将介绍如何使用 link:https://docs.quarkiverse.io/quarkus-langchain4j/dev/index.html[Quarkus LangChain4j] 构建这样一个系统，但不使用 LLM。更具体地说，我们将使用向量数据库创建一个简单的电影相似性搜索系统。在这个故事中， link:https://docs.quarkiverse.io/quarkus-langchain4j/dev/index.html[Quarkus LangChain4j] 的作用是通过 `EmbeddingStore` 接口对底层矢量数据库进行抽象。"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "A relevant sample has been recently added to the https://github.com/quarkiverse/quarkus-langchain4j/tree/main/samples/[Quarkus LangChain4j samples]."
-msgstr ""
+msgstr "最近， link:https://github.com/quarkiverse/quarkus-langchain4j/tree/main/samples/[Quarkus LangChain4j 样本] 中添加了一个相关样本。"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "Embeddings"
-msgstr ""
+msgstr "嵌入"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid ""
 "An embedding is a way to represent unstructured data (text, images etc.) in a structured way. This is done by mapping the data into a vector.\n"
 "As we are able to perform mathematical operations on vectors, such as calculating the distance between them, we can use embeddings to calculate\n"
 "how close (or similar) two pieces of data are. In our case, comparing the embeddings of the movie overview can give us a measure of how similar\n"
 "the two movies are. This is the premise of this post."
-msgstr ""
+msgstr "嵌入是一种以结构化方式表示非结构化数据（文本、图像等）的方法。这是通过将数据映射成向量来实现的。由于我们可以对向量进行数学运算，比如计算它们之间的距离，因此我们可以使用嵌入来计算两个数据的接近（或相似）程度。在我们的例子中，比较电影概览的嵌入可以衡量两部电影的相似程度。这就是本篇文章的前提。"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "How are embeddings created?"
-msgstr ""
+msgstr "如何创建嵌入式？"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "There are multiple ways to create embeddings. https://docs.quarkiverse.io/quarkus-langchain4j/dev/index.html[Quarkus LangChain4j] provides the following:"
-msgstr ""
+msgstr "创建嵌入有多种方法。 link:https://docs.quarkiverse.io/quarkus-langchain4j/dev/index.html[Quarkus LangChain4j] 提供了以下几种方法："
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "https://docs.quarkiverse.io/quarkus-langchain4j/dev/in-process-embedding.html[In-process embedding]"
-msgstr ""
+msgstr "link:https://docs.quarkiverse.io/quarkus-langchain4j/dev/in-process-embedding.html[进程中嵌入]"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "https://docs.quarkiverse.io/quarkus-langchain4j/dev/llms.html[Model provider]"
-msgstr ""
+msgstr "link:https://docs.quarkiverse.io/quarkus-langchain4j/dev/llms.html[模式提供商]"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid ""
 "In this post we'll use the former. Did I mention that we won't be using LLMs?\n"
 "Instead, we'll be using https://github.com/pgvector/pgvector[pgvector] which is a PostgreSQL extension that provides vector operations and indexing."
-msgstr ""
+msgstr "在本篇文章中，我们将使用前者。我提到过我们不会使用 LLMs 吗？相反，我们将使用 link:https://github.com/pgvector/pgvector[pgvector] ，它是 PostgreSQL 的一个扩展，提供矢量操作和索引。"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "Our project will need the following dependencies, for https://github.com/pgvector/pgvector[pgvector] and https://docs.quarkiverse.io/quarkus-langchain4j/dev/in-process-embedding.html[in-process embedding]:"
-msgstr ""
+msgstr "我们的项目需要以下依赖项，用于 link:https://github.com/pgvector/pgvector[pgvector] 和 link:https://docs.quarkiverse.io/quarkus-langchain4j/dev/in-process-embedding.html[进程内嵌入] ："
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "To be able to use these dependencies without needing to specify versions, the BOM can be imported to the `dependencyManagement` of the project:"
-msgstr ""
+msgstr "为了使用这些依赖关系而无需指定版本，可以将 BOM 导入项目的 `dependencyManagement` ："
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid ""
 "To properly use the in-process embedding model we need to configure it in the `application.properties` file.\n"
 "We also need to configure the pgvector dimension and ensure it's aligned with the dimension of the embedding model.\n"
 "In our case, it's 384 (the https://docs.quarkiverse.io/quarkus-langchain4j/dev/index.html[Quarkus LangChain4j] documentation provides the size used by each model)."
-msgstr ""
+msgstr "要正确使用进程内嵌入模型，我们需要在 `application.properties` 文件中对其进行配置。我们还需要配置 pgvector 的尺寸，并确保它与嵌入模型的尺寸一致。我们的情况是 384（ link:https://docs.quarkiverse.io/quarkus-langchain4j/dev/index.html[Quarkus LangChain4j] 文档提供了每个模型使用的尺寸）。"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "So, the `application.properties` file should look like this:"
-msgstr ""
+msgstr "因此， `application.properties` 文件应该是这样的："
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid ""
 "*Note*: We can use any other document store supported by https://docs.quarkiverse.io/quarkus-langchain4j/dev/index.html[Quarkus LangChain4j], in fact that's one of the key benefits of using it, the abstraction\n"
 "of embeddings stores."
-msgstr ""
+msgstr "*注* ：我们可以使用 link:https://docs.quarkiverse.io/quarkus-langchain4j/dev/index.html[Quarkus LangChain4j] 支持的任何其他文档存储，事实上，这正是使用 link:https://docs.quarkiverse.io/quarkus-langchain4j/dev/index.html[Quarkus LangChain4j] 的主要优势之一，即对嵌入式存储的抽象。"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "Storing the embedding"
-msgstr ""
+msgstr "存储嵌入"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid ""
 "To store the embedding we'll need an `EmbeddingStoreIngestor` The ingestor is created using the `EmbeddingModel` and the `EmbeddingStore`, both provided\n"
 "as beans and can be easily injected. Alternatively, the user can specify a document splitter, for splitting large documents into smaller chunks, but we won't be needing that\n"
 "in this post, as the movie overview are relatively small."
-msgstr ""
+msgstr "为了存储嵌入内容，我们需要一个 `EmbeddingStoreIngestor` 。摄取器是通过 `EmbeddingModel` 和 `EmbeddingStore` 创建的，两者都以 Bean 形式提供，可以轻松注入。另外，用户还可以指定一个文档分割器，将大文档分割成小块，但我们在这篇文章中不需要这样做，因为电影概览相对较小。"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid ""
 "Before passing the unstructured text to the ingestor we need to wrap it in a `Document` object. The `Document` also contains a `Metadata` object which holds key-value pairs.\n"
 "The `Metadata` is really handy as we can add there information needed for correlating the `Document` with other data. In our case we'll use the `Metadata` to store the id of the movie.\n"
 "That id will help us correlate the movie overview with the actual movie."
-msgstr ""
+msgstr "在将非结构化文本传递给采集器之前，我们需要将其封装在 `Document` 对象中。 `Document` 还包含一个 `Metadata` 对象，该对象用于保存键值对。 `Metadata` 非常方便，因为我们可以在其中添加将 `Document` 与其他数据关联起来所需的信息。在本例中，我们将使用 `Metadata` 来存储电影的 id。该 id 将帮助我们将电影概览与实际电影关联起来。"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "The simplified code below shows, how the actual ingestor is created and how the embedding is stored."
-msgstr ""
+msgstr "下面的简化代码显示了如何创建实际的摄取器以及如何存储嵌入。"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid ""
 "So, how exactly do we use the movie id ? This depends really on how we store the rest of the movie data. In our case, we'll store the movie data in a PostgreSQL database.\n"
 "This means that the movie id, corresponds to the id of the Movie in the database."
-msgstr ""
+msgstr "那么，我们究竟该如何使用电影 ID 呢？这实际上取决于我们如何存储电影数据的其他部分。在我们的例子中，我们将把电影数据存储在 PostgreSQL 数据库中。这就意味着电影 ID 与数据库中电影的 ID 相对应。"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "Querying the embedding"
-msgstr ""
+msgstr "查询嵌入"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid ""
 "To query the embedding we'll use the `EmbeddingStore` and the `EmbeddingModel` in order to execute `EmbeddingSearchRequest`.\n"
 "The code is pretty straight forward. We use the movie overview to create a search request. The `EmbeddingSearchRequest` builder\n"
 "also allows us to specify the maximum number of results and also the minimum similarity threshold. The later allows us to filter\n"
 "out embeddings that are not similar enough to the query embedding. In other words, it tells the store that if there are not enough similar results\n"
 "to avoid adding irrelevant results to the response."
-msgstr ""
+msgstr "为了查询嵌入情况，我们将使用 `EmbeddingStore` 和 `EmbeddingModel` ，以便执行 `EmbeddingSearchRequest` 。代码非常简单。我们使用影片概览来创建搜索请求。 `EmbeddingSearchRequest` 生成器还允许我们指定结果的最大数量和最小相似度阈值。后者允许我们过滤掉与查询嵌入式不够相似的嵌入式。换句话说，它告诉存储空间，如果没有足够的相似结果，就要避免将不相关的结果添加到响应中。"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "Loading the movies"
-msgstr ""
+msgstr "加载电影"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid ""
 "To populate the movies in the database, we'll use a CSV file containing the top 1000 movies from IMDB.\n"
 "The important columns for us are:"
-msgstr ""
+msgstr "为了在数据库中填充电影，我们将使用一个 CSV 文件，其中包含 IMDB 中排名前 1000 位的电影。对我们来说，重要的列有"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "`title` the movie title"
-msgstr ""
+msgstr "`title` 片名"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "`overview` the movie overview"
-msgstr ""
+msgstr "`overview` 电影概览"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "`link` the link to the image poster"
-msgstr ""
+msgstr "`link` 图像海报的链接"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid ""
 "To easily map CSV entries to `Movie` objects we'll use `Jackson`. Specifically, we will use the `@JsonProperty`\n"
 "annotation to map the CSV columns to the `Movie` fields. Also, we'll use `@JsonIgnoreProperties(ignoreUnknown = true)`\n"
 "to ignore unknown fields."
-msgstr ""
+msgstr "为了方便地将 CSV 条目映射到 `Movie` 对象，我们将使用 `Jackson` 。具体来说，我们将使用 `@JsonProperty` 注释将 CSV 列映射到 `Movie` 字段。此外，我们还将使用 `@JsonIgnoreProperties(ignoreUnknown = true)` 忽略未知字段。"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "So, a simplified version of our Movie entity object looks like:"
-msgstr ""
+msgstr "因此，我们的 \"电影 \"实体对象简化版看起来就像这样："
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "So, now we are ready to load our movies from the CSV to our relational and vector databases."
-msgstr ""
+msgstr "现在，我们可以将 CSV 中的影片加载到关系数据库和矢量数据库中了。"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "Key points:"
-msgstr ""
+msgstr "要点"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "Observing the `StartupEvent` allows us to load the movies when the application starts"
-msgstr ""
+msgstr "通过观察 `StartupEvent` ，我们可以在应用程序启动时加载影片"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "CSVMapper is used to map the CSV entries to `Movie` objects"
-msgstr ""
+msgstr "CSVMapper 用于将 CSV 条目映射为 `Movie` 对象"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "We save each movie using a @Transaction method because we need that `id` that's often generated by the database"
-msgstr ""
+msgstr "我们使用 @Transaction 方法保存每部影片，因为我们需要数据库经常生成的 `id` "
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "We ingest the documents in a batch. This can make a huge difference especially, if we move from in-process to remote embedding models."
-msgstr ""
+msgstr "我们批量摄取文件。尤其是当我们从流程内嵌入模式转向远程嵌入模式时，这将带来巨大的不同。"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "To use the CSV mapper, we'll need to Jackson's CSV dataformat dependency:"
-msgstr ""
+msgstr "要使用 CSV 映射器，我们需要依赖 Jackson 的 CSV 数据格式："
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "The path of the movies file is specified in the `application.properties` file."
-msgstr ""
+msgstr "电影文件的路径在 `application.properties` 文件中指定。"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "Bringing it all together"
-msgstr ""
+msgstr "将一切融为一体"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid ""
 "The only thing that's left is to create a REST endpoint that allows us to search for similar movies. We could also use a simple UI.\n"
 "Let's start with the REST endpoint. It's pretty straightforward. We need two methods, one for searching movies and one for searching similar movies.\n"
 "For the former we just use the `Movie` entity, for the latter we inject and use the `MovieRecommendationService` we created earlier."
-msgstr ""
+msgstr "剩下的工作就是创建一个 REST 端点，让我们可以搜索类似的电影。我们还可以使用一个简单的用户界面。让我们从 REST 端点开始。这很简单。我们需要两个方法，一个用于搜索电影，另一个用于搜索类似电影。对于前者，我们只需使用 `Movie` 实体；对于后者，我们注入并使用之前创建的 `MovieRecommendationService` 。"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "For the UI, let's just use a simple HTML page that uses the REST endpoint to search for similar movies."
-msgstr ""
+msgstr "在用户界面方面，我们只需使用一个简单的 HTML 页面，利用 REST 端点搜索类似的电影。"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "The key elements of that page are:"
-msgstr ""
+msgstr "该页面的主要内容包括"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "movie-box: a text field for entering the movie title"
-msgstr ""
+msgstr "movie-box: 输入电影标题的文本框"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "search-results: an unordered list for displaying the search results"
-msgstr ""
+msgstr "search-results：用于显示搜索结果的无序列表"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "movie-overview: div for displaying the overview of the selected movie"
-msgstr ""
+msgstr "movie-overview：用于显示所选影片概览的 div"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "movie-poster: an image for displaying the movie poster"
-msgstr ""
+msgstr "电影海报：用于显示电影海报的图像"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid "similar-results: an additional unordered list for displaying the similar movies"
-msgstr ""
+msgstr "similar-results：附加的无序列表，用于显示相似影片"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid ""
 "It's important to remember that the `Movie` entity is using Jackson to map the CSV columns to the entity fields.\n"
 "This means that when a `Movie` is serialized to JSON, it will use the CSV column names as the field names and not\n"
 "the entity field names. The HTML code below needs to take that into consideration."
-msgstr ""
+msgstr "重要的是要记住， `Movie` 实体使用 Jackson 将 CSV 列映射到实体字段。这意味着，当 `Movie` 序列化为 JSON 时，它将使用 CSV 列名作为字段名称，而不是实体字段名称。下面的 HTML 代码需要考虑到这一点。"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid ""
 "I won't go into much detail about the HTML code as it's outside the scope of this post.\n"
 "The final results should look like this:"
-msgstr ""
+msgstr "由于 HTML 代码不在本帖讨论范围之内，我就不详细介绍了。最终结果应该是这样的"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
 msgid "Conclusion"
 msgstr "解决方案"
 
 #: _posts/2025-03-24-movie-similarity-search-using-vector-databases.adoc
+#, fuzzy
 msgid ""
 "The quality of the recommendations depends on the accuracy of the movie overview and also on the quality of the embeddings.\n"
 "This means that better embedding models can lead to better recommendations. The vector database used could possibly also\n"
 "affect the quality of the recommendations, but that's a topic for another post."
-msgstr ""
+msgstr "推荐的质量取决于电影概览的准确性，也取决于嵌入模型的质量。这意味着更好的嵌入模型可以带来更好的推荐。使用的向量数据库也可能影响推荐的质量，但这是下一篇文章的主题。"
