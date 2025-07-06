@@ -7,424 +7,756 @@ msgstr ""
 "X-Generator: jekyll-l10n\n"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "Getting ready for secure MCP with Quarkus MCP Server"
-msgstr ""
+msgstr "使用 Quarkus MCP 服务器为安全 MCP 做好准备"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Explain how MCP clients can access Quarkus MCP SSE servers with access tokens"
-msgstr ""
+#, fuzzy
+msgid ""
+"Explain how MCP clients can access Quarkus MCP SSE servers with access "
+"tokens"
+msgstr "解释 MCP 客户端如何使用访问令牌访问 Quarkus MCP SSE 服务器"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
 msgid "Introduction"
 msgstr "简介"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "https://modelcontextprotocol.io/specification/2025-03-26[The latest version of the Model Context Protocol (MCP) specification] introduces an https://modelcontextprotocol.io/specification/2025-03-26/basic/authorization[authorization] flow."
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "While it will take a bit of time for the new MCP specification to be widely supported, you can already add authentication to client and server following the https://modelcontextprotocol.io/specification/2024-11-05[previous MCP version]."
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "You only need an MCP client that can receive an access token and pass it to the MCP server and, obviously, an MCP server that verifies the token."
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "In this post, we will detail how you can enforce authentication with the https://github.com/quarkiverse/quarkus-mcp-server[Quarkus MCP SSE Server]."
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "We will first use Keycloak as an OpenID Connect (OIDC) provider to login and use a Keycloak JWT access token to access the server with `Quarkus MCP SSE Server Dev UI` in dev mode."
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Secondly, we will show how to log in using GitHub OAuth2 and use a GitHub binary access token to access the server in prod mode with both https://modelcontextprotocol.io/docs/tools/inspector[MCP inspector] and the `curl` tools."
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Step 1 - Create an MCP server using the SSE transport"
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "First, let's create a secure Quarkus MCP SSE server that requires authentication to establish Server-Sent Events (SSE) connection and also when invoking the tools."
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "You can find the complete project source in the https://github.com/quarkiverse/quarkus-mcp-server/tree/main/samples/secure-mcp-sse-server[Quarkus MCP SSE Server samples]."
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Maven dependencies"
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Add the following dependencies:"
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "`quarkus-mcp-server-sse` is required to support MCP SSE transport."
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "`quarkus-oidc` is required to secure access to MCP SSE endpoints. Its version is defined in the Quarkus BOM."
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Tool"
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Let's create a tool that can be invoked only if the current MCP request is authenticated:"
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Provide a tool that can return a name of the current user. Note the `user-name-provider` tool name, you will use it later for a tool call."
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid ""
-"Require authenticated tool access - yes, the only difference with an unauthenticated MCP server tool is `@Authenticated`, that's it!\n"
-"See also how the main MCP SSE endpoint is secured in the <<initial-configuration>> section below."
+"https://modelcontextprotocol.io/specification/2025-03-26[The latest version "
+"of the Model Context Protocol (MCP) specification] introduces an https://"
+"modelcontextprotocol.io/specification/2025-03-26/basic/"
+"authorization[authorization] flow."
 msgstr ""
+"link:https://modelcontextprotocol.io/specification/2025-03-"
+"26[最新版本的模型上下文协议（MCP）规范] 引入了 link:https://modelcontextprotocol.io/"
+"specification/2025-03-26/basic/authorization[授权] 流程。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid ""
+"While it will take a bit of time for the new MCP specification to be widely "
+"supported, you can already add authentication to client and server following "
+"the https://modelcontextprotocol.io/specification/2024-11-05[previous MCP "
+"version]."
+msgstr ""
+"虽然广泛支持新的 MCP 规范还需要一些时间，但您已经可以按照 link:https://modelcontextprotocol.io/"
+"specification/2024-11-05[以前的 MCP 版本] 为客户端和服务器添加身份验证功能。"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid ""
+"You only need an MCP client that can receive an access token and pass it to "
+"the MCP server and, obviously, an MCP server that verifies the token."
+msgstr "你只需要一个能接收访问令牌并将其传递给 MCP 服务器的 MCP 客户端，当然，还需要一个能验证令牌的 MCP 服务器。"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid ""
+"In this post, we will detail how you can enforce authentication with the "
+"https://github.com/quarkiverse/quarkus-mcp-server[Quarkus MCP SSE Server]."
+msgstr ""
+"在本篇文章中，我们将详细介绍如何使用 link:https://github.com/quarkiverse/quarkus-mcp-"
+"server[Quarkus MCP SSE 服务器] 执行身份验证。"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid ""
+"We will first use Keycloak as an OpenID Connect (OIDC) provider to login and "
+"use a Keycloak JWT access token to access the server with `Quarkus MCP SSE "
+"Server Dev UI` in dev mode."
+msgstr ""
+"我们将首先使用 Keycloak 作为 OpenID Connect (OIDC) 提供商进行登录，并使用 Keycloak JWT "
+"访问令牌在开发模式下访问 `Quarkus MCP SSE Server Dev UI` 服务器。"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid ""
+"Secondly, we will show how to log in using GitHub OAuth2 and use a GitHub "
+"binary access token to access the server in prod mode with both https://"
+"modelcontextprotocol.io/docs/tools/inspector[MCP inspector] and the `curl` "
+"tools."
+msgstr ""
+"其次，我们将演示如何使用 GitHub OAuth2 登录，并使用 GitHub 二进制访问令牌以 prod 模式通过 link:https://"
+"modelcontextprotocol.io/docs/tools/inspector[MCP inspector] 和 `curl` "
+"工具访问服务器。"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid "Step 1 - Create an MCP server using the SSE transport"
+msgstr "步骤 1 - 使用 SSE 传输创建 MCP 服务器"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid ""
+"First, let's create a secure Quarkus MCP SSE server that requires "
+"authentication to establish Server-Sent Events (SSE) connection and also "
+"when invoking the tools."
+msgstr "首先，让我们创建一个安全的 Quarkus MCP SSE 服务器，它要求在建立服务器发送事件（SSE）连接和调用工具时进行身份验证。"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid ""
+"You can find the complete project source in the https://github.com/"
+"quarkiverse/quarkus-mcp-server/tree/main/samples/secure-mcp-sse-"
+"server[Quarkus MCP SSE Server samples]."
+msgstr ""
+"您可以在 link:https://github.com/quarkiverse/quarkus-mcp-server/tree/main/"
+"samples/secure-mcp-sse-server[Quarkus MCP SSE 服务器示例] 中找到完整的项目源代码。"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid "Maven dependencies"
+msgstr "Maven 依赖项"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid "Add the following dependencies:"
+msgstr "添加以下依赖项"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid "`quarkus-mcp-server-sse` is required to support MCP SSE transport."
+msgstr "`quarkus-mcp-server-sse` 支持 MCP SSE 传输。"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid ""
+"`quarkus-oidc` is required to secure access to MCP SSE endpoints. Its "
+"version is defined in the Quarkus BOM."
+msgstr "`quarkus-oidc` 是确保 MCP SSE 端点访问安全所必需的。其版本已在 Quarkus BOM 中定义。"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid "Tool"
+msgstr "工具"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid ""
+"Let's create a tool that can be invoked only if the current MCP request is "
+"authenticated:"
+msgstr "让我们创建一个工具，只有当前的 MCP 请求通过验证后才能调用："
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid ""
+"Provide a tool that can return a name of the current user. Note the `user-"
+"name-provider` tool name, you will use it later for a tool call."
+msgstr "提供一个可以返回当前用户名称的工具。请注意 `user-name-provider` 工具名称，稍后将用于工具调用。"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid ""
+"Require authenticated tool access - yes, the only difference with an "
+"unauthenticated MCP server tool is `@Authenticated`, that's it!\n"
+"See also how the main MCP SSE endpoint is secured in the <<initial-"
+"configuration>> section below."
+msgstr ""
+"要求经过身份验证的工具访问 - 是的，与未经身份验证的 MCP 服务器工具的唯一区别是 `@Authenticated` ，仅此而已！另请参阅下面的 "
+"<<initial-configuration>> 部分，了解主要 MCP SSE 端点是如何确保安全的。"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "Use the injected `SecurityIdentity` to return the current user's name."
-msgstr ""
+msgstr "使用注入的 `SecurityIdentity` 返回当前用户的名称。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "Configuration"
-msgstr ""
+msgstr "配置"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "Finally, let's configure our secure MCP server:"
-msgstr ""
+msgstr "最后，让我们配置安全的 MCP 服务器："
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Enforce an authenticated access to the main MCP SSE endpoint during the initial handshake. See also how the tool is secured with an annotation in the <<tool>> section above, though you can also secure access to the tool by listing both main and tools endpoints in the configuration, for example: `quarkus.http.auth.permission.authenticated.paths=/mcp/sse,/mcp/messages/*`."
+#, fuzzy
+msgid ""
+"Enforce an authenticated access to the main MCP SSE endpoint during the "
+"initial handshake. See also how the tool is secured with an annotation in "
+"the <<tool>> section above, though you can also secure access to the tool by "
+"listing both main and tools endpoints in the configuration, for example: "
+"`quarkus.http.auth.permission.authenticated.paths=/mcp/sse,/mcp/messages/*`."
 msgstr ""
+"在初始握手过程中，强制对主 MCP SSE 端点进行验证访问。另请参阅上文 <<tool>> "
+"部分的注释，了解如何确保工具的安全，当然也可以通过在配置中同时列出主端点和工具端点来确保工具的访问安全，例如： `quarkus.http.auth."
+"permission.authenticated.paths=/mcp/sse,/mcp/messages/*` 。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "We are ready to test our secure MCP server in dev mode."
-msgstr ""
+msgstr "我们已经准备好在开发模式下测试我们的安全 MCP 服务器。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "Step 2 - Access the MCP server in dev mode"
-msgstr ""
+msgstr "步骤 2 - 以开发模式访问 MCP 服务器"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "Start the MCP server in dev mode"
-msgstr ""
+msgstr "以开发模式启动 MCP 服务器"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "The configuration properties that we set in the <<initial-configuration>> section above are sufficient to start the application in dev mode."
-msgstr ""
+#, fuzzy
+msgid ""
+"The configuration properties that we set in the <<initial-configuration>> "
+"section above are sufficient to start the application in dev mode."
+msgstr "我们在 <<initial-configuration>> 部分设置的配置属性足以在开发模式下启动应用程序。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "The OIDC configuration is provided in dev mode automatically by https://quarkus.io/guides/security-openid-connect-dev-services[Dev Services for Keycloak]. It creates a default realm, client and adds two users, `alice` and `bob`, for you to get started with OIDC immediately. You can also register a custom Keycloak realm to work with the existing realm, client and user registrations."
+#, fuzzy
+msgid ""
+"The OIDC configuration is provided in dev mode automatically by https://"
+"quarkus.io/guides/security-openid-connect-dev-services[Dev Services for "
+"Keycloak]. It creates a default realm, client and adds two users, `alice` "
+"and `bob`, for you to get started with OIDC immediately. You can also "
+"register a custom Keycloak realm to work with the existing realm, client and "
+"user registrations."
 msgstr ""
+"OIDC 配置由 link:https://quarkus.io/guides/security-openid-connect-dev-"
+"services[Keycloak 的 Dev Services] 以开发模式自动提供。它会创建一个默认域、客户端，并添加两个用户 `alice` 和 "
+"`bob` ，让你立即开始使用 OIDC。您也可以注册自定义 Keycloak 领域，以便与现有领域、客户端和用户注册一起使用。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "You can also login to other OIDC and OAuth2 providers in OIDC Dev UI, see the <<mcp-server-devui>> section for more details."
+#, fuzzy
+msgid ""
+"You can also login to other OIDC and OAuth2 providers in OIDC Dev UI, see "
+"the <<mcp-server-devui>> section for more details."
 msgstr ""
+"您还可以在 OIDC Dev UI 中登录其他 OIDC 和 OAuth2 提供商，详情请参见 <<mcp-server-devui>> 部分。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "Use OIDC Dev UI to login and copy access token"
-msgstr ""
+msgstr "使用 OIDC Dev UI 登录并复制访问令牌"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Go to http://localhost:8080/q/dev[Dev UI], find the OpenId Connect card:"
-msgstr ""
+#, fuzzy
+msgid ""
+"Go to http://localhost:8080/q/dev[Dev UI], find the OpenId Connect card:"
+msgstr "进入 link:http://localhost:8080/q/dev[开发人员用户界面] ，找到 OpenId Connect 卡："
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Follow the `Keycloak Provider` link and https://quarkus.io/guides/security-openid-connect-dev-services#develop-service-applications[login to Keycloak] using an `alice` name and an `alice` password."
+#, fuzzy
+msgid ""
+"Follow the `Keycloak Provider` link and https://quarkus.io/guides/security-"
+"openid-connect-dev-services#develop-service-applications[login to Keycloak] "
+"using an `alice` name and an `alice` password."
 msgstr ""
+"点击 `Keycloak Provider` 链接，使用 `alice` 名称和 `alice` 密码 link:https://quarkus.io/"
+"guides/security-openid-connect-dev-services#develop-service-applications[登录 "
+"Keycloak] 。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "You can login to other providers such as `Auth0` or https://quarkus.io/guides/security-openid-connect-providers#github[GitHub] from OIDC DevUI as well. The only requirement is to update your application registration to allow callbacks to DevUI. For example, see how you can https://quarkus.io/guides/security-oidc-auth0-tutorial#looking-at-auth0-tokens-in-the-oidc-dev-ui[login to Auth0 from Dev UI]."
+#, fuzzy
+msgid ""
+"You can login to other providers such as `Auth0` or https://quarkus.io/"
+"guides/security-openid-connect-providers#github[GitHub] from OIDC DevUI as "
+"well. The only requirement is to update your application registration to "
+"allow callbacks to DevUI. For example, see how you can https://quarkus.io/"
+"guides/security-oidc-auth0-tutorial#looking-at-auth0-tokens-in-the-oidc-dev-"
+"ui[login to Auth0 from Dev UI]."
 msgstr ""
+"您也可以通过 OIDC DevUI 登录 `Auth0` 或 link:https://quarkus.io/guides/security-"
+"openid-connect-providers#github[GitHub] 等其他提供商。唯一的要求是更新您的应用程序注册，以允许回调到 "
+"DevUI。例如，请参阅如何 link:https://quarkus.io/guides/security-oidc-auth0-"
+"tutorial#looking-at-auth0-tokens-in-the-oidc-dev-ui[从 DevUI 登录 Auth0] 。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "After logging in with `Keycloak` as `alice`, copy the acquired access token using a provided copy button:"
-msgstr ""
+#, fuzzy
+msgid ""
+"After logging in with `Keycloak` as `alice`, copy the acquired access token "
+"using a provided copy button:"
+msgstr "使用 `Keycloak` 作为 `alice` 登录后，使用提供的复制按钮复制获取的访问令牌："
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "Use Quarkus MCP Server Dev UI to access the MCP server"
-msgstr ""
+msgstr "使用 Quarkus MCP 服务器 Dev UI 访问 MCP 服务器"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Make sure to login and copy the access token as explained in the <<oidc-devui>> section above."
-msgstr ""
+#, fuzzy
+msgid ""
+"Make sure to login and copy the access token as explained in the <<oidc-"
+"devui>> section above."
+msgstr "确保登录并复制访问令牌，如上文 <<oidc-devui>> 部分所述。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "Go to http://localhost:8080/q/dev[Dev UI], find the MCP Server card:"
-msgstr ""
+msgstr "进入 link:http://localhost:8080/q/dev[Dev UI] ，找到 MCP 服务器卡："
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Select its `Tools` option and choose to `Call` the `user-name-provider` tool:"
-msgstr ""
+#, fuzzy
+msgid ""
+"Select its `Tools` option and choose to `Call` the `user-name-provider` tool:"
+""
+msgstr "选择 `Tools` 选项，并选择 `Call` `user-name-provider` 工具："
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Paste the copied Keycloak access token into the Tool's `Bearer token` field, and request a new MCP SSE session:"
-msgstr ""
+#, fuzzy
+msgid ""
+"Paste the copied Keycloak access token into the Tool's `Bearer token` field, "
+"and request a new MCP SSE session:"
+msgstr "将复制的 Keycloak 访问令牌粘贴到工具的 `Bearer token` 字段，然后请求新的 MCP SSE 会话："
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Make a tool call and get a response which contains the `alice` user name:"
-msgstr ""
+#, fuzzy
+msgid ""
+"Make a tool call and get a response which contains the `alice` user name:"
+msgstr "调用工具并获得包含 `alice` 用户名的响应："
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid ""
 "All is good in dev mode; it is time to see how it will work in prod mode.\n"
 "Before that, stop the MCP server, which runs in dev mode."
-msgstr ""
+msgstr "开发模式下一切正常，现在该看看它在 prod 模式下的运行情况了。在此之前，先停止在开发模式下运行的 MCP 服务器。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "Step 3 - Access the MCP server in prod mode"
-msgstr ""
+msgstr "步骤 3 - 以 prod 模式访问 MCP 服务器"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "Register GitHub OAuth2 application"
-msgstr ""
+msgstr "注册 GitHub OAuth2 应用程序"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Before it was all in dev mode - using Quarkus devservices to try things out. Now, let's move to prod mode. If you already have a Keycloak instance running then you can use it. But to illustrate how OAuth2 works with more than just Keycloak, we will switch to GitHub OAuth2 when the application runs in _prod mode_."
+#, fuzzy
+msgid ""
+"Before it was all in dev mode - using Quarkus devservices to try things out. "
+"Now, let's move to prod mode. If you already have a Keycloak instance "
+"running then you can use it. But to illustrate how OAuth2 works with more "
+"than just Keycloak, we will switch to GitHub OAuth2 when the application "
+"runs in _prod mode_."
 msgstr ""
+"之前，我们都是在开发模式下使用 Quarkus Devservices 来进行尝试。现在，让我们转到 prod 模式。如果你已经运行了 Keycloak "
+"实例，那么就可以使用它。不过，为了说明 OAuth2 不仅仅适用于 Keycloak，当应用程序在 _prod 模式_ 下运行时，我们将切换到 "
+"GitHub OAuth2。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "First, start with registering a GitHub OAuth2 application."
-msgstr ""
+msgstr "首先，注册一个 GitHub OAuth2 应用程序。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Follow the https://quarkus.io/guides/security-openid-connect-providers#github[GitHub OAuth2 registration] process, and make sure to register the `http://localhost:8080/login` callback URL."
+#, fuzzy
+msgid ""
+"Follow the https://quarkus.io/guides/security-openid-connect-"
+"providers#github[GitHub OAuth2 registration] process, and make sure to "
+"register the `http://localhost:8080/login` callback URL."
 msgstr ""
+"按照 link:https://quarkus.io/guides/security-openid-connect-"
+"providers#github[GitHub OAuth2 注册] 流程操作，确保注册了 `http://localhost:8080/login` "
+"回调 URL。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Next, use the client id and secret generated during the GitHub OAuth2 application registration to <<update-config-to-support-github,update the configuration to support GitHub>>."
+#, fuzzy
+msgid ""
+"Next, use the client id and secret generated during the GitHub OAuth2 "
+"application registration to <<update-config-to-support-github,update the "
+"configuration to support GitHub>>."
 msgstr ""
+"接下来，使用在 GitHub OAuth2 应用程序注册过程中生成的客户端 ID 和密码 xref:update-config-to-support-"
+"github[更新配置以支持 GitHub] 。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "Update the configuration to support GitHub"
-msgstr ""
+msgstr "更新配置以支持 GitHub"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "The <<initial-configuration, configuration>> that was used to run the MCP server in dev mode was suffient because Keycloak Dev Service was supporting the OIDC login."
+#, fuzzy
+msgid ""
+"The <<initial-configuration, configuration>> that was used to run the MCP "
+"server in dev mode was suffient because Keycloak Dev Service was supporting "
+"the OIDC login."
 msgstr ""
+"由于 Keycloak Dev Service 支持 OIDC 登录，因此在开发模式下运行 MCP 服务器的 xref:initial-"
+"configuration[配置] 已经足够。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "To work with GitHub in prod mode, we update the configuration as follows:"
-msgstr ""
+#, fuzzy
+msgid ""
+"To work with GitHub in prod mode, we update the configuration as follows:"
+msgstr "要在 prod 模式下使用 GitHub，我们需要更新配置如下："
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Enforce an authenticated access to the main MCP SSE endpoint during the initial handshake. See also how the tool is secured with an annotation in the <<tool>> section above."
-msgstr ""
+#, fuzzy
+msgid ""
+"Enforce an authenticated access to the main MCP SSE endpoint during the "
+"initial handshake. See also how the tool is secured with an annotation in "
+"the <<tool>> section above."
+msgstr "在初始握手过程中强制执行对主 MCP SSE 端点的验证访问。另请参阅上文 <<tool>> 部分的注释，了解如何确保工具安全。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Default Quarkus OIDC configuration requires that only GitHub access tokens can be used to access MCP SSE server."
-msgstr ""
+#, fuzzy
+msgid ""
+"Default Quarkus OIDC configuration requires that only GitHub access tokens "
+"can be used to access MCP SSE server."
+msgstr "默认的 Quarkus OIDC 配置要求只能使用 GitHub 访问令牌访问 MCP SSE 服务器。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "By default, `quarkus.oidc.provider=github` supports an authorization code flow only. `quarkus.oidc.application-type=service` overrides it and requires the use of bearer tokens."
+#, fuzzy
+msgid ""
+"By default, `quarkus.oidc.provider=github` supports an authorization code "
+"flow only. `quarkus.oidc.application-type=service` overrides it and requires "
+"the use of bearer tokens."
 msgstr ""
+"默认情况下， `quarkus.oidc.provider=github` 只支持授权码流。 `quarkus.oidc.application-"
+"type=service` 会覆盖它，并要求使用承载令牌。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Use GitHub authorization code flow to support the login endpoint with a dedicated Quarkus OIDC `login` https://quarkus.io/guides/security-openid-connect-multitenancy[tenant] configuration."
+#, fuzzy
+msgid ""
+"Use GitHub authorization code flow to support the login endpoint with a "
+"dedicated Quarkus OIDC `login` https://quarkus.io/guides/security-openid-"
+"connect-multitenancy[tenant] configuration."
 msgstr ""
+"使用 GitHub 授权代码流，通过专用的 Quarkus OIDC `login` link:https://quarkus.io/guides/"
+"security-openid-connect-multitenancy[租户] 配置支持登录端点。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Use the client id and secret generated in the <<register-github-application>> section."
-msgstr ""
+#, fuzzy
+msgid ""
+"Use the client id and secret generated in the <<register-github-"
+"application>> section."
+msgstr "使用在 <<register-github-application>> 部分生成的客户 ID 和密码。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Note the use of the `%prod.` prefixes. It ensures the configuration properties prefixed with `%prod.` are only effective in prod mode and do not interfere with dev mode."
+#, fuzzy
+msgid ""
+"Note the use of the `%prod.` prefixes. It ensures the configuration "
+"properties prefixed with `%prod.` are only effective in prod mode and do not "
+"interfere with dev mode."
 msgstr ""
+"请注意 `%prod.` 前缀的使用。这样可以确保以 `%prod.` 为前缀的配置属性只在 prod 模式下有效，而不会干扰 dev 模式。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "Implement Login endpoint"
-msgstr ""
+msgstr "实施登录终端"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Currently, MCP clients can not use the authorization code flow themselves. Therefore, we implement an OAuth2 login endpoint that will return a GitHub token for the user to use with MCP clients, which can work with bearer tokens."
+#, fuzzy
+msgid ""
+"Currently, MCP clients can not use the authorization code flow themselves. "
+"Therefore, we implement an OAuth2 login endpoint that will return a GitHub "
+"token for the user to use with MCP clients, which can work with bearer "
+"tokens."
 msgstr ""
+"目前，MCP 客户端无法自行使用授权码流。因此，我们实现了一个 OAuth2 登录端点，该端点将返回一个 GitHub 令牌供用户与 MCP "
+"客户端一起使用，而 MCP 客户端可以使用不记名令牌。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "Add another dependency to support Qute templates:"
-msgstr ""
+msgstr "添加另一个依赖项，以支持 Qute 模板："
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "`quarkus-rest-qute` is required to generate HTML pages. Its version is defined in the Quarkus BOM."
-msgstr ""
+#, fuzzy
+msgid ""
+"`quarkus-rest-qute` is required to generate HTML pages. Its version is "
+"defined in the Quarkus BOM."
+msgstr "`quarkus-rest-qute` 是生成 HTML 页面所必需的。其版本已在 Quarkus BOM 中定义。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "and implement the login endpoint:"
-msgstr ""
+msgstr "并实现登录端点："
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "GitHub access tokens are binary and Quarkus OIDC indirectly verifies them by using them to request GitHub specific `UserInfo` representation."
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "`AccessTokenCredential` is used to capture a binary GitHub access token."
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid ""
-"After the user logs in to GitHub and is redirected to this endpoint, the access token will be returned to the user in an HTML page generated with a simple https://github.com/quarkiverse/quarkus-mcp-server/tree/main/samples/secure-mcp-sse-server/src/main/resources/templates/accessTokenPage.html[Qute template].\n"
-"Of course, you would not do that in a real application. It is just an example to demonstrate the capability."
+"GitHub access tokens are binary and Quarkus OIDC indirectly verifies them by "
+"using them to request GitHub specific `UserInfo` representation."
 msgstr ""
+"GitHub 访问令牌是二进制的，Quarkus OIDC 通过使用这些令牌请求 GitHub 特定的 `UserInfo` 表示法来间接验证它们。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid ""
+"`AccessTokenCredential` is used to capture a binary GitHub access token."
+msgstr "`AccessTokenCredential` 用于捕获二进制 GitHub 访问令牌。"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid ""
+"After the user logs in to GitHub and is redirected to this endpoint, the "
+"access token will be returned to the user in an HTML page generated with a "
+"simple https://github.com/quarkiverse/quarkus-mcp-server/tree/main/samples/"
+"secure-mcp-sse-server/src/main/resources/templates/accessTokenPage.html[Qute "
+"template].\n"
+"Of course, you would not do that in a real application. It is just an "
+"example to demonstrate the capability."
+msgstr ""
+"用户登录 GitHub 并被重定向到该端点后，访问令牌将通过一个简单的 link:https://github.com/quarkiverse/"
+"quarkus-mcp-server/tree/main/samples/secure-mcp-sse-server/src/main/"
+"resources/templates/accessTokenPage.html[Qute 模板] 生成的 HTML "
+"页面返回给用户。当然，在实际应用中不会这样做。这只是一个演示功能的示例。"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "Package and run the MCP Server"
-msgstr ""
+msgstr "打包并运行 MCP 服务器"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "Package the MCP server application:"
-msgstr ""
+msgstr "打包 MCP 服务器应用程序："
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "Run it:"
-msgstr ""
+msgstr "运行它："
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "You can also run the MCP server from its Maven coordinates directly with `jbang`:"
-msgstr ""
+#, fuzzy
+msgid ""
+"You can also run the MCP server from its Maven coordinates directly with "
+"`jbang`:"
+msgstr "您还可以通过 `jbang` 直接从 Maven 坐标运行 MCP 服务器："
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "Login to GitHub and copy the access token"
-msgstr ""
+msgstr "登录 GitHub 并复制访问令牌"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Access `http://localhost:8080/login`, login to GitHub, and copy the returned access token:"
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid ""
-"By default, Quarkus GitHub provider submits the client id and secret in the HTTP Authorization header.\n"
-"However, GitHub may require that both client id and secret are submitted as form parameters instead."
-msgstr ""
+"Access `http://localhost:8080/login`, login to GitHub, and copy the returned "
+"access token:"
+msgstr "访问 `http://localhost:8080/login` 登录 GitHub，并复制返回的访问令牌："
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid ""
-"When you get HTTP 401 error after logging in to GitHub and being redirected back to Quarkus MCP server,\n"
-"try to replace `%prod.quarkus.oidc.login.credentials.secret=${github.client.secret}` property\n"
+"By default, Quarkus GitHub provider submits the client id and secret in the "
+"HTTP Authorization header.\n"
+"However, GitHub may require that both client id and secret are submitted as "
+"form parameters instead."
+msgstr ""
+"默认情况下，Quarkus GitHub 提供商会在 HTTP 授权头中提交客户端 id 和秘密。不过，GitHub "
+"可能会要求以表单参数的形式提交客户端 id 和秘密。"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid ""
+"When you get HTTP 401 error after logging in to GitHub and being redirected "
+"back to Quarkus MCP server,\n"
+"try to replace `%prod.quarkus.oidc.login.credentials.secret=${github.client."
+"secret}` property\n"
 "with the following two properties instead:"
 msgstr ""
+"如果登录 GitHub 后出现 HTTP 401 错误，并被重定向回 Quarkus MCP 服务器，请尝试用以下两个属性替换 `%prod."
+"quarkus.oidc.login.credentials.secret=${github.client.secret}` 属性："
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "Use MCP Inspector to access the MCP server"
-msgstr ""
+msgstr "使用 MCP 检查器访问 MCP 服务器"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "https://modelcontextprotocol.io/docs/tools/inspector[MCP Inspector] is an interactive developer tool for testing and debugging MCP servers. Let's use it to invoke our MCP server with the authentication."
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Launch https://modelcontextprotocol.io/docs/tools/inspector[MCP inspector]:"
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Ensure that you have https://github.com/modelcontextprotocol/inspector/releases/tag/0.6.0[modelcontextprotocol/inspector] version 0.6.0 or later installed as it adds support for specifying bearer token authentication."
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Navigate to the URL provided into a browser."
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Change the _Transport Type_ dropdown to `SSE` and the _URL_ to `http://localhost:8080/mcp/sse` so that it targets the running Quarkus MCP Server:"
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Select the _Authorization_ button and paste the copied GitHub access token from the browser to the `Bearer Token` field and connect to the Quarkus MCP SSE server:"
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Next, make a `user-name-provider` tool call:"
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "You will see the name from your GitHub account returned."
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Use curl to access the MCP server"
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Finally, let's use `curl` and also learn a little bit how both the MCP protocol and MCP SSE transport work."
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "First, open a new terminal window and access the main SSE endpoint without the GitHub access token:"
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "You will get HTTP 401 error."
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Use the access token that was obtained previously to access MCP server:"
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "and get an SSE response such as:"
-msgstr ""
-
-#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid ""
-"The SSE connection is created.  Note the unique path in the received `data`, we need this path to invoke the tools.\n"
-"We cannot invoke the tool directly, we first need to follow the MCP handshake protocol."
+"https://modelcontextprotocol.io/docs/tools/inspector[MCP Inspector] is an "
+"interactive developer tool for testing and debugging MCP servers. Let's use "
+"it to invoke our MCP server with the authentication."
 msgstr ""
+"link:https://modelcontextprotocol.io/docs/tools/inspector[MCP Inspector] "
+"是一款交互式开发工具，用于测试和调试 MCP 服务器。让我们用它来调用我们的 MCP 服务器并进行身份验证。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Open another terminal window and use the same GitHub access token to initialize the curl as MCP client, and access the tool, using the value of the `data` property to build the target URL."
+#, fuzzy
+msgid ""
+"Launch https://modelcontextprotocol.io/docs/tools/inspector[MCP inspector]:"
 msgstr ""
+"启动 link:https://modelcontextprotocol.io/docs/tools/inspector[MCP 检查器] ："
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid ""
+"Ensure that you have https://github.com/modelcontextprotocol/inspector/"
+"releases/tag/0.6.0[modelcontextprotocol/inspector] version 0.6.0 or later "
+"installed as it adds support for specifying bearer token authentication."
+msgstr ""
+"确保安装了 0.6.0 或更高版本的 link:https://github.com/modelcontextprotocol/inspector/"
+"releases/tag/0.6.0[modelcontextprotocol/inspector] ，因为它增加了对指定承载令牌身份验证的支持。"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid "Navigate to the URL provided into a browser."
+msgstr "在浏览器中导航到提供的 URL。"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid ""
+"Change the _Transport Type_ dropdown to `SSE` and the _URL_ to `http://"
+"localhost:8080/mcp/sse` so that it targets the running Quarkus MCP Server:"
+msgstr ""
+"将 _传输类型_ 下拉菜单更改为 `SSE` ，将 _URL_ 更改为 `http://localhost:8080/mcp/sse` 使其针对运行中的 "
+"Quarkus MCP 服务器："
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid ""
+"Select the _Authorization_ button and paste the copied GitHub access token "
+"from the browser to the `Bearer Token` field and connect to the Quarkus MCP "
+"SSE server:"
+msgstr ""
+"选择 _授权_ 按钮，将从浏览器复制的 GitHub 访问令牌粘贴到 `Bearer Token` 字段，然后连接到 Quarkus MCP SSE "
+"服务器："
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid "Next, make a `user-name-provider` tool call:"
+msgstr "接下来，调用 `user-name-provider` 工具："
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid "You will see the name from your GitHub account returned."
+msgstr "您将看到 GitHub 账户返回的名称。"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid "Use curl to access the MCP server"
+msgstr "使用 curl 访问 MCP 服务器"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid ""
+"Finally, let's use `curl` and also learn a little bit how both the MCP "
+"protocol and MCP SSE transport work."
+msgstr "最后，让我们使用 `curl` ，同时了解一下 MCP 协议和 MCP SSE 传输的工作原理。"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid ""
+"First, open a new terminal window and access the main SSE endpoint without "
+"the GitHub access token:"
+msgstr "首先，打开一个新的终端窗口，在没有 GitHub 访问令牌的情况下访问 SSE 主端点："
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid "You will get HTTP 401 error."
+msgstr "您将收到 HTTP 401 错误。"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid ""
+"Use the access token that was obtained previously to access MCP server:"
+msgstr "使用之前获得的访问令牌访问 MCP 服务器："
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid "and get an SSE response such as:"
+msgstr "并得到 SSE 响应，例如"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid ""
+"The SSE connection is created.  Note the unique path in the received `data`, "
+"we need this path to invoke the tools.\n"
+"We cannot invoke the tool directly, we first need to follow the MCP "
+"handshake protocol."
+msgstr ""
+"SSE 连接已创建。请注意接收到的 `data` 中的唯一路径，我们需要该路径来调用工具。我们不能直接调用工具，首先需要遵循 MCP 握手协议。"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
+msgid ""
+"Open another terminal window and use the same GitHub access token to "
+"initialize the curl as MCP client, and access the tool, using the value of "
+"the `data` property to build the target URL."
+msgstr ""
+"打开另一个终端窗口，使用相同的 GitHub 访问令牌初始化作为 MCP 客户端的 curl，并访问该工具，使用 `data` 属性的值创建目标 "
+"URL。"
+
+#: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "Send the client initialization request:"
-msgstr ""
+msgstr "发送客户端初始化请求："
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "where the `initialize.json` file has a content like this:"
-msgstr ""
+msgstr "`initialize.json` 文件的内容是这样的："
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "Send the client initialization confirmation:"
-msgstr ""
+msgstr "发送客户端初始化确认："
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "where the `initialized.json` file has a content like this:"
-msgstr ""
+msgstr "`initialized.json` 文件的内容是这样的："
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "Finally, send the request that will invoke the tool:"
-msgstr ""
+msgstr "最后，发送调用工具的请求："
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "where the `call.json` file has a content like this:"
-msgstr ""
+msgstr "`call.json` 文件的内容是这样的："
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Now look at the terminal window containing the SSE connection and you will see the name from your GitHub account returned."
-msgstr ""
+#, fuzzy
+msgid ""
+"Now look at the terminal window containing the SSE connection and you will "
+"see the name from your GitHub account returned."
+msgstr "现在查看包含 SSE 连接的终端窗口，就会看到 GitHub 账户的名称已返回。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
 msgid "Conclusion"
 msgstr "解决方案"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid ""
-"In this blog post, we explained how you can easily create a Quarkus MCP SSE server that requires authentication, obtain an access token and use it to access the MCP server tool in dev mode with `Quarkus MCP SSE Server Dev UI` and prod mode with both the https://modelcontextprotocol.io/docs/tools/inspector[MCP inspector] and the curl tools.\n"
+"In this blog post, we explained how you can easily create a Quarkus MCP SSE "
+"server that requires authentication, obtain an access token and use it to "
+"access the MCP server tool in dev mode with `Quarkus MCP SSE Server Dev UI` "
+"and prod mode with both the https://modelcontextprotocol.io/docs/tools/"
+"inspector[MCP inspector] and the curl tools.\n"
 "You can use any MCP client that allows passing a bearer token to the server."
 msgstr ""
+"在这篇博文中，我们介绍了如何轻松创建一个需要身份验证的 Quarkus MCP SSE 服务器，获取访问令牌，并用它在开发模式下访问 MCP "
+"服务器工具（ `Quarkus MCP SSE Server Dev UI` ），以及在 prod 模式下访问 MCP link:https://"
+"modelcontextprotocol.io/docs/tools/inspector[检查器] 和 curl "
+"工具。你可以使用任何允许向服务器传递承载令牌的 MCP 客户端。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "Notice, that there is no real difference in how OAuth2 is done for either Quarkus MCP server or REST endpoints. The most complex part is to get the settings configured correctly for your OAuth2 provider - but when all is done you just apply a few annotations to mark relevant methods as secure and Quarkus handles the authentication for you."
+#, fuzzy
+msgid ""
+"Notice, that there is no real difference in how OAuth2 is done for either "
+"Quarkus MCP server or REST endpoints. The most complex part is to get the "
+"settings configured correctly for your OAuth2 provider - but when all is "
+"done you just apply a few annotations to mark relevant methods as secure and "
+"Quarkus handles the authentication for you."
 msgstr ""
+"请注意，无论是 Quarkus MCP 服务器还是 REST 端点，OAuth2 的实现方式并无本质区别。最复杂的部分是为你的 OAuth2 "
+"提供商正确配置设置，但当一切完成后，你只需应用一些注释将相关方法标记为安全方法，Quarkus 就会为你处理身份验证。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
-msgid "This blog post uses the previous version of the MCP protocol. The Quarkus team is keeping a close eye on the MCP Authorization specification evolution and working on having all possible MCP Authorization scenarios supported."
-msgstr ""
+#, fuzzy
+msgid ""
+"This blog post uses the previous version of the MCP protocol. The Quarkus "
+"team is keeping a close eye on the MCP Authorization specification evolution "
+"and working on having all possible MCP Authorization scenarios supported."
+msgstr "本博文使用的是上一版本的 MCP 协议。Quarkus 团队正密切关注 MCP 授权规范的演变，并致力于支持所有可能的 MCP 授权方案。"
 
 #: _posts/2025-04-28-secure-mcp-sse-server.adoc
+#, fuzzy
 msgid "Stay tuned for more updates!"
-msgstr ""
+msgstr "敬请期待更多更新！"
