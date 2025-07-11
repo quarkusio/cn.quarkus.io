@@ -9,10 +9,10 @@ jobs:
     steps:
       - name: Checkout base branch
         # To avoid GitHub Secrets compromise, checkout base branch to get reliable (untainted) build scripts
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Checkout merged commit to 'merged' dir
         # Checkout merged commit to 'merged' dir
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           path: merged
@@ -23,7 +23,7 @@ jobs:
           cp -r merged/l10n ./
       - name: Cache bundle directory
         # Cache ruby bundle directory to speed up build
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
@@ -39,17 +39,17 @@ jobs:
         # Deploy the site to surge.sh
         # We use surge.sh for pull-request preview because surge.sh supports custom sub-domain and it fits pull-request preview site.
         run: |
-          surge docs pr-preview-"${{ github.event.pull_request.number }}"-pt-quarkusio.surge.sh
+          surge docs pr-preview-"${{ github.event.pull_request.number }}"-cn-quarkusio.surge.sh
         env:
           SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
           SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
       - name: Add comment
         # Add comment to the pull request to announce the deployed preview site URL.
-        uses: actions/github-script@v3.1.0
+        uses: actions/github-script@v7
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            let body = `Site preview(pt): https://pr-preview-${{ github.event.pull_request.number }}-pt-quarkusio.surge.sh`
+            let body = `Site preview(cn): https://pr-preview-${{ github.event.pull_request.number }}-cn-quarkusio.surge.sh`
             github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
