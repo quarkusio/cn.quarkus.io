@@ -13,79 +13,113 @@ msgstr "使用 Quarkus 本机在 OutOfMemoryError 时获取堆转储"
 
 #: _posts/2024-04-23-heapdump-oome-native.adoc
 #, fuzzy
-msgid "Generating and inspecting heap dumps in Quarkus native when `OutOfMemoryError` errors occur"
+msgid ""
+"Generating and inspecting heap dumps in Quarkus native when "
+"`OutOfMemoryError` errors occur"
 msgstr "当发生 `OutOfMemoryError` 错误时，在 Quarkus 本机中生成并检查堆转储"
 
 #: _posts/2024-04-23-heapdump-oome-native.adoc
 #, fuzzy
 msgid ""
 "Starting with GraalVM for JDK 21,\n"
-"native executables can run with the `-XX:+HeapDumpOnOutOfMemoryError` option to generate a heap dump when a `java.lang.OutOfMemoryError` is thrown.\n"
+"native executables can run with the `-XX:+HeapDumpOnOutOfMemoryError` option "
+"to generate a heap dump when a `java.lang.OutOfMemoryError` is thrown.\n"
 "In this blog post we will explore how to use the flag,\n"
-"we will inspect what a GraalVM Native Image heap dump looks like and how it compares with one produced by HotSpot."
-msgstr "从 JDK 21 的 GraalVM 开始，本地可执行文件可以使用 `-XX:+HeapDumpOnOutOfMemoryError` 选项运行，以便在抛出 `java.lang.OutOfMemoryError` 时生成堆转储。在这篇博文中，我们将探讨如何使用该标记，并将检查 GraalVM 本地映像堆转储的外观，以及它与 HotSpot 生成的堆转储的比较。"
+"we will inspect what a GraalVM Native Image heap dump looks like and how it "
+"compares with one produced by HotSpot."
+msgstr ""
+"从 JDK 21 的 GraalVM 开始，本地可执行文件可以使用 `-XX:+HeapDumpOnOutOfMemoryError` "
+"选项运行，以便在抛出 `java.lang.OutOfMemoryError` 时生成堆转储。在这篇博文中，我们将探讨如何使用该标记，并将检查 "
+"GraalVM 本地映像堆转储的外观，以及它与 HotSpot 生成的堆转储的比较。"
 
 #: _posts/2024-04-23-heapdump-oome-native.adoc
 #, fuzzy
 msgid ""
-"Note: The heap of GraalVM Native Image executables has both read-only and read-write segments.\n"
-"The read-only part is referred to as the \"image heap\" and contains the data pre-initialized during the image build to help speed up start-up time.\n"
+"Note: The heap of GraalVM Native Image executables has both read-only and "
+"read-write segments.\n"
+"The read-only part is referred to as the \"image heap\" and contains the "
+"data pre-initialized during the image build to help speed up start-up time.\n"
 "The read-write part is where allocations at runtime are made.\n"
-"Therefore, heap dumps generated at runtime will contain content from both the \"image heap\" and the read-write heap."
-msgstr "注意：GraalVM 本地映像可执行文件的堆有只读段和读写段。只读部分称为 \"映像堆\"，包含在映像构建过程中预先初始化的数据，以帮助加快启动时间。读写部分是在运行时进行分配的地方。因此，运行时生成的堆转储将包含 \"映像堆 \"和读写器堆的内容。"
+"Therefore, heap dumps generated at runtime will contain content from both "
+"the \"image heap\" and the read-write heap."
+msgstr ""
+"注意：GraalVM 本地映像可执行文件的堆有只读段和读写段。只读部分称为 "
+"\"映像堆\"，包含在映像构建过程中预先初始化的数据，以帮助加快启动时间。读写部分是在运行时进行分配的地方。因此，运行时生成的堆转储将包含 \"映像堆 "
+"\"和读写器堆的内容。"
 
 #: _posts/2024-04-23-heapdump-oome-native.adoc
 #, fuzzy
 msgid ""
-"To see this flag in action, we need to manufacture a situation where a Quarkus application runs out of memory.\n"
-"One easy way to achieve this is to configure the application with a garbage collector that doesn't do any memory reclamation,\n"
+"To see this flag in action, we need to manufacture a situation where a "
+"Quarkus application runs out of memory.\n"
+"One easy way to achieve this is to configure the application with a garbage "
+"collector that doesn't do any memory reclamation,\n"
 "i.e. the Epsilon GC.\n"
 "Once the Quarkus application is running with Epsilon GC,\n"
-"apply some load and within a short space of time it will run out of memory and produce a heap dump."
-msgstr "要看到这个标志的作用，我们需要制造一种 Quarkus 应用程序内存耗尽的情况。一种简单的方法是为应用程序配置一个不进行任何内存回收的垃圾回收器，即 Epsilon GC。一旦 Quarkus 应用程序使用 Epsilon GC 运行，施加一些负载，它就会在很短的时间内耗尽内存并产生堆转储。"
+"apply some load and within a short space of time it will run out of memory "
+"and produce a heap dump."
+msgstr ""
+"要看到这个标志的作用，我们需要制造一种 Quarkus 应用程序内存耗尽的情况。一种简单的方法是为应用程序配置一个不进行任何内存回收的垃圾回收器，即 "
+"Epsilon GC。一旦 Quarkus 应用程序使用 Epsilon GC 运行，施加一些负载，它就会在很短的时间内耗尽内存并产生堆转储。"
 
 #: _posts/2024-04-23-heapdump-oome-native.adoc
 #, fuzzy
 msgid ""
-"Let’s do this using a Quarkus application that simply responds to an HTTP endpoint request as a starting point.\n"
+"Let’s do this using a Quarkus application that simply responds to an HTTP "
+"endpoint request as a starting point.\n"
 "The sample application can be downloaded from\n"
 "https://code.quarkus.io[code.quarkus.io] using a browser\n"
 "or via the command line:"
-msgstr "让我们以一个简单响应 HTTP 端点请求的 Quarkus 应用程序为起点来实现这一点。可以使用浏览器或通过命令行从 link:https://code.quarkus.io[code.quarkus.io] 下载示例应用程序："
+msgstr ""
+"让我们以一个简单响应 HTTP 端点请求的 Quarkus 应用程序为起点来实现这一点。可以使用浏览器或通过命令行从 link:https://code."
+"quarkus.io[code.quarkus.io] 下载示例应用程序："
 
 #: _posts/2024-04-23-heapdump-oome-native.adoc
 #, fuzzy
-msgid "Next, build a Quarkus native executable with GraalVM for JDK 21 configuring it to use Epsilon GC:"
+msgid ""
+"Next, build a Quarkus native executable with GraalVM for JDK 21 configuring "
+"it to use Epsilon GC:"
 msgstr "接下来，使用 GraalVM for JDK 21 构建一个 Quarkus 本地可执行文件，配置它使用 Epsilon GC："
 
 #: _posts/2024-04-23-heapdump-oome-native.adoc
 #, fuzzy
-msgid "Note: The GC selection needs to be done at build time for Quarkus native applications."
+msgid ""
+"Note: The GC selection needs to be done at build time for Quarkus native "
+"applications."
 msgstr "注意：对于 Quarkus 本机应用程序，需要在构建时选择 GC。"
 
 #: _posts/2024-04-23-heapdump-oome-native.adoc
 #, fuzzy
-msgid "While the Quarkus native executable is being produced you will be able to observe that GC is indeed configured to be EpsilonGC:"
+msgid ""
+"While the Quarkus native executable is being produced you will be able to "
+"observe that GC is indeed configured to be EpsilonGC:"
 msgstr "在生成 Quarkus 本地可执行文件时，你可以看到 GC 确实被配置为 EpsilonGC："
 
 #: _posts/2024-04-23-heapdump-oome-native.adoc
 #, fuzzy
 msgid ""
 "Once the build completes,\n"
-"start Quarkus with `-XX:+HeapDumpOnOutOfMemoryError -XX:+ExitOnOutOfMemoryError`.\n"
-"The latter forces the application to shutdown when an `OutOfMemoryError` occurs rather than leave the process in an indeterminate state:"
-msgstr "构建完成后，使用 `-XX:+HeapDumpOnOutOfMemoryError -XX:+ExitOnOutOfMemoryError` 启动 Quarkus。后者会强制应用程序在 `OutOfMemoryError` 出现时关闭，而不是让进程处于不确定状态："
+"start Quarkus with `-XX:+HeapDumpOnOutOfMemoryError -XX:"
+"+ExitOnOutOfMemoryError`.\n"
+"The latter forces the application to shutdown when an `OutOfMemoryError` "
+"occurs rather than leave the process in an indeterminate state:"
+msgstr ""
+"构建完成后，使用 `-XX:+HeapDumpOnOutOfMemoryError -XX:+ExitOnOutOfMemoryError` 启动 "
+"Quarkus。后者会强制应用程序在 `OutOfMemoryError` 出现时关闭，而不是让进程处于不确定状态："
 
 #: _posts/2024-04-23-heapdump-oome-native.adoc
 #, fuzzy
-msgid "Next, apply some load to the HTTP endpoint exposed by the Quarkus application, for example using `curl` in a bash loop:"
+msgid ""
+"Next, apply some load to the HTTP endpoint exposed by the Quarkus "
+"application, for example using `curl` in a bash loop:"
 msgstr "接下来，对 Quarkus 应用程序暴露的 HTTP 端点施加一些负载，例如在 bash 循环中使用 `curl` ："
 
 #: _posts/2024-04-23-heapdump-oome-native.adoc
 #, fuzzy
 msgid ""
 "Switching to the Quarkus console,\n"
-"an `OutOfMemoryError` would be observed along with some messages indicating that a heap dump is being produced:"
+"an `OutOfMemoryError` would be observed along with some messages indicating "
+"that a heap dump is being produced:"
 msgstr "切换到 Quarkus 控制台，可以看到 `OutOfMemoryError` 以及一些显示正在生成堆转储的信息："
 
 #: _posts/2024-04-23-heapdump-oome-native.adoc
@@ -94,19 +128,29 @@ msgid ""
 "Multiple graphical tools exist out there to inspect heap dumps,\n"
 "such as https://visualvm.github.io/[VisualVM],\n"
 "https://eclipse.dev/mat/[Eclipse Memory Analyzer (MAT)], etc.,\n"
-"but some new ones are also available that you can run in the command line to get a quick picture of the heap dump,\n"
+"but some new ones are also available that you can run in the command line to "
+"get a quick picture of the heap dump,\n"
 "for example\n"
 "https://github.com/openjdk/jol[Java Object Layout (JOL)]:"
-msgstr "有多种图形工具可以检查堆转储，如 link:https://visualvm.github.io/[VisualVM] 、 link:https://eclipse.dev/mat/[Eclipse Memory Analyzer (MAT)] 等，但也有一些新工具可以在命令行中运行，以快速了解堆转储的情况，如 link:https://github.com/openjdk/jol[Java Object Layout (JOL)：]"
+msgstr ""
+"有多种图形工具可以检查堆转储，如 link:https://visualvm.github.io/[VisualVM] 、 link:https://"
+"eclipse.dev/mat/[Eclipse Memory Analyzer (MAT)] "
+"等，但也有一些新工具可以在命令行中运行，以快速了解堆转储的情况，如 link:https://github.com/openjdk/jol[Java "
+"Object Layout (JOL)：]"
 
 #: _posts/2024-04-23-heapdump-oome-native.adoc
 #, fuzzy
 msgid ""
 "The presence of SubstrateVM,\n"
 "the VM that powers native images built with GraalVM,\n"
-"can be clearly observed because of the instances of `com.oracle.svm.core.monitor.JavaMonitor` present in the heap dump.\n"
-"What would the heap dump look like if we repeat exactly the same exercise but instead we use Quarkus JVM mode? Let’s see:"
-msgstr "SubstrateVM 是使用 GraalVM 构建的本地映像的虚拟机，从堆转储中出现的 `com.oracle.svm.core.monitor.JavaMonitor` 实例可以清楚地观察到 SubstrateVM 的存在。如果我们重复同样的练习，但使用 Quarkus JVM 模式，堆转储会是什么样子呢？让我们拭目以待："
+"can be clearly observed because of the instances of `com.oracle.svm.core."
+"monitor.JavaMonitor` present in the heap dump.\n"
+"What would the heap dump look like if we repeat exactly the same exercise "
+"but instead we use Quarkus JVM mode? Let’s see:"
+msgstr ""
+"SubstrateVM 是使用 GraalVM 构建的本地映像的虚拟机，从堆转储中出现的 `com.oracle.svm.core.monitor."
+"JavaMonitor` 实例可以清楚地观察到 SubstrateVM 的存在。如果我们重复同样的练习，但使用 Quarkus JVM "
+"模式，堆转储会是什么样子呢？让我们拭目以待："
 
 #: _posts/2024-04-23-heapdump-oome-native.adoc
 #, fuzzy
@@ -115,7 +159,9 @@ msgstr "将 Quarkus 应用程序重建为 JVM 模式，并使用 Epsilon GC 运�
 
 #: _posts/2024-04-23-heapdump-oome-native.adoc
 #, fuzzy
-msgid "After applying the same load, you would observe the heap dump being generated in JVM mode as well:"
+msgid ""
+"After applying the same load, you would observe the heap dump being "
+"generated in JVM mode as well:"
 msgstr "应用相同的负载后，您将观察到堆转储也是在 JVM 模式下生成的："
 
 #: _posts/2024-04-23-heapdump-oome-native.adoc
