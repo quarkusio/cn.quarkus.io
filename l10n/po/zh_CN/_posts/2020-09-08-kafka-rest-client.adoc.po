@@ -2,7 +2,7 @@
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -33,31 +33,49 @@ msgstr "如何结合反应式消息传递、Kafka和Rest客户端"
 msgid ""
 "Another week, another interesting question.\n"
 "This week, someone asks me about combining Kafka and the Rest Client.\n"
-"That is a recurring subject, and most of the time, the goal is to achieve the following process:"
-msgstr "又是一周，又是一个有趣的问题。本周，有人问我如何将 Kafka 和 Rest Client 结合起来。这是一个反复出现的话题，大多数时候，目标是实现以下流程："
+"That is a recurring subject, and most of the time, the goal is to achieve "
+"the following process:"
+msgstr ""
+"又是一周，又是一个有趣的问题。本周，有人问我如何将 Kafka 和 Rest Client "
+"结合起来。这是一个反复出现的话题，大多数时候，目标是实现以下流程："
 
 #. type: Plain text
 #: _posts/2020-09-08-kafka-rest-client.adoc
 #, fuzzy
-msgid "image:/assets/images/posts/kafka-rest-client/kafka-rest-architecture.png[]"
-msgstr "image:/assets/images/posts/kafka-rest-client/kafka-rest-architecture.png[alt=\"kafka rest architecture\"]"
+msgid ""
+"image:/assets/images/posts/kafka-rest-client/kafka-rest-architecture.png[]"
+msgstr ""
+"image:/assets/images/posts/kafka-rest-client/kafka-rest-architecture.png[alt="
+"\"kafka rest architecture\"]"
 
 #: _posts/2020-09-08-kafka-rest-client.adoc
 #, fuzzy
 msgid ""
-"In other words, we want to call a remote service for each Kafka message we receive.\n"
-"Therefore, we have a first topic (\"in\") containing the data we are consuming, for instance, \"transactions\".\n"
-"Then, we have the central piece of the architecture: the processing component.\n"
-"It consumes the incoming transactions, and for each of them, calls a remote service.\n"
-"It also writes the response (produced by the remote service) to another Kafka topic \"out\"."
-msgstr "换句话说，我们希望为收到的每一条 Kafka 消息调用一个远程服务。因此，我们有一个第一个主题（\"in\"），其中包含我们要消费的数据，例如 \"事务\"。然后，我们就有了架构的核心部分：处理组件。它消耗输入的事务，并为每个事务调用远程服务。它还会将响应（由远程服务生成）写入另一个 Kafka 主题 \"out\"。"
+"In other words, we want to call a remote service for each Kafka message we "
+"receive.\n"
+"Therefore, we have a first topic (\"in\") containing the data we are "
+"consuming, for instance, \"transactions\".\n"
+"Then, we have the central piece of the architecture: the processing "
+"component.\n"
+"It consumes the incoming transactions, and for each of them, calls a remote "
+"service.\n"
+"It also writes the response (produced by the remote service) to another "
+"Kafka topic \"out\"."
+msgstr ""
+"换句话说，我们希望为收到的每一条 Kafka 消息调用一个远程服务。因此，我们有一个第一个主题（\"in\"），其中包含我们要消费的数据，例如 "
+"\"事务\"。然后，我们就有了架构的核心部分：处理组件。它消耗输入的事务，并为每个事务调用远程服务。它还会将响应（由远程服务生成）写入另一个 Kafka "
+"主题 \"out\"。"
 
 #: _posts/2020-09-08-kafka-rest-client.adoc
 #, fuzzy
 msgid ""
-"Implementing this with Quarkus is straightforward, and that's what we will cover in this post.\n"
-"Thanks to Reactive Messaging and the Rest Client, this should not take more than 20 lines of code!"
-msgstr "使用 Quarkus 实现这一功能非常简单，这就是我们将在本篇文章中介绍的内容。有了反应式消息传递（Reactive Messaging）和休息客户端（Rest Client），这应该不需要超过 20 行代码！"
+"Implementing this with Quarkus is straightforward, and that's what we will "
+"cover in this post.\n"
+"Thanks to Reactive Messaging and the Rest Client, this should not take more "
+"than 20 lines of code!"
+msgstr ""
+"使用 Quarkus 实现这一功能非常简单，这就是我们将在本篇文章中介绍的内容。有了反应式消息传递（Reactive "
+"Messaging）和休息客户端（Rest Client），这应该不需要超过 20 行代码！"
 
 #. type: Title ==
 #: _posts/2020-09-08-kafka-rest-client.adoc
@@ -69,32 +87,48 @@ msgstr "远程服务"
 #, fuzzy
 msgid ""
 "Let's start with the remote service.\n"
-"Quarkus offers multiple ways to invoke a remote HTTP service, but let's use the Rest Client as it provides an excellent way to interact with HTTP services without having to handle the low-level details of HTTP."
-msgstr "让我们从远程服务开始。Quarkus 提供了多种调用远程 HTTP 服务的方法，但我们还是使用 Rest Client，因为它提供了一种与 HTTP 服务交互的绝佳方法，而无需处理 HTTP 的底层细节。"
+"Quarkus offers multiple ways to invoke a remote HTTP service, but let's use "
+"the Rest Client as it provides an excellent way to interact with HTTP "
+"services without having to handle the low-level details of HTTP."
+msgstr ""
+"让我们从远程服务开始。Quarkus 提供了多种调用远程 HTTP 服务的方法，但我们还是使用 Rest Client，因为它提供了一种与 HTTP "
+"服务交互的绝佳方法，而无需处理 HTTP 的底层细节。"
 
 #. type: Plain text
 #: _posts/2020-09-08-kafka-rest-client.adoc
 #, fuzzy
-msgid "You can use any HTTP API, but to simplify, let's consider a straightforward remote service, something like:"
+msgid ""
+"You can use any HTTP API, but to simplify, let's consider a straightforward "
+"remote service, something like:"
 msgstr "你可以使用任何HTTP API，但为了简化，让我们考虑一个直接的远程服务，比如说。"
 
 #: _posts/2020-09-08-kafka-rest-client.adoc
 #, fuzzy
 msgid ""
 "This service contains two methods calling the same HTTP endpoint.\n"
-"The first one is synchronous, and so blocks the caller thread until the response is received.\n"
-"The second is asynchronous, and the returned `Uni` gets the response when received.\n"
+"The first one is synchronous, and so blocks the caller thread until the "
+"response is received.\n"
+"The second is asynchronous, and the returned `Uni` gets the response when "
+"received.\n"
 "In this case, the caller thread is not blocked and can do something else.\n"
-"We are going to see how to use these methods later, but first, a bit of configuration.\n"
+"We are going to see how to use these methods later, but first, a bit of "
+"configuration.\n"
 "In the `application.properties` add:"
-msgstr "该服务包含两个调用同一个 HTTP 端点的方法。第一个方法是同步的，因此会阻塞调用者线程，直到收到响应为止。第二个方法是异步的，返回的 `Uni` 会在收到响应时获取响应。在这种情况下，调用线程不会被阻塞，可以做其他事情。稍后我们将了解如何使用这些方法，但首先要进行一下配置。在 `application.properties` 中添加"
+msgstr ""
+"该服务包含两个调用同一个 HTTP 端点的方法。第一个方法是同步的，因此会阻塞调用者线程，直到收到响应为止。第二个方法是异步的，返回的 `Uni` "
+"会在收到响应时获取响应。在这种情况下，调用线程不会被阻塞，可以做其他事情。稍后我们将了解如何使用这些方法，但首先要进行一下配置。在 "
+"`application.properties` 中添加"
 
 #: _posts/2020-09-08-kafka-rest-client.adoc
 #, fuzzy
 msgid ""
 "Of course, update the URL.\n"
-"The https://quarkus.io/guides/rest-client[https://quarkus.io/guides/rest-client] guide gives more details about the usage and configuration of the Rest Client."
-msgstr "当然，要更新 URL。 https://quarkus.io/guides/rest-client 指南详细介绍了 Rest Client 的使用和配置。"
+"The https://quarkus.io/guides/rest-client[https://quarkus.io/guides/rest-"
+"client] guide gives more details about the usage and configuration of the "
+"Rest Client."
+msgstr ""
+"当然，要更新 URL。 https://quarkus.io/guides/rest-client 指南详细介绍了 Rest Client "
+"的使用和配置。"
 
 #. type: Title ==
 #: _posts/2020-09-08-kafka-rest-client.adoc
@@ -105,20 +139,27 @@ msgstr "为每个传入的交易调用服务"
 #: _posts/2020-09-08-kafka-rest-client.adoc
 #, fuzzy
 msgid ""
-"Ok, we can call our service, but remember, we want to invoke it for every incoming transaction, and these transactions come from a Kafka topic.\n"
+"Ok, we can call our service, but remember, we want to invoke it for every "
+"incoming transaction, and these transactions come from a Kafka topic.\n"
 "With Reactive Messaging, there is no need to handle Kafka right now.\n"
 "We can focus on the logic.\n"
-"Let's say we have a *channel* (a stream of data), in which to transit our transactions.\n"
+"Let's say we have a *channel* (a stream of data), in which to transit our "
+"transactions.\n"
 "We call this first channel `in`."
-msgstr "好了，我们可以调用我们的服务，但请记住，我们要为每一个传入的事务调用它，而这些事务来自 Kafka 主题。有了 Reactive Messaging，现在就不需要处理 Kafka 了。我们可以专注于逻辑。比方说，我们有一个 *通道* （数据流），用于传输事务。我们将第一个通道称为 `in` 。"
+msgstr ""
+"好了，我们可以调用我们的服务，但请记住，我们要为每一个传入的事务调用它，而这些事务来自 Kafka 主题。有了 Reactive "
+"Messaging，现在就不需要处理 Kafka 了。我们可以专注于逻辑。比方说，我们有一个 *通道* （数据流），用于传输事务。我们将第一个通道称为 "
+"`in` 。"
 
 #: _posts/2020-09-08-kafka-rest-client.adoc
 #, fuzzy
 msgid ""
-"We also want to write the responses from the remote service into another Kafka topic.\n"
+"We also want to write the responses from the remote service into another "
+"Kafka topic.\n"
 "Again, no need to handle Kafka right now.\n"
 "Let's say we write the responses into a channel named `out`."
-msgstr "我们还想把远程服务的响应写入另一个 Kafka 主题。同样，现在不需要处理 Kafka。比方说，我们将响应写入一个名为 `out` 的通道。"
+msgstr ""
+"我们还想把远程服务的响应写入另一个 Kafka 主题。同样，现在不需要处理 Kafka。比方说，我们将响应写入一个名为 `out` 的通道。"
 
 #. type: Plain text
 #: _posts/2020-09-08-kafka-rest-client.adoc
@@ -145,10 +186,14 @@ msgstr "首先，我们注入 Rest Client。然后，在我们的方法中调用
 #, fuzzy
 msgid ""
 "You may wonder about `@Blocking`.\n"
-"With reactive messaging, you need to indicate when you are using blocking code, as by default, it uses an event loop architecture.\n"
-"While convenient, you should not abuse `@Blocking`, as it relies on a thread pool limiting your concurrency.\n"
+"With reactive messaging, you need to indicate when you are using blocking "
+"code, as by default, it uses an event loop architecture.\n"
+"While convenient, you should not abuse `@Blocking`, as it relies on a thread "
+"pool limiting your concurrency.\n"
 "But, it keeps your logic synchronous."
-msgstr "您可能想知道 `@Blocking` 。使用反应式消息传递时，您需要说明何时使用阻塞代码，因为默认情况下，它使用的是事件循环架构。 `@Blocking` 虽然方便，但不应滥用，因为它依赖于线程池，限制了并发性。不过，它能保持逻辑同步。"
+msgstr ""
+"您可能想知道 `@Blocking` 。使用反应式消息传递时，您需要说明何时使用阻塞代码，因为默认情况下，它使用的是事件循环架构。 "
+"`@Blocking` 虽然方便，但不应滥用，因为它依赖于线程池，限制了并发性。不过，它能保持逻辑同步。"
 
 #: _posts/2020-09-08-kafka-rest-client.adoc
 #, fuzzy
@@ -158,16 +203,23 @@ msgstr "使用异步操作"
 #. type: Plain text
 #: _posts/2020-09-08-kafka-rest-client.adoc
 #, fuzzy
-msgid "We can get rid of `@Blocking` annotation by using the second method provided by the `TransactionService`: `postAsync:`"
-msgstr "我们可以通过使用 `TransactionService` 所提供的第二种方法来摆脱 `@Blocking` 注释。 `postAsync:` "
+msgid ""
+"We can get rid of `@Blocking` annotation by using the second method provided "
+"by the `TransactionService`: `postAsync:`"
+msgstr ""
+"我们可以通过使用 `TransactionService` 所提供的第二种方法来摆脱 `@Blocking` 注释。 `postAsync:` "
 
 #: _posts/2020-09-08-kafka-rest-client.adoc
 #, fuzzy
 msgid ""
-"Using the *async* variant of the `post` method allows us to remove `@Blocking`.\n"
+"Using the *async* variant of the `post` method allows us to remove "
+"`@Blocking`.\n"
 "We return the `Uni` directly.\n"
-"When that `Uni` receives the remote service's response, it writes the value to the `out` channel."
-msgstr "使用 `post` 方法的 *异步* 变体可以删除 `@Blocking` 。我们直接返回 `Uni` 。当 `Uni` 收到远程服务的响应时，它会将值写入 `out` 频道。"
+"When that `Uni` receives the remote service's response, it writes the value "
+"to the `out` channel."
+msgstr ""
+"使用 `post` 方法的 *异步* 变体可以删除 `@Blocking` 。我们直接返回 `Uni` 。当 `Uni` "
+"收到远程服务的响应时，它会将值写入 `out` 频道。"
 
 #: _posts/2020-09-08-kafka-rest-client.adoc
 #, fuzzy
@@ -180,37 +232,60 @@ msgid ""
 "So far, so good.\n"
 "It's time to connect our code with Kafka.\n"
 "With Reactive Messaging, we map channels to _connectors_, here Kafka.\n"
-"So, we just need to configure the application to indicate that the `in` and `out` channels are Kafka topics.\n"
+"So, we just need to configure the application to indicate that the `in` and "
+"`out` channels are Kafka topics.\n"
 "Once again, edit the `application.properties` file, and add:"
-msgstr "到目前为止，一切顺利。是时候将我们的代码与 Kafka 连接起来了。使用 Reactive Messaging，我们将通道映射到 _连接器_ ，这里就是 Kafka。因此，我们只需配置应用程序，以表明 `in` 和 `out` 频道是 Kafka 主题。再次编辑 `application.properties` 文件，添加"
+msgstr ""
+"到目前为止，一切顺利。是时候将我们的代码与 Kafka 连接起来了。使用 Reactive Messaging，我们将通道映射到 _连接器_ ，这里就是 "
+"Kafka。因此，我们只需配置应用程序，以表明 `in` 和 `out` 频道是 Kafka 主题。再次编辑 `application."
+"properties` 文件，添加"
 
 #: _posts/2020-09-08-kafka-rest-client.adoc
 #, fuzzy
 msgid ""
 "The first block is about the `in` channel.\n"
 "It's connected to the `transactions` Kafka topic.\n"
-"The data is deserialized with a https://github.com/cescoffier/quarkus-kafka-rest-client-demo/blob/master/src/main/java/org/acme/model/TransactionDeserializer.java[custom deserializer].\n"
-"The last other properties disable the auto-commit (Reactive Messaging is handling commits for you) and read the data since the last committed offset."
-msgstr "第一个区块是关于 `in` 频道的。它连接到 `transactions` Kafka 主题。数据通过 link:https://github.com/cescoffier/quarkus-kafka-rest-client-demo/blob/master/src/main/java/org/acme/model/TransactionDeserializer.java[自定义反序列化器] 进行 link:https://github.com/cescoffier/quarkus-kafka-rest-client-demo/blob/master/src/main/java/org/acme/model/TransactionDeserializer.java[反序列化] 。最后的其他属性会禁用自动提交（Reactive Messaging 会为您处理提交），并读取上次提交偏移量后的数据。"
+"The data is deserialized with a https://github.com/cescoffier/quarkus-kafka-"
+"rest-client-demo/blob/master/src/main/java/org/acme/model/"
+"TransactionDeserializer.java[custom deserializer].\n"
+"The last other properties disable the auto-commit (Reactive Messaging is "
+"handling commits for you) and read the data since the last committed offset."
+msgstr ""
+"第一个区块是关于 `in` 频道的。它连接到 `transactions` Kafka 主题。数据通过 link:https://github.com/"
+"cescoffier/quarkus-kafka-rest-client-demo/blob/master/src/main/java/org/acme/"
+"model/TransactionDeserializer.java[自定义反序列化器] 进行 link:https://github.com/"
+"cescoffier/quarkus-kafka-rest-client-demo/blob/master/src/main/java/org/acme/"
+"model/TransactionDeserializer.java[反序列化] 。最后的其他属性会禁用自动提交（Reactive Messaging "
+"会为您处理提交），并读取上次提交偏移量后的数据。"
 
 #: _posts/2020-09-08-kafka-rest-client.adoc
 #, fuzzy
 msgid ""
 "The second block configures the `out` channel.\n"
-"We connect it with the `output` Kafka topic and configure the value serializer.\n"
+"We connect it with the `output` Kafka topic and configure the value "
+"serializer.\n"
 "For this simple example, we write the data as JSON."
-msgstr "第二个区块配置 `out` 通道。我们将其与 `output` Kafka 主题连接，并配置值序列化器。在这个简单的例子中，我们将数据写成 JSON 格式。"
+msgstr ""
+"第二个区块配置 `out` 通道。我们将其与 `output` Kafka 主题连接，并配置值序列化器。在这个简单的例子中，我们将数据写成 JSON "
+"格式。"
 
 #. type: Plain text
 #: _posts/2020-09-08-kafka-rest-client.adoc
 #, fuzzy
-msgid "So, when a transaction is written to the Kafka `transaction` topic, it gets received by our processing component, sent to the remote service, and the result is written to the `output` Kafka topic:"
-msgstr "因此，当一个事务被写入Kafka `transaction` 主题时，它被我们的处理组件接收，发送到远程服务，然后结果被写入 `output` Kafka主题。"
+msgid ""
+"So, when a transaction is written to the Kafka `transaction` topic, it gets "
+"received by our processing component, sent to the remote service, and the "
+"result is written to the `output` Kafka topic:"
+msgstr ""
+"因此，当一个事务被写入Kafka `transaction` 主题时，它被我们的处理组件接收，发送到远程服务，然后结果被写入 `output` "
+"Kafka主题。"
 
 #. type: Plain text
 #: _posts/2020-09-08-kafka-rest-client.adoc
 #, fuzzy
-msgid "If you look inside the `output` topic, you will see the `TransactionResult` flowing:"
+msgid ""
+"If you look inside the `output` topic, you will see the `TransactionResult` "
+"flowing:"
 msgstr "如果你看一下 `output` 主题里面，你会看到 `TransactionResult` 流动。"
 
 #. type: Plain text
@@ -227,20 +302,29 @@ msgstr "我们完了！"
 #. type: Plain text
 #: _posts/2020-09-08-kafka-rest-client.adoc
 #, fuzzy
-msgid "With a few lines of code and a bit of configuration, we can read data from a Kafka topic, call a remote service, and write the result to another Kafka topic. Plain simple."
+msgid ""
+"With a few lines of code and a bit of configuration, we can read data from a "
+"Kafka topic, call a remote service, and write the result to another Kafka "
+"topic. Plain simple."
 msgstr "通过几行代码和一些配置，我们可以从一个Kafka主题读取数据，调用一个远程服务，并将结果写入另一个Kafka主题。简单明了。"
 
 #: _posts/2020-09-08-kafka-rest-client.adoc
 #, fuzzy
 msgid ""
 "Want to try by yourself?\n"
-"Check out the code in this https://github.com/cescoffier/quarkus-kafka-rest-client-demo[GitHub repository] and follow the instructions from the readme."
-msgstr "想自己试试吗？查看 link:https://github.com/cescoffier/quarkus-kafka-rest-client-demo[GitHub] 代码 link:https://github.com/cescoffier/quarkus-kafka-rest-client-demo[库中] 的代码，并按照自述文件中的说明进行操作。"
+"Check out the code in this https://github.com/cescoffier/quarkus-kafka-rest-"
+"client-demo[GitHub repository] and follow the instructions from the readme."
+msgstr ""
+"想自己试试吗？查看 link:https://github.com/cescoffier/quarkus-kafka-rest-client-"
+"demo[GitHub] 代码 link:https://github.com/cescoffier/quarkus-kafka-rest-client-"
+"demo[库中] 的代码，并按照自述文件中的说明进行操作。"
 
 #. type: Plain text
 #: _posts/2020-09-08-kafka-rest-client.adoc
 #, fuzzy
-msgid "Reactive Messaging and the Rest client contain other gems, check the related guides and documentation to learn more about them:"
+msgid ""
+"Reactive Messaging and the Rest client contain other gems, check the related "
+"guides and documentation to learn more about them:"
 msgstr "Reactive Messaging和Rest客户端包含了其他的宝石，请查看相关的指南和文档以了解更多信息。"
 
 #. type: Plain text
@@ -258,5 +342,9 @@ msgstr "link:https://quarkus.io/guides/kafka[与 Kafka 交互]"
 #. type: Plain text
 #: _posts/2020-09-08-kafka-rest-client.adoc
 #, fuzzy
-msgid "https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/2.2/kafka/kafka.html[The Kafka Connector documentation]"
-msgstr "link:https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/2.2/kafka/kafka.html[Kafka 连接器文档]"
+msgid ""
+"https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/"
+"2.2/kafka/kafka.html[The Kafka Connector documentation]"
+msgstr ""
+"link:https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-"
+"messaging/2.2/kafka/kafka.html[Kafka 连接器文档]"
