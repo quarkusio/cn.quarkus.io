@@ -2,7 +2,7 @@
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -32,37 +32,27 @@ msgstr "用Mutiny运行并发的异步行动"
 #, fuzzy
 msgid ""
 "This week, I've been asked about a widespread use case around concurrency.\n"
-"This user wanted to call two microservices _in parallel_, and when both "
-"results are received, join them and continue the processing.\n"
+"This user wanted to call two microservices _in parallel_, and when both results are received, join them and continue the processing.\n"
 "Basically, the following pattern:"
-msgstr ""
-"本周，有人向我询问了一个关于并发性的广泛用例。这位用户希望 _并行_ 调用两个微服务，当收到两个结果时，将它们连接起来并继续处理。基本上是以下模式："
+msgstr "本周，有人向我询问了一个关于并发性的广泛用例。这位用户希望 _并行_ 调用两个微服务，当收到两个结果时，将它们连接起来并继续处理。基本上是以下模式："
 
 #. type: Plain text
 #: _posts/2020-09-29-mutiny-concurrent-uni.adoc
 #, fuzzy
-msgid ""
-"image:/assets/images/posts/mutiny-concurrent-uni/pattern.png[width=50%]"
-msgstr ""
-"image:/assets/images/posts/mutiny-concurrent-uni/pattern.png[alt="
-"\"pattern\", width=\"50%\"]"
+msgid "image:/assets/images/posts/mutiny-concurrent-uni/pattern.png[width=50%]"
+msgstr "image:/assets/images/posts/mutiny-concurrent-uni/pattern.png[alt=\"pattern\", width=\"50%\"]"
 
 #: _posts/2020-09-29-mutiny-concurrent-uni.adoc
 #, fuzzy
 msgid ""
-"In a non-reactive approach, both calls would block the caller thread, and, "
-"except if you use a worker thread pool, the calls are not concurrent.\n"
-"Even if you use a worker thread pool, these threads are likely blocked, "
-"consuming resources for nothing."
-msgstr ""
-"在非反应式方法中，这两个调用都会阻塞调用者线程，除非使用工作线程池，否则调用是不并发的。即使使用了工作线程池，这些线程也很可能被阻塞，白白消耗资源。"
+"In a non-reactive approach, both calls would block the caller thread, and, except if you use a worker thread pool, the calls are not concurrent.\n"
+"Even if you use a worker thread pool, these threads are likely blocked, consuming resources for nothing."
+msgstr "在非反应式方法中，这两个调用都会阻塞调用者线程，除非使用工作线程池，否则调用是不并发的。即使使用了工作线程池，这些线程也很可能被阻塞，白白消耗资源。"
 
 #. type: Plain text
 #: _posts/2020-09-29-mutiny-concurrent-uni.adoc
 #, fuzzy
-msgid ""
-"But no worries, Quarkus reactive nature and Mutiny have everything to handle "
-"this scenario."
+msgid "But no worries, Quarkus reactive nature and Mutiny have everything to handle this scenario."
 msgstr "但不用担心，夸库斯的反应性和突变性有一切可以处理这种情况。"
 
 #: _posts/2020-09-29-mutiny-concurrent-uni.adoc
@@ -73,16 +63,11 @@ msgstr "让我们调用两个服务"
 #: _posts/2020-09-29-mutiny-concurrent-uni.adoc
 #, fuzzy
 msgid ""
-"In this post, I'm going to use the Vert.x Web Client, a reactive HTTP client."
-"\n"
-"It leverages non-blocking I/O to be highly performant and truly non-blocking."
-"\n"
+"In this post, I'm going to use the Vert.x Web Client, a reactive HTTP client.\n"
+"It leverages non-blocking I/O to be highly performant and truly non-blocking.\n"
 "It does not rely on a hidden thread pool.\n"
-"You can also use the Quarkus Rest Client, but, at the moment, it still uses "
-"worker threads."
-msgstr ""
-"在这篇文章中，我将使用 Vert.x Web Client，它是一个反应式 HTTP 客户端。它利用非阻塞 I/O "
-"实现了高性能和真正的非阻塞。它不依赖于隐藏的线程池。你也可以使用 Quarkus Rest Client，但目前它仍在使用工作线程。"
+"You can also use the Quarkus Rest Client, but, at the moment, it still uses worker threads."
+msgstr "在这篇文章中，我将使用 Vert.x Web Client，它是一个反应式 HTTP 客户端。它利用非阻塞 I/O 实现了高性能和真正的非阻塞。它不依赖于隐藏的线程池。你也可以使用 Quarkus Rest Client，但目前它仍在使用工作线程。"
 
 #: _posts/2020-09-29-mutiny-concurrent-uni.adoc
 #, fuzzy
@@ -94,9 +79,7 @@ msgstr "无论使用哪种客户端，我们都需要调用一些远程服务。
 #. type: Plain text
 #: _posts/2020-09-29-mutiny-concurrent-uni.adoc
 #, fuzzy
-msgid ""
-"https://programming-quotes-api.herokuapp.com/ - to get a quote about "
-"programming"
+msgid "https://programming-quotes-api.herokuapp.com/ - to get a quote about programming"
 msgstr " https://programming-quotes-api.herokuapp.com/ - 获得关于编程的报价"
 
 #. type: Plain text
@@ -109,25 +92,20 @@ msgstr " https://api.chucknorris.io/ - 获得关于 _查克-诺里斯_ 的报价
 #, fuzzy
 msgid ""
 "First thing first, let's see the code required to retrieve our quotes:\n"
-"While both services are similar, the structure of the response differs a "
-"little bit.\n"
+"While both services are similar, the structure of the response differs a little bit.\n"
 "So we end up with:"
 msgstr "首先，让我们看看检索报价所需的代码：虽然两种服务类似，但响应结构略有不同。因此，我们的最终结果是"
 
 #: _posts/2020-09-29-mutiny-concurrent-uni.adoc
 #, fuzzy
 msgid ""
-"These two methods receive a `WebClient`, invoke the services, retrieve the "
-"JSON responses, and extract them.\n"
+"These two methods receive a `WebClient`, invoke the services, retrieve the JSON responses, and extract them.\n"
 "They both return a `Uni`.\n"
 "So they are asynchronous.\n"
 "The result (the quote) is provided _later_ when available.\n"
-"Also, returning a `Uni` means that the services will only be invoked when "
-"someone subscribes to the returned `Uni`.\n"
+"Also, returning a `Uni` means that the services will only be invoked when someone subscribes to the returned `Uni`.\n"
 "If you subscribe multiple times, you will call the service multiple times."
-msgstr ""
-"这两个方法接收 `WebClient` ，调用服务，检索 JSON 响应并提取它们。它们都会返回 `Uni` 。因此它们是异步的。结果（引用）将在 "
-"_稍后_ 可用时提供。此外，返回 `Uni` 意味着只有当有人订阅了返回的 `Uni` 时，服务才会被调用。如果您多次订阅，就会多次调用服务。"
+msgstr "这两个方法接收 `WebClient` ，调用服务，检索 JSON 响应并提取它们。它们都会返回 `Uni` 。因此它们是异步的。结果（引用）将在 _稍后_ 可用时提供。此外，返回 `Uni` 意味着只有当有人订阅了返回的 `Uni` 时，服务才会被调用。如果您多次订阅，就会多次调用服务。"
 
 #: _posts/2020-09-29-mutiny-concurrent-uni.adoc
 #, fuzzy
@@ -150,33 +128,23 @@ msgstr "Mutiny提供了一种方法来 _组合_ 由 `Unis` 。"
 #: _posts/2020-09-29-mutiny-concurrent-uni.adoc
 #, fuzzy
 msgid ""
-"When someone subscribes to the `Uni tuple`, it subscribes to the "
-"`getProgrammingQuote(client)` and `getChuckNorrisQuote(client)` `Unis`, "
-"which invoke the services.\n"
+"When someone subscribes to the `Uni tuple`, it subscribes to the `getProgrammingQuote(client)` and `getChuckNorrisQuote(client)` `Unis`, which invoke the services.\n"
 "So the requests are emitted, and the services are invoked concurrently."
-msgstr ""
-"当有人订阅 `Uni tuple` 时，它会订阅 `getProgrammingQuote(client)` 和 "
-"`getChuckNorrisQuote(client)` `Unis` ，后者会调用服务。因此，请求是同时发出的，服务也是同时调用的。"
+msgstr "当有人订阅 `Uni tuple` 时，它会订阅 `getProgrammingQuote(client)` 和 `getChuckNorrisQuote(client)` `Unis` ，后者会调用服务。因此，请求是同时发出的，服务也是同时调用的。"
 
 #. type: Plain text
 #: _posts/2020-09-29-mutiny-concurrent-uni.adoc
 #, fuzzy
-msgid ""
-"When both responses are available, it combines them into a _Tuple_, a simple "
-"structure carrying multiple items."
+msgid "When both responses are available, it combines them into a _Tuple_, a simple structure carrying multiple items."
 msgstr "当两个回复都可用时，它会将它们合并成一个 _Tuple（元组_ ），这是一个包含多个项目的简单结构。"
 
 #: _posts/2020-09-29-mutiny-concurrent-uni.adoc
 #, fuzzy
 msgid ""
 "In other words, concurrently calling our services is pretty straightforward.\n"
-"Just create the `Unis` representing the services or the asynchronous action "
-"you want to achieve and combine them using `Uni.combine().all()`\n"
-"You can decide to combine the results using _tuples_ or to use a combinator "
-"function."
-msgstr ""
-"换句话说，并发调用我们的服务非常简单。只需创建代表服务或您想实现的异步操作的 `Unis` ，然后使用 `Uni.combine().all()` "
-"将它们组合起来即可。您可以决定使用 _元组_ 或使用组合函数来组合结果。"
+"Just create the `Unis` representing the services or the asynchronous action you want to achieve and combine them using `Uni.combine().all()`\n"
+"You can decide to combine the results using _tuples_ or to use a combinator function."
+msgstr "换句话说，并发调用我们的服务非常简单。只需创建代表服务或您想实现的异步操作的 `Unis` ，然后使用 `Uni.combine().all()` 将它们组合起来即可。您可以决定使用 _元组_ 或使用组合函数来组合结果。"
 
 #: _posts/2020-09-29-mutiny-concurrent-uni.adoc
 #, fuzzy
@@ -187,12 +155,8 @@ msgstr "把所有东西放在一起"
 #, fuzzy
 msgid ""
 "That's it!\n"
-"If you want to see this code in action, check this https://gist.github.com/"
-"cescoffier/1ed68bef12b798529e10350f77686e9a[gist]. You even can run it "
-"directly with JBang:"
-msgstr ""
-"就是这样！如果你想看看这段代码的实际运行情况，请查看此 link:https://gist.github.com/cescoffier/"
-"1ed68bef12b798529e10350f77686e9a[gist] 。你甚至可以直接用 JBang 运行它："
+"If you want to see this code in action, check this https://gist.github.com/cescoffier/1ed68bef12b798529e10350f77686e9a[gist]. You even can run it directly with JBang:"
+msgstr "就是这样！如果你想看看这段代码的实际运行情况，请查看此 link:https://gist.github.com/cescoffier/1ed68bef12b798529e10350f77686e9a[gist] 。你甚至可以直接用 JBang 运行它："
 
 #: _posts/2020-09-29-mutiny-concurrent-uni.adoc
 #, fuzzy
