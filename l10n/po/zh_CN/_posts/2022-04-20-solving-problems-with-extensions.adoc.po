@@ -2,7 +2,7 @@
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -25,33 +25,47 @@ msgstr "用Quarkus扩展来解决问题（1/n）。"
 #. type: YAML Front Matter: synopsis
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy, no-wrap
-msgid "The unique build infrastructure of Quarkus allows you to solve complex issues in a very simple way by developing custom extensions."
+msgid ""
+"The unique build infrastructure of Quarkus allows you to solve complex "
+"issues in a very simple way by developing custom extensions."
 msgstr "Quarkus独特的构建基础设施允许你通过开发自定义扩展，以非常简单的方式解决复杂问题。"
 
 #. type: Plain text
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
-msgid "This is the first post of what I hope will be a series of several articles showing how you can solve complex problems by leveraging the unique Quarkus build infrastructure and extension framework."
+msgid ""
+"This is the first post of what I hope will be a series of several articles "
+"showing how you can solve complex problems by leveraging the unique Quarkus "
+"build infrastructure and extension framework."
 msgstr "这是第一篇文章，我希望这将是一系列的文章，展示你如何利用独特的Quarkus构建基础设施和扩展框架来解决复杂的问题。"
 
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
 msgid ""
-"First things first, bootstraping a Quarkus extension is easy: in one command, you can get it scaffolded and get started on the actual implementation.\n"
+"First things first, bootstraping a Quarkus extension is easy: in one "
+"command, you can get it scaffolded and get started on the actual "
+"implementation.\n"
 "But that's not the subject of this post!"
 msgstr "首先，Quarkus 扩展的引导非常简单：只需一条命令，你就可以为它搭建脚手架，并开始实际实施。但这不是本篇文章的主题！"
 
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
 msgid ""
-"An extension, apart from providing some runtime code to your application, also allows to tweak the build of your application and do all sorts of things at the build level.\n"
+"An extension, apart from providing some runtime code to your application, "
+"also allows to tweak the build of your application and do all sorts of "
+"things at the build level.\n"
 "This is what we will focus on in this series."
 msgstr "扩展除了为应用程序提供一些运行时代码外，还可以调整应用程序的构建，并在构建级别上做各种事情。这就是我们本系列将重点讨论的内容。"
 
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
-msgid "**Problem of the day:** to ensure binary compatibility, the Hub4j GitHub API introduces some bridge methods that confuse Mockito and more specifically ByteBuddy and ultimately make our tests unreliable. How can we solve that?"
-msgstr "*今日问题：* 为了确保二进制兼容性，Hub4j GitHub API 引入了一些桥接方法，这些方法会混淆 Mockito，特别是 ByteBuddy，最终导致我们的测试不可靠。我们该如何解决这个问题呢？"
+msgid ""
+"**Problem of the day:** to ensure binary compatibility, the Hub4j GitHub API "
+"introduces some bridge methods that confuse Mockito and more specifically "
+"ByteBuddy and ultimately make our tests unreliable. How can we solve that?"
+msgstr ""
+"*今日问题：* 为了确保二进制兼容性，Hub4j GitHub API 引入了一些桥接方法，这些方法会混淆 Mockito，特别是 "
+"ByteBuddy，最终导致我们的测试不可靠。我们该如何解决这个问题呢？"
 
 #. type: Title ==
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
@@ -62,52 +76,82 @@ msgstr "一些背景"
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
 msgid ""
-"You might have heard about https://github.com/quarkiverse/quarkus-github-app[my Quarkus GitHub App extension]\n"
-"that allows you to develop GitHub Apps based on Quarkus at light speed with very little boilerplate\n"
+"You might have heard about https://github.com/quarkiverse/quarkus-github-"
+"app[my Quarkus GitHub App extension]\n"
+"that allows you to develop GitHub Apps based on Quarkus at light speed with "
+"very little boilerplate\n"
 "(shameless ad: it is awesome!)."
-msgstr "你可能听说过 link:https://github.com/quarkiverse/quarkus-github-app[我的 Quarkus GitHub 应用程序扩展] ，它能让你以极快的速度，只用很少的模板就开发出基于 Quarkus 的 GitHub 应用程序（无耻的广告：它棒极了！）。"
+msgstr ""
+"你可能听说过 link:https://github.com/quarkiverse/quarkus-github-app[我的 Quarkus "
+"GitHub 应用程序扩展] ，它能让你以极快的速度，只用很少的模板就开发出基于 Quarkus 的 GitHub 应用程序（无耻的广告：它棒极了！）。"
 
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
 msgid ""
-"My dear colleague https://github.com/yrodiere[Yoann Rodière] (he is awesome too!) wrote some test infrastructure for it based on https://site.mockito.org[Mockito]\n"
+"My dear colleague https://github.com/yrodiere[Yoann Rodière] (he is awesome "
+"too!) wrote some test infrastructure for it based on https://site.mockito."
+"org[Mockito]\n"
 "(which uses https://bytebuddy.net/[ByteBuddy] under the hood).\n"
-"That was all good until we started noticing confusing and non reproducible failures in our tests\n"
+"That was all good until we started noticing confusing and non reproducible "
+"failures in our tests\n"
 "with Mockito sometimes not actually calling the method we would expect."
-msgstr "我亲爱的同事 link:https://github.com/yrodiere[Yoann Rodière] （他也很棒！）基于 link:https://site.mockito.org[Mockito] （在引擎盖下使用 link:https://bytebuddy.net/[ByteBuddy] ）为其编写了一些测试基础架构。这一切都很顺利，直到我们开始注意到测试中出现了令人困惑和不可重现的故障，Mockito 有时实际上并没有调用我们期望的方法。"
+msgstr ""
+"我亲爱的同事 link:https://github.com/yrodiere[Yoann Rodière] （他也很棒！）基于 link:https:/"
+"/site.mockito.org[Mockito] （在引擎盖下使用 link:https://bytebuddy.net/[ByteBuddy] "
+"）为其编写了一些测试基础架构。这一切都很顺利，直到我们开始注意到测试中出现了令人困惑和不可重现的故障，Mockito "
+"有时实际上并没有调用我们期望的方法。"
 
 #. type: Plain text
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
-msgid "The source of the problem is that, to ensure binary compatibility, the https://github.com/hub4j/github-api[Hub4j GitHub API] we use in Quarkus GitHub App introduces bridge methods in the bytecode."
-msgstr "问题的根源在于，为了确保二进制兼容，我们在Quarkus GitHub App中使用的 link:https://github.com/hub4j/github-api[Hub4j GitHub API] 在字节码中引入了桥接方法。"
+msgid ""
+"The source of the problem is that, to ensure binary compatibility, the https:"
+"//github.com/hub4j/github-api[Hub4j GitHub API] we use in Quarkus GitHub App "
+"introduces bridge methods in the bytecode."
+msgstr ""
+"问题的根源在于，为了确保二进制兼容，我们在Quarkus GitHub App中使用的 link:https://github.com/hub4j/"
+"github-api[Hub4j GitHub API] 在字节码中引入了桥接方法。"
 
 #. type: Plain text
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
-msgid "For instance, let's take this method of the `GitHub` class of the GitHub API:"
+msgid ""
+"For instance, let's take this method of the `GitHub` class of the GitHub API:"
+""
 msgstr "例如，让我们以GitHub API的 `GitHub` 类的这个方法为例。"
 
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
 msgid ""
-"Historically, it used to return a `GHUser` but, in newer versions, it returns a `GHMyself`,\n"
+"Historically, it used to return a `GHUser` but, in newer versions, it "
+"returns a `GHMyself`,\n"
 "which broke the binary compatibility."
 msgstr "历史上，它曾返回 `GHUser` ，但在新版本中，它返回 `GHMyself` ，这破坏了二进制兼容性。"
 
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
 msgid ""
-"To restore it and with the help of the `@WithBridgeMethods` annotation, the GitHub API build will create two methods in the bytecode:\n"
+"To restore it and with the help of the `@WithBridgeMethods` annotation, the "
+"GitHub API build will create two methods in the bytecode:\n"
 "one returning `GHMyself` and one returning `GHUser`.\n"
-"This is very useful if you have compiled your application with an old version of the GitHub API and you just want to use the new version without recompiling your application.\n"
-"Typically, in the case of Jenkins, you can switch to a new version of the GitHub API without having to recompile all the Jenkins plugins using GitHub API."
-msgstr "为了还原它，在 `@WithBridgeMethods` 注解的帮助下，GitHub API 编译会在字节码中创建两个方法：一个返回 `GHMyself` ，一个返回 `GHUser` 。如果您使用旧版本的 GitHub API 编译了应用程序，而您只想使用新版本的 GitHub API 而无需重新编译应用程序，那么这将非常有用。通常情况下，就 Jenkins 而言，你可以切换到新版本的 GitHub API，而无需重新编译所有使用 GitHub API 的 Jenkins 插件。"
+"This is very useful if you have compiled your application with an old "
+"version of the GitHub API and you just want to use the new version without "
+"recompiling your application.\n"
+"Typically, in the case of Jenkins, you can switch to a new version of the "
+"GitHub API without having to recompile all the Jenkins plugins using GitHub "
+"API."
+msgstr ""
+"为了还原它，在 `@WithBridgeMethods` 注解的帮助下，GitHub API 编译会在字节码中创建两个方法：一个返回 "
+"`GHMyself` ，一个返回 `GHUser` 。如果您使用旧版本的 GitHub API 编译了应用程序，而您只想使用新版本的 GitHub "
+"API 而无需重新编译应用程序，那么这将非常有用。通常情况下，就 Jenkins 而言，你可以切换到新版本的 GitHub "
+"API，而无需重新编译所有使用 GitHub API 的 Jenkins 插件。"
 
 #. type: Plain text
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
-msgid "At the bytecode level, you end up with something equivalent to the following:"
+msgid ""
+"At the bytecode level, you end up with something equivalent to the following:"
+""
 msgstr "在字节码层面，你最终会得到相当于以下的东西。"
 
 #. type: Plain text
@@ -119,28 +163,39 @@ msgstr " `invokevirtual` 的 ，返回 `getMyself()` `GHMyself` "
 #. type: Plain text
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
-msgid "And if your existing compiled code calls `GHUser getMyself()`, it will still work after the change of return type."
+msgid ""
+"And if your existing compiled code calls `GHUser getMyself()`, it will still "
+"work after the change of return type."
 msgstr "而如果你现有的编译代码调用 `GHUser getMyself()` ，在改变返回类型后，它仍然可以工作。"
 
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
 msgid ""
-"This bridge methods approach solves a real problem and it's not that big of a deal as it's fully transparent for the developer...\n"
-"except when you start using Mockito due to https://github.com/raphw/byte-buddy/issues/1162[a ByteBuddy issue]:\n"
-"ByteBuddy can get confused if there are several methods with the same signature but different return types."
-msgstr "这种桥接方法解决了一个实际问题，而且它对开发人员来说完全透明，因此并不是什么大问题......除非您由于 link:https://github.com/raphw/byte-buddy/issues/1162[ByteBuddy 问题] 而开始使用 Mockito：如果有几个签名相同但返回类型不同的方法，ByteBuddy 可能会感到困惑。"
+"This bridge methods approach solves a real problem and it's not that big of "
+"a deal as it's fully transparent for the developer...\n"
+"except when you start using Mockito due to https://github.com/raphw/byte-"
+"buddy/issues/1162[a ByteBuddy issue]:\n"
+"ByteBuddy can get confused if there are several methods with the same "
+"signature but different return types."
+msgstr ""
+"这种桥接方法解决了一个实际问题，而且它对开发人员来说完全透明，因此并不是什么大问题......除非您由于 link:https://github.com/"
+"raphw/byte-buddy/issues/1162[ByteBuddy 问题] 而开始使用 "
+"Mockito：如果有几个签名相同但返回类型不同的方法，ByteBuddy 可能会感到困惑。"
 
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
 msgid ""
-"ByteBuddy is an amazing library and this blog post should not be seen as a critique of ByteBuddy.\n"
+"ByteBuddy is an amazing library and this blog post should not be seen as a "
+"critique of ByteBuddy.\n"
 "This is an extreme corner case that doesn't happen with standard bytecode."
 msgstr "ByteBuddy 是一个了不起的库，这篇博文不应被视为对 ByteBuddy 的批评。这是标准字节码不会出现的极端情况。"
 
 #. type: Plain text
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
-msgid "This issue was causing our tests to be unreliable because sometimes ByteBuddy was choosing the wrong method to apply Mockito magic."
+msgid ""
+"This issue was causing our tests to be unreliable because sometimes "
+"ByteBuddy was choosing the wrong method to apply Mockito magic."
 msgstr "这个问题导致我们的测试不可靠，因为有时ByteBuddy会选择错误的方法来应用Mockito的魔法。"
 
 #. type: Title ==
@@ -152,10 +207,12 @@ msgstr "我们如何才能解决这个问题？"
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
 msgid ""
-"In the case of Quarkus GitHub App, we don't really care about binary compatibility:\n"
+"In the case of Quarkus GitHub App, we don't really care about binary "
+"compatibility:\n"
 "when upgrading to a new version of the GitHub API,\n"
 "users will rebuild their application."
-msgstr "就 Quarkus GitHub 应用程序而言，我们并不真正关心二进制兼容性：当升级到新版本的 GitHub API 时，用户将重建他们的应用程序。"
+msgstr ""
+"就 Quarkus GitHub 应用程序而言，我们并不真正关心二进制兼容性：当升级到新版本的 GitHub API 时，用户将重建他们的应用程序。"
 
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
@@ -167,20 +224,26 @@ msgstr "因此，鉴于这些桥接方法存在问题，一种解决办法就是
 #. type: Plain text
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
-msgid "Obviously, we could fork the GitHub API and avoid generating the bridge methods."
+msgid ""
+"Obviously, we could fork the GitHub API and avoid generating the bridge "
+"methods."
 msgstr "很明显，我们可以分叉GitHub的API，避免生成桥接方法。"
 
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
 msgid ""
-"But forking and maintaining a fork forever is definitely not something we should consider if we can avoid it.\n"
-"Especially since we want to continue benefiting from all the future improvements of the GitHub API."
+"But forking and maintaining a fork forever is definitely not something we "
+"should consider if we can avoid it.\n"
+"Especially since we want to continue benefiting from all the future "
+"improvements of the GitHub API."
 msgstr "但如果可以避免的话，我们绝对不应该考虑分叉并永远维护一个分叉。尤其是我们希望继续受益于 GitHub API 未来的所有改进。"
 
 #. type: Plain text
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
-msgid "So could we somehow keep the library standard but have Quarkus adjust the bytecode when building the application?"
+msgid ""
+"So could we somehow keep the library standard but have Quarkus adjust the "
+"bytecode when building the application?"
 msgstr "那么我们是否可以以某种方式保持库的标准，但在构建应用程序时让Quarkus调整字节码？"
 
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
@@ -200,9 +263,13 @@ msgstr "让我们来确定这些方法"
 #, fuzzy
 msgid ""
 "In Quarkus, we can index the annotations with Jandex so, in a perfect world,\n"
-"we would index the GitHub API jar with Jandex (which we already do for other purposes)\n"
-"and interrogate Jandex to get all the methods annotated with `@WithBridgeMethods`:"
-msgstr "在 Quarkus 中，我们可以使用 Jandex 对注释进行索引，因此，在一个完美的世界里，我们可以使用 Jandex 对 GitHub API jar 进行索引（我们已经出于其他目的这样做了），然后询问 Jandex 以获取所有使用 `@WithBridgeMethods` 进行注释的方法："
+"we would index the GitHub API jar with Jandex (which we already do for other "
+"purposes)\n"
+"and interrogate Jandex to get all the methods annotated with "
+"`@WithBridgeMethods`:"
+msgstr ""
+"在 Quarkus 中，我们可以使用 Jandex 对注释进行索引，因此，在一个完美的世界里，我们可以使用 Jandex 对 GitHub API "
+"jar 进行索引（我们已经出于其他目的这样做了），然后询问 Jandex 以获取所有使用 `@WithBridgeMethods` 进行注释的方法："
 
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
@@ -210,7 +277,9 @@ msgid ""
 "Unfortunately, `@WithBridgeMethods` has a `CLASS` retention policy\n"
 "- which makes perfect sense for its usage -\n"
 "and Jandex only considers annotations with a `RUNTIME` retention policy."
-msgstr "遗憾的是， `@WithBridgeMethods` 的保留策略为 `CLASS` ，这对其使用非常合理，而 Jandex 只考虑保留策略为 `RUNTIME` 的注释。"
+msgstr ""
+"遗憾的是， `@WithBridgeMethods` 的保留策略为 `CLASS` ，这对其使用非常合理，而 Jandex 只考虑保留策略为 "
+"`RUNTIME` 的注释。"
 
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
@@ -235,20 +304,27 @@ msgstr "为了提高灵活性，我们引入了一个 `BuildItem` 。"
 #. type: Plain text
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
-msgid "And we will produce a `GitHubApiClassWithBridgeMethodsBuildItem` for each class:"
+msgid ""
+"And we will produce a `GitHubApiClassWithBridgeMethodsBuildItem` for each "
+"class:"
 msgstr "而且我们将为每个班级制作一个 `GitHubApiClassWithBridgeMethodsBuildItem` 。"
 
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
 msgid ""
-"Once this is done, we are able to consume the `GitHubApiClassWithBridgeMethodsBuildItem` from any Quarkus `@BuildStep`\n"
+"Once this is done, we are able to consume the "
+"`GitHubApiClassWithBridgeMethodsBuildItem` from any Quarkus `@BuildStep`\n"
 "so this list is generally available to the Quarkus build."
-msgstr "一旦完成这项工作，我们就能从任何 Quarkus `@BuildStep` 中使用 `GitHubApiClassWithBridgeMethodsBuildItem` ，因此 Quarkus 构建一般都能使用该列表。"
+msgstr ""
+"一旦完成这项工作，我们就能从任何 Quarkus `@BuildStep` 中使用 "
+"`GitHubApiClassWithBridgeMethodsBuildItem` ，因此 Quarkus 构建一般都能使用该列表。"
 
 #. type: delimited block =
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
-msgid "I won't go into detail on the Quarkus build process but the principle of it is extremely simple:"
+msgid ""
+"I won't go into detail on the Quarkus build process but the principle of it "
+"is extremely simple:"
 msgstr "我不会详细介绍Quarkus的构建过程，但其原理极其简单。"
 
 #. type: delimited block =
@@ -272,14 +348,19 @@ msgstr "构建步骤产生构建项目。"
 #. type: delimited block =
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
-msgid "Then it is just a matter of resolving the dependencies of the build steps to get to the final result: your application."
+msgid ""
+"Then it is just a matter of resolving the dependencies of the build steps to "
+"get to the final result: your application."
 msgstr "然后就是解决构建步骤的依赖性问题，以获得最终结果：你的应用程序。"
 
 #. type: delimited block =
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
-msgid "You can learn more about it in the link:/guides/writing-extensions#build-step-processors[Writing extensions guide]."
-msgstr "你可以在 link:/guides/writing-extensions#build-step-processors[写作扩展指南] 中了解更多信息。"
+msgid ""
+"You can learn more about it in the link:/guides/writing-extensions#build-"
+"step-processors[Writing extensions guide]."
+msgstr ""
+"你可以在 link:/guides/writing-extensions#build-step-processors[写作扩展指南] 中了解更多信息。"
 
 #. type: Title ===
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
@@ -290,15 +371,20 @@ msgstr "删除的方法"
 #. type: Plain text
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
-msgid "Now that we have the list of methods handy, the next step is to remove them."
+msgid ""
+"Now that we have the list of methods handy, the next step is to remove them."
 msgstr "现在我们有了方便的方法列表，下一步是删除它们。"
 
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
 msgid ""
-"To manipulate bytecode during the build, Quarkus offers the `BytecodeTransformerBuildItem`.\n"
-"Adjusting the bytecode of a class is just a matter of producing one for the given class."
-msgstr "要在构建过程中操作字节码，Quarkus 提供了 `BytecodeTransformerBuildItem` 。调整类的字节码只需为给定的类生成字节码即可。"
+"To manipulate bytecode during the build, Quarkus offers the "
+"`BytecodeTransformerBuildItem`.\n"
+"Adjusting the bytecode of a class is just a matter of producing one for the "
+"given class."
+msgstr ""
+"要在构建过程中操作字节码，Quarkus 提供了 `BytecodeTransformerBuildItem` "
+"。调整类的字节码只需为给定的类生成字节码即可。"
 
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
@@ -316,19 +402,27 @@ msgstr "我们将生产 `BytecodeTransformerBuildItem` s。"
 #. type: Plain text
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
-msgid "We consume the previously produced ``GitHubApiClassWithBridgeMethodsBuildItem``s."
+msgid ""
+"We consume the previously produced "
+"``GitHubApiClassWithBridgeMethodsBuildItem``s."
 msgstr "我们消耗之前产生的 `GitHubApiClassWithBridgeMethodsBuildItem` s。"
 
 #. type: Plain text
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
-msgid "`RemoveBridgeMethodsClassVisitor` is a classic https://asm.ow2.io[ASM] `ClassVisitor` that will modify the bytecode:"
-msgstr " `RemoveBridgeMethodsClassVisitor` 是一个经典的 link:https://asm.ow2.io[ASM] `ClassVisitor` ，将修改字节码。"
+msgid ""
+"`RemoveBridgeMethodsClassVisitor` is a classic https://asm.ow2.io[ASM] "
+"`ClassVisitor` that will modify the bytecode:"
+msgstr ""
+" `RemoveBridgeMethodsClassVisitor` 是一个经典的 link:https://asm.ow2.io[ASM] "
+"`ClassVisitor` ，将修改字节码。"
 
 #. type: Plain text
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
-msgid "If the method name matches and the method is a bridge and synthetic method..."
+msgid ""
+"If the method name matches and the method is a bridge and synthetic method..."
+""
 msgstr "如果方法名称匹配，并且该方法是一个桥梁和合成方法..."
 
 #. type: Plain text
@@ -340,7 +434,9 @@ msgstr " 我们通过返回 `null` ，将其从字节码中删除。 "
 #. type: Plain text
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
-msgid "If not, we just delegate to the superclass method that will incorporate the method in the bytecode."
+msgid ""
+"If not, we just delegate to the superclass method that will incorporate the "
+"method in the bytecode."
 msgstr "如果没有，我们就委托给超类的方法，将该方法纳入字节码中。"
 
 #. type: Plain text
@@ -352,10 +448,14 @@ msgstr "就这样吧!"
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
 msgid ""
-"During the build process, Quarkus will create a class file containing the modified bytecode\n"
+"During the build process, Quarkus will create a class file containing the "
+"modified bytecode\n"
 "and will use it instead of the class coming from the GitHub API jar.\n"
-"Thus the bridge methods we wanted to remove will never be visible to ByteBuddy."
-msgstr "在构建过程中，Quarkus 会创建一个包含修改后字节码的类文件，并使用它来代替 GitHub API jar 中的类。因此，ByteBuddy 将永远无法看到我们想要移除的桥接方法。"
+"Thus the bridge methods we wanted to remove will never be visible to "
+"ByteBuddy."
+msgstr ""
+"在构建过程中，Quarkus 会创建一个包含修改后字节码的类文件，并使用它来代替 GitHub API jar 中的类。因此，ByteBuddy "
+"将永远无法看到我们想要移除的桥接方法。"
 
 #. type: Title ==
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
@@ -366,17 +466,22 @@ msgstr "解决方案"
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
 msgid ""
-"At conferences, we often say that Quarkus is doing things differently from other frameworks\n"
+"At conferences, we often say that Quarkus is doing things differently from "
+"other frameworks\n"
 "and that the magic relies in its innovative build process."
 msgstr "在会议上，我们经常说 Quarkus 的做法与其他框架不同，其神奇之处在于创新的构建流程。"
 
 #. type: Plain text
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
-msgid "This build process is the key to the low memory footprint and fast startup times of Quarkus."
+msgid ""
+"This build process is the key to the low memory footprint and fast startup "
+"times of Quarkus."
 msgstr "这一构建过程是 Quarkus 占用内存少、启动速度快的关键所在。"
 
 #: _posts/2022-04-20-solving-problems-with-extensions.adoc
 #, fuzzy
-msgid "**But it is also a very powerful tool to customize the build of your applications.**"
+msgid ""
+"**But it is also a very powerful tool to customize the build of your "
+"applications.**"
 msgstr "*不过，它也是一个非常强大的工具，可用于定制应用程序的构建。*"
