@@ -7,269 +7,481 @@ msgstr ""
 "X-Generator: jekyll-l10n\n"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid "How to Secure Your A2A Server Agent with Keycloak OAuth2"
-msgstr ""
+msgstr "如何使用 Keycloak OAuth2 确保 A2A 服务器代理的安全"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
-msgid "This blog post shows how to secure an A2A server agent using OAuth2 bearer tokens via Keycloak and shows how to enable an A2A client to automatically obtain and pass the required token in each request."
-msgstr ""
-
-#: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid ""
-"Today, we've released A2A Java SDK 0.3.0.Final which includes security and cloud related enhancements.\n"
-"In this post, we'll focus on A2A security. Stay tuned for a future post on cloud related enhancements!"
+"This blog post shows how to secure an A2A server agent using OAuth2 bearer "
+"tokens via Keycloak and shows how to enable an A2A client to automatically "
+"obtain and pass the required token in each request."
 msgstr ""
+"本博文介绍了如何通过 Keycloak 使用 OAuth2 承载令牌确保 A2A 服务器代理的安全，并介绍了如何使 A2A "
+"客户端在每次请求中自动获取并传递所需的令牌。"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid ""
-"The A2A protocol delegates authentication to standard mechanisms like OAuth2 and OpenID Connect. An\n"
-"A2A server agent specifies its authentication requirements in its agent card so A2A clients know\n"
-"what type of credentials they need to obtain and then they can pass these credentials to\n"
+"Today, we've released A2A Java SDK 0.3.0.Final which includes security and "
+"cloud related enhancements.\n"
+"In this post, we'll focus on A2A security. Stay tuned for a future post on "
+"cloud related enhancements!"
+msgstr ""
+"今天，我们发布了 A2A Java SDK 0.3.0.Final，其中包括安全和云相关的增强功能。在本篇文章中，我们将重点介绍 A2A "
+"的安全性。敬请期待未来关于云相关增强功能的文章！"
+
+#: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
+msgid ""
+"The A2A protocol delegates authentication to standard mechanisms like OAuth2 "
+"and OpenID Connect. An\n"
+"A2A server agent specifies its authentication requirements in its agent card "
+"so A2A clients know\n"
+"what type of credentials they need to obtain and then they can pass these "
+"credentials to\n"
 "the server agent when sending requests."
 msgstr ""
+"A2A 协议将身份验证委托给 OAuth2 和 OpenID Connect 等标准机制。A2A 服务器代理会在其代理卡中指定其身份验证要求，这样 "
+"A2A 客户端就知道他们需要获得哪种类型的凭证，然后他们就可以在发送请求时将这些凭证传递给服务器代理。"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid ""
-"We're going to walk through securing an A2A server agent with OAuth2 using Keycloak and we'll\n"
-"show how to configure an A2A client to handle token management. Our A2A server agent will be able\n"
-"to support all 3 transports (JSON‑RPC, HTTP+JSON/REST, and gRPC) so we can see that the authentication\n"
+"We're going to walk through securing an A2A server agent with OAuth2 using "
+"Keycloak and we'll\n"
+"show how to configure an A2A client to handle token management. Our A2A "
+"server agent will be able\n"
+"to support all 3 transports (JSON‑RPC, HTTP+JSON/REST, and gRPC) so we can "
+"see that the authentication\n"
 "configuration is consistent across transport protocols."
 msgstr ""
+"我们将介绍如何使用 Keycloak 通过 OAuth2 保护 A2A 服务器代理，并展示如何配置 A2A 客户端以处理令牌管理。我们的 A2A "
+"服务器代理将能够支持所有 3 种传输（JSON-RPC、HTTP+JSON/REST 和 gRPC），因此我们可以看到跨传输协议的身份验证配置是一致的。"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid "Magic 8 Ball Sample"
-msgstr ""
+msgstr "魔术 8 球样本"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid ""
-"To see security configuration in action, we'll use the https://github.com/a2aproject/a2a-samples/tree/main/samples/java/agents/magic_8_ball_security[Magic 8 Ball Security sample]\n"
-"from the https://github.com/a2aproject/a2a-samples[a2a-samples] repository. This sample is a simple https://github.com/a2aproject/a2a-samples/blob/main/samples/java/agents/magic_8_ball_security/server/src/main/java/com/samples/a2a/Magic8BallAgent.java[Quarkus LangChain4j AI service] that consults a virtual Magic 8 Ball to answer yes/no questions."
+"To see security configuration in action, we'll use the https://github.com/"
+"a2aproject/a2a-samples/tree/main/samples/java/agents/"
+"magic_8_ball_security[Magic 8 Ball Security sample]\n"
+"from the https://github.com/a2aproject/a2a-samples[a2a-samples] repository. "
+"This sample is a simple https://github.com/a2aproject/a2a-samples/blob/main/"
+"samples/java/agents/magic_8_ball_security/server/src/main/java/com/samples/"
+"a2a/Magic8BallAgent.java[Quarkus LangChain4j AI service] that consults a "
+"virtual Magic 8 Ball to answer yes/no questions."
 msgstr ""
+"为了了解安全配置的实际应用，我们将使用 link:https://github.com/a2aproject/a2a-samples[a2a-"
+"samples] 资源库中的 link:https://github.com/a2aproject/a2a-samples/tree/main/"
+"samples/java/agents/magic_8_ball_security[Magic 8 Ball Security 示例] "
+"。该示例是一个简单的 link:https://github.com/a2aproject/a2a-samples/blob/main/samples/"
+"java/agents/magic_8_ball_security/server/src/main/java/com/samples/a2a/"
+"Magic8BallAgent.java[Quarkus LangChain4j AI 服务] ，它可以咨询虚拟 Magic 8 Ball 来回答是/"
+"否问题。"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid "A2A Server Agent"
-msgstr ""
+msgstr "A2A 服务器代理"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid ""
-"We're going to focus specifically on the security configuration for our A2A server agent. For a detailed\n"
-"description on how to turn a Quarkus LangChain4j AI Service into an A2A server agent, check\n"
+"We're going to focus specifically on the security configuration for our A2A "
+"server agent. For a detailed\n"
+"description on how to turn a Quarkus LangChain4j AI Service into an A2A "
+"server agent, check\n"
 "out this previous https://quarkus.io/blog/quarkus-a2a-java-grpc/[blog post]."
 msgstr ""
+"我们将特别关注 A2A 服务器代理的安全配置。有关如何将 Quarkus LangChain4j AI 服务转化为 A2A "
+"服务器代理的详细说明，请查看之前的 link:https://quarkus.io/blog/quarkus-a2a-java-grpc/[博文] 。"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid "Security Configuration"
-msgstr ""
+msgstr "安全配置"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid ""
-"When using the A2A Java SDK reference implementations, the endpoints that need to be secured according to\n"
-"the A2A specification are already annotated with `@Authenticated` for you. That means that in order to secure\n"
-"your A2A server agent, you just need to specify the configuration for the specific authentication mechanism\n"
-"you'd like to use. To secure our A2A server agent with OAuth2, we simply need to add a dependency on the\n"
+"When using the A2A Java SDK reference implementations, the endpoints that "
+"need to be secured according to\n"
+"the A2A specification are already annotated with `@Authenticated` for you. "
+"That means that in order to secure\n"
+"your A2A server agent, you just need to specify the configuration for the "
+"specific authentication mechanism\n"
+"you'd like to use. To secure our A2A server agent with OAuth2, we simply "
+"need to add a dependency on the\n"
 "`quarkus-oidc` extension as shown below:"
 msgstr ""
+"使用 A2A Java SDK 参考实现时，需要根据 A2A 规范确保安全的端点已为您注释为 `@Authenticated` 。这意味着，为了确保 "
+"A2A 服务器代理的安全，您只需指定您要使用的特定身份验证机制的配置。要使用 OAuth2 确保 A2A 服务器代理的安全，我们只需在 `quarkus-"
+"oidc` 扩展中添加一个依赖项，如下所示："
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid ""
-"**NOTE**: In our sample, we're going to rely on Quarkus Dev Services to automatically create and configure\n"
-"a Keycloak instance that we'll use as our OAuth2 provider. Quarkus Dev Services relies on a container runtime\n"
-"like Docker or Podman to be installed and properly configured. For more details on using Podman with\n"
+"**NOTE**: In our sample, we're going to rely on Quarkus Dev Services to "
+"automatically create and configure\n"
+"a Keycloak instance that we'll use as our OAuth2 provider. Quarkus Dev "
+"Services relies on a container runtime\n"
+"like Docker or Podman to be installed and properly configured. For more "
+"details on using Podman with\n"
 "Quarkus, see this https://quarkus.io/guides/podman[guide]."
 msgstr ""
+"*注意* ：在我们的示例中，我们将依靠 Quarkus Dev Services 自动创建和配置 Keycloak 实例，并将其用作 OAuth2 "
+"提供程序。Quarkus Dev Services 依赖于 Docker 或 Podman 等容器运行时的安装和正确配置。有关在 Quarkus 中使用 "
+"Podman 的更多详情，请参阅本 link:https://quarkus.io/guides/podman[指南] 。"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid ""
-"Now that our A2A server agent is being secured with OAuth2, we need to indicate this in our agent card\n"
+"Now that our A2A server agent is being secured with OAuth2, we need to "
+"indicate this in our agent card\n"
 "as shown below."
-msgstr ""
+msgstr "现在，我们的 A2A 服务器代理已使用 OAuth2 进行了加密，我们需要在代理卡中说明这一点，如下图所示。"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid "Details about the OAuth2 flow our A2A server agent supports."
-msgstr ""
+msgstr "有关我们的 A2A 服务器代理支持的 OAuth2 流程的详细信息。"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
-msgid "We can optionally specify the URL to be used for obtaining a refresh token."
-msgstr ""
+#, fuzzy
+msgid ""
+"We can optionally specify the URL to be used for obtaining a refresh token."
+msgstr "我们可以选择指定用于获取刷新令牌的 URL。"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
-msgid "The available scopes for the OAuth2 client credentials flow. This is a map between the scope name and a description of the scope."
-msgstr ""
+#, fuzzy
+msgid ""
+"The available scopes for the OAuth2 client credentials flow. This is a map "
+"between the scope name and a description of the scope."
+msgstr "OAuth2 客户端凭据流程的可用作用域。这是作用域名称和作用域描述之间的映射。"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid "The token URL to be used for this flow."
-msgstr ""
+msgstr "此流程要使用的令牌 URL。"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid ""
-"Specifies an OAuth2 security scheme using the `ClientCredentialsOAuthFlow`. We'll refer to this from the\n"
+"Specifies an OAuth2 security scheme using the `ClientCredentialsOAuthFlow`. "
+"We'll refer to this from the\n"
 "agent card."
-msgstr ""
+msgstr "使用 `ClientCredentialsOAuthFlow` 指定 OAuth2 安全方案。我们将从代理卡中引用该方案。"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid ""
-"A list of security requirement objects that apply to all agent interactions. Each object lists\n"
-"security schemes that can be used. Follows the OpenAPI 3.0 Security Requirement Object."
-msgstr ""
+"A list of security requirement objects that apply to all agent interactions. "
+"Each object lists\n"
+"security schemes that can be used. Follows the OpenAPI 3.0 Security "
+"Requirement Object."
+msgstr "适用于所有代理交互的安全要求对象列表。每个对象都列出了可使用的安全方案。遵循 OpenAPI 3.0 安全要求对象。"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid "A declaration of the security schemes that can be used."
-msgstr ""
+msgstr "可使用的安全方案声明。"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
-msgid "Notice that our A2A server agent supports all 3 transports: JSON-RPC, HTTP+JSON/REST, and gRPC."
-msgstr ""
+#, fuzzy
+msgid ""
+"Notice that our A2A server agent supports all 3 transports: JSON-RPC, "
+"HTTP+JSON/REST, and gRPC."
+msgstr "请注意，我们的 A2A 服务器代理支持所有 3 种传输方式：JSON-RPC、HTTP+JSON/REST 和 gRPC。"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid "Starting the A2A Server Agent"
-msgstr ""
+msgstr "启动 A2A 服务器代理"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
-msgid "Follow the https://github.com/a2aproject/a2a-samples/tree/main/samples/java/agents/magic_8_ball_security#running-the-a2a-server-agent[instructions] in the sample's README to start our A2A server agent."
-msgstr ""
-
-#: _posts/2025-10-28-quarkus-a2a-java-security.adoc
-msgid "A2A clients can now send queries to our A2A server agent using any of the 3 configured transports."
-msgstr ""
-
-#: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid ""
-"Now that our secured A2A server agent is up and running, let's take a look at how to create an A2A\n"
+"Follow the https://github.com/a2aproject/a2a-samples/tree/main/samples/java/"
+"agents/magic_8_ball_security#running-the-a2a-server-agent[instructions] in "
+"the sample's README to start our A2A server agent."
+msgstr ""
+"按照样本 README 中的 link:https://github.com/a2aproject/a2a-samples/tree/main/"
+"samples/java/agents/magic_8_ball_security#running-the-a2a-server-agent[说明] "
+"启动我们的 A2A 服务器代理。"
+
+#: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
+msgid ""
+"A2A clients can now send queries to our A2A server agent using any of the 3 "
+"configured transports."
+msgstr "A2A 客户端现在可以使用 3 种已配置传输中的任何一种向我们的 A2A 服务器代理发送查询。"
+
+#: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
+msgid ""
+"Now that our secured A2A server agent is up and running, let's take a look "
+"at how to create an A2A\n"
 "client that can communicate with it."
-msgstr ""
+msgstr "现在，我们的安全 A2A 服务器代理已经启动并运行，让我们来看看如何创建一个可以与之通信的 A2A 客户端。"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid "A2A Client"
-msgstr ""
+msgstr "A2A 客户"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
-msgid "The `magic_8_ball_security` sample also includes a https://github.com/a2aproject/a2a-samples/tree/main/samples/java/agents/magic_8_ball_security/client/src/main/java/com/samples/a2a/client/TestClient.java[TestClient] that can be used to send messages to the `Magic8BallAgent`."
-msgstr ""
-
-#: _posts/2025-10-28-quarkus-a2a-java-security.adoc
-msgid "For general information on how to configure A2A clients using the A2A Java SDK, check out this https://quarkus.io/blog/quarkus-a2a-java-0-3-0-alpha-release/[previous post]."
-msgstr ""
-
-#: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid ""
-"Because the A2A server agent our client will be communicating with is secured using OAuth2, our client\n"
-"needs to be able to obtain the required token and pass it to the A2A server agent with each request."
+"The `magic_8_ball_security` sample also includes a https://github.com/"
+"a2aproject/a2a-samples/tree/main/samples/java/agents/magic_8_ball_security/"
+"client/src/main/java/com/samples/a2a/client/TestClient.java[TestClient] that "
+"can be used to send messages to the `Magic8BallAgent`."
 msgstr ""
+"`magic_8_ball_security` 示例还包括一个 link:https://github.com/a2aproject/a2a-"
+"samples/tree/main/samples/java/agents/magic_8_ball_security/client/src/main/"
+"java/com/samples/a2a/client/TestClient.java[TestClient] ，可用于向 "
+"`Magic8BallAgent` 发送消息。"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
-msgid "The `a2a-java-sdk-client` dependency provided by the A2A Java SDK gives us access to a `Client.builder` that we'll use to create our A2A client and specify the necessary authentication configuration."
+#, fuzzy
+msgid ""
+"For general information on how to configure A2A clients using the A2A Java "
+"SDK, check out this https://quarkus.io/blog/quarkus-a2a-java-0-3-0-alpha-"
+"release/[previous post]."
 msgstr ""
+"有关如何使用 A2A Java SDK 配置 A2A 客户端的一般信息，请查看 link:https://quarkus.io/blog/quarkus-"
+"a2a-java-0-3-0-alpha-release/[以前的文章] 。"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
+msgid ""
+"Because the A2A server agent our client will be communicating with is "
+"secured using OAuth2, our client\n"
+"needs to be able to obtain the required token and pass it to the A2A server "
+"agent with each request."
+msgstr ""
+"由于我们的客户端将使用 OAuth2 与 A2A 服务器代理进行通信，因此我们的客户端需要能够获取所需的令牌，并在每次请求时将其传递给 A2A "
+"服务器代理。"
+
+#: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
+msgid ""
+"The `a2a-java-sdk-client` dependency provided by the A2A Java SDK gives us "
+"access to a `Client.builder` that we'll use to create our A2A client and "
+"specify the necessary authentication configuration."
+msgstr ""
+"A2A Java SDK 提供的 `a2a-java-sdk-client` 依赖项可让我们访问 `Client.builder` ，我们将用它来创建 "
+"A2A 客户端并指定必要的身份验证配置。"
+
+#: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid "The A2A Java SDK provides two main classes related to authentication:"
-msgstr ""
+msgstr "A2A Java SDK 提供两个与身份验证相关的主要类："
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
-msgid "`CredentialService`: An interface you can implement to define how to obtain a credential for a specific security scheme."
-msgstr ""
+#, fuzzy
+msgid ""
+"`CredentialService`: An interface you can implement to define how to obtain "
+"a credential for a specific security scheme."
+msgstr "`CredentialService` :接口：可以实现的接口，用于定义如何获取特定安全方案的凭证。"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
-msgid "`AuthInterceptor`: A `ClientCallInterceptor` implementation that uses a `CredentialService` to automatically obtain and attach the required credential to client requests."
+#, fuzzy
+msgid ""
+"`AuthInterceptor`: A `ClientCallInterceptor` implementation that uses a "
+"`CredentialService` to automatically obtain and attach the required "
+"credential to client requests."
 msgstr ""
+"`AuthInterceptor` : `ClientCallInterceptor` 实现，使用 `CredentialService` "
+"自动获取所需证书并将其附加到客户端请求。"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid "Let's see how to configure an A2A client using these classes."
-msgstr ""
+msgstr "让我们看看如何使用这些类配置 A2A 客户端。"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid ""
-"`CredentialService` is an interface provided by the A2A Java SDK. You can implement this interface to\n"
-"obtain credentials for a given security scheme. In our sample, since the A2A server agent is being secured\n"
-"with Keycloak, we have created a class called https://github.com/a2aproject/a2a-samples/tree/main/samples/java/agents/magic_8_ball_security/client/src/main/java/com/samples/a2a/client/KeycloakOAuth2CredentialService.java[KeycloakOAuth2CredentialService] that implements this\n"
-"interface and obtains credentials for the OAuth2 security scheme using the Keycloak `AuthzClient`."
+"`CredentialService` is an interface provided by the A2A Java SDK. You can "
+"implement this interface to\n"
+"obtain credentials for a given security scheme. In our sample, since the A2A "
+"server agent is being secured\n"
+"with Keycloak, we have created a class called https://github.com/a2aproject/"
+"a2a-samples/tree/main/samples/java/agents/magic_8_ball_security/client/src/"
+"main/java/com/samples/a2a/client/KeycloakOAuth2CredentialService."
+"java[KeycloakOAuth2CredentialService] that implements this\n"
+"interface and obtains credentials for the OAuth2 security scheme using the "
+"Keycloak `AuthzClient`."
 msgstr ""
+"`CredentialService` 是 A2A Java SDK 提供的一个接口。您可以实现该接口来获取给定安全方案的凭证。在我们的示例中，由于 "
+"A2A 服务器代理使用 Keycloak 进行安全保护，我们创建了一个名为 link:https://github.com/a2aproject/a2a-"
+"samples/tree/main/samples/java/agents/magic_8_ball_security/client/src/main/"
+"java/com/samples/a2a/client/KeycloakOAuth2CredentialService."
+"java[KeycloakOAuth2CredentialService] 的类，该类实现了此接口，并使用 Keycloak `AuthzClient` "
+"获取 OAuth2 安全方案的凭证。"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid ""
-"`AuthInterceptor` is a class provided by the A2A Java SDK that can be used to automatically add credential\n"
-"details to a request based on the security schemes supported by the A2A server agent using a `CredentialService`.\n"
-"Notice that we are passing our `KeycloakOAuth2CredentialService` to the `AuthInterceptor`. We're going to use\n"
-"the same `AuthInterceptor` to specify the authentication configuration for all 3 transport protocols."
+"`AuthInterceptor` is a class provided by the A2A Java SDK that can be used "
+"to automatically add credential\n"
+"details to a request based on the security schemes supported by the A2A "
+"server agent using a `CredentialService`.\n"
+"Notice that we are passing our `KeycloakOAuth2CredentialService` to the "
+"`AuthInterceptor`. We're going to use\n"
+"the same `AuthInterceptor` to specify the authentication configuration for "
+"all 3 transport protocols."
 msgstr ""
+"`AuthInterceptor` 是 A2A Java SDK 提供的一个类，可用于根据 A2A 服务器代理支持的安全方案，使用 "
+"`CredentialService` 自动向请求添加凭证详细信息。请注意，我们将 `KeycloakOAuth2CredentialService` "
+"传递给了 `AuthInterceptor` 。我们将使用相同的 `AuthInterceptor` 为所有 3 个传输协议指定身份验证配置。"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
-msgid "Interceptors can be configured for each transport. Here we are specifying that we want to use our `AuthInterceptor` for the gRPC transport."
-msgstr ""
-
-#: _posts/2025-10-28-quarkus-a2a-java-security.adoc
-msgid "This shows how to configure the `AuthInterceptor` for the HTTP+JSON/REST transport."
-msgstr ""
-
-#: _posts/2025-10-28-quarkus-a2a-java-security.adoc
-msgid "This shows how to configure the `AuthInterceptor` for the JSON-RPC transport."
-msgstr ""
-
-#: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid ""
-"With this configuration, when our A2A client attempts to sends a request to the A2A server agent,\n"
-"the `AuthInterceptor` will use the A2A server's agent card to detect its supported security schemes\n"
-"and will automatically obtain the required credential for the OAuth2 security scheme using the `KeycloakOAuth2CredentialService`. The obtained token will then be included in the HTTP authorization\n"
+"Interceptors can be configured for each transport. Here we are specifying "
+"that we want to use our `AuthInterceptor` for the gRPC transport."
+msgstr "可以为每种传输配置拦截器。在这里，我们指定要将 `AuthInterceptor` 用于 gRPC 传输。"
+
+#: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
+msgid ""
+"This shows how to configure the `AuthInterceptor` for the HTTP+JSON/REST "
+"transport."
+msgstr "这里展示了如何为 HTTP+JSON/REST 传输配置 `AuthInterceptor` 。"
+
+#: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
+msgid ""
+"This shows how to configure the `AuthInterceptor` for the JSON-RPC transport."
+""
+msgstr "这说明了如何为 JSON-RPC 传输配置 `AuthInterceptor` 。"
+
+#: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
+msgid ""
+"With this configuration, when our A2A client attempts to sends a request to "
+"the A2A server agent,\n"
+"the `AuthInterceptor` will use the A2A server's agent card to detect its "
+"supported security schemes\n"
+"and will automatically obtain the required credential for the OAuth2 "
+"security scheme using the `KeycloakOAuth2CredentialService`. The obtained "
+"token will then be included in the HTTP authorization\n"
 "header for the A2A server agent to validate."
 msgstr ""
+"有了这种配置，当我们的 A2A 客户端尝试向 A2A 服务器代理发送请求时， `AuthInterceptor` 将使用 A2A "
+"服务器的代理卡检测其支持的安全方案，并使用 `KeycloakOAuth2CredentialService` 自动获取 OAuth2 "
+"安全方案所需的凭证。然后，获取的令牌将包含在 HTTP 授权标头中，供 A2A 服务器代理验证。"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid "Using the A2A Client"
-msgstr ""
+msgstr "使用 A2A 客户端"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
-msgid "The sample application contains a `TestClientRunner` that can be run using JBang:"
-msgstr ""
-
-#: _posts/2025-10-28-quarkus-a2a-java-security.adoc
-msgid "You should see output similar to this:"
-msgstr ""
-
-#: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid ""
-"You can also experiment with sending different messages to the A2A server agent using the --message option as\n"
-"follows:"
-msgstr ""
+"The sample application contains a `TestClientRunner` that can be run using "
+"JBang:"
+msgstr "示例应用程序包含一个可使用 JBang 运行的 `TestClientRunner` ："
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
-msgid "You can try using different transports (`jsonrpc`, `grpc`, or `rest`) with the --transport option:"
-msgstr ""
+#, fuzzy
+msgid "You should see output similar to this:"
+msgstr "您应该会看到类似下面的输出："
+
+#: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
+msgid ""
+"You can also experiment with sending different messages to the A2A server "
+"agent using the --message option as\n"
+"follows:"
+msgstr "您还可以尝试使用 --message 选项向 A2A 服务器代理发送不同的信息，如下所示："
+
+#: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
+msgid ""
+"You can try using different transports (`jsonrpc`, `grpc`, or `rest`) with "
+"the --transport option:"
+msgstr "你可以尝试使用不同的传输（ `jsonrpc` 、 `grpc` 或 `rest` ），并使用 --transport 选项："
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
 msgid "Conclusion"
 msgstr "解决方案"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
-msgid "This post has shown how to configure security for both A2A server agents and A2A clients."
-msgstr ""
+#, fuzzy
+msgid ""
+"This post has shown how to configure security for both A2A server agents and "
+"A2A clients."
+msgstr "本文章介绍了如何为 A2A 服务器代理和 A2A 客户端配置安全性。"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid "Further Reading"
-msgstr ""
+msgstr "更多阅读"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
-msgid "https://github.com/a2aproject/a2a-samples/tree/main/samples/java/agents/magic_8_ball_security[Magic 8 Ball Security Sample]"
+#, fuzzy
+msgid ""
+"https://github.com/a2aproject/a2a-samples/tree/main/samples/java/agents/"
+"magic_8_ball_security[Magic 8 Ball Security Sample]"
 msgstr ""
+"link:https://github.com/a2aproject/a2a-samples/tree/main/samples/java/agents/"
+"magic_8_ball_security[魔力 8 球安全样本]"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
-msgid "https://quarkus.io/blog/quarkus-a2a-java-0-3-0-alpha-release/[Getting Started with Quarkus and A2A Java SDK 0.3.0]"
+#, fuzzy
+msgid ""
+"https://quarkus.io/blog/quarkus-a2a-java-0-3-0-alpha-release/[Getting "
+"Started with Quarkus and A2A Java SDK 0.3.0]"
 msgstr ""
+"link:https://quarkus.io/blog/quarkus-a2a-java-0-3-0-alpha-release/[Quarkus 和 "
+"A2A Java SDK 0.3.0 入门]"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
-msgid "https://quarkus.io/blog/quarkus-a2a-java-0-3-0-beta-release/[A2A Java SDK: Support for the REST Transport is Now Here]"
+#, fuzzy
+msgid ""
+"https://quarkus.io/blog/quarkus-a2a-java-0-3-0-beta-release/[A2A Java SDK: "
+"Support for the REST Transport is Now Here]"
 msgstr ""
+"link:https://quarkus.io/blog/quarkus-a2a-java-0-3-0-beta-release/[A2A Java "
+"SDK：支持 REST 传输]"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
-msgid "https://quarkus.io/blog/quarkus-a2a-java-grpc/[Getting Started with A2A Java SDK and gRPC]"
+#, fuzzy
+msgid ""
+"https://quarkus.io/blog/quarkus-a2a-java-grpc/[Getting Started with A2A Java "
+"SDK and gRPC]"
 msgstr ""
+"link:https://quarkus.io/blog/quarkus-a2a-java-grpc/[A2A Java SDK 和 gRPC 入门]"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
-msgid "https://github.com/a2aproject/a2a-samples/tree/main/samples/java/agents[A2A Java SDK Samples]"
+#, fuzzy
+msgid ""
+"https://github.com/a2aproject/a2a-samples/tree/main/samples/java/agents[A2A "
+"Java SDK Samples]"
 msgstr ""
+"link:https://github.com/a2aproject/a2a-samples/tree/main/samples/java/"
+"agents[A2A Java SDK 示例]"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
-msgid "https://github.com/a2aproject/a2a-java/blob/main/README.md[A2A Java SDK Documentation]"
+#, fuzzy
+msgid ""
+"https://github.com/a2aproject/a2a-java/blob/main/README.md[A2A Java SDK "
+"Documentation]"
 msgstr ""
+"link:https://github.com/a2aproject/a2a-java/blob/main/README.md[A2A Java SDK "
+"文档]"
 
 #: _posts/2025-10-28-quarkus-a2a-java-security.adoc
+#, fuzzy
 msgid "https://a2a-protocol.org/latest/specification/[A2A Specification]"
-msgstr ""
+msgstr "link:https://a2a-protocol.org/latest/specification/[A2A 规格]"
