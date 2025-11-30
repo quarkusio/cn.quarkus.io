@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2025-11-23 08:18+0000\n"
+"POT-Creation-Date: 2025-11-30 08:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,9 +18,9 @@ msgstr ""
 
 #. type: Hash Value: working-groups board-url
 #: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid "https://github.com/orgs/quarkusio/projects/59"
-msgstr ""
+#, fuzzy, no-wrap
+msgid "https://github.com/orgs/quarkusio/projects/30"
+msgstr "https://github.com/orgs/quarkusio/projects/30"
 
 #. type: Hash Value: working-groups lts
 #: upstream/_data/wg.yaml:0
@@ -30,22 +30,21 @@ msgstr "false"
 
 #. type: Hash Value: working-groups discussion
 #: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Java.2025.20chat"
-msgstr ""
+#, fuzzy, no-wrap
+msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20.2330.20Test.20Classloading.20chatter/"
+msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20.2330.20Test.20Classloading.20chatter/"
 
 #. type: Hash Value: working-groups last-activity
 #: upstream/_data/wg.yaml:0
 #, no-wrap
-msgid "2025-11-20"
+msgid "2025-11-28"
 msgstr ""
 
 #. type: Hash Value: working-groups last-update
 #: upstream/_data/wg.yaml:0
 #, no-wrap
 msgid ""
-"In the last month, the WG - Java 25 support did not close any issues but opened a new issue focused on providing container images for Java 25. This activity aligns with the group's objective of ensuring Quarkus applications can run seamlessly across various modes on Java 25, without requiring it as a baseline. \n"
-"The container image should be available in november.\n"
+"In the past month, the WG - Test classloading closed two significant issues: support for simplified constructor injection in QuarkusComponentTest and resolving the service configuration error in camel-quarkus-integration-test-sql. No new issues were opened, indicating the near completion of the working group.\n"
 "(This status update was automatically generated using AI.)\n"
 msgstr ""
 
@@ -57,82 +56,50 @@ msgstr ""
 
 #. type: Hash Value: working-groups point-of-contact
 #: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid "@Sanne (@<strong>Sanne</strong> on Zulip) and @gsmet (@_<strong>Guillaume Smet</strong> on Zulip)"
-msgstr ""
+#, fuzzy, no-wrap
+msgid "@holly-cummins (@<strong>Holly Cummins</strong>  on Zulip)"
+msgstr "@holly-cummins (@Holly<strong>Cummins</strong>on Zulip)"
 
 #. type: Hash Value: working-groups proposal
 #: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid "https://github.com/quarkusio/quarkus/discussions/49696"
-msgstr ""
+#, fuzzy, no-wrap
+msgid "https://github.com/quarkusio/quarkus/discussions/41867"
+msgstr "https://github.com/quarkusio/quarkus/discussions/41867"
 
 #. type: Hash Value: working-groups readme
 #: upstream/_data/wg.yaml:0
-#, no-wrap
+#, fuzzy, no-wrap
 msgid ""
-"<h3>Objective</h3>\n"
-"<p>To enable Quarkus applications to run cleanly across dev/test/production modes on Java 25, with no requirement to adopt Java 25 as a baseline.</p>\n"
-"<h3>The Problem</h3>\n"
-"<p>Java 25 brings new features and platform-level changes (e.g., new JEPs, VM flags, performance tweaks) that may trigger warnings, break behavior, or degrade Quarkus experiences. Dependencies or extensions may also face compatibility challenges. A coordinated effort is needed to identify, fix, document, and optionally leverage these changes.</p>\n"
-"<h3>The Solution</h3>\n"
-"<p>The working group will:</p>\n"
+"<p>At the moment, Quarkus tests are invoked using one classloader, and then executed in a different classloader. This mostly works well, but means some use cases don't work: extensions cannot manipulate test classes in the same way that they do normal application classes. For example, anything run via a JUnit @TestTemplate test case will see the un-transformed class.</p>\n"
+"<p>It also means we have extra user-facing complexity, such as the QuarkusTest*Callbacks](https://quarkus.io/guides/getting-started-testing#enrichment-via-quarkustestcallback):</p>\n"
+"<blockquote>\n"
+"<p>While it is possible to use JUnit Jupiter callback interfaces like BeforeEachCallback, you might run into classloading issues because Quarkus has to run tests in a custom classloader which JUnit is not aware of.</p>\n"
+"</blockquote>\n"
+"<p>A final benefit is a reduction in the internal complexity of our code. Hopping between classloaders during test execution takes a lot of work, and adds a lot of code! It also is brittle in places. For example, because the hop between classloaders relies on serialization in some cases, it's becoming harder to do as the JVM tightens up security restrictions. We used to rely on xstream, but that stopped working in Java 17. In https://github.com/quarkusio/quarkus/pull/40601, @dmlloyd moved us to use the JBoss Serializer, which works better, but might still be affected by future restrictions on class access.</p>\n"
+"<p>The goal of this working group is to allow test classes to fully participate in the 'quarkification' of classes. The mechanism for this is probably just to load the test classes with the classloader we intend to run them with, so that JUnit sees the 'correct' version of the class.</p>\n"
 "<ul>\n"
-"<li>Attempt to run representative Quarkus applications under Java 25 in dev, test, and production modes.</li>\n"
-"<li>Catalog issues, warnings, or incompatibilities in a Wiki or issue tracker.</li>\n"
-"<li>Propose and implement fixes or mitigations (or document workarounds).</li>\n"
-"<li>Optionally explore beneficial Java 25 features (e.g., Scoped Values, Flexible Constructor Bodies), without requiring their use.</li>\n"
-"<li>Identify and remediate or flag problematic Quarkus extensions.\n"
-"⠀</li>\n"
-"</ul>\n"
-"<h3>Definition of Done</h3>\n"
-"<ul>\n"
-"<li>Publish a wiki page detailing issues and resolutions.</li>\n"
-"<li>Ensure Quarkus core and its ecosystem can operate cleanly under Java 25 in all modes.</li>\n"
-"<li>Integrate any selected Java 25 features in an optional, non-breaking manner.</li>\n"
-"<li>Document or fix problematic extensions, offering guidance where needed.</li>\n"
-"<li>Communicate results via a blog post or quarkus-dev announcement.\n"
-"⠀</li>\n"
-"</ul>\n"
-"<h3>Scope of Work</h3>\n"
-"<p><strong>In scope:</strong></p>\n"
-"<ul>\n"
-"<li>Running and diagnosing Quarkus on Java 25.</li>\n"
-"<li>Fixing issues in Quarkus core repository and extensions.</li>\n"
-"<li>Exploring select Java 25 enhancements.</li>\n"
-"</ul>\n"
-"<p>⠀\n"
-"<strong>Out of scope:</strong></p>\n"
-"<ul>\n"
-"<li>Mandating Java 25 as the minimum supported runtime.</li>\n"
-"</ul>\n"
-"<p>⠀</p>\n"
-"<h3>Organizing the Work</h3>\n"
-"<ol>\n"
-"<li><strong>Communication &amp; Transparency:</strong>\n"
-"<ul>\n"
-"<li>Use GitHub discussion, project board, and issues.</li>\n"
-"<li>Coordinate via Quarkus Zulip and GitHub.</li>\n"
-"</ul>\n"
-"</li>\n"
-"<li><strong>Timeline &amp; Milestones:</strong>\n"
-"<ul>\n"
-"<li><strong>Exploration Phase:</strong> Run tests on Java 25 Candidate Release, document findings before GA (target: <em>before September 16, 2025</em>), so we can guide our users as soon as Java 25 reaches GA.</li>\n"
-"</ul>\n"
-"</li>\n"
-"</ol>\n"
-"<hr />\n"
-"<ul>\n"
-"<li>Point of contact: @Sanne (@<strong>Sanne</strong> on Zulip) and @gsmet (@_<strong>Guillaume Smet</strong> on Zulip)</li>\n"
-"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/49696</li>\n"
-"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Java.2025.20chat\">Zulip</a></li>\n"
+"<li>Point of contact: @holly-cummins (@<strong>Holly Cummins</strong>  on Zulip)</li>\n"
+"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/41867</li>\n"
+"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20.2330.20Test.20Classloading.20chatter/\">Zulip topic</a></li>\n"
 "</ul>\n"
 msgstr ""
+"<p>目前，Quarkus 测试使用一个类加载器调用，然后在另一个类加载器中执行。这在大多数情况下运行良好，但也意味着某些用例无法运行：扩展无法像操作普通应用程序类那样操作测试类。例如，通过 JUnit @TestTemplate 测试用例运行的任何程序都将看到未转换的类。</p>\n"
+"<p>这也意味着我们有额外的面向用户的复杂性，例如 QuarkusTest*Callbacks](https://quarkus.io/guides/getting-started-testing#enrichment-via-quarkustestcallback) ：</p>\n"
+"<blockquote>\n"
+"<p>虽然可以使用 JUnit Jupiter 回调接口（如 BeforeEachCallback），但可能会遇到类加载问题，因为 Quarkus 必须在 JUnit 不知道的自定义类加载器中运行测试。</p>\n"
+"</blockquote>\n"
+"<p>最后一个好处是降低了代码的内部复杂性。在测试执行过程中，在类加载器之间跳来跳去会耗费大量工作，并增加大量代码！而且在某些地方还很脆弱。例如，由于类加载器之间的跳转在某些情况下依赖于序列化，随着 JVM 收紧安全限制，这种跳转变得越来越难。我们曾经依赖 xstream，但在 Java 17 中它已停止工作。在 https://github.com/quarkusio/quarkus/pull/40601 中，@dmlloyd 让我们使用 JBoss Serializer，它的效果更好，但仍可能受到未来类访问限制的影响。</p>\n"
+"<p>该工作组的目标是允许测试类完全参与类的 \"夸克化\"。其机制可能只是用我们打算运行的类加载器加载测试类，以便让 JUnit 看到类的 \"正确 \"版本。</p>\n"
+"<ul>\n"
+"<li>联系人：@holly-cummins （Zulip 上的 @Holly<strong>Cummins）</strong></li>\n"
+"<li>建议： https://github.com/quarkusio/quarkus/discussions/41867</li>\n"
+"<li>讨论：<a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20.2330.20Test.20Classloading.20chatter/\">Zulip 主题</a></li>\n"
+"</ul>\n"
 
 #. type: Hash Value: working-groups short-description
 #: upstream/_data/wg.yaml:0
 #, no-wrap
-msgid "The objective of this working group is to enable Quarkus applications to run cleanly across dev/test/production modes on Java 25, with no requirement to adopt Java 25 as a baseline.\n"
+msgid "The goal of this working group is to rewrite Quarkus's test classloading, so that tests are run in the same classloader as the application under tests, and Quarkus extensions can do \"Quarkus-y\" manipulations of test classes.\n"
 msgstr ""
 
 #. type: Hash Value: working-groups status
@@ -143,9 +110,9 @@ msgstr "未离题"
 
 #. type: Hash Value: working-groups title
 #: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid "Java 25 support"
-msgstr ""
+#, fuzzy, no-wrap
+msgid "Test classloading"
+msgstr "测试类加载"
 
 #. type: Hash Value: working-groups board-url
 #: upstream/_data/wg.yaml:0
@@ -157,12 +124,6 @@ msgstr ""
 #: upstream/_data/wg.yaml:0
 #, no-wrap
 msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Agentic.20Foundation.20and.20LangChain4j.20Next/with/547443137"
-msgstr ""
-
-#. type: Hash Value: working-groups last-activity
-#: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid "2025-11-19"
 msgstr ""
 
 #. type: Hash Value: working-groups last-update
@@ -311,15 +272,311 @@ msgstr ""
 
 #. type: Hash Value: working-groups board-url
 #: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "https://github.com/orgs/quarkusio/projects/49"
+msgstr ""
+
+#. type: Hash Value: working-groups discussion
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev"
+msgstr ""
+
+#. type: Hash Value: working-groups last-activity
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "2025-11-26"
+msgstr ""
+
+#. type: Hash Value: working-groups last-update
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid ""
+"In the past month, the WG - Dev Services Lifecycle made significant progress by closing essential issues related to the new dev services model. The team successfully transitioned AWS Lambda to the updated model, initiated services after augmentation, and added a runtime module for quarkus-devservices. However, a new issue was opened concerning the unintended startup of Keycloak dev services during the augmentation phase, along with another issue related to the QuarkusTestProfileAwareClassOrderer, indicating continued work needed to enhance the developer experience.\n"
+"(This status update was automatically generated using AI.)\n"
+msgstr ""
+
+#. type: Hash Value: working-groups last-activity
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "2025-09-08"
+msgstr ""
+
+#. type: Hash Value: working-groups point-of-contact
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "@holly-cummins (@<strong>Holly Cummins</strong>  on Zulip), @ozangunalp (@<strong>Ozan Günalp</strong> on Zulip )"
+msgstr ""
+
+#. type: Hash Value: working-groups proposal
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "https://github.com/quarkusio/quarkus/discussions/47683"
+msgstr ""
+
+#. type: Hash Value: working-groups readme
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid ""
+"<p>This working group was formed to address long-standing inconsistencies and pain points in the Dev Services lifecycle within Quarkus. Dev Services are essential for simplifying local development and testing by automatically provisioning runtime dependencies (e.g., databases, message brokers), but their current lifecycle behavior leads to confusion and inefficiencies. Most notably, they are started during the augmentation phase, which conflicts with their inherently runtime-oriented nature and causes issues with newer efforts such as the test classloading revamp.</p>\n"
+"<p>The primary goal of this group is to define and implement a consistent, runtime-aligned lifecycle model for Dev Services. This includes shifting their startup to a phase after augmentation but before the application begins execution, ensuring better alignment with the runtime environment. A critical focus will also be on enabling optional reuse of Dev Services across dev and test modes — including reuse between repeated test executions — to reduce startup time and improve the iterative development experience.</p>\n"
+"<p>The group's scope covers several strategic areas: formalizing when and how Dev Services are started, reused, or stopped; defining rules for discoverability and sharing between profiles or processes; and avoiding resource leaks or accidental retention. It explicitly excludes broader orchestration features (such as service dependency graphs) and unrelated feature enhancements.</p>\n"
+"<p>The working group will produce a set of deliverables to support the new model. These include one or more Architecture Decision Records (ADRs) describing the new lifecycle model, the implementation of lifecycle logic in Quarkus Core, and updates to both user-facing and contributor documentation. Additionally, enhancements to the Dev Services development model will make it easier for extension authors to adopt and follow the new lifecycle standards. A public communication effort (e.g., blog posts or demos) will also be used to showcase the improvements.</p>\n"
+"<ul>\n"
+"<li>Point of contact: @holly-cummins (@<strong>Holly Cummins</strong>  on Zulip), @ozangunalp (@<strong>Ozan Günalp</strong> on Zulip )</li>\n"
+"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/47683</li>\n"
+"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev\">Zulip</a>)</li>\n"
+"</ul>\n"
+msgstr ""
+
+#. type: Hash Value: working-groups short-description
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "This working group will define and implement a consistent and configurable lifecycle model for Dev Services. It will shift the startup to the correct phase, enable optional reuse across dev and test modes, and clarify teardown and sharing behavior. The goal is to improve the developer experience.\n"
+msgstr ""
+
+#. type: Hash Value: working-groups status
+#: upstream/_data/wg.yaml:0
 #, fuzzy, no-wrap
-msgid "https://github.com/orgs/quarkusio/projects/43"
-msgstr "https://github.com/orgs/quarkusio/projects/43"
+msgid "staled"
+msgstr "石沉大海"
+
+#. type: Hash Value: working-groups title
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "Dev Services Lifecycle"
+msgstr ""
+
+#. type: Hash Value: working-groups board-url
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "https://github.com/orgs/quarkiverse/projects/6"
+msgstr "https://github.com/orgs/quarkiverse/projects/6"
 
 #. type: Hash Value: working-groups completed
 #: upstream/_data/wg.yaml:0
 #, fuzzy, no-wrap
 msgid "true"
 msgstr "真"
+
+#. type: Hash Value: working-groups deliverable
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "<a rel=\"nofollow\" href=\"https://www.youtube.com/live/hrF1a5sKqBI\">Quarkus Insight</a>"
+msgstr "<a rel=\"nofollow\" href=\"https://www.youtube.com/live/hrF1a5sKqBI\">夸克斯洞察力</a>"
+
+#. type: Hash Value: working-groups last-activity
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "2025-11-25"
+msgstr ""
+
+#. type: Hash Value: working-groups last-update
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "ROQ has been released! See https://www.youtube.com/live/hrF1a5sKqBI to see ROQ in action.\n"
+msgstr "ROQ 已发布！请访问 https://www.youtube.com/live/hrF1a5sKqBI 查看 ROQ 的运行情况。\n"
+
+#. type: Hash Value: working-groups last-update-date
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "2024-11-18"
+msgstr "2024-11-18"
+
+#. type: Hash Value: working-groups point-of-contact
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "@ia3andy"
+msgstr "@ia3andy"
+
+#. type: Hash Value: working-groups proposal
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "https://github.com/quarkusio/quarkus/discussions/41309"
+msgstr "https://github.com/quarkusio/quarkus/discussions/41309"
+
+#. type: Hash Value: working-groups readme
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid ""
+"<p>New initiative to allow Static Site Generation with Quarkus.</p>\n"
+"<p>Quarkus already provides most of the pieces to create great web applications (https://quarkus.io/guides/web).</p>\n"
+"<p>I recently added https://github.com/quarkiverse/quarkus-roq. It will allow generating a static website out of any Quarkus application (it starts the app, fetch all the configured pages and assets, generate a static website and stop), it already works but it is still very alpha.</p>\n"
+"<p>What's missing? we now need to incrementally add the toolkit to ease the process of creating static content through Quarkus:</p>\n"
+"<ul>\n"
+"<li>Static Data</li>\n"
+"<li>Markdown/Asciidoc and frontmatter</li>\n"
+"<li>SEO</li>\n"
+"<li>Image processing</li>\n"
+"<li>Easy to configure routing</li>\n"
+"</ul>\n"
+"<p>This will allow to develop the content using Quarkus dev-mode, and then generate for Github Pages or similar when it's ready.</p>\n"
+"<p>Bonus, everything added will benefit any &quot;non-static&quot; Quarkus app and any Static Quarkus app could also become non static.</p>\n"
+"<p>This effort is now tracked using a &quot;Working Group&quot; project: https://github.com/orgs/quarkiverse/projects/6</p>\n"
+"<p>This is a great opportunity to participate in fun effort and be involved with the Quarkus community, if anyone is interested in being a part of this, please reach out to me 🚀</p>\n"
+"<ul>\n"
+"<li>Point of contact: @ia3andy</li>\n"
+"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/41309</li>\n"
+"<li>Deliverable: <a href=\"https://www.youtube.com/live/hrF1a5sKqBI\">Quarkus Insight</a></li>\n"
+"</ul>\n"
+msgstr ""
+"<p>允许使用 Quarkus 生成静态网站的新举措。</p>\n"
+"<p>Quarkus 已经提供了创建优秀网络应用程序的大部分组件 (https://quarkus.io/guides/web)。</p>\n"
+"<p>我最近添加了 https://github.com/quarkiverse/quarkus-roq。它将允许从任何 Quarkus 应用程序中生成静态网站（启动应用程序、获取所有配置的页面和资产、生成静态网站并停止），它已经开始工作，但仍处于初级阶段。</p>\n"
+"<p>我们现在需要逐步添加工具包，以简化通过 Quarkus 创建静态内容的过程：</p>\n"
+"<ul>\n"
+"<li>静态数据</li>\n"
+"<li>Markdown/Asciidoc 和 frontmatter</li>\n"
+"<li>搜索引擎优化</li>\n"
+"<li>图片处理</li>\n"
+"<li>易于配置的路由</li>\n"
+"</ul>\n"
+"<p>这将允许使用 Quarkus 开发模式开发内容，然后在准备就绪时生成 Github 页面或类似内容。</p>\n"
+"<p>额外的好处是，添加的所有内容都将使任何 &quot;非静态 &quot;Quarkus 应用程序受益，而且任何静态 Quarkus 应用程序也可以变成非静态。</p>\n"
+"<p>这项工作现在使用 &quot;工作组 &quot;项目进行跟踪：https://github.com/orgs/quarkiverse/projects/6</p>\n"
+"<p>这是一个参与 Quarkus 社区有趣工作的绝佳机会，如果有人有兴趣参与其中，请联系我 🚀。</p>\n"
+"<ul>\n"
+"<li>联系人：@ia3andy</li>\n"
+"<li>提案： https://github.com/quarkusio/quarkus/discussions/41309</li>\n"
+"<li>交付成果：<a href=\"https://www.youtube.com/live/hrF1a5sKqBI\">夸克洞察</a></li>\n"
+"</ul>\n"
+
+#. type: Hash Value: working-groups short-description
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "Allow Static Site Generation with Quarkus.\n"
+msgstr ""
+
+#. type: Hash Value: working-groups status
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "complete"
+msgstr "完整"
+
+#. type: Hash Value: working-groups title
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "Roq :: Quarkus SSG"
+msgstr "Roq :：夸克 SSG"
+
+#. type: Hash Value: working-groups board-url
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "https://github.com/orgs/quarkusio/projects/59"
+msgstr ""
+
+#. type: Hash Value: working-groups discussion
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Java.2025.20chat"
+msgstr ""
+
+#. type: Hash Value: working-groups last-activity
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "2025-11-20"
+msgstr ""
+
+#. type: Hash Value: working-groups last-update
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid ""
+"In the last month, the WG - Java 25 support did not close any issues but opened a new issue focused on providing container images for Java 25. This activity aligns with the group's objective of ensuring Quarkus applications can run seamlessly across various modes on Java 25, without requiring it as a baseline. \n"
+"The container image should be available in november.\n"
+"(This status update was automatically generated using AI.)\n"
+msgstr ""
+
+#. type: Hash Value: working-groups point-of-contact
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "@Sanne (@<strong>Sanne</strong> on Zulip) and @gsmet (@_<strong>Guillaume Smet</strong> on Zulip)"
+msgstr ""
+
+#. type: Hash Value: working-groups proposal
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "https://github.com/quarkusio/quarkus/discussions/49696"
+msgstr ""
+
+#. type: Hash Value: working-groups readme
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid ""
+"<h3>Objective</h3>\n"
+"<p>To enable Quarkus applications to run cleanly across dev/test/production modes on Java 25, with no requirement to adopt Java 25 as a baseline.</p>\n"
+"<h3>The Problem</h3>\n"
+"<p>Java 25 brings new features and platform-level changes (e.g., new JEPs, VM flags, performance tweaks) that may trigger warnings, break behavior, or degrade Quarkus experiences. Dependencies or extensions may also face compatibility challenges. A coordinated effort is needed to identify, fix, document, and optionally leverage these changes.</p>\n"
+"<h3>The Solution</h3>\n"
+"<p>The working group will:</p>\n"
+"<ul>\n"
+"<li>Attempt to run representative Quarkus applications under Java 25 in dev, test, and production modes.</li>\n"
+"<li>Catalog issues, warnings, or incompatibilities in a Wiki or issue tracker.</li>\n"
+"<li>Propose and implement fixes or mitigations (or document workarounds).</li>\n"
+"<li>Optionally explore beneficial Java 25 features (e.g., Scoped Values, Flexible Constructor Bodies), without requiring their use.</li>\n"
+"<li>Identify and remediate or flag problematic Quarkus extensions.\n"
+"⠀</li>\n"
+"</ul>\n"
+"<h3>Definition of Done</h3>\n"
+"<ul>\n"
+"<li>Publish a wiki page detailing issues and resolutions.</li>\n"
+"<li>Ensure Quarkus core and its ecosystem can operate cleanly under Java 25 in all modes.</li>\n"
+"<li>Integrate any selected Java 25 features in an optional, non-breaking manner.</li>\n"
+"<li>Document or fix problematic extensions, offering guidance where needed.</li>\n"
+"<li>Communicate results via a blog post or quarkus-dev announcement.\n"
+"⠀</li>\n"
+"</ul>\n"
+"<h3>Scope of Work</h3>\n"
+"<p><strong>In scope:</strong></p>\n"
+"<ul>\n"
+"<li>Running and diagnosing Quarkus on Java 25.</li>\n"
+"<li>Fixing issues in Quarkus core repository and extensions.</li>\n"
+"<li>Exploring select Java 25 enhancements.</li>\n"
+"</ul>\n"
+"<p>⠀\n"
+"<strong>Out of scope:</strong></p>\n"
+"<ul>\n"
+"<li>Mandating Java 25 as the minimum supported runtime.</li>\n"
+"</ul>\n"
+"<p>⠀</p>\n"
+"<h3>Organizing the Work</h3>\n"
+"<ol>\n"
+"<li><strong>Communication &amp; Transparency:</strong>\n"
+"<ul>\n"
+"<li>Use GitHub discussion, project board, and issues.</li>\n"
+"<li>Coordinate via Quarkus Zulip and GitHub.</li>\n"
+"</ul>\n"
+"</li>\n"
+"<li><strong>Timeline &amp; Milestones:</strong>\n"
+"<ul>\n"
+"<li><strong>Exploration Phase:</strong> Run tests on Java 25 Candidate Release, document findings before GA (target: <em>before September 16, 2025</em>), so we can guide our users as soon as Java 25 reaches GA.</li>\n"
+"</ul>\n"
+"</li>\n"
+"</ol>\n"
+"<hr />\n"
+"<ul>\n"
+"<li>Point of contact: @Sanne (@<strong>Sanne</strong> on Zulip) and @gsmet (@_<strong>Guillaume Smet</strong> on Zulip)</li>\n"
+"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/49696</li>\n"
+"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Java.2025.20chat\">Zulip</a></li>\n"
+"</ul>\n"
+msgstr ""
+
+#. type: Hash Value: working-groups short-description
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "The objective of this working group is to enable Quarkus applications to run cleanly across dev/test/production modes on Java 25, with no requirement to adopt Java 25 as a baseline.\n"
+msgstr ""
+
+#. type: Hash Value: working-groups title
+#: upstream/_data/wg.yaml:0
+#, no-wrap
+msgid "Java 25 support"
+msgstr ""
+
+#. type: Hash Value: working-groups board-url
+#: upstream/_data/wg.yaml:0
+#, fuzzy, no-wrap
+msgid "https://github.com/orgs/quarkusio/projects/43"
+msgstr "https://github.com/orgs/quarkusio/projects/43"
 
 #. type: Hash Value: working-groups deliverable
 #: upstream/_data/wg.yaml:0
@@ -383,12 +640,6 @@ msgstr ""
 #, no-wrap
 msgid "Gizmo 2 related tasks\n"
 msgstr ""
-
-#. type: Hash Value: working-groups status
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "complete"
-msgstr "完整"
 
 #. type: Hash Value: working-groups title
 #: upstream/_data/wg.yaml:0
@@ -571,14 +822,14 @@ msgstr "https://github.com/orgs/quarkusio/projects/42"
 #: upstream/_data/wg.yaml:0
 #, no-wrap
 msgid ""
-"In the last month, the WG - Observability.Next focused on improving the observability stack within the Quarkus framework. The group successfully closed several issues, addressing duplicated OpenTelemetry metrics messages and resolving test failures related to constructor injection in @GrpcService-annotated classes. Additionally, they worked on enhancing documentation regarding the differences in semantic conventions between Micrometer and OpenTelemetry. Notably, a new documentation issue was opened to further refine the precision of this section, reflecting ongoing efforts to clarify and improve resources for users.\n"
+"In the last month, the WG - Observability.Next successfully closed an issue focused on documentation regarding the interaction with the OpenTelemetry collector. This progress contributes to the ongoing efforts to enhance the observability stack within the Quarkus framework, aligning with the group's goal to better monitor and manage distributed systems.\n"
 "(This status update was automatically generated using AI.)\n"
 msgstr ""
 
-#. type: Hash Value: working-groups last-activity
+#. type: Hash Value: working-groups last-update-date
 #: upstream/_data/wg.yaml:0
 #, no-wrap
-msgid "2025-09-08"
+msgid "2025-11-24"
 msgstr ""
 
 #. type: Hash Value: working-groups point-of-contact
@@ -726,12 +977,6 @@ msgstr ""
 #, no-wrap
 msgid "Observability.Next is a strategic initiative to modernize the observability stack within the Quarkus framework, aiming to streamline and enhance its ability to monitor and manage distributed systems.\n"
 msgstr ""
-
-#. type: Hash Value: working-groups status
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "staled"
-msgstr "石沉大海"
 
 #. type: Hash Value: working-groups title
 #: upstream/_data/wg.yaml:0
@@ -953,86 +1198,6 @@ msgstr ""
 #, fuzzy, no-wrap
 msgid "Quarkus to the CommonHaus Foundation"
 msgstr "Quarkus 加入 CommonHaus 基金会"
-
-#. type: Hash Value: working-groups board-url
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "https://github.com/orgs/quarkusio/projects/30"
-msgstr "https://github.com/orgs/quarkusio/projects/30"
-
-#. type: Hash Value: working-groups discussion
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20.2330.20Test.20Classloading.20chatter/"
-msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20.2330.20Test.20Classloading.20chatter/"
-
-#. type: Hash Value: working-groups last-activity
-#: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid "2025-10-23"
-msgstr ""
-
-#. type: Hash Value: working-groups last-update
-#: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid ""
-"In the past month, the WG - Test classloading closed two significant issues: support for simplified constructor injection in QuarkusComponentTest and resolving the service configuration error in camel-quarkus-integration-test-sql. No new issues were opened, indicating the near completion of the working group.\n"
-"(This status update was automatically generated using AI.)\n"
-msgstr ""
-
-#. type: Hash Value: working-groups point-of-contact
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "@holly-cummins (@<strong>Holly Cummins</strong>  on Zulip)"
-msgstr "@holly-cummins (@Holly<strong>Cummins</strong>on Zulip)"
-
-#. type: Hash Value: working-groups proposal
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "https://github.com/quarkusio/quarkus/discussions/41867"
-msgstr "https://github.com/quarkusio/quarkus/discussions/41867"
-
-#. type: Hash Value: working-groups readme
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid ""
-"<p>At the moment, Quarkus tests are invoked using one classloader, and then executed in a different classloader. This mostly works well, but means some use cases don't work: extensions cannot manipulate test classes in the same way that they do normal application classes. For example, anything run via a JUnit @TestTemplate test case will see the un-transformed class.</p>\n"
-"<p>It also means we have extra user-facing complexity, such as the QuarkusTest*Callbacks](https://quarkus.io/guides/getting-started-testing#enrichment-via-quarkustestcallback):</p>\n"
-"<blockquote>\n"
-"<p>While it is possible to use JUnit Jupiter callback interfaces like BeforeEachCallback, you might run into classloading issues because Quarkus has to run tests in a custom classloader which JUnit is not aware of.</p>\n"
-"</blockquote>\n"
-"<p>A final benefit is a reduction in the internal complexity of our code. Hopping between classloaders during test execution takes a lot of work, and adds a lot of code! It also is brittle in places. For example, because the hop between classloaders relies on serialization in some cases, it's becoming harder to do as the JVM tightens up security restrictions. We used to rely on xstream, but that stopped working in Java 17. In https://github.com/quarkusio/quarkus/pull/40601, @dmlloyd moved us to use the JBoss Serializer, which works better, but might still be affected by future restrictions on class access.</p>\n"
-"<p>The goal of this working group is to allow test classes to fully participate in the 'quarkification' of classes. The mechanism for this is probably just to load the test classes with the classloader we intend to run them with, so that JUnit sees the 'correct' version of the class.</p>\n"
-"<ul>\n"
-"<li>Point of contact: @holly-cummins (@<strong>Holly Cummins</strong>  on Zulip)</li>\n"
-"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/41867</li>\n"
-"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20.2330.20Test.20Classloading.20chatter/\">Zulip topic</a></li>\n"
-"</ul>\n"
-msgstr ""
-"<p>目前，Quarkus 测试使用一个类加载器调用，然后在另一个类加载器中执行。这在大多数情况下运行良好，但也意味着某些用例无法运行：扩展无法像操作普通应用程序类那样操作测试类。例如，通过 JUnit @TestTemplate 测试用例运行的任何程序都将看到未转换的类。</p>\n"
-"<p>这也意味着我们有额外的面向用户的复杂性，例如 QuarkusTest*Callbacks](https://quarkus.io/guides/getting-started-testing#enrichment-via-quarkustestcallback) ：</p>\n"
-"<blockquote>\n"
-"<p>虽然可以使用 JUnit Jupiter 回调接口（如 BeforeEachCallback），但可能会遇到类加载问题，因为 Quarkus 必须在 JUnit 不知道的自定义类加载器中运行测试。</p>\n"
-"</blockquote>\n"
-"<p>最后一个好处是降低了代码的内部复杂性。在测试执行过程中，在类加载器之间跳来跳去会耗费大量工作，并增加大量代码！而且在某些地方还很脆弱。例如，由于类加载器之间的跳转在某些情况下依赖于序列化，随着 JVM 收紧安全限制，这种跳转变得越来越难。我们曾经依赖 xstream，但在 Java 17 中它已停止工作。在 https://github.com/quarkusio/quarkus/pull/40601 中，@dmlloyd 让我们使用 JBoss Serializer，它的效果更好，但仍可能受到未来类访问限制的影响。</p>\n"
-"<p>该工作组的目标是允许测试类完全参与类的 \"夸克化\"。其机制可能只是用我们打算运行的类加载器加载测试类，以便让 JUnit 看到类的 \"正确 \"版本。</p>\n"
-"<ul>\n"
-"<li>联系人：@holly-cummins （Zulip 上的 @Holly<strong>Cummins）</strong></li>\n"
-"<li>建议： https://github.com/quarkusio/quarkus/discussions/41867</li>\n"
-"<li>讨论：<a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20.2330.20Test.20Classloading.20chatter/\">Zulip 主题</a></li>\n"
-"</ul>\n"
-
-#. type: Hash Value: working-groups short-description
-#: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid "The goal of this working group is to rewrite Quarkus's test classloading, so that tests are run in the same classloader as the application under tests, and Quarkus extensions can do \"Quarkus-y\" manipulations of test classes.\n"
-msgstr ""
-
-#. type: Hash Value: working-groups title
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "Test classloading"
-msgstr "测试类加载"
 
 #. type: Hash Value: working-groups board-url
 #: upstream/_data/wg.yaml:0
@@ -1311,71 +1476,6 @@ msgstr ""
 #. type: Hash Value: working-groups board-url
 #: upstream/_data/wg.yaml:0
 #, no-wrap
-msgid "https://github.com/orgs/quarkusio/projects/49"
-msgstr ""
-
-#. type: Hash Value: working-groups discussion
-#: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev"
-msgstr ""
-
-#. type: Hash Value: working-groups last-activity
-#: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid "2025-09-25"
-msgstr ""
-
-#. type: Hash Value: working-groups last-update
-#: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid ""
-"In the past month, the WG - Dev Services Lifecycle made significant progress by closing essential issues related to the new dev services model. The team successfully transitioned AWS Lambda to the updated model, initiated services after augmentation, and added a runtime module for quarkus-devservices. However, a new issue was opened concerning the unintended startup of Keycloak dev services during the augmentation phase, along with another issue related to the QuarkusTestProfileAwareClassOrderer, indicating continued work needed to enhance the developer experience.\n"
-"(This status update was automatically generated using AI.)\n"
-msgstr ""
-
-#. type: Hash Value: working-groups point-of-contact
-#: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid "@holly-cummins (@<strong>Holly Cummins</strong>  on Zulip), @ozangunalp (@<strong>Ozan Günalp</strong> on Zulip )"
-msgstr ""
-
-#. type: Hash Value: working-groups proposal
-#: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid "https://github.com/quarkusio/quarkus/discussions/47683"
-msgstr ""
-
-#. type: Hash Value: working-groups readme
-#: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid ""
-"<p>This working group was formed to address long-standing inconsistencies and pain points in the Dev Services lifecycle within Quarkus. Dev Services are essential for simplifying local development and testing by automatically provisioning runtime dependencies (e.g., databases, message brokers), but their current lifecycle behavior leads to confusion and inefficiencies. Most notably, they are started during the augmentation phase, which conflicts with their inherently runtime-oriented nature and causes issues with newer efforts such as the test classloading revamp.</p>\n"
-"<p>The primary goal of this group is to define and implement a consistent, runtime-aligned lifecycle model for Dev Services. This includes shifting their startup to a phase after augmentation but before the application begins execution, ensuring better alignment with the runtime environment. A critical focus will also be on enabling optional reuse of Dev Services across dev and test modes — including reuse between repeated test executions — to reduce startup time and improve the iterative development experience.</p>\n"
-"<p>The group's scope covers several strategic areas: formalizing when and how Dev Services are started, reused, or stopped; defining rules for discoverability and sharing between profiles or processes; and avoiding resource leaks or accidental retention. It explicitly excludes broader orchestration features (such as service dependency graphs) and unrelated feature enhancements.</p>\n"
-"<p>The working group will produce a set of deliverables to support the new model. These include one or more Architecture Decision Records (ADRs) describing the new lifecycle model, the implementation of lifecycle logic in Quarkus Core, and updates to both user-facing and contributor documentation. Additionally, enhancements to the Dev Services development model will make it easier for extension authors to adopt and follow the new lifecycle standards. A public communication effort (e.g., blog posts or demos) will also be used to showcase the improvements.</p>\n"
-"<ul>\n"
-"<li>Point of contact: @holly-cummins (@<strong>Holly Cummins</strong>  on Zulip), @ozangunalp (@<strong>Ozan Günalp</strong> on Zulip )</li>\n"
-"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/47683</li>\n"
-"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev\">Zulip</a>)</li>\n"
-"</ul>\n"
-msgstr ""
-
-#. type: Hash Value: working-groups short-description
-#: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid "This working group will define and implement a consistent and configurable lifecycle model for Dev Services. It will shift the startup to the correct phase, enable optional reuse across dev and test modes, and clarify teardown and sharing behavior. The goal is to improve the developer experience.\n"
-msgstr ""
-
-#. type: Hash Value: working-groups title
-#: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid "Dev Services Lifecycle"
-msgstr ""
-
-#. type: Hash Value: working-groups board-url
-#: upstream/_data/wg.yaml:0
-#, no-wrap
 msgid "https://github.com/orgs/quarkusio/projects/48"
 msgstr ""
 
@@ -1540,106 +1640,6 @@ msgstr ""
 #, fuzzy, no-wrap
 msgid "Quarkus 3.20 LTS"
 msgstr "Quarkus 3.20 LTS"
-
-#. type: Hash Value: working-groups board-url
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "https://github.com/orgs/quarkiverse/projects/6"
-msgstr "https://github.com/orgs/quarkiverse/projects/6"
-
-#. type: Hash Value: working-groups deliverable
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "<a rel=\"nofollow\" href=\"https://www.youtube.com/live/hrF1a5sKqBI\">Quarkus Insight</a>"
-msgstr "<a rel=\"nofollow\" href=\"https://www.youtube.com/live/hrF1a5sKqBI\">夸克斯洞察力</a>"
-
-#. type: Hash Value: working-groups last-activity
-#: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid "2025-04-04"
-msgstr ""
-
-#. type: Hash Value: working-groups last-update
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "ROQ has been released! See https://www.youtube.com/live/hrF1a5sKqBI to see ROQ in action.\n"
-msgstr "ROQ 已发布！请访问 https://www.youtube.com/live/hrF1a5sKqBI 查看 ROQ 的运行情况。\n"
-
-#. type: Hash Value: working-groups last-update-date
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "2024-11-18"
-msgstr "2024-11-18"
-
-#. type: Hash Value: working-groups point-of-contact
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "@ia3andy"
-msgstr "@ia3andy"
-
-#. type: Hash Value: working-groups proposal
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "https://github.com/quarkusio/quarkus/discussions/41309"
-msgstr "https://github.com/quarkusio/quarkus/discussions/41309"
-
-#. type: Hash Value: working-groups readme
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid ""
-"<p>New initiative to allow Static Site Generation with Quarkus.</p>\n"
-"<p>Quarkus already provides most of the pieces to create great web applications (https://quarkus.io/guides/web).</p>\n"
-"<p>I recently added https://github.com/quarkiverse/quarkus-roq. It will allow generating a static website out of any Quarkus application (it starts the app, fetch all the configured pages and assets, generate a static website and stop), it already works but it is still very alpha.</p>\n"
-"<p>What's missing? we now need to incrementally add the toolkit to ease the process of creating static content through Quarkus:</p>\n"
-"<ul>\n"
-"<li>Static Data</li>\n"
-"<li>Markdown/Asciidoc and frontmatter</li>\n"
-"<li>SEO</li>\n"
-"<li>Image processing</li>\n"
-"<li>Easy to configure routing</li>\n"
-"</ul>\n"
-"<p>This will allow to develop the content using Quarkus dev-mode, and then generate for Github Pages or similar when it's ready.</p>\n"
-"<p>Bonus, everything added will benefit any &quot;non-static&quot; Quarkus app and any Static Quarkus app could also become non static.</p>\n"
-"<p>This effort is now tracked using a &quot;Working Group&quot; project: https://github.com/orgs/quarkiverse/projects/6</p>\n"
-"<p>This is a great opportunity to participate in fun effort and be involved with the Quarkus community, if anyone is interested in being a part of this, please reach out to me 🚀</p>\n"
-"<ul>\n"
-"<li>Point of contact: @ia3andy</li>\n"
-"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/41309</li>\n"
-"<li>Deliverable: <a href=\"https://www.youtube.com/live/hrF1a5sKqBI\">Quarkus Insight</a></li>\n"
-"</ul>\n"
-msgstr ""
-"<p>允许使用 Quarkus 生成静态网站的新举措。</p>\n"
-"<p>Quarkus 已经提供了创建优秀网络应用程序的大部分组件 (https://quarkus.io/guides/web)。</p>\n"
-"<p>我最近添加了 https://github.com/quarkiverse/quarkus-roq。它将允许从任何 Quarkus 应用程序中生成静态网站（启动应用程序、获取所有配置的页面和资产、生成静态网站并停止），它已经开始工作，但仍处于初级阶段。</p>\n"
-"<p>我们现在需要逐步添加工具包，以简化通过 Quarkus 创建静态内容的过程：</p>\n"
-"<ul>\n"
-"<li>静态数据</li>\n"
-"<li>Markdown/Asciidoc 和 frontmatter</li>\n"
-"<li>搜索引擎优化</li>\n"
-"<li>图片处理</li>\n"
-"<li>易于配置的路由</li>\n"
-"</ul>\n"
-"<p>这将允许使用 Quarkus 开发模式开发内容，然后在准备就绪时生成 Github 页面或类似内容。</p>\n"
-"<p>额外的好处是，添加的所有内容都将使任何 &quot;非静态 &quot;Quarkus 应用程序受益，而且任何静态 Quarkus 应用程序也可以变成非静态。</p>\n"
-"<p>这项工作现在使用 &quot;工作组 &quot;项目进行跟踪：https://github.com/orgs/quarkiverse/projects/6</p>\n"
-"<p>这是一个参与 Quarkus 社区有趣工作的绝佳机会，如果有人有兴趣参与其中，请联系我 🚀。</p>\n"
-"<ul>\n"
-"<li>联系人：@ia3andy</li>\n"
-"<li>提案： https://github.com/quarkusio/quarkus/discussions/41309</li>\n"
-"<li>交付成果：<a href=\"https://www.youtube.com/live/hrF1a5sKqBI\">夸克洞察</a></li>\n"
-"</ul>\n"
-
-#. type: Hash Value: working-groups short-description
-#: upstream/_data/wg.yaml:0
-#, no-wrap
-msgid "Allow Static Site Generation with Quarkus.\n"
-msgstr ""
-
-#. type: Hash Value: working-groups title
-#: upstream/_data/wg.yaml:0
-#, fuzzy, no-wrap
-msgid "Roq :: Quarkus SSG"
-msgstr "Roq :：夸克 SSG"
 
 #. type: Hash Value: working-groups board-url
 #: upstream/_data/wg.yaml:0
