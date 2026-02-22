@@ -251,19 +251,16 @@ msgid "You can change the Generated OpenAPI Schema using one or more filter. Fil
 msgstr "您可以使用一个或多个过滤器来更改生成的 OpenAPI 模式。过滤器可以在构建时运行，也可以在运行时运行。"
 
 #: _versions/main/guides/openapi-swaggerui.adoc
-#, fuzzy
-msgid "Annotate method with `@OpenApiFilter` and the run stage (BUILD,RUN,BOTH)"
-msgstr "用 `@OpenApiFilter` 和运行阶段（BUILD,RUN,BOTH）注释方法"
+msgid "Annotate the class with `@OpenApiFilter` and use the `stages` field with one or more of `BUILD`, `RUNTIME_STARTUP`, or `RUNTIME_PER_REQUEST`. This filter runs once during build, and once every time the OpenAPI document is requested."
+msgstr ""
 
 #: _versions/main/guides/openapi-swaggerui.adoc
-#, fuzzy
-msgid "Implement OASFilter and override any of the methods"
-msgstr "实施 OASFilter 并覆盖任何方法"
+msgid "Implement OASFilter and override any of its methods"
+msgstr ""
 
 #: _versions/main/guides/openapi-swaggerui.adoc
-#, fuzzy
-msgid "For Build stage filters, the index can be passed in (optional)"
-msgstr "对于 \"建立阶段 \"过滤器，可输入索引（可选）"
+msgid "Filters which run during the build of the application - i.e. `BUILD` Stage filters (See also <<Advanced interactions of RunStages>>) - the Jandex index can be passed in the constructor. During application runtime, the Jandex index will *not* be null. However it will be empty, i.e it won't contain info about any classes or annotations."
+msgstr ""
 
 #: _versions/main/guides/openapi-swaggerui.adoc
 #, fuzzy
@@ -276,16 +273,94 @@ msgid "Remember that setting fields on the schema will override what has been ge
 msgstr "请记住，在模式上设置字段将覆盖已生成的值，您可能需要获取并添加（因此需要修改）。还要知道生成的值可能为空，因此必须进行检查。"
 
 #: _versions/main/guides/openapi-swaggerui.adoc
-#, fuzzy
-msgid "Runtime filters"
-msgstr "运行时过滤器"
+msgid "Overview of RunStages"
+msgstr ""
 
 #: _versions/main/guides/openapi-swaggerui.adoc
-#, fuzzy
+msgid "Stage"
+msgstr ""
+
+#: _versions/main/guides/openapi-swaggerui.adoc
+msgid "Meaning"
+msgstr ""
+
+#: _versions/main/guides/openapi-swaggerui.adoc
+msgid "BUILD"
+msgstr ""
+
+#: _versions/main/guides/openapi-swaggerui.adoc
+msgid "The filter executes at build time."
+msgstr ""
+
+#: _versions/main/guides/openapi-swaggerui.adoc
+msgid "RUNTIME_STARTUP"
+msgstr ""
+
+#: _versions/main/guides/openapi-swaggerui.adoc
+msgid "The filter executes (eagerly) at application startup."
+msgstr ""
+
+#: _versions/main/guides/openapi-swaggerui.adoc
+msgid "RUNTIME_PER_REQUEST"
+msgstr ""
+
+#: _versions/main/guides/openapi-swaggerui.adoc
+msgid "The filter executes each time the OpenAPI document is requested."
+msgstr ""
+
+#: _versions/main/guides/openapi-swaggerui.adoc
+msgid "RUN"
+msgstr ""
+
+#: _versions/main/guides/openapi-swaggerui.adoc
 msgid ""
-"Runtime filters by default runs on startup (when the final OpenAPI document gets created). You can change runtime filters to run on every request, making the OpenAPI document dynamic.\n"
-"To do this you need to set this propery: `quarkus.smallrye-openapi.always-run-filter=true`."
-msgstr "运行时过滤器默认在启动时运行（在创建最终 OpenAPI 文档时）。您可以更改运行时过滤器，使其在每次请求时运行，从而使 OpenAPI 文档动态化。为此，您需要设置以下属性： `quarkus.smallrye-openapi.always-run-filter=true` ."
+"DEPRECATED. The filter executes at stage `RUNTIME_STARTUP` if `quarkus.smallrye-openapi.always-run-filter` is set to `false`,\n"
+"or at stage `RUNTIME_PER_REQUEST` if `quarkus.smallrye-openapi.always-run-filter` is set to `true`. (See also <<Advanced interactions of RunStages>>.)"
+msgstr ""
+
+#: _versions/main/guides/openapi-swaggerui.adoc
+msgid "BOTH"
+msgstr ""
+
+#: _versions/main/guides/openapi-swaggerui.adoc
+msgid "DEPRECATED. The filter executes as if both the `BUILD` and `RUN` stages were specified."
+msgstr ""
+
+#: _versions/main/guides/openapi-swaggerui.adoc
+msgid "The `quarkus.smallrye-openapi.always-run-filter` configuration property is deprecated. Annotate your filters with `@OpenApiFilter(stages = OpenApiFilter.RunStage.RUNTIME_PER_REQUEST)` instead."
+msgstr ""
+
+#: _versions/main/guides/openapi-swaggerui.adoc
+msgid "Advanced interactions of RunStages"
+msgstr ""
+
+#: _versions/main/guides/openapi-swaggerui.adoc
+msgid "While the `BUILD` RunStage is expected to run at build time - as the name already suggests - there are additional RunStages that also execute at build time."
+msgstr ""
+
+#: _versions/main/guides/openapi-swaggerui.adoc
+msgid ""
+"The `quarkus-smallrye-openapi` extension saves the OpenAPI Document to a file when the `quarkus.smallrye-openapi.store-schema-directory` is configured.\n"
+"This saved version of the OpenAPI Document is useful for downstream consumers."
+msgstr ""
+
+#: _versions/main/guides/openapi-swaggerui.adoc
+msgid ""
+"To produce an OpenAPI Document which possibly *could* match the one produced during runtime, the `RUN` and `RUNTIME_STARTUP` RunStages are executed at build time - in a separate step from the `BUILD` RunStage.\n"
+"Any exception which occurs during this additional processing step is ignored, i.e. if one of the filters throws, none will have any effect."
+msgstr ""
+
+#: _versions/main/guides/openapi-swaggerui.adoc
+msgid "This additional processing step is done even if `quarkus.smallrye-openapi.store-schema-directory` is *NOT* configured."
+msgstr ""
+
+#: _versions/main/guides/openapi-swaggerui.adoc
+msgid "The MicroProfile OpenAPI way"
+msgstr ""
+
+#: _versions/main/guides/openapi-swaggerui.adoc
+msgid "The Microprofile OpenAPI specification defines that *one* OASFilter implementation can be specified using the `mp.openapi.filter` configuration property. This filter will be run during RunStage `RUN`."
+msgstr ""
 
 #. type: Title ==
 #: _versions/main/guides/openapi-swaggerui.adoc
