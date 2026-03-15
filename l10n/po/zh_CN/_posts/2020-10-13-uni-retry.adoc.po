@@ -2,7 +2,7 @@
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -31,19 +31,24 @@ msgstr " `retry` 实际上是如何工作的？"
 #: _posts/2020-10-13-uni-retry.adoc
 #, fuzzy
 msgid ""
-"Last week, David, a Quarkus user, asked me about retrying an asynchronous operation.\n"
+"Last week, David, a Quarkus user, asked me about retrying an asynchronous "
+"operation.\n"
 "David has a _picky_ remote HTTP service, which sometimes misbehaves.\n"
 "Easy answer!\n"
 "Just do: `uni.onFailure().retry().atMost(x)`.\n"
 "But, David is curious, and asked me a second question: how does retry work?\n"
 "Well, that’s simple; it just retries...\n"
 "As you can imagine, that did not satisfy David’s curiosity."
-msgstr "上周，Quarkus 用户 David 向我询问了重试异步操作的问题。大卫的远程 HTTP 服务很 _挑剔_ ，有时会出现问题。答案很简单！只需执行： `uni.onFailure().retry().atMost(x)` 。但是，戴维很好奇，又问了我第二个问题：重试是如何工作的？很简单，就是重试......可以想象，这并不能满足 David 的好奇心。"
+msgstr ""
+"上周，Quarkus 用户 David 向我询问了重试异步操作的问题。大卫的远程 HTTP 服务很 _挑剔_ ，有时会出现问题。答案很简单！只需执行： "
+"`uni.onFailure().retry().atMost(x)` 。但是，戴维很好奇，又问了我第二个问题：重试是如何工作的？很简单，就是重试...."
+"..可以想象，这并不能满足 David 的好奇心。"
 
 #: _posts/2020-10-13-uni-retry.adoc
 #, fuzzy
 msgid ""
-"While I was answering to David, I realized that retrying is not that simple and deserves more explanation.\n"
+"While I was answering to David, I realized that retrying is not that simple "
+"and deserves more explanation.\n"
 "That’s what we are going to see in this blog post."
 msgstr "在回答 David 的问题时，我意识到重试并不是那么简单，需要更多的解释。这就是我们将在这篇博文中看到的内容。"
 
@@ -55,13 +60,18 @@ msgstr "关于重试的免责声明"
 #: _posts/2020-10-13-uni-retry.adoc
 #, fuzzy
 msgid ""
-"Okay, if you are the kind of reader who skips the terms and conditions, you can jump to the next section.\n"
+"Okay, if you are the kind of reader who skips the terms and conditions, you "
+"can jump to the next section.\n"
 "But, for others, I need to warn you about retries.\n"
 "Retries may not be the solution to your problem, as it can be terrible.\n"
-"Retrying can only be done if your system can handle duplicated requests or messages.\n"
-"In other words, you can only retry if your system is idempotent, i.e., sending a request or a message multiple times does not change the overall state.\n"
+"Retrying can only be done if your system can handle duplicated requests or "
+"messages.\n"
+"In other words, you can only retry if your system is idempotent, i.e., "
+"sending a request or a message multiple times does not change the overall "
+"state.\n"
 "In doubt, check before implementing a retry, as it can harm your system."
-msgstr "好吧，如果你是那种跳过条款和条件的读者，你可以跳到下一节。但是，对于其他人，我需要提醒您注意重试。重试可能并不能解决你的问题，因为它可能很糟糕。重试只能在系统可以处理重复请求或信息的情况下进行。换句话说，只有当系统具有惰性（即多次发送请求或消息不会改变整体状态）时才能重试。如有疑问，请在执行重试前进行检查，因为重试可能会损害系统。"
+msgstr ""
+"好吧，如果你是那种跳过条款和条件的读者，你可以跳到下一节。但是，对于其他人，我需要提醒您注意重试。重试可能并不能解决你的问题，因为它可能很糟糕。重试只能在系统可以处理重复请求或信息的情况下进行。换句话说，只有当系统具有惰性（即多次发送请求或消息不会改变整体状态）时才能重试。如有疑问，请在执行重试前进行检查，因为重试可能会损害系统。"
 
 #. type: Plain text
 #: _posts/2020-10-13-uni-retry.adoc
@@ -77,7 +87,9 @@ msgstr "重试是为了重新订阅"
 #. type: Plain text
 #: _posts/2020-10-13-uni-retry.adoc
 #, fuzzy
-msgid "Let’s imagine you have a `Uni` representing your asynchronous action, like in David’s case, an invocation of a remote service:"
+msgid ""
+"Let’s imagine you have a `Uni` representing your asynchronous action, like "
+"in David’s case, an invocation of a remote service:"
 msgstr "让我们想象一下，你有一个 `Uni` ，代表你的异步操作，比如在David的案例中，是对一个远程服务的调用。"
 
 #: _posts/2020-10-13-uni-retry.adoc
@@ -85,55 +97,70 @@ msgstr "让我们想象一下，你有一个 `Uni` ，代表你的异步操作�
 msgid ""
 "Unis are lazy.\n"
 "Until someone subscribes to them, nothing happens.\n"
-"In our case, the request is only sent to the remote service when someone subscribes to the `uni`.\n"
+"In our case, the request is only sent to the remote service when someone "
+"subscribes to the `uni`.\n"
 "So to execute the request, we need to subscribe:"
-msgstr "Unis 很懒惰。在有人订阅之前，什么都不会发生。在我们的例子中，只有当有人订阅 `uni` 时，请求才会发送到远程服务。因此，要执行请求，我们需要订阅："
+msgstr ""
+"Unis 很懒惰。在有人订阅之前，什么都不会发生。在我们的例子中，只有当有人订阅 `uni` "
+"时，请求才会发送到远程服务。因此，要执行请求，我们需要订阅："
 
 #: _posts/2020-10-13-uni-retry.adoc
 #, fuzzy
 msgid ""
-"In Quarkus, most of the time, you return the `Uni`, and Quarkus subscribes to it.\n"
+"In Quarkus, most of the time, you return the `Uni`, and Quarkus subscribes "
+"to it.\n"
 "So, don't be mistaken, there is a subscription, you may not see it."
-msgstr "在 Quarkus 中，大多数情况下，您返回 `Uni` ，Quarkus 就会订阅它。因此，不要弄错了，订阅是存在的，只是你可能看不到而已。"
+msgstr ""
+"在 Quarkus 中，大多数情况下，您返回 `Uni` ，Quarkus 就会订阅它。因此，不要弄错了，订阅是存在的，只是你可能看不到而已。"
 
 #: _posts/2020-10-13-uni-retry.adoc
 #, fuzzy
 msgid ""
 "This laziness is the retry secret.\n"
-"In the following sequence diagram, you can see that the request is sent when we get a subscriber:"
+"In the following sequence diagram, you can see that the request is sent when "
+"we get a subscriber:"
 msgstr "这种懒惰就是重试的秘密。从下面的序列图中可以看到，当我们收到一个订阅者时，就会发送请求："
 
 #. type: Plain text
 #: _posts/2020-10-13-uni-retry.adoc
 #, fuzzy
 msgid "image:/assets/images/posts/mutiny-retry/subscription.png[]"
-msgstr "image:/assets/images/posts/mutiny-retry/subscription.png[alt=\"subscription\"]"
+msgstr ""
+"image:/assets/images/posts/mutiny-retry/subscription.png[alt="
+"\"subscription\"]"
 
 #. type: Plain text
 #: _posts/2020-10-13-uni-retry.adoc
 #, fuzzy
-msgid "An interesting consequence of this is that if you subscribe twice, you emit two requests, and so get two responses:"
+msgid ""
+"An interesting consequence of this is that if you subscribe twice, you emit "
+"two requests, and so get two responses:"
 msgstr "一个有趣的结果是，如果你订阅了两次，你就会发出两个请求，因此得到两个回应。"
 
 #. type: Plain text
 #: _posts/2020-10-13-uni-retry.adoc
 #, fuzzy
 msgid "image:/assets/images/posts/mutiny-retry/double-subscription.png[]"
-msgstr "image:/assets/images/posts/mutiny-retry/double-subscription.png[alt=\"double subscription\"]"
+msgstr ""
+"image:/assets/images/posts/mutiny-retry/double-subscription.png[alt=\"double "
+"subscription\"]"
 
 #: _posts/2020-10-13-uni-retry.adoc
 #, fuzzy
 msgid ""
 "But let’s go back to retry.\n"
 "What’s a retry?\n"
-"A retry is a reaction to a failure, so you are going to write: `uni.onFailure().retry()`.\n"
+"A retry is a reaction to a failure, so you are going to write: `uni."
+"onFailure().retry()`.\n"
 "You also need to indicate how long do you want to retry:"
-msgstr "但让我们回到重试。什么是重试？重试是对失败的反应，因此您要写成： `uni.onFailure().retry()` 。您还需要说明重试的时间："
+msgstr ""
+"但让我们回到重试。什么是重试？重试是对失败的反应，因此您要写成： `uni.onFailure().retry()` 。您还需要说明重试的时间："
 
 #. type: Plain text
 #: _posts/2020-10-13-uni-retry.adoc
 #, fuzzy
-msgid "In this snippet, we retry _indefinitely_ until we get a successful result."
+msgid ""
+"In this snippet, we retry _indefinitely_ until we get a successful result."
 msgstr "在这个片段中，我们 _无限期_ 地重试，直到得到一个成功的结果。"
 
 #: _posts/2020-10-13-uni-retry.adoc
@@ -168,7 +195,8 @@ msgid ""
 "That’s always a good question.\n"
 "Should I retry _indefinitely_?\n"
 "Most probably, not.\n"
-"Indefinitely can be very long, and it could never end if the called service fails continuously."
+"Indefinitely can be very long, and it could never end if the called service "
+"fails continuously."
 msgstr "这一直是个好问题。我应该 _无限期地_ 重试吗？很可能不应该。无限重试的时间可能很长，而且如果被调用的服务连续失败，重试可能永远不会结束。"
 
 #. type: Plain text
@@ -181,17 +209,22 @@ msgstr "你可以使用 `atMost` ，配置重试的次数。"
 #, fuzzy
 msgid ""
 "`atMost` indicates that at most `n` attempts will be done before failing.\n"
-"If we still get a failure after that number of resubscription, the last failure is sent to the subscriber."
+"If we still get a failure after that number of resubscription, the last "
+"failure is sent to the subscriber."
 msgstr "`atMost` 表示最多尝试 次才会失败。如果重新订阅后仍出现失败，则会将最后一次失败发送给订阅者。 `n`"
 
 #: _posts/2020-10-13-uni-retry.adoc
 #, fuzzy
 msgid "image:/assets/images/posts/mutiny-retry/retry-failed.png[]"
-msgstr "image:/assets/images/posts/mutiny-retry/retry-failed.png[alt=\"retry failed\"]"
+msgstr ""
+"image:/assets/images/posts/mutiny-retry/retry-failed.png[alt=\"retry "
+"failed\"]"
 
 #: _posts/2020-10-13-uni-retry.adoc
 #, fuzzy
-msgid "You can also use `until` and decide to retry by looking at the received failure:"
+msgid ""
+"You can also use `until` and decide to retry by looking at the received "
+"failure:"
 msgstr "您也可以使用 `until` ，通过查看收到的失败信息来决定是否重试："
 
 #: _posts/2020-10-13-uni-retry.adoc
@@ -203,10 +236,13 @@ msgstr "奖励：指数后退"
 #, fuzzy
 msgid ""
 "So far, our retries happen immediately.\n"
-"It might not be very wise, and separating a bit our retries may give better results, especially when facing intermittent failures due to the load or other external causes.\n"
+"It might not be very wise, and separating a bit our retries may give better "
+"results, especially when facing intermittent failures due to the load or "
+"other external causes.\n"
 "Using exponential backoff provides a reasonable tradeoff.\n"
 "Retrying with exponential backoff:"
-msgstr "到目前为止，我们的重试都是立即进行的。这样做可能不太明智，将重试时间稍微分开可能会取得更好的效果，尤其是在面临因负载或其他外部原因造成的间歇性故障时。使用指数后退可以实现合理的权衡。使用指数级延迟重试："
+msgstr ""
+"到目前为止，我们的重试都是立即进行的。这样做可能不太明智，将重试时间稍微分开可能会取得更好的效果，尤其是在面临因负载或其他外部原因造成的间歇性故障时。使用指数后退可以实现合理的权衡。使用指数级延迟重试："
 
 #: _posts/2020-10-13-uni-retry.adoc
 #, fuzzy
@@ -215,7 +251,8 @@ msgstr "在初始延迟后重试、"
 
 #: _posts/2020-10-13-uni-retry.adoc
 #, fuzzy
-msgid "on every failure, it doubles the previous delay, with an optional maximum,"
+msgid ""
+"on every failure, it doubles the previous delay, with an optional maximum,"
 msgstr "每次失败时，都会将之前的延迟时间加倍，并可选择最大延迟时间、"
 
 #: _posts/2020-10-13-uni-retry.adoc
@@ -237,10 +274,14 @@ msgstr "它仍然受制于 `atMost`"
 #, fuzzy
 msgid ""
 "This last snippet configures the retry with exponential backoff.\n"
-"The first retry happens after 1 second, and then it doubles every time without an upper limit.\n"
+"The first retry happens after 1 second, and then it doubles every time "
+"without an upper limit.\n"
 "Random jitter is applied to delays.\n"
-"If, unfortunately, after ten attempts, it still fails, the failure is sent to the subscriber."
-msgstr "最后一个代码段配置了指数退避重试。第一次重试在 1 秒后进行，然后每次加倍，不设上限。对延迟采用随机抖动。如果十次重试后仍然失败，则会将失败信息发送给用户。"
+"If, unfortunately, after ten attempts, it still fails, the failure is sent "
+"to the subscriber."
+msgstr ""
+"最后一个代码段配置了指数退避重试。第一次重试在 1 "
+"秒后进行，然后每次加倍，不设上限。对延迟采用随机抖动。如果十次重试后仍然失败，则会将失败信息发送给用户。"
 
 #: _posts/2020-10-13-uni-retry.adoc
 #, fuzzy
@@ -251,14 +292,23 @@ msgstr "演示时间"
 #, fuzzy
 msgid ""
 "Ok, enough talking.\n"
-"I’ve built a simple playground where you can adjust and try the various retry policies: https://gist.github.com/cescoffier/e9abce907a1c3d05d70bea3dae6dc3d5.\n"
-"You can _jbang_ the script by downloading it and running `jbang Retry.java`, or just run:"
-msgstr "好了，不说了。我建了一个简单的游戏场地，你可以在这里调整和尝试各种重试策略 link:https://gist.github.com/cescoffier/e9abce907a1c3d05d70bea3dae6dc3d5[：https://gist.github.com/cescoffier/e9abce907a1c3d05d70bea3dae6dc3d5。] 你可以通过下载并运行 `jbang Retry.java` 来 _jbang_ 脚本，或者直接运行："
+"I’ve built a simple playground where you can adjust and try the various "
+"retry policies: https://gist.github.com/cescoffier/"
+"e9abce907a1c3d05d70bea3dae6dc3d5.\n"
+"You can _jbang_ the script by downloading it and running `jbang Retry.java`, "
+"or just run:"
+msgstr ""
+"好了，不说了。我建了一个简单的游戏场地，你可以在这里调整和尝试各种重试策略 link:https://gist.github.com/"
+"cescoffier/e9abce907a1c3d05d70bea3dae6dc3d5[：https://gist.github.com/"
+"cescoffier/e9abce907a1c3d05d70bea3dae6dc3d5。] 你可以通过下载并运行 `jbang Retry.java` "
+"来 _jbang_ 脚本，或者直接运行："
 
 #. type: Plain text
 #: _posts/2020-10-13-uni-retry.adoc
 #, fuzzy
-msgid "The called service fails 50% of the time (well, it uses a random, so statistically 50% of the time)."
+msgid ""
+"The called service fails 50% of the time (well, it uses a random, so "
+"statistically 50% of the time)."
 msgstr "被调用的服务有50%的时间是失败的（好吧，它使用的是随机的，所以统计上有50%的时间）。"
 
 #: _posts/2020-10-13-uni-retry.adoc
@@ -267,10 +317,14 @@ msgid ""
 "That concludes this blog post.\n"
 "Again, before using retry, please verify that your system can support it.\n"
 "Retrying is resubscribing.\n"
-"You can configure how long, how many times, and when retrying should be attempted.\n"
-"There are many more options offered by Mutiny, like `when` or using deadlines (`expireIn` and `expireAt`) when using exponential backoff.\n"
+"You can configure how long, how many times, and when retrying should be "
+"attempted.\n"
+"There are many more options offered by Mutiny, like `when` or using "
+"deadlines (`expireIn` and `expireAt`) when using exponential backoff.\n"
 "You can try all these with the provided playground."
-msgstr "本博文到此结束。在使用重试之前，请再次确认您的系统是否支持重试。重试就是重新订阅。你可以配置重试的时间、次数和时间。Mutiny 还提供了更多选项，如 `when` 或在使用指数回溯时使用截止时间（ `expireIn` 和 `expireAt` ）。你可以用提供的游戏场地尝试所有这些选项。"
+msgstr ""
+"本博文到此结束。在使用重试之前，请再次确认您的系统是否支持重试。重试就是重新订阅。你可以配置重试的时间、次数和时间。Mutiny 还提供了更多选项，如 "
+"`when` 或在使用指数回溯时使用截止时间（ `expireIn` 和 `expireAt` ）。你可以用提供的游戏场地尝试所有这些选项。"
 
 #. type: Plain text
 #: _posts/2020-10-13-uni-retry.adoc
