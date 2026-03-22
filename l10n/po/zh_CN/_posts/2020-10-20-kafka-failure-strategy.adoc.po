@@ -2,7 +2,7 @@
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -32,14 +32,10 @@ msgstr "Kafka连接器中的故障处理"
 #, fuzzy
 msgid ""
 "Failures are inevitable.\n"
-"There is nothing we can do about that, and that also applies to Kafka "
-"applications.\n"
-"Your application may contain a faulty component misbehaving once in a while, "
-"or unable to process a specific Kafka record.\n"
+"There is nothing we can do about that, and that also applies to Kafka applications.\n"
+"Your application may contain a faulty component misbehaving once in a while, or unable to process a specific Kafka record.\n"
 "In this post, we are going to see how we can manage these failures."
-msgstr ""
-"故障是不可避免的。我们对此无能为力，这同样适用于 Kafka 应用程序。您的应用程序中可能会偶尔出现故障组件，或者无法处理特定的 Kafka "
-"记录。在本篇文章中，我们将了解如何管理这些故障。"
+msgstr "故障是不可避免的。我们对此无能为力，这同样适用于 Kafka 应用程序。您的应用程序中可能会偶尔出现故障组件，或者无法处理特定的 Kafka 记录。在本篇文章中，我们将了解如何管理这些故障。"
 
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
@@ -50,99 +46,62 @@ msgstr "阿克和纳克"
 #, fuzzy
 msgid ""
 "But, first, we need to explain how it works under the hood.\n"
-"When using reactive messaging, your application receives https://smallrye.io/"
-"smallrye-reactive-messaging/smallrye-reactive-messaging/2.4/concepts."
-"html#messages[Messages].\n"
-"Even if your method handles _payloads_, there are Messages under the hood, "
-"and it unwraps the payload just before calling your method."
-msgstr ""
-"但首先，我们需要解释一下它在引擎盖下是如何工作的。使用反应式消息传递时，应用程序会收到 link:https://smallrye.io/"
-"smallrye-reactive-messaging/smallrye-reactive-messaging/2.4/concepts."
-"html#messages[消息] 。即使你的方法处理的是 _有效载荷_ ，但在引擎盖下也有消息，而且它在调用你的方法之前就会解开有效载荷。"
+"When using reactive messaging, your application receives https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/2.4/concepts.html#messages[Messages].\n"
+"Even if your method handles _payloads_, there are Messages under the hood, and it unwraps the payload just before calling your method."
+msgstr "但首先，我们需要解释一下它在引擎盖下是如何工作的。使用反应式消息传递时，应用程序会收到 link:https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/2.4/concepts.html#messages[消息] 。即使你的方法处理的是 _有效载荷_ ，但在引擎盖下也有消息，而且它在调用你的方法之前就会解开有效载荷。"
 
 #. type: Plain text
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
 msgid "image:/assets/images/posts/kafka-failure-strategy/messages.png[]"
-msgstr ""
-"image:/assets/images/posts/kafka-failure-strategy/messages.png[alt="
-"\"messages\"]"
+msgstr "image:/assets/images/posts/kafka-failure-strategy/messages.png[alt=\"messages\"]"
 
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
 msgid ""
 "A message can be _acked_ or _nacked_.\n"
-"If the message processing completes successfully, the message is "
-"acknowledged.\n"
-"You can manually trigger the acknowledgment (by calling the `ack()` method) "
-"or let the framework handle it automatically.\n"
-"In general, it's the outbound connector that acknowledges the message once "
-"the outgoing message has been sent to the broker successfully.\n"
-"If not configured otherwise, acknowledging a message acknowledges the "
-"_source_ message, acknowledging its source, until we reach the root message, "
-"most probably created by an inbound connector:"
-msgstr ""
-"报文可以被 _接受_ 或 _拒绝_ 。如果消息处理成功完成，消息就会被确认。你可以手动触发确认（通过调用 `ack()` "
-"方法），也可以让框架自动处理。一般来说，一旦出站报文成功发送到代理，就会由出站连接器确认报文。如果没有其他配置，确认报文会确认 _源_ "
-"报文，确认其来源，直到我们到达根报文为止，根报文很可能是由入站（inbound）连接器创建的："
+"If the message processing completes successfully, the message is acknowledged.\n"
+"You can manually trigger the acknowledgment (by calling the `ack()` method) or let the framework handle it automatically.\n"
+"In general, it's the outbound connector that acknowledges the message once the outgoing message has been sent to the broker successfully.\n"
+"If not configured otherwise, acknowledging a message acknowledges the _source_ message, acknowledging its source, until we reach the root message, most probably created by an inbound connector:"
+msgstr "报文可以被 _接受_ 或 _拒绝_ 。如果消息处理成功完成，消息就会被确认。你可以手动触发确认（通过调用 `ack()` 方法），也可以让框架自动处理。一般来说，一旦出站报文成功发送到代理，就会由出站连接器确认报文。如果没有其他配置，确认报文会确认 _源_ 报文，确认其来源，直到我们到达根报文为止，根报文很可能是由入站（inbound）连接器创建的："
 
 #. type: Plain text
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
-msgid ""
-"image:/assets/images/posts/kafka-failure-strategy/ack-chain."
-"png[Acknowledgement chain]"
-msgstr ""
-"image:/assets/images/posts/kafka-failure-strategy/ack-chain.png[alt="
-"\"Acknowledgement chain\"]"
+msgid "image:/assets/images/posts/kafka-failure-strategy/ack-chain.png[Acknowledgement chain]"
+msgstr "image:/assets/images/posts/kafka-failure-strategy/ack-chain.png[alt=\"Acknowledgement chain\"]"
 
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
 msgid ""
-"When the inbound connector receives the acknowledgment, it can act upon it "
-"and, for example, indicate to the broker that the message processing "
-"succeeded.\n"
+"When the inbound connector receives the acknowledgment, it can act upon it and, for example, indicate to the broker that the message processing succeeded.\n"
 "In the context of Kafka, there are various commit strategies.\n"
 "We will cover these in a future post."
-msgstr ""
-"入站连接器收到确认后，就可以根据确认采取行动，例如，向代理表明消息处理成功。在 Kafka 中，有多种提交策略。我们将在以后的文章中介绍这些策略。"
+msgstr "入站连接器收到确认后，就可以根据确认采取行动，例如，向代理表明消息处理成功。在 Kafka 中，有多种提交策略。我们将在以后的文章中介绍这些策略。"
 
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
 msgid ""
 "But as said earlier, failures are inevitable.\n"
-"For example, you may have a misbehaving component throwing exceptions, or "
-"the outbound connector cannot send the messages because the remote broker is "
-"unavailable.\n"
-"In these cases, the message is _nacked_, indicating that the processing "
-"failed.\n"
-"Similarly to successful acknowledgment, negative acknowledgment can be "
-"triggered manually (using the `nack` method) or handled automatically.\n"
+"For example, you may have a misbehaving component throwing exceptions, or the outbound connector cannot send the messages because the remote broker is unavailable.\n"
+"In these cases, the message is _nacked_, indicating that the processing failed.\n"
+"Similarly to successful acknowledgment, negative acknowledgment can be triggered manually (using the `nack` method) or handled automatically.\n"
 "For example, if your method throws an exception, the message is nacked.\n"
-"As with _ack_, nacking a message nacks its source, and the nack is "
-"propagated until the inbound connector:"
-msgstr ""
-"但如前所述，失败是不可避免的。例如，可能有一个行为不端的组件抛出异常，或者由于远程代理不可用，出站连接器无法发送消息。在这种情况下，报文就会被 _否定_ "
-"，表明处理失败。与成功确认类似，否定确认也可以手动触发（使用 `nack` 方法）或自动处理。例如，如果你的方法抛出了异常，消息就会被剔除。 _与_ "
-"\"接受\"（ack）一样，\"否定 \"报文也会否定其来源，并且该否定会一直传播到入站连接器："
+"As with _ack_, nacking a message nacks its source, and the nack is propagated until the inbound connector:"
+msgstr "但如前所述，失败是不可避免的。例如，可能有一个行为不端的组件抛出异常，或者由于远程代理不可用，出站连接器无法发送消息。在这种情况下，报文就会被 _否定_ ，表明处理失败。与成功确认类似，否定确认也可以手动触发（使用 `nack` 方法）或自动处理。例如，如果你的方法抛出了异常，消息就会被剔除。 _与_ \"接受\"（ack）一样，\"否定 \"报文也会否定其来源，并且该否定会一直传播到入站连接器："
 
 #. type: Plain text
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
-msgid ""
-"image:/assets/images/posts/kafka-failure-strategy/nack-chain.png[Negative "
-"acknowledgment chain]"
-msgstr ""
-"image:/assets/images/posts/kafka-failure-strategy/nack-chain.png[alt="
-"\"Negative acknowledgment chain\"]"
+msgid "image:/assets/images/posts/kafka-failure-strategy/nack-chain.png[Negative acknowledgment chain]"
+msgstr "image:/assets/images/posts/kafka-failure-strategy/nack-chain.png[alt=\"Negative acknowledgment chain\"]"
 
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
 msgid ""
-"It's the responsibility of the connector to decide how to react in this case."
-"\n"
-"The Kafka connector proposes three failure handling strategies, and that's "
-"what we are going to detail now."
+"It's the responsibility of the connector to decide how to react in this case.\n"
+"The Kafka connector proposes three failure handling strategies, and that's what we are going to detail now."
 msgstr "在这种情况下，连接器有责任决定如何应对。Kafka 连接器提出了三种故障处理策略，这就是我们现在要详细介绍的。"
 
 #. type: Title ==
@@ -154,40 +113,25 @@ msgstr "快速失败 \"战略"
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
 msgid ""
-"The first strategy is the simplest, but not sure we can qualify it with "
-"\"smoothly.\"\n"
+"The first strategy is the simplest, but not sure we can qualify it with \"smoothly.\"\n"
 "It's the default strategy.\n"
-"As soon as a message is nacked, the connector reports the failure, and the "
-"application stops.\n"
-"If you use the health checks extension, the application is marked as "
-"unhealthy, and your orchestrator may restart the application."
-msgstr ""
-"第一种策略是最简单的，但不确定我们是否能用 \"顺利 "
-"\"来形容它。这是默认策略。一旦消息被拦截，连接器就会报告故障，应用程序也会停止。如果使用健康检查扩展，应用程序就会被标记为不健康，协调器就会重新启动应用程序。"
+"As soon as a message is nacked, the connector reports the failure, and the application stops.\n"
+"If you use the health checks extension, the application is marked as unhealthy, and your orchestrator may restart the application."
+msgstr "第一种策略是最简单的，但不确定我们是否能用 \"顺利 \"来形容它。这是默认策略。一旦消息被拦截，连接器就会报告故障，应用程序也会停止。如果使用健康检查扩展，应用程序就会被标记为不健康，协调器就会重新启动应用程序。"
 
 #. type: Plain text
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
-msgid ""
-"image:/assets/images/posts/kafka-failure-strategy/fail-fast.png[Fail-Fast]"
-msgstr ""
-"image:/assets/images/posts/kafka-failure-strategy/fail-fast.png[alt=\"Fail-"
-"Fast\"]"
+msgid "image:/assets/images/posts/kafka-failure-strategy/fail-fast.png[Fail-Fast]"
+msgstr "image:/assets/images/posts/kafka-failure-strategy/fail-fast.png[alt=\"Fail-Fast\"]"
 
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
 msgid ""
 "But, it's time to demonstrate it.\n"
-"I've created a simple application receiving movie titles from Kafka and "
-"failing (with an exception) if the title contains a `'` or `,`.\n"
-"You can check the code on this https://gist.github.com/cescoffier/"
-"23ca7b2bcc8c49cee3db29b3f2b59e4a#file-kafkafailfast-java[Gist], or run it "
-"using:"
-msgstr ""
-"不过，是时候演示一下了。我创建了一个从 Kafka 接收电影标题的简单应用程序，如果标题中包含 `'` 或 `,` "
-"，该应用程序就会失败（出现异常）。您可以在此 link:https://gist.github.com/cescoffier/"
-"23ca7b2bcc8c49cee3db29b3f2b59e4a#file-kafkafailfast-java[Gist] "
-"上查看代码，或使用以下工具运行它："
+"I've created a simple application receiving movie titles from Kafka and failing (with an exception) if the title contains a `'` or `,`.\n"
+"You can check the code on this https://gist.github.com/cescoffier/23ca7b2bcc8c49cee3db29b3f2b59e4a#file-kafkafailfast-java[Gist], or run it using:"
+msgstr "不过，是时候演示一下了。我创建了一个从 Kafka 接收电影标题的简单应用程序，如果标题中包含 `'` 或 `,` ，该应用程序就会失败（出现异常）。您可以在此 link:https://gist.github.com/cescoffier/23ca7b2bcc8c49cee3db29b3f2b59e4a#file-kafkafailfast-java[Gist] 上查看代码，或使用以下工具运行它："
 
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
@@ -203,24 +147,16 @@ msgstr "如果运行应用程序并查看日志，您会发现"
 
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
-msgid ""
-"Now, if you open your browser to http://localhost:8080/health, you will see "
-"that the failure has been caught and the application is unhealthy:"
-msgstr ""
-"现在，如果您打开浏览器 link:http://localhost:8080/health[http://localhost:8080/health，] "
-"就会看到故障已被捕获，应用程序已处于不健康状态："
+msgid "Now, if you open your browser to http://localhost:8080/health, you will see that the failure has been caught and the application is unhealthy:"
+msgstr "现在，如果您打开浏览器 link:http://localhost:8080/health[http://localhost:8080/health，] 就会看到故障已被捕获，应用程序已处于不健康状态："
 
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
 msgid ""
 "This approach works well with sporadic, network-related issues.\n"
-"Still, if the source of the failure is your application code, you may enter "
-"a restart loop.\n"
-"Indeed, when the application restarts, it may again receive the message (the "
-"red one from the previous picture) that would produce the same failure again "
-"and again."
-msgstr ""
-"这种方法可以很好地解决零星的、与网络相关的问题。不过，如果故障源是您的应用程序代码，您可能会进入重启循环。事实上，当应用程序重新启动时，它可能会再次收到信息（上一张图片中的红色信息），从而一次又一次地出现同样的故障。"
+"Still, if the source of the failure is your application code, you may enter a restart loop.\n"
+"Indeed, when the application restarts, it may again receive the message (the red one from the previous picture) that would produce the same failure again and again."
+msgstr "这种方法可以很好地解决零星的、与网络相关的问题。不过，如果故障源是您的应用程序代码，您可能会进入重启循环。事实上，当应用程序重新启动时，它可能会再次收到信息（上一张图片中的红色信息），从而一次又一次地出现同样的故障。"
 
 #. type: Title ==
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
@@ -232,26 +168,19 @@ msgstr "忽略 \"策略"
 #, fuzzy
 msgid ""
 "The second strategy is also straightforward: just close your eyes.\n"
-"When a message is nacked, it ignores the failure and continues the "
-"processing:"
+"When a message is nacked, it ignores the failure and continues the processing:"
 msgstr "第二种策略也很简单：闭上眼睛。当信息被拦截时，它会忽略失败并继续处理："
 
 #. type: delimited block -
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
-msgid ""
-"image:/assets/images/posts/kafka-failure-strategy/ignore.png[Ignore "
-"strategy]"
-msgstr ""
-"image:/assets/images/posts/kafka-failure-strategy/ignore.png[Ignore "
-"strategy]"
+msgid "image:/assets/images/posts/kafka-failure-strategy/ignore.png[Ignore strategy]"
+msgstr "image:/assets/images/posts/kafka-failure-strategy/ignore.png[Ignore strategy]"
 
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
 msgid ""
-"The log indicates the failure, but it continues the processing with the next "
-"one.\n"
-"You can only use this strategy if you don't need to manage all the messages "
-"or if your application is handling the failure internally."
+"The log indicates the failure, but it continues the processing with the next one.\n"
+"You can only use this strategy if you don't need to manage all the messages or if your application is handling the failure internally."
 msgstr "日志会显示故障，但会继续处理下一条日志。只有在不需要管理所有消息或应用程序正在内部处理故障的情况下，才能使用这种策略。"
 
 #. type: delimited block -
@@ -261,20 +190,13 @@ msgstr "To enable this strategy, configure the channel with:"
 
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
-msgid ""
-"You can try this strategy with https://gist.github.com/cescoffier/"
-"23ca7b2bcc8c49cee3db29b3f2b59e4a#file-kafkaignorefailure-java[Gist], or run "
-"it using:"
-msgstr ""
-"您可以使用 link:https://gist.github.com/cescoffier/"
-"23ca7b2bcc8c49cee3db29b3f2b59e4a#file-kafkaignorefailure-java[Gist] "
-"尝试这一策略，或使用"
+msgid "You can try this strategy with https://gist.github.com/cescoffier/23ca7b2bcc8c49cee3db29b3f2b59e4a#file-kafkaignorefailure-java[Gist], or run it using:"
+msgstr "您可以使用 link:https://gist.github.com/cescoffier/23ca7b2bcc8c49cee3db29b3f2b59e4a#file-kafkaignorefailure-java[Gist] 尝试这一策略，或使用"
 
 #. type: Plain text
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
-msgid ""
-"If you ran the application and check the log, you will see two exceptions:"
+msgid "If you ran the application and check the log, you will see two exceptions:"
 msgstr "如果你运行该应用程序并检查日志，你会看到两个异常情况。"
 
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
@@ -287,9 +209,7 @@ msgstr "请看最后一行。如前所述，它将继续处理下一条信息。
 #. type: Plain text
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
-msgid ""
-"If you check the health of the application (using http://localhost:8080/"
-"health), everything is fine:"
+msgid "If you check the health of the application (using http://localhost:8080/health), everything is fine:"
 msgstr "如果你检查应用程序的健康状况（使用 http://localhost:8080/health ，一切正常。"
 
 #. type: Title ==
@@ -301,17 +221,11 @@ msgstr "死板的主题 \"策略"
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
 msgid ""
-"The https://en.wikipedia.org/wiki/Dead_letter_queue[dead-letter queue] is a "
-"well-known pattern to handle message processing failure.\n"
-"Instead of failing fast or ignoring and continuing the processing, it stores "
-"the failing messages into a specific destination: a dead letter.\n"
-"An administrator, human or software, can review the failing messages and "
-"decide what can be done (retry, skip, etc.).\n"
-"Note that you can only apply this strategy if the ordering is not essential "
-"to the application."
-msgstr ""
-"link:https://en.wikipedia.org/wiki/Dead_letter_queue[死信队列] "
-"是一种著名的处理报文处理失败的模式。它不是快速失败或忽略并继续处理，而是将失败的报文存储到一个特定的目的地：死信。管理员（人工或软件）可以查看失败的报文，并决定如何处理（重试、跳过等）。需要注意的是，只有当排序对应用程序来说不是至关重要时，才能使用这种策略。"
+"The https://en.wikipedia.org/wiki/Dead_letter_queue[dead-letter queue] is a well-known pattern to handle message processing failure.\n"
+"Instead of failing fast or ignoring and continuing the processing, it stores the failing messages into a specific destination: a dead letter.\n"
+"An administrator, human or software, can review the failing messages and decide what can be done (retry, skip, etc.).\n"
+"Note that you can only apply this strategy if the ordering is not essential to the application."
+msgstr "link:https://en.wikipedia.org/wiki/Dead_letter_queue[死信队列] 是一种著名的处理报文处理失败的模式。它不是快速失败或忽略并继续处理，而是将失败的报文存储到一个特定的目的地：死信。管理员（人工或软件）可以查看失败的报文，并决定如何处理（重试、跳过等）。需要注意的是，只有当排序对应用程序来说不是至关重要时，才能使用这种策略。"
 
 #. type: Plain text
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
@@ -322,19 +236,13 @@ msgstr "你可以在以后审查失败的信息。"
 #. type: Plain text
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
-msgid ""
-"image:/assets/images/posts/kafka-failure-strategy/dead-letter-topic.png[Dead-"
-"letter topic]"
-msgstr ""
-"image:/assets/images/posts/kafka-failure-strategy/dead-letter-topic.png[alt="
-"\"Dead-letter topic\"]"
+msgid "image:/assets/images/posts/kafka-failure-strategy/dead-letter-topic.png[Dead-letter topic]"
+msgstr "image:/assets/images/posts/kafka-failure-strategy/dead-letter-topic.png[alt=\"Dead-letter topic\"]"
 
 #. type: Plain text
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
-msgid ""
-"To enable this strategy, you need to add the following attribute to your "
-"configuration:"
+msgid "To enable this strategy, you need to add the following attribute to your configuration:"
 msgstr "要启用这一策略，你需要在你的配置中添加以下属性。"
 
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
@@ -342,34 +250,22 @@ msgstr "要启用这一策略，你需要在你的配置中添加以下属性。
 msgid ""
 "By default, it writes to the `dead-letter-topic-$topic-name` topic.\n"
 "In our demo, it's `dead-letter-topic-movies`.\n"
-"But you can also configure the topic by setting the `dead-letter-queue."
-"topic` attribute."
-msgstr ""
-"默认情况下，它会写入 `dead-letter-topic-$topic-name` 主题。在我们的演示中，主题是 `dead-letter-topic-"
-"movies` 。但也可以通过设置 `dead-letter-queue.topic` 属性来配置主题。"
+"But you can also configure the topic by setting the `dead-letter-queue.topic` attribute."
+msgstr "默认情况下，它会写入 `dead-letter-topic-$topic-name` 主题。在我们的演示中，主题是 `dead-letter-topic-movies` 。但也可以通过设置 `dead-letter-queue.topic` 属性来配置主题。"
 
 #. type: Plain text
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
-msgid ""
-"Depending on your Kafka configuration, you may have to create the topic "
-"beforehand and configure the replication factor."
+msgid "Depending on your Kafka configuration, you may have to create the topic beforehand and configure the replication factor."
 msgstr "根据你的Kafka配置，你可能需要事先创建主题并配置复制因子。"
 
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
 msgid ""
 "Let's try it!\n"
-"The https://gist.github.com/cescoffier/23ca7b2bcc8c49cee3db29b3f2b59e4a#file-"
-"kafkadeadlettertopic-java[KafkaDeadLetterTopic.java] file extends our "
-"previous application.\n"
-"It uses the dead-letter-topic failure strategy and contains a component "
-"reading the dead-letter topic (`dead-letter-topic-movies`)."
-msgstr ""
-"让我们试试看！ link:https://gist.github.com/cescoffier/"
-"23ca7b2bcc8c49cee3db29b3f2b59e4a#file-kafkadeadlettertopic-"
-"java[KafkaDeadLetterTopic.java] 文件扩展了我们之前的应用程序。它使用死信主题失败策略，并包含一个读取死信主题的组件 ( "
-"`dead-letter-topic-movies` )。"
+"The https://gist.github.com/cescoffier/23ca7b2bcc8c49cee3db29b3f2b59e4a#file-kafkadeadlettertopic-java[KafkaDeadLetterTopic.java] file extends our previous application.\n"
+"It uses the dead-letter-topic failure strategy and contains a component reading the dead-letter topic (`dead-letter-topic-movies`)."
+msgstr "让我们试试看！ link:https://gist.github.com/cescoffier/23ca7b2bcc8c49cee3db29b3f2b59e4a#file-kafkadeadlettertopic-java[KafkaDeadLetterTopic.java] 文件扩展了我们之前的应用程序。它使用死信主题失败策略，并包含一个读取死信主题的组件 ( `dead-letter-topic-movies` )。"
 
 #. type: Plain text
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
@@ -380,8 +276,7 @@ msgstr "你可以用以下方式运行该应用程序。"
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
 msgid ""
-"If you check the log, you will see the two expected exceptions and that all "
-"the titles are processed.\n"
+"If you check the log, you will see the two expected exceptions and that all the titles are processed.\n"
 "You will also notice:"
 msgstr "如果查看日志，就会发现两个预期的例外情况，而且所有标题都已处理。您还会注意到"
 
@@ -394,9 +289,7 @@ msgstr "这个日志是由读取死信主题的组件写的。"
 #. type: Plain text
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
-msgid ""
-"When reading messages from the dead-letter topic, you can retrieve the "
-"failure reason by reading the `dead-letter-reason` header."
+msgid "When reading messages from the dead-letter topic, you can retrieve the failure reason by reading the `dead-letter-reason` header."
 msgstr "当从死信主题中读取消息时，你可以通过读取 `dead-letter-reason` header来检索失败原因。"
 
 #. type: Title ==
@@ -426,15 +319,12 @@ msgstr "`ignore` 即使出现故障，也会继续处理。"
 #. type: Plain text
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
-msgid ""
-"`dead-letter-queue` sends failing messages to another Kafka topic for "
-"further investigation."
+msgid "`dead-letter-queue` sends failing messages to another Kafka topic for further investigation."
 msgstr "`dead-letter-queue` 会将失败的报文发送到另一个 Kafka 主题进行进一步调查。"
 
 #: _posts/2020-10-20-kafka-failure-strategy.adoc
 #, fuzzy
 msgid ""
-"Next time, we will talk about the commit strategies because failures are "
-"inevitable, but successful processing happens sometimes!\n"
+"Next time, we will talk about the commit strategies because failures are inevitable, but successful processing happens sometimes!\n"
 "Stay tuned!"
 msgstr "下一次，我们将讨论承诺策略，因为失败在所难免，但成功处理时有发生！敬请期待！"
