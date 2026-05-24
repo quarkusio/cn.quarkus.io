@@ -7,509 +7,683 @@ msgstr ""
 "X-Generator: jekyll-l10n\n"
 
 #. type: YAML Front Matter: title
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Introducing Quarkus Agent MCP: teaching AI agents to speak Quarkus"
-msgstr ""
+msgstr "介绍 Quarkus 代理 MCP：教人工智能代理说 Quarkus 语"
 
 #. type: YAML Front Matter: synopsis
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Quarkus Agent MCP is a standalone MCP server that lets AI coding agents create, manage, and work effectively with Quarkus applications. Extension authors can ship coding skills that agents pick up automatically."
-msgstr ""
+msgstr "Quarkus Agent MCP 是一个独立的 MCP 服务器，可让人工智能编码代理创建、管理并有效地使用 Quarkus 应用程序。扩展作者可以向代理发送编码技能，代理会自动学习这些技能。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "AI coding agents like Claude Code, GitHub Copilot, Cursor, Windsurf, and JetBrains AI are already capable of generating code, fixing bugs, and refactoring entire modules.\n"
 "But they become much more effective when they have context about the framework you are using: that Quarkus dev mode hot-reloads on the next request rather than on file save, that Panache entities need `@Transactional` for writes, that REST clients should be injected via CDI rather than instantiated manually."
-msgstr ""
+msgstr "Claude Code、GitHub Copilot、Cursor、Windsurf 和 JetBrains AI 等人工智能编码代理已经能够生成代码、修复错误和重构整个模块。但是，当它们掌握了你正在使用的框架的上下文时，它们就会变得更加有效：Quarkus 开发模式会在下一次请求时热加载，而不是在保存文件时；Panache 实体需要 `@Transactional` 来写入；REST 客户端应该通过 CDI 注入，而不是手动实例化。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "https://github.com/quarkusio/quarkus-agent-mcp[Quarkus Agent MCP] gives agents exactly that context.\n"
 "It is a standalone https://modelcontextprotocol.io[MCP (Model Context Protocol)] server that lets any compatible AI agent create, manage, and work effectively with Quarkus applications by providing Quarkus-specific tools, documentation, and extension-level coding patterns."
-msgstr ""
+msgstr "link:https://github.com/quarkusio/quarkus-agent-mcp[Quarkus Agent MCP] 为代理提供的正是这种上下文。它是一个独立的 link:https://modelcontextprotocol.io[MCP（模型上下文协议）] 服务器，通过提供 Quarkus 专用工具、文档和扩展级编码模式，让任何兼容的人工智能代理都能创建、管理 Quarkus 应用程序，并与之有效协作。"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "What is MCP?"
-msgstr ""
+msgstr "什么是 MCP？"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "The https://modelcontextprotocol.io[Model Context Protocol] is an open standard that lets AI agents discover and use tools exposed by external servers.\n"
 "Instead of hard-coding integrations for every framework, an agent connects to MCP servers that provide domain-specific capabilities.\n"
 "The agent discovers available tools at runtime and calls them as needed."
-msgstr ""
+msgstr "link:https://modelcontextprotocol.io[模型上下文协议] 是一项开放标准，可让人工智能代理发现并使用外部服务器提供的工具。代理无需为每个框架硬编码集成，而是连接到提供特定领域功能的 MCP 服务器。代理可在运行时发现可用工具，并在需要时调用它们。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "It's a plugin system for AI agents: connect to a server and the agent gains new capabilities."
-msgstr ""
+msgstr "它是人工智能代理的插件系统：连接到服务器，代理就能获得新的能力。"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Why a standalone server?"
-msgstr ""
+msgstr "为什么是独立服务器？"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "Quarkus already has a built-in Dev MCP server that exposes tools from inside a running application: endpoints, configuration, dev services, testing, and more.\n"
 "So why add another server?"
-msgstr ""
+msgstr "Quarkus 已经内置了 Dev MCP 服务器，可以从运行中的应用程序内部公开工具：端点、配置、开发服务、测试等。那么，为什么还要添加另一个服务器呢？"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "The answer is *lifecycle*.\n"
 "The built-in Dev MCP server lives inside the Quarkus process.\n"
 "When the app crashes (a compilation error, a missing bean, a bad migration), that MCP server dies with it.\n"
 "The agent loses its connection and cannot inspect what went wrong."
-msgstr ""
+msgstr "答案就是 *生命周期* 。内置的 Dev MCP 服务器存在于 Quarkus 进程中。当应用程序崩溃时（编译错误、Bean 丢失、迁移失败），MCP 服务器也会随之死亡。代理将失去连接，无法检查出错的原因。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "Quarkus Agent MCP runs as a separate process.\n"
 "It wraps `quarkus dev` as a child process and stays alive when the application crashes.\n"
 "The agent can read the logs, get structured exception details, fix the code, and watch the app recover on its own."
-msgstr ""
+msgstr "Quarkus Agent MCP 作为独立进程运行。它将 `quarkus dev` 包装为子进程，并在应用程序崩溃时保持存活。代理可以读取日志，获取结构化异常详细信息，修复代码，并观察应用程序自行恢复。"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Getting started"
-msgstr ""
+msgstr "开始"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "Install via https://www.jbang.dev[JBang] with a single command.\n"
 "For Claude Code:"
-msgstr ""
+msgstr "只需一条命令即可通过 link:https://www.jbang.dev[JBang] 安装。用于克劳德代码："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Or as a Claude Code plugin:"
-msgstr ""
+msgstr "或作为克劳德代码插件："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "The README covers configuration for VS Code, Cursor, Windsurf, JetBrains, and other MCP-compatible tools."
-msgstr ""
+msgstr "README 包括 VS Code、Cursor、Windsurf、JetBrains 和其他 MCP 兼容工具的配置。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Once installed, you can verify it works by asking your agent:"
-msgstr ""
+msgstr "安装完成后，您可以通过询问代理来验证它是否能正常工作："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Search the Quarkus docs for how to create a REST endpoint"
-msgstr ""
+msgstr "搜索 Quarkus 文档，了解如何创建 REST 端点"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "The agent will use the `quarkus_searchDocs` tool and return documentation results."
-msgstr ""
+msgstr "代理将使用 `quarkus_searchDocs` 工具并返回文档结果。"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "What the agent can do"
-msgstr ""
+msgstr "代理可以做什么"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Quarkus Agent MCP exposes tools organized into five areas."
-msgstr ""
+msgstr "Quarkus Agent MCP 提供的工具分为五个方面。"
 
 #. type: Title ==
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Create applications"
-msgstr ""
+msgstr "创建应用程序"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "The `quarkus_create` tool scaffolds a new Quarkus project from natural language.\n"
 "Ask your agent to _\"create a Quarkus REST API with PostgreSQL and Panache\"_ and it will pick the right extensions, create the project, start it in dev mode, and generate a `AGENTS.md` — a convention file that AI agents read for project-specific instructions."
-msgstr ""
+msgstr "`Quarkus_create` 工具通过自然语言构建了一个新的 Quarkus 项目。让你的代理 _\"使用 PostgreSQL 和 Panache 创建一个 Quarkus REST API\"_ ，它就会选择正确的扩展、创建项目、以开发模式启动项目，并生成一个 `AGENTS.md` 文件--一个人工智能代理可以阅读以获取项目特定说明的约定文件。"
 
 #. type: Title ==
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Learn before coding: extension skills"
-msgstr ""
+msgstr "先学习后编码：扩展技能"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "Before writing a single line of code, the agent calls `quarkus_skills` to load coding patterns for the application's extensions.\n"
 "These skills contain the kind of knowledge that usually lives in a senior developer's head: which annotations to use, how to write tests, what the common pitfalls are, and troubleshooting guidance."
-msgstr ""
+msgstr "在编写一行代码之前，代理会调用 `quarkus_skills` 来加载应用程序扩展的编码模式。这些技能包含了通常存在于资深开发人员头脑中的知识：使用哪些注释、如何编写测试、常见陷阱是什么，以及故障排除指导。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "For example, the Hibernate Validator skill teaches the agent that constraint violations on REST endpoint parameters automatically return HTTP 400, that `@Valid` is required for cascading validation on nested objects, and that method validation only works on CDI-managed beans."
-msgstr ""
+msgstr "例如，Hibernate Validator 技能会告诉代理，REST 端点参数上的约束违规会自动返回 HTTP 400， `@Valid` 是对嵌套对象进行级联验证的必要条件，而方法验证只适用于 CDI 管理的 Bean。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "Without skills, the agent might still produce working code, especially with larger models, but the results become less predictable.\n"
 "Skills level the playing field: even smaller, cheaper models produce correct idiomatic Quarkus code when they have the right patterns to follow."
-msgstr ""
+msgstr "如果没有技能，代理仍有可能生成可用的代码，尤其是对于较大的模型，但结果的可预测性会降低。有了技能，竞争就变得公平了：即使是更小、更便宜的模型，只要有正确的模式可循，也能生成正确的成语 Quarkus 代码。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "More on how skills work, and how you can write your own, later in this post."
-msgstr ""
+msgstr "本帖稍后将详细介绍技能的工作原理，以及如何编写自己的技能。"
 
 #. type: Title ==
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Search documentation"
-msgstr ""
+msgstr "搜索文件"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "The `quarkus_searchDocs` tool performs semantic search over the full Quarkus documentation.\n"
 "On first use, a Docker/Podman container with pre-indexed documentation starts automatically."
-msgstr ""
+msgstr "`quarkus_searchDocs` 工具可对完整的 Quarkus 文档进行语义搜索。首次使用时，带有预索引文档的 Docker/Podman 容器会自动启动。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "The search implementation (currently using BGE embeddings and pgvector) is still being iterated on and may change in future versions.\n"
 "The documentation version matches the project's Quarkus version, so the agent never gives advice based on a different release."
-msgstr ""
+msgstr "搜索实现（目前使用 BGE embeddings 和 pgvector）仍在迭代中，在未来版本中可能会有所改变。文档版本与项目的 Quarkus 版本一致，因此代理不会根据不同的版本提供建议。"
 
 #. type: Title ==
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Manage the application lifecycle"
-msgstr ""
+msgstr "管理应用程序生命周期"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "The agent can start, stop, and restart the application.\n"
 "It can check the application status, read logs, and list all managed instances.\n"
 "When the app crashes, the agent uses the Dev MCP proxy to call `devui-exceptions_getLastException`, which returns the exception class, message, stack trace, and exact source location.\n"
 "It then fixes the code and lets hot reload do the rest."
-msgstr ""
+msgstr "代理可以启动、停止和重启应用程序。它可以检查应用程序状态、读取日志并列出所有托管实例。当应用程序崩溃时，代理会使用 Dev MCP 代理调用 `devuii-exceptions_getLastException` ，返回异常类、消息、堆栈跟踪和准确的源位置。然后，它会修复代码，并让热重载完成其余工作。"
 
 #. type: Title ==
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Proxy to Dev MCP tools"
-msgstr ""
+msgstr "代理开发 MCP 工具"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "Once the application is running, the agent can discover and call any tool exposed by the built-in Dev MCP server.\n"
 "This includes running tests, listing endpoints, inspecting dev services, changing configuration, and managing extensions, all through a single proxy layer.\n"
 "The tool list is dynamic: when you add or remove extensions, the agent re-discovers the available tools automatically."
-msgstr ""
+msgstr "一旦应用程序开始运行，代理就能发现并调用内置 Dev MCP 服务器提供的任何工具。这包括通过单个代理层运行测试、列出端点、检查开发服务、更改配置和管理扩展。工具列表是动态的：添加或删除扩展时，代理会自动重新发现可用工具。"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "The development workflow"
-msgstr ""
+msgstr "开发工作流程"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Here is what an agent-driven development session looks like in practice:"
-msgstr ""
+msgstr "以下是代理驱动开发环节的实际效果："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "*For a new project:*"
-msgstr ""
+msgstr "*新项目：*"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "`quarkus_create`: scaffold the project, auto-start dev mode"
-msgstr ""
+msgstr "`quarkus_create` ：搭建项目脚手架，自动启动开发模式"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "`quarkus_skills`: learn extension patterns before writing code"
-msgstr ""
+msgstr "`quarkus_skills` ：在编写代码前学习扩展模式"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "`quarkus_searchDocs`: look up APIs and configuration"
-msgstr ""
+msgstr "`quarkus_searchDocs` : 查找应用程序接口和配置"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Write code and tests"
-msgstr ""
+msgstr "编写代码和测试"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Run tests via `quarkus_callTool`"
-msgstr ""
+msgstr "通过 `quarkus_callTool` 运行测试"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "If the app crashes, read the exception, fix, and iterate"
-msgstr ""
+msgstr "如果应用程序崩溃，则读取异常、修复并迭代"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "*For an existing project:*"
-msgstr ""
+msgstr "*对于现有项目：*"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "`quarkus_update`: check if the Quarkus version is current"
-msgstr ""
+msgstr "`quarkus_update` : 检查 Quarkus 版本是否为最新版本"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "`quarkus_start`: start dev mode"
-msgstr ""
+msgstr "`quarkus_start` ： 启动开发模式"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "`quarkus_skills`: learn extension patterns"
-msgstr ""
+msgstr "`quarkus_skills` : 学习扩展模式"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Develop, test, iterate"
-msgstr ""
+msgstr "开发、测试、迭代"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "The key insight is *skills before code*.\n"
 "The agent does not guess at patterns.\n"
 "It reads the skills, then writes code that follows them."
-msgstr ""
+msgstr "关键在于 *先有技能，后有代码* 。代理不会猜测模式。它先读取技能，然后根据技能编写代码。"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "For extension authors: shipping skills with your extension"
-msgstr ""
+msgstr "针对扩展作者：使用扩展运送技能"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "If you maintain a Quarkus extension, whether in core, Quarkiverse, or your own organization, you can ship a skill file that teaches every AI agent how to use your extension correctly.\n"
 "The agent picks up the skill automatically when a developer adds your extension to their project."
-msgstr ""
+msgstr "如果你在核心、Quarkiverse 或你自己的组织中维护一个 Quarkus 扩展，你可以发送一个技能文件，教每个人工智能代理如何正确使用你的扩展。当开发者将你的扩展添加到他们的项目中时，代理就会自动学习该技能。"
 
 #. type: Title ==
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "What goes into an extension skill?"
-msgstr ""
+msgstr "扩展技能包含哪些内容？"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "A skill file is a Markdown document at `META-INF/quarkus-skill.md` in your extension's *deployment* JAR.\n"
 "It should contain the practical knowledge an agent needs to write correct code with your extension:"
-msgstr ""
+msgstr "技能文件是扩展 *部署* JAR 中 `META-INF/quarkus-skill.md` 中的 Markdown 文档。它应包含代理使用你的扩展编写正确代码所需的实用知识："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "**Coding patterns**: the right way to use your APIs, with brief examples"
-msgstr ""
+msgstr "*编码模式* ：使用应用程序接口的正确方法，附简要示例"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "**Testing guidelines**: how to write tests that work with your extension"
-msgstr ""
+msgstr "*测试指南* ：如何编写与扩展协同工作的测试"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "**Common pitfalls**: mistakes the agent should avoid"
-msgstr ""
+msgstr "*常见陷阱* ：代理人应避免的错误"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "**Configuration**: key properties and their effect"
-msgstr ""
+msgstr "*配置* ：关键属性及其影响"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Here is an abbreviated example from the Hibernate Validator extension:"
-msgstr ""
+msgstr "下面是一个来自 Hibernate 验证器扩展的简略示例："
 
 #. type: Title ==
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Where to put it"
-msgstr ""
+msgstr "放在哪里"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Place the file at:"
-msgstr ""
+msgstr "将文件放在"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "That is it.\n"
 "When the extension is published and a developer adds it to their project, `quarkus_skills` will discover the skill from the deployment JAR in the local Maven repository, compose it with metadata from `quarkus-extension.yaml`, and include any Dev MCP tools your extension exposes."
-msgstr ""
+msgstr "就是这样。当扩展发布后，开发人员将其添加到自己的项目中时， `quarkus_skills` 将从本地 Maven 资源库中的部署 JAR 中发现该技能，并将其与 `quarkus-extension.yaml` 中的元数据组合在一起，同时包含扩展所暴露的任何 Dev MCP 工具。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Per-extension skill discovery from deployment JARs requires Quarkus 3.35.0+. For older versions, the agent will rely on `quarkus_searchDocs` for guidance instead."
-msgstr ""
+msgstr "从部署 JAR 中发现每个扩展的技能需要 Quarkus 3.35.0 以上版本。对于旧版本，代理将依赖于 `quarkus_searchDocs` 的指导。"
 
 #. type: Title ==
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Writing effective skills"
-msgstr ""
+msgstr "有效的写作技巧"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Keep these principles in mind:"
-msgstr ""
+msgstr "请牢记这些原则："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "*Be prescriptive, not descriptive.*\n"
 "The agent does not need a tour of your API surface; it can read Javadoc for that.\n"
 "It needs to know the _right_ pattern to use and the mistakes to avoid.\n"
 "Instead of \"the `@Transactional` annotation can be used on methods,\" write \"always annotate write operations with `@Transactional`.\""
-msgstr ""
+msgstr "*要规范，不要描述。* 代理不需要参观你的 API 表面；它可以阅读 Javadoc 来实现这一点。它需要知道 _正确的_ 使用模式和应避免的错误。与其写\" `@Transactional` 注解可用于方法\"，不如写 \"始终使用 `@Transactional` 对写操作进行注解\"。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "*Focus on what surprises people.*\n"
 "If every new developer hits the same three issues with your extension, those belong in the skill.\n"
 "If something works exactly as expected, you probably do not need to mention it."
-msgstr ""
+msgstr "*关注让人惊喜的地方。* 如果每个新开发者都会在扩展中遇到同样的三个问题，那么这些问题就属于技能范畴。如果某些东西完全按照预期运行，你可能不需要提及。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "*Keep it concise.*\n"
 "A skill that is 50 lines of actionable guidance beats 500 lines of documentation rehash.\n"
 "The agent will search the full documentation via `quarkus_searchDocs` when it needs details.\n"
 "The skill is for the patterns and pitfalls that documentation alone does not prevent."
-msgstr ""
+msgstr "*简明扼要。* 50 行可操作指导的技能胜过 500 行的重复文档。代理需要详细资料时，会通过 `quarkus_searchDocs 搜索` 全部文档。该技能针对的是单靠文档无法避免的模式和陷阱。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "*Include testing patterns.*\n"
 "How should tests be written for your extension?\n"
 "What test infrastructure does it provide?\n"
 "This is one of the areas where agents struggle most without guidance."
-msgstr ""
+msgstr "*包括测试模式。* 应如何编写扩展测试？它提供了哪些测试基础设施？这是代理商在没有指导的情况下最头疼的问题之一。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "*Test with a cheap model.*\n"
 "A large frontier model might produce correct code even without your skill.\n"
 "The real test is whether a smaller, cheaper model (like Haiku or GPT-4o mini) gets it right when following your skill.\n"
 "If it does, your skill is doing its job."
-msgstr ""
+msgstr "*使用廉价模型进行测试。* 即使没有你的技能，大型前沿模型也可能生成正确的代码。真正的测试是一个更小、更便宜的模型（如 Haiku 或 GPT-4o mini）在使用你的技能时是否能生成正确的代码。如果正确，说明你的技能发挥了作用。"
 
 #. type: Title ==
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "The three-layer composition system"
-msgstr ""
+msgstr "三层构成系统"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "Different teams have different conventions, and sometimes the built-in skill does not cover a specific use case.\n"
 "To handle this, skills use a three-layer composition system:"
-msgstr ""
+msgstr "不同的团队有不同的惯例，有时内置技能并不涵盖特定的用例。为了解决这个问题，技能使用了三层构成系统："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "**Extension skill**: ships with the extension itself (`META-INF/quarkus-skill.md`)"
-msgstr ""
+msgstr "*扩展技能* ：与扩展本身一起发布 `（META-INF/quarkus-skill.md）`"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "**User-level skill**: stored at `~/.quarkus/skills/<extension-name>/SKILL.md`, applies to all projects for that developer"
-msgstr ""
+msgstr "*用户级技能* ：存储在 `~/.quarkus/skills/< 扩展名>/SKILL.md` ，适用于该开发者的所有项目。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "**Project-level skill**: stored at `.agent/skills/<extension-name>/SKILL.md`, applies to one project only"
-msgstr ""
+msgstr "*项目级技能* ：存储在 `.agent/skills/<extension-name>/SKILL.md` 中，仅适用于一个项目"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Layers 1 and 2 support *enhance* (append additional guidance) and *override* (fully replace) composition, controlled by the `mode` field in the SKILL.md frontmatter:"
-msgstr ""
+msgstr "第 1 层和第 2 层支持 *增强* （附加额外指导）和 *覆盖* （完全替换）成分，由 SKILL.md 前置文件中的 `模式` 字段控制："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "Project-level skills (layer 3) are standalone files read as-is, with no composition against the base layers.\n"
 "This means any agent can read them directly from the filesystem without needing to understand the composition chain.\n"
 "Use the `quarkus_saveSkill` tool to materialize a fully composed skill into `.agent/skills/`, then edit the file directly to customize it for your project."
-msgstr ""
+msgstr "项目级技能（第 3 层）是按原样读取的独立文件，与基础层没有任何关联。这意味着任何代理都可以直接从文件系统中读取它们，而无需了解组成链。使用 `quarkus_saveSkill` 工具可将一个完全组成的技能实体化为 `.agent/skills/` ，然后直接编辑该文件，为你的项目进行定制。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "For global customizations that apply across all projects, the agent can use `quarkus_updateSkill` to write to `~/.quarkus/skills/`."
-msgstr ""
+msgstr "对于适用于所有项目的全局定制，代理可以使用 `quarkus_updateSkill` 写入 `~/.quarkus/skills/。`"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Privacy"
-msgstr ""
+msgstr "隐私权"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "Quarkus Agent MCP runs entirely on your machine.\n"
 "It does not collect telemetry or send data to any third party.\n"
 "Outbound network requests are limited to downloading extension JARs from Maven Central, pulling pre-indexed documentation containers, and checking for Quarkus version updates. Everything is cached locally after the first use."
-msgstr ""
+msgstr "Quarkus Agent MCP 完全在你的机器上运行。它不会收集遥测数据，也不会向任何第三方发送数据。对外网络请求仅限于从 Maven Central 下载扩展 JAR、提取预索引文档容器以及检查 Quarkus 版本更新。首次使用后，所有请求都会缓存在本地。"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "What is next"
-msgstr ""
+msgstr "下一步是什么"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid ""
 "Quarkus Agent MCP is part of the https://github.com/quarkusio/quarkus/discussions/53093[DevStar working group] and we are actively developing new capabilities.\n"
 "If you are an extension author interested in shipping skills, or a developer with feedback on the workflow, we want to hear from you."
-msgstr ""
+msgstr "Quarkus Agent MCP 是 link:https://github.com/quarkusio/quarkus/discussions/53093[DevStar 工作组] 的一部分，我们正在积极开发新功能。如果您是对发布技能感兴趣的扩展作者，或者是对工作流程有反馈意见的开发人员，我们希望收到您的来信。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Try it out:"
-msgstr ""
+msgstr "试试吧"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "This example uses Claude Code, but any coding agent that supports the MCP protocol (Cursor, Windsurf, GitHub Copilot, JetBrains AI, and others) can connect to Quarkus Agent MCP. See the https://github.com/quarkusio/quarkus-agent-mcp[README] for configuration instructions for each agent."
-msgstr ""
+msgstr "本示例使用了克劳德代码，但任何支持 MCP 协议的编码代理（Cursor、Windsurf、GitHub Copilot、JetBrains AI 等）都可以连接到 Quarkus Agent MCP。有关每个代理的配置说明，请参阅 link:https://github.com/quarkusio/quarkus-agent-mcp[README] 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "Then ask your agent to build something."
-msgstr ""
+msgstr "那就请你的代理人来建造一些东西。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "https://github.com/quarkusio/quarkus-agent-mcp[GitHub repository]"
-msgstr ""
+msgstr "link:https://github.com/quarkusio/quarkus-agent-mcp[GitHub 存储库]"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "https://github.com/quarkusio/quarkus-agent-mcp/issues[Report issues]"
-msgstr ""
+msgstr "link:https://github.com/quarkusio/quarkus-agent-mcp/issues[报告问题]"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-07-introducing-agent-mcp.adoc
+#, fuzzy
 msgid "https://github.com/quarkusio/quarkus/discussions/53093[DevStar working group discussion]"
-msgstr ""
+msgstr "link:https://github.com/quarkusio/quarkus/discussions/53093[DevStar 工作组讨论]"

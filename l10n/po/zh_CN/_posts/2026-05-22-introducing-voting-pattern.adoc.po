@@ -7,241 +7,337 @@ msgstr ""
 "X-Generator: jekyll-l10n\n"
 
 #. type: YAML Front Matter: title
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "Parallel voting and adaptive model selection: smarter agentic AI on a budget"
-msgstr ""
+msgstr "并行投票和自适应模型选择：预算内更智能的代理人工智能"
 
 #. type: YAML Front Matter: synopsis
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "Learn how LangChain4j 1.15.0`s voting pattern uses parallel multi-critic evaluation and runtime model switching to build smarter, cost-efficient agentic systems with Quarkus."
-msgstr ""
+msgstr "了解 LangChain4j 1.15.0 的投票模式如何使用并行多评判器评估和运行时模型切换来使用 Quarkus 构建更智能、更具成本效益的代理系统。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "In a https://quarkus.io/blog/agentic-ai-patterns/[previous article] we discussed why no single agentic pattern can cover all use cases, and introduced a generic `Planner` abstraction that allows users to define their own orchestration strategies and combine them with the ones provided by LangChain4j out-of-the-box. For instance, there we demonstrated how a goal-oriented pattern could be extended with a reflection loop to iteratively refine a piece of generated content."
-msgstr ""
+msgstr "在 link:https://quarkus.io/blog/agentic-ai-patterns/[上] 一篇 link:https://quarkus.io/blog/agentic-ai-patterns/[文章] 中，我们讨论了为什么没有一种单一的代理模式可以涵盖所有用例，并介绍了一种通用的 `Planner` 抽象，它允许用户定义自己的协调策略，并将其与 LangChain4j 开箱即用的策略相结合。例如，我们演示了如何通过反射循环扩展面向目标的模式，以迭代完善生成的内容。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "Among other things, that example highlighted that having an agent evaluate its own output and loop until it reaches a quality threshold is a powerful technique. But this fundamental pattern also comes with a limitation: relying on a single evaluator can make the system fragile or less reliable. To overcome this issue, what if, instead of one judge, we could assemble a panel?"
-msgstr ""
+msgstr "除其他外，这个例子还强调，让代理评估自己的输出并循环直到达到质量阈值，是一种强大的技术。但这一基本模式也有其局限性：依赖单个评估者会使系统变得脆弱或不可靠。为了解决这个问题，我们是否可以组建一个小组来代替一个评委呢？"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "The voting pattern"
-msgstr ""
+msgstr "投票模式"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "The https://docs.langchain4j.dev/tutorials/agents/#voting-agentic-pattern[voting pattern], introduced in LangChain4j 1.15.0, addresses this by dispatching the same input to multiple evaluator agents in parallel, collecting their individual assessments, and then aggregating them into a single consolidated result. This is not a simple majority vote on a boolean decision: the aggregation strategy is fully customizable, allowing the system to combine structured results in whatever way makes sense for the task at hand."
-msgstr ""
+msgstr "LangChain4j 1.15.0 中引入的 link:https://docs.langchain4j.dev/tutorials/agents/#voting-agentic-pattern[投票模式] 可以解决这个问题，它可以将相同的输入并行分派给多个评估代理，收集它们各自的评估结果，然后将它们汇总为一个综合结果。这并不是简单的布尔决算多数表决：聚合策略是完全可定制的，允许系统以任何对手头任务有意义的方式组合结构化结果。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "To put this into practice, let's build a story evaluation system, also using the `quarkus-langchain4j-agentic` extension version 1.10.0. The pipeline works as follows: a creative writer generates a short story on a given topic, and then a panel of three critics, each specialized in a different aspect, evaluates the story in parallel. Their scores and suggestions are aggregated into a single critique, which is fed back to an editor agent that rewrites the story. This review loop repeats until the aggregated score crosses a quality threshold or a maximum number of iterations is reached. We will implement this example leveraging the fully declarative style made available by the quarkus-langchain4j extension."
-msgstr ""
+msgstr "为了将其付诸实践，让我们同样使用 `quarkus-langchain4j-agentic` 扩展 1.10.0 版来构建一个故事评估系统。该系统的工作流程如下：创作者就给定的主题创作一个短篇小说，然后由三位评论家组成的小组对该故事进行并行评估。他们的分数和建议汇总成一份评论，再反馈给编辑代理，由编辑代理对故事进行改写。这个评论循环不断重复，直到综合得分超过质量阈值或达到最大迭代次数。我们将利用 quarkus-langchain4j 扩展提供的完全声明式风格来实现这个示例。"
 
 #. type: Title ==
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "Defining the agents"
-msgstr ""
+msgstr "确定代理人"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "First, let's define the basic data types and the individual agents. Each agent is a simple Java interface with a single method having an `@Agent` annotation describing its role and an `@UserMessage` containing its prompt. In particular the `@Agent` annotation's `outputKey` attribute specifies the key under which the agent's output will be stored in the `AgenticScope`, making it available for other agents to use."
-msgstr ""
+msgstr "首先，我们来定义基本数据类型和各个代理。每个代理都是一个简单的 Java 接口，其单个方法都有一个 `@Agent` 注解（描述其角色）和一个 `@UserMessage` （包含其提示）。特别是 `@Agent` 注解的 `outputKey` 属性指定了代理的输出将存储在 `AgenticScope` 中的键值，以便其他代理使用。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "All these agents return a common `CritiqueResult` record to represent scores and suggestions, while the final output of the system is a `ScoredStory` that combines the story with its aggregated critique."
-msgstr ""
+msgstr "所有这些代理都会返回一个共同的 `CritiqueResult` 记录，以表示分数和建议，而系统的最终输出则是一个 `ScoredStory` ，它将故事与其汇总的评论结合在一起。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "The creative writer generates a short story from a topic:"
-msgstr ""
+msgstr "创意作家根据主题创作短篇小说："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "The three critics evaluate different aspects of the story: style, originality, and engagement. They all follow the same structure, differing only in their prompt:"
-msgstr ""
+msgstr "三位评论家对故事的不同方面进行了评价：风格、原创性和参与性。他们都遵循相同的结构，只是在提示上有所不同："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "The `OriginalityCritic` and `EngagementCritic` are analogous, each focusing on their respective dimension and producing their own `CritiqueResult` with `outputKey` values of `\"originalityCritique\"` and `\"engagementCritique\"`."
-msgstr ""
+msgstr "`原创性批判` 和 `参与性批判` 类似，各自关注各自的维度，并产生各自的 `CritiqueResult` ，其 `输出关键` 值分别为 `\"originalityCritique \"` 和 `\"engagementCritique\"` 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "Finally, the story editor rewrites the story based on the aggregated critique:"
-msgstr ""
+msgstr "最后，故事编辑会根据汇总的评论意见改写故事："
 
 #. type: Title ==
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "Implementing the VotingPlanner"
-msgstr ""
+msgstr "实施 VotingPlanner"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "The key component that makes this pattern work is the `VotingPlanner`. It implements the `Planner` interface and orchestrates the parallel execution of all critic subagents, then aggregates their results using a configurable `VotingStrategy`."
-msgstr ""
+msgstr "使这一模式发挥作用的关键组件是 `VotingPlanner` 。它实现了 `Planner` 接口，协调所有批评子代理的并行执行，然后使用可配置的 `VotingStrategy` 聚合它们的结果。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "The planner's logic is straightforward: on the first action it dispatches all subagents at once in parallel by returning `call(subagents)`. As each critic completes, `nextAction` is called: it collects the result and returns `noOp()` until all critics have finished, at which point it aggregates the votes and returns `done(result)`."
-msgstr ""
+msgstr "规划器的逻辑简单明了：在第一个行动时，规划器通过返回 `call(subagents)` 并行地一次性派发所有子代理。每个批判者完成一个 `动作` 后， `nextAction` 就会被调用：它会收集结果并返回 `noOp()` ，直到所有批判者都完成为止，这时它会汇总投票结果并返回 `done(result)` 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "The `VotingStrategy` is a functional interface that takes the collection of all critic outputs and reduces them to a single result:"
-msgstr ""
+msgstr "`VotingStrategy` 是一个功能接口，它收集了所有批评者的输出，并将其还原为一个结果："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "For our story evaluation use case, the aggregation strategy averages the scores and concatenates the suggestions from all critics:"
-msgstr ""
+msgstr "对于我们的故事评估用例，聚合策略是对分数进行平均，并将所有评论家的建议合并在一起："
 
 #. type: Title ==
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "Composing the agentic system"
-msgstr ""
+msgstr "代理系统的构成"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "The LangChain4j API makes it easy to wire these agents into a coherent agentic system. First of all, we can configure the three critic agents as subagents of the voting agentic pattern, using the `critiquesAggregator` defined above to combine their results:"
-msgstr ""
+msgstr "LangChain4j API 可以轻松地将这些代理连接成一个连贯的代理系统。首先，我们可以将三个批评者代理配置为投票代理模式的子代理，使用上文定义的 `批评者聚合器（critiquesAggregator）` 来合并它们的结果："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "Then we can put the resulting `votingCritics` planner together with the story editor into a review loop that iteratively refines the story until it reaches a certain quality threshold:"
-msgstr ""
+msgstr "然后，我们就可以将生成的 `votingCritics` 计划程序与故事编辑器一起放入一个审查循环中，对故事进行迭代改进，直到达到一定的质量阈值："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "Finally, we can chain the `CreativeWriter` agent, that generates the initial story, with the review loop in a sequence, and define an output method to assemble the final `ScoredStory` result:"
-msgstr ""
+msgstr "最后，我们可以将生成初始故事的 `CreativeWriter` 代理与审查循环按顺序串联起来，并定义一个输出方法来组合最终的 `ScoredStory` 结果："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "The resulting system composes three different agentic patterns, a sequence, a loop, and a custom voting planner, into a single pipeline that can be injected at any point in your Quarkus application."
-msgstr ""
+msgstr "由此产生的系统将三种不同的代理模式（序列、循环和自定义投票计划器）组合成一个单一的管道，可在 Quarkus 应用程序的任何位置注入。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "and then can be called with one line:"
-msgstr ""
+msgstr "然后只需一行即可调用："
 
 #. type: Title ==
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "Visualizing the system"
-msgstr ""
+msgstr "系统可视化"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "Making the `StoryEvaluator` interface extend the `MonitoredAgent` interface allows us to visualize both the system topology and the execution history of a sample run, using the new LangChain4j view available in the Quarkus Dev-UI. The LangChain4j monitoring dashboard automatically detects the nested structure of the agentic system, showing how the different patterns are composed together."
-msgstr ""
+msgstr "通过让 `StoryEvaluator` 接口扩展 `MonitoredAgent` 接口，我们可以使用 Quarkus Dev-UI 中提供的新 LangChain4j 视图可视化系统拓扑结构和样本运行的执行历史。LangChain4j 监控仪表板可自动检测代理系统的嵌套结构，显示不同模式是如何组合在一起的。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "Giving a look at the topology of this agentic system clearly shows how the three patterns are nested: at the top, a sequential planner first invokes the `CreativeWriter` and then enters the review loop. Inside the loop, the `VotingPlanner` fans out to the three critics in parallel, collects and aggregates their results, and then the `StoryEditor` rewrites the story. The loop continues until the average score reaches 8.5 or five iterations have been completed."
-msgstr ""
+msgstr "看一下这个代理系统的拓扑结构，就能清楚地看到这三种模式是如何嵌套的：在顶层，顺序规划器首先调用 `创意写作` 器，然后进入评论循环。在这个循环中， `VotingPlanner` 并行向三位评论家发散，收集并汇总他们的结果，然后 `StoryEditor` 重写故事。这个循环一直持续到平均得分达到 8.5 分或完成五次迭代为止。"
 
 #. type: Block title
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "The topology of the voting-based story evaluation system"
-msgstr ""
+msgstr "基于投票的故事评价系统的拓扑结构"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "We can try to put this agentic system at work, for instance asking it to generare a story on the topic of \"a lonely robot finding friendship\" and see how it iteratively refines the story based on the critics' feedback, finally producing a result like this:"
-msgstr ""
+msgstr "我们可以试着让这个代理系统工作，比如让它生成一个以 \"孤独机器人寻找友谊 \"为主题的故事，然后看看它是如何根据评论家的反馈不断改进这个故事的，最后产生这样一个结果："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "The execution history of this sample run illustrates the sequence of agents invoked to fulfill the request."
-msgstr ""
+msgstr "该示例运行的执行历史说明了为满足请求而调用代理的顺序。"
 
 #. type: Block title
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "A sample execution of the voting-based story evaluation system"
-msgstr ""
+msgstr "基于投票的故事评价系统执行样本"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "The parallel execution of the three critics is clearly visible in the Gantt-like chart: in each iteration of the review loop they run concurrently, and only after all three have completed does the editor receive the aggregated critique and produce an improved version of the story."
-msgstr ""
+msgstr "从甘特图中可以清楚地看到三位评论者的并行执行：在评论循环的每次迭代中，他们同时运行，只有在三位评论者都完成评论后，编辑才会收到汇总的评论，并制作出改进版的故事。"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "Dynamic chat model selection"
-msgstr ""
+msgstr "动态聊天模式选择"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "The system described so far uses the same chat model for every agent. This is a reasonable default, but it doesn't have to be the only option. In a real-world scenario, you might want to use a cheaper, faster model for routine work and switch to a more capable, and more expensive, one only when it really matters: for instance, when the story is already good enough that the final polish requires a higher level of linguistic sophistication."
-msgstr ""
+msgstr "目前描述的系统为每个代理使用相同的聊天模式。这是一个合理的默认设置，但不一定是唯一的选择。在现实世界中，您可能希望在日常工作中使用更便宜、更快速的模式，只有在真正重要的时候才切换到能力更强、更昂贵的模式：例如，当故事已经足够好，最后的润色需要更高水平的语言复杂性时。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "The LangChain4j agentic framework supports this scenario through https://docs.langchain4j.dev/tutorials/agents/#dynamic-chat-model-selection[dynamic chat model selection]. The idea is simple: instead of binding an agent to a single fixed model at build time, it is possible to provide the agent with a function of the `AgenticScope` that dynamically selects the model to use for each invocation. This allows the agent to adapt its behavior based on the current state of the system."
-msgstr ""
+msgstr "LangChain4j 代理框架通过 link:https://docs.langchain4j.dev/tutorials/agents/#dynamic-chat-model-selection[动态聊天模型选择] 支持这种情况。这个想法很简单：与其在构建时将代理绑定到一个固定的模型上，还不如为代理提供一个 `AgenticScope` 函数，为每次调用动态选择要使用的模型。这样，代理就能根据系统的当前状态调整自己的行为。"
 
 #. type: Title ==
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "Applying it to the story editor"
-msgstr ""
+msgstr "将其应用于故事编辑器"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "In our story evaluation pipeline, the natural candidate for this optimization is the `StoryEditor`. During the first iterations, when the story is still rough and the critique score is low, a fast and inexpensive model like `gpt-4o-mini`, defined as `baseModel` in the code, is more than adequate. But once the critics start giving higher scores, indicating that the story is close to its final form, the editor can switch to a more powerful model like `gpt-5.1`, identified as `enhancedModel`, for the finishing touches. These two models can be defined in the Quarkus `application.properties` file as follows:"
-msgstr ""
+msgstr "在我们的故事评估流水线中， `故事编辑器（StoryEditor` ）自然是进行这种优化的候选对象。在最初的迭代过程中，当故事还很粗糙、评论得分较低时，使用像 `gpt-4o-mini` 这样快速而廉价的模型（在代码中定义为 `baseModel` ）就足够了。但一旦评论者开始给出较高的分数，说明故事已经接近最终形态，编辑就可以切换到功能更强大的模型，如 `gpt-5.1` ，即 `增强` 模型，进行最后的润色。这两个模型可以在 Quarkus `application.properties` 文件中定义如下："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "and then we can implement the following `DynamicModelSelector` to read the current critique from the `AgenticScope` and select the appropriate model based on the current score:"
-msgstr ""
+msgstr "然后我们就可以实现下面的 `动态模型选择器（` `DynamicModelSelector` ），从 `AgenticScope` 中读取当前评论，并根据当前评分选择合适的模型："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "Finally, it is possible to rewrite the `StoryEditor` agent adding a method annotated with `@ChatModelSupplier` that uses this selector to choose at runtime, at each invocation of the agent, the model that best fits the current state of the story:"
-msgstr ""
+msgstr "最后，我们还可以重写 `StoryEditor` 代理，添加一个注释为 `@ChatModelSupplier` 的方法，在每次调用代理时，使用该选择器在运行时选择最适合故事当前状态的模型："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "In this configuration, the editor starts with `baseModel` for all iterations where the critique score is 7.8 or below. Once the critics' average score exceeds 7.8, indicating that the story has reached a level of quality where finer editorial judgment matters, the selector switches to `enhancedModel` for the subsequent iterations."
-msgstr ""
+msgstr "在此配置中，编辑器会在评论分数为 7.8 或以下的所有迭代中使用 `baseModel` 。一旦评论者的平均得分超过 7.8 分，表明故事的质量已经达到了需要更精细编辑判断的水平，选择器就会在随后的迭代中切换到 `增强模型` 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "Looking back at the execution log, this transition is clearly visible. During the first two iterations, the story editor is invoked with `gpt-4o-mini`. In the third iteration, after the critics' average score crosses the 7.8 threshold, the editor transparently switches to `gpt-5.1` for the remaining refinements."
-msgstr ""
+msgstr "回看执行日志，这一转变清晰可见。在前两次迭代中，故事编辑器调用的是 `gpt-4o-mini` 。在第三次迭代中，当评论家的平均得分超过 7.8 分的临界值后，编辑器就会自动切换到 `gpt-5.1` 来进行剩余的完善工作。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "This approach provides a practical way to balance cost and quality. The cheaper model handles the bulk of the iterative refinement, and the more expensive one is brought in only for the final passes where its additional capabilities can make a real difference. The decision is driven entirely by the runtime state of the agentic system, with no manual intervention required."
-msgstr ""
+msgstr "这种方法提供了一种平衡成本和质量的实用方法。成本较低的模型负责处理大部分迭代改进工作，而成本较高的模型只在最后阶段才使用，因为它的附加功能可以发挥真正的作用。决策完全由代理系统的运行状态驱动，无需人工干预。"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "Conclusion"
-msgstr ""
+msgstr "结论"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "The voting pattern adds a new dimension to agentic orchestration by introducing collective evaluation. Instead of relying on a single critic that might be biased or inconsistent, multiple specialized agents assess the same content from different perspectives, and their judgments are aggregated into a more robust and balanced evaluation."
-msgstr ""
+msgstr "投票模式通过引入集体评估，为代理协调增添了一个新的维度。多个专业代理不依赖可能存在偏见或不一致的单一评论者，而是从不同角度对同一内容进行评估，并将他们的判断汇总为更可靠、更平衡的评价。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "Combined with conditional chat model selection, this creates a system that is not only more reliable in its quality assessments but also cost-efficient in its use of language models. The framework dynamically allocates more powerful, and more expensive, models only when the quality of the content justifies the investment, while routine iterations run on cheaper alternatives."
-msgstr ""
+msgstr "结合条件聊天模型选择，这样创建的系统不仅在质量评估方面更可靠，而且在使用语言模型方面也更经济高效。只有在内容质量证明投资合理时，该框架才会动态分配功能更强大、价格更昂贵的模型，而日常迭代则使用价格更低廉的替代模型。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "Both these new features are implemented as composable building blocks within the LangChain4j agentic framework. The `VotingPlanner` is a `Planner` like any other, meaning it can be nested inside sequences, loops, or any other pattern. The conditional model selection works transparently at the agent level, requiring no changes to the surrounding orchestration logic. Together, they demonstrate how small, focused additions to the framework can enable sophisticated behaviors without increasing complexity for the user. The complete source code for this example is available in the https://github.com/mariofusco/voting-agentic-pattern[here]."
-msgstr ""
+msgstr "这两项新功能都是在 LangChain4j 代理框架内以可组合构件的形式实现的。 `VotingPlanner` 与其他 `计划器` 一样，意味着它可以嵌套在序列、循环或任何其他模式中。条件模型选择在代理级透明运行，无需更改周围的协调逻辑。它们共同展示了如何通过对框架进行小而集中的添加来实现复杂的行为，而不会增加用户的复杂性。本示例的完整源代码可在 link:https://github.com/mariofusco/voting-agentic-pattern[此处] 获取。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-05-22-introducing-voting-pattern.adoc
+#, fuzzy
 msgid "In the near future we plan to further enrich the set of available https://docs.langchain4j.dev/tutorials/agents/#custom-agentic-patterns[custom agentic patterns] in order to cover even more use cases out-of-the-box, and to provide more examples of how to combine them together in complex agentic systems. Stay tuned!"
-msgstr ""
+msgstr "在不久的将来，我们计划进一步丰富可用的 link:https://docs.langchain4j.dev/tutorials/agents/#custom-agentic-patterns[自定义代理模式] 集，以涵盖更多开箱即用的用例，并提供更多示例，说明如何将它们结合到复杂的代理系统中。敬请期待！"
