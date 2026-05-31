@@ -7,16 +7,20 @@ msgstr ""
 "X-Generator: jekyll-l10n\n"
 
 #. type: YAML Front Matter: title
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Generating and Using CycloneDX SBOMs"
-msgstr ""
+msgstr "生成和使用 CycloneDX SBOM"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid ""
 "An SBOM (Software Bill of Materials) is a manifest that describes what a given software distribution consists of in terms of components. In addition to that, it may include a lot more information such as relationships between those components, licenses, provenance, etc.\n"
 "SBOMs are typically used by software security and software supply chain risk management tools to perform vulnerability and compliance related analysis."
-msgstr ""
+msgstr "SBOM（软件物料清单）是一种清单，它以组件的形式描述了特定软件发行版的组成。除此之外，它还可能包含更多信息，如这些组件之间的关系、许可证、出处等。软件安全和软件供应链风险管理工具通常使用 SBOM 来执行漏洞和合规性相关分析。"
 
 #. type: Plain text
 #: _guides/cyclonedx.adoc
@@ -24,39 +28,53 @@ msgid "This guide covers:"
 msgstr "本指南包括："
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "<<dependency-sboms,Dependency SBOMs>> — generating SBOMs that manifest application dependencies before a build"
-msgstr ""
+msgstr "xref:dependency-sboms[依赖性 SBOM] - 在构建之前生成 SBOM，以显示应用程序的依赖性"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "<<embedded-dependency-sboms,Embedded Dependency SBOMs>> — embedding dependency SBOMs into applications as classpath resources"
-msgstr ""
+msgstr "xref:embedded-dependency-sboms[嵌入式依赖 SBOM] - 将依赖 SBOM 作为类路径资源嵌入到应用程序中"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "<<sbom-endpoint,SBOM REST Endpoint>> — exposing embedded dependency SBOMs via a REST endpoint"
-msgstr ""
+msgstr "xref:sbom-endpoint[SBOM REST 端点] --通过 REST 端点公开嵌入式依赖 SBOM"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "<<distribution-sboms,Distribution SBOMs>> — generating SBOMs that manifest the final application distribution after a build"
-msgstr ""
+msgstr "xref:distribution-sboms[分发 SBOM] --生成 SBOM，以显示构建后的最终应用程序分发情况"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "<<vulnerability-scanning,Vulnerability scanning>> — using generated SBOMs with tools such as Grype to identify known vulnerabilities"
-msgstr ""
+msgstr "xref:vulnerability-scanning[漏洞扫描] --利用生成的 SBOM 和 Grype 等工具识别已知漏洞"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "<<extension-sbom-contributions,Extension SBOM contributions>> — contributing additional components to the application SBOM from Quarkus extensions"
-msgstr ""
+msgstr "xref:extension-sbom-contributions[扩展 SBOM 贡献] --从 Quarkus 扩展中为应用程序 SBOM 贡献额外组件"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "All SBOM generation in this guide follows the https://cyclonedx.org/[CycloneDX] specification."
-msgstr ""
+msgstr "本指南中所有 SBOM 的生成都遵循 link:https://cyclonedx.org/[CycloneDX] 规范。"
 
 #. type: Title =
 #: _guides/cyclonedx.adoc
@@ -65,24 +83,32 @@ msgid "Why Quarkus-specific tooling?"
 msgstr "为什么要使用 Quarkus 专用工具？"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "While Quarkus integrates with build tools such as https://maven.apache.org/[Maven] and https://gradle.org/[Gradle], it could itself be categorized as a build tool with its own component and dependency model, build steps, and build outcomes. One of the essential component types of a Quarkus application is a Quarkus extension, which consists of runtime and build time artifacts, and their dependencies."
-msgstr ""
+msgstr "尽管 Quarkus 与 link:https://maven.apache.org/[Maven] 和 link:https://gradle.org/[Gradle] 等构建工具集成，但它本身也可以归类为一种构建工具，拥有自己的组件和依赖模型、构建步骤和构建结果。Quarkus 应用程序的基本组件类型之一是 Quarkus 扩展，它由运行时和构建时工件及其依赖关系组成。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "To properly resolve Quarkus extension and other application dependencies, Quarkus uses its own dependency resolver, which is implemented on top of the dependency resolver provided by the underlying build tool: Maven or Gradle."
-msgstr ""
+msgstr "为了正确解析 Quarkus 扩展和其他应用程序的依赖关系，Quarkus 使用了自己的依赖关系解析器，该解析器是在底层构建工具提供的依赖关系解析器之上实现的：Maven 或 Gradle。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "As a consequence, in the case of Maven, for example, the results of `dependency:tree` will not include all the dependencies Quarkus will use to build an application. A similar issue will affect other dependency analysis tools that assume a project adheres to the standard Maven dependency model: they will not be able to capture the effective Quarkus application dependency graph. Unfortunately, that includes the implementation of the https://github.com/CycloneDX/cyclonedx-maven-plugin[CycloneDX Maven plugin]."
-msgstr ""
+msgstr "因此，以 Maven 为例， `dependency:tree` 的结果将不会包含 Quarkus 用于构建应用程序的所有依赖关系。类似的问题也会影响其他假定项目遵循标准 Maven 依赖关系模型的依赖关系分析工具：它们将无法捕捉到有效的 Quarkus 应用程序依赖关系图。不幸的是，这包括 link:https://github.com/CycloneDX/cyclonedx-maven-plugin[CycloneDX Maven 插件] 的实现。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "In addition to manifesting dependencies (the input to a build), there is also an outcome of the build that is the final distribution of an application. Users of an application may request an SBOM manifesting not only the dependencies (the input to a build) but also the final distribution (the outcome of the build) before they agree to deploy the application. Quarkus allows application developers to choose various packaging types for their applications, some of which are Quarkus-specific. Providing certain Quarkus-specific details about components included in a distribution may help better evaluate the impact of potential security-related issues."
-msgstr ""
+msgstr "除了依赖项（联编的输入）之外，联编的结果也是应用程序的最终发布。应用程序的用户在同意部署应用程序之前，不仅可以要求 SBOM 体现依赖关系（构建的输入），还可以要求 SBOM 体现最终发布（构建的结果）。Quarkus 允许应用程序开发人员为其应用程序选择各种打包类型，其中一些是 Quarkus 特有的。提供发行版中包含的组件的某些特定 Quarkus 细节，有助于更好地评估潜在安全相关问题的影响。"
 
 #. type: Title =
 #: _guides/cyclonedx.adoc
@@ -91,9 +117,11 @@ msgid "Dependency SBOMs"
 msgstr "依赖 SBOM"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Dependency SBOMs manifest the dependencies of an application before it is built. In other words, they describe the input to a build. These SBOMs can be used to perform vulnerability and compliance related analysis before building applications."
-msgstr ""
+msgstr "依赖关系 SBOM 在应用程序构建之前就会显示其依赖关系。换句话说，它们描述了构建的输入。这些 SBOM 可用于在构建应用程序前执行与漏洞和合规性相关的分析。"
 
 #. type: Title ==
 #: _guides/cyclonedx.adoc
@@ -102,19 +130,25 @@ msgid "Maven Dependency SBOMs"
 msgstr "Maven 依赖 SBOM"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "For Quarkus Maven projects, dependency SBOMs can be generated with the `quarkus:dependency-sbom` goal. The output of the goal will be saved in a `target/<artifactId>-<version>-dependency-cyclonedx.json` file (which can be changed by setting the `outputFile` goal parameter or the `quarkus.dependency.sbom.output-file` property). The complete Quarkus build and runtime dependency graphs will be recorded in the https://cyclonedx.org/[CycloneDX] `JSON` format."
-msgstr ""
+msgstr "对于 Quarkus Maven 项目，可使用 `quarkus:dependency-sbom` 目标生成依赖关系 SBOM。目标的输出将保存在 `target/<artifactId>-<version>-dependency-cyclonedx.json` 文件中（可通过设置 `outputFile` 目标参数或 `quarkus.dependency.sbom.output-file` 属性进行更改）。完整的 Quarkus 构建和运行时依赖关系图将以 link:https://cyclonedx.org/[CycloneDX] `JSON` 格式记录。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "`XML` format can be requested by setting the `format` goal parameter (or `quarkus.dependency.sbom.format` property) to `xml`."
-msgstr ""
+msgstr "可通过将 `格式` 目标参数（或 `quarkus.dependency.sbom.format` 属性）设置为 `xml` 来请求 `XML` 格式。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Each component in the generated SBOM will include the `quarkus:component:scope` property indicating whether the component is used at runtime or only at development/build time."
-msgstr ""
+msgstr "生成的 SBOM 中的每个组件都将包含 `quarkus:component:scope` 属性，表明该组件是在运行时使用，还是仅在开发/构建时使用。"
 
 #. type: Plain text
 #: _guides/cyclonedx.adoc
@@ -123,19 +157,25 @@ msgid "The complete set of parameters and their description can be obtained by e
 msgstr "全套参数及其说明可通过执行 `mvn help:describe -Dcmd=quarkus:dependency-sbom -Ddetail` 获取。"
 
 #. type: Title ===
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Bootstrap Modes"
-msgstr ""
+msgstr "引导模式"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "By default, `quarkus:dependency-sbom` captures the dependencies of a production build. Quarkus supports three application bootstrap modes: normal (production), test, and dev. In all three modes, an application may have different dependency graphs."
-msgstr ""
+msgstr "默认情况下， `quarkus:dependency-sbom 会` 捕获生产构建的依赖关系。Quarkus 支持三种应用程序引导模式：正常（生产）、测试和开发。在这三种模式下，应用程序可能有不同的依赖关系图。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "The `mode` parameter can be used to indicate which dependency graph should be recorded. If the `mode` is set to `test` or `dev`, the target file name will become `target/<artifactId>-<version>-<mode>-dependency-cyclonedx.json`."
-msgstr ""
+msgstr "`模式` 参数可用于指示应记录哪个依赖关系图。如果 `模式` 设置为 `test` 或 `dev` ，目标文件名将变为 `target/<artifactId>-<version>-<mode>-dependency-cyclonedx.json` 。"
 
 #. type: Title ==
 #: _guides/cyclonedx.adoc
@@ -150,9 +190,11 @@ msgid "Unlike Maven, the https://github.com/CycloneDX/cyclonedx-gradle-plugin[Gr
 msgstr "与 Maven 不同， link:https://github.com/CycloneDX/cyclonedx-gradle-plugin[Gradle CycloneDX 插件实现] 可在 Quarkus 项目中用于生成依赖关系 SBOM，因为该实现会显示由已配置插件注册的依赖关系配置。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Please refer to the https://github.com/CycloneDX/cyclonedx-gradle-plugin[Gradle CycloneDX plugin] documentation for its configuration options. Here is a list of Quarkus dependency configurations that would be relevant for manifesting:"
-msgstr ""
+msgstr "有关配置选项，请参阅 link:https://github.com/CycloneDX/cyclonedx-gradle-plugin[Gradle CycloneDX 插件] 文档。以下是与清单相关的 Quarkus 依赖关系配置列表："
 
 #. type: Plain text
 #: _guides/cyclonedx.adoc
@@ -191,94 +233,128 @@ msgid "`quarkusDevRuntimeClasspathConfigurationDeployment` - Quarkus application
 msgstr "`quarkusDevRuntimeClasspathConfigurationDeployment` - Quarkus 应用程序开发模式运行时和构建时的依赖关系。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "For example, to generate an SBOM for the production runtime dependencies only:"
-msgstr ""
+msgstr "例如，只为生产运行时依赖项生成 SBOM："
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Given that the plugin is not aware of how Quarkus uses these dependencies, it will not be able to set the `quarkus:component:scope` property for components. On the other hand, the requested configuration name can be used to indicate which scope to target."
-msgstr ""
+msgstr "由于插件不知道 Quarkus 如何使用这些依赖关系，因此无法为组件设置 `quarkus:component:scope` 属性。另一方面，请求的配置名称可以用来指示要针对哪个作用域。"
 
 #. type: Title =
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Embedded Dependency SBOMs"
-msgstr ""
+msgstr "嵌入式依赖 SBOM"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "In addition to generating dependency SBOMs as separate files, Quarkus can embed a dependency SBOM directly into the built application as a classpath resource. This allows the application to carry its own bill of materials at runtime, which can be useful for runtime auditing or to expose via a REST endpoint (see <<sbom-endpoint>>)."
-msgstr ""
+msgstr "除了以单独文件的形式生成依赖 SBOM 外，Quarkus 还可以将依赖 SBOM 作为类路径资源直接嵌入到构建的应用程序中。这样，应用程序就可以在运行时携带自己的材料清单，这对于运行时审计或通过 REST 端点进行公开非常有用（参见 <<sbom-endpoint>> ）。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "To embed a dependency SBOM in the application:"
-msgstr ""
+msgstr "在应用程序中嵌入依赖 SBOM："
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "The SBOM will be embedded as a classpath resource at `META-INF/sbom/dependency.cdx.json` by default. The resource name can be customized:"
-msgstr ""
+msgstr "默认情况下，SBOM 将作为 classpath 资源嵌入 `META-INF/sbom/dependency.cdx.json` 。资源名称可以自定义："
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "The format is determined by the resource name extension: `.json` for JSON, `.xml` for XML."
-msgstr ""
+msgstr "格式由资源名称扩展名决定： `.json` 表示 JSON，. `xml` 表示 XML。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "By default, the embedded SBOM is compressed with GZIP to reduce the application size. The classpath resource name will have a `.gz` extension appended (e.g., `META-INF/sbom/dependency.cdx.json.gz`). If the SBOM is exposed through the <<sbom-endpoint,REST endpoint>>, it will be served with `Content-Encoding: gzip`, so HTTP clients will decompress it transparently. Compression can be disabled with:"
-msgstr ""
+msgstr "默认情况下，嵌入式 SBOM 会使用 GZIP 压缩，以减小应用程序的大小。类路径资源名称将附加 `.gz` 扩展名（例如， `META-INF/sbom/dependency.cdx.json.gz` ）。如果 SBOM 是通过 xref:sbom-endpoint[REST 端点] 公开的，它将以 `Content-Encoding: gzip` 方式提供，因此 HTTP 客户端会以透明方式解压缩。可以使用"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Embedded dependency SBOMs are also available when running in dev mode (`quarkus dev`)."
-msgstr ""
+msgstr "在开发模式 `（quarkus dev` ）下运行时，也可使用嵌入式依赖 SBOM。"
 
 #. type: Title =
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "SBOM REST Endpoint"
-msgstr ""
+msgstr "SBOM REST 端点"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "The embedded dependency SBOM can be exposed through a REST endpoint, making it accessible to external tools and scanners at runtime. To enable the endpoint:"
-msgstr ""
+msgstr "嵌入式依赖 SBOM 可通过 REST 端点公开，使外部工具和扫描仪可在运行时访问它。要启用端点，请"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid ""
 "The embedded SBOM will be served at `/.well-known/sbom` with the `application/vnd.cyclonedx+json` content type (or `application/vnd.cyclonedx+xml` for XML SBOMs).\n"
 "Since the embedded SBOM is compressed by default, the response will include `Content-Encoding: gzip`, which HTTP clients handle transparently.\n"
 "The path can be customized using the `quarkus.cyclonedx.endpoint.path` property."
-msgstr ""
+msgstr "嵌入式 SBOM 将以 `application/vnd.cyclonedx+json` 内容类型（或 `application/vnd.cyclonedx+xml` 用于 XML SBOM）在 `/.well-known/sbom` 服务。由于嵌入式 SBOM 默认是压缩的，因此响应将包括 `Content-Encoding: gzip` ，HTTP 客户端会以透明方式处理。可以使用 `quarkus.cyclonedx.endpoint.path` 属性自定义路径。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Enabling the endpoint will automatically trigger SBOM embedding, even if `quarkus.cyclonedx.embedded.enabled` is not explicitly set to `true`."
-msgstr ""
+msgstr "即使 `quarkus.cyclonedx.embedded.enabled` 未明确设为 `true` ，启用端点也会自动触发 SBOM 嵌入。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "The `quarkus.cyclonedx.endpoint.*` configuration options are only available when `quarkus-vertx-http` is present as a direct or transitive dependency of the application, which is the case for most web applications (e.g., those using `quarkus-rest`)."
-msgstr ""
+msgstr "`quarkus.cyclonedx.endpoint.*` 配置选项只有在 `quarkus-vertx-http` 作为应用程序的直接或传递依赖关系存在时才可用，大多数网络应用程序（如使用 `quarkus-rest` 的应用程序）都是这种情况。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid ""
 "Exposing an SBOM endpoint allows anyone with access to it to perform composition analysis of the application, potentially revealing dependency versions with known vulnerabilities.\n"
 "The endpoint should be restricted to approved consumers only by applying appropriate authentication and authorization policies."
-msgstr ""
+msgstr "公开 SBOM 端点可让任何有访问权限的人对应用程序进行成分分析，从而可能揭示存在已知漏洞的依赖版本。应采用适当的身份验证和授权策略，将端点限制为只有经过批准的用户才能访问。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "For an example of scanning a running application through the endpoint, see <<scanning-via-endpoint>>."
-msgstr ""
+msgstr "有关通过端点扫描运行中应用程序的示例，请参阅 <<scanning-via-endpoint>> 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "The SBOM endpoint is also available when running in dev mode (`quarkus dev`), which can be useful for scanning during development."
-msgstr ""
+msgstr "在开发模式 `（quarkus dev` ）下运行时，SBOM 端点也可用，这对开发过程中的扫描非常有用。"
 
 #. type: Title ==
 #: _guides/cyclonedx.adoc
@@ -287,16 +363,20 @@ msgid "Management Interface"
 msgstr "管理界面"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "When the xref:management-interface-reference.adoc[management interface] is enabled, the SBOM endpoint is automatically served on the management port (default `9000`) instead of the main application port:"
-msgstr ""
+msgstr "启用 xref:management-interface-reference.adoc[管理接口] 后，SBOM 端点将自动通过管理端口（默认为 `9000` ）而不是主应用程序端口提供服务："
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid ""
 "The SBOM will then be accessible at `http://localhost:9000/.well-known/sbom`.\n"
 "Authentication and authorization policies can be applied to the management interface to restrict access — see xref:management-interface-reference.adoc[Management Interface] for details."
-msgstr ""
+msgstr "然后就可以通过 http://localhost:9000/.well-known/sbom 访问 SBOM `link:http://localhost:9000/.well-known/sbom[。]` 验证和授权策略可应用于管理界面，以限制访问权限--详情请参阅 xref:management-interface-reference.adoc[管理界面] 。"
 
 #. type: Title =
 #: _guides/cyclonedx.adoc
@@ -305,34 +385,46 @@ msgid "Distribution SBOMs"
 msgstr "分配 SBOM"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Distribution SBOMs manifest the outcomes of Quarkus builds — the final application distributions. Unlike dependency SBOMs, which describe the input to a build, distribution SBOMs describe what was actually produced."
-msgstr ""
+msgstr "分布式 SBOM 展示了 Quarkus 构建的结果--最终的应用程序分布。依赖关系 SBOM 描述的是构建的输入内容，而分布 SBOM 描述的是实际生成的内容。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "During the build and package assembly process, Quarkus captures details about the produced distribution and allows an SBOM generator to record that information in an SBOM format."
-msgstr ""
+msgstr "在构建和软件包组装过程中，Quarkus 可捕捉所生成的发行版的详细信息，并允许 SBOM 生成器以 SBOM 格式记录这些信息。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "To generate CycloneDX distribution SBOMs, add `io.quarkus:quarkus-cyclonedx` as a project dependency. It will generate SBOMs every time an application is built. SBOMs will be saved in the project's build output directory under `<executable-name>-cyclonedx.<format>` name, where"
-msgstr ""
+msgstr "要生成 CycloneDX 发行版 SBOM，请将 `io.quarkus:quarkus-cyclonedx` 添加为项目依赖关系。它将在每次构建应用程序时生成 SBOM。SBOM 将保存在项目的构建输出目录中的 `<executable-name>-cyclonedx.<format>` 名称下，其中"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "`<executable-name>` is the base file name (without the extension) of the executable that launches the application;"
-msgstr ""
+msgstr "`<executable-name>` 是启动应用程序的可执行文件的基本文件名（不含扩展名）；"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "`<format>` is either `json` (the default) or `xml`, which can be configured using the `quarkus.cyclonedx.format` property. If both formats are desired, `quarkus.cyclonedx.format` can be set to `all`."
-msgstr ""
+msgstr "`<format>` 是 `json` （默认）或 `xml` ，可使用 `quarkus.cyclonedx.format` 属性进行配置。如果两种格式都需要，可将 `quarkus.cyclonedx.format` 设置为 `全部` 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "By default, generated JSON SBOMs are not pretty-printed. To enable pretty-printing:"
-msgstr ""
+msgstr "默认情况下，生成的 JSON SBOM 不进行漂亮打印。要启用漂亮打印，请"
 
 #. type: Title ==
 #: _guides/cyclonedx.adoc
@@ -341,24 +433,32 @@ msgid "Pedigree"
 msgstr "血统"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Pedigree is a way to provide information that patches or modifications have been applied to a component."
-msgstr ""
+msgstr "Pedigree 是一种提供组件已打补丁或已做修改信息的方法。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "An application developer may instruct Quarkus to remove some resources or classes from specific dependencies to exclude them from the application classpath. Manipulating the original content of an artifact will change its digest, which may get highlighted as suspicious by the tools comparing original component digest to the one found in the distribution."
-msgstr ""
+msgstr "应用程序开发人员可能会指示 Quarkus 从特定的依赖关系中移除某些资源或类，以便将其从应用程序的类路径中排除。修改工件的原始内容会改变其摘要，而将原始组件摘要与发布中的摘要进行比较的工具可能会将其作为可疑内容突出显示。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "In such cases, when Quarkus generates an SBOM, it will add a pedigree note for a modified artifact documenting what content was removed from the artifact."
-msgstr ""
+msgstr "在这种情况下，Quarkus 在生成 SBOM 时，会为修改后的工件添加血统注释，记录从工件中删除了哪些内容。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "For example, if an application developer decided to remove certain classpath resources from a dependency, such as"
-msgstr ""
+msgstr "例如，如果应用程序开发人员决定从依赖关系中移除某些 classpath 资源，如"
 
 #. type: Plain text
 #: _guides/cyclonedx.adoc
@@ -391,9 +491,11 @@ msgid "Runtime Components"
 msgstr "运行时组件"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Every file in the resulting Fast JAR distribution will appear in the SBOM with the `quarkus:component:scope` property set to `runtime` and `evidence.occurrences.location` field pointing to the location of the component in the application distribution directory, for example:"
-msgstr ""
+msgstr "生成的 Fast JAR 分发中的每个文件都将出现在 SBOM 中，其 `quarkus:component:scope` 属性设置为 `运行时` ， `evidence.occurrences.` location 字段指向应用程序分发目录中的组件位置（例如）："
 
 #. type: Plain text
 #: _guides/cyclonedx.adoc
@@ -432,9 +534,11 @@ msgid "SBOMs for Uber JARs will use the Uber JAR Maven artifact as their main co
 msgstr "Uber JAR 的 SBOM 将使用 Uber JAR Maven 构件作为其主要组件。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Since an Uber JAR is published as a Maven artifact itself, SBOMs generated for Uber JARs will also be automatically published as Maven artifacts. This can be disabled by setting the `attachSboms` parameter of the `quarkus:build` goal to `false`:"
-msgstr ""
+msgstr "由于 Uber JAR 本身就是作为 Maven 构件发布的，因此为 Uber JAR 生成的 SBOM 也会自动作为 Maven 构件发布。可以通过将 `quarkus:build` goal 的 `attachSboms` 参数设置为 `false` 来禁用此功能："
 
 #. type: Plain text
 #: _guides/cyclonedx.adoc
@@ -467,24 +571,32 @@ msgid "Since native executables are not currently attached to projects as Maven 
 msgstr "由于本地可执行文件目前不会作为 Maven 构件附加到项目中，因此它们的 SBOM 也不会作为 Maven 构件附加到项目中。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "As in the case of an Uber JAR, runtime components in an SBOM generated for a native executable will not include `evidence.occurrences.location` since their corresponding code and resources are included in a single native executable file."
-msgstr ""
+msgstr "与 Uber JAR 的情况一样，为本地可执行文件生成的 SBOM 中的运行时组件不会包含 `evidence.occurrences.location` ，因为它们的相应代码和资源都包含在一个本地可执行文件中。"
 
 #. type: Title ===
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Embedded SBOM in native executables"
-msgstr ""
+msgstr "在本地可执行文件中嵌入 SBOM"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "When <<embedded-dependency-sboms,SBOM embedding>> is enabled, the SBOM is also embedded directly into the native executable as global symbols (`sbom` and `sbom_length`), following the https://www.graalvm.org/jdk25/security-guide/native-image/sbom/[GraalVM SBOM specification]. This allows tools such as `syft` to extract the SBOM from the binary:"
-msgstr ""
+msgstr "启用 xref:embedded-dependency-sboms[SBOM 嵌入] 后，SBOM 也会按照 link:https://www.graalvm.org/jdk25/security-guide/native-image/sbom/[GraalVM SBOM 规范] ，作为全局符号 `（sbom` 和 `sbom_length` ）直接嵌入到本地可执行文件中。这允许 `syft` 等工具从二进制文件中提取 SBOM："
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "The SBOM is always GZIP-compressed before being embedded as a global symbol, regardless of the `quarkus.cyclonedx.embedded.compress` setting. If the classpath resource is not already compressed, Quarkus will compress it at native image build time."
-msgstr ""
+msgstr "无论 `quarkus.cyclonedx.embedded.compress` 设置如何，在作为全局符号嵌入之前，SBOM 始终会进行 GZIP `压缩` 。如果 classpath 资源尚未压缩，Quarkus 将在构建本地映像时对其进行压缩。"
 
 #. type: Title ==
 #: _guides/cyclonedx.adoc
@@ -505,24 +617,32 @@ msgid "SBOMs generated for Mutable JAR distributions will also record locations 
 msgstr "为可变 JAR 发行版生成的 SBOM 还将记录组件的位置，这些组件将在使用 `evidence.occurrences.location` 但将其 `quarkus:component:scope` 属性设置为 `development` 的重新补充过程中使用。例如"
 
 #. type: Title =
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Vulnerability Scanning with SBOMs"
-msgstr ""
+msgstr "利用 SBOM 进行漏洞扫描"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "SBOMs can be fed into vulnerability scanners such as https://github.com/anchore/grype[Grype] to identify known vulnerabilities in application dependencies. This section demonstrates how to use Quarkus-generated SBOMs with Grype."
-msgstr ""
+msgstr "SBOM 可以输入到 link:https://github.com/anchore/grype[Grype] 等漏洞扫描程序中，以识别应用程序依赖关系中的已知漏洞。本节将演示如何将 Quarkus 生成的 SBOM 与 Grype 结合使用。"
 
 #. type: Title ==
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Sample Project Setup"
-msgstr ""
+msgstr "项目设置示例"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Create a sample project with a REST endpoint, CycloneDX SBOM generation, and `org.codehaus.plexus:plexus-utils:3.6.0` — a dependency with a known security vulnerability added here on purpose for demonstration:"
-msgstr ""
+msgstr "创建一个包含 REST 端点、CycloneDX SBOM 生成和 `org.codehaus.plexus:plexus-utils:3.6.0 的` 示例项目："
 
 #. type: Block title
 #: _guides/cyclonedx.adoc
@@ -541,79 +661,109 @@ msgid "Gradle"
 msgstr "Gradle"
 
 #. type: Title ==
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Scanning Distribution SBOMs"
-msgstr ""
+msgstr "扫描配送 SBOM"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Build the application:"
-msgstr ""
+msgstr "构建应用程序："
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Scan the generated distribution SBOM:"
-msgstr ""
+msgstr "扫描生成的分发 SBOM："
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Grype should report the known vulnerability in `plexus-utils:3.6.0`:"
-msgstr ""
+msgstr "Grype 应报告 `plexus-utils:3.6.0` 中的已知漏洞："
 
 #. type: Title ==
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Scanning via the SBOM Endpoint"
-msgstr ""
+msgstr "通过 SBOM 端点扫描"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "With the SBOM endpoint enabled, a running application can be scanned without access to the build output. This works regardless of the packaging type, including JARs and native executables."
-msgstr ""
+msgstr "启用 SBOM 端点后，可以在不访问构建输出的情况下扫描运行中的应用程序。无论打包类型（包括 JAR 和本地可执行文件）如何，都可以进行扫描。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Enable the endpoint by adding the following property to `src/main/resources/application.properties`:"
-msgstr ""
+msgstr "在 `src/main/resources/application.properties` 中添加以下属性，启用端点："
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "This can also be done from the command line:"
-msgstr ""
+msgstr "这也可以通过命令行完成："
 
 #. type: Block title
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Linux / macOS"
-msgstr ""
+msgstr "Linux / macOS"
 
 #. type: Block title
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Windows (PowerShell)"
-msgstr ""
+msgstr "Windows (PowerShell)"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Start the application:"
-msgstr ""
+msgstr "启动应用程序："
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "In another terminal, scan the running application:"
-msgstr ""
+msgstr "在另一个终端中，扫描正在运行的应用程序："
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "The output should be the same as when scanning the distribution SBOM:"
-msgstr ""
+msgstr "输出结果应与扫描分发 SBOM 时的结果相同："
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "This approach is useful for scanning applications that are already deployed, for example as part of a periodic audit or a CI/CD pipeline that verifies running instances."
-msgstr ""
+msgstr "这种方法适用于扫描已部署的应用程序，例如作为定期审核或验证运行实例的 CI/CD 管道的一部分。"
 
 #. type: Title =
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "SBOM Component Properties"
-msgstr ""
+msgstr "SBOM 组件属性"
 
 #. type: Table
 #: _guides/cyclonedx.adoc
@@ -668,58 +818,78 @@ msgid "Used in SBOMs with schema versions 1.4 or older. Starting from schema 1.5
 msgstr "在模式 1.4 或更早版本的 SBOM 中使用。从模式 1.5 开始， `evidence.occurrences.location` 。该属性仅在组件出现在分发版中时使用。其值是一个文件的相对路径，指向组件在分发中的位置，使用 `/` 作为路径元素分隔符。"
 
 #. type: Title =
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Extension SBOM Contributions"
-msgstr ""
+msgstr "扩展 SBOM 捐款"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid ""
 "By default, Quarkus generates SBOMs from the application's Maven dependency model and the packaging output.\n"
 "Extensions that manage additional software components — for example, npm packages or other non-Maven artifacts — can contribute those components to the application SBOM by producing `SbomContributionBuildItem` instances from their `@BuildStep` methods."
-msgstr ""
+msgstr "默认情况下，Quarkus 会根据应用程序的 Maven 依赖关系模型和打包输出生成 SBOM。管理其他软件组件（例如 npm 包或其他非 Maven 工件）的扩展可以通过其 `@BuildStep` 方法生成 `SbomContributionBuildItem` 实例，从而将这些组件贡献到应用程序 SBOM 中。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid ""
 "Extension contributions are merged with the core application contribution by the SBOM generator.\n"
 "Components marked as top-level will appear as direct dependencies of the main application component in the generated SBOM."
-msgstr ""
+msgstr "SBOM 生成器会将扩展组件与核心应用程序组件合并。在生成的 SBOM 中，标记为顶级的组件将作为主应用程序组件的直接依赖关系出现。"
 
 #. type: Title ==
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "API Overview"
-msgstr ""
+msgstr "应用程序接口概述"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Extension SBOM contributions are built from the following classes:"
-msgstr ""
+msgstr "扩展 SBOM 贡献由以下类别组成："
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "`io.quarkus.sbom.Purl` — identifies a software component using the https://github.com/package-url/purl-spec[Package URL] specification. Factory methods are provided for Maven, npm, and generic component types."
-msgstr ""
+msgstr "`io.quarkus.sbom.Purl` - 使用 link:https://github.com/package-url/purl-spec[软件包 URL] 规范识别软件组件。为 Maven、npm 和通用组件类型提供了工厂方法。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "`io.quarkus.sbom.ComponentDescriptor` — describes a software component with its PURL, scope, integrity hash, and other metadata."
-msgstr ""
+msgstr "`io.quarkus.sbom.ComponentDescriptor` - 用 PURL、范围、完整性哈希值和其他元数据描述软件组件。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "`io.quarkus.sbom.ComponentDependencies` — describes the dependency relationships of a component, referencing other components by their bom-ref."
-msgstr ""
+msgstr "`io.quarkus.sbom.ComponentDependencies` - 描述组件的依赖关系，通过其 bom-ref 引用其他组件。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "`io.quarkus.sbom.SbomContribution` — groups component descriptors and their dependency relationships into a single contribution."
-msgstr ""
+msgstr "`io.quarkus.sbom.SbomContribution` - 将组件描述符及其依赖关系归类为单一贡献。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "`io.quarkus.deployment.sbom.SbomContributionBuildItem` — a `MultiBuildItem` that carries an `SbomContribution` to the SBOM generator."
-msgstr ""
+msgstr "`io.quarkus.deployment.sbom.SbomContributionBuildItem` - 向 SBOM 生成器发送 `SbomContribution` 的 `多重构建项` 。"
 
 #. type: Title ==
 #: _guides/cyclonedx.adoc
@@ -727,9 +897,11 @@ msgid "Example"
 msgstr "例子"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "The following example shows a `@BuildStep` method that contributes npm packages to the application SBOM:"
-msgstr ""
+msgstr "下面的示例展示了一个 `@BuildStep` 方法，该方法可将 npm 软件包贡献给应用程序 SBOM："
 
 #. type: Title ==
 #: _guides/cyclonedx.adoc
@@ -738,31 +910,43 @@ msgid "Key Points"
 msgstr "要点"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Extensions must not designate a main component — only the core application contribution does that."
-msgstr ""
+msgstr "扩展程序不得指定主组件--只有核心应用程序才能这样做。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Components from any package ecosystem can be contributed using the appropriate `Purl` type (e.g., `Purl.npm(...)`, `Purl.maven(...)`, `Purl.generic(...)`, or `Purl.of(type, ...)` for other ecosystems)."
-msgstr ""
+msgstr "任何软件包生态系统的组件都可以使用相应的 `Purl` 类型（例如 `Purl.npm(...)` 、 `Purl.maven(...)` 、 `Purl.` `generic(` `.` ..)，或其他生态系统的 `Purl.of(type,..` .)）进行贡献。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Set `topLevel(true)` on components that are direct dependencies of the application (e.g., packages declared in `package.json`). Transitive dependencies should not be marked as top-level."
-msgstr ""
+msgstr "为应用程序的直接依赖组件（如 `package.json` 中声明的包）设置 `topLevel(true)` 。传递依赖关系不应标记为顶级。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "The `scope` field classifies components as `runtime` or `development` dependencies, which is recorded in the SBOM as the `quarkus:component:scope` property."
-msgstr ""
+msgstr "`作用域` 字段将组件分类为 `运行时` 依赖或 `开发` 依赖，并在 SBOM 中记录为 `quarkus:component:` `scope` 属性。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "The `integrity` field can carry an SRI-format hash (e.g., from lock files) for component verification."
-msgstr ""
+msgstr "`完整性` 字段可包含 SRI 格式的哈希值（例如来自锁文件），用于组件验证。"
 
 #. type: Plain text
+#. mt: deepl
 #: _guides/cyclonedx.adoc
+#, fuzzy
 msgid "Dependency relationships are optional. If you only need to list components without expressing their dependency graph, use `SbomContribution.ofComponents(...)`."
-msgstr ""
+msgstr "依赖关系是可选的。如果您只需要列出组件而不需要表达其依赖关系图，请使用 `SbomContribution.ofComponents(...)` 。"
