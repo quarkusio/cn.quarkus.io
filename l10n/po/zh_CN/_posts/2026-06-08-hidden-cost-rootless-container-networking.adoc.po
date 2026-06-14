@@ -7,476 +7,664 @@ msgstr ""
 "X-Generator: jekyll-l10n\n"
 
 #. type: YAML Front Matter: title
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Why isn't Quarkus 2x faster than Spring on my machine?"
-msgstr ""
+msgstr "为什么在我的机器上，Quarkus 没有比 Spring 快 2 倍？"
 
 #. type: YAML Front Matter: synopsis
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Our perf-lab shows Quarkus 2x faster than Spring, but a community member only sees 1.19x locally. The culprit: a userspace TCP proxy hidden inside rootless podman."
-msgstr ""
+msgstr "我们的性能实验室显示 Quarkus 比 Spring 快 2 倍，但一位社区成员在本地只看到 1.19 倍。罪魁祸首是隐藏在无根 podman 中的用户空间 TCP 代理。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "A community member ran our https://github.com/quarkusio/spring-quarkus-perf-comparison[Quarkus vs Spring CRUD benchmark] on their bare-metal Fedora workstation and asked:"
-msgstr ""
+msgstr "一位社区成员在他们的裸机 Fedora 工作站上运行了我们的 link:https://github.com/quarkusio/spring-quarkus-perf-comparison[Quarkus vs Spring CRUD 基准] ，并提出了一个问题："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "_Why do I see only 1.19x instead of 2x?_"
-msgstr ""
+msgstr "_为什么我只看到 1.19 倍而不是 2 倍？_"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "**Our perf-lab shows Quarkus at 2.08x Spring's throughput, but locally the gap nearly disappears.**"
-msgstr ""
+msgstr "*我们的性能实验室显示，Quarkus 的吞吐量是 Spring 的 2.08 倍，但在局部地区，差距几乎消失。*"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "This post walks through the investigation that found the culprit."
-msgstr ""
+msgstr "这篇文章将介绍找到罪魁祸首的调查过程。"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "The gap"
-msgstr ""
+msgstr "差距"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "The benchmark is a REST/CRUD application backed by PostgreSQL. The app runs on the host, PostgreSQL in a rootless podman container. Each HTTP request executes 2 SQL queries (confirmed via https://www.postgresql.org/docs/current/pgstatstatements.html[pg_stat_statements])."
-msgstr ""
+msgstr "该基准是一个由 PostgreSQL 支持的 REST/CRUD 应用程序。应用程序在主机上运行，PostgreSQL 在无根 podman 容器中运行。每个 HTTP 请求执行 2 个 SQL 查询（通过 link:https://www.postgresql.org/docs/current/pgstatstatements.html[pg_stat_statements] 确认）。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Spring delivers roughly the same throughput in both environments. Quarkus swings from 15.5K to 24.5K TPS — it is being held back locally. **Something in the local environment is capping Quarkus but not Spring.**"
-msgstr ""
+msgstr "Spring 在两种环境下的吞吐量大致相同。Quarkus 的吞吐量从 15.5K 增至 24.5K - 它在本地受到了限制。 *本地环境中的某些因素限制了 Quarkus，但没有限制 Spring。*"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "mpstat: where is the CPU going?"
-msgstr ""
+msgstr "mpstat：CPU 去哪儿了？"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "The benchmark collects https://man7.org/linux/man-pages/man1/mpstat.1.html[mpstat] data during every run — per-CPU utilization split into `%usr` (application code), `%sys` (kernel), `%soft` (softirq, mainly network packet processing), and `%idle`. This is part of our https://github.com/quarkusio/spring-quarkus-perf-comparison/issues/62[active benchmarking practice]: observing the system _while it runs_, not just collecting final TPS numbers."
-msgstr ""
+msgstr "该基准测试在每次运行时都会收集 link:https://man7.org/linux/man-pages/man1/mpstat.1.html[mpstat] 数据 - 每 CPU 利用率分为 `%usr` （应用程序代码）、 `%sys` （内核）、 `%soft` （softirq，主要是网络数据包处理）和 `%idle` 。这是我们 link:https://github.com/quarkusio/spring-quarkus-perf-comparison/issues/62[主动基准测试实践的] 一部分： _在_ 系统 _运行时_ 对 _其进行_ 观察，而不仅仅是收集最终的 TPS 数据。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Both environments run Quarkus at 2.3GHz with the same workload and CPU pinning. The mpstat profiles could not be more different:"
-msgstr ""
+msgstr "两种环境都以 2.3GHz 的频率运行 Quarkus，工作负载和 CPU 引脚相同。而 mpstat 配置文件的差异却非常明显："
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Environment"
-msgstr ""
+msgstr "环境"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "%usr"
-msgstr ""
+msgstr "%usr"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "%sys"
-msgstr ""
+msgstr "%sys"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "%soft"
-msgstr ""
+msgstr "%软"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "%idle"
-msgstr ""
+msgstr "静止"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Local (Fedora, 15,504 TPS)"
-msgstr ""
+msgstr "本地（Fedora，15 504 TPS）"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "39-50%"
-msgstr ""
+msgstr "39-50%"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "34-41%"
-msgstr ""
+msgstr "34-41%"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "9-17%"
-msgstr ""
+msgstr "9-17%"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "3-5%"
-msgstr ""
+msgstr "3-5%"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Perf-lab (RHEL, 24,472 TPS)"
-msgstr ""
+msgstr "Perf-lab （RHEL，24,472 TPS）"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "87-94%"
-msgstr ""
+msgstr "87-94%"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "5-11%"
-msgstr ""
+msgstr "5-11%"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "0-2%"
-msgstr ""
+msgstr "0-2%"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "0%"
-msgstr ""
+msgstr "0%"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "`%usr` is time running application code. `%sys` is time in the kernel. On perf-lab, over 85% of CPU goes to the application. Locally, nearly half goes to the kernel. Same application, same clock speed, same workload: **locally, a significant fraction of CPU time is spent in the kernel rather than in application code.**"
-msgstr ""
+msgstr "`%usr` 是运行应用程序代码的时间。 `%sys` 为内核运行时间。在 perf-lab 上，超过 85% 的 CPU 用于应用程序。在本地，近一半的时间用于内核。相同的应用程序、相同的时钟速度、相同的工作量： *在本地，CPU 的大部分时间都花在内核上，而不是应用程序代码上。*"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Where is the kernel time going?"
-msgstr ""
+msgstr "内核时间去哪儿了？"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "A https://www.brendangregg.com/flamegraphs.html[differential flamegraph] of the JFR CPU profiles (collected via https://github.com/async-profiler/async-profiler[async-profiler]) from the perf-lab and local Quarkus runs shows exactly where the extra kernel time is spent:"
-msgstr ""
+msgstr "来自 perf-lab 和本地 Quarkus 运行的 JFR CPU 配置文件（通过 link:https://github.com/async-profiler/async-profiler[async-profiler] 收集）的 link:https://www.brendangregg.com/flamegraphs.html[差分火焰图] 显示了额外的内核时间都花在了哪里："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Red frames appear more in the local run; blue frames appear more on the perf-lab. The brightest red hotspots are kernel spin locks (`_raw_spin_unlock_irqrestore`), nftables firewall evaluation (`nft_do_chain`, `nft_meta_get_eval`), and TCP packet processing (`tcp_clean_rtx_queue`, `skb_defer_free_flush`). The blue band at the bottom is application code that gets more CPU on the perf-lab — because the kernel isn't eating it. **The local kernel is spending cycles on network packet processing and firewall rules that the perf-lab doesn't need.**"
-msgstr ""
+msgstr "红色框架更多出现在本地运行中；蓝色框架更多出现在 perf-lab 中。最亮的红色热点是内核自旋锁 `（_raw_spin_unlock_irqrestore` ）、nftables 防火墙评估 `（nft_do_chain` 、 `nft_meta_get_eval` ）和 TCP 数据包处理 `（tcp_clean_rtx_queue` 、 `skb_defer_free_flush` ）。底部的蓝色区域是在 perf-lab 上获得更多 CPU 的应用代码--因为内核没有吃掉它。 *本地内核在网络数据包处理和防火墙规则上花费了大量时间，而 perf-lab 并不需要这些。*"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "The brightest red frame — `_raw_spin_unlock_irqrestore` — is worth a closer look. The stack trace shows it's triggered by Agroal (Quarkus's connection pool) returning a JDBC connection after a query: `ConnectionPool.returnConnectionHandler` → `LinkedTransferQueue.tryTransfer` → `LockSupport.unpark` → kernel `futex_wake` → `try_to_wake_up` → spin lock. If network round-trips are slower, JDBC connections are held longer and more threads pile up waiting for a free connection. Every connection return triggers a `futex_wake` to unpark a waiter — the higher the network latency, the more waiters accumulate, and the more kernel time is spent waking them."
-msgstr ""
+msgstr "最亮的红框-- `_raw_spin_unlock_irqrestore` --值得仔细查看。堆栈跟踪显示，它是由 Agroal（Quarkus 的连接池）在查询后返回 JDBC 连接触发的： `ConnectionPool.returnConnectionHandler` → `LinkedTransferQueue.tryTransfer` → `LockSupport.unpark` → 内核 `futex_wake` → `try_too_wake_up` → 自旋锁。如果网络往返速度较慢，JDBC 连接的保持时间就会更长，等待空闲连接的线程就会更多。每次连接返回都会触发一次 `futex_wake` ，以唤醒一个等待者--网络延迟越高，等待者就会越多，内核花费在唤醒等待者上的时间也就越多。"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "The suspect: pasta, the userspace TCP proxy"
-msgstr ""
+msgstr "嫌疑犯：Pasta，用户空间 TCP 代理"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Rootless podman on Fedora uses https://passt.top/passt/[pasta (passt)] to forward container ports. Unlike rootful podman (which uses kernel-level port forwarding), pasta is a userspace process that proxies every TCP packet:"
-msgstr ""
+msgstr "Fedora 上的无根 podman 使用 link:https://passt.top/passt/[pasta (passt)] 来转发容器端口。与有根 podman（使用内核级端口转发）不同，pasta 是一个用户空间进程，会代理每个 TCP 数据包："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid ""
 "With pasta (default rootless):\n"
 "  App  -->  kernel  -->  pasta (userspace)  -->  kernel  -->  container netns  -->  PostgreSQL\n"
 "\n"
 "With --network=host:\n"
 "  App  -->  kernel  -->  PostgreSQL (same network namespace)"
-msgstr ""
+msgstr "使用 pasta（默认无根）：应用程序 -→ 内核 -→ 面食（用户空间） -→ 内核 -→ 容器 netns -→ PostgreSQL"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Every JDBC packet traverses two extra kernel/userspace boundary crossings plus a userspace copy in the pasta process. For a chatty protocol like JDBC with small, frequent packets, this adds up fast. The kernel functions visible in the flamegraph — `nft_do_chain`, `tcp_clean_rtx_queue`, `skb_defer_free_flush` — are not pasta's own CPU time (pasta runs in a separate process), but they are the kernel-side cost of the extra network hops that the application's syscalls now traverse. The connection pool contention (`futex_wake` from Agroal) could be a consequence of the added queuing delay: if each round-trip takes longer, connections are held longer, and waiters accumulate."
-msgstr ""
+msgstr "每个 JDBC 数据包都要穿越两个额外的内核/用户空间边界，再加上 pasta 进程中的用户空间副本。对于像 JDBC 这样的聊天协议来说，数据包数量少、频率高，因此增加速度很快。flamegraph 中可见的内核函数-- `nft_do_chain` 、 `tcp_clean_rtx_queue` 、 `skb_defer_free_flush` --并不是 pasta 本身的 CPU 时间（pasta 在单独的进程中运行），而是应用程序的系统调用现在穿越的额外网络跳数的内核成本。连接池争用 `（` Agroal 的 `futex_wake` ）可能是增加的队列延迟造成的：如果每次往返需要更长的时间，连接的保持时间就会更长，等待者就会累积。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Crucially, **pasta is single-threaded**. It processes all forwarded packets on a single CPU core. If that core saturates, packet processing queues up — latency spikes and throughput hits a ceiling regardless of how many cores the application has available. The alternative is `--network=host`: the container shares the host's network namespace, so packets stay in the kernel and never pass through a proxy."
-msgstr ""
+msgstr "最重要的是， *意大利面是单线程的* 。它在单个 CPU 内核上处理所有转发的数据包。如果该内核达到饱和，数据包处理就会排队--无论应用程序有多少可用内核，延迟都会激增，吞吐量也会达到上限。另一种选择是 `--network=host` ：容器共享主机的网络命名空间，因此数据包会留在内核中，而不会通过代理。"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Quantifying the overhead with pgbench"
-msgstr ""
+msgstr "使用 pgbench 量化开销"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "To measure pasta's impact on database traffic, we ran https://www.postgresql.org/docs/current/pgbench.html[pgbench] with the same 2-query workload (50 clients — matching the default JDBC connection pool size for both Quarkus and Spring — prepared statements, 30 seconds) over different network paths. We also tested with Fedora's https://wiki.nftables.org/[nftables] firewall disabled, since the flamegraph showed `nft_do_chain` in the kernel stacks:"
-msgstr ""
+msgstr "为了衡量 pasta 对数据库流量的影响，我们在不同的网络路径上运行了 link:https://www.postgresql.org/docs/current/pgbench.html[pgbench] ，测试了相同的 2-query 工作负载（50 个客户端--与 Quarkus 和 Spring 的默认 JDBC 连接池大小相匹配--准备语句，30 秒）。我们还禁用了 Fedora 的 link:https://wiki.nftables.org/[nftables] 防火墙进行测试，因为 flamegraph 显示内核堆栈中存在 `nft_do_chain` ："
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Network path"
-msgstr ""
+msgstr "网络路径"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "TPS"
-msgstr ""
+msgstr "TPS"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Host -> container (pasta + nftables)"
-msgstr ""
+msgstr "主机 → 容器（面食 + nftables）"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "18,106"
-msgstr ""
+msgstr "18,106"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Host -> container (pasta, no nftables)"
-msgstr ""
+msgstr "主机 → 容器（面食，无 nftables）"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "20,402"
-msgstr ""
+msgstr "20,402"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Host -> container (`--network=host`)"
-msgstr ""
+msgstr "主机 → 容器 `（--network=host）`"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "53,262"
-msgstr ""
+msgstr "53,262"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "With `--network=host`, throughput jumps from 18K to 53K TPS — roughly a 3x increase. Pasta caps at ~18K TPS for this 2-query workload: that is the ceiling imposed by a single-threaded proxy."
-msgstr ""
+msgstr "使用 `--network=host 时` ，吞吐量从 18K 跃升至 53K TPS，大约提高了 3 倍。Pasta 对这种 2 次查询工作负载的上限为约 18K TPS：这是单线程代理的上限。"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "The fix"
-msgstr ""
+msgstr "修复"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Run the PostgreSQL container with `--network=host` instead of port-mapping (`-p 5432:5432`). We added `DB_HOST_NETWORK=true` to the benchmark's https://github.com/quarkusio/spring-quarkus-perf-comparison/blob/main/scripts/infra.sh[infrastructure script]."
-msgstr ""
+msgstr "使用 `--network=host` 而不是端口映射 `（-p 5432:5432` ）运行 PostgreSQL 容器。我们在基准的 link:https://github.com/quarkusio/spring-quarkus-perf-comparison/blob/main/scripts/infra.sh[基础架构脚本] 中添加了 `DB_HOST_NETWORK=true` 。"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Configuration"
-msgstr ""
+msgstr "配置"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Quarkus TPS"
-msgstr ""
+msgstr "Quarkus TPS"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Spring TPS"
-msgstr ""
+msgstr "弹簧 TPS"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Ratio"
-msgstr ""
+msgstr "比率"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Default (pasta + nftables)"
-msgstr ""
+msgstr "默认值（pasta + nftables）"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "15,504"
-msgstr ""
+msgstr "15,504"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "13,062"
-msgstr ""
+msgstr "13,062"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "1.19x"
-msgstr ""
+msgstr "1.19x"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "`--network=host`"
-msgstr ""
+msgstr "`--网络=主机`"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "24,116"
-msgstr ""
+msgstr "24,116"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "13,368"
-msgstr ""
+msgstr "13,368"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "1.80x"
-msgstr ""
+msgstr "1.80x"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "`--network=host` + no nftables"
-msgstr ""
+msgstr "`--network=host` +无 nftables"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "26,039"
-msgstr ""
+msgstr "26,039"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "13,214"
-msgstr ""
+msgstr "13,214"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "1.97x"
-msgstr ""
+msgstr "1.97x"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Perf-lab (RHEL 9.6, different hardware)"
-msgstr ""
+msgstr "Perf-lab （RHEL 9.6，不同硬件）"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "24,472"
-msgstr ""
+msgstr "24,472"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "11,783"
-msgstr ""
+msgstr "11,783"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "2.08x"
-msgstr ""
+msgstr "2.08x"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "**With host networking, Quarkus throughput improves by 55% while Spring moves by +2.3%.** Disabling the firewall on top recovers another 8% for Quarkus, bringing the ratio from 1.19x back to 1.97x — close to the perf-lab's 2.08x."
-msgstr ""
+msgstr "*通过主机联网，Quarkus 的吞吐量提高了 55%，而 Spring 则提高了 +2.3%。* 禁用防火墙后，Quarkus 的吞吐量又恢复了 8%，吞吐量比从 1.19 倍恢复到 1.97 倍，接近 perf-lab 的 2.08 倍。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Fedora's `firewalld` loads nearly 1000 https://wiki.nftables.org/[nftables] rules that every packet traverses. This is independent of pasta — disabling the firewall adds another 13% throughput in the pgbench test (18,106 → 20,402 TPS)."
-msgstr ""
+msgstr "Fedora 的 `firewalld` 会加载近 1000 条 link:https://wiki.nftables.org/[nftables] 规则，每个数据包都要经过这些规则。这与 pasta 无关--在 pgbench 测试中，禁用防火墙又增加了 13% 的吞吐量（18,106 → 20,402 TPS）。"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Why Quarkus is affected but Spring is not"
-msgstr ""
+msgstr "为什么夸克受影响而斯普林不受影响？"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "As the pgbench data shows, pasta caps at ~18,000 TPS for a 2-query workload. pgbench is a minimal client that does nothing between queries — it represents the maximum throughput pasta can forward. Quarkus, which also processes HTTP requests, runs ORM and serialization between SQL queries, reaches 15,504 TPS through pasta — lower than pgbench's 18,106 because the application work between queries reduces the pressure on the proxy, but still constrained by it."
-msgstr ""
+msgstr "正如 pgbench 数据显示的那样，pasta 在 2 次查询工作负载中的上限为约 18,000 TPS。pgbench 是一个最小客户端，在查询之间不做任何事情，它代表了 pasta 可以提供的最大吞吐量。Quarkus 也处理 HTTP 请求，在 SQL 查询之间运行 ORM 和序列化，通过 pasta 达到 15,504 TPS，低于 pgbench 的 18,106 TPS，因为查询之间的应用工作减轻了代理的压力，但仍受其限制。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "With host networking, Quarkus reaches ~24,000 TPS — well above what pasta can deliver. Spring reaches ~13,000 TPS, which is below pasta's ceiling regardless of networking mode. **Any application that can push close to pasta's ceiling will be constrained by it; any application that stays well below it will not notice.**"
-msgstr ""
+msgstr "在主机联网模式下，Quarkus 可达到约 24,000 TPS，远高于 pasta 的性能。Spring 达到约 13,000 TPS，无论采用哪种联网模式，都低于 pasta 的上限。 *任何能接近 pasta 上限的应用程序都会受到限制；任何远远低于 pasta 上限的应用程序都不会注意到这一点。*"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Confirming the fix"
-msgstr ""
+msgstr "确认修复"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "A second differential flamegraph — this time comparing the local default (pasta) run with the local `--network=host` run — confirms the overhead is gone:"
-msgstr ""
+msgstr "第二次差分火焰图 `--` 这次是比较本地默认（pasta）运行和本地 `--network=host` 运行--证实开销已经消失："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Red means more CPU in the default (pasta) run; blue means more CPU with host networking. The red stacks that dominated the first flamegraph — `_raw_spin_unlock_irqrestore`, `nft_do_chain`, `tcp_clean_rtx_queue` — have disappeared."
-msgstr ""
+msgstr "红色表示默认（pasta）运行时 CPU 占用较多；蓝色表示主机联网时 CPU 占用较多。在第一张火焰图中占主导地位的红色堆栈 - `_raw_spin_unlock_irqrestore` 、 `nft_do_chain` 、 `tcp_clean_rtx_queue` - 已经消失。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "**With `--network=host`, the app and PostgreSQL share the same network namespace; packets never leave the kernel.**"
-msgstr ""
+msgstr "*使用--network=host 时，应用程序和 PostgreSQL 共享相同的网络命名空间；数据包永远不会离开内核。*"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Takeaways"
-msgstr ""
+msgstr "收获"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "**A benchmark that saturates an unexpected resource and component is not measuring what you think.** This is what Brendan Gregg calls https://www.brendangregg.com/activebenchmarking.html[active benchmarking]:"
-msgstr ""
+msgstr "*对意外资源和组件进行饱和测量的基准并非如你所想的那样。* 这就是布伦丹-格雷格所说的 link:https://www.brendangregg.com/activebenchmarking.html[主动基准测试] ："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "_You benchmark A, but actually measure B, and conclude you've measured C._"
-msgstr ""
+msgstr "_你以 A 为基准，但实际上测量的是 B，并得出测量了 C 的结论。_"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "We benchmarked framework throughput, but Quarkus was saturating pasta's single CPU core — so we were measuring pasta's forwarding capacity, not framework performance. Only by collecting https://man7.org/linux/man-pages/man1/mpstat.1.html[mpstat] and flamegraphs _during_ the run — as https://github.com/quarkusio/spring-quarkus-perf-comparison/issues/62[required by our benchmarking practice] — did we identify which resource and component was saturated. Without that, the 1.19x ratio would have been taken at face value."
-msgstr ""
+msgstr "我们对框架吞吐量进行了基准测试，但 Quarkus 使 pasta 的单 CPU 内核达到饱和，因此我们测量的是 pasta 的转发能力，而不是框架性能。只有在运行 _过程中_ 收集 link:https://man7.org/linux/man-pages/man1/mpstat.1.html[mpstat] 和 flamegraph（这是 link:https://github.com/quarkusio/spring-quarkus-perf-comparison/issues/62[我们的基准测试实践所要求的] ），我们才能确定是哪个资源和组件达到了饱和。如果不这样做，1.19 倍的比率就会被认为是表面价值。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "**The impact is asymmetric.** Pasta's single-threaded ceiling affects only applications whose throughput would otherwise exceed it. In this benchmark, Quarkus exceeds the ceiling and is capped; Spring does not and is unaffected. The same logic applies to any workload — the proxy is invisible until you hit its limit."
-msgstr ""
+msgstr "*影响是不对称的。* Pasta 的单线程上限只影响吞吐量超过上限的应用程序。在此基准测试中，Quarkus 超过了上限并被限制；而 Spring 没有超过上限，因此不受影响。同样的逻辑也适用于任何工作负载--在达到上限之前，代理是不可见的。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "**Check your networking path.** Run `podman info | grep rootlessNetworkCmd` to see your backend. If it says `pasta` and your benchmark talks to a containerized database, use `--network=host` for the database container."
-msgstr ""
+msgstr "*检查网络路径。* 运行 `podman info | grep rootlessNetworkCmd` 查看后端。如果显示 `pasta` ，而你的基准会与容器化数据库通信，请对数据库容器使用 `--network=host` 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "**Firewall rules add up.** Nearly 1000 nftables rules cost 8-13% throughput on this workload (8% for Quarkus with host networking, 13% for pgbench through pasta). For benchmarking, consider temporarily disabling the firewall or using a minimal ruleset."
-msgstr ""
+msgstr "*防火墙规则会增加。* 在此工作负载上，近 1000 条 nftables 规则的吞吐量损失为 8-13%（使用主机网络的 Quarkus 为 8%，通过 pasta 的 pgbench 为 13%）。在进行基准测试时，可考虑暂时禁用防火墙或使用最小规则集。"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Known upstream issues"
-msgstr ""
+msgstr "已知的上游问题"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "Our findings are consistent with several known issues in the podman/pasta ecosystem:"
-msgstr ""
+msgstr "我们的发现与 podman/pasta 生态系统中的几个已知问题一致："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "**pasta is single-threaded by design** and degrades under concurrent load. Community reports confirm that above ~8 connections, even the older https://github.com/rootless-containers/slirp4netns[slirp4netns] backend can outperform it. (https://github.com/containers/podman/discussions/22559[Podman Discussion #22559])"
-msgstr ""
+msgstr "*pasta 在设计上是单线程的* ，在并发负载下性能会下降。社区报告证实，连接数超过 8 个以上时，即使是较老的 link:https://github.com/rootless-containers/slirp4netns[slirp4netns] 后端也能胜任。( link:https://github.com/containers/podman/discussions/22559[Podman 讨论 #22559] )"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "**pasta consuming 90-100% CPU** has been reported under sustained network load, e.g. Wireguard tunnels on kernel 6.x. (https://github.com/containers/podman/issues/23686[Podman Issue #23686])"
-msgstr ""
+msgstr "有报告称，在持续的网络负载下，如内核 6.x 上的 Wireguard 隧道， *pasta 的 CPU 占用率为 90-100%* （ link:https://github.com/containers/podman/issues/23686[Podman 问题 #23686）]"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "**Java + PostgreSQL hang** -- a Spring app running PostgreSQL `COPY FROM STDIN` via pasta consistently freezes mid-transfer. `--network=host` fixes it. (https://github.com/containers/podman/issues/22593[Podman Issue #22593])"
-msgstr ""
+msgstr "*Java + PostgreSQL 挂起* - 通过 pasta 运行 PostgreSQL `COPY FROM STDIN` 的 Spring 应用程序在传输过程中持续 *挂起* 。 `--network=host` 修复了这一问题。( link:https://github.com/containers/podman/issues/22593[Podman 问题 #22593] )"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "**Throughput far below host capacity** -- rootless containers on multi-gigabit hosts achieving only ~100 Mbit/s through pasta. (https://github.com/containers/podman/issues/17865[Podman Issue #17865])"
-msgstr ""
+msgstr "*吞吐量远低于主机容量* --千兆位主机上的无根容器通过 pasta 只能达到 ~100 Mbit/s（ link:https://github.com/containers/podman/issues/17865[Podman 问题 #17865）]"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "**Traffic stalls under sustained load** -- TCP downloads through pasta start normally then halt, with pasta pinned at high CPU. (https://github.com/containers/podman/issues/17703[Podman Issue #17703])"
-msgstr ""
+msgstr "*流量在持续负载下停滞* - 通过意大利面进行的 TCP 下载开始正常，然后停止，意大利面的 CPU 占用率很高。( link:https://github.com/containers/podman/issues/17703[Podman 问题 #17703] )"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-08-hidden-cost-rootless-container-networking.adoc
+#, fuzzy
 msgid "The official https://github.com/containers/podman/blob/main/docs/tutorials/performance.md[Podman performance tutorial] documents `--network=host` and socket activation as workarounds for network-sensitive workloads."
-msgstr ""
+msgstr "link:https://github.com/containers/podman/blob/main/docs/tutorials/performance.md[Podman] 官方 link:https://github.com/containers/podman/blob/main/docs/tutorials/performance.md[性能教程] 记录了 `--network=host` 和套接字激活，作为网络敏感工作负载的变通方法。"
