@@ -7,969 +7,1319 @@ msgstr ""
 "X-Generator: jekyll-l10n\n"
 
 #. type: YAML Front Matter: title
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Building my first extension"
-msgstr ""
+msgstr "开发我的第一个扩展程序"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "Quarkus extensions enhance your application just as projects dependencies do.\n"
 "The role of the extensions is to leverage Quarkus paradigms to integrate seamlessly a library into Quarkus architecture - e.g. do more things at build time.\n"
 "This is how you can use your battle-tested ecosystem and take advantage of Quarkus performance and native compilation.\n"
 "Go to https://code.quarkus.io/[code.quarkus.io] to get the list of the supported extensions."
-msgstr ""
+msgstr "Quarkus 扩展与项目依赖项一样，都能增强您的应用程序功能。扩展的作用是利用 Quarkus 的设计范式，将库无缝集成到 Quarkus 架构中——例如在构建时执行更多操作。通过这种方式，您可以利用经过实战检验的生态系统，同时享受 Quarkus 的性能优势和原生编译功能。 请访问 link:https://code.quarkus.io/[code.quarkus.io] 查看受支持的扩展列表。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "In this guide, we are going to develop the *Sample Greeting Extension*.\n"
 "The extension will expose a customizable HTTP endpoint that simply greets the visitor."
-msgstr ""
+msgstr "在本指南中，我们将开发 *“示例问候扩展”* 。该扩展将提供一个可自定义的 HTTP 端点，仅用于向访问者问好。"
 
 #. type: Block title
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Disclaimer"
-msgstr ""
+msgstr "免责声明"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "To be sure it's extra clear that you don't need an extension to add a Servlet to your application.\n"
 "This guide is a simplified example to explain the concepts of extensions development, see the xref:writing-extensions.adoc[full documentation] if you need more information.\n"
 "Keep in mind it's not representative of the power of moving things to build time or simplifying the build of native images."
-msgstr ""
+msgstr "需要明确的是，您无需使用扩展即可将 Servlet 添加到应用程序中。本指南仅通过一个简化的示例来解释扩展开发的相关概念，如需更多信息，请 xref:writing-extensions.adoc[参阅完整文档] 。请注意，这并不能体现将操作移至构建阶段或简化原生镜像构建所带来的强大功能。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Prerequisites"
-msgstr ""
+msgstr "先决条件"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "Writing extension with any other than Java and Maven has **not** been tested by the Quarkus team, so your mileage may vary\n"
 "if you stray off this path"
-msgstr ""
+msgstr "Quarkus 团队 *尚未* 测试使用 Java 和 Maven 以外的语言编写扩展程序的情况，因此如果您偏离这一路径，实际效果可能会有所不同。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Basic Concepts"
-msgstr ""
+msgstr "基本概念"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "First things first, we will need to start with some basic concepts."
-msgstr ""
+msgstr "首先，我们需要从一些基本概念开始讲起。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "JVM mode vs Native mode"
-msgstr ""
+msgstr "JVM 模式与本机模式"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Quarkus is first and foremost a Java framework, that means you can develop, package, and run classic JAR applications, that's what we call *JVM mode*."
-msgstr ""
+msgstr "Quarkus 首先是一个 Java 框架，这意味着你可以开发、打包和运行经典的 JAR 应用程序，这就是我们所说的 *JVM 模式* 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Thanks to https://graalvm.org/[GraalVM] you can compile your Java application into machine specific code (like you do in Go or C++) and that's what we call *Native mode*."
-msgstr ""
+msgstr "得益于 link:https://graalvm.org/[GraalVM，您可以] 将 Java 应用程序编译为特定于特定硬件的代码（就像在 Go 或 C++ 中那样），这就是我们所说的 *“本机模式”* 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "The operation of compiling Java bytecode into a native system-specific machine code is named *Ahead of Time Compilation* (aka AoT)."
-msgstr ""
+msgstr "将 Java 字节码编译为特定系统的本机机器码的操作被称为 *“提前编译”* （也称为 AoT）。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "build time vs runtime in classic Java frameworks"
-msgstr ""
+msgstr "经典 Java 框架中的构建时间与运行时间对比"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "The build time corresponds to all the actions you apply to your Java source files to convert them into something runnable (class files, jar/war, native images).\n"
 "Usually this stage is composed by the compilation, annotation processing, bytecode generation, etc. At this point, everything is under the developer's scope and control."
-msgstr ""
+msgstr "构建时间指的是将 Java 源文件转换为可运行形式（类文件、jar/war、本机映像）过程中所执行的所有操作。通常，这一阶段包括编译、注解处理、字节码生成等步骤。在此阶段，所有内容均处于开发人员的掌控范围内。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "The runtime is all the actions that happen when you execute your application.\n"
 "It's obviously focused on starting your business-oriented actions, but it relies on a lot of technical actions like loading libraries and configuration files, scanning the application's classpath, configuring the dependency injection, setting up your Object-Relational Mapping, instantiating your REST controllers, etc."
-msgstr ""
+msgstr "运行时是指执行应用程序时发生的所有操作。 它显然侧重于启动面向业务的操作，但同时也依赖于许多技术性操作，例如加载库和配置文件、扫描应用程序的类路径、配置依赖注入、设置对象关系映射（ORM）、实例化 REST 控制器等。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Usually, Java frameworks do their bootstrapping during the runtime before actually starting the application \"Business oriented layer\". During bootstrap, frameworks dynamically collect metadata by scanning the classpath to find configurations, entity definitions, dependency injection binding, etc. in order to instantiate proper objects through reflection. The main consequences are:"
-msgstr ""
+msgstr "通常，Java 框架会在运行时完成初始化，然后才真正启动应用程序的“业务层”。在初始化过程中，框架会通过扫描类路径来动态收集元数据，以查找配置、实体定义、依赖注入绑定等内容，从而通过反射实例化相应的对象。这主要会导致以下后果："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Delaying the readiness of your application: you need to wait a couple of seconds before actually serving a business request."
-msgstr ""
+msgstr "延迟应用程序的就绪时间：在实际处理业务请求之前，您需要等待几秒钟。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Having a peak of resource consumption at bootstrap: in a constrained environment, you will need to size the needed resources based on your technical bootstrap needs rather than your actual business needs."
-msgstr ""
+msgstr "在启动阶段资源消耗达到峰值：在资源受限的环境中，您需要根据技术启动需求而非实际业务需求来确定所需资源的规模。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "Quarkus' philosophy is to prevent as much as possible slow and memory intensive dynamic code execution by shifting left these actions and eventually do them during the build time.\n"
 "A Quarkus extension is a Java piece of code acting as an adapter layer for your favorite library or technology."
-msgstr ""
+msgstr "Quarkus 的设计理念是，通过将这些操作“左移”，尽可能避免执行缓慢且占用大量内存的动态代码，最终在构建阶段完成这些操作。Quarkus 扩展是一段 Java 代码，它作为适配层，用于连接您常用的库或技术。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Description of a Quarkus extension"
-msgstr ""
+msgstr "Quarkus 扩展的描述"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "A Quarkus extension consists of two parts:"
-msgstr ""
+msgstr "一个 Quarkus 扩展由两部分组成："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "The *runtime module* which represents the capabilities the extension developer exposes to the application's developer (an authentication filter, an enhanced data layer API, etc).\n"
 "Runtime dependencies are the ones the users will add as their application dependencies (in Maven POMs or Gradle build scripts)."
-msgstr ""
+msgstr "*运行时模块* 代表了扩展开发者向应用程序开发者提供的功能（例如身份验证过滤器、增强型数据层 API 等）。运行时依赖项即用户将作为应用程序依赖项添加的那些依赖项（在 Maven POM 文件或 Gradle 构建脚本中）。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "The *deployment module*, which is used during the augmentation phase of the build, describes how to \"deploy\" a library\n"
 "following the Quarkus philosophy.\n"
 "In other words, it applies all the Quarkus optimizations to your application during the build.\n"
 "The deployment module is also where we prepare things for GraalVM's native compilation."
-msgstr ""
+msgstr "*部署模块* 在构建的增强阶段使用，它描述了如何遵循 Quarkus 的理念来“部署”一个库。换句话说，它会在构建过程中将所有 Quarkus 优化应用到您的应用程序上。部署模块也是我们为 GraalVM 的原生编译做准备的地方。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "Users should not be adding the deployment modules of extension as application dependencies. The deployment dependencies are resolved by\n"
 "Quarkus during the augmentation phase from the runtime dependencies of the application."
-msgstr ""
+msgstr "用户不应将扩展的部署模块添加为应用程序的依赖项。部署依赖项由 Quarkus 在增强阶段根据应用程序的运行时依赖项进行解析。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "At this point, you should have understood that most of the magic will happen at the Augmentation build time, thanks to the deployment module."
-msgstr ""
+msgstr "至此，您应该已经明白，得益于部署模块，大部分“魔法”都将在 Augmentation 的构建阶段发生。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Quarkus Application Bootstrap"
-msgstr ""
+msgstr "Quarkus 应用程序启动"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "There are three distinct bootstrap phases of a Quarkus application."
-msgstr ""
+msgstr "Quarkus 应用程序有三个截然不同的启动阶段。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "*Augmentation*. During the build time, the Quarkus extensions will load and scan your application's bytecode (including the dependencies) and configuration.\n"
 "At this stage, the extension can read configuration files, scan classes for specific annotations, etc.\n"
 "Once all the metadata has been collected, the extensions can pre-process the libraries bootstrap actions like your ORM, DI, or REST controllers configurations.\n"
 "The result of the bootstrap is directly recorded into bytecode and will be part of your final application package."
-msgstr ""
+msgstr "*增强* 。在构建过程中，Quarkus 扩展会加载并扫描您的应用程序的字节码（包括依赖项）和配置。在此阶段，扩展可以读取配置文件、扫描类以查找特定注解等。 一旦收集完所有元数据，扩展即可预处理库的初始化操作，例如您的 ORM、DI 或 REST 控制器配置。初始化的结果将直接记录到字节码中，并成为您最终应用程序包的一部分。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "*Static Init*. During the run time, Quarkus will execute first a static init method which contains some extensions actions/configurations.\n"
 "When you will do your native packaging, this static method will be pre-processed during the build time and the objects it has generated will be serialized into the final native executable, so the initialization code will not be executed in the native mode (imagine you execute a Fibonacci function during this phase, the result of the computation will be directly recorded in the native executable).\n"
 "When running the application in JVM mode, this static init phase is executed at the start of the application."
-msgstr ""
+msgstr "*静态初始化* 。在运行时，Quarkus 会首先执行一个包含某些扩展操作/配置的静态初始化方法。当您进行原生打包时， 该静态方法将在构建阶段被预处理，其生成的对象将被序列化到最终的原生可执行文件中，因此初始化代码不会在原生模式下执行（试想若在此阶段执行斐波那契函数，计算结果将直接记录在原生可执行文件中）。 在 JVM 模式下运行应用程序时，该静态初始化阶段会在应用程序启动时执行。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "*Runtime Init*. Well nothing fancy here, we do classic run time code execution.\n"
 "So, the more code you run during the two phases above, the faster your application will start."
-msgstr ""
+msgstr "*运行时初始化* 。这里没什么花哨的，我们只是执行经典的运行时代码。因此，你在上述两个阶段中执行的代码越多，应用程序的启动速度就越快。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Now that everything is explained, we can start coding!"
-msgstr ""
+msgstr "既然一切都已经讲清楚了，我们就可以开始编写代码了！"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Project setup"
-msgstr ""
+msgstr "项目设置"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Extensions can be built with either Maven or Gradle. Depending on your build tool, setup can be done as following:"
-msgstr ""
+msgstr "扩展程序既可以使用 Maven，也可以使用 Gradle 进行构建。根据您使用的构建工具，可以按照以下方式进行配置："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "The Gradle extension plugin is still experimental and may be missing features available in the Maven plugin."
-msgstr ""
+msgstr "Gradle 扩展插件目前仍处于实验阶段，可能缺少 Maven 插件中已有的某些功能。"
 
 #. type: Title ==
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Maven setup"
-msgstr ""
+msgstr "Maven 配置"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Quarkus provides `create-extension` Maven Mojo to initialize your extension project."
-msgstr ""
+msgstr "Quarkus 提供了一个 `名为 create-extension 的` Maven Mojo，用于初始化您的扩展项目。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "It will try to auto-detect its options:"
-msgstr ""
+msgstr "它将尝试自动检测其选项："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "from `quarkus` (Quarkus Core) or `quarkus/extensions` directory, it will use the 'Quarkus Core' extension layout and defaults."
-msgstr ""
+msgstr "如果从 `quarkus` （Quarkus Core）或 `quarkus/extensions` 目录中加载，它将使用“Quarkus Core”扩展的布局和默认设置。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "with `-DgroupId=io.quarkiverse.[extensionId]`, it will use the 'Quarkiverse' extension layout and defaults."
-msgstr ""
+msgstr "使用 `-DgroupId=io.quarkiverse.[extensionId]` 时，它将采用“Quarkiverse”扩展的布局和默认设置。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "in other cases it will use the 'Standalone' extension layout and defaults."
-msgstr ""
+msgstr "在其他情况下，它将使用“独立”扩展布局及其默认设置。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "we may introduce other layout types in the future."
-msgstr ""
+msgstr "未来我们可能会引入其他布局类型。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "You may call it without any parameter to use the interactive mode: `mvn {quarkus-platform-groupid}:quarkus-maven-plugin:{quarkus-version}:create-extension -N`"
-msgstr ""
+msgstr "若要使用交互模式，可不带任何参数调用该命令： `mvn {quarkus-platform-groupid}:quarkus-maven-plugin:{quarkus-version}:create-extension -N`"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "The extension groupId"
-msgstr ""
+msgstr "扩展的 groupId"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "The extension id (not namespaced)."
-msgstr ""
+msgstr "扩展标识符（不带命名空间）。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Indicate that we don't want to generate any test"
-msgstr ""
+msgstr "注明我们不想生成任何测试"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "From a directory with no pom.xml and without any further options, the generator will automatically pick the 'standalone' extension layout"
-msgstr ""
+msgstr "如果目录中没有 pom.xml 文件且未指定其他选项，生成器将自动选择“standalone”扩展布局"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "With the 'standalone' layout, the `namespaceId` is empty by default, so the computed runtime module artifactId is the `extensionId`"
-msgstr ""
+msgstr "在“独立”布局下， `namespaceId` 默认是空的，因此计算出的运行时模块 artifactId 即为 `extensionId`"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Maven has generated a `greeting-extension` directory containing the extension project, which consists of the parent `pom.xml`, the `runtime`, and the `deployment` modules."
-msgstr ""
+msgstr "Maven 生成了一个 `名为 greeting-extension` 的目录，其中包含该扩展项目，该项目由父级 `pom.xml` 、 `运行时模块和` `部署` 模块组成。"
 
 #. type: Title ===
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "The parent pom.xml"
-msgstr ""
+msgstr "父级 pom.xml"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Your extension is a multi-module project. So let's start by checking out the parent POM at `./greeting-extension/pom.xml`."
-msgstr ""
+msgstr "您的扩展是一个多模块项目。因此，让我们先检出位于 `./greeting-extension/pom.xml` 的父级 POM 文件。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Your extension declares 2 sub-modules `deployment` and `runtime`."
-msgstr ""
+msgstr "您的扩展声明了两个子模块： `deployment` 和 `runtime` 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Quarkus requires a recent version of the Maven compiler plugin supporting the annotationProcessorPaths configuration."
-msgstr ""
+msgstr "Quarkus 需要一个支持 annotationProcessorPaths 配置的最新版本 Maven 编译器插件。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "The `quarkus-bom` aligns your dependencies with those used by Quarkus during the augmentation phase."
-msgstr ""
+msgstr "`quarkus-bom` 会在增强阶段将您的依赖项与 Quarkus 所使用的依赖项保持一致。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Quarkus requires these configs to run tests properly."
-msgstr ""
+msgstr "Quarkus 需要这些配置才能正确运行测试。"
 
 #. type: Title ===
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "The Deployment module"
-msgstr ""
+msgstr "部署模块"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Let's have a look at the deployment's `./greeting-extension/deployment/pom.xml`."
-msgstr ""
+msgstr "让我们来看看该部署的 `./greeting-extension/deployment/pom.xml` 文件。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "The key points are:"
-msgstr ""
+msgstr "要点如下："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "By convention, the deployment module has the `-deployment` suffix (`greeting-extension-deployment`)."
-msgstr ""
+msgstr "按照惯例，部署模块的名称后缀为 `-deployment` （例如 `greeting-extension-deployment` ）。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "The deployment module depends on the `quarkus-arc-deployment` artifact.\n"
 "We will see later which dependencies are convenient to add."
-msgstr ""
+msgstr "部署模块依赖于 `quarkus-arc-deployment` 构建产物。我们稍后将探讨哪些依赖项方便添加。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "The deployment module also *must* depend on the runtime module."
-msgstr ""
+msgstr "部署模块还 *必须* 依赖于运行时模块。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "We add  the `quarkus-extension-processor` to the compiler annotation processors."
-msgstr ""
+msgstr "我们将 `quarkus-extension-processor` 添加到编译器注解处理器中。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "In addition to the `pom.xml` `create-extension` also generated the `org.acme.greeting.extension.deployment.GreetingExtensionProcessor` class."
-msgstr ""
+msgstr "除了 `pom.xml` 之外， `create-extension` 还生成了 `org.acme.greeting.extension.deployment.GreetingExtensionProcessor` 类。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "`FeatureBuildItem` represents a functionality provided by an extension.\n"
 "The name of the feature gets displayed in the log during application bootstrap.\n"
 "An extension should provide at most one feature."
-msgstr ""
+msgstr "`FeatureBuildItem` 代表扩展提供的一项功能。该功能的名称会在应用程序启动过程中显示在日志中。一个扩展最多应提供一项功能。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "Be patient, we will explain the `Build Step Processor` concept and all the extension deployment API later on.\n"
 "At this point, you just need to understand that this class explains to Quarkus how to deploy a feature named `greeting`, which is your extension.\n"
 "In other words, you are augmenting your application to use the `greeting` extension with all the Quarkus benefits (build time optimization, native support, etc.)."
-msgstr ""
+msgstr "请耐心等待，我们稍后会详细讲解 `“构建步骤处理器` ”的概念以及所有扩展部署 API。 目前，您只需理解：该类向 Quarkus 说明了如何部署一个名为 `greeting 的` 功能，而这正是您的扩展。换言之，您正在增强您的应用程序，使其能够使用 `greeting` 扩展，并享受 Quarkus 带来的所有优势（构建时优化、原生支持等）。"
 
 #. type: Title ===
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "The Runtime module"
-msgstr ""
+msgstr "Runtime 模块"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Finally `./greeting-extension/runtime/pom.xml`."
-msgstr ""
+msgstr "最后是 `./greeting-extension/runtime/pom.xml` 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "By convention, the runtime module has no suffix (`greeting-extension`) as it is the artifact exposed to the end user."
-msgstr ""
+msgstr "按照惯例，运行时模块不带后缀（ `greeting-extension` ），因为它是面向最终用户的组件。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "The runtime module depends on the `quarkus-arc` artifact."
-msgstr ""
+msgstr "该运行时模块依赖于 `quarkus-arc` 构建产物。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "We add  the `quarkus-extension-maven-plugin` to generate the Quarkus extension descriptor included into the runtime artifact, which links it with the corresponding deployment artifact."
-msgstr ""
+msgstr "我们添加了 `quarkus-extension-maven-plugin` ，用于生成包含在运行时工件中的 Quarkus 扩展描述符，该描述符将其与相应的部署工件关联起来。"
 
 #. type: Title ==
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Gradle setup"
-msgstr ""
+msgstr "Gradle 配置"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Quarkus does not provide any way to initialize a Gradle project for extensions yet."
-msgstr ""
+msgstr "Quarkus 目前尚未提供任何用于初始化扩展程序 Gradle 项目的方法。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "As mentioned before, an extension is composed of two modules:"
-msgstr ""
+msgstr "如前所述，一个扩展由两个模块组成："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "`runtime`"
-msgstr ""
+msgstr "`运行时`"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "`deployment`"
-msgstr ""
+msgstr "`部署`"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "We are going to create a Gradle multi-module project with those two modules. Here is a simple `settings.gradle` example file:"
-msgstr ""
+msgstr "我们将使用这两个模块创建一个 Gradle 多模块项目。以下是一个简单的 `settings.gradle` 示例文件："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Configure the quarkus extension plugin version"
-msgstr ""
+msgstr "配置 Quarkus 扩展插件的版本"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Include both `runtime` and `deployment` modules"
-msgstr ""
+msgstr "同时包含 `运行时` 模块和 `部署` 模块"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Here is a sample of a root `build.gradle` file:"
-msgstr ""
+msgstr "以下是一个根目录下 `build.gradle` 文件的示例："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Apply the `java-library` plugin for all sub-modules"
-msgstr ""
+msgstr "将 `java-library` 插件应用于所有子模块"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Apply the `maven-publish` plugin used to publish our artifacts"
-msgstr ""
+msgstr "应用用于发布我们构建产物的 `maven-publish` 插件"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Globally set the group id used for publication"
-msgstr ""
+msgstr "全局设置用于发布的组 ID"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "The `io.quarkus.extension` plugin will be used in order to help us building the extension.\n"
 "The plugin will *only* be applied to the `runtime` module."
-msgstr ""
+msgstr "我们将使用 `io.quarkus.extension` 插件来帮助构建该扩展。该插件 *仅* 适用于 `运行时` 模块。"
 
 #. type: Title ===
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "The deployment module"
-msgstr ""
+msgstr "部署模块"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "The deployment module does not require any specific plugin.\n"
 "Here is an example of a minimal `build.gradle` file for the `deployment` module:"
-msgstr ""
+msgstr "部署模块不需要任何特定的插件。以下是一个 `部署模块` 的简易 `build.gradle` 文件示例："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "The deployment module *must* depend on the `runtime` module."
-msgstr ""
+msgstr "部署模块 *必须* 依赖于 `运行时` 模块。"
 
 #. type: Title ===
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "The runtime module"
-msgstr ""
+msgstr "运行时模块"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "The runtime module applies the `io.quarkus.extension` plugin. This will:"
-msgstr ""
+msgstr "运行时模块应用了 `io.quarkus.extension` 插件。这将："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Add `quarkus-extension-process` as an annotation processor to both modules."
-msgstr ""
+msgstr "将 `quarkus-extension-process` 作为注解处理器添加到这两个模块中。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Generate extension description files."
-msgstr ""
+msgstr "生成扩展描述文件。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Here is an example of `build.gradle` file for the `runtime` module:"
-msgstr ""
+msgstr "以下是 `运行时` 模块的 `build.gradle` 文件示例："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Apply the `io.quarkus.extension` plugin."
-msgstr ""
+msgstr "应用 `io.quarkus.extension` 插件。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "By convention, the runtime module doesn't have a suffix (and thus is named `greeting-extension`) as it is the artifact exposed to the end user."
-msgstr ""
+msgstr "按照惯例，运行时模块不带后缀（因此命名为 `greeting-extension` ），因为它是向最终用户公开的组件。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Basic version of the Sample Greeting extension"
-msgstr ""
+msgstr "“示例问候”扩展的基本版本"
 
 #. type: Title ==
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Implementing the Greeting feature"
-msgstr ""
+msgstr "实现“问候”功能"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "The (killer) feature proposed by our extension is to greet the user.\n"
 "To do so, our extension will deploy, in the user application, a Servlet exposing the HTTP endpoint `/greeting` which responds to the GET verb with a plain text `Hello`."
-msgstr ""
+msgstr "我们扩展程序提出的（杀手级）功能是向用户问好。为此，我们的扩展程序将在用户应用程序中部署一个 Servlet，该 Servlet 公开 HTTP 端点 `/greeting` ，当接收到 GET 请求时，会返回纯文本 `“Hello”` 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "The `runtime` module is where you develop the feature you want to propose to your users, so it's time to create our Web Servlet."
-msgstr ""
+msgstr "`运行时` 模块是您开发要向用户推出的功能的地方，因此现在是时候创建我们的 Web Servlet 了。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "To use Servlets in your applications, you need to have a Servlet Container such as https://undertow.io[Undertow].\n"
 "Luckily, `quarkus-bom` imported by our parent `pom.xml` already includes the Undertow Quarkus extension."
-msgstr ""
+msgstr "要在应用程序中使用 Servlet，您需要一个 Servlet 容器，例如 link:https://undertow.io[Undertow] 。幸运的是，由我们的父级 `pom.xml` 导入的 `quarkus-bom` 已经包含了 Undertow 的 Quarkus 扩展。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "All we need to do is add `quarkus-undertow` as a dependency to our `./greeting-extension/runtime/pom.xml`:"
-msgstr ""
+msgstr "我们只需将 `quarkus-undertow` 作为依赖项添加到 `./greeting-extension/runtime/pom.xml` 中即可："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "For Gradle, add the dependency in `./greeting-extension/runtime/build.gradle` file:"
-msgstr ""
+msgstr "对于 Gradle，请在 `./greeting-extension/runtime/build.gradle` 文件中添加该依赖项："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "The dependency on `quarkus-arc` generated by the `create-extension` mojo can now be removed since\n"
 "`quarkus-undertow` already depends on it."
-msgstr ""
+msgstr "由于 `quarkus-undertow` 已经依赖于由 `create-extension` mojo 生成的 `quarkus-arc` ，因此现在可以移除此依赖了。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Now we can create our Servlet `org.acme.greeting.extension.GreetingExtensionServlet` in the `runtime` module."
-msgstr ""
+msgstr "现在，我们可以在 `运行时` 模块中创建 Servlet `org.acme.greeting.extension.GreetingExtensionServlet` 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "As usual, defining a servlet requires to extend `jakarta.servlet.http.HttpServlet`."
-msgstr ""
+msgstr "与往常一样，定义一个 Servlet 需要继承 `jakarta.servlet.http.HttpServlet` 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Since we want to respond to the HTTP GET verb, we override the `doGet` method and write `Hello` in the Servlet response's output stream."
-msgstr ""
+msgstr "由于我们要响应 HTTP GET 动词，因此重写了 `doGet` 方法，并在 Servlet 响应的输出流中写入 `“Hello”` 。"
 
 #. type: Title ==
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Deploying the Greeting feature"
-msgstr ""
+msgstr "部署“问候”功能"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "Quarkus magic relies on bytecode generation at build time rather than waiting for the runtime code evaluation, that's the role of your extension's `deployment` module.\n"
 "Calm down, we know, bytecode is hard, and you don't want to do it manually. Quarkus proposes a high level API to make your life easier.\n"
 "Thanks to basic concepts, you will describe the items to produce/consume and the corresponding steps in order to generate the bytecode to produce during the deployment time."
-msgstr ""
+msgstr "Quarkus 的魔力在于它在构建时就生成字节码，而不是等待运行时对代码进行评估——这正是您扩展的 `部署` 模块所承担的角色。别担心，我们知道字节码很难搞，您肯定也不想手动处理。Quarkus 提供了一个高级 API，让您的开发更轻松。 借助这些基本概念，您将描述需要生成/使用的项目以及相应的步骤，从而在部署期间生成所需的字节码。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "The `io.quarkus.builder.item.BuildItem` concept represents object instances you will produce or consume (and at some point convert into bytecode) thanks to methods annotated with `@io.quarkus.deployment.annotations.BuildStep` which describe your extension's deployment tasks."
-msgstr ""
+msgstr "`io.quarkus.builder.item.BuildItem` 概念代表了您将通过标注了 `@io.quarkus.deployment.annotations.BuildStep` 注解的方法（这些方法描述了扩展的部署任务）所生成或使用的对象实例（并在某个阶段将其转换为字节码）。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "See xref:all-builditems.adoc[the complete list of BuildItem implementations in core] for more information."
-msgstr ""
+msgstr "如需了解更多信息，请参阅 xref:all-builditems.adoc[核心模块中 BuildItem 实现的完整列表] 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Go back to the generated `org.acme.greeting.extension.deployment.GreetingExtensionProcessor` class."
-msgstr ""
+msgstr "返回生成的 `org.acme.greeting.extension.deployment.GreetingExtensionProcessor` 类。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "`feature()` method is annotated with `@BuildStep` which means it is identified as a deployment task Quarkus will have to execute during the deployment.\n"
 "`BuildStep` methods are run concurrently at augmentation time to augment the application.\n"
 "They use a producer/consumer model, where a step is guaranteed not to be run until all the items that it is consuming have been produced."
-msgstr ""
+msgstr "`feature()` 方法标注了 `@BuildStep` 注解，这意味着它被识别为 Quarkus 在部署过程中必须执行的部署任务。 `BuildStep` 方法会在增强阶段并行运行，以增强应用程序。它们采用生产者/消费者模型，该模型保证：在该步骤所消费的所有项都被生产出来之前，该步骤绝不会被执行。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "`io.quarkus.deployment.builditem.FeatureBuildItem` is an implementation of `BuildItem` which represents the description of an extension.\n"
 "This `BuildItem` will be used by Quarkus to display information to the users when the application is starting."
-msgstr ""
+msgstr "`io.quarkus.deployment.builditem.FeatureBuildItem` 是 `BuildItem` 的一个实现，用于表示扩展的描述。Quarkus 将在应用程序启动时使用该 `BuildItem` 向用户显示相关信息。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "There are many `BuildItem` implementations, each one represents an aspect of the deployment process.\n"
 "Here are some examples:"
-msgstr ""
+msgstr "`BuildItem` 有许多实现，每个实现都代表部署过程的一个方面。以下是一些示例："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "`ServletBuildItem`: describes a Servlet (name, path, etc.) we want to generate during the deployment."
-msgstr ""
+msgstr "`ServletBuildItem` ：描述了我们在部署过程中希望生成的 Servlet（名称、路径等）。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "`BeanContainerBuildItem`: describes a container used to store and retrieve object instances during the deployment."
-msgstr ""
+msgstr "`BeanContainerBuildItem` ：描述一种在部署过程中用于存储和检索对象实例的容器。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "If you don't find a `BuildItem` for what you want to achieve, you can create your own implementation. Keep in mind that a `BuildItem` should be as fine-grained as possible, representing a specific part of the deployment.\n"
 "To create your `BuildItem` you can extend:"
-msgstr ""
+msgstr "如果您找不到符合您需求的 `BuildItem，` 可以自行创建实现。请注意 `，BuildItem` 应尽可能细化，代表部署中的某个具体部分。要创建自己的 `BuildItem，` 您可以继承以下类："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "`io.quarkus.builder.item.SimpleBuildItem` if you need only a single instance of the item during the deployment (e.g. `BeanContainerBuildItem`, you only want one container)."
-msgstr ""
+msgstr "`io.quarkus.builder.item.SimpleBuildItem——` 若在部署过程中仅需该项的一个实例（例如 `BeanContainerBuildItem，` 您只需一个容器）。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "`io.quarkus.builder.item.MultiBuildItem` if you want to have multiple instances (e.g. `ServletBuildItem`, you can produce many Servlets during the deployment)."
-msgstr ""
+msgstr "`io.quarkus.builder.item.MultiBuildItem——若` 需创建多个实例（例如 `ServletBuildItem，` 可在部署过程中生成多个 Servlet）。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "It's now time to declare our HTTP endpoint. To do so, we need to produce a `ServletBuildItem`.\n"
 "At this point, we are sure you understood that if the `quarkus-undertow` dependency proposes Servlet support for our `runtime` module, we will need the `quarkus-undertow-deployment` dependency in our `deployment` module to have access to the `io.quarkus.undertow.deployment.ServletBuildItem`."
-msgstr ""
+msgstr "现在是声明我们的 HTTP 端点的时候了。为此，我们需要创建一个 `ServletBuildItem` 。 至此，相信您已经明白：如果 `quarkus-undertow` 依赖项为我们的 `运行时` 模块提供了 Servlet 支持，那么我们 `就在部署` 模块中需要添加 `quarkus-undertow-deployment` 依赖项，才能访问 `io.quarkus.undertow.deployment.ServletBuildItem` 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Let's add `quarkus-undertow-deployment` as dependency to our `./greeting-extension/deployment/pom.xml`:"
-msgstr ""
+msgstr "让我们将 `quarkus-undertow-deployment` 作为依赖项添加到我们的 `./greeting-extension/deployment/pom.xml` 中："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "The dependency on `quarkus-arc-deployment` generated by the `create-extension` mojo can now be removed since\n"
 "`quarkus-undertow-deployment` already depends on it."
-msgstr ""
+msgstr "由于 `quarkus-undertow-deployment` 已经依赖于由 `create-extension` mojo 生成的 `quarkus-arc-deployment` ，因此现在可以移除此依赖了。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "For Gradle, add the dependency in `./greeting-extension/deployment/build.gradle` file:"
-msgstr ""
+msgstr "对于 Gradle，请在 `./greeting-extension/deployment/build.gradle` 文件中添加该依赖项："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "We can now update `org.acme.greeting.extension.deployment.GreetingExtensionProcessor`:"
-msgstr ""
+msgstr "现在我们可以更新 `org.acme.greeting.extension.deployment.GreetingExtensionProcessor` ："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "We add a `createServlet` method which returns a `ServletBuildItem` and annotate it with `@BuildStep`.\n"
 "Now, Quarkus will process this new task which will result in the bytecode generation of the Servlet registration at build time."
-msgstr ""
+msgstr "我们添加了一个 `名为 createServlet` 的方法，该方法返回一个 `ServletBuildItem 对象` ，并为其添加 `@BuildStep` 注解。现在，Quarkus 将处理此新任务，从而在构建时生成 Servlet 注册的字节码。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "`ServletBuildItem` proposes a fluent API to instantiate a Servlet named `greeting-extension` of type `GreetingExtensionServlet` (it's our class provided by our extension `runtime` module), and map it to the `/greeting` path."
-msgstr ""
+msgstr "`ServletBuildItem` 提供了一个流畅 API，用于实例化一个名为 `greeting-extension` 、类型为 `GreetingExtensionServlet` 的 Servlet（这是由我们的扩展 `运行时` 模块提供的类），并将其映射到 `/greeting` 路径。"
 
 #. type: Title ==
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Testing the Greeting Extension feature"
-msgstr ""
+msgstr "测试“问候扩展”功能"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "When developing a Quarkus extension, you mainly want to test that your feature is properly deployed in an application and works as expected.\n"
 "That's why the tests will be hosted in the `deployment` module."
-msgstr ""
+msgstr "在开发 Quarkus 扩展时，您主要需要测试该功能是否已正确部署到应用程序中，并且能否按预期运行。因此，这些测试将托管在 `部署` 模块中。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Quarkus proposes facilities to test extensions via the `quarkus-junit-internal` artifact (which should already be in the deployment pom.xml), in particular the `io.quarkus.test.QuarkusUnitTest` runner, which starts an application with your extension."
-msgstr ""
+msgstr "Quarkus 提供了通过 `quarkus-junit-internal` 构建产物（该产物应已包含在部署版的 pom.xml 中）来测试扩展的功能，特别是 `io.quarkus.test.QuarkusUnitTest` 运行器，它会启动一个包含您扩展的应用程序。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "We will use https://rest-assured.io[RestAssured] (massively used in Quarkus) to test our HTTP endpoint.\n"
 "Let's add the `rest-assured` dependency into the  `./greeting-extension/deployment/pom.xml`."
-msgstr ""
+msgstr "我们将使用 link:https://rest-assured.io[RestAssured] （在 Quarkus 中被广泛使用）来测试我们的 HTTP 端点。现在，让我们将 `rest-assured` 依赖项添加到 `./greeting-extension/deployment/pom.xml` 中。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "The `create-extension` Maven Mojo can create the test and integration-test structure (drop the `-DwithoutTests`). Here, we'll create it ourselves:"
-msgstr ""
+msgstr "Maven Mojo 的 `create-extension` 命令可以生成测试和集成测试的结构（请省略 `-DwithoutTests` 参数）。这里，我们将自行创建该结构："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "To start testing your extension, create the following `org.acme.greeting.extension.deployment.GreetingExtensionTest` test class:"
-msgstr ""
+msgstr "要开始测试您的扩展，请创建以下测试类 `org.acme.greeting.extension.deployment.GreetingExtensionTest` ："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "We register a Junit Extension which will start a Quarkus application with the Greeting extension."
-msgstr ""
+msgstr "我们注册了一个 JUnit 扩展，该扩展将启动一个带有 Greeting 扩展的 Quarkus 应用程序。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "We verify the application has a `greeting` endpoint responding to an HTTP GET request with an OK status (200) and a plain text body containing `Hello`"
-msgstr ""
+msgstr "我们验证该应用程序是否有一个 `问候` 端点，该端点在收到 HTTP GET 请求时会返回 OK 状态码（200），且请求体为纯文本，内容为 `“Hello”` 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Time to test and install to our local maven repository!"
-msgstr ""
+msgstr "是时候进行测试并将代码安装到我们的本地 Maven 仓库了！"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Looks good! Congratulations you just finished your first extension."
-msgstr ""
+msgstr "看起来不错！恭喜你，你刚刚完成了第一个扩展。"
 
 #. type: Title ==
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Debugging your extension"
-msgstr ""
+msgstr "调试您的扩展程序"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "_If debugging is the process of removing bugs, then programming must be the process of putting them in._\n"
 "Edsger W. Dijkstra"
-msgstr ""
+msgstr "_如果调试是消除错误的过程，那么编程就一定是植入错误的过程。_ 埃德斯格·W·迪杰斯特拉"
 
 #. type: Title ===
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Debugging your application build"
-msgstr ""
+msgstr "调试应用程序的构建过程"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "Since your extension deployment is made during the application build, this process is triggered by your build tool.\n"
 "That means if you want to debug this phase you need to launch your build tool with the remote debug mode switched on."
-msgstr ""
+msgstr "由于扩展的部署是在应用程序构建过程中进行的，因此该过程由您的构建工具触发。这意味着，如果您想调试此阶段，则需要在启用远程调试模式的情况下启动构建工具。"
 
 #. type: Title ====
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Maven"
-msgstr ""
+msgstr "Maven"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "You can activate Maven remote debugging by using `mvnDebug`.\n"
 "You can launch your application with the following command line:"
-msgstr ""
+msgstr "您可以使用 `mvnDebug` 启用 Maven 远程调试。您可以通过以下命令行启动应用程序："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "By default, Maven will wait for a connection on `localhost:8000`.\n"
 "Now, you can run your IDE `Remote` configuration to attach it to `localhost:8000`."
-msgstr ""
+msgstr "默认情况下，Maven 会在 `localhost:8000` 上等待连接。现在，您可以运行 IDE `的“远程”` 配置，将其连接到 `localhost:8000` 。"
 
 #. type: Title ====
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Gradle"
-msgstr ""
+msgstr "Gradle"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "You can activate Gradle remote debugging by using the flags `org.gradle.debug=true` or `org.gradle.daemon.debug=true` in daemon mode.\n"
 "You can launch your application with the following command line:"
-msgstr ""
+msgstr "您可以在守护进程模式下使用 `org.gradle.debug=true` 或 `org.gradle.daemon.debug=true` 参数来启用 Gradle 远程调试。您可以使用以下命令行启动应用程序："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "By default, Gradle will wait for a connection on `localhost:5005`.\n"
 "Now, you can run your IDE `Remote` configuration to attach it to `localhost:5005`."
-msgstr ""
+msgstr "默认情况下，Gradle 会监听 `localhost:5005` 端口的连接。现在，您可以运行 IDE `的“远程”` 配置，将其连接到 `localhost:5005` 。"
 
 #. type: Title ===
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Debugging your extension tests"
-msgstr ""
+msgstr "调试扩展程序的测试"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "We have seen together how to test your extension and sometimes things don't go so well and you want to debug your tests.\n"
 "Same principle here, the trick is to enable the Maven Surefire remote debugging in order to attach an IDE `Remote` configuration."
-msgstr ""
+msgstr "我们已经一起了解了如何测试您的扩展，但有时测试过程并不顺利，您可能需要对测试进行调试。这里的原则也是一样的，关键在于启用 Maven Surefire 远程调试功能，以便连接 IDE `远程` 配置。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "By default, Maven will wait for a connection on `localhost:5005`."
-msgstr ""
+msgstr "默认情况下，Maven 会在 `localhost:5005` 上等待连接。"
 
 #. type: Title ==
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Time to use your new extension"
-msgstr ""
+msgstr "是时候使用你的新扩展程序了"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Now that you just finished building your first extension, you should be eager to use it in a Quarkus application!"
-msgstr ""
+msgstr "既然你刚刚完成了第一个扩展的开发，想必已经迫不及待想在 Quarkus 应用程序中使用它了吧！"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "*Classic Maven publication*"
-msgstr ""
+msgstr "*Maven经典出版物*"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "If not already done in the previous step, you should install the `greeting-extension` in your local repository:"
-msgstr ""
+msgstr "如果上一步尚未完成，您应将 `greeting-extension` 安装到本地仓库中："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Then from another directory, use our tooling to create a new `greeting-app` Quarkus application with your new extension:"
-msgstr ""
+msgstr "然后，在另一个目录下，使用我们的工具创建一个包含您新扩展的新 `“greeting-app”` Quarkus 应用程序："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "`cd` into `greeting-app`."
-msgstr ""
+msgstr "`切换` 到 `greeting-app` 目录。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "The `greeting-extension` extension has to be installed in the local Maven repository to be usable in the application."
-msgstr ""
+msgstr "要使应用程序能够使用 `greeting-extension` 扩展，必须将其安装到本地 Maven 仓库中。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Run the application and notice the `Installed Features` list contains the `greeting-extension` extension."
-msgstr ""
+msgstr "运行该应用程序，你会发现 `“已安装功能` ”列表中包含 `“greeting-extension”` 扩展。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "From an extension developer standpoint, the Maven publication strategy is very handy and fast, but Quarkus wants to go one step further by also ensuring a reliability of the ecosystem for the people who will use the extensions.\n"
 "Think about it, we all had a poor Developer Experience with an unmaintained library, an incompatibility between dependencies (and we don't even talk about legal issues).\n"
 "That's why there is the Quarkus Platform."
-msgstr ""
+msgstr "从扩展开发者的角度来看，Maven 的发布策略非常便捷高效，但 Quarkus 希望更进一步，为使用这些扩展的用户确保生态系统的可靠性。 试想一下，我们都曾因使用无人维护的库、依赖项之间的不兼容等问题而遭遇糟糕的开发者体验（更不用说法律问题了）。这就是 Quarkus 平台诞生的原因。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "*Quarkus Platform*"
-msgstr ""
+msgstr "*Quarkus 平台*"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid ""
 "Quarkus platform is a set of extensions that target the primary use-cases of Quarkus as a development framework and can safely be used in any combination in the same application without creating a dependency conflict.\n"
 "From an application developer perspective, a Quarkus platform is represented as one or more Maven BOMs, for example `{quarkus-platform-groupid}:quarkus-bom:{quarkus-version}`, `{quarkus-platform-groupid}:quarkus-camel-bom:{quarkus-version}`, etc, whose dependency version constraints were globally aligned so that these BOMs can be imported in the same application in any order without introducing a dependency conflict."
-msgstr ""
+msgstr "Quarkus 平台是一组扩展，旨在满足 Quarkus 作为开发框架的主要用例，可在同一应用程序中以任意组合安全地使用，而不会引发依赖冲突。 从应用程序开发者的角度来看，Quarkus 平台表现为一个或多个 Maven BOM，例如 `{quarkus-platform-groupid}:quarkus-bom:{quarkus-version}` ， `{quarkus-platform-groupid}:quarkus-camel-bom:{quarkus-version}` 等，这些 BOM 的依赖版本约束已进行全局协调，因此可以在同一应用程序中按任意顺序导入这些 BOM，而不会引发依赖冲突。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "*Quarkiverse Hub*"
-msgstr ""
+msgstr "*夸克宇宙中心*"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "link:https://github.com/quarkiverse[Quarkiverse Hub] is the GitHub organization that provides repository hosting (including build, CI and release publishing setup) for Quarkus extension projects contributed by the community."
-msgstr ""
+msgstr "link:https://github.com/quarkiverse[Quarkiverse Hub] 是一个 GitHub 组织，为社区贡献的 Quarkus 扩展项目提供代码仓库托管服务（包括构建、持续集成和发布配置）。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "In case you are wondering about creating a new Quarkus extension and adding it to the Quarkus ecosystem so that the Quarkus community can discover it using the Quarkus dev tools (including the xref:cli-tooling.adoc[Quarkus CLI] and https://code.quarkus.io[code.quarkus.io]), the https://github.com/quarkiverse[Quarkiverse Hub] GitHub organization will be a good home for it."
-msgstr ""
+msgstr "如果您正在考虑创建一个新的 Quarkus 扩展并将其添加到 Quarkus 生态系统中，以便 Quarkus 社区能够通过 Quarkus 开发工具（包括 xref:cli-tooling.adoc[Quarkus CLI] 和 link:https://code.quarkus.io[code.quarkus.io] ）发现它，那么 link:https://github.com/quarkiverse[Quarkiverse Hub] GitHub 组织将是一个理想的选择。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "You can get started by creating an link:https://github.com/quarkusio/quarkus/issues/new/choose[Extension Request] issue (check first if one wasn't already submitted link:https://github.com/quarkusio/quarkus/labels/kind%2Fextension-proposal[here]) and asking to lead it."
-msgstr ""
+msgstr "你可以先创建一个 link:https://github.com/quarkusio/quarkus/issues/new/choose[“扩展请求] ”问题（请先确认 link:https://github.com/quarkusio/quarkus/labels/kind%2Fextension-proposal[此处] 是否已有相关提交），并申请负责该项目。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "We'll take care of provisioning a new repository and set it up to:"
-msgstr ""
+msgstr "我们将负责配置一个新的代码库，并将其设置为："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Be supported by our tooling;"
-msgstr ""
+msgstr "借助我们的工具获得支持；"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Publish the documentation you produce for your extension to the Quarkiverse website;"
-msgstr ""
+msgstr "将您为扩展程序编写的文档发布到 Quarkiverse 网站上；"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Configure your extension to use the link:https://github.com/quarkusio/quarkus-ecosystem-ci#quarkus-ecosystem-ci[Quarkus Ecosystem CI] to build against the latest Quarkus Core changes;"
-msgstr ""
+msgstr "配置您的扩展程序，使其使用 link:https://github.com/quarkusio/quarkus-ecosystem-ci#quarkus-ecosystem-ci[Quarkus 生态系统持续集成（CI）] 来根据 Quarkus Core 的最新变更进行构建；"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Give you the freedom to manage the project and release to Maven Central as you like."
-msgstr ""
+msgstr "让您能够自由地管理项目，并按自己的意愿将其发布到 Maven Central。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Extensions hosted in the Quarkiverse Hub may or may not end up in the Quarkus platform."
-msgstr ""
+msgstr "托管在 Quarkiverse Hub 上的扩展程序，最终可能会被纳入 Quarkus 平台，也可能不会。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "For more information, check link:https://github.com/quarkiverse/quarkiverse/wiki[the Quarkiverse Wiki] and link:https://quarkus.io/blog/quarkiverse/[this blog post]."
-msgstr ""
+msgstr "如需了解更多信息，请查阅 link:https://github.com/quarkiverse/quarkiverse/wiki[Quarkiverse 维基] 和 link:https://quarkus.io/blog/quarkiverse/[这篇博客文章] 。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Conclusion"
-msgstr ""
+msgstr "结论"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Creating new extensions may appear to be an intricate task at first, but once you understand the Quarkus game-changer paradigm (build time vs runtime) the structure of an extension makes perfectly sense."
-msgstr ""
+msgstr "创建新扩展功能起初看起来可能是一项复杂的任务，但一旦理解了 Quarkus 这一颠覆性的范式（构建时与运行时），扩展功能的结构就变得完全合乎逻辑了。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "As usual, along the path, Quarkus simplifies things under the hood (Maven Mojo, bytecode generation, or testing) to make it pleasant to develop new features."
-msgstr ""
+msgstr "一如既往，在开发过程中，Quarkus 会在后台简化各项操作（Maven Mojo、字节码生成或测试），从而让新功能的开发变得轻松愉快。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "Further reading"
-msgstr ""
+msgstr "延伸阅读"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "xref:writing-extensions.adoc[Writing your own extension] for the full documentation."
-msgstr ""
+msgstr "xref:writing-extensions.adoc[编写您自己的扩展程序] ，以获取完整的文档。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/building-my-first-extension.adoc
+#, fuzzy
 msgid "xref:dev-ui.adoc[Quarkus Dev UI] to learn how to support the Dev UI in your extension"
-msgstr ""
+msgstr "xref:dev-ui.adoc[Quarkus Dev UI] ，了解如何在您的扩展中支持 Dev UI"

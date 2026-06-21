@@ -7,345 +7,481 @@ msgstr ""
 "X-Generator: jekyll-l10n\n"
 
 #. type: YAML Front Matter: title
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Generating CycloneDX BOMs"
-msgstr ""
+msgstr "生成 CycloneDX 物料清单 (BOM)"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid ""
 "An SBOM (Software Bill of Material) is a manifest that describes what a given software distribution consists of in terms of components. In addition to that, it may include a lot more information such as relationships between those components, licenses, provenance, etc.\n"
 "SBOMs would typically be used by software security and software supply chain risk management tools to perform vulnerability and compliance related analysis."
-msgstr ""
+msgstr "SBOM（软件物料清单）是一份清单，用于描述特定软件发行版由哪些组件构成。 此外，它还可能包含更多信息，例如这些组件之间的关系、许可协议、来源等。SBOM通常被软件安全和软件供应链风险管理工具用于进行漏洞和合规性相关分析。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "This guide describes Quarkus SBOM generation capabilities following https://cyclonedx.org/[CycloneDX] specification."
-msgstr ""
+msgstr "本指南介绍了 Quarkus 根据 link:https://cyclonedx.org/[CycloneDX] 规范生成 SBOM 的功能。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Why Quarkus-specific tooling?"
-msgstr ""
+msgstr "为什么需要专门针对 Quarkus 的工具？"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "While Quarkus integrates with build tools such as https://maven.apache.org/[Maven] and https://gradle.org/[Gradle], it could itself be categorized as a build tool with its own component and dependency model, build steps, and build outcomes. One of the essential component types of a Quarkus application is a Quarkus extension, which consists of a runtime and a build time artifacts, and their dependencies."
-msgstr ""
+msgstr "虽然 Quarkus 与 link:https://maven.apache.org/[Maven] 和 link:https://gradle.org/[Gradle] 等构建工具集成，但它本身也可以被归类为一种构建工具，拥有自己的组件和依赖项模型、构建步骤以及构建结果。 Quarkus 应用程序的核心组件类型之一是 Quarkus 扩展，它由运行时和构建时工件及其依赖项组成。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "To properly resolve Quarkus extension and other application dependencies Quarkus uses its own dependency resolver, which is implemented on top of the dependency resolver provided by the underlying build tool: Maven or Gradle."
-msgstr ""
+msgstr "为了正确解析 Quarkus 扩展及其他应用程序的依赖关系，Quarkus 使用其自有的依赖解析器，该解析器是在底层构建工具（Maven 或 Gradle）提供的依赖解析器基础上实现的。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "As a consequence, in case of Maven, for example, the results of `dependency:tree` will not include all the dependencies Quarkus will use to build an application. A similar issue will affect other dependency analysis tools that assume a project adheres to the standard Maven dependency model: they will not be able to capture the effective Quarkus application dependency graph. Unfortunately, that includes the implementation of the https://github.com/CycloneDX/cyclonedx-maven-plugin[CycloneDX Maven plugin]."
-msgstr ""
+msgstr "因此，以 Maven 为例，` `dependency:tree` ` 的结果将不会包含 Quarkus 用于构建应用程序的所有依赖项。 类似的问题也会影响其他假设项目遵循标准 Maven 依赖模型的依赖分析工具：它们将无法捕获 Quarkus 应用程序的实际依赖图。遗憾的是，这包括 link:https://github.com/CycloneDX/cyclonedx-maven-plugin[CycloneDX Maven 插件] 的实现。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Besides the dependencies, that are an input to a build process, there is also an outcome of the build that is the final distribution of an application. Users of an application may request an SBOM manifesting not only the dependencies (the input to a build) but also the final distribution (the outcome of the build) before they agree to deploy the application. Quarkus allows application developers to choose various packaging types for their applications, some of which are Quarkus-specific. Providing certain Quarkus-specific details about components included in a distribution may help better evaluate the impact of potential security-related issues."
-msgstr ""
+msgstr "除了作为构建过程输入的依赖项之外，构建过程的输出结果也是应用程序的最终发布版本。 应用程序的用户在同意部署该应用程序之前，可能会要求提供一份 SBOM，该清单不仅应列出依赖项（即构建的输入），还应包含最终发行版（即构建的输出）。 Quarkus 允许应用程序开发人员为其应用程序选择各种打包类型，其中一些是 Quarkus 特有的。提供有关分发包中包含的组件的某些 Quarkus 特定详细信息，有助于更好地评估潜在安全相关问题的影响。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Dependency SBOMs"
-msgstr ""
+msgstr "依赖项 SBOM"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "This chapter describes how to generate SBOMs manifesting only the dependencies of an application before it is built. In other words, these SBOMs will manifest the input into a build. These SBOMs could be used to perform vulnerability and compliance related analysis before building applications."
-msgstr ""
+msgstr "本章介绍了如何在应用程序构建之前生成仅列出其依赖关系的SBOM。换言之，这些SBOM将列出构建过程的输入内容。这些SBOM可用于在构建应用程序之前进行漏洞和合规性相关分析。"
 
 #. type: Title ==
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Maven Dependency SBOMs"
-msgstr ""
+msgstr "Maven 依赖项 SBOM"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "For Quarkus Maven projects dependency SBOMs can be generated with the `quarkus:dependency-sbom` goal. The outcome of the goal will be saved in a `target/<artifactId>-<version>-dependency-cyclonedx.json` file (which can be changed by setting the `outputFile` goal parameter or the `quarkus.dependency.sbom.output-file` property). The complete Quarkus build and runtime dependency graphs will be recorded in the https://cyclonedx.org/[CycloneDX] `JSON` format."
-msgstr ""
+msgstr "对于 Quarkus Maven 项目，可以使用 `quarkus:dependency-sbom` 目标生成依赖项 SBOM。 该目标的输出结果将保存在 `target/<artifactId>-<version>-dependency-cyclonedx.json` 文件中（可通过设置 `outputFile` 目标参数或 `quarkus.dependency.sbom.output-file` 属性来更改该路径）。 完整的 Quarkus 构建和运行时依赖关系图将以 link:https://cyclonedx.org/[CycloneDX] `JSON` 格式记录下来。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "`XML` format can be requested by setting `format` goal parameter (or `quarkus.dependency.sbom.format` property) to `xml`."
-msgstr ""
+msgstr "可以通过将 `格式` 目标参数（或 `quarkus.dependency.sbom.format` 属性）设置为 `xml` 来请求 `XML` 格式。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Each component in the generated SBOM will include the `quarkus:component:scope` property that will indicate whether this component is used at runtime or only development/build time."
-msgstr ""
+msgstr "生成的 SBOM 中的每个组件都将包含 `quarkus:component:scope` 属性，该属性将指示该组件是在运行时使用，还是仅在开发/构建时使用。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "By default, `quarkus:dependency-sbom` captures the dependencies of a production build. Quarkus supports three application bootstrap modes: normal (production), test, and dev. In all three modes, an application may have different dependency graphs. The `mode` parameter can be used to indicate which dependency graph should be recorded. If the `mode` is set to `test` or `dev`, the target file name will become `target/<artifactId>-<version>-<mode>-dependency-cyclonedx.json`."
-msgstr ""
+msgstr "默认情况下 `，quarkus:dependency-sbom` 会捕获生产环境构建的依赖关系。Quarkus 支持三种应用程序启动模式：normal（生产）、test 和 dev。在这三种模式下，应用程序可能具有不同的依赖关系图。 可通过 `mode` 参数指定应记录哪个依赖关系图。如果 `mode` 设置为 `test` 或 `dev` ，目标文件名将变为 `target/<artifactId>-<version>-<mode>-dependency-cyclonedx.json` 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "The complete set of parameters and their description can be obtained by executing `mvn help:describe -Dcmd=quarkus:dependency-sbom -Ddetail`."
-msgstr ""
+msgstr "通过执行 `mvn help:describe -Dcmd=quarkus:dependency-sbom -Ddetail，` 可以获取完整的参数及其说明。"
 
 #. type: Title ==
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Gradle Dependency SBOMs"
-msgstr ""
+msgstr "Gradle 依赖项 SBOM"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Unlike Maven, the https://github.com/CycloneDX/cyclonedx-gradle-plugin[Gradle CycloneDX plugin implementation] can be used in Quarkus projects to generate dependency SBOMs, since the implementation manifests dependency configurations registered by configured plugins."
-msgstr ""
+msgstr "与 Maven 不同 link:https://github.com/CycloneDX/cyclonedx-gradle-plugin[，Gradle] 的 link:https://github.com/CycloneDX/cyclonedx-gradle-plugin[CycloneDX 插件实现] 可在 Quarkus 项目中用于生成依赖项 SBOM，因为该实现会列出由已配置插件注册的依赖项配置。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Please, refer to the https://github.com/CycloneDX/cyclonedx-gradle-plugin[Gradle CycloneDX plugin] documentation for its configuration options. Here is a list of Quarkus dependency configurations that would be relevant for manifesting:"
-msgstr ""
+msgstr "有关配置选项，请参阅 link:https://github.com/CycloneDX/cyclonedx-gradle-plugin[Gradle CycloneDX 插件的] 文档。以下是与清单配置相关的 Quarkus 依赖项配置列表："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "`quarkusProdRuntimeClasspathConfiguration` - Quarkus application production runtime dependencies;"
-msgstr ""
+msgstr "`quarkusProdRuntimeClasspathConfiguration` - Quarkus 应用程序的生产运行时依赖项；"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "`quarkusProdRuntimeClasspathConfigurationDeployment` - Quarkus application production runtime and build time dependencies;"
-msgstr ""
+msgstr "`quarkusProdRuntimeClasspathConfigurationDeployment` - Quarkus 应用程序的生产运行时和构建时依赖项；"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "`quarkusTestRuntimeClasspathConfiguration` - Quarkus application test runtime dependencies;"
-msgstr ""
+msgstr "`quarkusTestRuntimeClasspathConfiguration` - Quarkus 应用程序测试运行时的依赖项；"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "`quarkusTestRuntimeClasspathConfigurationDeployment` - Quarkus application test runtime and build time dependencies;"
-msgstr ""
+msgstr "`quarkusTestRuntimeClasspathConfigurationDeployment` - Quarkus 应用程序的测试运行时和构建时依赖项；"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "`quarkusDevRuntimeClasspathConfiguration` - Quarkus application dev mode runtime dependencies;"
-msgstr ""
+msgstr "`quarkusDevRuntimeClasspathConfiguration` - Quarkus 应用程序开发模式的运行时依赖项；"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "`quarkusDevRuntimeClasspathConfigurationDeployment` - Quarkus application dev mode runtime and build time dependencies."
-msgstr ""
+msgstr "`quarkusDevRuntimeClasspathConfigurationDeployment` - Quarkus 应用程序开发模式下的运行时和构建时依赖项。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Given that the plugin is not aware of how Quarkus uses these dependencies, it will not be able to set the `quarkus:component:scope` property for components. On the other hand, the requested configuration name can be used indicate which scope to target."
-msgstr ""
+msgstr "由于该插件无法识别 Quarkus 是如何使用这些依赖项的，因此无法为组件设置 `quarkus:component:scope` 属性。不过，可以通过指定的配置名称来指示应针对哪个作用域。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Distribution SBOMs"
-msgstr ""
+msgstr "发布 SBOM"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "This chapter describes SBOMs that manifest outcomes of Quarkus builds that are final application distributions."
-msgstr ""
+msgstr "本章介绍了反映 Quarkus 构建结果（即最终应用程序发行版）的 SBOM。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "During an application build and package assembly process, Quarkus captures certain details about the produced distribution and then allows an SBOM generator to consume and record that information in an SBOM format."
-msgstr ""
+msgstr "在应用程序构建和打包过程中，Quarkus 会捕获有关生成的发行版的某些详细信息，然后允许 SBOM 生成器读取并以 SBOM 格式记录这些信息。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "At this point, the only SBOM generator available for Quarkus users that can manifest application distributions is `io.quarkus:quarkus-cyclonedx`. Once it's added as a project dependency it will generate SBOMs every time an application is built. SBOMs will be saved in the project's build output directory under `<executable-name>-cyclonedx.<format>` name, where"
-msgstr ""
+msgstr "目前，Quarkus 用户可用的、能够生成应用程序分发清单的唯一 SBOM 生成器是 `io.quarkus:quarkus-cyclonedx` 。将其添加为项目依赖项后，每次构建应用程序时都会生成 SBOM。 SBOM 将保存在项目构建输出目录下，文件名为 `<可执行文件名>-cyclonedx.<格式>` ，其中"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "`<executable-name>` is the base file name (without the extension) of the executable that launches an application;"
-msgstr ""
+msgstr "`<可执行文件名>` 是用于启动应用程序的可执行文件的基文件名（不带扩展名）；"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "`<format>` is either `json` (the default) or `xml`, which can be configured using `quarkus.cyclonedx.format` property. If both formats are desired `quarkus.cyclonedx.format` can be set to `all`."
-msgstr ""
+msgstr "`<format>` 可以是 `json` （默认）或 `xml，` 可通过 `quarkus.cyclonedx.format` 属性进行配置。如果需要同时使用这两种格式，可将 `quarkus.cyclonedx.format` 设置为 `all` 。"
 
 #. type: Title ==
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Fast JAR"
-msgstr ""
+msgstr "Fast JAR"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Fast JAR packaging uses a Quarkus-specific filesystem directory layout that contains files generated by Quarkus and Maven artifacts that are runtime dependencies of an application."
-msgstr ""
+msgstr "快速 JAR 打包采用一种 Quarkus 专用的文件系统目录结构，其中包含由 Quarkus 生成的文件以及作为应用程序运行时依赖项的 Maven 构建产物。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "SBOMs for Fast JAR packaging type will use the executable JAR file as their main component and record both runtime and build time Quarkus application dependencies."
-msgstr ""
+msgstr "针对“快速 JAR”打包类型的 SBOM 将以可执行 JAR 文件作为其主要组件，并记录 Quarkus 应用程序在运行时和构建时的依赖项。"
 
 #. type: Title ===
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Runtime Components"
-msgstr ""
+msgstr "运行时组件"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Every file in the resulting Fast JAR distribution will appear in the SBOM with the `quarkus:component:scope` property set to `runtime` and `evidence.occurrences.location` field pointing to the location of the component in the application distribution directory, for example"
-msgstr ""
+msgstr "生成的 Fast JAR 发行包中的每个文件都会出现在 SBOM 中，其中 `quarkus:component:scope` 属性设置为 `runtime，evidence.occurrences.location` 字段则指向该组件在应用程序发行目录中的位置，例如"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "`evidence.occurrences.location` was introduced in CycloneDX schema version 1.5, for older versions the location will be indicated using the `quarkus:component:location` property."
-msgstr ""
+msgstr "`evidence.occurrences.location` 是在 CycloneDX 模式 1.5 版本中引入的；对于较早版本，将使用 `quarkus:component:location` 属性来指定位置。"
 
 #. type: Title ===
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Pedigree"
-msgstr ""
+msgstr "血统"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Pedigree is a way to provide information that certain patches, or changes in general, have been applied to a certain component."
-msgstr ""
+msgstr "“源代码历史”是一种用于说明某些补丁（或一般性更改）已应用到特定组件上的信息记录方式。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "In certain cases, Quarkus may copy modified versions of dependency artifacts to an application distribution. Manipulating the original content of a component will change its hash sums which may get highlighted as suspicious by the tools comparing original component hash sums to those found in the distribution."
-msgstr ""
+msgstr "在某些情况下，Quarkus 可能会将依赖项工件的修改版本复制到应用程序发行版中。对组件的原始内容进行修改会改变其哈希值，这可能会被将原始组件哈希值与发行版中哈希值进行比对的工具标记为可疑。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid ""
 "When Quarkus applies modifications to artifacts resolved from Maven repositories, it can manifest these changes as pedigree notes in the generated SBOM.\n"
 "For example, if an application developer decided to remove certain classpath resources from a dependency, such as"
-msgstr ""
+msgstr "当 Quarkus 对从 Maven 仓库解析出的工件进行修改时，它可以在生成的 SBOM 中以血统注释的形式体现这些更改。例如，如果应用程序开发人员决定从某个依赖项中移除某些类路径资源，例如"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "The resulting SBOM will include"
-msgstr ""
+msgstr "生成的 SBOM 将包含"
 
 #. type: Title ===
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Build time dependencies"
-msgstr ""
+msgstr "构建时间依赖关系"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Build time dependencies will be recorded with the `quarkus:component:scope` property set to `development`:"
-msgstr ""
+msgstr "当 `quarkus:component:scope` 属性设置为 `development` 时，构建时间依赖关系将被记录下来："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "They will not include `evidence.occurrences.location` since they will not be found in the distribution."
-msgstr ""
+msgstr "它们不会包含 `evidence.occurrences.location，` 因为这些内容在发行版中找不到。"
 
 #. type: Title ==
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Uber JAR"
-msgstr ""
+msgstr "Uber JAR"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "SBOMs for Uber JARs will use the Uber JAR Maven artifact as their main component."
-msgstr ""
+msgstr "Uber JAR 的 SBOM 将使用 Uber JAR Maven 工件作为其主要组件。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Since an Uber JAR is published as a Maven artifact itself, SBOMs generated for Uber JARs will also be automatically published as Maven artifacts. This, however, can be disabled by setting the `attachSboms` parameter of the `quarkus:build` goal to `false`."
-msgstr ""
+msgstr "由于 Uber JAR 本身是以 Maven 工件的形式发布的，因此为 Uber JAR 生成的 SBOM 也会自动作为 Maven 工件发布。不过，可以通过将 `quarkus:build` 目标的 `attachSboms` 参数设置为 `false` 来禁用此功能。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Gradle users will have to explicitly configure a publishing plugin to deploy SBOMs as Maven artifacts."
-msgstr ""
+msgstr "Gradle 用户必须显式配置一个发布插件，才能将 SBOM 作为 Maven 工件进行部署。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Runtime components in an SBOM generated for an Uber JAR will not include `evidence.occurrences.location` since their content is merged in a single JAR file."
-msgstr ""
+msgstr "为 Uber JAR 生成的 SBOM 中的运行时组件将不包含 `evidence.occurrences.location，` 因为其内容已合并到单个 JAR 文件中。"
 
 #. type: Title ==
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Native image"
-msgstr ""
+msgstr "原始图片"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "SBOMs for native images will use the native executable file as their main component."
-msgstr ""
+msgstr "本机映像的软件物料清单（SBOM）将以本机可执行文件作为其主要组成部分。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Since native executables are not currently attached to projects as Maven artifacts, their SBOMs will not be attached as Maven artifacts either."
-msgstr ""
+msgstr "由于原生可执行文件目前并未作为 Maven 工件附加到项目中，因此其 SBOM 也不会作为 Maven 工件附加。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "As in the case of an Uber JAR, runtime components in an SBOM generated for an native executable will not include `evidence.occurrences.location` since their corresponding code and resources are included in a single native executable file."
-msgstr ""
+msgstr "与 Uber JAR 的情况类似，为原生可执行文件生成的 SBOM 中的运行时组件不会包含 `evidence.occurrences.location，` 因为其对应的代码和资源都包含在一个原生可执行文件中。"
 
 #. type: Title ==
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Mutable JAR"
-msgstr ""
+msgstr "可变JAR"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Mutable JAR distribution is similar to the Fast JAR one except it also includes build time dependencies to support re-augmentation (re-building) of an application."
-msgstr ""
+msgstr "可变 JAR 分发与 Fast JAR 分发类似，不同之处在于它还包含构建时依赖项，以支持应用程序的重新增强（重新构建）。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "SBOMs generated for Mutable JAR distributions will also record locations of components that will be used during re-augmentation process using `evidence.occurrences.location` but keeping their `quarkus:component:scope` property set to `development`. For example:"
-msgstr ""
+msgstr "为可变 JAR 发行版生成的 SBOM 还将通过 ` `evidence.occurrences.location` ` 记录在重新增强过程中将使用的组件的位置，但会将这些组件的 ``quarkus:component:scope` ` 属性保留为 ` `development` `。例如："
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Quarkus Property Taxonomy"
-msgstr ""
+msgstr "Quarkus 属性分类法"
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Name"
-msgstr ""
+msgstr "姓名"
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Value range"
-msgstr ""
+msgstr "值范围"
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Description"
-msgstr ""
+msgstr "描述"
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "`quarkus:component:scope`"
-msgstr ""
+msgstr "`quarkus:component:scope`"
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "`runtime` or `development`"
-msgstr ""
+msgstr "`运行时` 或 `开发时`"
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Indicates whether a component is a runtime or a build/development time dependency of an application."
-msgstr ""
+msgstr "用于指示某个组件是应用程序的运行时依赖项，还是构建/开发时依赖项。"
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "`quarkus:component:location`"
-msgstr ""
+msgstr "`quarkus:component:location`"
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "String representing a file system path using `/` as a path element"
-msgstr ""
+msgstr "一个字符串，表示使用 `/` 作为路径元素的文件系统路径simplified Chinese (Mainland)"
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.33/guides/cyclonedx.adoc
+#, fuzzy
 msgid "Used in SBOMs with schema versions 1.4 or older. Starting from schema 1.5, `evidence.occurrences.location` is used instead. This property is used only if a component is found in the distribution. The value is a relative path to a file pointing to the location of a component in a distribution using `/` as a path element separator."
-msgstr ""
+msgstr "用于模式版本为 1.4 或更早的 SBOM。 从模式 1.5 开始，改用 `evidence.occurrences.location` 。仅当在发行版中找到该组件时，才会使用此属性。其值为指向发行版中组件位置的文件相对路径，路径中使用 `/` 作为路径元素分隔符。"

@@ -7,254 +7,338 @@ msgstr ""
 "X-Generator: jekyll-l10n\n"
 
 #. type: YAML Front Matter: title
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid "Introducing Quarkus Data: One Gateway for Data Access"
-msgstr ""
+msgstr "Quarkus Data 简介：数据访问的统一入口"
 
 #. type: YAML Front Matter: synopsis
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid "Quarkus Data unifies the data access experience in Quarkus"
-msgstr ""
+msgstr "Quarkus Data 统一了 Quarkus 中的数据访问体验"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid "Quarkus Data: One Gateway for Data Access"
-msgstr ""
+msgstr "Quarkus Data：数据访问的统一入口"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid ""
 "You might have read Stephane's https://quarkus.io/blog/hibernate-panache-next/[blog post] about Panache Next, the new version of Panache that we're currently developing, and https://quarkus.io/blog/panache-next-renamed-to-quarkus-data/[his follow-up] on the renaming to Quarkus Data.\n"
 "This blog post is about what comes next."
-msgstr ""
+msgstr "您可能已经读过斯蒂芬（Stephane）关于“Panache Next”（即我们目前正在开发的 Panache 新版本） link:https://quarkus.io/blog/hibernate-panache-next/[的博客文章] ，以及 link:https://quarkus.io/blog/panache-next-renamed-to-quarkus-data/[他] 关于该项目更名为“Quarkus Data link:https://quarkus.io/blog/panache-next-renamed-to-quarkus-data/[”的后续文章] 。本文将探讨接下来的发展方向。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid ""
 "Having discussed current database access patterns in conferences, meetings and user feedback sessions, we know that the current implementation of Panache, which we'll call Panache 1 in this blog post, is popular as a data access mechanism.\n"
 "But despite Panache 1's popularity, we discovered that there is some confusion on exactly what Quarkus extension to use."
-msgstr ""
+msgstr "通过在各类会议、研讨会及用户反馈会上探讨当前的数据库访问模式，我们了解到，Panache 的当前实现版本（本文中我们将之称为 Panache 1）作为一种数据访问机制颇受欢迎。但尽管 Panache 1 广受欢迎，我们发现大家对于究竟该使用哪种 Quarkus 扩展仍存在一些困惑。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid ""
 "Should a Quarkus application that needs database access use the Hibernate extension, the Hibernate Reactive extension, Panache, or something else?\n"
 "Given that Hibernate is currently the most popular extension in Quarkus (as most applications will need persistence on the database), you might imagine that this confusion is creating some friction."
-msgstr ""
+msgstr "如果一个需要访问数据库的 Quarkus 应用程序，应该使用 Hibernate 扩展、Hibernate Reactive 扩展、Panache，还是其他方案？鉴于 Hibernate 目前是 Quarkus 中最流行的扩展（因为大多数应用程序都需要数据库持久化），你可以想象这种困惑正在造成一些摩擦。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid "Try it yourself: create a Quarkus app with the CLI, then search for a database extension:"
-msgstr ""
+msgstr "自己试一试：使用 CLI 创建一个 Quarkus 应用，然后搜索一个数据库扩展："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid ""
 "That's a lot of results. Some of them are not obviously related, but the ones on top are misleading.\n"
 "And if you try searching for \"database\" instead, it's even worse:"
-msgstr ""
+msgstr "搜索结果真多。其中一些显然没什么关联，但排在最前面的那些结果会让人产生误解。如果你改成搜索“database”，情况就更糟了："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid "Which one do you pick?"
-msgstr ""
+msgstr "你会选哪一个？"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid "From Panache to Jakarta Data"
-msgstr ""
+msgstr "从“Panache”到“雅加达数据”"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid ""
 "This situation is admittedly confusing, but it didn't happen by accident.\n"
 "Every one of those extensions exists because it solves a real problem.\n"
 "To understand how we got here, we need to go back to the early days of Quarkus."
-msgstr ""
+msgstr "诚然，这种情况令人困惑，但这并非偶然。这些扩展之所以存在，是因为它们各自都解决了实际问题。要理解我们为何会走到这一步，我们需要回溯到 Quarkus 的早期阶段。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid ""
 "Developers wanted a simple way to avoid writing repetitive data access code: define an entity, get basic CRUD operations, and declare queries in a single place without writing similar query methods by hand.\n"
 "Also, developers love the idea of the \"repository class\", a class that will hold such queries and some helpers to avoid writing code.\n"
 "At the time, there was no standard repository pattern for Hibernate, so the Quarkus team created Panache to fill that gap.\n"
 "Panache provided a repository pattern, a single place to define queries for each entity, and also offered richer entities to simplify data access by putting persistence methods directly on their entities."
-msgstr ""
+msgstr "开发人员希望有一种简单的方法来避免编写重复的数据访问代码：定义一个实体，获取基本的 CRUD 操作，并在一个地方声明查询，而无需手动编写类似的查询方法。此外，开发人员非常喜欢“存储库类”这一概念——这种类会封装此类查询以及一些辅助方法，从而避免重复编写代码。 当时，Hibernate 还没有标准的存储库模式，因此 Quarkus 团队创建了 Panache 来填补这一空白。Panache 提供了一种存储库模式，允许在单一位置为每个实体定义查询，同时还提供了功能更丰富的实体，通过将持久化方法直接置于实体上，从而简化了数据访问。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid ""
 "Since then, the Jakarta EE ecosystem has caught up.\n"
 "Jakarta Data <<jd>> standardizes the repository pattern across SQL and NoSQL databases, with an annotation processor that generates implementations at compile time, including full type checking of queries and parameter bindings against your entity model.\n"
 "It is a top-level specification in Jakarta EE 11 that supports both Jakarta Persistence and Jakarta NoSQL <<nosql>>.\n"
 "With Jakarta Data now providing some of the features Panache pioneered, it was natural for the Quarkus team to build on it."
-msgstr ""
+msgstr "自那时起，Jakarta EE 生态系统已迎头赶上。Jakarta Data <<jd>> 实现了 SQL 和 NoSQL 数据库间存储库模式的标准化，其注解处理器可在编译时生成实现代码，包括针对实体模型对查询和参数绑定进行全面的类型检查。 这是 Jakarta EE 11 中的顶级规范，同时支持 Jakarta Persistence 和 Jakarta NoSQL <<nosql>> 。鉴于 Jakarta Data 现已提供 Panache 率先推出的一些功能，Quarkus 团队基于它进行开发便水到渠成。"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid "Introducing Quarkus Data"
-msgstr ""
+msgstr "Quarkus Data 简介"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid ""
 "We then created \"Quarkus Data\": an umbrella project for data access in Quarkus.\n"
 "It groups all data access extensions we showed earlier under a single name, making it easier to find documentation and understand how the pieces fit together.\n"
 "This is the biggest change to data access in Quarkus since the introduction of Panache, and we believe it's a step forward for both new and existing users. It's the first part towards a better user experience for newcomers, but it's not yet done: having a new extension means having more complexity, not less. Part of the future work will be to make Quarkus Data the obvious entry point across the CLI tools, the documentation, code.quarkus.io, and other places."
-msgstr ""
+msgstr "随后，我们创建了“Quarkus Data”：这是一个用于 Quarkus 中数据访问的统合项目。它将我们之前展示的所有数据访问扩展整合到一个名称之下，从而更便于查找文档并理解各部分如何相互配合。 这是自 Panache 推出以来，Quarkus 数据访问领域最大的变革，我们相信这对新老用户而言都是一大进步。这是为新手提供更佳用户体验的第一步，但工作尚未完成：新增扩展意味着复杂性会增加，而非减少。 未来的工作之一，将是让 Quarkus Data 成为 CLI 工具、文档、code.quarkus.io 及其他各处的自然入口。"
 
 #. type: Block title
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid "Why \"Quarkus Data\" and not \"Panache 2.0\"?"
-msgstr ""
+msgstr "为什么是“Quarkus Data”，而不是“Panache 2.0”？"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid ""
 "The Panache name was popular with our users, but it had a discoverability problem.\n"
 "\"Hibernate with Panache\" was meant to signal a better Hibernate experience, but if you didn't already know what Panache was, the name didn't tell you.\n"
 "A user searching for \"hibernate\" or \"data\" would see Panache in the results, but nothing about the name suggested it was the simpler way to do repositories, or any of its other features.\n"
 "We chose \"Data\" because the project is built on Jakarta Data, it's self-explanatory, and it might help users migrating from other frameworks as they're already used to the \"Data\" naming, i.e. Spring, Micronaut, Helidon...\n"
 "It's also an opportunity to create an umbrella that covers both SQL and NoSQL under the same name."
-msgstr ""
+msgstr "“Panache”这个名字虽然深受用户喜爱，但存在可发现性问题。“Hibernate with Panache”本意是传达一种更优质的 Hibernate 使用体验，但如果你原本并不了解 Panache 是什么，这个名字并不能让你明白。 用户搜索“hibernate”或“data”时，虽然会在结果中看到 Panache，但该名称本身并未体现它能以更简便的方式实现存储库，也未体现其任何其他功能。 我们选择“Data”作为名称，是因为该项目基于 Jakarta Data 构建，这个名称不言自明，而且可能有助于从其他框架迁移过来的用户——他们已经习惯了“Data”的命名方式，例如 Spring、Micronaut、Helidon……​ 这也是一个机会，可以创建一个统一的名称，将 SQL 和 NoSQL 都纳入其中。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid ""
 "Under the Quarkus Data umbrella, there can be specific modules for different backends.\n"
 "The first one is **Quarkus Data Hibernate**, for relational databases.\n"
 "In the future, additional modules like Quarkus Data MongoDB could follow the same model for NoSQL databases."
-msgstr ""
+msgstr "在 Quarkus Data 框架下，可以针对不同的后端提供专门的模块。第一个模块是 *Quarkus Data Hibernate* ，用于关系型数据库。未来，诸如 Quarkus Data MongoDB 之类的其他模块可能会采用相同的模式，以支持 NoSQL 数据库。"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid "Quarkus Data Hibernate"
-msgstr ""
+msgstr "Quarkus Data Hibernate"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid ""
 "Quarkus Data Hibernate is now the new entry point for relational database access in Quarkus.\n"
 "If you need to talk to a database, this is the one extension you add:"
-msgstr ""
+msgstr "Quarkus Data Hibernate 现已成为 Quarkus 中访问关系型数据库的新入口。如果您需要与数据库进行交互，只需添加这一项扩展即可："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid "Or in your `pom.xml`:"
-msgstr ""
+msgstr "或者在你的 `pom.xml` 中："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid ""
 "This single extension gives you everything you need to start with data access in your application. It's structured in a way that makes \"simple things easy, and complex things possible\".\n"
 "This means that it offers an experience that is enjoyable for newcomers to Hibernate, without limiting advanced users from using advanced features."
-msgstr ""
+msgstr "这个单一扩展包为您提供了在应用程序中开始进行数据访问所需的一切。它的设计理念是“让简单的事情变得简单，让复杂的事情成为可能”。这意味着它既能为 Hibernate 新手提供愉快的开发体验，又不会限制高级用户使用高级功能。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid "Here's a round-up of the features it offers:"
-msgstr ""
+msgstr "以下是该产品所提供功能的汇总："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid "**Richer entities**: your entity gets lifecycle operations by extending a simple class. The simplest way to get started."
-msgstr ""
+msgstr "*功能更丰富的实体* ：通过继承一个简单的类，您的实体即可获得生命周期操作。这是入门最简单的方式。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid "**Repositories**: define a standalone repository interface annotated with `@Repository`, along with queries consisting simply in strings using the HQL/JPQL languages from Jakarta Persistence. The Hibernate annotation processor generates the implementation at compile time, with full type checking of queries and parameters against your entity model."
-msgstr ""
+msgstr "*存储库* ：定义一个带有 `@Repository` 注解的独立存储库接口，以及使用 Jakarta Persistence 中的 HQL/JPQL 语言编写的、仅由字符串组成的查询。Hibernate 注解处理器会在编译时生成实现代码，并对查询和参数进行基于实体模型的完整类型检查。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid "**Stateless and Managed session**: Explicit lifecycles for simple cases, all the power of Hibernate managed objects when you need it."
-msgstr ""
+msgstr "*无状态会话和托管会话* ：针对简单场景提供明确的生命周期，在需要时可充分利用 Hibernate 托管对象的全部功能。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid "**Reactive**: The same entity model and project work in both blocking and non-blocking modes, useful when you need to integrate with reactive code."
-msgstr ""
+msgstr "*响应式* ：同一实体模型和项目在阻塞模式和非阻塞模式下均可正常运行，这在需要与响应式代码集成时非常有用。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid "**Raw SQL**: write native SQL queries using `@SQL` on a repository method when writing SQL is easier. No entity mapping required."
-msgstr ""
+msgstr "*原始 SQL* ：当编写 SQL 更简单时，可在仓库方法中使用 `@SQL` 编写原生 SQL 查询。无需实体映射。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid ""
 "While Quarkus Data Hibernate is the main entry point, some features require an additional dependency to keep the default footprint small.\n"
 "For example, reactive support requires adding `quarkus-hibernate-reactive` explicitly."
-msgstr ""
+msgstr "虽然 Quarkus Data Hibernate 是主要入口，但为了保持默认占用空间较小，某些功能需要额外的依赖项。例如，要支持响应式编程，需要显式添加 `quarkus-hibernate-reactive` 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid "We'll publish a hands-on tutorial shortly that walks through each style with working examples, so stay tuned."
-msgstr ""
+msgstr "我们很快会发布一篇实操教程，通过实际示例详细讲解每种样式，敬请期待。"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid "What about Panache 1?"
-msgstr ""
+msgstr "那么“Panache 1”呢？"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid ""
 "Panache 1 is not going away.\n"
 "It will remain available as an extension for existing applications, and we have no plans to remove it."
-msgstr ""
+msgstr "Panache 1 不会被淘汰。它将继续作为现有应用程序的扩展提供，我们目前没有计划将其移除。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid ""
 "That said, Quarkus Data Hibernate is where all new development and investment is happening.\n"
 "If you're starting a new project, we'd encourage you to give it a try. We really believe it's a better experience.\n"
 "The extension is still experimental, so you might find some bugs. If you do, please reach out to us either on GitHub or Zulip, we always appreciate your honest feedback."
-msgstr ""
+msgstr "话虽如此，Quarkus Data Hibernate 才是当前所有新开发和投资的重点所在。如果您正在启动一个新项目，我们建议您尝试一下。 我们坚信它能带来更好的使用体验。该扩展目前仍处于实验阶段，因此您可能会遇到一些 bug。若遇到此类问题，请通过 GitHub 或 Zulip 联系我们，我们始终非常重视您的诚恳反馈。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid "We are working on migration tooling to help existing Panache 1 users transition when they are ready, and we will share more details as that work progresses."
-msgstr ""
+msgstr "我们正在开发迁移工具，以帮助现有的 Panache 1 用户在准备就绪时完成迁移，随着工作的推进，我们将分享更多细节。"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid "Try it today"
-msgstr ""
+msgstr "今天就试试吧"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid ""
 "You can try Quarkus Data Hibernate today from Quarkus 3.37.0.\n"
 "It will also ship as part of https://github.com/quarkusio/quarkus/discussions/52020[Quarkus 4.0]."
-msgstr ""
+msgstr "您现在就可以在 Quarkus 3.37.0 中试用 Quarkus Data Hibernate。它还将作为 link:https://github.com/quarkusio/quarkus/discussions/52020[Quarkus 4.0] 的一部分发布。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid "Give it a try and let us know what you think. Feedback is welcome on https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Quarkus.20Data/with/602434654[Zulip] or via https://github.com/quarkusio/quarkus/issues[GitHub issues]."
-msgstr ""
+msgstr "不妨试一试，并告诉我们您的想法。欢迎在 link:https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Quarkus.20Data/with/602434654[Zulip] 上或通过 link:https://github.com/quarkusio/quarkus/issues[GitHub 问题] 提交反馈。"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid "References"
-msgstr ""
+msgstr "参考文献"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid "[[[jd]]] https://jakarta.ee/specifications/data/[Jakarta Data specification]"
-msgstr ""
+msgstr "[ ] link:https://jakarta.ee/specifications/data/[雅加达数据规范]"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid "[[[nosql]]] https://jakarta.ee/learn/specification-guides/nosql-and-persistence-explained/[NoSQL and Persistence explained] — how Jakarta Data supports both Jakarta Persistence and Jakarta NoSQL"
-msgstr ""
+msgstr "[ ] link:https://jakarta.ee/learn/specification-guides/nosql-and-persistence-explained/[NoSQL 与持久化详解] ——Jakarta Data 如何同时支持 Jakarta Persistence 和 Jakarta NoSQL"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid "https://projects.eclipse.org/projects/ee4j.data/reviews/creation-review[Jakarta Data creation review] — Eclipse Foundation approval (2022)"
-msgstr ""
+msgstr "link:https://projects.eclipse.org/projects/ee4j.data/reviews/creation-review[雅加达数据创建审查] ——Eclipse基金会批准（2022年）"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-06-15-introducing-quarkus-data.adoc
+#, fuzzy
 msgid "https://www.youtube.com/watch?v=Qr7R2pLnBDM[Gavin King on repositories and annotation processing] — what made compile-time validation the turning point"
-msgstr ""
+msgstr "link:https://www.youtube.com/watch?v=Qr7R2pLnBDM[加文·金谈代码仓库与注解处理] ——是什么让编译时验证成为转折点"

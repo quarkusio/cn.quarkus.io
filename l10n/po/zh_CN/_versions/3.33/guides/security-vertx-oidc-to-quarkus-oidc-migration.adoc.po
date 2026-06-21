@@ -7,665 +7,929 @@ msgstr ""
 "X-Generator: jekyll-l10n\n"
 
 #. type: YAML Front Matter: title
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Migrate from Vert.x OIDC to Quarkus OIDC"
-msgstr ""
+msgstr "从 Vert.x OIDC 迁移到 Quarkus OIDC"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Learn how to migrate your Vert.x OIDC application to Quarkus and choose to either retain Vert.x OIDC or replace it with Quarkus OIDC."
-msgstr ""
+msgstr "了解如何将您的 Vert.x OIDC 应用程序迁移到 Quarkus，并选择保留 Vert.x OIDC 还是将其替换为 Quarkus OIDC。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "We will start with an original Vert.x https://how-to.vertx.io/web-and-oauth2-oidc/[Securing a Web Application with OAuth2/OpenID Connect] `how-to` tutorial which shows how a https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authenticating-to-the-rest-api-with-an-oauth-app[GitHub OAuth2 application] can be implemented with Vert.x OIDC. You may have already worked through this tutorial before as a Vert.x OIDC user."
-msgstr ""
+msgstr "我们将从一篇 Vert.x `的原创教程《使用` link:https://how-to.vertx.io/web-and-oauth2-oidc/[OAuth2/OpenID Connect 保障 Web 应用程序安全] `》` 开始，该教程演示了 `如何` link:https://how-to.vertx.io/web-and-oauth2-oidc/[使用] Vert.x OIDC 实现一个 link:https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authenticating-to-the-rest-api-with-an-oauth-app[GitHub OAuth2 应用程序] 。作为 Vert.x OIDC 用户，您可能之前已经学习过这篇教程。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid ""
 "Even though GitHub supports `OAuth2` only, we will use a `Vert.x OIDC` term.\n"
 "OIDC is built on top of OAuth2 and the Vert.x https://how-to.vertx.io/web-and-oauth2-oidc/[Securing a Web Application with OAuth2/OpenID Connect] tutorial also https://how-to.vertx.io/web-and-oauth2-oidc/#openid-connect[talks about OIDC]."
-msgstr ""
+msgstr "尽管 GitHub 仅支持 `OAuth2` ，但我们将使用 `Vert.x` 的 `OIDC` 术语。OIDC 是基于 OAuth2 构建的，Vert.x 的《 link:https://how-to.vertx.io/web-and-oauth2-oidc/[使用 OAuth2/OpenID Connect 保护 Web 应用程序] 》教程 link:https://how-to.vertx.io/web-and-oauth2-oidc/#openid-connect[中也提到了 OIDC] 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Next, you will learn how to migrate the Vert.x application to Quarkus, while `completely retaining` the Vert.x OIDC code."
-msgstr ""
+msgstr "接下来，您将学习如何将 Vert.x 应用程序迁移到 Quarkus，同时 `完全保留` Vert.x 的 OIDC 代码。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Finally, an option of replacing the Vert.x OIDC with Quarkus OIDC will be explained for you to analyze and consider implementing it."
-msgstr ""
+msgstr "最后，我们将为您讲解用 Quarkus OIDC 替换 Vert.x OIDC 的方案，供您分析并考虑是否实施。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Vert.x OIDC on Vert.x"
-msgstr ""
+msgstr "Vert.x 上的 OIDC"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Let's start with the https://how-to.vertx.io/web-and-oauth2-oidc/[Securing a Web Application with OAuth2/OpenID Connect] `how-to` tutorial."
-msgstr ""
+msgstr "让我们从《 link:https://how-to.vertx.io/web-and-oauth2-oidc/[使用 OAuth2/OpenID Connect 保障 Web 应用程序安全] 》 `操作指南` 开始。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "https://how-to.vertx.io/web-and-oauth2-oidc/#create-a-project[Create the project], you should end up with a `pom.xml` which contains the following properties and dependencies:"
-msgstr ""
+msgstr "link:https://how-to.vertx.io/web-and-oauth2-oidc/#create-a-project[创建项目] 后，您将获得一个 `pom.xml` 文件，其中包含以下属性及依赖项："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Register the GitHub application as described in the https://how-to.vertx.io/web-and-oauth2-oidc/[Securing a Web Application with OAuth2/OpenID Connect] tutorial, the only difference is that you should register a `http://localhost:8080/login` callback url, instead of `http://localhost:8080/callback`."
-msgstr ""
+msgstr "请按照《 link:https://how-to.vertx.io/web-and-oauth2-oidc/[使用 OAuth2/OpenID Connect 保护 Web 应用程序] 》教程中的说明注册 GitHub 应用程序，唯一的区别在于，您应注册 `http://localhost:8080/login` 作为回调网址，而不是 `http://localhost:8080/callback` 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "The final version of the `MainVerticle` Java class looks like this:"
-msgstr ""
+msgstr "`MainVerticle` Java 类的最终版本如下所示："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Initialize Handlebars templating engine."
-msgstr ""
+msgstr "初始化 Handlebars 模板引擎。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Create Vert.x router."
-msgstr ""
+msgstr "创建 Vert.x 路由器。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Register Vert.x OIDC session handler which keeps the session details in memory."
-msgstr ""
+msgstr "注册 Vert.x OIDC 会话处理程序，该处理程序将会话详细信息保存在内存中。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Create a route handler to support a welcome page at the `http://localhost:8080` address."
-msgstr ""
+msgstr "创建一个路由处理程序，以支持地址为 `link:http://localhost:8080[http://localhost:8080 的]` 欢迎页面。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Initialize OAuth2 GitHub provider with a Vert.x instance, and GitHub client id and secret properties."
-msgstr ""
+msgstr "使用 Vert.x 实例以及 GitHub 客户端 ID 和密钥属性初始化 OAuth2 GitHub 提供程序。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Register OAuth2 handler to secure the `http://localhost:8080/protected` endpoint. This handler uses the GitHub provider to authenticate users and requests a `user:email` scope when redirecting users to GitHub. The handler is set up with a callback route which uses a returned authorizaion code and the provided `http://localhost:8080/login` redirect URL to complete the authorization code flow and acquire a GitHub access token."
-msgstr ""
+msgstr "注册 OAuth2 处理程序以保护 `http://localhost:8080/protected` 端点的安全。该处理程序使用 GitHub 提供商对用户进行身份验证，并在将用户重定向至 GitHub 时请求 `user:email` 权限范围。 该处理程序配置了一个回调路由，该路由利用返回的授权码和提供的 `http://localhost:8080/login` 重定向 URL 来完成授权码流程，并获取 GitHub 访问令牌。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Do not allow access to the `http://localhost:8080/protected` endpoint if the GitHub access token does not have a `user:email` scope. Please note that while the `PermissionBasedAuthorization` capability to constrain access tokens is great, applying it in the context of this application is not necessary: authorization code flow access tokens, and GitHub access tokens in particular, are not meant to control access to the application that acquired them but for this application to use them on behalf of the authenticated user to access another API, such as GitHub API, as indeed, is demonsrtated below."
-msgstr ""
+msgstr "如果 GitHub 访问令牌不包含 `user:email` 范围，请勿允许访问 `http://localhost:8080/protected` 端点。请注意，尽管 `PermissionBasedAuthorization` 功能在限制访问令牌方面非常出色，但在本应用程序的上下文中应用该功能并非必要： 授权码流程生成的访问令牌（尤其是 GitHub 访问令牌）并非用于控制对其生成应用的访问，而是供该应用代表经过身份验证的用户访问其他 API（例如 GitHub API），如下文所示。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "The `ProtectedProfileHandler` Java class returns a list of user emails and looks exactly as shown in the https://how-to.vertx.io/web-and-oauth2-oidc/#create-a-project[Securing a Web Application with OAuth2/OpenID Connect] tutorial:"
-msgstr ""
+msgstr "Java 类 `ProtectedProfileHandler` 会返回一个用户电子邮件列表，其代码与《 link:https://how-to.vertx.io/web-and-oauth2-oidc/#create-a-project[使用 OAuth2/OpenID Connect 保护 Web 应用程序] 》教程中展示的完全一致："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Fetch the user emails with Vert.x WebClient"
-msgstr ""
+msgstr "使用 Vert.x WebClient 获取用户电子邮件"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Use the GitHub access token to access GitHub API"
-msgstr ""
+msgstr "使用 GitHub 访问令牌访问 GitHub API"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Update UserInfo with a JSON array containing private emails and pass it to the `protected.hbs` template."
-msgstr ""
+msgstr "使用包含私人电子邮件的 JSON 数组更新 UserInfo，并将该数组传递给 `protected.hbs` 模板。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Finally, create `index.hbs` and `protected.hbs` templates in the `src/main/resources/views` directory, copy their content from the https://how-to.vertx.io/web-and-oauth2-oidc/#create-a-project[Securing a Web Application with OAuth2/OpenID Connect] tutorial."
-msgstr ""
+msgstr "最后，在 `src/main/resources/views` 目录下创建 `index.hbs` 和 `protected.hbs` 模板，并将《 link:https://how-to.vertx.io/web-and-oauth2-oidc/#create-a-project[使用 OAuth2/OpenID Connect 保护 Web 应用程序] 》教程中的内容复制到这些模板中。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Compile and run the application as `java -jar target/oauth-oidc-1.0.0-SNAPSHOT-fat.jar`, go to `http://localhost:8080` and follow the https://how-to.vertx.io/web-and-oauth2-oidc/#create-a-project[Securing a Web Application with OAuth2/OpenID Connect] tutorial to login to GitHub and get your GitHub account email(s) displayed."
-msgstr ""
+msgstr "使用 `java -jar target/oauth-oidc-1.0.0-SNAPSHOT-fat.jar，` 访问 `http://localhost:8080` ，并按照《 link:https://how-to.vertx.io/web-and-oauth2-oidc/#create-a-project[使用 OAuth2/OpenID Connect 保护 Web 应用程序] 》教程登录 GitHub，即可查看您的 GitHub 账户邮箱。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "When you accessed the `http://localhost:8080/protected` page the first time, the following redirects happened:"
-msgstr ""
+msgstr "当您首次访问 `http://localhost:8080/protected` 页面时，发生了以下重定向："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "You were redirected by Vert.x OIDC to GitHub to login."
-msgstr ""
+msgstr "您已被 Vert.x OIDC 重定向至 GitHub 进行登录。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "You were redirected by GitHub to the `http://localhost:8080/login` callback route handler which completed the authorization code flow and acquired the GitHub access token."
-msgstr ""
+msgstr "您已被 GitHub 重定向至 `http://localhost:8080/login` 回调路由处理程序，该处理程序已完成授权码流程并获取了 GitHub 访问令牌。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "You were redirected by Vert.x OIDC to the `original` request URL, `http://localhost:8080/protected`."
-msgstr ""
+msgstr "您已被 Vert.x OIDC 重定向至 `原始请求` URL： `http://localhost:8080/protected` 。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Vert.x OIDC on Quarkus"
-msgstr ""
+msgstr "Quarkus 上的 Vert.x OIDC"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "We have worked through the original https://how-to.vertx.io/web-and-oauth2-oidc/#create-a-project[Securing a Web Application with OAuth2/OpenID Connect] tutorial in the <<vertx-oidc-vertx>> section, and now we can start planning moving the Vert.x applicaton to Quarkus, while retaining Vert.x OIDC."
-msgstr ""
+msgstr "我们已经完成了 <<vertx-oidc-vertx>> 章节中 link:https://how-to.vertx.io/web-and-oauth2-oidc/#create-a-project[关于“使用OAuth2/OpenID Connect保障Web应用程序安全”的] 原始教程，现在可以开始规划将Vert.x应用程序迁移到Quarkus，同时保留Vert.x的OIDC功能。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Let's update `pom.xml` as follows:"
-msgstr ""
+msgstr "让我们按以下方式更新 `pom.xml` ："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Compared to the pom.xml from the <<vertx-oidc-vertx>> section, this pom.xml retains only two original Vert.x dependencies in the `io.vertx` group, `vertx-web-client` to support GitHub API calls, and `vertx-auth-oauth2` to continue securing the protected endpoint with the Vert.x GitHub OAuth2 provider."
-msgstr ""
+msgstr "与“ <<vertx-oidc-vertx>> ”部分中的 pom.xml 相比，此 pom.xml 仅保留了 `io.vertx` 组中的两个原始 Vert.x 依赖项： `vertx-web-client` （用于支持 GitHub API 调用）和 `vertx-auth-oauth2` （用于继续通过 Vert.x GitHub OAuth2 提供商对受保护的端点进行安全防护）。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "We also introduce two Quarkus dependencies in the `io.quarkus` group, `quarkus-vertx-http`, and `quarkus-qute` which provides https://quarkus.io/guides/qute[Qute Templating Engine] and replaces the Handlebars engine used in the <<vertx-oidc-vertx>> section."
-msgstr ""
+msgstr "此外，我们在 `io.quarkus` 组中引入了两个 Quarkus 依赖项： `quarkus-vertx-http` 和 `quarkus-qute` 。其中 `quarkus-qute` 提供了 link:https://quarkus.io/guides/qute[Qute 模板引擎] ，并取代了 <<vertx-oidc-vertx>> 部分中使用的 Handlebars 引擎。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "The `MainVerticle` Java class has been converted to a CDI `ApplicationScoped` `GitHubProfileService` Java bean class which registeres the Vert.x route and handlers on the start-up:"
-msgstr ""
+msgstr "`MainVerticle` Java 类已转换为一个 CDI `ApplicationScoped` 范围 `的` `GitHubProfileService` Java Bean 类，该类会在启动时注册 Vert.x 路由和处理程序："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Initialize OAuth2 GitHub provider with an injected Vert.x instance, and GitHub client id and secret properties."
-msgstr ""
+msgstr "使用注入的 Vert.x 实例以及 GitHub 客户端 ID 和密钥属性，初始化 OAuth2 GitHub 提供程序。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Setup a router at the start up, nearly exactly as it was done in the `MainVerticle` class in the <<vertx-oidc-vertx>> section, with only a small difference, see the next point."
-msgstr ""
+msgstr "在启动时配置路由器，操作方式几乎与“ <<vertx-oidc-vertx>> ”部分中的 `MainVerticle` 类完全一致，仅有一处细微差别，详见下一条。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Pass the injected Qute `userEmail` template to the `ProtectedProfileHandler`."
-msgstr ""
+msgstr "将注入的 Qute `userEmail` 模板传递给 `ProtectedProfileHandler` 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "The `ProtectedProfileHandler` Java class remains similar to how it was implemented in the <<vertx-oidc-vertx>> section, but now it works with the Qute template and looks like this:"
-msgstr ""
+msgstr "`ProtectedProfileHandler` Java 类的实现方式与“ <<vertx-oidc-vertx>> ”一节中的实现类似，但现在它与 Qute 模板配合使用，代码如下："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Update UserInfo with a JSON array containing private emails, pass it to the `userEmail` template and render it asynchronously."
-msgstr ""
+msgstr "使用包含私人邮箱的 JSON 数组更新 UserInfo，将其传递给 `userEmail` 模板，并异步渲染。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "The `index.hbs` has been renamed to the `index.html` Qute template and moved to the `src/main/resources/META-INF/resources/` directory, its content remains the same."
-msgstr ""
+msgstr "`index.hbs` 已重命名为 Qute 模板 `index.html` ，并移动到 `src/main/resources/META-INF/resources/` 目录下，其内容保持不变。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "The `protected.hbs` has been converted to the `userEmail.html` Qute template and moved to the `src/main/templates` directory. It has been updated to follow Qute rules:"
-msgstr ""
+msgstr "已将 `protected.hbs` 转换为 `userEmail.html` Qute 模板，并移动到 `src/main/templates` 目录下。该文件已更新以符合 Qute 规范："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "This simple template is quite similar to the Handlebars template you created in the the <<vertx-oidc-vertx>> section. Please see the https://quarkus.io/guides/qute-reference[Qute Reference Guide] for more details."
-msgstr ""
+msgstr "这个简单的模板与您在“ <<vertx-oidc-vertx>> ”部分中创建的 Handlebars 模板非常相似。更多详细信息，请参阅《 link:https://quarkus.io/guides/qute-reference[Qute 参考指南] 》。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Now, you can compile and run the application but let's start it the dev mode with `mvn quarkus:dev`."
-msgstr ""
+msgstr "现在，您可以编译并运行该应用程序了，但让我们先通过执行 ` `mvn quarkus:dev` ` 命令以开发模式启动它。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Go to `http://localhost:8080` and follow the https://how-to.vertx.io/web-and-oauth2-oidc/#create-a-project[Securing a Web Application with OAuth2/OpenID Connect] tutorial to login to GitHub and get your GitHub account email(s) displayed."
-msgstr ""
+msgstr "访问 `http://localhost:8080` ，并按照《 link:https://how-to.vertx.io/web-and-oauth2-oidc/#create-a-project[使用 OAuth2/OpenID Connect 保护 Web 应用程序] 》教程的指引登录 GitHub，系统将显示您的 GitHub 账户邮箱地址。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "The same sequence of redirects that is described in the end of the <<vertx-oidc-vertx>> section also happened in this application, after you accessed `http://localhost:8080/protected`."
-msgstr ""
+msgstr "正如“ <<vertx-oidc-vertx>> ”部分结尾所述，在访问 `http://localhost:8080/protected` 之后，该应用程序中也发生了相同的重定向序列。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "At this point, if you prefer, you can continue learning working with Quarkus, while keeping your existing Veert.x OIDC code."
-msgstr ""
+msgstr "此时，如果你愿意，可以在保留现有 Veert.x OIDC 代码的同时，继续学习如何使用 Quarkus。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "You may also want to have a look at https://quarkus.io/guides/security-authorize-web-endpoints-reference[how to apply authorization rules to the HTTP request paths], without having to use annotations."
-msgstr ""
+msgstr "您可能还想了解一下 link:https://quarkus.io/guides/security-authorize-web-endpoints-reference[如何] 在不使用注解的情况下， link:https://quarkus.io/guides/security-authorize-web-endpoints-reference[将授权规则应用于 HTTP 请求路径] 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "If you would like to learn how to migrate Vert.x OIDC to Quarkus OIDC, please follow to the next <<vertx-oidc-to-quarkus-oidc>> section."
-msgstr ""
+msgstr "如果您想了解如何将 Vert.x OIDC 迁移到 Quarkus OIDC，请参阅下文的“ <<vertx-oidc-to-quarkus-oidc>> ”部分。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Migrate to Quarkus OIDC"
-msgstr ""
+msgstr "迁移至 Quarkus OIDC"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "We started with working through the original https://how-to.vertx.io/web-and-oauth2-oidc/#create-a-project[Securing a Web Application with OAuth2/OpenID Connect] tutorial in the <<vertx-oidc-vertx>> section. And in the <<vertx-oidc-quarkus>> section, we converted it to run on Quarkus, while retaining Vert.x OIDC."
-msgstr ""
+msgstr "我们首先从《 <<vertx-oidc-vertx>> 》章节中的原始教程《 link:https://how-to.vertx.io/web-and-oauth2-oidc/#create-a-project[使用 OAuth2/OpenID Connect 保护 Web 应用程序] 》开始学习。随后在《 <<vertx-oidc-quarkus>> 》章节中，我们将该教程移植到 Quarkus 上运行，同时保留了 Vert.x OIDC。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "In this section, you are going to learn how the Vert.x OIDC code can be converted to Quarkus OIDC."
-msgstr ""
+msgstr "在本节中，您将学习如何将 Vert.x 的 OIDC 代码转换为 Quarkus 的 OIDC 代码。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Let's start with updating the `pom.xml`, it should look like this:"
-msgstr ""
+msgstr "首先，我们来更新 `pom.xml` 文件，它应该如下所示："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Compared to the pom.xml from the <<vertx-oidc-quarkus>> section above, this pom.xml no longer has dependencies in the `io.vertx` group but retains two Quarkus dependencies in the `io.quarkus` group, `quarkus-vertx-http` and `quarkus-qute`, and adds several more Quarkus dependencies."
-msgstr ""
+msgstr "与上文“ <<vertx-oidc-quarkus>> ”部分中的 pom.xml 相比，此 pom.xml 不再包含 `io.vertx` 组中的依赖项，但保留了 `io.quarkus` 组中的两个 Quarkus 依赖项（ `quarkus-vertx-http` 和 `quarkus-qute` ），并新增了若干 Quarkus 依赖项。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid ""
 "The `quarkus-oidc` extension is used to protect the secured endpoint and manage the GitHub OAuth2 authentication.\n"
 "The `quarkus-rest` extension is used to support JAX-RS REST endpoints, while the `quarkus-rest-qute` extension makes it easier to render Qute templates with JAX-RS."
-msgstr ""
+msgstr "`quarkus-oidc` 扩展用于保护受保护的端点并管理 GitHub OAuth2 身份验证。 `quarkus-rest` 扩展用于支持 JAX-RS REST 端点，而 `quarkus-rest-qute` 扩展则使通过 JAX-RS 渲染 Qute 模板变得更加容易。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "The `quarkus-rest-client-oidc-token-propagation` extension supports an easy access token propagation with the REST client, and the `quarkus-rest-client-jackson` helps to convert REST client responses in JSON format to Java beans and records with Jackson."
-msgstr ""
+msgstr "`quarkus-rest-client-oidc-token-propagation` 扩展支持通过 REST 客户端轻松进行访问令牌传播，而 `quarkus-rest-client-jackson` 则有助于使用 Jackson 将 REST 客户端的 JSON 格式响应转换为 Java Bean 和记录。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "The `GitHubProfileService` has now become a JAX-RS REST class:"
-msgstr ""
+msgstr "`GitHubProfileService` 现已成为一个 JAX-RS REST 类："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Require an authenticated access to the `/protected` endpoint."
-msgstr ""
+msgstr "要求对 `/protected` 端点进行身份验证后才能访问。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Inject GitHub specific UserInfo representation."
-msgstr ""
+msgstr "注入 GitHub 特有的 UserInfo 表示形式。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Inject GitHub API REST client that is used to request user emails."
-msgstr ""
+msgstr "注入用于请求用户电子邮件的 GitHub API REST 客户端。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Inject the current OIDC session."
-msgstr ""
+msgstr "注入当前的 OIDC 会话。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "JAX-RS method that returns a `userEmail` template instance to be rendered. You do not have to use `Uni` but since you are migrating from Vert.x, you are surely very comfortable with the reactive code supported by `Uni` in Quarkus."
-msgstr ""
+msgstr "一个 JAX-RS 方法，用于返回待渲染的 `userEmail` 模板实例。您不必使用 `Uni` ，但既然您是从 Vert.x 迁移过来的，那么您肯定对 Quarkus 中 `Uni` 支持的响应式代码非常熟悉。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Use the injected REST client to access GitHub API and request the private user emails"
-msgstr ""
+msgstr "使用注入的 REST 客户端访问 GitHub API，并请求用户的私有电子邮件地址"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "If the request to the GitHub API succeeded, initialize a template instance with the user email and the returned set of the private email addresses"
-msgstr ""
+msgstr "如果对 GitHub API 的请求成功，则使用用户的电子邮件地址和返回的私有电子邮件地址集合初始化一个模板实例"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "If the request to the GitHub API failed, clear a session cookie by performing a local session logout and return HTTP 401 status."
-msgstr ""
+msgstr "如果对 GitHub API 的请求失败，请通过执行本地会话注销来清除会话 Cookie，并返回 HTTP 401 状态码。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "To acquire the private user emails, `GitHubApiClient` REST Client is used:"
-msgstr ""
+msgstr "为了获取用户的私人邮箱地址，使用了 `GitHubApiClient` REST 客户端："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Register a REST client, use the `github-api-client` configuration key"
-msgstr ""
+msgstr "注册一个 REST 客户端，使用 `github-api-client` 配置键"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Request the access token propagation."
-msgstr ""
+msgstr "请求访问令牌的传播。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Return a set of private emails. As in the previous example, you do not have to use `Uni` but having `Uni` aligns better with the JAX-RS method which calls this method and returns a `Uni` response in the `GitHubProfileService` JAX-RS resource above."
-msgstr ""
+msgstr "返回一组私人电子邮件。与前一个示例一样，您不必使用 `Uni` ，但使用 `Uni` 更符合 JAX-RS 的做法——在上述 `GitHubProfileService` JAX-RS 资源中，该方法会调用此方法并返回一个 `Uni` 响应。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "The configuration in the `application.properties` looks like this:"
-msgstr ""
+msgstr "`application.properties` 文件中的配置如下所示："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Enable the Quarkus GitHub provider"
-msgstr ""
+msgstr "启用 Quarkus GitHub 提供程序"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "By default, when the Quarkus GitHub provider acquires the access token, it sends the client id and secret as the encoded HTTP Authorization `Basic` scheme value. In some regions, GitHub may not support such an option, see the comment in the `application.properties` above how to enable a `client_secret_post` method instead, for the client id and secret be sent as form parameters."
-msgstr ""
+msgstr "默认情况下，当 Quarkus GitHub 提供程序获取访问令牌时，会将客户端 ID 和密钥作为编码后的 HTTP `基本` 授权（ `Basic）` 方案值发送。 在某些地区，GitHub 可能不支持此选项，请参阅上文 `application.properties` 中的注释，了解如何启用 `client_secret_post` 方法，以便将客户端 ID 和密钥作为表单参数发送。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Declare a callback `/login` path."
-msgstr ""
+msgstr "声明一个回调 `/登录` 路径。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Restore the original `/protected` request path once the authorization code flow has been complete. You may recall that in the examples with Vert.x OIDC in the <<vertx-oidc-vertx>> and <<vertx-oidc-vertx>> sections, the original request path is restored by default, without users having to do anything at all. However, by default, Quarkus OIDC gives access to the callback resource, `but only after it has completed the authorization code flow`, see the next <<vertx-oidc-to-quarkus-oidc-custom-callback>> section for more details."
-msgstr ""
+msgstr "在授权码流程完成后，请恢复原始的 `/protected` 请求路径。 您可能还记得，在 <<vertx-oidc-vertx>> 和 <<vertx-oidc-vertx>> 章节中的Vert.x OIDC示例中，原始请求路径会默认恢复，用户无需进行任何操作。然而，默认情况下，Quarkus `OIDC仅在授权码流程完成后才会` 授予对回调资源的访问权限 `，` 更多详情请参阅接下来的 <<vertx-oidc-to-quarkus-oidc-custom-callback>> 章节。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "In Quarkus security, the resource is secured if it is either annotated with one of the security annotations such as `@Authenticated` or its endpoint path is secured in the configured HTTP security policy. The `/login` callback resource is virtual - neither JAX-RS method nor an additional callback handler is allocated to process it, therefore it must be secured with the HTTP security policy configuration, for the Quarkus OIDC authentication mechanism to secure it."
-msgstr ""
+msgstr "在 Quarkus 安全机制中，如果资源被标注了 `@Authenticated` 等安全注解之一，或者其端点路径在配置的 HTTP 安全策略中被设为受保护状态，则该资源即被视为受保护。 `/login` 回调资源是虚拟的——既没有分配 JAX-RS 方法，也没有分配额外的回调处理程序来处理它，因此必须通过 HTTP 安全策略配置对其进行保护，以便 Quarkus OIDC 身份验证机制对其进行保护。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Configure the `github-api-client` REST Client base URL."
-msgstr ""
+msgstr "配置 `github-api-client` REST 客户端的基准 URL。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Log REST Client request and response data."
-msgstr ""
+msgstr "记录 REST 客户端的请求和响应数据。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "The `index.html` Qute template in the `src/main/resources/META-INF/resources/` directory and the `userEmail.html` Qute template in the `src/main/templates` directory remain unchanged."
-msgstr ""
+msgstr "位于 `src/main/resources/META-INF/resources/` 目录下的 `index.html` Qute 模板以及位于 `src/main/templates` 目录下的 `userEmail.html` Qute 模板保持不变。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Now, start the application in the dev mode with `mvn quarkus:dev`."
-msgstr ""
+msgstr "现在，请使用 `mvn quarkus:dev` 命令以开发模式启动应用程序。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Go to `http://localhost:8080`, login to GitHub and get your GitHub account email(s) displayed."
-msgstr ""
+msgstr "访问 `http://localhost:8080` ，登录 GitHub，查看您的 GitHub 账户邮箱。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "You were redirected by Quarkus OIDC to GitHub to login."
-msgstr ""
+msgstr "您已被 Quarkus OIDC 重定向至 GitHub 进行登录。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "You were redirected by GitHub to the `http://localhost:8080/login` virtual callback handler, Quarkus OIDC completed the authorization code flow and acquired the GitHub access token."
-msgstr ""
+msgstr "您已被 GitHub 重定向至 `http://localhost:8080/login` 虚拟回调处理程序，Quarkus OIDC 已完成授权码流程并获取了 GitHub 访问令牌。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "You were redirected by Quarkus OIDC to the `original` request URL, `http://localhost:8080/protected`. The OIDC redirect query parameters such as `code` and `state` are also dropped during this final redirect."
-msgstr ""
+msgstr "您已被 Quarkus OIDC 重定向至 `原始请求` URL： `http://localhost:8080/protected` 。在此最终重定向过程中，OIDC 重定向查询参数（如 `code` 和 `state` ）也会被移除。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Migrate to Quarkus OIDC with the custom callback method"
-msgstr ""
+msgstr "使用自定义回调方法迁移到 Quarkus OIDC"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "When we worked with the first <<vertx-oidc-to-quarkus-oidc,Vertx OIDC to Quarkus OIDC migration example>>, we had to configure Quarkus OIDC to restore the original request URL, after the authorization code flow is complete."
-msgstr ""
+msgstr "在处理第一个 xref:vertx-oidc-to-quarkus-oidc[Vertx OIDC 到 Quarkus OIDC 的迁移示例] 时，我们必须配置 Quarkus OIDC，以便在授权码流程完成后恢复原始请求 URL。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "In this section, we are going to look at the alternative, default option, where a custom callback handler is called, but after Quarkus OIDC has completed the authorization code flow."
-msgstr ""
+msgstr "在本节中，我们将探讨另一种默认选项：即在 Quarkus OIDC 完成授权码流程后，调用自定义回调处理程序。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Typically, in production, users that must login are guided to the central login URL first, as opposed to them accessing random secured paths and expecting to be returned to the very same original request paths, likely missing the context available from the central login endpoint. Instead, once the user lands at the secured central login page, this page redirects users further according to the application flow."
-msgstr ""
+msgstr "通常在生产环境中，需要登录的用户会首先被引导至中央登录 URL，而不是让他们直接访问随机的受保护路径，并期望能返回至最初的请求路径——因为这样很可能导致无法获取中央登录端点提供的上下文信息。 相反，一旦用户进入受保护的中央登录页面，该页面会根据应用程序流程将用户进一步重定向。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "By nominating the central login endpoint as a callback URL, you have the authenticated users landing on this login endpoint once the authorization code flow is complete without requiring Quarkus OIDC to keep the original request URL as the authorization code flow state to be able to restore it, and also making it possible to secure the callback endpoints with the security annotations."
-msgstr ""
+msgstr "通过将中央登录端点指定为回调 URL， 一旦授权码流程完成，经过身份验证的用户将跳转至该登录端点，而无需 Quarkus OIDC 将原始请求 URL 作为授权码流程的状态进行保存以便后续恢复；同时，这还使得能够通过安全注解对回调端点进行安全保护。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Let's have a look at how it can be done."
-msgstr ""
+msgstr "让我们来看看具体该怎么做。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "The dependencies remain the same as in <<vertx-oidc-to-quarkus-oidc>> section, but we add one more JAX-RS resource that manages a login callback:"
-msgstr ""
+msgstr "依赖项与 <<vertx-oidc-to-quarkus-oidc>> 部分中的保持一致，但我们额外添加了一个用于管理登录回调的JAX-RS资源："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "`LoginService` is a secured callback handler which gets control once Quarkus OIDC completes the authorization code flow."
-msgstr ""
+msgstr "`LoginService` 是一个安全的回调处理程序，在 Quarkus OIDC 完成授权码流程后，该处理程序将接管控制权。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Do whatever is required by the application once the authenticated users land on this page. In this case, they are redirected to the secured `/protected` resource. This `/protected` endpoint may be an internal endpoint. If the secured `/protected` endpoint is also publicly accessible and unauthenticated users try to access it, then they will still land on this `LoginService` page first after authenticating with GitHub, and be redirected to the `/protected` page next."
-msgstr ""
+msgstr "一旦经过身份验证的用户进入此页面，请执行应用程序所需的操作。在此情况下，用户将被重定向至受保护的 `/protected` 资源。该 `/protected` 端点可能是内部端点。 如果受保护的 `/protected` 端点也对公众开放，且未经身份验证的用户尝试访问它，那么他们仍会在通过 GitHub 身份验证后首先进入此 `LoginService` 页面，随后被重定向到 `/protected` 页面。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "`GitHubProfileService` and `GitHubApiClient` classes remain the same as in the <<vertx-oidc-to-quarkus-oidc>> section."
-msgstr ""
+msgstr "`GitHubProfileService` 和 `GitHubApiClient` 类与“ <<vertx-oidc-to-quarkus-oidc>> ”部分中的定义保持一致。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "The configuration looks much simpler now:"
-msgstr ""
+msgstr "现在配置看起来简单多了："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "You were redirected by Quarkus OIDC to GitHub to login"
-msgstr ""
+msgstr "您已被 Quarkus OIDC 重定向至 GitHub 进行登录"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "You were redirected by GitHub to the `http://localhost:8080/login` callback handler, but Quarkus OIDC completes the authorization code flow and acquires the GitHub access token first."
-msgstr ""
+msgstr "您已被 GitHub 重定向至 `http://localhost:8080/login` 回调处理程序，但 Quarkus OIDC 会先完成授权码流程并获取 GitHub 访问令牌。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Before the `/login` handler is given control, Quarkus OIDC removes the OIDC redirect `code` and `state` properties and redirects the user to the same `/login` endpoint - this is done to minimize a risk of these parameters remaining visible in the user browser if the applications returns an application error after completing the authorization code flow, with the `code` and `state` query parameters still present in the current browser view. If preferred, this final redirect can be disabled with `quarkus.oidc.authentication.remove-redirect-parameters=false`."
-msgstr ""
+msgstr "在将控制权交由 `/login` 处理程序之前， Quarkus OIDC 会移除 OIDC 重 `定向代码` 和 `状态` 属性，并将用户重定向至相同的 `/login` 端点——此举旨在最大限度地降低以下风险：若应用程序在完成授权码流程后返回应用程序错误，而当前浏览器视图中仍存在 `代码` 和 `状态` 查询参数，则这些参数可能会在用户浏览器中持续可见。 如果需要，可以通过设置 `quarkus.oidc.authentication.remove-redirect-parameters=false` 来禁用此最终重定向。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Enforce GitHub access token scope in Quarkus OIDC"
-msgstr ""
+msgstr "在 Quarkus OIDC 中强制执行 GitHub 访问令牌的范围"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Both the <<vertx-oidc-vertx>> and <<vertx-oidc-quarkus>> sections demonstrate how you can retrict access to the Vert.x OIDC application by enforcing that the GitHub access token has a `user:email` scope."
-msgstr ""
+msgstr "<<vertx-oidc-vertx>> 和 <<vertx-oidc-quarkus>> 这两个部分都演示了如何通过强制要求 GitHub 访问令牌具有 `user:email` 作用域，来限制对 Vert.x OIDC 应用程序的访问。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Also, in the <<vertx-oidc-vertx>> section, we also commented that GitHub access tokens are meant to be used to access GitHub API, and not the application that acquired them, and therefore enforcing a GitHub access token `user:email` scope was not necessary."
-msgstr ""
+msgstr "此外，在 <<vertx-oidc-vertx>> 这一部分中，我们还指出，GitHub 访问令牌的用途是访问 GitHub API，而非获取该令牌的应用程序，因此没有必要强制要求 GitHub 访问令牌具有 `user:email` 范围。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "If you do wish to continue enforcing a GitHub access token `user:email` scope after migrating to Quarkus OIDC, you can do as follows."
-msgstr ""
+msgstr "如果您希望在迁移到 Quarkus OIDC 后继续强制执行 GitHub 访问令牌的 `user:email` 作用域，可以按照以下步骤操作。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "First, replace the `@Authenticated` annotation with `@PermissionsAllowed(\"user:email\")`, with the latter implying the former and requiring a user authentication too:"
-msgstr ""
+msgstr "首先，将 `@Authenticated` 注解替换为 `@PermissionsAllowed(\"user:email\")` ，后者既包含前者的含义，同时也要求进行用户身份验证："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "And add the following configuration property: `quarkus.oidc.roles.source=accesstoken`."
-msgstr ""
+msgstr "并添加以下配置属性： `quarkus.oidc.roles.source=accesstoken` 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "The reason you have to add this property is because with the authorization code flow, Quarkus OIDC treats the ID token as the primary token that controls access to the application into where the user has logged in, it uses the access token to access downstream services as required by the application on behalf of the authenticated user who authorized the application to do it."
-msgstr ""
+msgstr "必须添加此属性的原因是：在授权码流程中，Quarkus OIDC 将 ID 令牌视为控制用户登录后对应用程序访问权限的主要令牌；它会根据应用程序的需求，代表已授权该应用程序的经过身份验证的用户，使用访问令牌访问下游服务。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "When Quarkus OIDC works with the pure OAuth2 providers such as GitHub, it generates an internal ID token to represent the user authentication. The GitHub access token is still meant to access GitHub API."
-msgstr ""
+msgstr "当 Quarkus OIDC 与 GitHub 等纯 OAuth2 提供商配合使用时，它会生成一个内部 ID 令牌来表示用户身份验证。GitHub 访问令牌仍用于访问 GitHub API。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "This is why you have to set `quarkus.oidc.roles.source=accesstoken`, when you prefer to use an access token acquired by the application during the authorizatuion code flow to access this very same application."
-msgstr ""
+msgstr "这就是为什么当你希望使用应用程序在授权码流程中获取的访问令牌来访问该应用程序本身时，必须设置 `quarkus.oidc.roles.source=accesstoken` 。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Session management in Vertx OIDC and Quarkus OIDC"
-msgstr ""
+msgstr "Vertx OIDC 和 Quarkus OIDC 中的会话管理"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Vert.x OIDC is `stateful` and some users may assume that, therefore, Vert.x OIDC does not use cookies. It is not the case: it uses an opaque session cookie to track both the authorization code flow progress and the authenticated user session."
-msgstr ""
+msgstr "Vert.x OIDC 是 `带状态的` ，因此部分用户可能会认为 Vert.x OIDC 不使用 Cookie。事实并非如此：它使用一个不透明的会话 Cookie 来跟踪授权码流的进度以及已认证用户的会话。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "When you run an application created in either the <<vertx-oidc-vertx>> or <<vertx-oidc-quarkus>> sections, you can use your browser's developer tools to observe that an opaque `vertx-web-session` session cookie is used to track the user session:"
-msgstr ""
+msgstr "当您运行在“ <<vertx-oidc-vertx>> ”或“ <<vertx-oidc-quarkus>> ”部分中创建的应用程序时，可以使用浏览器的开发者工具观察到，系统使用了一个不透明的 `vertx-web-session` 会话 Cookie 来跟踪用户会话："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "The state associated with the current user session is stored on the server."
-msgstr ""
+msgstr "与当前用户会话相关的状态存储在服务器上。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Now, when you run an application created in either the <<vertx-oidc-to-quarkus-oidc>> or <<vertx-oidc-to-quarkus-oidc-custom-callback>> sections, you can observe that Quarkus OIDC also uses a `q_session` session cookie but it is significantly larger in size:"
-msgstr ""
+msgstr "现在，当你运行在 <<vertx-oidc-to-quarkus-oidc>> 或 <<vertx-oidc-to-quarkus-oidc-custom-callback>> 部分中创建的应用程序时，你会发现Quarkus OIDC同样 `使用了q_session会话Cookie` ，但其大小要大得多："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "It is due to the fact that Quarkus OIDC is `stateless` by default. It encrypts the user session details in the session cookie and no user session related content is stored on the server. This approach offers significantly higher WEB-scale level capabilities."
-msgstr ""
+msgstr "这是因为 Quarkus OIDC 默认是 `无状态的` 。它将用户会话详细信息加密存储在会话 Cookie 中，且服务器上不会存储任何与用户会话相关的内容。这种方法提供了显著更强的 Web 级扩展能力。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Is it less secure than the `stateful` approach ? It is hard to give a precise answer. The `stateful` approach does not protect the session cookie, if the attacker gets hold of it, the secure access is compromised. Thefore, with either approach, using HTTPS and applying additional CORS and CSRF controls must be considered."
-msgstr ""
+msgstr "它是否比 `带状态` 的方法安全性更低？很难给出一个确切的答案。 `带状态` 的方法并不能保护会话 Cookie，如果攻击者获取了该 Cookie，安全访问就会受到威胁。因此，无论采用哪种方法，都必须考虑使用 HTTPS 并实施额外的 CORS 和 CSRF 控制措施。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "For the `stateless` approach, Quarkus allows users to configure a session cookie encryption key, fallbacks to the client secret and finally to a generated secure random key to apply a JSON Web Encryption (JWE) to encrypt a generated content encryption key with the symmetric `A256GCMKW` algorithm and the `A256GCM` algorithm to encrypt the actual session cookie content."
-msgstr ""
+msgstr "对于 `无状态` 方法， Quarkus 允许用户配置会话 Cookie 加密密钥，若配置缺失则依次回退至客户端密钥，最后使用生成的安全随机密钥，通过 JSON Web Encryption（JWE）机制，采用对称的 `A256GCMKW` 算法对生成的内容加密密钥进行加密，并采用 `A256GCM` 算法对实际的会话 Cookie 内容进行加密。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "However, if you do prefer to continue following a stateful approach, you can easily achieve it with Quarkus OIDC."
-msgstr ""
+msgstr "不过，如果你确实更倾向于继续采用有状态的方法，那么借助 Quarkus OIDC 可以轻松实现。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "The session state that Quarkus OIDC keeps includes the ID, access and refresh tokens. Additionally, if the authorization code grant response returns the access token expiry and scope properties, then their values are also stored."
-msgstr ""
+msgstr "Quarkus OIDC 维护的会话状态包括 ID、访问令牌和刷新令牌。此外，如果授权码授予响应返回了访问令牌的过期时间和作用域属性，则也会存储这些属性的值。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "To start with, you can register a custom `quarkus.oidc.TokenStateManager` and implement a required session state storage mechanism. For example, Quarkus OIDC does not ship an in-memory `TokenStateManager` because it does not really work after restarts or across multiple pods, but you can implement the one in order to start experimenting with the custom `TokenStateManager`."
-msgstr ""
+msgstr "首先，你可以注册一个自定义的 `quarkus.oidc.TokenStateManager` ，并实现所需的会话状态存储机制。 例如，Quarkus OIDC 并未提供内存中的 `TokenStateManager，` 因为它在重启后或跨多个 Pod 时实际上无法正常工作，但您可以自行实现该组件，以便开始尝试使用自定义的 `TokenStateManager` 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Additionally, Quarkus OIDC ships both a database-aware `TokenStateManager` that can integrate with most known databases and a Redis `TokenStateManager`. See the https://quarkus.io/guides/security-oidc-code-flow-authentication#handling-and-controlling-the-lifetime-of-authentication[section] for mor details."
-msgstr ""
+msgstr "此外，Quarkus OIDC 既提供了一个支持数据库的 `TokenStateManager` （可与大多数常见数据库集成），也提供了一个 Redis `TokenStateManager` 。更多详细信息请参见 link:https://quarkus.io/guides/security-oidc-code-flow-authentication#handling-and-controlling-the-lifetime-of-authentication[相关章节] 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Let's see how it works with the Redis `TokenStateManager`."
-msgstr ""
+msgstr "让我们来看看它与 Redis `TokenStateManager` 配合使用时的效果如何。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Update the pom.xml from either the <<vertx-oidc-to-quarkus-oidc>> or <<vertx-oidc-to-quarkus-oidc-custom-callback>> sections by adding this single dependency:"
-msgstr ""
+msgstr "请在 pom.xml 的 <<vertx-oidc-to-quarkus-oidc>> 或 <<vertx-oidc-to-quarkus-oidc-custom-callback>> 部分中，添加以下这一项依赖关系："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "It is all that you need to do to start using the Redis `TokenStateManager`."
-msgstr ""
+msgstr "这就是您开始使用 Redis `TokenStateManager` 所需做的全部操作。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Clear the cookies in the browser, access the protected endpoint again and now you can observe an opaque `q_session` session cookie only:"
-msgstr ""
+msgstr "清除浏览器中的Cookie，再次访问受保护的端点，此时您会发现只有一个不透明 `的q_session会话` Cookie："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "You may also observe that Vert.x OIDC uses a session cookie to track the authorization code flow progress as well as the authenticated user's session."
-msgstr ""
+msgstr "您可能还会注意到，Vert.x OIDC 使用一个会话 Cookie 来跟踪授权码流的进度以及已认证用户的会话。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "On the other hand, Quarkus OIDC uses a dedicated `q_auth_<uuid>` state cookie while the authorization code flow is in progress and only creates a session cookie once the code flow is complete. The state cookie names are also unique allowing for a multi-tab authentication."
-msgstr ""
+msgstr "另一方面，Quarkus OIDC 在授权码流程进行期间会使用一个专用的 `q_auth_<uuid>` 状态 Cookie，只有在授权码流程完成后才会创建会话 Cookie。这些状态 Cookie 的名称也是唯一的，从而支持多标签页认证。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Help with the migration"
-msgstr ""
+msgstr "迁移方面的帮助"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "If you are considering to migrate from Vert.x OIDC to Quarkus OIDC and have questions that may not have been answered in this guide, please https://quarkus.io/support/[reach out to the Quarkus team]."
-msgstr ""
+msgstr "如果您正在考虑从 Vert.x OIDC 迁移到 Quarkus OIDC，且本指南中未解答您的疑问，请 link:https://quarkus.io/support/[联系 Quarkus 团队] 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "Please also see the <<references>> for more information."
-msgstr ""
+msgstr "如需了解更多信息，请参阅《 <<references>> 》。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "References"
-msgstr ""
+msgstr "参考文献"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "xref:security-overview.adoc[Quarkus Security overview]"
-msgstr ""
+msgstr "xref:security-overview.adoc[Quarkus 安全概述]"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "xref:security-oidc-code-flow-authentication.adoc[OpenID Connect authorization code flow authentication]."
-msgstr ""
+msgstr "xref:security-oidc-code-flow-authentication.adoc[OpenID Connect 授权码流程认证] 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "xref:security-oidc-bearer-token-authentication.adoc[OpenID Connect bearer access token authentication]."
-msgstr ""
+msgstr "xref:security-oidc-bearer-token-authentication.adoc[OpenID Connect 承载者访问令牌身份验证] 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "xref:security-openid-connect-multitenancy.adoc[Using OpenID Connect Multi-Tenancy]"
-msgstr ""
+msgstr "xref:security-openid-connect-multitenancy.adoc[使用 OpenID Connect 多租户功能]"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/security-vertx-oidc-to-quarkus-oidc-migration.adoc
+#, fuzzy
 msgid "xref:security-oidc-expanded-configuration.adoc[Expanded OIDC Configuration Reference]"
-msgstr ""
+msgstr "xref:security-oidc-expanded-configuration.adoc[扩展的 OIDC 配置参考]"

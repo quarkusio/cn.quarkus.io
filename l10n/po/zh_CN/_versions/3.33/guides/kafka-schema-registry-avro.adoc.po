@@ -7,517 +7,685 @@ msgstr ""
 "X-Generator: jekyll-l10n\n"
 
 #. type: YAML Front Matter: title
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "Using Apache Kafka with Schema Registry and Avro"
-msgstr ""
+msgstr "在 Apache Kafka 中使用模式注册表和 Avro"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "This guide shows how your Quarkus application can use Apache Kafka, https://avro.apache.org/docs/current/[Avro] serialized\n"
 "records, and connect to a schema registry (such as the https://docs.confluent.io/platform/current/schema-registry/index.html[Confluent Schema Registry] or https://www.apicur.io/registry/[Apicurio Registry])."
-msgstr ""
+msgstr "本指南介绍了如何让您的 Quarkus 应用程序使用 Apache Kafka、 link:https://avro.apache.org/docs/current/[Avro] 序列化记录，并连接到模式注册表（例如 link:https://docs.confluent.io/platform/current/schema-registry/index.html[Confluent Schema Registry] 或 link:https://www.apicur.io/registry/[Apicurio Registry] ）。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "If you are not familiar with Kafka and Kafka in Quarkus in particular, consider\n"
 "first going through the xref:kafka.adoc[Using Apache Kafka with Reactive Messaging] guide."
-msgstr ""
+msgstr "如果您对 Kafka 以及 Quarkus 中的 Kafka 还不熟悉，建议您先阅读《 xref:kafka.adoc[使用 Reactive Messaging 与 Apache Kafka] 配合使用》指南。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "Prerequisites"
-msgstr ""
+msgstr "先决条件"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "Architecture"
-msgstr ""
+msgstr "建筑"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "In this guide we are going to implement a REST resource, namely `MovieResource`, that\n"
 "will consume movie DTOs and put them in a Kafka topic."
-msgstr ""
+msgstr "在本指南中，我们将实现一个名为 `MovieResource 的` REST 资源，该资源将接收电影 DTO，并将其写入一个 Kafka 主题。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "Then, we will implement a consumer that will consume and collect messages from the same topic.\n"
 "The collected messages will be then exposed by another resource, `ConsumedMovieResource`, via\n"
 "https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events[Server-Sent Events]."
-msgstr ""
+msgstr "接下来，我们将实现一个消费者，用于从同一主题中消费并收集消息。收集到的消息随后将通过另一个资源 `——ConsumedMovieResource` ——以 link:https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events[服务器发送事件（Server-Sent Events）] 的方式对外提供。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "The _Movies_ will be serialized and deserialized using Avro.\n"
 "The schema, describing the _Movie_, is stored in Apicurio Registry.\n"
 "The same concept applies if you are using the Confluent Avro _serde_ and Confluent Schema Registry."
-msgstr ""
+msgstr "_电影数据_ 将使用 Avro 进行序列化和反序列化。描述 _电影_ 的模式存储在 Apicurio Registry 中。如果您使用的是 Confluent Avro _serde_ 和 Confluent Schema Registry，同样的原理也适用。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "Solution"
-msgstr ""
+msgstr "解决方案"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "We recommend that you follow the instructions in the next sections and create the application step by step.\n"
 "However, you can go right to the completed example."
-msgstr ""
+msgstr "我们建议您按照后续各节中的说明，一步一步地创建该应用程序。不过，您也可以直接查看已完成的示例。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "Clone the Git repository: `git clone {quickstarts-clone-url}`, or download an {quickstarts-archive-url}[archive]."
-msgstr ""
+msgstr "克隆 Git 仓库： `git clone {quickstarts-clone-url}` ，或下载 {quickstarts-archive-url}[存档]。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "The solution is located in the `kafka-avro-schema-quickstart` link:{quickstarts-tree-url}/kafka-avro-schema-quickstart[directory]."
-msgstr ""
+msgstr "该解决方案位于 `kafka-avro-schema-quickstart` link:{quickstarts-tree-url}/kafka-avro-schema-quickstart[目录] 中。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "Creating the Maven Project"
-msgstr ""
+msgstr "创建 Maven 项目"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "First, we need a new project. Create a new project with the following command:"
-msgstr ""
+msgstr "首先，我们需要一个新项目。使用以下命令创建一个新项目："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "If you use Confluent Schema Registry, you don't need the `quarkus-apicurio-registry-avro` extension.\n"
 "Instead, you need the `quarkus-confluent-registry-avro` extension and a few more dependencies.\n"
 "See <<confluent>> for details."
-msgstr ""
+msgstr "如果您使用 Confluent Schema Registry，则无需安装 `quarkus-apicurio-registry-avro` 扩展。取而代之，您需要安装 `quarkus-confluent-registry-avro` 扩展以及其他一些依赖项。详情请参阅 <<confluent>> 。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "Avro schema"
-msgstr ""
+msgstr "Avro 模式"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "Apache Avro is a data serialization system. Data structures are described using schemas.\n"
 "The first thing we need to do is to create a schema describing the `Movie` structure.\n"
 "Create a file called `src/main/avro/movie.avsc` with the schema for our record (Kafka message):"
-msgstr ""
+msgstr "Apache Avro 是一个数据序列化系统。数据结构通过模式来描述。我们需要做的第一件事是创建一个描述 `Movie` 结构的模式。创建一个名为 `src/main/avro/movie.avsc` 的文件，其中包含我们记录（Kafka 消息）的模式："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "If you build the project with:"
-msgstr ""
+msgstr "如果你使用以下命令构建该项目："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "the `movies.avsc` will get compiled to a `Movie.java` file\n"
 "placed in the `target/generated-sources/avsc` directory."
-msgstr ""
+msgstr "`movies.avsc` 文件将编译为 `Movie.java` 文件，并保存在 `target/generated-sources/avsc` 目录下。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "Take a look at the https://avro.apache.org/docs/current/spec.html#schemas[Avro specification] to learn more about\n"
 "the Avro syntax and supported types."
-msgstr ""
+msgstr "请查阅 link:https://avro.apache.org/docs/current/spec.html#schemas[Avro 规范，] 以进一步了解 Avro 的语法和支持的类型。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "With Quarkus, there's no need to use a specific Maven plugin to process the Avro schema, this is all done for you by the `quarkus-avro` extension!"
-msgstr ""
+msgstr "使用 Quarkus 时，无需使用特定的 Maven 插件来处理 Avro 模式，这一切都由 `quarkus-avro` 扩展自动为您完成！"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "If you run the project with:"
-msgstr ""
+msgstr "如果你使用以下命令运行该项目："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "the changes you do to the schema file will be\n"
 "automatically applied to the generated Java files."
-msgstr ""
+msgstr "您对模式文件所做的更改将自动应用到生成的 Java 文件中。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "The `Movie` producer"
-msgstr ""
+msgstr "`电影` 制片人"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "Having defined the schema, we can now jump to implementing the `MovieResource`."
-msgstr ""
+msgstr "定义好模式后，我们现在可以开始实现 `MovieResource` 了。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "Let's open the `MovieResource`, inject an https://quarkus.io/blog/reactive-messaging-emitter/[`Emitter`] of `Movie` DTO and implement a `@POST` method\n"
 "that consumes `Movie` and sends it through the `Emitter`:"
-msgstr ""
+msgstr "让我们打开 `MovieResource` ，注入一个 `Movie` DTO 的 link:https://quarkus.io/blog/reactive-messaging-emitter/[Emitter] ，并实现一个 `@POST` 方法，该方法接收 `Movie` 并将其通过 `Emitter` 发送出去："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "Now, we need to _map_ the `movies` channel (the `Emitter` emits to this channel) to a Kafka topic.\n"
 "To achieve this, edit the `application.properties` file, and add the following content:"
-msgstr ""
+msgstr "现在，我们需要将 `movies` 通道（ `Emitter` 向该通道发送数据） _映射到_ 一个 Kafka 主题。为此，请编辑 `application.properties` 文件，并添加以下内容："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "You might have noticed that we didn't define the `value.serializer`.\n"
 "That's because Quarkus can xref:kafka.adoc#serialization-autodetection[autodetect] that `io.apicurio.registry.serde.avro.AvroKafkaSerializer` is appropriate here, based on the `@Channel` declaration, structure of the `Movie` type, and presence of the Apicurio Registry libraries.\n"
 "We still have to define the `apicurio.registry.auto-register` property."
-msgstr ""
+msgstr "您可能已经注意到，我们并没有定义 `value.serializer` 。 这是因为 Quarkus 可以根据 `@Channel` 声明、 `Movie` 类型的结构以及 Apicurio Registry 库的存在 xref:kafka.adoc#serialization-autodetection[，自动检测到] `io.apicurio.registry.serde.avro.AvroKafkaSerializer` 在此处是合适的。 我们仍然需要定义 `apicurio.registry.auto-register` 属性。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "If you use Confluent Schema Registry, you don't have to configure `value.serializer` either.\n"
 "It is also detected automatically.\n"
 "The Confluent Schema Registry analogue of `apicurio.registry.auto-register` is called `auto.register.schemas`.\n"
 "It defaults to `true`, so it doesn't have to be configured in this example.\n"
 "It can be explicitly set to `false` if you want to disable automatic schema registration."
-msgstr ""
+msgstr "如果您使用 Confluent Schema Registry，则也不必配置 `value.serializer` 。该配置同样会自动被检测到。 Confluent 模式注册表中与 `apicurio.registry.auto-register` 对应的配置项名为 `auto.register.schemas` 。其默认值为 `true` ，因此在本示例中无需进行配置。若需禁用自动模式注册，可将其显式设置为 `false` 。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "The `Movie` consumer"
-msgstr ""
+msgstr "`电影` 观众"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "So, we can write records into Kafka containing our `Movie` data.\n"
 "That data is serialized using Avro.\n"
 "Now, it's time to implement a consumer for them."
-msgstr ""
+msgstr "因此，我们可以将包含 `电影` 数据的记录写入Kafka。这些数据使用Avro进行了序列化。现在，是时候为这些数据实现一个消费者了。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "Let's create `ConsumedMovieResource` that will consume `Movie` messages\n"
 "from the `movies-from-kafka` channel and will expose it via Server-Sent Events:"
-msgstr ""
+msgstr "让我们创建 `一个名为 ConsumedMovieResource 的资源` ，它将从 `movies-from-kafka` 频道接收 `Movie` 消息，并通过服务器发送事件（Server-Sent Events）将其发布出来："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "The last bit of the application's code is the configuration of the `movies-from-kafka` channel in\n"
 "`application.properties`:"
-msgstr ""
+msgstr "应用程序代码的最后一部分是在 `application.properties` 文件中配置 `movies-from-kafka` 通道："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "You might have noticed that we didn't define the `value.deserializer`.\n"
 "That's because Quarkus can xref:kafka.adoc#serialization-autodetection[autodetect] that `io.apicurio.registry.serde.avro.AvroKafkaDeserializer` is appropriate here, based on the `@Channel` declaration, structure of the `Movie` type, and presence of the Apicurio Registry libraries.\n"
 "We don't have to define the `apicurio.registry.use-specific-avro-reader` property either, that is also configured automatically."
-msgstr ""
+msgstr "您可能已经注意到，我们并没有定义 `value.deserializer` 。 这是因为 Quarkus 可以根据 `@Channel` 声明、 `Movie` 类型的结构以及 Apicurio Registry 库的存在 xref:kafka.adoc#serialization-autodetection[，自动检测到] `io.apicurio.registry.serde.avro.AvroKafkaDeserializer` 在此处是合适的。 我们也不必定义 `apicurio.registry.use-specific-avro-reader` 属性，该属性同样会自动配置。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "If you use Confluent Schema Registry, you don't have to configure `value.deserializer` or `specific.avro.reader` either.\n"
 "They are both detected automatically."
-msgstr ""
+msgstr "如果您使用 Confluent Schema Registry，则无需配置 `value.deserializer` 或 `specific.avro.reader` 。这两者都会被自动检测到。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "Running the application"
-msgstr ""
+msgstr "运行应用程序"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "Start the application in dev mode:"
-msgstr ""
+msgstr "以开发模式启动应用程序："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "Kafka broker and Apicurio Registry instance are started automatically thanks to Dev Services.\n"
 "See xref:kafka-dev-services.adoc[Dev Services for Kafka] and xref:apicurio-registry-dev-services.adoc[Dev Services for Apicurio Registry] for more details."
-msgstr ""
+msgstr "借助 Dev Services，Kafka 代理和 Apicurio Registry 实例会自动启动。更多详细信息，请参阅 xref:kafka-dev-services.adoc[《Dev Services for Kafka] 》和《 xref:apicurio-registry-dev-services.adoc[Dev Services for Apicurio Registry] 》。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "You might have noticed that we didn't configure the schema registry URL anywhere.\n"
 "This is because Dev Services for Apicurio Registry configures all Kafka channels in Quarkus Messaging to use the automatically started registry instance."
-msgstr ""
+msgstr "您可能已经注意到，我们并没有在任何地方配置模式注册表的 URL。这是因为 Apicurio Registry 的开发服务会将 Quarkus Messaging 中的所有 Kafka 通道配置为使用自动启动的注册表实例。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "Apicurio Registry, in addition to its native API, also exposes an endpoint that is API-compatible with Confluent Schema Registry.\n"
 "Therefore, this automatic configuration works both for Apicurio Registry serde and Confluent Schema Registry serde."
-msgstr ""
+msgstr "Apicurio Registry 除了其原生 API 之外，还提供了一个与 Confluent Schema Registry 兼容的 API 端点。因此，此自动配置既适用于 Apicurio Registry serde，也适用于 Confluent Schema Registry serde。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "However, note that there's no Dev Services support for running Confluent Schema Registry itself.\n"
 "If you want to use a running instance of Confluent Schema Registry, configure its URL, together with the URL of a Kafka broker:"
-msgstr ""
+msgstr "不过，请注意，Dev Services 不支持直接运行 Confluent Schema Registry 本身。如果您想使用一个正在运行的 Confluent Schema Registry 实例，请配置其 URL 以及一个 Kafka 经纪器的 URL："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "In the second terminal, query the `ConsumedMovieResource` resource with `curl`:"
-msgstr ""
+msgstr "在第二个终端中，使用 `curl` 查询 `ConsumedMovieResource` 资源："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "In the third one, post a few movies:"
-msgstr ""
+msgstr "在第三个帖子中，发几部电影："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "Observe what is printed in the second terminal. You should see something along the lines of:"
-msgstr ""
+msgstr "请观察第二个终端中显示的内容。你应该会看到类似以下的内容："
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "Running in JVM or Native mode"
-msgstr ""
+msgstr "在 JVM 或本机模式下运行"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "When not running in dev or test mode, you will need to start your own Kafka broker and Apicurio Registry.\n"
 "The easiest way to get them running is to use `docker-compose` to start the appropriate containers."
-msgstr ""
+msgstr "如果不在开发或测试模式下运行，您需要自行启动 Kafka 代理和 Apicurio Registry。让它们运行起来最简单的方法是使用 `docker-compose` 启动相应的容器。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "If you use Confluent Schema Registry, you already have a Kafka broker and Confluent Schema Registry instance running and configured.\n"
 "You can ignore the `docker-compose` instructions here, as well as the Apicurio Registry configuration."
-msgstr ""
+msgstr "如果您使用的是 Confluent Schema Registry，那么您已经拥有一个已运行且配置好的 Kafka 代理和 Confluent Schema Registry 实例。您可以忽略此处的 `docker-compose` 操作指南，以及 Apicurio Registry 的配置。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "Create a `docker-compose.yaml` file at the root of the project with the following content:"
-msgstr ""
+msgstr "在项目根目录下创建一个 `名为 docker-compose.yaml 的` 文件，内容如下："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "Before starting the application, let's first start the Kafka broker and Apicurio Registry:"
-msgstr ""
+msgstr "在启动应用程序之前，让我们先启动 Kafka 代理和 Apicurio Registry："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "To stop the containers, use `docker-compose down`. You can also clean up\n"
 "the containers with `docker-compose rm`"
-msgstr ""
+msgstr "要停止容器，请使用 ` `docker-compose down`` 。您也可以使用 ` `docker-compose rm` ` 清理容器。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "You can build the application with:"
-msgstr ""
+msgstr "您可以使用以下命令构建该应用程序："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "And run it in JVM mode with:"
-msgstr ""
+msgstr "然后使用以下命令以 JVM 模式运行它："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "By default, the application tries to connect to a Kafka broker listening at `localhost:9092`.\n"
 "You can configure the bootstrap server using: `java -Dkafka.bootstrap.servers=\\... -jar target/quarkus-app/quarkus-run.jar`"
-msgstr ""
+msgstr "默认情况下，应用程序会尝试连接到监听 `localhost:9092` 的 Kafka 代理。您可以通过以下命令配置引导服务器： `java -Dkafka.bootstrap.servers=... -jar target/quarkus-app/quarkus-run.jar`"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "Specifying the registry URL on the command line is not very convenient, so you can add a configuration property only for the `prod` profile:"
-msgstr ""
+msgstr "在命令行上指定注册表 URL 并不太方便，因此您可以仅针对 `生产环境` 配置文件添加一个配置属性："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "You can build a native executable with:"
-msgstr ""
+msgstr "您可以使用以下命令构建原生可执行文件："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "and run it with:"
-msgstr ""
+msgstr "并使用以下命令运行它："
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "Testing the application"
-msgstr ""
+msgstr "测试应用程序"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "As mentioned above, Dev Services for Kafka and Apicurio Registry automatically start and configure a Kafka broker and Apicurio Registry instance in dev mode and for tests.\n"
 "Hence, we don't have to set up Kafka and Apicurio Registry ourselves.\n"
 "We can just focus on writing the test."
-msgstr ""
+msgstr "如上所述，Kafka 和 Apicurio Registry 的开发服务会自动启动并配置一个处于开发模式且用于测试的 Kafka 代理和 Apicurio Registry 实例。因此，我们无需自行配置 Kafka 和 Apicurio Registry，只需专注于编写测试代码即可。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "First, let's add test dependencies on REST Client and Awaitility to the build file:"
-msgstr ""
+msgstr "首先，让我们在构建文件中添加对 REST Client 和 Awaitility 的测试依赖项："
 
 #. type: Block title
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "pom.xml"
-msgstr ""
+msgstr "pom.xml"
 
 #. type: Block title
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "build.gradle"
-msgstr ""
+msgstr "build.gradle"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "In the test, we will send movies in a loop and check if the `ConsumedMovieResource` returns\n"
 "what we send."
-msgstr ""
+msgstr "在测试中，我们将循环发送电影，并检查 `ConsumedMovieResource` 是否返回了我们发送的内容。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "We modified the `MovieResourceTest` that was generated together with the project. This test class has a\n"
 "subclass, `NativeMovieResourceIT`, that runs the same test against the native executable.\n"
 "To run it, execute:"
-msgstr ""
+msgstr "我们修改了随项目一起生成的 `MovieResourceTest` 。该测试类有一个子类 `NativeMovieResourceIT` ，它会对本机可执行文件运行相同的测试。要运行它，请执行："
 
 #. type: Title ==
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "Manual setup"
-msgstr ""
+msgstr "手动设置"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "If we couldn't use Dev Services and wanted to start a Kafka broker and Apicurio Registry instance manually, we would define a xref:getting-started-testing.adoc#quarkus-test-resource[QuarkusTestResourceLifecycleManager]."
-msgstr ""
+msgstr "如果无法使用 Dev Services，且希望手动启动一个 Kafka 代理和一个 Apicurio Registry 实例，则需要定义一个 xref:getting-started-testing.adoc#quarkus-test-resource[QuarkusTestResourceLifecycleManager] 。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "Using the Confluent Schema Registry"
-msgstr ""
+msgstr "使用 Confluent 模式注册表"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "If you want to use the Confluent Schema Registry, you need the `quarkus-confluent-registry-avro` extension, instead of the `quarkus-apicurio-registry-avro` extension.\n"
 "Also, you need to add a few dependencies and a custom Maven repository to your `pom.xml` / `build.gradle` file:"
-msgstr ""
+msgstr "如果您想使用 Confluent 模式注册表，则需要使用 `quarkus-confluent-registry-avro` 扩展，而不是 `quarkus-apicurio-registry-avro` 扩展。此外，您还需要在 `pom.xml` / `build.gradle` 文件中添加一些依赖项和一个自定义 Maven 仓库："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "In JVM mode, any version of `io.confluent:kafka-avro-serializer` can be used.\n"
 "In native mode, Quarkus supports the following versions: `6.2.x`, `7.0.x`, `7.1.x`, `7.2.x`, `7.3.x`."
-msgstr ""
+msgstr "在 JVM 模式下，可以使用任何版本的 `io.confluent:kafka-avro-serializer` 。在原生模式下，Quarkus 支持以下版本： `6.2.x` 、 `7.0.x` 、 `7.1.x` 、 `7.2.x` 、 `7.3.x` 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "For versions `7.4.x` and later, due to an issue with the Confluent Schema Serializer, you need to add another dependency:"
-msgstr ""
+msgstr "对于 `7.4.x` 及更高版本，由于 Confluent 模式序列化器存在一个问题，您需要添加另一个依赖项："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "For any other versions, the native configuration may need to be adjusted."
-msgstr ""
+msgstr "对于其他版本，可能需要调整原生配置。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "Avro code generation details"
-msgstr ""
+msgstr "Avro 代码生成详情"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "In this guide we used the Quarkus code generation mechanism to generate Java files\n"
 "from Avro schema."
-msgstr ""
+msgstr "在本指南中，我们利用 Quarkus 的代码生成机制，根据 Avro 模式生成了 Java 文件。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "Under the hood, the mechanism uses `org.apache.avro:avro-compiler`."
-msgstr ""
+msgstr "在底层，该机制使用了 `org.apache.avro:avro-compiler` 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "You can use the following configuration properties to alter how it works:"
-msgstr ""
+msgstr "您可以使用以下配置属性来更改其工作方式："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "`avro.codegen.[avsc|avdl|avpr].imports` - a list of files or directories that should be compiled first thus making them\n"
 "importable by subsequently compiled schemas. Note that imported files should not reference each other. All paths should be relative\n"
 "to the `src/[main|test]/avro` directory, or `avro` sub-directory in any source directory configured by the build system. Passed as a comma-separated list."
-msgstr ""
+msgstr "`avro.codegen.[avsc|avdl|avpr].imports` - 应优先编译的文件或目录列表，以便后续编译的模式能够导入这些文件或目录。请注意，被导入的文件不应相互引用。 所有路径均应相对于 `src/[main|test]/avro` 目录，或构建系统配置的任何源目录中的 `avro` 子目录。以逗号分隔的列表形式传递。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "`avro.codegen.stringType` - the Java type to use for Avro strings. May be one of `CharSequence`, `String` or\n"
 "`Utf8`. Defaults to `String`"
-msgstr ""
+msgstr "`avro.codegen.stringType` - 用于 Avro 字符串的 Java 类型。可以是 `CharSequence` 、 `String` 或 `Utf8` 之一。默认值为 `String`"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "`avro.codegen.createOptionalGetters` - enables generating the `getOptional...`\n"
 "methods that return an Optional of the requested type. Defaults to `false`"
-msgstr ""
+msgstr "`avro.codegen.createOptionalGetters` - 启用生成 `getOptional…​` 方法，这些方法会返回请求类型的 Optional 对象。默认值为 `false`"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "`avro.codegen.enableDecimalLogicalType` - determines whether to use Java classes for decimal types, defaults to `false`"
-msgstr ""
+msgstr "`avro.codegen.enableDecimalLogicalType` - 确定是否为十进制类型使用 Java 类，默认值为 `false`"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "`avro.codegen.createSetters` - determines whether to create setters for the fields of the record.\n"
 "Defaults to `false`"
-msgstr ""
+msgstr "`avro.codegen.createSetters` - 确定是否为记录的字段创建设置器。默认值为 `false`"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "`avro.codegen.gettersReturnOptional` - enables generating `get...` methods that\n"
 "return an Optional of the requested type. Defaults to `false`"
-msgstr ""
+msgstr "`avro.codegen.gettersReturnOptional` - 启用生成返回请求类型 Optional 的 `get…​` 方法。默认值为 `false`"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "`avro.codegen.optionalGettersForNullableFieldsOnly`, works in conjunction with `gettersReturnOptional` option.\n"
 "If it is set, `Optional` getters will be generated only for fields that are nullable. If the field is mandatory,\n"
 "regular getter will be generated. Defaults to `false`"
-msgstr ""
+msgstr "`avro.codegen.optionalGettersForNullableFieldsOnly` 选项需与 `gettersReturnOptional` 选项配合使用。若启用该选项，则仅为可为空字段生成 `Optional` 获取器；若字段为必填字段，则生成常规获取器。默认值为 `false` 。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "Further reading"
-msgstr ""
+msgstr "延伸阅读"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid "link:https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/3.4/kafka/kafka.html[SmallRye Reactive Messaging Kafka] documentation"
-msgstr ""
+msgstr "link:https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/3.4/kafka/kafka.html[SmallRye 响应式消息传递 Kafka] 文档"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.33/guides/kafka-schema-registry-avro.adoc
+#, fuzzy
 msgid ""
 "link:https://quarkus.io/blog/kafka-avro/[How to Use Kafka, Schema Registry and Avro with Quarkus] - a blog post on which\n"
 "the guide is based. It gives a good introduction to Avro and the concept of schema registry"
-msgstr ""
+msgstr "link:https://quarkus.io/blog/kafka-avro/[《如何在 Quarkus 中使用 Kafka、模式注册表和 Avro] 》——本指南基于这篇博客文章编写。该文章对 Avro 以及模式注册表的概念进行了很好的介绍。"

@@ -7,908 +7,1238 @@ msgstr ""
 "X-Generator: jekyll-l10n\n"
 
 #. type: YAML Front Matter: title
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Using Reactive Routes"
-msgstr ""
+msgstr "使用响应式路由"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "Reactive routes propose an alternative approach to implement HTTP endpoints where you declare and chain _routes_.\n"
 "This approach became very popular in the JavaScript world, with frameworks like Express.Js or Hapi.\n"
 "Quarkus also offers the possibility to use reactive routes.\n"
 "You can implement REST API with routes only or combine them with Jakarta REST resources and servlets."
-msgstr ""
+msgstr "响应式路由提供了一种实现 HTTP 端点的替代方法，您可以在其中声明并链式 _调用路由_ 。这种方法在 JavaScript 领域非常流行，例如 Express.js 或 Hapi 等框架。Quarkus 也支持使用响应式路由。您可以仅使用路由来实现 REST API，也可以将其与 Jakarta REST 资源和 Servlet 结合使用。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "The code presented in this guide is available in this {quickstarts-base-url}[GitHub repository] under the link:{quickstarts-tree-url}/reactive-routes-quickstart[`reactive-routes-quickstart` directory]"
-msgstr ""
+msgstr "本指南中提供的代码可在 {quickstarts-base-url}[GitHub 仓库] 的 link:{quickstarts-tree-url}/reactive-routes-quickstart[reactive-routes-quickstart目录下] 找到"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "Reactive Routes were initially introduced to provide a reactive execution model for HTTP APIs on top of the xref:quarkus-reactive-architecture.adoc[Quarkus Reactive Architecture].\n"
 "With the introduction of xref:rest.adoc[Quarkus REST (formerly RESTEasy Reactive)], you can now implement reactive HTTP APIs and still use Jakarta REST annotations.\n"
 "Reactive Routes are still supported, especially if you want a more _route-based_ approach, and something closer to the underlying reactive engine."
-msgstr ""
+msgstr "Reactive Routes 最初是为了在 xref:quarkus-reactive-architecture.adoc[Quarkus 响应式架构] 之上为 HTTP API 提供一种响应式执行模型而引入的。随着 xref:rest.adoc[Quarkus REST（原名 RESTEasy Reactive）] 的推出，您现在可以实现响应式 HTTP API，同时仍可使用 Jakarta REST 注解。 Reactive Routes 仍然受到支持，特别是当您希望采用更 _基于路由_ 的方法，并更贴近底层的响应式引擎时。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Quarkus HTTP"
-msgstr ""
+msgstr "Quarkus HTTP"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "Before going further, let's have a look at the HTTP layer of Quarkus.\n"
 "Quarkus HTTP support is based on a non-blocking and reactive engine (Eclipse Vert.x and Netty).\n"
 "All the HTTP requests your application receive are handled by _event loops_ (I/O Thread) and then are routed towards the code that manages the request.\n"
 "Depending on the destination, it can invoke the code managing the request on a worker thread (Servlet, Jax-RS) or use the IO Thread (reactive route).\n"
 "Note that because of this, a reactive route must be non-blocking or explicitly declare its blocking nature (which would result by being called on a worker thread)."
-msgstr ""
+msgstr "在继续探讨之前，让我们先了解一下 Quarkus 的 HTTP 层。Quarkus 的 HTTP 支持基于一个非阻塞且响应式的引擎（Eclipse Vert.x 和 Netty）。 应用程序接收的所有 HTTP 请求均由 _事件循环_ （I/O 线程）处理，随后被路由至负责管理该请求的代码。根据目标的不同，它可能会在工作线程上调用管理该请求的代码（如 Servlet、Jax-RS），或者使用 I/O 线程（响应式路由）。 请注意，正因如此，响应式路由必须是非阻塞的，或者明确声明其阻塞性质（这将导致该路由在工作线程上被调用）。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "image:http-architecture.png[alt=Quarkus HTTP Architecture]"
-msgstr ""
+msgstr "image:http-architecture.png[alt=\"Quarkus HTTP Architecture\"]"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "See the xref:quarkus-reactive-architecture.adoc[Quarkus Reactive Architecture documentation] for further details on this topic."
-msgstr ""
+msgstr "有关此主题的更多详细信息，请参阅 xref:quarkus-reactive-architecture.adoc[Quarkus 响应式架构文档] 。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Declaring reactive routes"
-msgstr ""
+msgstr "声明响应式路由"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "The first way to use reactive routes is to use the `@Route` annotation.\n"
 "To have access to this annotation, you need to add the `quarkus-reactive-routes` extension by running this command:"
-msgstr ""
+msgstr "使用响应式路由的第一种方法是使用 `@Route` 注解。要使用该注解，您需要通过运行以下命令添加 `quarkus-reactive-routes` 扩展："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "This will add the following to your build file:"
-msgstr ""
+msgstr "这将在您的构建文件中添加以下内容："
 
 #. type: Block title
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "pom.xml"
-msgstr ""
+msgstr "pom.xml"
 
 #. type: Block title
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "build.gradle"
-msgstr ""
+msgstr "build.gradle"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Then in a _bean_, you can use the `@Route` annotation as follows:"
-msgstr ""
+msgstr "然后，在 _Bean_ 中，你可以像下面这样使用 `@Route` 注解："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "If there is a reactive route found on a class with no scope annotation then `@jakarta.inject.Singleton` is added automatically."
-msgstr ""
+msgstr "如果在未标注作用域的类上找到了反应式注入路径，则会自动添加 `@jakarta.inject.Singleton` 注解。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "The `@Route` annotation indicates that the method is a reactive route. Again, by default, the code contained in the method must not block."
-msgstr ""
+msgstr "`@Route` 注解表示该方法是一个响应式路由。同样，默认情况下，该方法中的代码不得阻塞。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "The method gets a https://vertx.io/docs/apidocs/io/vertx/ext/web/RoutingContext.html[`RoutingContext`] as a parameter. From the `RoutingContext` you can retrieve the HTTP request (using `request()`) and write the response using `response().end(...)`."
-msgstr ""
+msgstr "该方法将一个 link:https://vertx.io/docs/apidocs/io/vertx/ext/web/RoutingContext.html[RoutingContext] 作为参数传入。通过 `RoutingContext` ，您可以获取 HTTP 请求（使用 `request()` ），并使用 `response().end(…​)` 写入响应。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "If the annotated method does not return `void` the arguments are optional."
-msgstr ""
+msgstr "如果带注释的方法不是返回 `void` ，则其参数为可选的。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "`RoutingExchange` is a convenient wrapper of `RoutingContext` which provides some useful methods."
-msgstr ""
+msgstr "`RoutingExchange` 是 `RoutingContext` 的一个便捷封装类，提供了若干有用的方法。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "The `RoutingExchange` is used to retrieve the request query parameter `name`."
-msgstr ""
+msgstr "`RoutingExchange` 用于获取请求查询参数的 `名称` 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "The path defines a parameter `name` which can be injected inside the method parameters using the annotation `@Param`."
-msgstr ""
+msgstr "该路径定义了一个参数 `名称` ，该 `名称` 可通过 `@Param` 注解注入到方法参数中。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "More details about using the `RoutingContext` is available in the https://vertx.io/docs/vertx-web/java/[Vert.x Web documentation]."
-msgstr ""
+msgstr "有关如何使用 `RoutingContext` 的更多详细信息，请参阅 link:https://vertx.io/docs/vertx-web/java/[Vert.x Web 文档] 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "The `@Route` annotation allows you to configure:"
-msgstr ""
+msgstr "`@Route` 注解允许您配置："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "The `path` - for routing by path, using the https://vertx.io/docs/vertx-web/java/#_capturing_path_parameters[Vert.x Web format]"
-msgstr ""
+msgstr "`路径` ——用于基于路径的路由，采用 link:https://vertx.io/docs/vertx-web/java/#_capturing_path_parameters[Vert.x Web 格式]"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "The `regex` - for routing with regular expressions, see https://vertx.io/docs/vertx-web/java/#_routing_with_regular_expressions[for more details]"
-msgstr ""
+msgstr "`正则表达式` ——有关使用正则表达式进行路由的 link:https://vertx.io/docs/vertx-web/java/#_routing_with_regular_expressions[详细信息] ， link:https://vertx.io/docs/vertx-web/java/#_routing_with_regular_expressions[请] 参阅"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "The `methods` - the HTTP verbs triggering the route such as `GET`, `POST`..."
-msgstr ""
+msgstr "`方法` ——触发路由的 HTTP 动词，例如 `GET` 、 `POST……​`"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "The `type` - it can be _normal_ (non-blocking), _blocking_ (method dispatched on a worker thread), or _failure_ to indicate that this route is called on failures"
-msgstr ""
+msgstr "`类型` ——可以是 _普通类型_ （非阻塞型）、 _阻塞型_ （方法在工作线程上分派）或 _失败类型_ ，以表明该路由在发生错误时会被调用"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "The `order` - the order of the route when several routes are involved in handling the incoming request.\n"
 "Must be positive for regular user routes."
-msgstr ""
+msgstr "`顺序` ——当处理传入请求时涉及多条路由时，这些路由的排列顺序。对于常规用户路由，该值必须为正数。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "The produced and consumed mime types using `produces`, and `consumes`"
-msgstr ""
+msgstr "使用 ``produces` ` 和 ` `consumes` ` 生成的和消费的 MIME 类型"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "For instance, you can declare a blocking route as follows:"
-msgstr ""
+msgstr "例如，你可以按以下方式声明一条阻塞路由："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Alternatively, you can use `@io.smallrye.common.annotation.Blocking` and omit the `type = Route.HandlerType.BLOCKING`:"
-msgstr ""
+msgstr "或者，您可以使用 `@io.smallrye.common.annotation.Blocking，` 并省略 `type = Route.HandlerType.BLOCKING` ："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "When `@Blocking` is used, the `type` attribute of the `@Route` is ignored."
-msgstr ""
+msgstr "使用 `@Blocking` 时，将忽略 `@Route` 的 `type` 属性。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "The `@Route` annotation is repeatable and so you can declare several routes for a single method:"
-msgstr ""
+msgstr "`@Route` 注解支持重复使用，因此您可以为同一个方法声明多个路由："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Each route can use different paths, methods..."
-msgstr ""
+msgstr "每条路由都可以使用不同的路径、方法……​"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "If no content-type header is set, then we will try to use the most acceptable content type by matching the accept header with the value of the `Route` produces attribute as defined by `io.vertx.ext.web.RoutingContext.getAcceptableContentType()`."
-msgstr ""
+msgstr "如果未设置 Content-Type 头，则我们会尝试通过将 Accept 头与 `Route` 的 produce 属性值进行匹配，来选用最合适的內容类型，该属性值由 `io.vertx.ext.web.RoutingContext.getAcceptableContentType()` 定义。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "If the `accept` header matches `text/html`, we set the content type automatically to `text/html`."
-msgstr ""
+msgstr "如果 `Accept` 头与 `text/html` 匹配，我们会自动将内容类型设置为 `text/html` 。"
 
 #. type: Title ==
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Executing route on a virtual thread"
-msgstr ""
+msgstr "在虚拟线程上执行路线"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "You can annotate a route method with `@io.smallrye.common.annotation.RunOnVirtualThread` in order to execute it on a virtual thread.\n"
 "However, keep in mind that not everything can run safely on virtual threads.\n"
 "You should read the xref:virtual-threads.adoc#run-code-on-virtual-threads-using-runonvirtualthread[Virtual thread support reference] carefully and get acquainted with all the details."
-msgstr ""
+msgstr "您可以使用 `@io.smallrye.common.annotation.RunOnVirtualThread` 注解标记一个路由方法，以便在虚拟线程上执行该方法。不过请注意，并非所有内容都能在虚拟线程上安全运行。您应仔细阅读《 xref:virtual-threads.adoc#run-code-on-virtual-threads-using-runonvirtualthread[虚拟线程支持参考文档] 》，并熟悉其中的所有细节。"
 
 #. type: Title ==
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Handling conflicting routes"
-msgstr ""
+msgstr "处理冲突的路线"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "You may end up with multiple routes matching a given path.\n"
 "In the following example, both route matches `/accounts/me`:"
-msgstr ""
+msgstr "最终可能会出现多个路由与给定的路径匹配的情况。在下面的示例中，这两个路由都匹配 `/accounts/me` ："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "As a consequence, the result is not the expected one as the first route is called with the path parameter `id` set to `me`.\n"
 "To avoid the conflict, use the `order` attribute:"
-msgstr ""
+msgstr "因此，由于第一个路由被调用时，路径参数 `id` 的值被设置为 `me` ，结果与预期不符。为避免冲突，请使用 `order` 属性："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "By giving a lower order to the second route, it gets evaluated first.\n"
 "If the request path matches, it is invoked, otherwise the other routes are evaluated."
-msgstr ""
+msgstr "通过将第二条路由的优先级设为较低，它将被优先评估。如果请求路径匹配，则调用该路由；否则，将评估其他路由。"
 
 #. type: Title ==
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "`@RouteBase`"
-msgstr ""
+msgstr "`@RouteBase`"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "This annotation can be used to configure some defaults for reactive routes declared on a class."
-msgstr ""
+msgstr "该注解可用于为类上声明的响应式路由配置一些默认值。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "The `path` value is used as a prefix for any route method declared on the class where `Route#path()` is used."
-msgstr ""
+msgstr "`路径` 值将作为前缀，应用于在使用 `Route#path()` 的类上声明的任何路由方法。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "The value of `produces()` is used for content-based routing for all routes where `Route#produces()` is empty."
-msgstr ""
+msgstr "`produces()` 的返回值用于所有 `Route#produces()` 为空的路由的内容基于路由。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Reactive Route Methods"
-msgstr ""
+msgstr "响应式路由方法"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "A route method must be a non-private non-static method of a CDI bean.\n"
 "If the annotated method returns `void` then it has to accept at least one argument - see the supported types below.\n"
 "If the annotated method does not return `void` then the arguments are optional."
-msgstr ""
+msgstr "路由方法必须是 CDI Bean 的非私有、非静态方法。如果标注的方法返回值为 `void` ，则必须至少接受一个参数——请参阅下文支持的类型。如果标注的方法返回值不是 `void，` 则参数为可选。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "Methods that return `void` must __end__ the response or the HTTP request to this route will never end.\n"
 "Some methods of `RoutingExchange` do it for you, others not and you must call the `end()` method of the response by yourself, please refer to its JavaDoc for more information."
-msgstr ""
+msgstr "返回 `void` 的方法必须 _结束_ 响应，否则对该路由的 HTTP 请求将永远不会结束。 `RoutingExchange` 中的某些方法会自动完成此操作，而其他方法则不会，您必须自行调用响应的 `end()` 方法，更多信息请参阅其 JavaDoc。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "A route method can accept arguments of the following types:"
-msgstr ""
+msgstr "路由方法可以接受以下类型的参数："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "`io.vertx.ext.web.RoutingContext`"
-msgstr ""
+msgstr "`io.vertx.ext.web.RoutingContext`"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "`io.quarkus.vertx.web.RoutingExchange`"
-msgstr ""
+msgstr "`io.quarkus.vertx.web.RoutingExchange`"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "`io.vertx.core.http.HttpServerRequest`"
-msgstr ""
+msgstr "`io.vertx.core.http.HttpServerRequest`"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "`io.vertx.core.http.HttpServerResponse`"
-msgstr ""
+msgstr "`io.vertx.core.http.HttpServerResponse`"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "`io.vertx.mutiny.core.http.HttpServerRequest`"
-msgstr ""
+msgstr "`io.vertx.mutiny.core.http.HttpServerRequest`"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "`io.vertx.mutiny.core.http.HttpServerResponse`"
-msgstr ""
+msgstr "`io.vertx.mutiny.core.http.HttpServerResponse`"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Furthermore, it is possible to inject the `HttpServerRequest` parameters into method parameters annotated with `@io.quarkus.vertx.web.Param` using the following types:"
-msgstr ""
+msgstr "此外，可以使用以下类型，将 `HttpServerRequest` 参数注入到标注了 `@io.quarkus.vertx.web.Param` 的方法参数中："
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Parameter Type"
-msgstr ""
+msgstr "参数类型"
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Obtained via"
-msgstr ""
+msgstr "来源："
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "`java.lang.String`"
-msgstr ""
+msgstr "`java.lang.String`"
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "`routingContext.request().getParam()`"
-msgstr ""
+msgstr "`routingContext.request().getParam()`"
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "`java.util.Optional<String>`"
-msgstr ""
+msgstr "`java.util.Optional<String>`"
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "`java.util.List<String>`"
-msgstr ""
+msgstr "`java.util.List<String>`"
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "`routingContext.request().params().getAll()`"
-msgstr ""
+msgstr "`routingContext.request().params().getAll()`"
 
 #. type: Block title
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Request Parameter Example"
-msgstr ""
+msgstr "请求参数示例"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "The `HttpServerRequest` headers can be injected into method parameters annotated with `@io.quarkus.vertx.web.Header` using the following types:"
-msgstr ""
+msgstr "`HttpServerRequest` 头部信息可以通过以下类型，注入到带有 `@io.quarkus.vertx.web.Header` 注解的方法参数中："
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "`routingContext.request().getHeader()`"
-msgstr ""
+msgstr "`routingContext.request().getHeader()`"
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "`routingContext.request().headers().getAll()`"
-msgstr ""
+msgstr "`routingContext.request().headers().getAll()`"
 
 #. type: Block title
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Request Header Example"
-msgstr ""
+msgstr "请求头示例"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "The request body can be injected into a method parameter annotated with `@io.quarkus.vertx.web.Body` using the following types:"
-msgstr ""
+msgstr "可以使用以下类型，将请求正文注入到标有 `@io.quarkus.vertx.web.Body` 注解的方法参数中："
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "`routingContext.getBodyAsString()`"
-msgstr ""
+msgstr "`routingContext.getBodyAsString()`"
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "`io.vertx.core.buffer.Buffer`"
-msgstr ""
+msgstr "`io.vertx.core.buffer.Buffer`"
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "`routingContext.getBody()`"
-msgstr ""
+msgstr "`routingContext.getBody()`"
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "`io.vertx.core.json.JsonObject`"
-msgstr ""
+msgstr "`io.vertx.core.json.JsonObject`"
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "`routingContext.getBodyAsJson()`"
-msgstr ""
+msgstr "`routingContext.getBodyAsJson()`"
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "`io.vertx.core.json.JsonArray`"
-msgstr ""
+msgstr "`io.vertx.core.json.JsonArray`"
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "`routingContext.getBodyAsJsonArray()`"
-msgstr ""
+msgstr "`routingContext.getBodyAsJsonArray()`"
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "any other type"
-msgstr ""
+msgstr "任何其他类型"
 
 #. type: Table
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "`routingContext.getBodyAsJson().mapTo(MyPojo.class)`"
-msgstr ""
+msgstr "`routingContext.getBodyAsJson().mapTo(MyPojo.class)`"
 
 #. type: Block title
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Request Body Example"
-msgstr ""
+msgstr "请求正文示例"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "A failure handler can declare a single method parameter whose type extends `Throwable`.\n"
 "The type of the parameter is used to match the result of `RoutingContext#failure()`."
-msgstr ""
+msgstr "故障处理程序可以声明一个方法参数，其类型继承自 `Throwable` 。该参数的类型用于与 `RoutingContext#failure()` 的返回结果进行匹配。"
 
 #. type: Block title
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Failure Handler Example"
-msgstr ""
+msgstr "错误处理程序示例"
 
 #. type: Title ==
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Returning Unis"
-msgstr ""
+msgstr "返校大学"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "In a reactive route, you can return a `Uni` directly:"
-msgstr ""
+msgstr "在响应式路径中，你可以直接返回一个 `Uni` ："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Returning `Unis` is convenient when using a reactive client:"
-msgstr ""
+msgstr "在使用响应式客户端时，返回 `Unis` 非常方便："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "The item produced by the returned `Uni` can be:"
-msgstr ""
+msgstr "退回的 `Uni` 所生产的商品可以是："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "A string - written into the HTTP response directly."
-msgstr ""
+msgstr "一个字符串——直接写入 HTTP 响应中。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "A `io.vertx.core.buffer.Buffer` - written into the HTTP response directly."
-msgstr ""
+msgstr "一个 `io.vertx.core.buffer.Buffer` 对象——直接写入 HTTP 响应中。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "An object - written into the HTTP response after having been encoded into JSON.\n"
 "The `content-type` header is set to `application/json` if not already set."
-msgstr ""
+msgstr "一个对象——在被编码为 JSON 后写入 HTTP 响应中。如果尚未设置，则将 `content-type` 标头设置为 `application/json` 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "If the returned `Uni` produces a failure (or is `null`), an HTTP 500 response is written."
-msgstr ""
+msgstr "如果返回的 `Uni` 导致失败（或为 `null` ），则会写入 HTTP 500 响应。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Returning a `Uni<Void>` produces a 204 response (no content)."
-msgstr ""
+msgstr "返回 `Uni<Void>` 会产生 204 响应（无内容）。"
 
 #. type: Title ==
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Returning results"
-msgstr ""
+msgstr "返回结果"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "You can also return a result directly:"
-msgstr ""
+msgstr "您也可以直接返回结果："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "Be aware, the processing must be **non-blocking** as reactive routes are invoked on the IO Thread.\n"
 "Otherwise, set the `type` attribute of the `@Route` annotation to `Route.HandlerType.BLOCKING`, or use the `@io.smallrye.common.annotation.Blocking` annotation."
-msgstr ""
+msgstr "请注意，处理过程必须 *是非阻塞的* ，因为响应式路由是在 I/O 线程上调用的。否则，请将 `@Route` 注解的 `type` 属性设置为 `Route.HandlerType.BLOCKING` ，或者使用 `@io.smallrye.common.annotation.Blocking` 注解。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "The method can return:"
-msgstr ""
+msgstr "该方法可能返回："
 
 #. type: Title ==
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Returning Multis"
-msgstr ""
+msgstr "返回多选项"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "A reactive route can return a `Multi`.\n"
 "The items are written one by one, in the response.\n"
 "The response `Transfer-Encoding` header is set to `chunked`."
-msgstr ""
+msgstr "一个响应式路由可以返回一个 `Multi 对象` 。响应中的各项将逐一写入。响应的 `Transfer-Encoding` 标头被设置为 `chunked` 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Produces `helloworld!`"
-msgstr ""
+msgstr "输出 `“helloworld！` ”"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "A `Multi<String>` - the items are written one by one (one per _chunk_) in the response."
-msgstr ""
+msgstr "一个 `Multi<String>` —— 响应中会逐个写入这些项目（每个 _块_ 一个）。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "A `Multi<Buffer>` - the buffers are written one by one (one per _chunk_) without any processing."
-msgstr ""
+msgstr "一个 `Multi<Buffer>` ——缓冲区将逐个写入（每个 _块_ 一个），且不进行任何处理。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "A `Multi<Object>` - the items are encoded to JSON written one by one in the response."
-msgstr ""
+msgstr "一个 `Multi<Object>` —— 这些项目被编码为 JSON，并在响应中逐个写入。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "The previous snippet produces:"
-msgstr ""
+msgstr "上述代码片段的输出结果为："
 
 #. type: Title ==
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Streaming JSON Array items"
-msgstr ""
+msgstr "流式传输 JSON 数组项"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "You can return a `Multi` to produce a JSON Array, where every item is an item from this array.\n"
 "The response is written item by item to the client.\n"
 "To do that set the `produces` attribute to `\"application/json\"` (or `ReactiveRoutes.APPLICATION_JSON`)."
-msgstr ""
+msgstr "您可以返回一个 `Multi 对象` 来生成一个 JSON 数组，其中每个元素都是该数组中的一个项。响应将逐项写入客户端。要实现这一点，请将 `produces` 属性设置为 `\"application/json\"` （或 `ReactiveRoutes.APPLICATION_JSON` ）。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "The `produces` attribute is an array.\n"
 "When you pass a single value you can omit the \"{\" and \"}\".\n"
 "Note that `\"application/json\"` must be the first value in the array."
-msgstr ""
+msgstr "` `produces` ` 属性是一个数组。当传递单个值时，可以省略“{”和“}”。请注意 `，“application/json”` 必须是数组中的第一个值。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "Only `Multi<String>`, `Multi<Object>` and `Multi<Void>` can be written into the JSON Array.\n"
 "Using a `Multi<Void>` produces an empty array.\n"
 "You cannot use `Multi<Buffer>`.\n"
 "If you need to use `Buffer`, transform the content into a JSON or String representation first."
-msgstr ""
+msgstr "只有 `Multi<String>` 、 `Multi<Object>` 和 `Multi<Void>` 可以写入 JSON 数组。使用 `Multi<Void>` 会生成一个空数组。不能使用 `Multi<Buffer>` 。如果需要使用 `Buffer` ，请先将内容转换为 JSON 或字符串表示形式。"
 
 #. type: Block title
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Deprecation of `asJsonArray`"
-msgstr ""
+msgstr "`asJsonArray` 已被废弃"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "The `ReactiveRoutes.asJsonArray` has been deprecated as it is not compatible with the security layer of Quarkus."
-msgstr ""
+msgstr "`ReactiveRoutes.asJsonArray` 已被废弃，因为它与 Quarkus 的安全层不兼容。"
 
 #. type: Title ==
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Event Stream and Server-Sent Event support"
-msgstr ""
+msgstr "对事件流和服务器发送事件的支持"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "You can return a `Multi` to produce an event source (stream of server sent events).\n"
 "To enable this feature, set the `produces` attribute to `\"text/event-stream\"` (or `ReactiveRoutes.EVENT_STREAM`), such as in:"
-msgstr ""
+msgstr "您可以返回一个 `Multi 对象` 来生成事件源（服务器发送的事件流）。要启用此功能，请将 `produces` 属性设置 `为“text/event-stream”` （或 `ReactiveRoutes.EVENT_STREAM` ），例如："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "This method would produce:"
-msgstr ""
+msgstr "该方法将生成："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "The `produces` attribute is an array.\n"
 "When you pass a single value you can omit the \"{\" and \"}\".\n"
 "Note that `\"text/event-stream\"` must be the first value in the array."
-msgstr ""
+msgstr "` `produces` ` 属性是一个数组。当传递单个值时，可以省略“{”和“}”。请注意 `，“text/event-stream”` 必须是数组中的第一个值。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "You can also implement the `io.quarkus.vertx.web.ReactiveRoutes.ServerSentEvent` interface to customize the `event` and `id` section of the server sent event:"
-msgstr ""
+msgstr "您还可以实现 `io.quarkus.vertx.web.ReactiveRoutes.ServerSentEvent` 接口，以自定义服务器发送事件中的 `事件` 和 `ID` 部分："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Using a `Multi<PersonEvent>` would produce:"
-msgstr ""
+msgstr "使用 `Multi<PersonEvent>` 会产生以下结果："
 
 #. type: Block title
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Deprecation of `asEventStream`"
-msgstr ""
+msgstr "`asEventStream` 已弃用"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "The `ReactiveRoutes.asEventStream` has been deprecated as it is not compatible with the security layer of Quarkus."
-msgstr ""
+msgstr "`ReactiveRoutes.asEventStream` 已被废弃，因为它与 Quarkus 的安全层不兼容。"
 
 #. type: Title ==
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Json Stream in NDJSON format"
-msgstr ""
+msgstr "NDJSON 格式的 JSON 流"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "You can return a `Multi` to produce a newline delimited stream of JSON values.\n"
 "To enable this feature, set the `produces` attribute of the `@Route` annotation to `\"application/x-ndjson\"` (or `ReactiveRoutes.ND_JSON`):"
-msgstr ""
+msgstr "您可以返回一个 `Multi 对象` ，以生成一个由换行符分隔的 JSON 值流。要启用此功能，请将 `@Route` 注解的 `produces` 属性设置为 `\"application/x-ndjson\"` （或 `ReactiveRoutes.ND_JSON` ）："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "The `produces` attribute is an array. When you pass a single value you can omit the \"{\" and \"}\".\n"
 "Note that `\"application/x-ndjson\"` must be the first value in the array."
-msgstr ""
+msgstr "`“produces”` 属性是一个数组。当传递单个值时，可以省略“{”和“}”。请注意 `，“application/x-ndjson”` 必须是数组中的第一个值。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "You can also provide strings instead of objects, in that case the strings will be wrapped in quotes to become valid JSON values:"
-msgstr ""
+msgstr "您也可以提供字符串而非对象，在这种情况下，字符串会被用引号包裹，从而成为有效的 JSON 值："
 
 #. type: Block title
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Deprecation of `asJsonStream`"
-msgstr ""
+msgstr "`asJsonStream` 已弃用"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "The `ReactiveRoutes.asJsonStream` has been deprecated as it is not compatible with the security layer of Quarkus."
-msgstr ""
+msgstr "`ReactiveRoutes.asJsonStream` 已被废弃，因为它与 Quarkus 的安全层不兼容。"
 
 #. type: Title ==
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Using Bean Validation"
-msgstr ""
+msgstr "使用 Bean Validation"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "You can combine reactive routes and Bean Validation.\n"
 "First, don't forget to add the `quarkus-hibernate-validator` extension to your project.\n"
 "Then, you can add constraints to your route parameter (annotated with `@Param` or `@Body`):"
-msgstr ""
+msgstr "您可以将响应式路由与 Bean Validation 结合使用。首先，别忘了将 `quarkus-hibernate-validator` 扩展添加到您的项目中。然后，您就可以为路由参数（标注了 `@Param` 或 `@Body` ）添加约束："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "If the parameters do not pass the tests, it returns an HTTP 400 response.\n"
 "If the request accepts JSON payload, the response follows the https://opensource.zalando.com/problem/constraint-violation/[Problem] format."
-msgstr ""
+msgstr "如果参数未通过测试，则返回 HTTP 400 响应。如果请求接受 JSON 有效载荷，则响应将 link:https://opensource.zalando.com/problem/constraint-violation/[遵循“Problem”格式] 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "When returning an object or a `Uni`, you can also use the `@Valid` annotation:"
-msgstr ""
+msgstr "在返回一个对象或 `Uni` 时，也可以使用 `@Valid` 注解："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "If the item produced by the route does not pass the validation, it returns an HTTP 500 response.\n"
 "If the request accepts JSON payload, the response follows the https://opensource.zalando.com/problem/constraint-violation/[Problem] format."
-msgstr ""
+msgstr "如果该路由生成的项未通过验证，则返回 HTTP 500 响应。如果请求接受 JSON 有效载荷，则响应将 link:https://opensource.zalando.com/problem/constraint-violation/[遵循“Problem”] 格式。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "Note that only `@Valid` is supported on the return type.\n"
 "The returned class can use any constraint.\n"
 "In the case of `Uni`, it checks the item produced asynchronously."
-msgstr ""
+msgstr "请注意，返回类型仅支持 `@Valid` 约束。返回类可以使用任何约束。以 `Uni` 为例，它会检查异步生成的项。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Using the Vert.x Web Router"
-msgstr ""
+msgstr "使用 Vert.x Web Router"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "You can also register your route directly on the _HTTP routing layer_ by registering routes directly on the `Router` object.\n"
 "To retrieve the `Router` instance at startup:"
-msgstr ""
+msgstr "您还可以通过直接在 `Router` 对象上注册路由，在 _HTTP 路由层_ 直接注册您的路由。要在启动时获取 `Router` 实例："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Check the https://vertx.io/docs/vertx-web/java/#_basic_vert_x_web_concepts[Vert.x Web documentation] to know more about the route registration, options, and available handlers."
-msgstr ""
+msgstr "请查阅 link:https://vertx.io/docs/vertx-web/java/#_basic_vert_x_web_concepts[Vert.x Web 文档] ，以了解有关路由注册、选项和可用处理程序的更多信息。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "`Router` access is provided by the `quarkus-vertx-http` extension.\n"
 "If you use `quarkus-rest` or `quarkus-reactive-routes`, the extension will be added automatically."
-msgstr ""
+msgstr "`路由` 访问功能由 `quarkus-vertx-http` 扩展提供。如果您使用 `quarkus-rest` 或 `quarkus-reactive-routes` ，该扩展将自动添加。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "You can also receive the Mutiny variant of the Router (`io.vertx.mutiny.ext.web.Router`):"
-msgstr ""
+msgstr "您还可以获取 Router 的 Mutiny 变体（ `io.vertx.mutiny.ext.web.Router` ）："
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Intercepting HTTP requests"
-msgstr ""
+msgstr "拦截 HTTP 请求"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "You can also register filters that would intercept incoming HTTP requests.\n"
 "Note that these filters are also applied for servlets, Jakarta REST resources, and reactive routes."
-msgstr ""
+msgstr "您还可以注册用于拦截传入 HTTP 请求的过滤器。请注意，这些过滤器同样适用于 Servlet、Jakarta REST 资源和响应式路由。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "For example, the following code snippet registers a filter adding an HTTP header:"
-msgstr ""
+msgstr "例如，以下代码片段注册了一个用于添加 HTTP 头部的过滤器："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "The `RouteFilter#value()` defines the priority used to sort the filters - filters with higher priority are called first."
-msgstr ""
+msgstr "`RouteFilter#value()` 定义了用于对过滤器进行排序的优先级——优先级更高的过滤器将首先被调用。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "The filter is likely required to call the `next()` method to continue the chain."
-msgstr ""
+msgstr "该过滤器可能需要调用 `next()` 方法才能继续链式调用。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "HTTP Compression"
-msgstr ""
+msgstr "HTTP 压缩"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "The body of an HTTP response is not compressed by default.\n"
 "You can enable the HTTP compression support by means of `quarkus.http.enable-compression=true`."
-msgstr ""
+msgstr "HTTP 响应正文默认不会被压缩。您可以通过设置 `quarkus.http.enable-compression=true` 来启用 HTTP 压缩支持。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "If compression support is enabled then the response body is compressed if:"
-msgstr ""
+msgstr "如果启用了压缩支持，则在以下情况下响应正文将被压缩："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "the route method is annotated with `@io.quarkus.vertx.http.Compressed`, or"
-msgstr ""
+msgstr "该路由方法标注了 `@io.quarkus.vertx.http.Compressed` 注解，或者"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "the `Content-Type` header is set and the value is a compressed media type as configured via `quarkus.http.compress-media-types`."
-msgstr ""
+msgstr "已设置 `Content-Type` 头，且其值为通过 `quarkus.http.compress-media-types` 配置的压缩媒体类型。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "The response body is never compressed if:"
-msgstr ""
+msgstr "在以下情况下，响应正文绝不会被压缩："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "the route method is annotated with `@io.quarkus.vertx.http.Uncompressed`, or"
-msgstr ""
+msgstr "该路由方法标注了 `@io.quarkus.vertx.http.Uncompressed` 注解，或者"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "the `Content-Type` header is not set."
-msgstr ""
+msgstr "未设置 `Content-Type` 标头。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "By default, the following list of media types is compressed: `text/html`, `text/plain`, `text/xml`, `text/css`, `text/javascript`, `application/javascript`, `application/json`, `application/graphql+json` and `application/xhtml+xml`."
-msgstr ""
+msgstr "默认情况下，以下媒体类型会被压缩： `text/html` 、 `text/plain` 、 `text/xml` 、 `text/css` 、 `text/javascript` 、 `application/javascript` 、 `application/json` 、 `application/graphql+json` 和 `application/xhtml+xml` 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "If the client does not support HTTP compression then the response body is not compressed."
-msgstr ""
+msgstr "如果客户端不支持 HTTP 压缩，则响应正文不会被压缩。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Adding OpenAPI and Swagger UI"
-msgstr ""
+msgstr "添加 OpenAPI 和 Swagger UI"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "You can add support for link:https://www.openapis.org/[OpenAPI] and link:https://swagger.io/tools/swagger-ui/[Swagger UI] by using the `quarkus-smallrye-openapi` extension."
-msgstr ""
+msgstr "您可以通过使用 `quarkus-smallrye-openapi` 扩展来添加对 link:https://www.openapis.org/[OpenAPI] 和 link:https://swagger.io/tools/swagger-ui/[Swagger UI] 的支持。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Add the extension by running this command:"
-msgstr ""
+msgstr "运行以下命令添加该扩展："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "This is enough to generate a basic OpenAPI schema document from your Vert.x Routes:"
-msgstr ""
+msgstr "仅此即可根据您的 Vert.x Routes 生成一个基本的 OpenAPI 模式文档："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "You will see the generated OpenAPI schema document:"
-msgstr ""
+msgstr "您将看到生成的 OpenAPI 架构文档："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Also see xref:openapi-swaggerui.adoc[the OpenAPI Guide]."
-msgstr ""
+msgstr "另请参阅 xref:openapi-swaggerui.adoc[《OpenAPI 指南》] 。"
 
 #. type: Title ==
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Adding MicroProfile OpenAPI Annotations"
-msgstr ""
+msgstr "添加 MicroProfile OpenAPI 注解"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "You can use link:https://github.com/eclipse/microprofile-open-api[MicroProfile OpenAPI] to better document your schema,\n"
 "for instance, adding header info, or specifying the return type on `void` methods might be useful:"
-msgstr ""
+msgstr "您可以使用 link:https://github.com/eclipse/microprofile-open-api[MicroProfile OpenAPI] 来更好地记录您的模式，例如，添加标头信息，或者为 `void` 方法指定返回类型可能会很有帮助："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Header information about your API."
-msgstr ""
+msgstr "有关您 API 的标头信息。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Defining the response."
-msgstr ""
+msgstr "定义响应。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "This will generate this OpenAPI schema:"
-msgstr ""
+msgstr "这将生成以下 OpenAPI 模式："
 
 #. type: Title ==
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Using Swagger UI"
-msgstr ""
+msgstr "使用 Swagger UI"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "Swagger UI is included by default when running in `dev` or `test` mode, and can optionally be added to `prod` mode.\n"
 "For more information, see the <<openapi-swaggerui.adoc#dev-mode,Swagger UI>> guide."
-msgstr ""
+msgstr "在 `开发` 或 `测试` 模式下运行时，Swagger UI 默认已包含在内，也可选择将其添加到 `生产` 模式中。有关更多信息，请参阅 xref:openapi-swaggerui.adoc#dev-mode[Swagger UI] 指南。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Navigate to link:http://localhost:8080/q/swagger-ui/[localhost:8080/q/swagger-ui/] and observe the Swagger UI screen:"
-msgstr ""
+msgstr "访问 link:http://localhost:8080/q/swagger-ui/[localhost:] 8080/q/swagger-ui/，查看 Swagger UI 界面："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "image:reactive-routes-guide-screenshot01.png[alt=Swagger UI]"
-msgstr ""
+msgstr "image:reactive-routes-guide-screenshot01.png[alt=\"Swagger UI\"]"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid "Conclusion"
-msgstr ""
+msgstr "结论"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/reactive-routes.adoc
+#, fuzzy
 msgid ""
 "This guide has introduced how you can use reactive routes to define an HTTP endpoint.\n"
 "It also describes the structure of the Quarkus HTTP layer and how to write filters."
-msgstr ""
+msgstr "本指南介绍了如何使用响应式路由来定义 HTTP 端点。此外，还介绍了 Quarkus HTTP 层的结构以及如何编写过滤器。"

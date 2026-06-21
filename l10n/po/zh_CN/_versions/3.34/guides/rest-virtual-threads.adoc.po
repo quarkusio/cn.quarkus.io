@@ -7,326 +7,442 @@ msgstr ""
 "X-Generator: jekyll-l10n\n"
 
 #. type: YAML Front Matter: title
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "Use virtual threads in REST applications"
-msgstr ""
+msgstr "在 REST 应用程序中使用虚拟线程"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid ""
 "In this guide, we see how you can use virtual threads in a REST application.\n"
 "Because virtual threads are all about I/O, we will also use the REST client."
-msgstr ""
+msgstr "在本指南中，我们将了解如何在 REST 应用程序中使用虚拟线程。由于虚拟线程主要涉及 I/O 操作，因此我们还将使用 REST 客户端。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "Prerequisites"
-msgstr ""
+msgstr "先决条件"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "Architecture"
-msgstr ""
+msgstr "建筑"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid ""
 "The application built into this guide is quite simple.\n"
 "It calls a weather service for two cities (Valence, France, and Athens, Greece) and decides the best place based on the current temperature."
-msgstr ""
+msgstr "本指南中内置的应用程序非常简单。它会查询两个城市（法国瓦朗斯和希腊雅典）的天气服务，并根据当前气温确定最佳地点。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "Create the Maven project"
-msgstr ""
+msgstr "创建 Maven 项目"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "First, we need a new project. Create a new project with the following command:"
-msgstr ""
+msgstr "首先，我们需要一个新项目。使用以下命令创建一个新项目："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid ""
 "This command generates a new project importing the Quarkus REST (formerly RESTEasy Reactive), REST client, and https://github.com/FasterXML/jackson[Jackson] extensions,\n"
 "and in particular, adds the following dependencies:"
-msgstr ""
+msgstr "该命令将生成一个新项目，导入 Quarkus REST（原名 RESTEasy Reactive）、REST 客户端和 link:https://github.com/FasterXML/jackson[Jackson] 扩展，并特别添加以下依赖项："
 
 #. type: Block title
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "pom.xml"
-msgstr ""
+msgstr "pom.xml"
 
 #. type: Block title
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "build.gradle"
-msgstr ""
+msgstr "build.gradle"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid ""
 "You might wonder why we use _reactive_ extensions.\n"
 "Virtual threads have limitations, and we can only integrate them properly when using the reactive extensions.\n"
 "No worries: your code will be written 100% in a synchronous / imperative style."
-msgstr ""
+msgstr "你可能会疑惑，我们为什么要使用 _响应式_ 扩展。虚拟线程存在一些限制，只有在使用响应式扩展时，才能将其正确集成。别担心：你的代码将100%采用同步/命令式风格编写。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "Check the xref:./virtual-threads.adoc#why-not[virtual thread reference guide] for details."
-msgstr ""
+msgstr "详情请参阅 xref:./virtual-threads.adoc#why-not[虚拟线程参考指南] 。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "Prepare the `pom.xml` file"
-msgstr ""
+msgstr "准备 `pom.xml` 文件"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "We need to customize the `pom.xml` file to use virtual threads."
-msgstr ""
+msgstr "我们需要自定义 `pom.xml` 文件，以便使用虚拟线程。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "1) Locate the line with `<maven.compiler.release>17</maven.compiler.release>`, and replace it with:"
-msgstr ""
+msgstr "1) 找到包含 `<maven.compiler.release>17</maven.compiler.release>` 的那行，将其替换为："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "2) In the maven-surefire-plugin and maven-failsafe-plugin configurations, add the following `argLine` parameter:"
-msgstr ""
+msgstr "2) 在 maven-surefire-plugin 和 maven-failsafe-plugin 的配置中，添加以下 `argLine` 参数："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid ""
 "The `-Djdk.tracePinnedThreads` system property **only works on Java 21-23**.\n"
 "It has been removed in Java 24+. For Java 24+, use the JFR events or Quarkus testing extensions instead (see the xref:./virtual-threads.adoc#testing-virtual-thread-applications[Testing virtual thread applications] section)."
-msgstr ""
+msgstr "系统属性 `-Djdk.tracePinnedThreads` *仅在 Java 21-23 版本中有效* 。该属性已在 Java 24 及更高版本中移除。对于 Java 24 及更高版本，请改用 JFR 事件或 Quarkus 测试扩展（参 xref:./virtual-threads.adoc#testing-virtual-thread-applications[见“测试虚拟线程应用程序”一节] ）。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "The `-Djdk.tracePinnedThreads` will detect pinned carrier threads while running tests on Java 21-23 (See xref:./virtual-threads.adoc#pinning[the virtual thread reference guide for details])."
-msgstr ""
+msgstr "在 Java 21-23 上运行测试时， `-Djdk.tracePinnedThreads` 参数将检测被固定的承载线程（ xref:./virtual-threads.adoc#pinning[详情请] 参阅 xref:./virtual-threads.adoc#pinning[虚拟线程参考指南] ）。"
 
 #. type: Block title
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "--enable-preview on Java 19 and 20"
-msgstr ""
+msgstr "--enable-preview 在 Java 19 和 20 上的应用"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid ""
 "If you are using a Java 19 or 20, add the `--enable-preview` flag in the `argLine` and as `parameters` of the maven compiler plugin.\n"
 "Note that we strongly recommend Java 21."
-msgstr ""
+msgstr "如果您使用的是 Java 19 或 20，请在 `argLine` 中以及作为 Maven 编译器插件的 `参数` 添加 `--enable-preview` 标志。请注意，我们强烈建议使用 Java 21。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "Create the weather client"
-msgstr ""
+msgstr "创建天气客户端"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid ""
 "This section is not about virtual threads.\n"
 "Because we need to do some I/O to demonstrate virtual threads usage, we need a client doing I/O operations.\n"
 "In addition, the REST client is virtual thread friendly: it does not pin and handle propagation correctly."
-msgstr ""
+msgstr "本节不涉及虚拟线程。由于我们需要进行一些 I/O 操作来演示虚拟线程的使用，因此需要一个执行 I/O 操作的客户端。此外，该 REST 客户端对虚拟线程不友好：它不会进行固定操作，且无法正确处理传播。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "Create the `src/main/java/org/acme/WeatherService.java` class with the following content:"
-msgstr ""
+msgstr "创建 `src/main/java/org/acme/WeatherService.java` 类，内容如下："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid ""
 "This class models the HTTP interaction with the weather service.\n"
 "Read more about the rest client in the dedicated xref:./rest-client.adoc[guide]."
-msgstr ""
+msgstr "该类用于模拟与天气服务之间的 HTTP 交互。有关 REST 客户端的更多信息，请参阅专门的 xref:./rest-client.adoc[指南] 。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "Create the HTTP endpoint"
-msgstr ""
+msgstr "创建 HTTP 端点"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "Now, create the `src/main/java/org/acme/TheBestPlaceToBeResource.java` class with the following content:"
-msgstr ""
+msgstr "现在，创建 `src/main/java/org/acme/TheBestPlaceToBeResource.java` 类，内容如下："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "Instructs Quarkus to invoke this method on a virtual thread"
-msgstr ""
+msgstr "指示 Quarkus 在虚拟线程上调用此方法"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "Run the application in dev mode"
-msgstr ""
+msgstr "以开发模式运行应用程序"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "Make sure that you use OpenJDK and JVM versions supporting virtual thread and launch the _dev mode_ with `./mvnw quarkus:dev`:"
-msgstr ""
+msgstr "请确保使用支持虚拟线程的 OpenJDK 和 JVM 版本，并使用 `./mvnw quarkus:dev` : 命令启动 _开发模式_ ："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "Must be 19+, we recommend 21+"
-msgstr ""
+msgstr "必须年满19岁，建议年满21岁"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "Launch the dev mode"
-msgstr ""
+msgstr "启动开发者模式"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid ""
 "Then, in a browser, open http://localhost:8080.\n"
 "You should get something like:"
-msgstr ""
+msgstr "然后，在浏览器中打开 http://localhost:8080 。您应该会看到类似以下的内容："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "As you can see, the endpoint runs on a virtual thread."
-msgstr ""
+msgstr "如您所见，该端点在虚拟线程上运行。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "It's essential to understand what happened behind the scene:"
-msgstr ""
+msgstr "了解幕后发生了什么至关重要："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "Quarkus creates the virtual thread to invoke your endpoint (because of the `@RunOnVirtualThread` annotation)."
-msgstr ""
+msgstr "Quarkus 会创建一个虚拟线程来调用您的端点（这是因为使用了 `@RunOnVirtualThread` 注解）。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "When the code invokes the rest client, the virtual thread is blocked, BUT the carrier thread is not blocked (that's the virtual thread _magic touch_)."
-msgstr ""
+msgstr "当代码调用 REST 客户端时，虚拟线程会被阻塞，但承载线程不会被阻塞（这就是虚拟线程 _的神奇之处_ ）。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "Once the first invocation of the rest client completes, the virtual thread is rescheduled and continues its execution."
-msgstr ""
+msgstr "一旦 REST 客户端的首次调用完成，虚拟线程就会被重新调度并继续执行。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "The second rest client invocation happens, and the virtual thread is blocked again (but not the carrier thread)."
-msgstr ""
+msgstr "第二次调用 Rest 客户端时，虚拟线程再次被阻塞（但承载线程并未被阻塞）。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "Finally, when the second invocation of the rest client completes, the virtual thread is rescheduled and continues its execution."
-msgstr ""
+msgstr "最后，当第二次调用 rest 客户端完成后，虚拟线程会被重新调度并继续执行。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "The method returns the result. The virtual thread terminates."
-msgstr ""
+msgstr "该方法返回结果。虚拟线程终止。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "The result is captured by Quarkus and written in the HTTP response"
-msgstr ""
+msgstr "Quarkus 会捕获该结果并将其写入 HTTP 响应中"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "Verify pinning using tests"
-msgstr ""
+msgstr "通过测试验证固定效果"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "In the `pom.xml,` we added an `argLine` argument to the surefire and failsafe plugins:"
-msgstr ""
+msgstr "在 `pom.xml 中，` 我们为 surefire 和 failsafe 插件添加了一个 `argLine` 参数："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid ""
 "The `-Djdk.tracePinnedThreads` dumps the stack trace if a virtual thread cannot be _unmounted_ smoothly (meaning that it blocks the carrier thread).\n"
 "That's what we call _pinning_ (more info in xref:./virtual-threads.adoc#pinning[the virtual thread reference guide])."
-msgstr ""
+msgstr "如果虚拟线程无法顺利 _卸载_ （即阻塞了承载线程） `，-Djdk.tracePinnedThreads` 选项会输出堆栈跟踪信息。这就是我们所说的 _“锁定”_ （更多信息请参见 xref:./virtual-threads.adoc#pinning[虚拟线程参考指南] ）。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "This flag **only works on Java 21-23** and has been removed in Java 24+. For Java 24+, use the Quarkus `junit-virtual-threads` extension described in xref:./virtual-threads.adoc#testing-virtual-thread-applications[the virtual thread reference guide], which uses JFR events to detect pinning across all Java versions."
-msgstr ""
+msgstr "*此标志仅在 Java 21-23 版本中有效* ，并在 Java 24 及更高版本中已被移除。对于 Java 24 及更高版本，请使用 xref:./virtual-threads.adoc#testing-virtual-thread-applications[《虚拟线程参考指南》] 中所述的 Quarkus `junit-virtual-threads` 扩展，该扩展利用 JFR 事件在所有 Java 版本中检测固定操作。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid ""
 "Starting with Java 24, thanks to link:https://openjdk.org/jeps/491[JEP 491], `synchronized` blocks no longer cause pinning.\n"
 "This means pinning is much less likely to occur on Java 24+, occurring only when native code calls back to Java code that performs blocking operations."
-msgstr ""
+msgstr "从 Java 24 开始，得益于 link:https://openjdk.org/jeps/491[JEP 491] `，synchronized` 代码块不再导致“pinning”现象。这意味着在 Java 24 及更高版本中，“pinning”现象发生的概率大大降低，仅在本地代码回调执行阻塞操作的 Java 代码时才会发生。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid ""
 "We recommend enabling pinning detection in tests.\n"
 "Thus, you can check that your application behaves correctly when using virtual threads.\n"
 "Just check your log after having run the test.\n"
 "If you see a stack trace (on Java 21-23) or pinning events (using the junit-virtual-threads extension), better check what's wrong.\n"
 "If your code (or one of your dependencies) pins, it might be better to use regular worker threads instead."
-msgstr ""
+msgstr "我们建议在测试中启用“固定”检测功能。这样，您就可以验证应用程序在使用虚拟线程时是否行为正常。只需在运行测试后查看日志即可。 如果您看到堆栈跟踪（在 Java 21-23 版本中）或固定事件（使用 junit-virtual-threads 扩展时），最好检查一下问题出在哪里。如果您的代码（或某个依赖项）发生了固定，最好改用常规的工作线程。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "Create the `src/test/java/org/acme/TheBestPlaceToBeResourceTest.java` class with the following content:"
-msgstr ""
+msgstr "创建 `src/test/java/org/acme/TheBestPlaceToBeResourceTest.java` 类，内容如下："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid ""
 "It is a straightforward test, but at least it will detect if our application is pinning.\n"
 "Run the test with either:"
-msgstr ""
+msgstr "这是一个简单的测试，但至少可以检测出我们的应用程序是否存在“固定”现象。请使用以下任一方式运行该测试："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "`r` in dev mode (using continuous testing)"
-msgstr ""
+msgstr "`r` 在开发模式下（使用持续测试）"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "`./mvnw test`"
-msgstr ""
+msgstr "`./mvnw test`"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid ""
 "As you will see, it does not pin - no stack trace.\n"
 "It is because the REST client is implemented in a virtual-thread-friendly way."
-msgstr ""
+msgstr "正如您将看到的，它不会发生死锁——没有堆栈跟踪。这是因为该 REST 客户端是以支持虚拟线程的方式实现的。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "The same approach can be used with integration tests."
-msgstr ""
+msgstr "集成测试也可以采用同样的方法。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "Conclusion"
-msgstr ""
+msgstr "结论"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid ""
 "This guide shows how you can use virtual threads with Quarkus REST and the REST client.\n"
 "Learn more about virtual threads support on:"
-msgstr ""
+msgstr "本指南介绍了如何在 Quarkus REST 和 REST 客户端中使用虚拟线程。如需进一步了解虚拟线程的支持情况，请访问："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "xref:./messaging-virtual-threads.adoc[@RunOnVirtualThread in messaging applications] (this guide covers Apache Kafka)"
-msgstr ""
+msgstr "xref:./messaging-virtual-threads.adoc[消息传递应用中的 @RunOnVirtualThread] （本指南以 Apache Kafka 为例）"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "xref:./grpc-virtual-threads.adoc[@RunOnVirtualThread in gRPC services]"
-msgstr ""
+msgstr "xref:./grpc-virtual-threads.adoc[gRPC 服务中的 @RunOnVirtualThread]"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/rest-virtual-threads.adoc
+#, fuzzy
 msgid "xref:./virtual-threads.adoc[the virtual thread reference guide] (include native compilation and containerization)"
-msgstr ""
+msgstr "xref:./virtual-threads.adoc[虚拟线程参考指南] （包括本机编译和容器化）"

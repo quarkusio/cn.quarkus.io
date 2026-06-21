@@ -7,395 +7,533 @@ msgstr ""
 "X-Generator: jekyll-l10n\n"
 
 #. type: YAML Front Matter: title
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "Getting Started to Quarkus Messaging with AMQP 1.0"
-msgstr ""
+msgstr "Quarkus 消息传递入门：使用 AMQP 1.0"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "This guide demonstrates how your Quarkus application can utilize Quarkus Messaging to interact with AMQP 1.0."
-msgstr ""
+msgstr "本指南演示了您的 Quarkus 应用程序如何利用 Quarkus Messaging 与 AMQP 1.0 进行交互。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid ""
 "If you want to use RabbitMQ, you should use the xref:rabbitmq.adoc[Quarkus Messaging RabbitMQ extension].\n"
 "Alternatively, if you want to use RabbitMQ with AMQP 1.0 you need to enable the AMQP 1.0 plugin in the RabbitMQ broker;\n"
 "check the https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/3.9/amqp/amqp.html#amqp-rabbitmq[connecting to RabbitMQ]\n"
 "documentation."
-msgstr ""
+msgstr "如果您想使用 RabbitMQ，应采用 xref:rabbitmq.adoc[Quarkus Messaging RabbitMQ 扩展] 。或者，如果您想通过 AMQP 1.0 协议使用 RabbitMQ，则需要在 RabbitMQ 消息代理中启用 AMQP 1.0 插件；请参阅 link:https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/3.9/amqp/amqp.html#amqp-rabbitmq[“连接到 RabbitMQ”] 文档。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "Prerequisites"
-msgstr ""
+msgstr "先决条件"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "Architecture"
-msgstr ""
+msgstr "建筑"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid ""
 "In this guide, we are going to develop two applications communicating with an AMQP broker.\n"
 "We will use https://activemq.apache.org/components/artemis/[Artemis], but you can use any AMQP 1.0 broker.\n"
 "The first application sends a _quote request_ to an AMQP queue and consumes messages from the _quote_ queue.\n"
 "The second application receives the _quote request_ and sends a _quote_ back."
-msgstr ""
+msgstr "在本指南中，我们将开发两个与 AMQP 代理进行通信的应用程序。我们将使用 link:https://activemq.apache.org/components/artemis/[Artemis] ，但您也可以使用任何 AMQP 1.0 代理。第一个应用程序向 AMQP 队列发送 _报价请求_ ，并从 _报价_ 队列中消费消息。第二个应用程序接收 _报价请求_ ，并返回 _报价_ 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid ""
 "The first application, the `producer`, will let the user request some quotes over an HTTP endpoint.\n"
 "For each quote request, a random identifier is generated and returned to the user, to put the quote request on _pending_.\n"
 "At the same time, the generated request id is sent over the `quote-requests` queue."
-msgstr ""
+msgstr "第一个应用程序（ `生产者` ）将允许用户通过一个 HTTP 端点提交报价请求。对于每个报价请求，系统会生成一个随机标识符并返回给用户，以此将该报价请求置于 _待处理状态_ 。同时，生成的请求 ID 会被发送到 `报价请求` 队列中。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "The second application, the `processor`, in turn, will read from the `quote-requests` queue, put a random price to the quote, and send it to a queue named `quotes`."
-msgstr ""
+msgstr "第二个应用程序（即 `处理器` ）将从 `报价请求` 队列中读取数据，为该报价设定一个随机价格，然后将其发送到名为 `“quotes”` 的队列中。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid ""
 "Lastly, the `producer` will read the quotes and send them to the browser using server-sent events.\n"
 "The user will therefore see the quote price updated from _pending_ to the received price in real-time."
-msgstr ""
+msgstr "最后， `生产者` 将读取报价，并通过服务器发送事件将其发送给浏览器。因此，用户将实时看到报价从 _“待处理”状态_ 更新为“已接收”价格。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "Solution"
-msgstr ""
+msgstr "解决方案"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid ""
 "We recommend that you follow the instructions in the next sections and create applications step by step.\n"
 "However, you can go right to the completed example."
-msgstr ""
+msgstr "我们建议您按照后续章节中的说明，一步一步地创建应用程序。不过，您也可以直接查看已完成的示例。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "Clone the Git repository: `git clone {quickstarts-clone-url}`, or download an {quickstarts-archive-url}[archive]."
-msgstr ""
+msgstr "克隆 Git 仓库： `git clone {quickstarts-clone-url}` ，或下载 {quickstarts-archive-url}[存档]。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "The solution is located in the `amqp-quickstart` link:{quickstarts-tree-url}/amqp-quickstart[directory]."
-msgstr ""
+msgstr "该解决方案位于 `amqp-quickstart` link:{quickstarts-tree-url}/amqp-quickstart[目录] 中。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "Creating the Maven Project"
-msgstr ""
+msgstr "创建 Maven 项目"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "First, we need to create two projects: the _producer_ and the _processor_."
-msgstr ""
+msgstr "首先，我们需要创建两个项目： _生产者_ 项目和 _处理器_ 项目。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "To create the _producer_ project, in a terminal run:"
-msgstr ""
+msgstr "要创建 _生产者_ 项目，请在终端中运行："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "This command creates the project structure and selects the two Quarkus extensions we will be using:"
-msgstr ""
+msgstr "该命令将创建项目结构，并选择我们将要使用的两个 Quarkus 扩展："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "Quarkus REST (formerly RESTEasy Reactive) and its Jackson support to handle JSON payloads"
-msgstr ""
+msgstr "Quarkus REST（原名 RESTEasy Reactive）及其对 Jackson 的支持，用于处理 JSON 有效载荷"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "The Reactive Messaging AMQP connector"
-msgstr ""
+msgstr "响应式消息传递 AMQP 连接器"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "To create the _processor_ project, from the same directory, run:"
-msgstr ""
+msgstr "要创建 _处理器_ 项目，请在同一目录下运行："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "At that point, you should have the following structure:"
-msgstr ""
+msgstr "此时，您应该得到以下结构："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "Open the two projects in your favorite IDE."
-msgstr ""
+msgstr "在您常用的集成开发环境（IDE）中打开这两个项目。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "The Quote object"
-msgstr ""
+msgstr "Quote 对象"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid ""
 "The `Quote` class will be used in both `producer` and `processor` projects.\n"
 "For the sake of simplicity, we will duplicate the class.\n"
 "In both projects, create the `src/main/java/org/acme/amqp/model/Quote.java` file, with the following content:"
-msgstr ""
+msgstr "`Quote` 类将在 `生产者项目` 和 `处理器项目` 中同时使用。为简化起见，我们将复制该类。在两个项目中，分别创建 `src/main/java/org/acme/amqp/model/Quote.java` 文件，内容如下："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid ""
 "JSON representation of `Quote` objects will be used in messages sent to the AMQP queues\n"
 "and also in the server-sent events sent to browser clients."
-msgstr ""
+msgstr "在发送到 AMQP 队列的消息中，以及在发送到浏览器客户端的服务器发送事件中，都将使用 `Quote` 对象的 JSON 表示形式。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "Quarkus has built-in capabilities to deal with JSON AMQP messages."
-msgstr ""
+msgstr "Quarkus 具备处理 JSON AMQP 消息的内置功能。"
 
 #. type: Block title
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "@RegisterForReflection"
-msgstr ""
+msgstr "@RegisterForReflection"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid ""
 "The `@RegisterForReflection` annotation instructs Quarkus to keep the class, its fields, and methods when creating a native executable.\n"
 "This is crucial when we later run our applications as native executables within containers.\n"
 "Without this annotation, the native compilation process would discard the fields and methods during the dead-code elimination phase, which would lead to runtime errors.\n"
 "More details about the `@RegisterForReflection` annotation can be found on  the xref:writing-native-applications-tips.adoc#registerForReflection[native application tips] page."
-msgstr ""
+msgstr "`@RegisterForReflection` 注解会指示 Quarkus 在生成本机可执行文件时保留该类及其字段和方法。当我们在后续将应用程序作为本机可执行文件在容器中运行时，这一点至关重要。 如果没有此注解，原生编译过程会在死代码消除阶段丢弃这些字段和方法，从而导致运行时错误。有关 `@RegisterForReflection` 注解的更多详细信息，请参阅 xref:writing-native-applications-tips.adoc#registerForReflection[原生应用程序提示] 页面。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "Sending quote request"
-msgstr ""
+msgstr "发送报价请求"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "Inside the `producer` project, locate the generated  `src/main/java/org/acme/amqp/producer/QuotesResource.java` file, and update the content to be:"
-msgstr ""
+msgstr "在 `生产者` 项目中，找到生成的 `src/main/java/org/acme/amqp/producer/QuotesResource.java` 文件，并将内容更新为："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "Inject a Reactive Messaging `Emitter` to send messages to the `quote-requests` channel."
-msgstr ""
+msgstr "注入一个响应式消息 `发射器` ，用于向 `quote-requests` 频道发送消息。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "On a post request, generate a random UUID and send it to the AMQP queue using the emitter."
-msgstr ""
+msgstr "在收到 POST 请求时，生成一个随机的 UUID，并通过发射器将其发送到 AMQP 队列。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid ""
 "The `quote-requests` channel is going to be managed as a AMQP queue, as that's the only connector on the classpath.\n"
 "If not indicated otherwise, like in this example, Quarkus uses the channel name as AMQP queue name.\n"
 "So, in this example, the application sends messages to the `quote-requests` queue."
-msgstr ""
+msgstr "`quote-requests` 通道将作为 AMQP 队列进行管理，因为这是类路径中唯一的连接器。除非另有说明（如本例所示），Quarkus 会将通道名称用作 AMQP 队列名称。因此，在本例中，应用程序会向 `quote-requests` 队列发送消息。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "When you have multiple connectors, you would need to indicate which connector you want to use in the application configuration."
-msgstr ""
+msgstr "当您有多个连接器时，需要在应用程序配置中指定要使用的连接器。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "Processing quote requests"
-msgstr ""
+msgstr "处理报价请求"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid ""
 "Now let's consume the quote request and give out a price.\n"
 "Inside the `processor` project, locate the `src/main/java/org/acme/amqp/processor/QuoteProcessor.java` file and add the following:"
-msgstr ""
+msgstr "现在，让我们处理报价请求并给出价格。在 `处理器` 项目中，找到 `src/main/java/org/acme/amqp/processor/QuoteProcessor.java` 文件，并添加以下内容："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "Indicates that the method consumes the items from the `requests` channel"
-msgstr ""
+msgstr "表示该方法会从 `请求` 通道中消耗项目"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "Indicates that the objects returned by the method are sent to the `quotes` channel"
-msgstr ""
+msgstr "表示该方法返回的对象会被发送到 `quotes` 频道"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "Indicates that the processing is _blocking_ and cannot be run on the caller thread."
-msgstr ""
+msgstr "表示该处理操作是 _阻塞的_ ，无法在调用线程上运行。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "The `process` method is called for every AMQP message from the `quote-requests` queue, and will send a `Quote` object to the `quotes` queue."
-msgstr ""
+msgstr "每当 `“quote-requests` ”队列中出现一条 AMQP 消息时，都会调用该 `处理` 方法，并向 `“quotes` ”队列发送一个 `Quote` 对象。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid ""
 "Because we want to consume messages from the `quotes-requests` queue into the `requests` channel, we need to configure this association.\n"
 "Open the `src/main/resources/application.properties` file and add:"
-msgstr ""
+msgstr "由于我们希望将 `quotes-requests` 队列中的消息消费到 `requests` 通道中，因此需要配置此关联。打开 `src/main/resources/application.properties` 文件，并添加以下内容："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "The configuration properties are structured as follows:"
-msgstr ""
+msgstr "配置属性的结构如下："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "`mp.messaging.[outgoing|incoming].{channel-name}.property=value`"
-msgstr ""
+msgstr "`mp.messaging.[outgoing|incoming].{channel-name}.property=value`"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "In our case, we want to configure the `address` attribute to indicate the name of the queue."
-msgstr ""
+msgstr "在我们的情况下，我们希望配置 `“address”` 属性以指定队列的名称。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "Receiving quotes"
-msgstr ""
+msgstr "获取报价"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid ""
 "Back to our `producer` project.\n"
 "Let's modify the `QuotesResource` to consume quotes, bind it to an HTTP endpoint to send events to clients:"
-msgstr ""
+msgstr "回到我们的 `生产者` 项目。让我们修改 `QuotesResource` 以处理报价数据，并将其绑定到一个 HTTP 端点，以便向客户端发送事件："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "Injects the `quotes` channel using the `@Channel` qualifier"
-msgstr ""
+msgstr "使用 `@Channel` 限定符注入 `quotes` 通道"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "Indicates that the content is sent using `Server Sent Events`"
-msgstr ""
+msgstr "表示该内容是通过 `服务器发送事件（Server Sent Events` ）发送的"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "Returns the stream (_Reactive Stream_)"
-msgstr ""
+msgstr "返回流（ _Reactive Stream_ ）"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "The HTML page"
-msgstr ""
+msgstr "HTML 页面"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "Final touch, the HTML page reading the converted prices using SSE."
-msgstr ""
+msgstr "最后一步，使用 SSE 读取转换后价格的 HTML 页面。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "Create inside the `producer` project `src/main/resources/META-INF/resources/quotes.html` file, with the following content:"
-msgstr ""
+msgstr "在 `生产者` 项目的 `src/main/resources/META-INF/resources/quotes.html` 文件中创建一个文件，内容如下："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid ""
 "Nothing spectacular here.\n"
 "On each received quote, it updates the page."
-msgstr ""
+msgstr "这里没什么特别的。每收到一份报价，页面就会刷新。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "Get it running"
-msgstr ""
+msgstr "让它运行起来"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "You just need to run both applications using:"
-msgstr ""
+msgstr "您只需使用以下命令运行这两个应用程序："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "And, in a separate terminal:"
-msgstr ""
+msgstr "此外，在另一个终端中："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid ""
 "Quarkus starts an AMQP broker automatically, configures the application, and shares the broker instance between different applications.\n"
 "See xref:amqp-dev-services.adoc[Dev Services for AMQP] for more details."
-msgstr ""
+msgstr "Quarkus 会自动启动一个 AMQP 消息代理，配置应用程序，并在不同应用程序之间共享该消息代理实例。更多详细信息，请参阅 xref:amqp-dev-services.adoc[《AMQP 开发服务》] 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "Open `http://localhost:8080/quotes.html` in your browser and request some quotes by clicking the button."
-msgstr ""
+msgstr "在浏览器中打开 `http://localhost:8080/quotes.html` ，然后点击按钮获取报价。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "Running in JVM or Native mode"
-msgstr ""
+msgstr "在 JVM 或本机模式下运行"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid ""
 "When not running in dev or test mode, you will need to start your AMQP broker.\n"
 "You can follow the instructions from the https://activemq.apache.org/components/artemis/documentation/latest/using-server.html[Apache ActiveMQ Artemis website] or create a `docker-compose.yaml` file with the following content:"
-msgstr ""
+msgstr "如果不是在开发或测试模式下运行，您需要启动 AMQP 消息代理。您可以按照 link:https://activemq.apache.org/components/artemis/documentation/latest/using-server.html[Apache ActiveMQ Artemis 网站上的] 说明操作，或者创建一个内容如下所示的 `docker-compose.yaml` 文件："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid ""
 "Note how the AMQP broker location is configured.\n"
 "The `amqp.host` and `amqp.port` (`AMQP_HOST` and `AMQP_PORT` environment variables) properties configure location."
-msgstr ""
+msgstr "请注意 AMQP 代理的位置配置方式。 `amqp.host` 和 `amqp.port` （即环境变量 `AMQP_HOST` 和 `AMQP_PORT` ）属性用于配置位置。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "First, make sure you stopped the applications, and build both applications in JVM mode with:"
-msgstr ""
+msgstr "首先，请确保已停止这两个应用程序，然后使用以下命令以 JVM 模式构建这两个应用程序："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid ""
 "Once packaged, run `docker compose up --build`.\n"
 "The UI is exposed on http://localhost:8080/quotes.html"
-msgstr ""
+msgstr "打包完成后，运行 `docker compose up --build` 。用户界面可通过 http://localhost:8080/quotes.html 访问 link:http://localhost:8080/quotes.html[。]"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "To run your applications as native, first we need to build the native executables:"
-msgstr ""
+msgstr "要将应用程序作为原生应用运行，首先需要构建原生可执行文件："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid ""
 "The `-Dquarkus.native.container-build=true` instructs Quarkus to build Linux 64bits native executables, who can run inside containers.\n"
 "Then, run the system using:"
-msgstr ""
+msgstr "`-Dquarkus.native.container-build=true` 该参数指示 Quarkus 构建可在容器内运行的 Linux 64 位本机可执行文件。然后，使用以下命令运行系统："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "As before, the UI is exposed on http://localhost:8080/quotes.html"
-msgstr ""
+msgstr "与之前一样，该用户界面可通过 http://localhost:8080/quotes.html 访问。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid "Going further"
-msgstr ""
+msgstr "进一步了解"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid ""
 "This guide has shown how you can interact with AMQP 1.0 using Quarkus.\n"
 "It utilizes https://smallrye.io/smallrye-reactive-messaging[SmallRye Reactive Messaging] to build data streaming applications."
-msgstr ""
+msgstr "本指南介绍了如何使用 Quarkus 与 AMQP 1.0 进行交互。它利用 link:https://smallrye.io/smallrye-reactive-messaging[SmallRye Reactive Messaging] 来构建数据流应用程序。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/3.34/guides/amqp.adoc
+#, fuzzy
 msgid ""
 "If you did the Kafka quickstart, you have realized that it's the same code.\n"
 "The only difference is the connector configuration and the JSON mapping."
-msgstr ""
+msgstr "如果你完成了 Kafka 快速入门，就会发现代码是一样的。唯一的区别在于连接器配置和 JSON 映射。"

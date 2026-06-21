@@ -7,363 +7,495 @@ msgstr ""
 "X-Generator: jekyll-l10n\n"
 
 #. type: YAML Front Matter: title
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "Implementing a Custom Stork Service Registrar"
-msgstr ""
+msgstr "实现自定义 Stork 服务注册表"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "<a class=\"status-label status-preview\" title=\"This extension's backward compatibility and presence in the ecosystem is not guaranteed\" href=\"#extension-status-note\">preview</a>"
-msgstr ""
+msgstr "<a class=\"status-label status-preview\" title=\"无法保证此扩展程序的向后兼容性及其在生态系统中的可用性\" href=\"#extension-status-note\">预览</a>"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "This guide explains how to implement a custom service registrar for https://smallrye.io/smallrye-stork[SmallRye Stork] and use it to programmatically register service instances at startup."
-msgstr ""
+msgstr "本指南介绍了如何为 link:https://smallrye.io/smallrye-stork[SmallRye Stork] 实现自定义服务注册器，并利用它在启动时通过编程方式注册服务实例。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "If you are new to Stork, please read the xref:stork.adoc[Stork Getting Started Guide]."
-msgstr ""
+msgstr "如果您是 Stork 的新用户，请阅读《 xref:stork.adoc[Stork 入门指南] 》。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "Prerequisites"
-msgstr ""
+msgstr "先决条件"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "Architecture"
-msgstr ""
+msgstr "建筑"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "In this guide, we will build an application that:"
-msgstr ""
+msgstr "在本指南中，我们将构建一个能够实现以下功能的应用程序："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "Implements a custom service registrar by extending Stork's SPI"
-msgstr ""
+msgstr "通过扩展 Stork 的 SPI 来实现自定义服务注册器"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "Programmatically registers a service instance at startup"
-msgstr ""
+msgstr "在启动时通过编程方式注册一个服务实例"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "Configures the registrar via `application.properties`"
-msgstr ""
+msgstr "通过 `application.properties` 配置注册器"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid ""
 "Beyond service discovery and load balancing, it also supports xref:stork-registration.adoc[_service registration_].\n"
 "Service registration is the process of announcing a service instance to a registry so that other services can discover it.\n"
 "While Stork provides built-in registrars for Consul, Eureka, and others, you can implement your own by using the Stork SPI."
-msgstr ""
+msgstr "除了服务发现和负载均衡外，它还支持 xref:stork-registration.adoc[服务注册] 。服务注册是指将服务实例发布到注册表中，以便其他服务能够发现该实例的过程。虽然 Stork 为 Consul、Eureka 等提供了内置的注册器，但您也可以使用 Stork SPI 来实现自己的注册器。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "Solution"
-msgstr ""
+msgstr "解决方案"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid ""
 "We recommend that you follow the instructions in the next sections and create the application step by step.\n"
 "However, you can go right to the completed example."
-msgstr ""
+msgstr "我们建议您按照后续各节中的说明，一步一步地创建该应用程序。不过，您也可以直接查看已完成的示例。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "Clone the Git repository: `git clone {quickstarts-clone-url}`, or download an {quickstarts-archive-url}[archive]."
-msgstr ""
+msgstr "克隆 Git 仓库： `git clone {quickstarts-clone-url}` ，或下载 {quickstarts-archive-url}[存档]。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "The solution is located in the `stork-programmatic-custom-registration-quickstart` link:{quickstarts-tree-url}/stork-programmatic-custom-registration-quickstart[directory]."
-msgstr ""
+msgstr "该解决方案位于 `stork-programmatic-custom-registration-quickstart` link:{quickstarts-tree-url}/stork-programmatic-custom-registration-quickstart[目录] 下。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "Bootstrapping the project"
-msgstr ""
+msgstr "项目的自举"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "Create a Quarkus project importing the quarkus-rest, quarkus-smallrye-stork, and quarkus-rest-client-jackson extensions using your favorite approach:"
-msgstr ""
+msgstr "使用您习惯的方式创建一个 Quarkus 项目，并导入 quarkus-rest、quarkus-smallrye-stork 和 quarkus-rest-client-jackson 扩展："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "In the generated project, also add the following dependencies:"
-msgstr ""
+msgstr "在生成的项目中，还请添加以下依赖项："
 
 #. type: Block title
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "pom.xml"
-msgstr ""
+msgstr "pom.xml"
 
 #. type: Block title
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "build.gradle"
-msgstr ""
+msgstr "build.gradle"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid ""
 "`stork-core` provides the Stork API and SPI needed to implement a custom registrar.\n"
 "`stork-configuration-generator` generates configuration classes at build time based on annotations on your registrar provider."
-msgstr ""
+msgstr "`stork-core` 提供了实现自定义注册器所需的 Stork API 和 SPI。 `stork-configuration-generator` 会在构建时根据注册器提供程序上的注解生成配置类。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "The Custom Service Registrar Provider"
-msgstr ""
+msgstr "自定义服务注册商提供商"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid ""
 "Stork uses a provider model.\n"
 "To create a custom registrar, you need two classes:"
-msgstr ""
+msgstr "Stork 采用提供者模式。要创建一个自定义注册器，你需要两个类："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "A *provider* implementing `ServiceRegistrarProvider` — the factory that creates registrar instances."
-msgstr ""
+msgstr "一个实现 `ServiceRegistrarProvider 的` *提供程序* ——用于创建注册器实例的工厂。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "A *registrar* implementing `ServiceRegistrar` — the actual registration logic."
-msgstr ""
+msgstr "一个实现 `ServiceRegistrar 接口的` *注册器* ——即实际的注册逻辑。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid ""
 "Let's start with the provider.\n"
 "Create the `src/main/java/org/acme/services/CustomServiceRegistrarProvider.java` file with the following content:"
-msgstr ""
+msgstr "我们先从提供者开始。创建 `src/main/java/org/acme/services/CustomServiceRegistrarProvider.java` 文件，内容如下："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "There are a few important things to note:"
-msgstr ""
+msgstr "有几点需要注意："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid ""
 "The `@ServiceRegistrarType` annotation declares the registrar _type_.\n"
 "This is the value used in the `quarkus.stork.<service-name>.service-registrar.type` property.\n"
 "Here, it is `custom`."
-msgstr ""
+msgstr "`@ServiceRegistrarType` 注解用于声明注册器 _类型_ 。该值将用于 `quarkus.stork.<service-name>.service-registrar.type` 属性中。此处，该值为 `custom` 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid ""
 "The `@ServiceRegistrarAttribute` annotations declare the configuration attributes for this registrar.\n"
 "Stork's annotation processor (provided by `stork-configuration-generator`) uses these annotations to generate\n"
 "the `CustomRegistrarConfiguration` class at compile time. You do not need to write this class yourself."
-msgstr ""
+msgstr "`@ServiceRegistrarAttribute` 注解用于声明该注册器的配置属性。Stork 的注解处理器（由 `stork-configuration-generator` 提供）会在编译时利用这些注解生成 `CustomRegistrarConfiguration` 类。您无需自行编写该类。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "The `@ApplicationScoped` annotation makes this provider a CDI bean, so Stork can discover it automatically."
-msgstr ""
+msgstr "`@ApplicationScoped` 注解使该提供程序成为一个 CDI Bean，因此 Stork 可以自动发现它。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "The `createServiceRegistrar` method is the factory that creates a `CustomServiceRegistrar` from the generated configuration."
-msgstr ""
+msgstr "`createServiceRegistrar` 方法是一个工厂方法，用于根据生成的配置创建一个 `CustomServiceRegistrar` 。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "The Custom Service Registrar"
-msgstr ""
+msgstr "定制服务注册商"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid ""
 "Now let's implement the registrar itself.\n"
 "Create the `src/main/java/org/acme/services/CustomServiceRegistrar.java` file with the following content:"
-msgstr ""
+msgstr "现在让我们来实现注册器本身。创建 `src/main/java/org/acme/services/CustomServiceRegistrar.java` 文件，内容如下："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "This registrar:"
-msgstr ""
+msgstr "该注册商："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "Receives its configuration (host and port) from the generated `CustomRegistrarConfiguration` class."
-msgstr ""
+msgstr "从生成的 `CustomRegistrarConfiguration` 类中获取其配置（主机和端口）。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "Stores registered instances in a `ConcurrentHashMap`."
-msgstr ""
+msgstr "将实例存储在 `ConcurrentHashMap` 中。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "Implements `registerServiceInstance` to add a service instance to the map."
-msgstr ""
+msgstr "实现 `registerServiceInstance` 方法，用于将服务实例添加到映射中。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "Implements `deregisterServiceInstance` to remove a service instance on shutdown."
-msgstr ""
+msgstr "实现 `deregisterServiceInstance` 方法，用于在关闭时移除服务实例。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "Both methods return `Uni<Void>`, since Stork uses Mutiny for reactive support."
-msgstr ""
+msgstr "这两种方法都返回 `Uni<Void>` ，因为 Stork 使用 Mutiny 来提供响应式支持。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "Programmatic Service Registration at Startup"
-msgstr ""
+msgstr "启动时的程序化服务注册"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid ""
 "With the registrar in place, we can now register service instances programmatically.\n"
 "Create the `src/main/java/org/acme/services/Registration.java` file with the following content:"
-msgstr ""
+msgstr "注册器就位后，我们现在可以通过编程方式注册服务实例。创建 `src/main/java/org/acme/services/Registration.java` 文件，内容如下："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid ""
 "When the application starts, this CDI bean observes the `StartupEvent` and uses the Stork API to register a service instance.\n"
 "The `Stork.getInstance().getService(\"my-service\")` call retrieves the Stork service named `my-service`, and `registerInstance`\n"
 "delegates to the custom registrar we created earlier."
-msgstr ""
+msgstr "应用程序启动时，该 CDI Bean 会监听 `StartupEvent` ，并使用 Stork API 注册一个服务实例。调用 `Stork.getInstance().getService(\"my-service\")` 可获取名为 `my-service` 的 Stork 服务，而 `registerInstance` 方法会委托给我们之前创建的自定义注册器。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "Stork configuration"
-msgstr ""
+msgstr "Stork 配置"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "Now we need to configure Stork to use our custom registrar."
-msgstr ""
+msgstr "现在，我们需要配置 Stork 以使用我们的自定义注册表。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "In the `src/main/resources/application.properties`, add:"
-msgstr ""
+msgstr "在 `src/main/resources/application.properties` 文件中，添加："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid ""
 "The `quarkus.stork.my-service.service-registrar.type` property tells Stork to use the `custom` registrar type.\n"
 "This matches the value declared in the `@ServiceRegistrarType` annotation on `CustomServiceRegistrarProvider`."
-msgstr ""
+msgstr "`quarkus.stork.my-service.service-registrar.type` 属性指示 Stork `使用自定义` 注册器类型。该值与 `CustomServiceRegistrarProvider` 上 `@ServiceRegistrarType` 注解中声明的值相匹配。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid ""
 "The `quarkus.stork.my-service.service-registrar.host` property maps to the `host` attribute declared with `@ServiceRegistrarAttribute` on the provider.\n"
 "This is a required attribute."
-msgstr ""
+msgstr "`quarkus.stork.my-service.service-registrar.host` 属性对应于在提供者上使用 `@ServiceRegistrarAttribute` 声明的 `host` 属性。这是一个必填属性。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid ""
 "You can optionally set `quarkus.stork.my-service.service-registrar.port` as well, since the provider declares an optional `port` attribute.\n"
 "If omitted, the registrar defaults to port `8080`."
-msgstr ""
+msgstr "您还可以选择性地设置 `quarkus.stork.my-service.service-registrar.port，` 因为该提供商声明了一个可选的 `端口` 属性。如果省略该属性，注册器将默认使用端口 `8080` 。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "Running the application"
-msgstr ""
+msgstr "运行应用程序"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "Package the application:"
-msgstr ""
+msgstr "打包应用程序："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "And run it:"
-msgstr ""
+msgstr "然后运行它："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "You should see the following log message in the output, confirming that the custom registrar is invoked:"
-msgstr ""
+msgstr "您应在输出中看到以下日志消息，以确认已调用自定义注册器："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "You can compile this application into a native executable:"
-msgstr ""
+msgstr "你可以将此应用程序编译成一个本机可执行文件："
 
 #. type: Title =
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "Summary"
-msgstr ""
+msgstr "摘要"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "In this guide, we have:"
-msgstr ""
+msgstr "在本指南中，我们提供了："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "Implemented a custom `ServiceRegistrarProvider` using the `@ServiceRegistrarType` and `@ServiceRegistrarAttribute` annotations."
-msgstr ""
+msgstr "使用 `@ServiceRegistrarType` 和 `@ServiceRegistrarAttribute` 注解实现了自定义的 `ServiceRegistrarProvider` 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "Implemented a custom `ServiceRegistrar` with `registerServiceInstance` and `deregisterServiceInstance` methods."
-msgstr ""
+msgstr "实现了一个自定义的 `ServiceRegistrar` ，其中包含 `registerServiceInstance` 和 `deregisterServiceInstance` 方法。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "Used the Stork API to programmatically register a service instance at startup."
-msgstr ""
+msgstr "使用 Stork API 在启动时通过编程方式注册了一个服务实例。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "Configured the custom registrar in `application.properties`."
-msgstr ""
+msgstr "已在 `application.properties` 中配置了自定义注册表。"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "This pattern is useful when you need to integrate Stork with a service registry that is not supported out of the box."
-msgstr ""
+msgstr "当您需要将 Stork 与某个未被原生支持的服务注册表集成时，此模式非常有用。"
 
 #. type: Title =
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "Going further"
-msgstr ""
+msgstr "进一步了解"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid ""
 "This guide has shown how to extend SmallRye Stork with a custom service registrar.\n"
 "You can find more about Stork in:"
-msgstr ""
+msgstr "本指南介绍了如何通过自定义服务注册器来扩展 SmallRye Stork。有关 Stork 的更多信息，请参阅："
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "the xref:stork-reference.adoc[Stork reference guide],"
-msgstr ""
+msgstr "《 xref:stork-reference.adoc[Stork 参考指南] 》，"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "the xref:stork.adoc[Stork with Consul getting started guide],"
-msgstr ""
+msgstr "《 xref:stork.adoc[Stork with Consul 入门指南] 》，"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "the xref:stork-kubernetes.adoc[Stork with Kubernetes guide],"
-msgstr ""
+msgstr "《 xref:stork-kubernetes.adoc[Stork 与 Kubernetes 指南] 》，"
 
 #. type: Plain text
+#. mt: deepl
 #: _versions/main/guides/stork-manual-service-registration.adoc
+#, fuzzy
 msgid "the https://smallrye.io/smallrye-stork[SmallRye Stork website]."
-msgstr ""
+msgstr "link:https://smallrye.io/smallrye-stork[SmallRye Stork 网站] 。"
