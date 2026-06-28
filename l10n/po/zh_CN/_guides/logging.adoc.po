@@ -1540,6 +1540,28 @@ msgid ""
 msgstr "*默认* ：根据日志记录中的 `键值` 生成结构化日志。映射诊断上下文 (MDC) 和嵌套诊断上下文 (NDC) 数据包含在 `mdc` 和 `ndc` 字段中。"
 
 #. type: Plain text
+#: _guides/logging.adoc
+msgid ""
+"Set `quarkus.log.console.json.mdc.flat-fields=true` to write MDC entries as root-level JSON fields instead of nesting them under `mdc`.\n"
+"This is useful when a log aggregator (such as OpenSearch or Elasticsearch) needs MDC fields to be queryable as top-level document fields."
+msgstr ""
+
+#. type: Block title
+#: _guides/logging.adoc
+msgid "Example: nested MDC (default, `flat-fields=false`)"
+msgstr ""
+
+#. type: Block title
+#: _guides/logging.adoc
+msgid "Example: flat MDC (`flat-fields=true`)"
+msgstr ""
+
+#. type: Plain text
+#: _guides/logging.adoc
+msgid "The option is available for all handler types: `quarkus.log.console.json.mdc.flat-fields`, `quarkus.log.file.json.mdc.flat-fields`, `quarkus.log.syslog.json.mdc.flat-fields`, `quarkus.log.socket.json.mdc.flat-fields`, and named handlers such as `quarkus.log.handler.console.<name>.json.mdc.flat-fields`."
+msgstr ""
+
+#. type: Plain text
 #. mt: deepl
 #: _guides/logging.adoc
 #, fuzzy
@@ -1579,6 +1601,60 @@ msgid ""
 "Google Cloud requires the `trace` field to follow the `\"projects/<my-trace-project>/traces/12345\"` format.\n"
 "`<my-trace-project>` uses the value of the `quarkus.application.name` configuration property."
 msgstr "Google Cloud 要求 `跟踪` 字段遵循 `\"projects/<my-trace-project>/` `trace` `/12345 \"` 格式。 `<my-trace-project>` 使用 `quarkus.application.name` 配置属性的值。"
+
+#. type: Title ===
+#: _guides/logging.adoc
+msgid "Custom JSON fields with JsonProvider"
+msgstr ""
+
+#. type: Plain text
+#: _guides/logging.adoc
+msgid ""
+"The `JsonProvider` SPI allows you to dynamically inject additional JSON fields into every log record at formatting time.\n"
+"Each registered provider's `writeTo` method is called once per log record, receiving a `JsonLogGenerator` and the `ExtLogRecord` being formatted."
+msgstr ""
+
+#. type: Plain text
+#: _guides/logging.adoc
+msgid ""
+"Providers can inspect the log record (level, logger name, MDC values, message, etc.) to decide which fields, if any, to add.\n"
+"Any keys listed in `quarkus.log.*.json.excluded-keys` are still filtered, even when written by a provider."
+msgstr ""
+
+#. type: Title ====
+#: _guides/logging.adoc
+msgid "CDI registration"
+msgstr ""
+
+#. type: Plain text
+#: _guides/logging.adoc
+msgid "In a Quarkus application, the preferred way to register a `JsonProvider` is as a CDI bean:"
+msgstr ""
+
+#. type: Title ====
+#: _guides/logging.adoc
+msgid "ServiceLoader registration"
+msgstr ""
+
+#. type: Plain text
+#: _guides/logging.adoc
+msgid ""
+"For providers that must work without CDI (for example, in libraries or during early startup), register them via the Java `ServiceLoader` mechanism.\n"
+"Create a file named `META-INF/services/io.quarkus.logging.json.runtime.JsonProvider` containing the fully-qualified class name of each implementation:"
+msgstr ""
+
+#. type: Plain text
+#: _guides/logging.adoc
+msgid "The implementation does not need to be a CDI bean:"
+msgstr ""
+
+#. type: Plain text
+#: _guides/logging.adoc
+msgid ""
+"When both CDI beans and ServiceLoader providers are present, all of them are called for each log record.\n"
+"ServiceLoader providers are called first, in the order they appear in the service file.\n"
+"CDI beans are called afterwards, but their relative order is not guaranteed."
+msgstr ""
 
 #. type: Title ===
 #: _guides/logging.adoc
