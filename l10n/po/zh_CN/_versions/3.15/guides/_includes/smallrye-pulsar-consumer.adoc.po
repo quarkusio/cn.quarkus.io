@@ -10,7 +10,7 @@ msgstr ""
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "Smallrye Pulsar Consumer"
-msgstr "小型脉冲星消费者"
+msgstr "Smallrye Pulsar 消费者版"
 
 #. type: Block title
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -61,13 +61,13 @@ msgstr "主题名称"
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "Set"
-msgstr "设置"
+msgstr "集合"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "true"
-msgstr "真"
+msgstr "true"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -130,15 +130,20 @@ msgid ""
 msgstr ""
 "订阅类型。\n"
 "\n"
-" 有四种订阅类型可供选择：\n"
 "\n"
-" * 独家\n"
+"共有四种订阅类型：\n"
 "\n"
-" * 故障转移\n"
 "\n"
-" * 共享\n"
+"* 独家\n"
 "\n"
-" * 密钥共享"
+"\n"
+"* 故障转移\n"
+"\n"
+"\n"
+"* 共享\n"
+"\n"
+"\n"
+"* Key_Shared"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -186,7 +191,7 @@ msgstr "耐用"
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*messageListener*"
-msgstr "*消息监听器*"
+msgstr "*messageListener*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -203,37 +208,37 @@ msgstr "false"
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*consumerEventListener*"
-msgstr "*消费者事件监听器*"
+msgstr "*consumerEventListener*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "ConsumerEventListener"
-msgstr "消费者事件监听器"
+msgstr "ConsumerEventListener"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*negativeAckRedeliveryBackoff*"
-msgstr "*负 AckRedeliveryBackoff*"
+msgstr "*负确认重传退避*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "Interface for custom message is negativeAcked policy. You can specify `RedeliveryBackoff` for a consumer."
-msgstr "自定义消息的接口是 negativeAcked 策略。您可以为消费者指定 `RedeliveryBackoff` 。"
+msgstr "自定义消息的接口采用负确认策略。您可以为消费者指定 `RedeliveryBackoff` 参数。"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "RedeliveryBackoff"
-msgstr "重新交付"
+msgstr "重投回退"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*ackTimeoutRedeliveryBackoff*"
-msgstr "*ackTimeoutRedeliveryBackoff*"
+msgstr "*ack超时重传退避*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -245,7 +250,7 @@ msgstr "自定义消息的接口是 ackTimeout 策略。您可以为消费者指
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*receiverQueueSize*"
-msgstr "*接收器队列大小*"
+msgstr "*接收队列大小*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -257,9 +262,11 @@ msgid ""
 msgstr ""
 "消费者接收队列的大小。\n"
 "\n"
-" 例如，消费者在应用程序调用 `Receive` 之前积累的信息数量。\n"
 "\n"
-" 如果值高于默认值，消费者的吞吐量就会增加，但代价是内存使用率提高。"
+"例如，在应用程序调用 `Receive 方法` 之前，消费者累积的消息数量。\n"
+"\n"
+"\n"
+"该值若高于默认值，将提高消费者的吞吐量，但会消耗更多的内存。"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -277,7 +284,7 @@ msgstr "1000"
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*acknowledgementsGroupTimeMicros*"
-msgstr "*确认分组时间微数*"
+msgstr "*致谢GroupTimeMicros*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -288,13 +295,16 @@ msgid ""
 "Setting a group time of 0 sends out acknowledgments immediately. +\n"
 "A longer ack group time is more efficient at the expense of a slight increase in message re-deliveries after a failure."
 msgstr ""
-"在指定时间内分组消费者确认。\n"
+"将消费者对指定时间段内的确认进行分组。\n"
 "\n"
-" 默认情况下，消费者使用 100 毫秒的分组时间向代理发送确认。\n"
 "\n"
-" 分组时间设置为 0 会立即发送确认。\n"
+"默认情况下，消费者使用 100 毫秒的聚合时间向经纪人发送确认。\n"
 "\n"
-" 确认分组时间越长，效率越高，但失败后重新发送信息的次数会略有增加。"
+"\n"
+"将分组时间设置为 0 会立即发送确认。\n"
+"\n"
+"\n"
+"较长的确认分组时间虽然效率更高，但会以失败后消息重传次数略微增加为代价。"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -312,19 +322,19 @@ msgstr "100000"
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*maxAcknowledgmentGroupSize*"
-msgstr "*最大应答组大小*"
+msgstr "*maxAcknowledgmentGroupSize*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "Group a consumer acknowledgment for the number of messages."
-msgstr "根据报文数量将消费者确认信息分组。"
+msgstr "将一条关于消息数量的消费者确认信息分组。"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*negativeAckRedeliveryDelayMicros*"
-msgstr "*负 AckRedeliveryDelayMicros*"
+msgstr "*负确认重传延迟（微秒）*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -333,9 +343,10 @@ msgid ""
 "Delay to wait before redelivering messages that failed to be processed. +\n"
 "When an application uses `Consumer#negativeAcknowledge(Message)`, failed messages are redelivered after a fixed timeout."
 msgstr ""
-"重新发送处理失败的报文前的等待时间。\n"
+"在重新发送处理失败的消息之前需等待的延迟时间。\n"
 "\n"
-" 当应用程序使用 `Consumer#negativeAcknowledge(Message)` 时，处理失败的报文会在固定超时后重新发送。"
+"\n"
+"当应用程序使用 `Consumer#negativeAcknowledge(Message)` 时，处理失败的消息将在固定的超时时间后被重新发送。"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -347,7 +358,7 @@ msgstr "60000000"
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*maxTotalReceiverQueueSizeAcrossPartitions*"
-msgstr "*maxTotalReceiverQueueSizeAcrossPartitions 跨分区总接收机队列大小*"
+msgstr "*跨分区的接收队列最大总大小*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -356,9 +367,10 @@ msgid ""
 "The max total receiver queue size across partitions. +\n"
 "This setting reduces the receiver queue size for individual partitions if the total receiver queue size exceeds this value."
 msgstr ""
-"各分区接收机队列的最大总大小。\n"
+"各分区接收队列的总最大大小。\n"
 "\n"
-" 如果总接收队列大小超过此值，此设置会减少单个分区的接收队列大小。"
+"\n"
+"如果接收队列的总大小超过此值，此设置将减少各个分区的接收队列大小。"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -370,13 +382,13 @@ msgstr "50000"
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*consumerName*"
-msgstr "*消费者名称*"
+msgstr "*consumerName*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "Consumer name"
-msgstr "消费者姓名"
+msgstr "用户名"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -388,7 +400,7 @@ msgstr "*ackTimeoutMillis*"
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "Timeout of unacked messages"
-msgstr "未加密报文的超时"
+msgstr "未确认消息的超时"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -409,15 +421,16 @@ msgid ""
 "Granularity of the ack-timeout redelivery. +\n"
 "Using an higher `tickDurationMillis` reduces the memory overhead to track messages when setting ack-timeout to a bigger value (for example, 1 hour)."
 msgstr ""
-"ack-timeout 重新交付的粒度。\n"
+"确认超时重传的粒度。\n"
 "\n"
-" 将 `tickDurationMillis` 设置为更大的值时（例如 1 小时），使用更高的值可减少跟踪报文的内存开销。"
+"\n"
+"当将确认超时设置为较大值（例如 1 小时）时，使用较大的 `tickDurationMillis` 值可减少跟踪消息所需的内存开销。"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*priorityLevel*"
-msgstr "*优先级*"
+msgstr "*优先级级别*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -438,27 +451,40 @@ msgid ""
 "\n"
 "Order in which a broker dispatches messages to consumers is: C1, C2, C3, C1, C4, C5, C4."
 msgstr ""
-"用户的优先级，在共享订阅类型中，代理在分派消息时给予该用户更高的优先级。\n"
+"在“共享订阅”类型中，代理在分发消息时给予某个消费者更高的优先级。\n"
 "\n"
-" 代理遵循从高到低的优先级。例如，0=最高优先级，1，2，...\n"
 "\n"
-" 在共享订阅类型中， *如果最大优先级的消费者有许可证* ，代理机构会 *首先向其发送信息* 。否则，代理会考虑下一优先级的消费者。\n"
-" *例 1* \n"
+"消息代理遵循优先级从高到低的顺序。例如，0=最高优先级，1、2、……​\n"
 "\n"
-" 如果一个订阅的消费者 A 的 `priorityLevel` 为 0，消费者 B 的 `priorityLevel` 为 1，那么代理 *只向消费者 A 发送信息，直到它用完许可* ，然后才开始向消费者 B 发送信息。\n"
-" *例 2* \n"
 "\n"
-" 消费者优先级、级别、许可\n"
+"在“共享订阅”类型中， *如果具有最高优先级级别的消费者持有许可* ，消息代理 *会首先向其分发消息* ；否则，消息代理将考虑下一优先级级别的消费者。\n"
 "\n"
-" C1, 0, 2\n"
 "\n"
-" C2, 0, 1\n"
+"*示例 1*\n"
 "\n"
-" C3, 0, 1\n"
 "\n"
-" C4, 1, 2\n"
+"如果一个订阅包含 `优先级为` 0 的消费者 A 和 `优先级为` 1 `的` 消费者 B，则代理 *仅向消费者 A 分发消息，直到其配额用尽* ，然后才开始向消费者 B 分发消息。\n"
 "\n"
-" C5, 1, 1"
+"\n"
+"*示例 2*\n"
+"\n"
+"\n"
+"消费者优先级、级别、许可\n"
+"\n"
+"\n"
+"C1, 0, 2\n"
+"\n"
+"\n"
+"C2, 0, 1\n"
+"\n"
+"\n"
+"C3, 0, 1\n"
+"\n"
+"\n"
+"C4, 1, 2\n"
+"\n"
+"\n"
+"C5, 1, 1"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -470,7 +496,7 @@ msgstr "*maxPendingChunkedMessage*"
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "The maximum size of a queue holding pending chunked messages. When the threshold is reached, the consumer drops pending messages to optimize memory utilization."
-msgstr "分块信息队列的最大容量。达到阈值后，消费者会放弃待处理报文，以优化内存利用率。"
+msgstr "用于存储待处理分块消息的队列的最大大小。当达到阈值时，消费者会丢弃待处理的消息，以优化内存利用率。"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -488,7 +514,7 @@ msgstr "*autoAckOldestChunkedMessageOnQueueFull*"
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "Whether to automatically acknowledge pending chunked messages when the threshold of `maxPendingChunkedMessage` is reached. If set to `false`, these messages will be redelivered by their broker."
-msgstr "当达到 `maxPendingChunkedMessage` 的阈值时，是否自动确认待处理的分块报文。如果设置为 `false` ，这些报文将由其代理重新发送。"
+msgstr "当 `maxPendingChunkedMessage` 的阈值被达到时，是否自动确认待处理的分块消息。如果设置为 `false` ，这些消息将由其消息代理重新投递。"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -500,13 +526,13 @@ msgstr "布尔型"
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*expireTimeOfIncompleteChunkedMessageMillis*"
-msgstr "*expireTimeOfIncompleteChunkedMessageMillis*"
+msgstr "*未完成分块消息的过期时间（毫秒）*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "The time interval to expire incomplete chunks if a consumer fails to receive all the chunks in the specified time period. The default value is 1 minute."
-msgstr "如果消费者在指定时间段内未收到所有数据块，不完整数据块的过期时间间隔。默认值为 1 分钟。"
+msgstr "如果消费者未能在指定时间段内接收所有分块，则将在此时间间隔后使未完成的分块失效。默认值为 1 分钟。"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -518,25 +544,25 @@ msgstr "60000"
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*cryptoKeyReader*"
-msgstr "*加密密钥阅读器*"
+msgstr "*cryptoKeyReader*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "CryptoKeyReader"
-msgstr "加密密钥阅读器"
+msgstr "CryptoKeyReader"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*messageCrypto*"
-msgstr "*消息加密*"
+msgstr "*messageCrypto*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "MessageCrypto"
-msgstr "消息加密"
+msgstr "MessageCrypto"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -571,7 +597,7 @@ msgstr ""
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "ConsumerCryptoFailureAction"
-msgstr "消费者加密失败行动"
+msgstr "消费者加密货币失败行动"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -600,7 +626,7 @@ msgstr "该消费者的名称或值属性。"
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "SortedMap"
-msgstr "排序地图"
+msgstr "SortedMap"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -612,7 +638,7 @@ msgstr "{}"
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*readCompacted*"
-msgstr "*读取压缩*"
+msgstr "*readCompacted*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -625,7 +651,7 @@ msgid ""
 "Only enabling `readCompacted` on subscriptions to persistent topics, which have a single active consumer (like failure or exclusive subscriptions).\n"
 "\n"
 "Attempting to enable it on subscriptions to non-persistent topics or on shared subscriptions leads to a subscription call throwing a `PulsarClientException`."
-msgstr "如果启用 `readCompacted` ，消费者会从压缩后的主题中读取信息，而不是读取主题的全部信息积压。"
+msgstr "如果启用了 `readCompacted` ，消费者将从压缩主题中读取消息，而不是读取该主题的完整消息积压。"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -637,7 +663,7 @@ msgstr "*订阅初始位置*"
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "Initial position at which to set cursor when subscribing to a topic at first time."
-msgstr "首次订阅主题时设置光标的初始位置。"
+msgstr "首次订阅主题时，光标应定位在该初始位置。"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -655,7 +681,7 @@ msgstr "最新"
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*patternAutoDiscoveryPeriod*"
-msgstr "*模式自动发现周期*"
+msgstr "*patternAutoDiscoveryPeriod*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -664,7 +690,7 @@ msgid ""
 "Topic auto discovery period when using a pattern for topic's consumer.\n"
 "\n"
 "The default and minimum value is 1 minute."
-msgstr "为主题消费者使用模式时的主题自动发现期。"
+msgstr "使用主题消费者模式时的主题自动发现周期。"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -686,7 +712,7 @@ msgid ""
 "* **PersistentOnly**: only subscribe to persistent topics. +\n"
 "* **NonPersistentOnly**: only subscribe to non-persistent topics. +\n"
 "* **AllTopics**: subscribe to both persistent and non-persistent topics."
-msgstr "使用正则表达式订阅主题时，可以选择特定类型的主题。"
+msgstr "使用正则表达式订阅主题时，您可以选择特定类型的主题。"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -698,13 +724,13 @@ msgstr "RegexSubscriptionMode"
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "PersistentOnly"
-msgstr "仅持续"
+msgstr "仅持久化"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*deadLetterPolicy*"
-msgstr "*死信政策*"
+msgstr "*死信策略*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -719,37 +745,37 @@ msgid ""
 "You can enable the dead letter mechanism by setting `deadLetterPolicy`.\n"
 "\n"
 "When specifying the dead letter policy while not specifying `ackTimeoutMillis`, you can set the ack timeout to 30000 millisecond."
-msgstr "为消费者提供死信政策。"
+msgstr "针对消费者的“死信”政策。"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "DeadLetterPolicy"
-msgstr "死信政策"
+msgstr "死信策略"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*retryEnable*"
-msgstr "*重试启用*"
+msgstr "*retryEnable*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*batchReceivePolicy*"
-msgstr "*批量接收策略*"
+msgstr "*batchReceivePolicy*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "BatchReceivePolicy"
-msgstr "批量接收策略"
+msgstr "BatchReceivePolicy"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*autoUpdatePartitions*"
-msgstr "*自动更新分区*"
+msgstr "*autoUpdatePartitions*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -758,49 +784,49 @@ msgid ""
 "If `autoUpdatePartitions` is enabled, a consumer subscribes to partition increase automatically.\n"
 "\n"
 "**Note**: this is only for partitioned consumers."
-msgstr "如果启用 `autoUpdatePartitions` ，消费者会自动订阅分区增加。"
+msgstr "如果启用了 `autoUpdatePartitions` ，则消费者会自动订阅分区增量。"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*autoUpdatePartitionsIntervalSeconds*"
-msgstr "*自动更新分区间隔秒数*"
+msgstr "*autoUpdatePartitionsIntervalSeconds*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*replicateSubscriptionState*"
-msgstr "*复制订阅状态*"
+msgstr "*replicateSubscriptionState*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "If `replicateSubscriptionState` is enabled, a subscription state is replicated to geo-replicated clusters."
-msgstr "如果启用 `replicateSubscriptionState` ，订阅状态会复制到地理复制群集。"
+msgstr "如果启用了 `replicateSubscriptionState` ，则会将订阅状态复制到地理复制集群中。"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*resetIncludeHead*"
-msgstr "*重置包含头*"
+msgstr "*resetIncludeHead*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*keySharedPolicy*"
-msgstr "*密钥共享策略*"
+msgstr "*keySharedPolicy*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "KeySharedPolicy"
-msgstr "密钥共享政策"
+msgstr "KeySharedPolicy"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*batchIndexAckEnabled*"
-msgstr "*已启用 batchIndexAckEnabled*"
+msgstr "*batchIndexAckEnabled*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -812,19 +838,19 @@ msgstr "*ackReceiptEnabled*"
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*poolMessages*"
-msgstr "*消息池*"
+msgstr "*poolMessages*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*payloadProcessor*"
-msgstr "*有效载荷处理器*"
+msgstr "*payloadProcessor*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "MessagePayloadProcessor"
-msgstr "消息载荷处理器"
+msgstr "消息负载处理器"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
@@ -836,13 +862,13 @@ msgstr "*startPaused*"
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*autoScaledReceiverQueueSizeEnabled*"
-msgstr "*自动缩放接收器队列大小已启用*"
+msgstr "*autoScaledReceiverQueueSizeEnabled*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc
 #, fuzzy
 msgid "*topicConfigurations*"
-msgstr "*主题配置*"
+msgstr "*topicConfigurations*"
 
 #. type: Table
 #: _versions/3.15/guides/_includes/smallrye-pulsar-consumer.adoc

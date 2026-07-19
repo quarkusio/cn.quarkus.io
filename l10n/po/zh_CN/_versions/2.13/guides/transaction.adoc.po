@@ -71,7 +71,7 @@ msgstr "开始和停止事务：确定你的事务边界"
 msgid ""
 "You can define your transaction boundaries either declaratively with `@Transactional` or programmatically with `QuarkusTransaction`. You can also use\n"
 "the JTA `UserTransaction` API directly, however this is less user-friendly than `QuarkusTransaction`."
-msgstr "您可以使用 `@Transactional` 声明式地定义事务边界，也可以使用 `QuarkusTransaction` 编程式地定义事务边界。您还可以直接使用 JTA `UserTransaction` API，但它不如 `QuarkusTransaction` 那样方便用户使用。"
+msgstr "您可以通过 `@Transactional` 声明式地定义事务边界，也可以通过 `QuarkusTransaction` 编程式地定义。您还可以直接使用 JTA `UserTransaction` API，但其易用性不如 `QuarkusTransaction` 。"
 
 #. type: Title ==
 #: _versions/2.13/guides/transaction.adoc
@@ -93,7 +93,7 @@ msgstr "这个注解定义了你的事务边界，并将把这个调用包含在
 #: _versions/2.13/guides/transaction.adoc
 #, fuzzy
 msgid "A `RuntimeException` crossing the transaction boundaries will roll back the transaction."
-msgstr "一个 `RuntimeException` ，越过事务边界，将回滚交易。"
+msgstr "跨越事务边界的 `RuntimeException` 会导致事务回滚。"
 
 #. type: Plain text
 #: _versions/2.13/guides/transaction.adoc
@@ -472,13 +472,16 @@ msgid ""
 "If you read one and the other from two different transactions, then they can be inconsistent.\n"
 "It can be more dramatic if you read data related to rights and access management for example."
 msgstr ""
-"错。\n"
+"不对。\n"
 "\n"
-" 首先，只需用 `@Transactional(NOT_SUPPORTED)` （或 `NEVER` 或 `SUPPORTS` ，取决于你想要的语义）标记事务边界，禁用事务即可。\n"
 "\n"
-" 其次，不使用事务会更快，这又是一个童话。答案是，这取决于你的数据库和你的 SQL SELECT 数量。不使用事务意味着数据库无论如何都有一个单一操作事务上下文。\n"
+"首先，只需通过在事务边界添加 `@Transactional(NOT_SUPPORTED)` （或根据所需语义选择 `NEVER` 或 `SUPPORTS` ）来禁用事务。\n"
 "\n"
-" 第三，当你执行多个 SELECT 操作时，最好将它们封装在一个事务中，因为它们将彼此保持一致。假设您的数据库代表您的汽车仪表盘，您可以看到剩余的公里数和油量表的油位。通过在一个事务中读取，它们将保持一致。如果在两个不同的事务中读取一个和另一个，那么它们就会不一致。如果您读取的是与权限和访问管理相关的数据，情况可能会更糟。"
+"\n"
+"其次，认为不使用事务会更快，这又是一个误区。答案是：这取决于你的数据库以及你执行了多少条 SQL SELECT 语句。不使用事务并不意味着数据库不会建立单操作的事务上下文。\n"
+"\n"
+"\n"
+"第三，当你执行多个 SELECT 语句时，最好将它们封装在一个事务中，因为这样它们之间才能保持一致性。 假设你的数据库代表汽车仪表盘，你可以看到剩余公里数和油量表的读数。如果在一个事务中读取这些数据，它们将保持一致；如果你分别在两个不同的事务中读取其中一项，则可能出现不一致。例如，如果你读取与权限和访问管理相关的数据，这种情况可能会更加明显。"
 
 #. type: Plain text
 #: _versions/2.13/guides/transaction.adoc

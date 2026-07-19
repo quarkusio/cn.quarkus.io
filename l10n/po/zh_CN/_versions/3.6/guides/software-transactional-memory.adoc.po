@@ -9,7 +9,7 @@ msgstr ""
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
 msgid "Using Software Transactional Memory in Quarkus"
-msgstr "在Quarkus中使用软件事务性内存"
+msgstr "在 Quarkus 中使用软件事务内存"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
@@ -23,7 +23,7 @@ msgid ""
 "or at least made optional. This is not the situation with JTA, where state changes are made durable\n"
 "to a relational database which supports https://pubs.opengroup.org/onlinepubs/009680699/toc.pdf[the X/Open XA\n"
 "standard]."
-msgstr "软件事务内存（STM）早在 20 世纪 90 年代末就出现在研究环境中，最近才开始出现在产品和各种编程语言中。关于 STM 的所有细节我们就不多说了，感兴趣的读者可以参阅 link:https://groups.csail.mit.edu/tds/papers/Shavit/ShavitTouitou-podc95.pdf[本文] 。不过，我们只需指出，STM 提供了一种在高度并发环境中开发事务应用程序的方法，它具有 ACID 事务的某些相同特性，而您可能已经通过 JTA 使用过 ACID 事务。但重要的是，在 STM 实现中，耐久性属性被放宽（删除）了，或者至少是可选的。这与 JTA 的情况不同，在 JTA 中，状态更改在支持 link:https://pubs.opengroup.org/onlinepubs/009680699/toc.pdf[X/Open XA 标准] 的关系数据库中是持久的。"
+msgstr "软件事务内存（STM）自20世纪90年代末起便已在研究领域出现，而直到最近才开始应用于产品和各种编程语言中。 我们在此不深入探讨STM背后的所有细节，但感兴趣的读者可以参阅 link:https://groups.csail.mit.edu/tds/papers/Shavit/ShavitTouitou-podc95.pdf[这篇论文] 。不过，简而言之，STM提供了一种在高度并发环境中开发事务性应用程序的方法，其具备与ACID事务部分相同的特性——您可能已经通过JTA使用过这些特性。 但重要的是，在 STM 实现中，“持久性”属性被放宽（移除），或者至少被设为可选。JTA 则并非如此，在 JTA 中，状态变更会被持久化到支持 link:https://pubs.opengroup.org/onlinepubs/009680699/toc.pdf[X/Open XA 标准] 的关系型数据库中。"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
@@ -31,12 +31,12 @@ msgid ""
 "Note that the STM implementation provided by Quarkus is based on the https://narayana.io/docs/project/index.html#d0e16066[Narayana STM] implementation. This document isn't meant to be a replacement for that project's documentation, so you may want\n"
 "to look at it for more detail. However, we will try to focus more on how you can combine some key capabilities\n"
 "into Quarkus when developing Kubernetes native applications and microservices."
-msgstr "请注意，Quarkus 提供的 STM 实现是基于 link:https://narayana.io/docs/project/index.html#d0e16066[Narayana STM] 实现的。本文档无意取代该项目的文档，因此您可能需要查看该文档以了解更多细节。不过，我们将更加关注在开发 Kubernetes 原生应用和微服务时，如何将一些关键功能结合到 Quarkus 中。"
+msgstr "请注意，Quarkus 提供的 STM 实现基于 link:https://narayana.io/docs/project/index.html#d0e16066[Narayana STM] 实现。本文档并非旨在替代该项目的文档，因此如需了解更多细节，建议您查阅该项目的文档。 不过，我们将重点探讨在开发 Kubernetes 本机应用程序和微服务时，如何将一些关键功能整合到 Quarkus 中。"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
 msgid "Why use STM with Quarkus?"
-msgstr "为什么使用STM和Quarkus？"
+msgstr "为什么要在 Quarkus 中使用 STM？"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
@@ -45,7 +45,7 @@ msgid ""
 "to STM that I don't get from JTA?\" Let's try to answer those or similar questions, with\n"
 "a particular focus on why we think they're great for Quarkus, microservices and Kubernetes\n"
 "native applications. So in no specific order ..."
-msgstr "现在你可能还在问自己：\"为什么是 STM 而不是 JTA？\"或者 \"STM 有哪些好处是 JTA 所没有的？\"让我们试着回答这些问题或类似问题，特别关注为什么我们认为它们非常适合 Quarkus、微服务和 Kubernetes 原生应用。因此，不分先后......"
+msgstr "现在，你可能还在问自己：“为什么选择 STM 而不是 JTA？”或者“STM 有哪些 JTA 无法提供的优势？” 让我们试着回答这些问题或类似的问题，特别重点探讨为什么我们认为它们非常适合 Quarkus、微服务以及 Kubernetes 原生应用。以下内容不分先后顺序……​"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
@@ -58,7 +58,7 @@ msgid ""
 "has completed its updates (committed or aborted the transaction); then there's the optimistic\n"
 "approach which allows all the threads to proceed and checks for conflicts at commit time, where\n"
 "one or more of the threads may be forced to abort if there have been conflicting updates."
-msgstr "STM 的目标是简化来自多个线程的对象读写/保护状态不被并发更新。Quarkus STM 实现将使用为保护特定状态实例（Quarkus 中为对象）而选择的隔离模型，安全地管理这些线程之间的任何冲突。在 Quarkus STM 中，有两种隔离实现，一种是悲观的（默认），它会导致冲突线程被阻塞，直到原始线程完成更新（提交或中止事务）；另一种是乐观的方法，它允许所有线程继续进行，并在提交时检查冲突，如果存在冲突更新，一个或多个线程可能会被迫中止。"
+msgstr "STM 的目标是简化多线程对对象的读写操作，并保护状态免受并发更新的影响。Quarkus 的 STM 实现将利用所选的任何隔离模型，安全地管理这些线程之间的任何冲突，以保护该特定状态实例（在 Quarkus 中即为对象）。 在 Quarkus STM 中，有两种隔离实现方式：悲观隔离（默认），它会使发生冲突的线程被阻塞，直到原始线程完成其更新（提交或中止事务）； 另一种是乐观隔离，它允许所有线程继续执行，并在提交时检查冲突；若存在冲突更新，则可能强制一个或多个线程中止。"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
@@ -76,7 +76,7 @@ msgid ""
 "and isolation in the presence of concurrent threads/users (common in distributed microservices architectures).\n"
 "Furthermore, not all stateful applications need to be durable - even when JTA transactions are used, it tends to be the\n"
 "exception and not the rule. And as you'll see later, because applications can optionally start and control transactions, it's possible to build microservices which can undo state changes and try alternative paths."
-msgstr "STM 对象有状态，但不需要持久化（耐用）。事实上，默认的行为是在事务内存中管理的对象是易失的（volatile），这样，如果使用这些对象的服务或微服务崩溃或被其他地方（如调度程序）生成，内存中的所有状态都会丢失，对象将从头开始。但是，有了 JTA（和一个合适的事务数据存储），你肯定就能得到这些和更多，而且不需要担心重启应用程序的问题了吗？不尽然。这里需要权衡利弊：我们要摒弃持久化状态，以及在每个事务期间从数据存储读取然后写入（和同步）的开销。这使得对（易失）状态的更新非常快，但你仍然可以获得跨多个 STM 对象的原子更新（例如，你的团队编写了对象，然后调用你从另一个团队继承的对象，并要求他们进行全有或全无的更新），以及并发线程/用户情况下的一致性和隔离性（在分布式微服务架构中很常见）。此外，并非所有有状态应用程序都需要持久性--即使使用 JTA 事务，也往往是例外情况，而不是常规。正如您稍后将看到的，由于应用程序可以选择性地启动和控制事务，因此可以构建能够撤销状态变化并尝试其他路径的微服务。"
+msgstr "STM 对象具有状态，但该状态不必是持久的（durable）。 事实上，事务内存中管理的对象默认行为是易失性的，这意味着如果使用这些对象的服务或微服务发生崩溃，或者在其他地方（例如由调度器）被重新启动，内存中的所有状态都会丢失，对象将从头开始。 但使用 JTA（以及合适的事务性数据存储）肯定也能实现这一点甚至更多功能，而且无需担心应用程序重启的问题，对吗？其实并非如此。 这里存在一个权衡：我们放弃了持久化状态，同时也消除了每次事务中从数据存储读取、写入（并同步）所产生的开销。 这使得对（易失性）状态的更新非常快速，但你仍然可以获得跨多个 STM 对象的原子性更新（例如，由你的团队编写的对象调用从其他团队继承的对象，并要求它们进行“全有或全无”的更新）带来的好处，以及在并发线程/用户存在时的一致性和隔离性 （这在分布式微服务架构中很常见）。 此外，并非所有带状态的应用程序都需要具备持久性——即使使用了JTA事务，这也往往是例外而非常规。而且正如您稍后将看到的，由于应用程序可以选择性地启动和控制事务，因此可以构建能够撤销状态更改并尝试替代路径的微服务。"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
@@ -87,7 +87,7 @@ msgid ""
 "written weeks, months or years earlier, and have A, C and I properties can be hugely beneficial. Furthermore, some\n"
 "STM implementations, including the one Quarkus uses, support nested transactions and these allow changes made within\n"
 "the context of a nested (sub) transaction to later be rolled back by the parent transaction."
-msgstr "STM 的另一个优点是可组合性和模块化。你可以编写并发的 Quarkus 对象/服务，这些对象/服务可以很容易地与使用 STM 构建的任何其他服务组成，而不会暴露对象/服务的实现细节。正如我们前面所讨论的，这种将你编写的对象与其他团队可能在数周、数月或数年前编写的对象（具有 A、C 和 I 属性）进行组合的能力可以带来巨大的好处。此外，一些 STM 实现（包括 Quarkus 使用的实现）支持嵌套事务，这些实现允许在嵌套（子）事务上下文中所做的更改随后被父事务回滚。"
+msgstr "STM 的另一个优势在于可组合性和模块化。您可以编写并发 Quarkus 对象/服务，这些对象/服务可以轻松地与使用 STM 构建的任何其他服务进行组合，而无需暴露这些对象/服务的具体实现细节。 正如我们之前讨论的那样，能够将您编写的对象与其他团队可能在数周、数月甚至数年前编写、且具备 A、C 和 I 属性的对象进行组合，将带来巨大的好处。 此外，包括 Quarkus 所采用的实现方案在内，某些 STM 实现支持嵌套事务，这使得在嵌套（子）事务上下文中进行的更改，可以随后由父事务回滚。"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
@@ -96,7 +96,7 @@ msgid ""
 "such that an object's state is durable. Although it's possible to configure Narayana such that different\n"
 "backend datastores can be used, including relational databases, the default is the local operating system\n"
 "file system, which means you don't need to configure anything else with Quarkus such as a database."
-msgstr "虽然 STM 对象状态的默认值是易失性的，但也可以配置 STM 实现，使对象的状态具有持久性。虽然可以对 Narayana 进行配置，以便使用不同的后端数据存储（包括关系数据库），但默认情况下使用的是本地操作系统文件系统，这意味着你不需要在 Quarkus 中配置数据库等其他任何东西。"
+msgstr "尽管 STM 对象状态的默认行为是易失性的，但可以通过配置 STM 实现，使对象的状态具有持久性。 虽然可以配置 Narayana 以支持使用不同的后端数据存储（包括关系型数据库），但默认使用的是本地操作系统文件系统，这意味着您无需在 Quarkus 中进行其他配置（例如数据库配置）。"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
@@ -104,12 +104,12 @@ msgid ""
 "Many STM implementations allow \"plain old language objects\" to be made STM-aware with little or no changes to\n"
 "the application code. You can build, test and deploy applications without wanting them to be STM-aware and\n"
 "then later add those capabilities if they become necessary and without much development overhead at all."
-msgstr "许多 STM 实现都允许 \"普通老式语言对象 \"具有 STM 感知，而只需对应用程序代码进行少量修改或不做任何修改。您可以在不希望应用程序具有 STM 感知的情况下构建、测试和部署应用程序，然后在必要时添加这些功能，而完全不需要太多的开发开销。"
+msgstr "许多 STM 实现方案允许在几乎不修改甚至完全不修改应用程序代码的情况下，使“普通语言对象”具备 STM 支持能力。您可以先构建、测试和部署应用程序，此时无需让它们具备 STM 支持能力；如果日后确实需要，再添加这些功能，且几乎不会产生额外的开发开销。"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
 msgid "Building STM applications"
-msgstr "构建STM应用"
+msgstr "构建STM应用程序"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
@@ -119,7 +119,7 @@ msgid ""
 "Look for the `software-transactional-memory-quickstart` example. This will help to understand how you\n"
 "can build STM-aware applications with Quarkus. However, before we do so there are a few basic concepts\n"
 "which we need to cover."
-msgstr "quickstarts 中还有一个完整的示例，你可以通过克隆 Git 仓库来访问它： `git clone {quickstarts-clone-url}` 或下载 {quickstarts-archive-url}[归档]。查找 `software-transactional-memory-quickstart` 示例。这将有助于了解如何使用 Quarkus 构建 STM 感知应用程序。不过，在此之前，我们需要了解一些基本概念。"
+msgstr "快速入门中还提供了一个完整的示例，您可以通过克隆 Git 仓库（ `git clone {quickstarts-clone-url}` ）或下载 {quickstarts-archive-url}[存档] 来访问该示例。 请查找名为 `software-transactional-memory-quickstart` 的示例。这将有助于您理解如何使用 Quarkus 构建支持 STM 的应用程序。不过，在开始之前，我们需要先了解几个基本概念。"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
@@ -129,7 +129,7 @@ msgid ""
 "understand what these may be. Please refer to the https://narayana.io/docs/project/index.html#d0e16066[Narayana STM manual]\n"
 "and the https://narayana.io//docs/project/index.html#d0e16133[STM annotations guide] for more details on\n"
 "all the annotations Narayana STM provides."
-msgstr "请注意，正如你将看到的，Quarkus 中的 STM 依赖于许多注释来定义行为。如果缺乏这些注释，就会假设合理的默认值，但开发人员必须了解这些默认值是什么。请参阅 link:https://narayana.io/docs/project/index.html#d0e16066[Narayana STM 手册] 和 link:https://narayana.io//docs/project/index.html#d0e16133[STM 注释指南] ，了解有关 Narayana STM 提供的所有注释的更多详情。"
+msgstr "请注意，正如您将看到的，Quarkus 中的 STM 依赖于一系列注解来定义行为。如果缺少这些注解，系统会采用合理的默认值，但开发人员必须了解这些默认值可能是什么。 有关 Narayana STM 提供的所有注解的更多详细信息，请参阅 link:https://narayana.io/docs/project/index.html#d0e16066[Narayana STM 手册和] link:https://narayana.io//docs/project/index.html#d0e16133[STM 注解指南] 。"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 msgid "Setting it up"
@@ -138,7 +138,7 @@ msgstr "设置它"
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
 msgid "To use the extension include it as a dependency in your build file:"
-msgstr "要使用该扩展，请在你的构建文件中把它作为一个依赖项。"
+msgstr "要使用该扩展，请将其作为依赖项添加到您的构建文件中："
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 msgid "pom.xml"
@@ -151,7 +151,7 @@ msgstr "build.gradle"
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
 msgid "Defining STM-aware classes"
-msgstr "定义STM感知的类"
+msgstr "定义支持STM的类"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
@@ -162,14 +162,14 @@ msgid ""
 "must be instances of classes which inherit from interfaces that themselves have been annotated to identify them\n"
 "as STM-aware. Any other objects (and their classes) which do not follow this rule will not be managed by the\n"
 "STM subsystem and hence any of their state changes will not be rolled back, for example."
-msgstr "为了让 STM 子系统了解哪些类需要在事务内存中进行管理，有必要提供最低程度的工具。具体来说，所有 STM 感知对象都必须是继承自接口的类实例，这些接口本身已被注释为 STM 感知接口。任何其他不遵守这一规则的对象（及其类）将不受 STM 子系统的管理，因此它们的任何状态变化都不会回滚。"
+msgstr "为了使 STM 子系统能够知道哪些类应在事务内存上下文中进行管理，必须提供最低限度的仪器化。 这是通过接口边界将支持 STM 的类和不支持 STM 的类进行分类来实现的；具体来说，所有支持 STM 的对象都必须是继承自接口的类的实例，而这些接口本身已被注释为支持 STM。 任何其他不遵循此规则的对象（及其类）都不会由 STM 子系统管理，因此，例如，它们的任何状态变化都不会被回滚。"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
 msgid ""
 "The specific annotation that STM-aware application interfaces must use is `org.jboss.stm.annotations.Transactional`.\n"
 "For example:"
-msgstr "STM 感知应用程序接口必须使用的特定注释是 `org.jboss.stm.annotations.Transactional` 。例如"
+msgstr "支持 STM 的应用程序接口必须使用的特定注解是 `org.jboss.stm.annotations.Transactional` 。例如："
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
@@ -179,7 +179,7 @@ msgid ""
 "within the class should be managed transactionally, e.g., some instance variables may not need to be rolled back\n"
 "if a transaction aborts. As mentioned earlier, if those annotations are not present then defaults are chosen to\n"
 "guarantee safety, such as assuming all methods will modify state."
-msgstr "实现该接口的类可以使用 Narayana 提供的附加注解来告诉 STM 子系统一些信息，例如某个方法是否会修改对象的状态，或者类中的哪些状态变量应该进行事务管理，例如，如果事务中止，某些实例变量可能不需要回滚。如前所述，如果没有这些注解，那么就会选择默认值来保证安全性，例如假设所有方法都会修改状态。"
+msgstr "实现该接口的类可以使用 Narayana 提供的额外注解，向 STM 子系统说明诸如方法是否会修改对象的状态，或者类中的哪些状态变量应进行事务管理等信息，例如，如果事务中止，某些实例变量可能无需回滚。 如前所述，如果未使用这些注解，系统将采用默认设置以确保安全性，例如假定所有方法都会修改状态。"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
@@ -188,14 +188,14 @@ msgid ""
 "STM subsystem that no state modifications will occur in this object when it is used in the transactional\n"
 "memory. Also, the `@NotState` annotation tells the system to ignore `timesCalled` when transactions commit or\n"
 "abort, so this value only changes due to application code."
-msgstr "例如，通过在 `getNumberOfBookings` 方法上使用 `@ReadLock` 注解，我们可以告诉 STM 子系统，在事务内存中使用该对象时，不会对其进行任何状态修改。此外， `@NotState` 注解还告诉系统在事务提交或中止时忽略 `timesCalled` ，因此该值只会因应用程序代码而改变。"
+msgstr "例如，通过在 `getNumberOfBookings` 方法上使用 `@ReadLock` 注解，我们可以告知 STM 子系统：当该对象在事务性内存中使用时，其状态不会发生任何修改。 此外， `@NotState` 注解会指示系统在事务提交或回滚时忽略 `timesCalled` 的值，因此该值仅会因应用程序代码而发生变化。"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
 msgid ""
 "Please refer to the Narayana guide for details of how to exert finer grained control over the transactional\n"
 "behaviour of objects that implement interfaces marked with the `@Transactional` annotation."
-msgstr "请参阅《Narayana 指南》，了解如何对实现带有 `@Transactional` 注解的接口的对象的事务行为进行更精细的控制。"
+msgstr "有关如何对实现带有 `@Transactional` 注解的接口的对象的事务行为进行更精细的控制，请参阅 Narayana 指南。"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
@@ -209,7 +209,7 @@ msgid ""
 "does this by providing containers of transactional memory within which these object instances reside. Until an object\n"
 "is placed within one of these STM containers it cannot be managed within transactions and any state changes will\n"
 "not possess the A, C, I (or even D) properties."
-msgstr "STM 子系统需要知道它应该管理哪些对象。Quarkus（又名 Narayana）的 STM 实现就是通过提供事务内存容器来实现这一点的，这些容器中存放着这些对象实例。在对象被放置在这些 STM 容器中之前，它无法在事务中被管理，任何状态变化都不具备 A、C、I（甚至 D）属性。"
+msgstr "需要告知 STM 子系统应管理哪些对象。 Quarkus（又名 Narayana）的 STM 实现通过提供事务性内存容器来完成此操作，这些对象实例就驻留在这些容器中。除非将对象放入其中一个 STM 容器中，否则无法在事务内对其进行管理，且任何状态变化都不会具备 A、C、I（甚至 D）属性。"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
@@ -217,7 +217,7 @@ msgid ""
 "Note, the term \"container\" was defined within the STM implementation years before Linux containers came along. It may\n"
 "be confusing to use especially in a Kubernetes native environment such as Quarkus, but hopefully\n"
 "the reader can do the mental mapping."
-msgstr "请注意，\"容器 \"一词是早在 Linux 容器出现之前几年就在 STM 实现中定义的。特别是在 Kubernetes 原生环境（如 Quarkus）中使用时，可能会让人感到困惑，但希望读者能进行思维映射。"
+msgstr "请注意，“容器”这一术语早在 Linux 容器出现之前，就在 STM 的实现中被定义了。特别是在 Quarkus 这样的 Kubernetes 原生环境中使用该术语可能会让人感到困惑，但希望读者能够进行相应的概念映射。"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
@@ -227,33 +227,33 @@ msgid ""
 "through which that object should then be used in the future. It is important to use this handle as continuing to access\n"
 "the object through the original reference will not allow the STM subsystem to track access and manage state and\n"
 "concurrency control."
-msgstr "默认 STM 容器（ `org.jboss.stm.Container` ）支持易失性对象，这些对象只能在同一微服务/JVM 实例的线程之间共享。将 STM 感知对象放入容器后，容器会返回一个句柄，今后可通过该句柄使用该对象。使用该句柄非常重要，因为继续通过原始引用访问对象将无法让 STM 子系统跟踪访问并管理状态和并发控制。"
+msgstr "默认的 STM 容器（ `org.jboss.stm.Container` ）支持易失性对象，此类对象仅可在同一微服务/JVM 实例内的线程之间共享。 当一个支持 STM 的对象被放入容器时，容器会返回一个句柄，今后应通过该句柄使用该对象。使用此句柄非常重要，因为如果继续通过原始引用访问该对象，STM 子系统将无法跟踪访问情况，也无法管理状态和并发控制。"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
 msgid ""
 "You need to tell each Container about the type of objects for which it will be responsible. In this example\n"
 "it will be instances that implement the FlightService interface."
-msgstr "您需要告诉每个容器它将负责的对象类型。在本例中，它将是实现 FlightService 接口的实例。"
+msgstr "你需要向每个容器指定它将负责处理的对象类型。在本例中，这些对象是实现 FlightService 接口的实例。"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
 msgid ""
 "Then you create an instance that implements `FlightService`. You should not use it directly at this stage because\n"
 "access to it is not being managed by the STM subsystem."
-msgstr "然后创建一个实现 `FlightService` 的实例。在此阶段，您不应直接使用它，因为 STM 子系统并不管理对它的访问。"
+msgstr "然后，您需要创建一个实现 `FlightService` 接口的实例。在此阶段不应直接使用该实例，因为对其的访问尚未由 STM 子系统进行管理。"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
 msgid ""
 "To obtain a managed instance, pass the original object to the STM `container` which then returns a reference\n"
 "through which you will be able to perform transactional operations. This reference can be used safely from multiple threads."
-msgstr "要获得托管实例，可将原始对象传递给 STM `container` ，然后返回一个引用，通过该引用可以执行事务操作。该引用可在多个线程中安全使用。"
+msgstr "要获取一个托管实例，请将原始对象传递给 STM `容器` ，该容器随后会返回一个引用，您可以通过该引用执行事务性操作。该引用可在多个线程中安全地使用。"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
 msgid "Defining transaction boundaries"
-msgstr "界定交易边界"
+msgstr "定义事务边界"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
@@ -261,7 +261,7 @@ msgid ""
 "Once an object is placed within an STM container the application developer can manage the scope of transactions\n"
 "within which it is used. There are some annotations which can be applied to the STM-aware class to have the\n"
 "container automatically create a transaction whenever a specific method is invoked."
-msgstr "一旦将对象置于 STM 容器中，应用程序开发人员就可以管理使用该对象的事务范围。有一些注解可以应用到 STM 感知类中，让容器在调用特定方法时自动创建事务。"
+msgstr "一旦将某个对象放入 STM 容器中，应用程序开发人员就可以管理该对象所使用的交易范围。可以通过在支持 STM 的类上添加某些注解，使容器在调用特定方法时自动创建交易。"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 msgid "Declarative approach"
@@ -277,17 +277,17 @@ msgid ""
 "transaction does not behave as a parent, i.e., the nested top-level transaction will commit or abort independently; the\n"
 "latter annotation will create a transaction with is properly nested within the calling transaction, i.e., that\n"
 "transaction acts as the parent of this newly created transaction."
-msgstr "如果在方法签名上使用 `@NestedTopLevel` 或 `@Nested` 注释，那么 STM 容器将在调用该方法时启动一个新事务，并在方法返回时尝试提交。如果已经有一个事务与调用线程相关联，那么这两种注解的行为会略有不同：前一种注解总是会创建一个新的顶级事务，该方法将在其中执行，因此外层事务不作为父事务，即嵌套的顶级事务将独立提交或中止；后一种注解将创建一个事务，该事务正确嵌套在调用事务中，即该事务作为新创建事务的父事务。"
+msgstr "如果将 `@NestedTopLevel` 或 `@Nested` 注解应用于方法签名，则当调用该方法时，STM 容器将启动一个新事务，并在方法返回时尝试提交该事务。 如果调用线程已关联一个事务，则这两个注解的行为会略有不同：前者将始终创建一个新的顶级事务，方法将在该事务内执行，因此外围事务不会作为父事务，即该嵌套的顶级事务将独立提交或回滚； 后一种注解将创建一个正确嵌套在调用事务之内的交易，即该事务作为此新创建事务的父事务。"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
 msgid "Programmatic approach"
-msgstr "编程实现方法"
+msgstr "方案化方法"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
 msgid "The application can programmatically start a transaction before accessing the methods of STM objects:"
-msgstr "应用程序可以在访问STM对象的方法之前以编程方式启动一个事务。"
+msgstr "应用程序可以在调用 STM 对象的方法之前，通过编程方式启动事务："
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
@@ -295,12 +295,12 @@ msgid ""
 "An object for manually controlling transaction boundaries (AtomicAction and many other useful\n"
 "classes are included in the extension).\n"
 "Refer https://narayana.io//docs/api/com/arjuna/ats/arjuna/AtomicAction.html[to the javadoc] for more detail."
-msgstr "用于手动控制事务边界的对象（扩展中包含 AtomicAction 和许多其他有用的类）。更多详情，请参 link:https://narayana.io//docs/api/com/arjuna/ats/arjuna/AtomicAction.html[阅 javadoc] 。"
+msgstr "一个用于手动控制事务边界的对象（该扩展中包含 AtomicAction 以及许多其他有用的类）。更多详细信息 link:https://narayana.io//docs/api/com/arjuna/ats/arjuna/AtomicAction.html[请参阅 Javadoc] 。"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
 msgid "Programmatically begin a transaction."
-msgstr "以编程方式开始交易。"
+msgstr "通过编程方式开始一笔交易。"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
@@ -308,12 +308,12 @@ msgid ""
 "Notice that object updates can be composed which means that updates to multiple objects can be committed together as a single action.\n"
 "[Note that it is also possible to begin nested transactions so that you can perform speculative work which may then be abandoned\n"
 "without abandoning other work performed by the outer transaction]."
-msgstr "请注意，对象更新是可以组成的，这意味着多个对象的更新可以作为单个操作一起提交。[请注意，也可以开始嵌套事务，这样就可以执行投机性工作，然后可以在不放弃外部事务执行的其他工作的情况下放弃这些工作]。"
+msgstr "请注意，对象更新可以进行组合，这意味着对多个对象的更新可以作为单一操作一起提交。[请注意，还可以启动嵌套事务，以便执行投机性操作，这些操作随后可以被放弃，而不会影响外层事务所执行的其他操作。]"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
 msgid "Since the transaction has not yet been committed the changes made by the flight and taxi services are not visible outside the transaction."
-msgstr "由于交易尚未提交，航班和出租车服务所做的改变在交易之外是不可见的。"
+msgstr "由于该事务尚未提交，因此航班和地面服务所做的更改在事务之外是不可见的。"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
@@ -321,17 +321,17 @@ msgid ""
 "Since the commit was successful the changes made by the flight and taxi services are now visible to other threads.\n"
 "Note that other transactions that relied on the old state may or may not now incur conflicts when they commit (the STM library\n"
 "provides a number of features for managing conflicting behaviour and these are covered in the Narayana STM manual)."
-msgstr "由于提交成功，其他线程现在可以看到航班和出租车服务所做的更改。请注意，依赖旧状态的其他事务在提交时可能会产生冲突，也可能不会（STM 库提供了许多管理冲突行为的功能，这些功能在 Narayana STM 手册中有所介绍）。"
+msgstr "由于提交成功，飞行和地面服务所做的更改现在对其他线程可见。请注意，那些依赖旧状态的其他事务在提交时可能会或可能不会引发冲突（STM 库提供了许多用于管理冲突行为的功能，相关内容在《Narayana STM 手册》中有详细说明）。"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
 msgid "Programmatically decide to abort the transaction which means that the changes made by the flight and taxi services are discarded."
-msgstr "通过程序决定中止交易，这意味着航班和出租车服务所做的更改将被丢弃。"
+msgstr "通过编程方式决定中止该事务，这意味着航班和地面交通服务所做的更改将被丢弃。"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
 msgid "Distributed transactions"
-msgstr "分布式交易"
+msgstr "分布式事务"
 
 #: _versions/3.6/guides/software-transactional-memory.adoc
 #, fuzzy
@@ -340,4 +340,4 @@ msgid ""
 "an advanced use case only and the Narayana documentation should be consulted\n"
 "if this behaviour is required. In particular, STM does not yet support the features\n"
 "described in the xref:context-propagation.adoc[Context Propagation guide]."
-msgstr "在多个服务之间共享事务是可能的，但目前只是高级用例，如果需要这种行为，应查阅 Narayana 文档。特别是，STM 尚不支持 xref:context-propagation.adoc[上下文传播指南] 中描述的功能。"
+msgstr "虽然可以在多个服务之间共享事务，但这目前仅适用于高级用例；若需要此功能，请查阅 Narayana 文档。特别需要注意的是，STM 目前尚不支持《 xref:context-propagation.adoc[上下文传播指南] 》中描述的功能。"
