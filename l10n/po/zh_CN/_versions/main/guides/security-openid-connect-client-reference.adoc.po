@@ -332,17 +332,47 @@ msgstr "`io.quarkus.oidc.client.runtime.TokensHelper` 负责管理访问令牌�
 
 #. type: Title ==
 #: _versions/main/guides/security-openid-connect-client-reference.adoc
-#, fuzzy, no-wrap
-msgid "Inject tokens"
-msgstr "注入令牌"
+msgid "Inject TokenProvider"
+msgstr ""
 
 #. type: Plain text
 #: _versions/main/guides/security-openid-connect-client-reference.adoc
-#, fuzzy
+msgid "You can inject `TokenProvider` that uses `OidcClient` internally to acquire the access tokens and refresh them asynchronously:"
+msgstr ""
+
+#. type: Plain text
+#: _versions/main/guides/security-openid-connect-client-reference.adoc
+msgid "You can also inject a `TokenProvider` that is bound to a named OIDC client, see <<named-oidc-clients>>."
+msgstr ""
+
+#. type: Plain text
+#: _versions/main/guides/security-openid-connect-client-reference.adoc
+msgid "When a Quarkus extension must acquire OIDC tokens by using one of the token grants supported by the OIDC client, it can also use `TokenProvider` while depending only on the OIDC Client SPI:"
+msgstr ""
+
+#. type: Plain text
+#: _versions/main/guides/security-openid-connect-client-reference.adoc
 msgid ""
-"You can inject `Tokens` that use `OidcClient` internally.\n"
-"`Tokens` can be used to acquire the access tokens and refresh them if necessary:"
-msgstr "您可以注入内部使用 `OidcClient` 的 `Tokens` 。 `Tokens` 可用于获取访问令牌并在必要时刷新它们："
+"Now, the extension is able to use a `TokenProvider` when an application that uses this extension also includes a `quarkus-oidc-client` dependency.\n"
+"Since the extension itself depends only on `quarkus-oidc-client-spi`, it must inject `TokenProvider` using `jakarta.enterprise.inject.Instance` and expect that `TokenProvider` may not be available."
+msgstr ""
+
+#. type: Plain text
+#: _versions/main/guides/security-openid-connect-client-reference.adoc
+msgid "Currently, when an extensions injects `io.quarkus.oidc.client.spi.TokenProvider`, only a default OIDC client configuration can be used."
+msgstr ""
+
+#. type: Title ==
+#: _versions/main/guides/security-openid-connect-client-reference.adoc
+msgid "Inject Tokens"
+msgstr ""
+
+#. type: Plain text
+#: _versions/main/guides/security-openid-connect-client-reference.adoc
+msgid ""
+"You can inject a `Tokens` class that uses `OidcClient` internally.\n"
+"`Tokens` can be used to acquire the access tokens and refresh them if necessary but also blocking the current request:"
+msgstr ""
 
 #. type: Title ==
 #: _versions/main/guides/security-openid-connect-client-reference.adoc
@@ -398,9 +428,8 @@ msgstr "现在，您可以按照以下方式使用该客户端："
 
 #. type: Title ==
 #: _versions/main/guides/security-openid-connect-client-reference.adoc
-#, fuzzy, no-wrap
-msgid "Inject named OidcClient and tokens"
-msgstr "注入名为 OidcClient 的对象和令牌"
+msgid "Inject named OidcClient, Tokens and TokenProvider"
+msgstr ""
 
 #. type: Plain text
 #: _versions/main/guides/security-openid-connect-client-reference.adoc
@@ -413,6 +442,11 @@ msgstr "如果配置了多个 `OidcClient` 对象，您可以使用 `@NamedOidcC
 #, fuzzy
 msgid "The same qualifier can be used to specify the `OidcClient` used for a `Tokens` injection:"
 msgstr "可以使用相同的限定符来指定用于 `令牌` 注入的 `OidcClient` ："
+
+#. type: Plain text
+#: _versions/main/guides/security-openid-connect-client-reference.adoc
+msgid "The same qualifier can also be used to specify the `OidcClient` used for a `TokenProvider` injection:"
+msgstr ""
 
 #. type: Plain text
 #. mt: deepl
@@ -607,9 +641,8 @@ msgstr "`令牌` 生成器将获取并刷新令牌，而自定义过滤器将决
 
 #. type: Plain text
 #: _versions/main/guides/security-openid-connect-client-reference.adoc
-#, fuzzy
-msgid "You can also inject named `Tokens`, see <<named-oidc-clients,Inject named OidcClient and Tokens>>"
-msgstr "您还可以注入命名 `令牌` ，请参阅 xref:named-oidc-clients[“注入命名 OidcClient 和令牌”]"
+msgid "You can also inject named `Tokens`, see <<named-oidc-clients>>."
+msgstr ""
 
 #. type: Title ==
 #: _versions/main/guides/security-openid-connect-client-reference.adoc
@@ -950,32 +983,6 @@ msgid ""
 "Since the discovery endpoint is accessed with an HTTP GET request, only authentication methods that use the HTTP `Authorization` header are effective, such as `client_secret_basic` and <<oidc-client-jwt-bearer,JWT bearer>>.\n"
 "Alternatively, you can use <<oidc-client-ref-oidc-request-filters,OidcRequestFilter>> to customize the authentication."
 msgstr "要将客户端凭据发送至发现端点，请将 `quarkus.oidc-client.credentials.for-all-endpoints 设置为 true` 。由于通过 HTTP GET 请求访问发现端点，因此只有使用 HTTP `Authorization` 头部的身份验证方法才有效，例如 `client_secret_basic` 和 xref:oidc-client-jwt-bearer[JWT bearer] 。 此外，您还可以使用 xref:oidc-client-ref-oidc-request-filters[OidcRequestFilter] 来自定义身份验证。"
-
-#. type: Title ==
-#: _versions/main/guides/security-openid-connect-client-reference.adoc
-#, fuzzy
-msgid "OIDC Client SPI"
-msgstr "OIDC 客户端 SPI"
-
-#. type: Plain text
-#: _versions/main/guides/security-openid-connect-client-reference.adoc
-#, fuzzy
-msgid "When your custom extension must acquire OIDC tokens by using one of the token grants supported by the OIDC client, the extension can depend only on the OIDC Client SPI and let the OIDC client itself acquire and refresh access tokens as needed."
-msgstr "当您的自定义扩展必须通过 OIDC 客户端支持的某一种令牌授予方式来获取 OIDC 令牌时，该扩展只需依赖 OIDC 客户端 SPI，并让 OIDC 客户端根据需要自行获取和刷新访问令牌。"
-
-#. type: Plain text
-#: _versions/main/guides/security-openid-connect-client-reference.adoc
-#, fuzzy
-msgid ""
-"Update your extension to use the `io.quarkus.oidc.client.spi.TokenProvider` CDI bean as required.\n"
-"For example:"
-msgstr "请根据要求更新您的扩展，使其使用 `io.quarkus.oidc.client.spi.TokenProvider` CDI Bean。例如："
-
-#. type: Plain text
-#: _versions/main/guides/security-openid-connect-client-reference.adoc
-#, fuzzy
-msgid "Currently, `io.quarkus.oidc.client.spi.TokenProvider` is available only for default OIDC clients because custom extensions are unlikely to be aware of multiple named OIDC clients."
-msgstr "目前 `，io.quarkus.oidc.client.spi.TokenProvider` 仅适用于默认的 OIDC 客户端，因为自定义扩展通常无法识别多个命名的 OIDC 客户端。"
 
 #. type: Title ==
 #: _versions/main/guides/security-openid-connect-client-reference.adoc
