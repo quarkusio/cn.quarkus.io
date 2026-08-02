@@ -7,593 +7,829 @@ msgstr ""
 "X-Generator: jekyll-l10n\n"
 
 #. type: YAML Front Matter: title
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "To Cache or Not to Cache Virtual Threads"
-msgstr ""
+msgstr "是否应将虚拟线程缓存起来"
 
 #. type: YAML Front Matter: synopsis
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "The OpenJDK team says don't pool virtual threads. We tested that advice with data, tried to fix the JVM when pooling broke, and discovered why the fix made things worse."
-msgstr ""
+msgstr "OpenJDK 团队表示不应对虚拟线程进行池化。我们通过数据对这一建议进行了测试，在池化机制失效时尝试修复 JVM，并发现了为何该修复反而使情况恶化。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "The official guidance on virtual threads is clear:"
-msgstr ""
+msgstr "关于虚拟线程的官方指南非常明确："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "Virtual threads are cheap and plentiful, and thus should never be pooled: A new virtual thread should be created for every application task."
-msgstr ""
+msgstr "虚拟线程资源成本低且数量充足，因此绝不应将其池化：每个应用程序任务都应创建一个新的虚拟线程。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "Creating a virtual thread is cheap — have millions, and don't pool them!"
-msgstr ""
+msgstr "创建一个虚拟线程的成本很低——可以有数百万个，而且不要将它们合并到一个池中！"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "As part of our work on https://youtu.be/Oy005l5vHtE[improving Quarkus performance with virtual threads] and https://youtu.be/oWE_kYB4Wns[investigating Loom's scheduling behavior], we decided to test this advice with data. *Spoiler: we should have listened.* But the _reason_ we should have listened turned out to be far more interesting than \"they're cheap enough.\""
-msgstr ""
+msgstr "作为我们 link:https://youtu.be/Oy005l5vHtE[利用虚拟线程提升 Quarkus 性能] 以及 link:https://youtu.be/oWE_kYB4Wns[研究 Loom 调度行为] 工作的一部分，我们决定通过数据来验证这一建议。 *剧透：我们本该听从建议的。* 但事实证明，我们本该听从建议的 _真正原因_ ，远比“它们足够便宜”这一理由更有趣。"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "Why Would You Pool Virtual Threads?"
-msgstr ""
+msgstr "为什么要将虚拟线程进行池化？"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "Pooling threads is a well-established pattern. We do it for platform threads in frameworks like Quarkus because they are expensive to create — each one maps to an OS thread with a pre-allocated stack. *Virtual threads are designed to be cheap, so the architects of Project Loom say pooling is unnecessary.* But a brave and careless developer might still consider it: creating a virtual thread allocates a `Thread` object, its thread-local storage (a `HashMap` per thread), and internal scheduling structures. If you reuse virtual threads, you skip all of that. At a superficial analysis, this looks beneficial — the same reasoning we apply when pooling platform threads."
-msgstr ""
+msgstr "线程池是一种行之有效的模式。我们在 Quarkus 等框架中对平台线程采用这种方式，因为创建平台线程的开销很大——每个平台线程都会映射到一个带有预分配栈的操作系统线程 *。而虚拟线程的设计初衷就是低开销，因此 Project Loom 的架构师认为没有必要使用线程池。* 但一位大胆且不拘小节的开发者仍可能会考虑这种做法：创建一个虚拟线程会分配一个 `Thread` 对象、其线程局部存储（每个线程一个 `HashMap` ）以及内部调度结构。如果复用虚拟线程，则可以省去所有这些步骤。从表面分析来看，这似乎是有益的——这与我们对平台线程进行池化时所采用的推理逻辑如出一辙。"
 
 #. type: Title ==
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "What could go wrong?"
-msgstr ""
+msgstr "会有什么问题呢？"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "*The workload we care about* is the typical Java enterprise pattern: an HTTP server receives requests, *dispatches each one to a virtual thread that performs blocking I/O* (a database query, an HTTP call to another service), then returns a response. This is how frameworks like Quarkus and Vert.x work — an event loop accepts connections and hands off blocking work to virtual threads."
-msgstr ""
+msgstr "*我们关注的工作负载* 是典型的 Java 企业级模式：HTTP 服务器接收请求， *将每个请求分派给一个虚拟线程，该线程执行阻塞式 I/O* （数据库查询、对其他服务的 HTTP 调用），然后返回响应。 Quarkus 和 Vert.x 等框架正是如此运作的——事件循环接受连接，并将阻塞性工作交由虚拟线程处理。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "*We've prepared a benchmark* which simplifies this to its essential shape: a Netty HTTP server receives requests, hands off each one to a VT that makes a blocking HTTP call (via Apache HttpClient) to a mock backend with 30ms think time, then returns the response. 10,000 concurrent connections, 8 cores, with a *30-second warmup phase* followed by a *30-second measurement phase*. In pooling mode, we pre-allocate a pool of 10,000 virtual threads — one per connection."
-msgstr ""
+msgstr "*我们设计了一个基准测试* ，将其简化为最基本的形态：一个 Netty HTTP 服务器接收请求，将每个请求交由一个 VT 处理，该 VT 通过 Apache HttpClient 向模拟后端发起阻塞式 HTTP 调用（带 30 毫秒的响应延迟），随后返回响应。 测试条件为 10,000 个并发连接、8 个核心，先进行 *30 秒的预热阶段* ，随后是 *30 秒的测量阶段* 。在池化模式下，我们预先分配了一个包含 10,000 个虚拟线程的池——每个连接对应一个线程。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "On a 4 GB heap with ParallelGC, pooling VTs delivered *143,966 req/s* vs *126,851* without pooling — a *13.5% throughput gain*, zero Full GCs for both. Pooling works! Time to see it deliver its value on a more constrained heap."
-msgstr ""
+msgstr "在配备 ParallelGC 的 4 GB 堆上，启用 VT 池化后 *吞吐量* 达到 *143,966 次请求/秒* ，而未启用池化时为 *126,851* *次请求/秒——吞吐量提升了 13.5%，* 且两种情况均未发生全垃圾回收。池化确实有效！ 现在是时候看看它在资源更受限的堆上能否发挥其价值了。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "We ran with a 1 GB heap. *It failed spectacularly.*"
-msgstr ""
+msgstr "我们使用 1 GB 的堆内存进行了运行。 *结果彻底失败了。*"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "The 1 GB Heap"
-msgstr ""
+msgstr "1 GB 堆"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "Same benchmark, same code, 1 GB heap, ParallelGC:"
-msgstr ""
+msgstr "相同的基准测试、相同的代码、1 GB 堆内存、并行垃圾回收（ParallelGC）："
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "Mode"
-msgstr ""
+msgstr "模式"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "4 GB TPS"
-msgstr ""
+msgstr "4 GB TPS"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "4 GB Full GCs"
-msgstr ""
+msgstr "4 GB 完整垃圾回收"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "1 GB TPS"
-msgstr ""
+msgstr "1 GB TPS"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "1 GB Full GCs"
-msgstr ""
+msgstr "1 GB 完整垃圾回收"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "*no pooling*"
-msgstr ""
+msgstr "*不合并*"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "126,851"
-msgstr ""
+msgstr "126,851"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "0"
-msgstr ""
+msgstr "0"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "*108,272*"
-msgstr ""
+msgstr "*108,272*"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "*4*"
-msgstr ""
+msgstr "*4*"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "*pooling VTs*"
-msgstr ""
+msgstr "*VT池化*"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "143,966"
-msgstr ""
+msgstr "143,966"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "*71,252*"
-msgstr ""
+msgstr "*71,252*"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "*461*"
-msgstr ""
+msgstr "*461*"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid ""
 "Without pooling, the smaller heap barely mattered — 127K down to 108K, 4 Full GCs, 9 seconds total GC pause. Pooling collapsed: 144K down to 71K, *461 Full GCs*, and *30.6 seconds of GC pauses* in a 60-second run — the garbage collector was running half the time. *And it couldn't even recover the heap*: after each Full GC, pooling still had 640-710 MB live on a 910 MB old gen.\n"
 "The 13.5% advantage from 4GB turned into a *34% deficit*."
-msgstr ""
+msgstr "如果不进行池化，较小的堆几乎没什么影响——从 127K 降至 108K，发生了 4 次完整垃圾回收（Full GC），总共 9 秒的垃圾回收暂停时间。 启用池化后情况急剧恶化：127K降至71K， *发生了461次完整GC* ，在60秒的运行中 *GC暂停时间长达30.6秒* ——垃圾回收器几乎占用了半数运行时间。 *而且它甚至无法回收堆内存* ：每次完整GC之后，在910 MB的老代中，池化机制仍保留着640-710 MB的活跃内存。原本4GB内存带来的13.5%优势，反而变成了 *34%的劣势* 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "Something about pooling long-lived virtual threads was making the GC miserable. We attached JDK Flight Recorder with allocation profiling to both runs. Here's the twist:"
-msgstr ""
+msgstr "关于聚合长寿命虚拟线程的某个问题，让垃圾回收器苦不堪言。我们在两次运行中都启用了带有内存分配分析功能的 JDK Flight Recorder。这里有个转折："
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "StackChunk total bytes allocated"
-msgstr ""
+msgstr "StackChunk 总分配字节数"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "Full GCs"
-msgstr ""
+msgstr "完整垃圾回收"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "*~14.4 GB*"
-msgstr ""
+msgstr "*~14.4 GB*"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "*~3.7 GB*"
-msgstr ""
+msgstr "*约 3.7 GB*"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "Both runs show significant allocation of an internal JVM type we didn't expect: `jdk.internal.vm.StackChunk`. Pooling allocates *4x less* of them (~3.7 GB vs ~14.4 GB) — which makes sense, we're reusing virtual threads. Yet pooling has *461 Full GCs* while no pooling has *4*. Less allocation, more Full GCs. That doesn't add up."
-msgstr ""
+msgstr "两次运行都显示，一种我们未曾预料到的内部 JVM 类型 `——jdk.internal.vm.StackChunk` ——被大量分配。 启用池化后，该类型的分配量 *减少了 4 倍* （约 3.7 GB 对比约 14.4 GB）——这合乎逻辑，因为我们正在复用虚拟线程。然而，启用池化时发生了 *461 次完整垃圾回收（Full GC）* ，而未启用池化时仅有 *4 次* 。分配量减少了，但完整垃圾回收次数却增加了。这似乎自相矛盾。"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "What Is a StackChunk?"
-msgstr ""
+msgstr "什么是 StackChunk？"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "When a virtual thread parks — blocks on I/O, waits on a lock, sleeps — the JVM needs to free up the *carrier thread* (the platform thread https://dev.java/learn/new-features/virtual-threads/[currently running] the virtual thread) so it can run other virtual threads. To do this, it needs to save the virtual thread's execution state: which methods are in progress, what their local variables are, and where to resume when the VT is unparked. This state lives on the *call stack* — the runtime data structure that tracks method calls. The JVM *\"freezes\"* this stack — copies it from the carrier thread into a *StackChunk*, a regular Java heap object. When the virtual thread is later unparked, the JVM *\"https://youtu.be/6nRS6UiN7X0[thaws]\"* it — copies the stack back from the StackChunk onto a carrier thread, and execution resumes."
-msgstr ""
+msgstr "当一个虚拟线程被“停驻”（因 I/O 阻塞、等待锁或进入睡眠状态）时，JVM 需要释放 *承载线程* （ link:https://dev.java/learn/new-features/virtual-threads/[即当前正在运行] 该虚拟线程的平台线程），以便其能够运行其他虚拟线程。 为此，它需要保存虚拟线程的执行状态：哪些方法正在执行、其局部变量的值是什么，以及在虚拟线程恢复运行时应从何处继续执行。该状态保存在 *调用栈* 中——即用于跟踪方法调用的运行时数据结构。 JVM *会“冻结”* 该栈——将其从承载线程复制到一个 *StackChunk* 中，这是一个普通的 Java 堆对象。当虚拟线程随后被解锁时，JVM *link:https://youtu.be/6nRS6UiN7X0[会“解冻] ”* 它——将栈从 StackChunk 复制回承载线程，并恢复执行。"
 
 #. type: Block title
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "What's inside a StackChunk?"
-msgstr ""
+msgstr "StackChunk 里面包含什么？"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "A StackChunk is a Java heap object with a header and a blob of raw stack memory. The blob contains an integral number of *stack frames* — copied verbatim from the carrier thread's platform stack. Each frame holds the state of one method activation:"
-msgstr ""
+msgstr "StackChunk 是一个 Java 堆对象，包含一个头部和一块原始栈内存。该内存块包含整数个 *栈帧——这些栈帧* 是从承载线程的平台栈中原样复制的。每个栈帧保存着一次方法调用的状态："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "For *compiled frames* (C1 or C2): return address, saved frame pointer, and spill slots (local values that didn't fit in CPU registers). The frame size is fixed per compiled method."
-msgstr ""
+msgstr "对于 *编译后的帧* （C1 或 C2）：返回地址、保存的帧指针以及溢出槽（无法放入 CPU 寄存器中的局部值）。每个编译后的方法的帧大小是固定的。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "For *interpreted frames*: return address, saved frame pointer, plus expression stack, monitors, bytecode pointer, locals, constant pool cache, and method pointer. Significantly larger than compiled frames."
-msgstr ""
+msgstr "对于 *解释型帧* ：返回地址、保存的帧指针，以及表达式栈、监视器、字节码指针、局部变量、常量池缓存和方法指针。其大小远大于编译型帧。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "The chunk also carries an oop bitmap so the GC can find object references within the frozen frames."
-msgstr ""
+msgstr "该块还携带一个面向对象的位图，以便垃圾回收器能在冻结帧中查找对象引用。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "There is no public design document for the StackChunk layout. The authoritative sources are the source code comments:"
-msgstr ""
+msgstr "StackChunk 的布局没有公开的设计文档。权威来源是源代码注释："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "https://github.com/openjdk/jdk/blob/master/src/hotspot/share/oops/instanceStackChunkKlass.hpp[Layout diagram in `InstanceStackChunkKlass.hpp`] (the chunk's internal structure)"
-msgstr ""
+msgstr "link:https://github.com/openjdk/jdk/blob/master/src/hotspot/share/oops/instanceStackChunkKlass.hpp[InstanceStackChunkKlass.hpp中的布局图] （块的内部结构）"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "https://github.com/openjdk/jdk/blob/master/src/hotspot/share/runtime/continuationFreezeThaw.cpp[Stack diagram in `continuationFreezeThaw.cpp`] (what gets frozen from the carrier stack)"
-msgstr ""
+msgstr "link:https://github.com/openjdk/jdk/blob/master/src/hotspot/share/runtime/continuationFreezeThaw.cpp[continuationFreezeThaw.cpp中的栈图] （从载体栈中被冻结的内容）"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "https://github.com/openjdk/jdk/commit/9583e3657e43cc1c6f2101a64534564db2a9bd84[JDK-8284161] — the commit that introduced the freeze/thaw machinery"
-msgstr ""
+msgstr "link:https://github.com/openjdk/jdk/commit/9583e3657e43cc1c6f2101a64534564db2a9bd84[JDK-8284161] —— 引入冻结/解冻机制的提交"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "Two properties of StackChunks matter for our story:"
-msgstr ""
+msgstr "对于我们的故事来说，StackChunks 的两个属性至关重要："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "*A chunk's capacity is fixed at allocation time.* It never grows or shrinks. If the frozen stack fits, the chunk is reused as-is — fast bulk memory copy, no GC overhead, no new allocation. If the stack is deeper than the chunk can hold, the JVM allocates a new chunk to replace it — but this is replacement, not resizing."
-msgstr ""
+msgstr "*块的容量在分配时即已确定。* 它绝不会增大或缩小。如果冻结后的栈能够容纳，则直接复用该块——这是一种快速的大批量内存复制，既无垃圾回收开销，也无需新分配内存。如果栈的深度超过了该块的容量，JVM 会分配一个新块来替换它——但这属于替换操作，而非调整大小。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "*This fast reuse only works while the chunk is in the young generation of the heap.*"
-msgstr ""
+msgstr "*这种快速复用仅在该块位于堆的年轻代时才有效。*"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "But the JVM's garbage collector divides the heap into generations: newly created objects go to the _young generation_, and objects that survive several GC cycles get _promoted_ to the _old generation_. When a long-lived virtual thread's StackChunk gets promoted to old gen, the fast copy no longer works — writing into old-gen objects requires extra GC bookkeeping called https://shipilev.net/jvm/anatomy-quarks/13-intergenerational-barriers/[_write barriers_] to track cross-generational references."
-msgstr ""
+msgstr "但 JVM 的垃圾回收器将堆划分为不同代：新创建的对象进入 _年轻代，_ 而存活过多个垃圾回收周期的对象则会被 _提升_ 到 _老年代_ 。 当一个长寿虚拟线程的 StackChunk 被提升到老代时，快速复制机制将不再起作用——向老代对象写入数据需要额外的 GC 记录机制（称为 link:https://shipilev.net/jvm/anatomy-quarks/13-intergenerational-barriers/[写屏障] ），以追踪跨代引用。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "So the JVM does the pragmatic thing: *it allocates a _new_ young-gen chunk and sets it as the new tail*. The old promoted chunk stays linked as a parent in the chunk chain, but after the next thaw, *empty chunks are detached from the chain and become garbage* — collected at the next Full GC (the expensive, stop-the-world collection that cleans up old gen)."
-msgstr ""
+msgstr "因此，JVM 采取了一种务实的做法： *它分配一个 _新的_ 年轻代块，并将其设为新的尾部* 。 被提升到老年代的旧块仍作为父块保留在块链中，但在下一次“解冻”之后， *空块将从链中分离并成为垃圾* ——并在下一次完整垃圾回收（Full GC，即清理老年代的、耗时且会暂停世界的垃圾回收）中被回收。"
 
 #. type: Block title
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "JVM internals: the decision point in continuationFreezeThaw.cpp"
-msgstr ""
+msgstr "JVM 内部机制：continuationFreezeThaw.cpp 中的决策点"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "This code is in https://github.com/openjdk/jdk/blob/master/src/hotspot/share/runtime/continuationFreezeThaw.cpp[`continuationFreezeThaw.cpp`], introduced in https://github.com/openjdk/jdk/commit/9583e3657e43cc1c6f2101a64534564db2a9bd84[JDK-8284161] (co-authored by Ron Pressler, Alan Bateman, Erik Österlund, and others)."
-msgstr ""
+msgstr "该代码位于 link:https://github.com/openjdk/jdk/blob/master/src/hotspot/share/runtime/continuationFreezeThaw.cpp[continuationFreezeThaw.cpp] 文件中，由 link:https://github.com/openjdk/jdk/commit/9583e3657e43cc1c6f2101a64534564db2a9bd84[JDK-8284161] 引入（共同作者包括 Ron Pressler、Alan Bateman、Erik Österlund 等）。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "This design *prioritizes freeze/thaw speed over memory efficiency* — and for short-lived virtual threads, it works well. But for long-lived VTs, *every GC cycle that promotes a chunk triggers a fresh allocation and an abandonment cycle*. With 10,000 long-lived pooled VTs, every GC cycle:"
-msgstr ""
+msgstr "该设计 *优先考虑冻结/解冻速度，而非内存效率* ——对于短寿命的虚拟线程，这种设计效果良好。但对于长寿命的虚拟线程， *每次垃圾回收（GC）周期中将一个内存块提升为虚拟线程时，都会触发一次新的内存分配和一次放弃循环* 。当存在 10,000 个长寿命的池化虚拟线程时，每次垃圾回收（GC）周期："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "Promotes 10,000 StackChunks to old gen"
-msgstr ""
+msgstr "将 10,000 个 StackChunk 移至老代"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "Triggers 10,000 fresh chunk allocations (new young-gen chunks)"
-msgstr ""
+msgstr "触发 10,000 次新的块分配（新的年轻代块）"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "Abandons 10,000 old-gen chunks — dead weight until the next Full GC cleans them up"
-msgstr ""
+msgstr "放弃了 10,000 个旧代块——在下次完整垃圾回收（Full GC）清理它们之前，这些块都是无用负担"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "On a 1 GB heap, this churn was *severe enough to dominate GC behavior*."
-msgstr ""
+msgstr "在 1 GB 的堆内存上，这种内存波动 *非常严重，以至于主导了垃圾回收的行为* 。"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "When Pooling Doesn't Help, Pool More."
-msgstr ""
+msgstr "当资源池化不起作用时，就增加资源池。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "So we're pooling virtual threads but the JVM keeps throwing away and re-allocating their StackChunks. The obvious question: *can we make the JVM reuse those chunks* instead?"
-msgstr ""
+msgstr "因此，我们正在合并虚拟线程，但JVM却不断丢弃并重新分配它们的StackChunks。一个显而易见的问题是： *我们能否让JVM重复利用这些块* 呢？"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "The StackChunk churn problem isn't limited to VT pooling. In containerized environments with small heaps — common in microservices — GC runs more frequently under heap pressure. Objects get promoted to old gen not because they are truly long-lived, but simply because GC ticks faster. This \"premature aging\" means *even short-lived virtual threads can have their StackChunks promoted and then abandoned*, creating the same allocation churn we observed with pooled VTs."
-msgstr ""
+msgstr "StackChunk 的频繁替换问题并不局限于 VT 池。在堆内存较小的容器化环境中（微服务中很常见），由于堆内存压力，垃圾回收（GC）会更频繁地运行。 对象被提升到老代，并非因为它们真正具有长生命周期，而是仅仅因为垃圾回收的频率更高。这种“过早老化”意味着 *，即使是短生命周期的虚拟线程，其 StackChunk 也会被提升到老代，随后又被弃用，* 从而产生与我们观察到的池化 VT 相同的内存分配波动。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "So we rolled up our sleeves and went into the JVM. The idea: instead of abandoning an empty old-gen chunk and allocating a fresh one, just _reuse_ it — write into it with the proper GC bookkeeping (write barriers). Trade a small overhead per freeze for eliminating the allocation churn entirely."
-msgstr ""
+msgstr "于是，我们卷起袖子，深入研究了JVM。我们的思路是：与其放弃一个空的旧代块并分配一个新的，不如直接 _重复利用_ 它——在进行写入时配合适当的GC记账机制（写屏障）。这样，虽然每次冻结都会产生一点开销，但可以完全消除分配操作带来的波动。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "We targeted Parallel and Serial GC specifically — we're not GC experts, but Parallel and Serial are the collectors where this kind of reuse looks possible (no segmentation faults yet!) — G1 and ZGC's concurrent collectors make it unsafe. Parallel and Serial also happen to be the typical choice for small containers and machines where heap sizes are tight."
-msgstr ""
+msgstr "我们特别针对并行和串行垃圾回收器进行了测试——虽然我们并非垃圾回收专家，但并行和串行垃圾回收器是此类资源复用似乎可行的收集器（目前尚未出现分段错误！）——而 G1 和 ZGC 的并发垃圾回收器则会导致安全隐患。 此外，在堆内存空间有限的小型容器和机器上，并行和串行垃圾收集器通常也是首选方案。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "We prototyped this on the https://github.com/openjdk/loom/tree/fibers[OpenJDK Loom `fibers` branch] — the branch where Loom experiments and upcoming features are developed before they go to mainline."
-msgstr ""
+msgstr "我们在 link:https://github.com/openjdk/loom/tree/fibers[OpenJDK 的 Loom纤维分支上] 实现了该功能的原型——该分支用于开发 Loom 的实验性功能和即将推出的功能，这些功能在合并到主线之前都会在此分支上进行开发。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "After a few iterations, we had eliminated the StackChunk allocation churn. Surely _this_ time we could celebrate?"
-msgstr ""
+msgstr "经过几次迭代，我们终于消除了 StackChunk 的内存分配波动。 _这次_ 我们总该庆祝一下了吧？"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "We ran pooling on 1 GB again, with our fix:"
-msgstr ""
+msgstr "我们再次对 1 GB 数据进行了池化处理，并应用了我们的修复方案："
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "Pooling on 1 GB"
-msgstr ""
+msgstr "在 1 GB 上进行池化"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "TPS"
-msgstr ""
+msgstr "TPS"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "*stock JDK*"
-msgstr ""
+msgstr "*标准版 JDK*"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "71,252"
-msgstr ""
+msgstr "71,252"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "461"
-msgstr ""
+msgstr "461"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "*+ reuse fix*"
-msgstr ""
+msgstr "*+ 修复重复使用问题*"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "68,290"
-msgstr ""
+msgstr "68,290"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "435"
-msgstr ""
+msgstr "435"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "*It got worse.* Fewer Full GCs (461→435), but throughput _dropped_ another 4%. We fixed the allocation churn, but something else was now wrong. The chunks were being reused — but reusing them was somehow more expensive than throwing them away."
-msgstr ""
+msgstr "*情况变得更糟了。* 完整垃圾回收（Full GC）的次数减少了（461→435），但吞吐量 _又下降了4%_ 。我们修复了内存分配的波动问题，但现在又出现了其他问题。内存块虽然被重复利用了——但不知为何，重复利用它们的开销竟然比直接丢弃还要大。"
 
 #. type: Block title
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "JVM internals: the reuse condition"
-msgstr ""
+msgstr "JVM 内部机制：重用条件"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "The core reuse condition we added to `continuationFreezeThaw.cpp`:"
-msgstr ""
+msgstr "我们在 `continuationFreezeThaw.cpp` 中添加的核心重用条件："
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "This only works for Parallel and Serial GC. G1 and ZGC are concurrent collectors — they can relocate objects while the application is running, which makes it unsafe to write into old-gen chunks via post-hoc barriers."
-msgstr ""
+msgstr "这仅适用于并行和串行垃圾回收器。G1 和 ZGC 是并发垃圾回收器——它们可以在应用程序运行时重定位对象，因此通过事后屏障向旧代块写入数据是不安全的。"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "Instrumenting the JVM"
-msgstr ""
+msgstr "对 JVM 进行性能监控"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "To understand what was going on, we instrumented the JVM's freeze/thaw code to log every StackChunk allocation and reuse — recording the chunk capacity and actual stack size at each event."
-msgstr ""
+msgstr "为了弄清楚究竟发生了什么，我们在 JVM 的冻结/解冻代码中添加了监控代码，以记录每次 StackChunk 的分配和复用情况——并在每次事件发生时记录该块的容量和实际栈大小。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "During steady state, the chunks being reused were *4x larger than needed*:"
-msgstr ""
+msgstr "在稳态期间，被重复使用的数据块大小是 *实际需求的4倍* ："
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "Pooled VTs"
-msgstr ""
+msgstr "汇总的VT"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "Chunk capacity being reused"
-msgstr ""
+msgstr "块容量正在被重复利用"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "*1,149 words* (~9.2 KB)"
-msgstr ""
+msgstr "*1,149个单词* （约9.2 KB）"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "Actual stack size at freeze"
-msgstr ""
+msgstr "冻结时的实际栈大小"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "~286 words (~2.3 KB)"
-msgstr ""
+msgstr "约286个单词（约2.3 KB）"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "Wasted old-gen space"
-msgstr ""
+msgstr "被浪费的上一代空间"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "*~90 MB* (9% of 1 GB heap)"
-msgstr ""
+msgstr "*~90 MB* （占 1 GB 堆内存的 9%）"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "The fix was faithfully reusing the chunks — but each one was 4x oversized. 90 MB of old gen wasted on empty space. With the fix, old gen after Full GC sits at ~728 MB vs ~713 MB without it — less headroom on a 910 MB old gen, *causing the throughput regression*."
-msgstr ""
+msgstr "修复方案是忠实地复用这些块——但每个块的大小都超出了实际需求的4倍。90 MB的老代内存被浪费在空闲空间上。 采用该修复方案后，完整垃圾回收（Full GC）后的旧代内存占用约为 728 MB，而未采用时约为 713 MB——在 910 MB 的旧代内存中，可用空间更少， *从而导致吞吐量下降* 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "Interestingly, *the actual stack size used at freeze was ~1,100 words during warmup but dropped to ~286 words during steady state* — even though the application code hadn't changed. The chunks were right-sized _when they were born_, but the demand shrank over time while the capacity stayed frozen."
-msgstr ""
+msgstr "有趣的是 *，在预热阶段，实际使用的栈大小约为 1,100 个字，但在稳态期间却降至约 286 个字* ——尽管应用程序代码并未发生变化。这些数据块 _在创建时_ 大小恰到好处，但随着时间的推移，需求逐渐减少，而容量却保持不变。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "What happened between warmup and steady state that made the same code need 4x less stack?"
-msgstr ""
+msgstr "在预热阶段和稳态阶段之间发生了什么，导致相同的代码所需的栈空间减少了4倍？"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "The Root Cause: JIT Compilation Timing"
-msgstr ""
+msgstr "根本原因：JIT 编译时机"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "The answer is https://dev.java/learn/jvm/tool/compiler/[tiered compilation]."
-msgstr ""
+msgstr "答案是 link:https://dev.java/learn/jvm/tool/compiler/[分层编译] 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "The JVM compiles Java methods in tiers. *C1* is the fast first-tier compiler — it produces correct code quickly but doesn't optimize aggressively. *C2* is the optimizing compiler — it kicks in later for hot methods and produces much more compact code. Our data shows that *C2-compiled code produces a significantly smaller frozen stack than C1-compiled code*."
-msgstr ""
+msgstr "JVM 采用分层方式编译 Java 方法。 *C1* 是快速的第一层编译器——它能快速生成正确的代码，但不会进行激进的优化。 *C2* 是优化编译器——它会在稍后针对热方法启动，并生成更加紧凑的代码。 我们的数据显示 *，与 C1 编译的代码相比，C2 编译的代码产生的冻结栈要小得多* 。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "We proved this with a control experiment: `-XX:TieredStopAtLevel=1` forces the JVM to use only C1 (no C2)."
-msgstr ""
+msgstr "我们通过一项对照实验证明了这一点： `-XX:TieredStopAtLevel=1` 会强制 JVM 仅使用 C1（不使用 C2）。"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "Normal (C1 + C2)"
-msgstr ""
+msgstr "正常 (C1 + C2)"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "C1 only"
-msgstr ""
+msgstr "仅限C1"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "Chunk capacity"
-msgstr ""
+msgstr "块容量"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "*1,149 words*"
-msgstr ""
+msgstr "*1,149个词*"
 
 #. type: Table
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "*1,144 words*"
-msgstr ""
+msgstr "*1,144个单词*"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "With C1-only, the chunk capacity matches what we see in the pooled run under normal compilation. *The ~1,149-word chunks are C1-sized.* Under normal compilation, C2 shrinks the frozen stack to ~280 words — but the shared VT pool is created during warmup, before C2 kicks in. Its VTs are born with C1-sized chunks, and *that capacity is locked in forever.*"
-msgstr ""
+msgstr "在仅启用 C1 的情况下，块容量与正常编译下池化运行中观察到的结果一致。 *这些约1,149字的块大小与C1一致。* 在正常编译下，C2会将冻结栈缩小至约280字——但共享的VT池是在预热阶段创建的，即在C2生效之前。其VT在创建时就带有C1大小的块，且 *该容量将永久锁定。*"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "The reuse fix keeps those bloated chunks alive in old gen — forever — leaving the garbage collector to fight over the scraps of a heap it can never fully reclaim."
-msgstr ""
+msgstr "“重用修复”机制会让这些臃肿的块在旧代中永远存活下去，导致垃圾回收器只能在堆中争夺那些残渣，却永远无法完全回收该堆。"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "So... Don't Pool?"
-msgstr ""
+msgstr "那么……​ 不要拼车吗？"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "It depends. With small heaps, clearly not. In production, you don't control VT lifecycles — and with a shared pool, you can't predict which code path a VT will be used for, whether that code is warm, hot, or never compiled by C2. Too aggressive caching risks bloating the runtime heap forever."
-msgstr ""
+msgstr "这要视情况而定。对于较小的堆而言，显然不是这样。在生产环境中，你无法控制虚拟目标（VT）的生命周期——而且在共享池中，你无法预测某个虚拟目标会被用于哪个代码路径，也无法判断该代码是“温”的、还是“热”的，抑或从未被 C2 编译过。缓存策略过于激进，可能会导致运行时堆永久性膨胀。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "But in Quarkus, we're experimenting with different options to improve our Loom integration — boldly going where no one has gone before. That means running with scissors that everyone told us are too sharp. We do it for the sake of innovation, and because we now know _why_ they cut. As the saying goes, *the journey matters more than the destination.*"
-msgstr ""
+msgstr "但在 Quarkus，我们正在尝试各种方案来改进与 Loom 的集成——大胆地踏入前人未至之境。这就像拿着一把大家都说太锋利的剪刀奔跑。我们之所以这样做，既是为了创新，也是因为我们现在已经明白它 _为何会_ 割伤人。正如俗话所说， *过程比结果更重要。*"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "Takeaways"
-msgstr ""
+msgstr "要点"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "*Pooling VTs doesn't save what you think it saves.* Under the hood, the JVM can still allocate new StackChunks — the biggest cost you were trying to avoid."
-msgstr ""
+msgstr "*合并 VT 并不能节省你想象中的开销。* 在底层，JVM 仍然会分配新的 StackChunk—— *而这* 正是你原本试图避免的最大开销。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "*The \"don't pool\" advice is broadly sensible.*"
-msgstr ""
+msgstr "*“不要聚在一起”这一建议总体上是合理的。*"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "*Fixing one problem can create a worse one.* Eliminating allocation churn sounds great until you realize you're pinning oversized objects in old gen forever."
-msgstr ""
+msgstr "*解决一个问题可能会引发更严重的问题。* 消除内存分配波动听起来很不错，直到你意识到自己正在将超大对象永久地锁定在旧代中。"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "*Shared pools are unpredictable.* You can't control when VTs are born, what code they'll run, or how the JIT has compiled it. That unpredictability is the real danger."
-msgstr ""
+msgstr "*共享池具有不可预测性。* 你无法控制虚拟机（VT）何时生成、它们将运行什么代码，以及JIT编译器是如何编译这些代码的。这种不可预测性才是真正的危险所在。"
 
 #. type: Title =
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "References"
-msgstr ""
+msgstr "参考文献"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "https://openjdk.org/jeps/444[JEP 444: Virtual Threads] — Ron Pressler & Alan Bateman"
-msgstr ""
+msgstr "link:https://openjdk.org/jeps/444[JEP 444：虚拟线程] —— 罗恩·普雷斯勒与艾伦·贝特曼"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "https://cr.openjdk.org/~rpressler/loom/loom/sol1_part1.html[State of Loom] — Ron Pressler"
-msgstr ""
+msgstr "link:https://cr.openjdk.org/~rpressler/loom/loom/sol1_part1.html[《织机之境] 》——罗恩·普雷斯勒"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "https://github.com/openjdk/jdk/commit/9583e3657e43cc1c6f2101a64534564db2a9bd84[JDK-8284161: Implementation of Virtual Threads (Preview)] — the commit introducing StackChunk and continuation freeze/thaw"
-msgstr ""
+msgstr "link:https://github.com/openjdk/jdk/commit/9583e3657e43cc1c6f2101a64534564db2a9bd84[JDK-8284161：虚拟线程的实现（预览版）] ——引入 StackChunk 以及延续冻结/解冻功能的提交"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "https://github.com/openjdk/jdk/blob/master/src/hotspot/share/runtime/continuationFreezeThaw.cpp[`continuationFreezeThaw.cpp` (mainline)] — the freeze/thaw implementation"
-msgstr ""
+msgstr "link:https://github.com/openjdk/jdk/blob/master/src/hotspot/share/runtime/continuationFreezeThaw.cpp[continuationFreezeThaw.cpp（主分支）] —— freeze/thaw 的实现"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "https://github.com/openjdk/loom/tree/fibers[OpenJDK Loom `fibers` branch] — the Loom experiment playground"
-msgstr ""
+msgstr "link:https://github.com/openjdk/loom/tree/fibers[OpenJDK Loom纤维分支] ——Loom 实验平台"
 
 #. type: Plain text
+#. mt: deepl
 #: _posts/2026-07-23-to-cache-or-not-to-cache-virtual-threads.adoc
+#, fuzzy
 msgid "https://shipilev.net/jvm/anatomy-quarks/13-intergenerational-barriers/[JVM Anatomy Quark #13: Intergenerational Barriers] — Aleksey Shipilev's explanation of GC write barriers"
-msgstr ""
+msgstr "link:https://shipilev.net/jvm/anatomy-quarks/13-intergenerational-barriers/[JVM 解剖系列第 13 期：代间屏障] ——Aleksey Shipilev 对 GC 写屏障的解释"
