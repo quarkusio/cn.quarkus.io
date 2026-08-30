@@ -6,128 +6,169 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: roq-plugin-l10n-adoc\n"
 
+#, fuzzy
 msgid "What does \"fair\" even mean?"
-msgstr ""
+msgstr "“公平”到底是什么意思？"
 
+#, fuzzy
 msgid "_\"The first principle is that you must not fool yourself — and you are the easiest person to fool.\"_ (https://calteches.library.caltech.edu/51/2/CargoCult.htm[Richard Feynman, 1974])"
-msgstr ""
+msgstr "_“第一条原则是：你绝不能自欺——而你自己却是最容易被欺骗的人。”_ （ link:https://calteches.library.caltech.edu/51/2/CargoCult.htm[理查德·费曼，1974年] ）"
 
+#, fuzzy
 msgid "Our https://quarkus.io/blog/when-the-jit-cant-keep-up/[previous article] dug into C2 compiler starvation: Spring's ~100 platform threads on 4 cores were hogging all the CPU, leaving the JIT compiler unable to do its job. The measured throughput reflected half-baked code running at C1 tier, not the peak Spring could actually achieve."
-msgstr ""
+msgstr "我们在 link:https://quarkus.io/blog/when-the-jit-cant-keep-up/[上一篇文章中] 深入探讨了C2编译器资源饥饿问题：在4核环境下，Spring的约100个平台线程独占了所有CPU资源，导致JIT编译器无法正常工作。测得的吞吐量反映的是在C1层级运行的未优化代码的表现，而非Spring实际能够达到的峰值性能。"
 
+#, fuzzy
 msgid "That raised an uncomfortable question. If our benchmark was measuring Spring mid-compilation, were we measuring peak performance... or just punishing slow warmup?"
-msgstr ""
+msgstr "这引发了一个令人不安的问题。如果我们的基准测试是在 Spring 编译中期进行的，那么我们测量的究竟是峰值性能……还是只是在惩罚缓慢的预热过程？"
 
+#, fuzzy
 msgid "If you're claiming to compare peak throughput, every runtime needs to have finished compiling before the stopwatch starts. Otherwise you're comparing one runtime's peak against another's still-warming-up numbers, and calling it a day."
-msgstr ""
+msgstr "如果你声称要比较峰值吞吐量，那么在启动秒表之前，每个运行时都必须已完成编译。否则，你就等于将一个运行时的峰值与另一个仍在预热阶段的数值进行比较，然后就草草收场了。"
 
+#, fuzzy
 msgid "Our old warmup was a single 2-minute continuous blast followed by a 30-second cooldown and a 30-second measurement. Quarkus was done compiling in 60 seconds. Spring wasn't done when measurement began."
-msgstr ""
+msgstr "我们以前的热身流程是：先进行一次2分钟的连续高强度运行，随后是30秒的冷却时间，接着进行30秒的测量。Quarkus在60秒内完成了编译。而Spring在开始测量时尚未完成编译。"
 
+#, fuzzy
 msgid "That's a framework problem: Quarkus doesn't have it despite higher throughput, because its leaner request processing leaves CPU gaps for the compiler. Or as Mytkowicz et al. put it: we were https://dl.acm.org/doi/10.1145/1508244.1508275[\"producing wrong data without doing anything obviously wrong\"]. In production, nobody pauses traffic so the JIT can catch up — continuous load is the realistic scenario. But it's still our call to make sure the benchmark gives every runtime the best chance to show its peak."
-msgstr ""
+msgstr "这是一个框架层面的问题：尽管 Quarkus 的吞吐量更高，却不存在这一问题，因为其更精简的请求处理方式为编译器留出了 CPU 空闲时间。或者用 Mytkowicz 等人的话来说：我们 link:https://dl.acm.org/doi/10.1145/1508244.1508275[“在没有明显做错任何事情的情况下，却生成了错误的数据”] 。 在生产环境中，没有人会暂停流量以等待 JIT 赶上——持续负载才是现实的情景。但我们仍需确保基准测试能让每个运行时都有最佳机会展现其峰值性能。"
 
+#, fuzzy
 msgid "The fix"
-msgstr ""
+msgstr "修复方法"
 
+#, fuzzy
 msgid "We can't just make the warmup longer. The whole point of the https://quarkus.io/blog/when-the-jit-cant-keep-up/[previous analysis] was that C2 never gets CPU during continuous load. More time under load just means more time starved."
-msgstr ""
+msgstr "我们不能仅仅把预热时间延长。 link:https://quarkus.io/blog/when-the-jit-cant-keep-up/[之前分析] 的核心结论是：在持续负载期间，C2 从未获得 CPU 资源。负载时间越长，意味着资源饥饿的时间就越长。"
 
+#, fuzzy
 msgid "The trick: **break the warmup into short bursts with cooldown gaps.** During each 15-second cooldown, the 2 C2 compiler threads get full access to the 4 available cores and can drain the compilation queue. 10 cycles of load+cooldown, 5 minutes total, then measure."
-msgstr ""
+msgstr "诀窍在于： *将预热过程拆分为多个短暂的预热阶段，并在各阶段之间穿插冷却间隔。* 在每次15秒的冷却期间，2个C2编译器线程可以完全访问4个可用核心，并清空编译队列。进行10个“加载+冷却”循环，总计5分钟，然后进行测量。"
 
+#, fuzzy
 msgid "Quarkus peaks by cycle 2. Spring ramps through 5 cycles and stabilizes. By the time measurement starts, both are fully compiled. In cloud deployments with fewer cores, the starvation would be worse — reaching peak quickly vs. slowly translates directly to provisioning cost."
-msgstr ""
+msgstr "Quarkus 在第 2 个周期达到峰值。Spring 则在 5 个周期内逐渐攀升，随后趋于稳定。在开始测量时，两者均已完成编译。在核心数较少的云部署环境中，资源饥饿现象会更加严重——峰值的达到速度快慢直接关系到资源配置成本。"
 
+#, fuzzy
 msgid "The C2 compiler thread activity confirms it. Compare this to the https://quarkus.io/blog/when-the-jit-cant-keep-up/[previous article's charts] where C2 was starved for the entire warmup:"
-msgstr ""
+msgstr "C2 编译器的线程活动情况证实了这一点。试着对比一下 link:https://quarkus.io/blog/when-the-jit-cant-keep-up/[上一篇文章中的图表——] 在那 link:https://quarkus.io/blog/when-the-jit-cant-keep-up/[张图表] 中，C2 在整个预热阶段都处于资源饥饿状态："
 
+#, fuzzy
 msgid "Both frameworks show near-zero C2 activity during the load test (rightmost region). The compiler is done."
-msgstr ""
+msgstr "在负载测试期间（最右侧区域），这两个框架的 C2 活动均接近于零。编译器已完成工作。"
 
+#, fuzzy
 msgid "What changed"
-msgstr ""
+msgstr "发生了什么变化"
 
+#, fuzzy
 msgid "Spring went from ~7,850 to ~8,500 TPS — an ~8% improvement just from letting C2 finish its job. Quarkus held steady at ~14,800. The ratio narrowed from ~1.9x to ~1.7x."
-msgstr ""
+msgstr "Spring 的 TPS 从约 7,850 提升至约 8,500——仅通过让 C2 完成其任务，就实现了约 8% 的提升。Quarkus 则保持在约 14,800 的水平。两者之间的比率从约 1.9 倍收窄至约 1.7 倍。"
 
+#, fuzzy
 msgid "**The performance gap is real, and Quarkus's lead remains definitive.** What we removed is the artificial penalty from measuring before Spring finished compiling."
-msgstr ""
+msgstr "*性能差距确实存在，而且 Quarkus 的领先优势依然明显。* 我们所消除的是在 Spring 完成编译之前进行测量所造成的人为性能损失。"
 
+#, fuzzy
 msgid "A number hides a shape"
-msgstr ""
+msgstr "一个数字背后隐藏着一个图形"
 
+#, fuzzy
 msgid "The multi-cycle warmup fixed the peak measurement. But here's something the average still can't tell you. These are the per-second TPS traces during the load test with the new warmup, across multiple iterations:"
-msgstr ""
+msgstr "经过多轮预热后，峰值测量结果得到了修正。但平均值仍无法反映以下情况：以下是在采用新预热方案的负载测试中，多次迭代过程中每秒的 TPS 曲线："
 
+#, fuzzy
 msgid "Quarkus is stable within the measurement window. spring4-virtual is stable across all three iterations, with occasional single-second dips. spring4-jvm wobbles continuously across all iterations, despite no C2 compiler activity during the load test (as we saw in the previous section). The instability is not a compilation problem."
-msgstr ""
+msgstr "Quarkus 在测量窗口内表现稳定。spring4-virtual 在所有三次迭代中均保持稳定，仅偶尔出现持续一秒的短暂波动。spring4-jvm 在所有迭代中持续波动，尽管在负载测试期间 C2 编译器并未运行（如上一节所示）。这种不稳定性并非编译问题。"
 
+#, fuzzy
 msgid "A violin plot makes the distributions visible at a glance:"
-msgstr ""
+msgstr "小提琴图能让人一目了然地看到分布情况："
 
+#, fuzzy
 msgid "In a https://quarkus.io/blog/quarkus-insights-252-performance-engineering-lessons/[Quarkus Insights session with Holly Cummins], we discussed the value of having a noiseless benchmark: if the measurement is stable enough, you don't need statistics at all. A single number tells the story. When it doesn't, https://en.wikipedia.org/wiki/Violin_plot[violin plots] show what's really happening, but they add cognitive load. The goal is to make statistics unnecessary, not to add more of them."
-msgstr ""
+msgstr "link:https://quarkus.io/blog/quarkus-insights-252-performance-engineering-lessons/[在与霍莉·卡明斯（Holly Cummins）进行的一次 Quarkus Insights 讨论中] ，我们探讨了“无噪声基准测试”的价值：如果测量结果足够稳定，就完全不需要统计分析。 一个数字就能说明一切。当一个数字无法说明问题时 link:https://en.wikipedia.org/wiki/Violin_plot[，小提琴图] 可以揭示实际情况，但它们会增加认知负荷。我们的目标是让统计分析变得不再必要，而不是增加更多的统计分析。"
 
+#, fuzzy
 msgid "Why does spring4-jvm still wobble?"
-msgstr ""
+msgstr "为什么 spring4-jvm 仍然不稳定？"
 
+#, fuzzy
 msgid "This isn't a warmup problem anymore. Compilations are done. The wobble comes from how Spring's ~100 platform threads interact with the https://en.wikipedia.org/wiki/Completely_Fair_Scheduler[CFS scheduler] on the performance lab (RHEL 9.6, kernel 5.14)."
-msgstr ""
+msgstr "这已经不再是一个热身问题了。编译工作已经完成。这种波动源于 Spring 的约 100 个平台线程在性能实验室（RHEL 9.6，内核 5.14）上与 link:https://en.wikipedia.org/wiki/Completely_Fair_Scheduler[CFS 调度器之间的] 交互方式。"
 
+#, fuzzy
 msgid "Spring Boot's default connection pool has a yield-spin pattern that creates a storm of involuntary context switches when many platform threads contend on few cores. The effect is OS-scheduler-dependent: severe on CFS, invisible on EEVDF. Quarkus uses https://agroal.github.io/[Agroal], which doesn't have this pattern."
-msgstr ""
+msgstr "Spring Boot 的默认连接池采用“yield-spin”模式，当大量平台线程争夺少数核心资源时，会引发大量非自愿的上下文切换。其影响取决于操作系统调度器：在 CFS 调度器下表现严重，而在 EEVDF 调度器下则几乎不可察觉。Quarkus 使用 link:https://agroal.github.io/[Agroal] ，后者不存在这种模式。"
 
+#, fuzzy
 msgid "**`Thread.yield()` is not what it seems.** The `sched_yield()` syscall keeps the thread in `TASK_RUNNING` state. The kernel classifies the resulting context switch as **involuntary**, not voluntary, because the thread never blocked. This means the high involuntary context switch counts for Spring are partly driven by HikariCP choosing to yield."
-msgstr ""
+msgstr "*Thread.yield()并非表面看起来那样。* `sched_yield()` 系统调用会使线程保持在 `TASK_RUNNING` 状态。由于线程从未被阻塞，内核将由此产生的上下文切换归类为 *非自愿的* ，而非自愿的。这意味着 Spring 中较高的非自愿上下文切换计数，部分是由于 HikariCP 选择了让步所致。"
 
+#, fuzzy
 msgid "With virtual threads, `Thread.yield()` is handled by the JVM's virtual thread scheduler in userspace. No syscall, no involuntary context switch storm."
-msgstr ""
+msgstr "在虚拟线程中， `Thread.yield()` 由用户空间中的 JVM 虚拟线程调度器处理。无需系统调用，也不会引发非自愿的上下文切换风暴。"
 
+#, fuzzy
 msgid "**Virtual threads stabilize Spring in our benchmark.** They collapse ~100 OS threads to a handful of carrier threads, where `Thread.yield()` is no longer the OS scheduler's responsibility. spring4-virtual reaches peak in 2 warmup cycles and delivers stable throughput. But virtual threads are not a universal fix for yield-spin: `Thread.yield()` on a virtual thread unmounts it from the carrier, but the virtual thread can be immediately re-enqueued on the same carrier, and under load all carriers can end up spinning in the yield loop. This was severe enough to cause pod restarts in production and was fixed in https://github.com/brettwooldridge/HikariCP/issues/2398[HikariCP 7.1.0]."
-msgstr ""
+msgstr "*在我们的基准测试中，虚拟线程使 Spring 运行更加稳定。* 它们将约 100 个操作系统线程合并为寥寥几个载体线程，此时 `Thread.yield()` 不再由操作系统调度器负责。spring4-virtual 在 2 个预热周期内达到峰值，并提供稳定的吞吐量。但虚拟线程并非解决 yield 空转问题的万能良方： 在虚拟线程上 `调用 Thread.yield()` 会将其从承载线程上卸载，但该虚拟线程可能会立即被重新排入同一承载线程的队列中；在高负载下，所有承载线程最终都可能陷入 yield 循环的空转状态。这一问题严重到足以导致生产环境中的 Pod 重启，已在 link:https://github.com/brettwooldridge/HikariCP/issues/2398[HikariCP 7.1.0] 中修复。"
 
+#, fuzzy
 msgid "As discussed in the https://quarkus.io/blog/when-the-jit-cant-keep-up/[previous article], machines with the https://lwn.net/Articles/925371/[EEVDF scheduler] don't exhibit the platform-thread CFS problem."
-msgstr ""
+msgstr "link:https://quarkus.io/blog/when-the-jit-cant-keep-up/[正如前一篇文章] 所述，采用 link:https://lwn.net/Articles/925371/[EEVDF 调度器的] 机器不会出现平台线程 CFS 问题。"
 
 msgid "We&#8217;ve done this before"
 msgstr ""
 
+#, fuzzy
 msgid "This isn't the first time we've faced this dilemma. In https://github.com/quarkusio/spring-quarkus-perf-comparison/issues/521[issue #521], we found that both frameworks were given 512MB heap even though **Quarkus could run with far less**. Rather than give Quarkus a memory advantage, we kept the same heap for both: a common baseline, even if it doesn't showcase Quarkus's density. Same principle: **measure what you claim to measure.**"
-msgstr ""
+msgstr "这并非我们第一次面临这种两难境地。在 link:https://github.com/quarkusio/spring-quarkus-perf-comparison/issues/521[第521期中] ，我们发现尽管 *Quarkus只需远少于512MB的堆内存即可运行* ，但两个框架却都被分配了512MB的堆内存。 与其让 Quarkus 在内存方面占据优势，我们选择为两者分配相同的堆内存：这虽无法充分展现 Quarkus 的资源利用效率，却建立了一个共同的基准。原则依然是： *要测量你声称要测量的内容。*"
 
+#, fuzzy
 msgid "Takeaways"
-msgstr ""
+msgstr "要点"
 
+#, fuzzy
 msgid "**Even after giving Spring every advantage — multi-cycle warmup, full C2 compilation, peak conditions — Quarkus delivers 1.7x the throughput.** The gap narrowed from 1.9x, but the lead remains definitive."
-msgstr ""
+msgstr "*即使在给予 Spring 所有优势的情况下——多周期预热、完整的 C2 编译、最佳运行条件——Quarkus 的吞吐量仍达到 Spring 的 1.7 倍。虽然* 差距从 1.9 倍缩小了，但 Quarkus 的领先优势依然十分明显。"
 
+#, fuzzy
 msgid "**If the compiler never finishes, you're not measuring peak.** Continuous warmup starves C2 on thread-heavy runtimes. Break it into cycles. Let the compiler breathe."
-msgstr ""
+msgstr "*如果编译器永远无法完成，那就说明你测量的不是峰值。* 在线程密集型运行时环境中，持续的预热会导致 C2 资源不足。将其拆分为多个周期，给编译器留出喘息的空间。"
 
+#, fuzzy
 msgid "**When your competitor looks slow, check your methodology before you celebrate.** We did. Spring gained ~650 TPS. We sleep fine."
-msgstr ""
+msgstr "*当你的竞争对手表现得反应迟钝时，在庆功之前先检查一下自己的方法论。* 我们就是这么做的。Spring 的 TPS 提升了约 650。我们睡得很香。"
 
+#, fuzzy
 msgid "**A throughput number is a lossy compression of reality.** Quarkus draws a flat line. Spring wobbles. Same average, very different stories. Show the trace, not just the score."
-msgstr ""
+msgstr "*吞吐量数值是对现实的一种有损压缩。* Quarkus 呈现一条平直的曲线，而 Spring 则起伏不定。虽然平均值相同，背后的故事却大相径庭。请展示运行轨迹，而不仅仅是分数。"
 
+#, fuzzy
 msgid "**Fairness isn't charity, it's credibility.** A benchmark that flatters you by handicapping the other side is a benchmark nobody should trust."
-msgstr ""
+msgstr "*公平不是施舍，而是公信力。* 一种通过给对方设限来让你看起来更出色的衡量标准，是任何人都不应信任的标准。"
 
+#, fuzzy
 msgid "Tools and data"
-msgstr ""
+msgstr "工具与数据"
 
+#, fuzzy
 msgid "Previous article: https://quarkus.io/blog/when-the-jit-cant-keep-up/[Harder, Better, Faster, Stronger... Earlier!]"
-msgstr ""
+msgstr "上一篇文章： link:https://quarkus.io/blog/when-the-jit-cant-keep-up/[更难、更好、更快、更强…… 更早！]"
 
+#, fuzzy
 msgid "Multi-cycle warmup: https://github.com/quarkusio/spring-quarkus-perf-comparison/pull/681[PR #681] / https://github.com/quarkusio/spring-quarkus-perf-comparison/issues/633[issue #633]"
-msgstr ""
+msgstr "多周期热身： link:https://github.com/quarkusio/spring-quarkus-perf-comparison/pull/681[PR #681] / link:https://github.com/quarkusio/spring-quarkus-perf-comparison/issues/633[期号 #633]"
 
+#, fuzzy
 msgid "Fairness precedent: https://github.com/quarkusio/spring-quarkus-perf-comparison/issues/521[issue #521] (heap sizing)"
-msgstr ""
+msgstr "公平性先例： link:https://github.com/quarkusio/spring-quarkus-perf-comparison/issues/521[问题 #521] （堆大小）"
 
+#, fuzzy
 msgid "HikariCP virtual-thread yield-spin: https://github.com/brettwooldridge/HikariCP/issues/2398[HikariCP #2398] (fixed in 7.1.0)"
-msgstr ""
+msgstr "HikariCP 虚拟线程让步-自旋： link:https://github.com/brettwooldridge/HikariCP/issues/2398[HikariCP #2398] （已在 7.1.0 版本中修复）"
 
+#, fuzzy
 msgid "Performance engineering discussion: https://quarkus.io/blog/quarkus-insights-252-performance-engineering-lessons/[Quarkus Insights #252]"
-msgstr ""
+msgstr "性能工程讨论： link:https://quarkus.io/blog/quarkus-insights-252-performance-engineering-lessons/[Quarkus Insights 第252期]"

@@ -9,245 +9,331 @@ msgstr ""
 msgid "What&#8217;s New"
 msgstr ""
 
+#, fuzzy
 msgid "I am happy to announce the release of https://github.com/a2aproject/a2a-java/releases/tag/v1.2.0.Final[A2A Java SDK 1.2.0.Final]. This release hardens the authorization model, adds stream lifecycle management, and fixes several protocol compliance issues."
-msgstr ""
+msgstr "我很高兴地宣布 link:https://github.com/a2aproject/a2a-java/releases/tag/v1.2.0.Final[，A2A Java SDK 1.2.0.Final] 现已发布。此版本强化了授权模型，新增了流生命周期管理功能，并修复了若干协议合规性问题。"
 
+#, fuzzy
 msgid "The A2A Java SDK is the official Java implementation of the https://a2a-protocol.org/v1.0.0/specification/[A2A Protocol], with https://quarkus.io[Quarkus] as its reference runtime. The SDK's CDI-based programming model -- used throughout the examples below -- integrates naturally with Quarkus, and the https://github.com/a2aproject/a2a-java/tree/main/examples[examples] in the repository are all Quarkus applications."
-msgstr ""
+msgstr "A2A Java SDK 是 link:https://a2a-protocol.org/v1.0.0/specification/[A2A 协议的] 官方 Java 实现，其参考运行时为 link:https://quarkus.io[Quarkus] 。该 SDK 基于 CDI 的编程模型（下文中的所有示例均采用该模型）与 Quarkus 自然集成，且代码库中的 link:https://github.com/a2aproject/a2a-java/tree/main/examples[示例] 均为 Quarkus 应用程序。"
 
+#, fuzzy
 msgid "Authorization Hardening"
-msgstr ""
+msgstr "授权强化"
 
+#, fuzzy
 msgid "The 1.1.0 release introduced the `TaskAuthorizationProvider` SPI for per-user task authorization. This release closes gaps in that model and makes the authorization API easier to use from non-CDI environments."
-msgstr ""
+msgstr "1.1.0 版本引入了用于按用户进行任务授权的 `TaskAuthorizationProvider` SPI。此版本弥补了该模型中的不足，并使非 CDI 环境中的授权 API 更易于使用。"
 
+#, fuzzy
 msgid "Read authorization on referenced tasks"
-msgstr ""
+msgstr "被引用的任务的读取权限"
 
+#, fuzzy
 msgid "Previously, when a request referenced existing tasks via `referenceTaskIds`, the SDK populated those tasks in the `RequestContext` without checking read authorization. An unauthorized caller could probe for task existence via `sendStreamingMessage` or `subscribeToTask`. This release enforces read authorization on all referenced task lookups (https://github.com/a2aproject/a2a-java/pull/1005[#1005])."
-msgstr ""
+msgstr "此前，当请求通过 `referenceTaskIds` 引用现有任务时，SDK 会在 `RequestContext` 中填充这些任务，而不会检查读取授权。未经授权的调用者可以通过 `sendStreamingMessage` 或 `subscribeToTask` 来探查任务是否存在。本次发布对所有引用的任务查询强制实施读取授权（ link:https://github.com/a2aproject/a2a-java/pull/1005[#1005] ）。"
 
+#, fuzzy
 msgid "The fix touches all transports (JSON-RPC, gRPC, REST) and decorators (OpenTelemetry, authorization). `InMemoryTaskStore` now applies fail-closed authorization -- when authorization is configured but no call context is available, access is denied -- matching the existing `JpaDatabaseTaskStore` behavior."
-msgstr ""
+msgstr "该修复涉及所有传输协议（JSON-RPC、gRPC、REST）和装饰器（OpenTelemetry、授权）。 `InMemoryTaskStore` 现采用“失败即关闭”的授权机制——当已配置授权但无可用调用上下文时，将拒绝访问——这与现有的 `JpaDatabaseTaskStore` 的行为一致。"
 
+#, fuzzy
 msgid "This is a **breaking change** -- see <<auth-migration>> below."
-msgstr ""
+msgstr "这是一项 *破坏性* 变更 *——请参阅* 下方的 <<auth-migration>> 。"
 
+#, fuzzy
 msgid "Referenced task population now enabled by default"
-msgstr ""
+msgstr "引用任务集合现已默认启用"
 
+#, fuzzy
 msgid "Previously, when using `DefaultRequestHandler` via CDI, referenced task IDs in messages were not resolved from the `TaskStore`. This has been fixed -- referenced tasks are now populated by default and made available via `RequestContext.getRelatedTasks()`."
-msgstr ""
+msgstr "此前，通过 CDI 使用 `DefaultRequestHandler` 时，消息中引用的任务 ID 无法从 `TaskStore` 中解析出来。该问题现已修复——引用的任务现在会默认加载 `，` 并可通过 `RequestContext.getRelatedTasks()` 获取。"
 
+#, fuzzy
 msgid "If you need to restore the previous behavior, set the following property:"
-msgstr ""
+msgstr "如果需要恢复以前的行为，请设置以下属性："
 
+#, fuzzy
 msgid "Fail-closed read-access helper"
-msgstr ""
+msgstr "故障时保持关闭状态的读取访问助手"
 
+#, fuzzy
 msgid "A new static helper `TaskAuthorizationProvider.checkReadAccess()` centralizes the fail-closed logic for read checks:"
-msgstr ""
+msgstr "一个新的静态辅助方法 `TaskAuthorizationProvider.checkReadAccess()` 将读取检查的“失败即关闭”逻辑集中管理起来："
 
+#, fuzzy
 msgid "This is the same logic used internally by `InMemoryTaskStore` and `JpaDatabaseTaskStore`, now available for custom `TaskStore` implementations."
-msgstr ""
+msgstr "这是 `InMemoryTaskStore` 和 `JpaDatabaseTaskStore` 在内部使用的同一套逻辑，现在也可用于自定义的 `TaskStore` 实现。"
 
+#, fuzzy
 msgid "Programmatic auth wiring"
-msgstr ""
+msgstr "程序化授权连接"
 
+#, fuzzy
 msgid "The `AuthorizationRequestHandlerDecorator` constructor is now `public` (https://github.com/a2aproject/a2a-java/pull/966[#966]), enabling programmatic wiring in non-CDI runtimes like Spring Framework:"
-msgstr ""
+msgstr "`AuthorizationRequestHandlerDecorator` 的构造函数现已设为 `public` （ link:https://github.com/a2aproject/a2a-java/pull/966[#966] ），从而支持在 Spring Framework 等非 CDI 运行时环境中进行程序化配置："
 
+#, fuzzy
 msgid "`AuthenticatedUser` now supports arbitrary attributes via a `Map<String, Object>` -- useful for carrying claims, roles, or other identity data from your authentication layer:"
-msgstr ""
+msgstr "`AuthenticatedUser` 现支持通过 `Map<String, Object>` 传递任意属性——这对于从身份验证层携带声明、角色或其他身份数据非常有用："
 
+#, fuzzy
 msgid "Security reporting"
-msgstr ""
+msgstr "安全报告"
 
+#, fuzzy
 msgid "We would like to thank the community members who responsibly reported security issues. If you discover a security vulnerability, please follow the process described in our https://github.com/a2aproject/a2a-java/blob/main/SECURITY.md[SECURITY.md] -- your reports help us keep the SDK safe for everyone."
-msgstr ""
+msgstr "我们谨向那些负责任地报告安全问题的社区成员表示感谢。如果您发现了安全漏洞，请按照我们 link:https://github.com/a2aproject/a2a-java/blob/main/SECURITY.md[SECURITY.md] 中描述的流程进行报告——您的报告有助于我们确保 SDK 对所有人来说都是安全的。"
 
+#, fuzzy
 msgid "Task Stream Lifecycle Hook"
-msgstr ""
+msgstr "任务流生命周期钩子"
 
+#, fuzzy
 msgid "The new `TaskStreamLifecycleHook` SPI (https://github.com/a2aproject/a2a-java/issues/990[#990]) lets you observe and control task stream lifecycle events. You can react when clients subscribe/unsubscribe to a task's event stream and when events are processed -- giving you the ability to close all active streams for a task on demand."
-msgstr ""
+msgstr "新的 `TaskStreamLifecycleHook` SPI（ link:https://github.com/a2aproject/a2a-java/issues/990[#990] ）允许您监视和控制任务流的生命周期事件。当客户端订阅或取消订阅某个任务的事件流时，以及当事件被处理时，您都可以做出响应——这使您能够按需关闭该任务的所有活动流。"
 
+#, fuzzy
 msgid "This is useful for patterns like closing streams after a timeout, enforcing maximum subscriber limits, or cleaning up resources when all clients disconnect."
-msgstr ""
+msgstr "这对于以下场景非常有用：例如在超时后关闭流、强制执行最大订阅者限制，或者在所有客户端断开连接时清理资源。"
 
+#, fuzzy
 msgid "To use it, implement the interface and register it as a CDI bean:"
-msgstr ""
+msgstr "要使用它，请实现该接口并将其注册为 CDI Bean："
 
+#, fuzzy
 msgid "The hook is wired through `InMemoryQueueManager`, `MainEventBusProcessor`, and `ReplicatedQueueManager`, so it works across all deployment modes. A https://github.com/a2aproject/a2a-java/tree/main/examples/stream-lifecycle[stream-lifecycle example] with integration tests across all three transports is included."
-msgstr ""
+msgstr "该钩子通过 `InMemoryQueueManager` 、 `MainEventBusProcessor` 和 `ReplicatedQueueManager` 进行连接，因此可在所有部署模式下正常工作。本文还提供了一个 link:https://github.com/a2aproject/a2a-java/tree/main/examples/stream-lifecycle[流生命周期示例] ，其中包含针对这三种传输方式的集成测试。"
 
+#, fuzzy
 msgid "Hardened Spec Immutability"
-msgstr ""
+msgstr "强化规范不可变性"
 
+#, fuzzy
 msgid "All remaining spec records now enforce deep immutability (https://github.com/a2aproject/a2a-java/pull/968[#968]). Collections in spec types like `SecurityRequirement`, `TaskArtifactUpdateEvent`, `TaskStatusUpdateEvent`, and `TextPart` are defensively copied, ensuring callers cannot mutate shared state."
-msgstr ""
+msgstr "所有剩余的规范记录现在都强制执行深度不可变性（ link:https://github.com/a2aproject/a2a-java/pull/968[#968] ）。 `SecurityRequirement` 、 `TaskArtifactUpdateEvent` 、 `TaskStatusUpdateEvent` 和 `TextPart` 等规范类型中的集合会进行防御性复制，以确保调用方无法修改共享状态。"
 
+#, fuzzy
 msgid "Multi-Version Documentation"
-msgstr ""
+msgstr "多版本文档"
 
+#, fuzzy
 msgid "The https://a2aproject.github.io/a2a-java/[project website] now supports versioned documentation (https://github.com/a2aproject/a2a-java/pull/1000[#1000]) with a version dropdown, per-version sidebar menus, and a version-scoped search filter. Each release produces a frozen documentation snapshot, while the `dev.next` version tracks the latest changes."
-msgstr ""
+msgstr "link:https://a2aproject.github.io/a2a-java/[该项目网站] 现已支持版本化文档（ link:https://github.com/a2aproject/a2a-java/pull/1000[#1000] ），包含版本下拉菜单、按版本划分的侧边栏菜单以及基于版本范围的搜索过滤器。每次发布都会生成一个冻结的文档快照，而 `dev.next` 版本则会跟踪最新的更改。"
 
+#, fuzzy
 msgid "Aggregated Javadoc"
-msgstr ""
+msgstr "汇总版 Javadoc"
 
+#, fuzzy
 msgid "A new `site-javadoc` Maven profile (https://github.com/a2aproject/a2a-java/pull/988[#988]) generates unified cross-module Javadoc where `@see` and `@link` references across modules resolve as navigable HTML links."
-msgstr ""
+msgstr "一个新的 `site-javadoc` Maven 配置文件（ link:https://github.com/a2aproject/a2a-java/pull/988[#988] ）可生成统一的跨模块 Javadoc，其中跨模块的 `@see` 和 `@link` 引用会被解析为可导航的 HTML 链接。"
 
+#, fuzzy
 msgid "Bug Fixes"
-msgstr ""
+msgstr "错误修复"
 
+#, fuzzy
 msgid "**Reconcile blocking result with TaskStore** -- when an `AgentExecutor` returned a result synchronously, the task state could diverge from what was persisted. The reconciliation timeout is now configurable (https://github.com/a2aproject/a2a-java/pull/991[#991])"
-msgstr ""
+msgstr "*将阻塞结果与 TaskStore 进行同步——当* `AgentExecutor` 同步返回结果时，任务状态可能会与已持久化的状态出现偏差。现在可以配置同步超时时间（ link:https://github.com/a2aproject/a2a-java/pull/991[#991] ）"
 
+#, fuzzy
 msgid "**Avoid wrapping tasks in list responses** -- `ListTasksResult` was incorrectly double-wrapping `Task` objects in JSON-RPC serialization (https://github.com/a2aproject/a2a-java/pull/998[#998])"
-msgstr ""
+msgstr "*避免在列表响应中对任务进行包裹*  — 在 JSON-RPC 序列化过程中， `ListTasksResult` 错误地对 `Task` 对象进行了双重包裹（ link:https://github.com/a2aproject/a2a-java/pull/998[#998] ）"
 
+#, fuzzy
 msgid "**Apply historyLength to streaming responses** -- `historyLength` from `MessageSendConfiguration` was silently ignored for `SendStreamingMessage` calls (https://github.com/a2aproject/a2a-java/pull/983[#983])"
-msgstr ""
+msgstr "*将 historyLength 应用于流式响应* ——在 `SendStreamingMessage` 调用中，来自 `MessageSendConfiguration 的` `historyLength` 会被静默忽略（ link:https://github.com/a2aproject/a2a-java/pull/983[#983] ）"
 
+#, fuzzy
 msgid "**Correct task/contextId in emitted Messages** -- `AgentEmitter` now populates the correct `taskId` and `contextId` on emitted messages (https://github.com/a2aproject/a2a-java/pull/976[#976])"
-msgstr ""
+msgstr "*在发出的消息中修正任务 ID/上下文 ID* — `AgentEmitter` 现已在发出的消息中填充正确的 `任务 ID` `和上下文 ID` （ link:https://github.com/a2aproject/a2a-java/pull/976[#976] ）"
 
+#, fuzzy
 msgid "**Deprecate isFinal overrides in AgentEmitter** -- interrupted state methods now use the spec-defined `isFinal` value instead of allowing callers to override it (https://github.com/a2aproject/a2a-java/pull/989[#989])"
-msgstr ""
+msgstr "*在 AgentEmitter 中弃用 isFinal 的重写——中断* 状态方法现在使用规范中定义的 `isFinal` 值，而非允许调用方对其进行重写（ link:https://github.com/a2aproject/a2a-java/pull/989[#989] ）"
 
+#, fuzzy
 msgid "**Vert.x HTTP client race condition** -- fixed a race in non-SSE error response handling where small error bodies could be fully received before the pipe attached (https://github.com/a2aproject/a2a-java/pull/1005[#1005])"
-msgstr ""
+msgstr "*Vert.x HTTP 客户端竞争条件——修复了* 非 SSE 错误响应处理中的一个竞争条件，该问题会导致在管道连接之前，较小的错误正文内容就被完全接收（ link:https://github.com/a2aproject/a2a-java/pull/1005[#1005] ）"
 
+#, fuzzy
 msgid "Migration from 1.1.0.Final"
-msgstr ""
+msgstr "从 1.1.0.Final 版本迁移"
 
+#, fuzzy
 msgid "Update your BOM version:"
-msgstr ""
+msgstr "更新您的物料清单（BOM）版本："
 
+#, fuzzy
 msgid "This release has three breaking changes:"
-msgstr ""
+msgstr "此版本包含三项破坏性变更："
 
+#, fuzzy
 msgid "1. Read authorization on referenced task lookup"
 msgstr ""
+"\n"
+" 在查找引用任务时的读取授权\n"
 
+#, fuzzy
 msgid "The `RequestHandler.validateRequestedTask()` method has been renamed to `authorizeTaskAccess()` with additional parameters:"
-msgstr ""
+msgstr "`RequestHandler.validateRequestedTask()` 方法已重命名为 `authorizeTaskAccess()` ，并增加了以下参数："
 
+#, fuzzy
 msgid "`DefaultRequestHandler.create()` has been replaced by a builder:"
-msgstr ""
+msgstr "`DefaultRequestHandler.create()` 已被构建器取代："
 
+#, fuzzy
 msgid "`SimpleRequestContextBuilder` now requires a third parameter:"
-msgstr ""
+msgstr "`SimpleRequestContextBuilder` 现在需要一个第三个参数："
 
+#, fuzzy
 msgid "2. Split packages resolved"
 msgstr ""
+"\n"
+" 已解决拆分包裹问题\n"
 
+#, fuzzy
 msgid "Several packages were renamed so that no Java package spans multiple Maven modules. This affects your imports:"
-msgstr ""
+msgstr "为确保没有 Java 包同时属于多个 Maven 模块，已对若干包进行了重命名。这会影响您的导入语句："
 
+#, fuzzy
 msgid "Module"
-msgstr ""
+msgstr "模块"
 
+#, fuzzy
 msgid "Old Package"
-msgstr ""
+msgstr "旧版软件包"
 
+#, fuzzy
 msgid "New Package"
-msgstr ""
+msgstr "新套餐"
 
+#, fuzzy
 msgid "`spec`"
-msgstr ""
+msgstr "`spec`"
 
+#, fuzzy
 msgid "`org.a2aproject.sdk.util`"
-msgstr ""
+msgstr "`org.a2aproject.sdk.util`"
 
+#, fuzzy
 msgid "`org.a2aproject.sdk.spec.util`"
-msgstr ""
+msgstr "`org.a2aproject.sdk.spec.util`"
 
+#, fuzzy
 msgid "`extras/opentelemetry`"
-msgstr ""
+msgstr "`extras/opentelemetry`"
 
+#, fuzzy
 msgid "`org.a2aproject.sdk.extras.opentelemetry`"
-msgstr ""
+msgstr "`org.a2aproject.sdk.extras.opentelemetry`"
 
+#, fuzzy
 msgid "`org.a2aproject.sdk.extras.opentelemetry.server`"
-msgstr ""
+msgstr "`org.a2aproject.sdk.extras.opentelemetry.server`"
 
+#, fuzzy
 msgid "`extras/http-client-android`"
-msgstr ""
+msgstr "`extras/http-client-android`"
 
+#, fuzzy
 msgid "`org.a2aproject.sdk.client.http`"
-msgstr ""
+msgstr "`org.a2aproject.sdk.client.http`"
 
+#, fuzzy
 msgid "`org.a2aproject.sdk.client.http.android`"
-msgstr ""
+msgstr "`org.a2aproject.sdk.client.http.android`"
 
+#, fuzzy
 msgid "`extras/http-client-vertx`"
-msgstr ""
+msgstr "`extras/http-client-vertx`"
 
+#, fuzzy
 msgid "`org.a2aproject.sdk.client.http.vertx`"
-msgstr ""
+msgstr "`org.a2aproject.sdk.client.http.vertx`"
 
+#, fuzzy
 msgid "The most common change: utility classes like `CollectionCopies`, `ErrorDetail`, `PageToken`, and `Utils` move from `org.a2aproject.sdk.util` to `org.a2aproject.sdk.spec.util`."
-msgstr ""
+msgstr "最常见的变更： `CollectionCopies` 、 `ErrorDetail` 、 `PageToken` 和 `Utils` 等实用类从 `org.a2aproject.sdk.util` 移至 `org.a2aproject.sdk.spec.util` 。"
 
+#, fuzzy
 msgid "SPI service files were updated, so `ServiceLoader`-based discovery continues to work automatically."
-msgstr ""
+msgstr "SPI 服务文件已更新，因此 `基于 ServiceLoader 的` 发现功能仍可自动运行。"
 
+#, fuzzy
 msgid "3. TaskState.UNRECOGNIZED renamed"
 msgstr ""
+"\n"
+" TaskState.UNRECOGNIZED 已更名\n"
 
+#, fuzzy
 msgid "`TaskState.UNRECOGNIZED` has been renamed to `TaskState.TASK_STATE_UNSPECIFIED` to match the A2A specification. Its `isFinal` property also changed from `true` to `false`:"
-msgstr ""
+msgstr "`TaskState.UNRECOGNIZED` 已更名为 `TaskState.TASK_STATE_UNSPECIFIED` ，以符合 A2A 规范。其 `isFinal` 属性也从 `true` 更改为 `false` ："
 
+#, fuzzy
 msgid "If your code relied on `UNRECOGNIZED` being terminal, review your logic -- event queues will no longer auto-close and clients will not stop polling when a task is in this state."
-msgstr ""
+msgstr "如果您的代码依赖于 `UNRECOGNIZED` 状态为终结状态，请检查您的逻辑——当任务处于该状态时，事件队列将不再自动关闭，且客户端也不会停止轮询。"
 
 msgid "Contributors"
 msgstr "贡献者"
 
+#, fuzzy
 msgid "Thank you to the contributors of this release!"
-msgstr ""
+msgstr "感谢本次发布的贡献者们！"
 
+#, fuzzy
 msgid "https://github.com/ehsavoie[@ehsavoie], https://github.com/kabir[@kabir], https://github.com/Sh1bari[@Sh1bari], https://github.com/JakubWorek[@JakubWorek], https://github.com/014-code[@014-code], https://github.com/jstar0[@jstar0]"
-msgstr ""
+msgstr "link:https://github.com/ehsavoie[@ehsavoie] 、 link:https://github.com/kabir[@kabir] 、 link:https://github.com/Sh1bari[@Sh1bari] 、 link:https://github.com/JakubWorek[@JakubWorek] 、 link:https://github.com/014-code[@014-code] 、 link:https://github.com/jstar0[@jstar0]"
 
+#, fuzzy
 msgid "Resources"
-msgstr ""
+msgstr "资源"
 
+#, fuzzy
 msgid "https://github.com/a2aproject/a2a-java/releases/tag/v1.2.0.Final[Release Notes on GitHub]"
-msgstr ""
+msgstr "link:https://github.com/a2aproject/a2a-java/releases/tag/v1.2.0.Final[GitHub 上的发布说明]"
 
+#, fuzzy
 msgid "https://central.sonatype.com/artifact/org.a2aproject.sdk/a2a-java-sdk-parent/1.2.0.Final[Maven Central]"
-msgstr ""
+msgstr "link:https://central.sonatype.com/artifact/org.a2aproject.sdk/a2a-java-sdk-parent/1.2.0.Final[Maven Central]"
 
+#, fuzzy
 msgid "https://javadoc.io/doc/org.a2aproject.sdk/[JavaDoc]"
-msgstr ""
+msgstr "link:https://javadoc.io/doc/org.a2aproject.sdk/[JavaDoc]"
 
+#, fuzzy
 msgid "https://a2a-protocol.org/v1.0.0/specification/[A2A Specification]"
-msgstr ""
+msgstr "link:https://a2a-protocol.org/v1.0.0/specification/[A2A 规格]"
 
+#, fuzzy
 msgid "https://a2aproject.github.io/a2a-java/[Project Website]"
-msgstr ""
+msgstr "link:https://a2aproject.github.io/a2a-java/[项目网站]"
 
+#, fuzzy
 msgid "https://github.com/a2aproject/a2a-java/tree/main/examples[Examples]"
-msgstr ""
+msgstr "link:https://github.com/a2aproject/a2a-java/tree/main/examples[实例]"
 
+#, fuzzy
 msgid "Come Join Us"
-msgstr ""
+msgstr "快来加入我们吧"
 
+#, fuzzy
 msgid "We value your feedback a lot so please report bugs, ask for improvements etc. Let's build something great together!"
-msgstr ""
+msgstr "我们非常重视您的反馈意见，因此请报告错误、要求改进等。让我们共创辉煌！"
 
+#, fuzzy
 msgid "If you are an A2A Java SDK user or just curious, don't be shy and join our welcoming community:"
-msgstr ""
+msgstr "如果您是 A2A Java SDK 用户或只是好奇，请不要害羞，加入我们欢迎您的社区："
 
+#, fuzzy
 msgid "provide feedback on https://github.com/a2aproject/a2a-java/issues[GitHub];"
-msgstr ""
+msgstr "在 link:https://github.com/a2aproject/a2a-java/issues[GitHub] 上提供反馈；"
 
+#, fuzzy
 msgid "craft some code and https://github.com/a2aproject/a2a-java/pulls[push a PR];"
-msgstr ""
+msgstr "编写一些代码并 link:https://github.com/a2aproject/a2a-java/pulls[推送 PR] ；"
 
+#, fuzzy
 msgid "discuss with us in the `#a2a-java` channel on https://discord.gg/jTtSkJB74Q[Discord];"
-msgstr ""
+msgstr "在 link:https://discord.gg/jTtSkJB74Q[Discord] 的 `#a2a-java` 频道与我们讨论；"

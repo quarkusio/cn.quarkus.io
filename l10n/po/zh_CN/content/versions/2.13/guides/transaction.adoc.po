@@ -32,10 +32,11 @@ msgstr "如果你不使用Hibernate ORM而直接使用事务，你可能需要�
 msgid "Starting and stopping transactions: defining your boundaries"
 msgstr "开始和停止事务：确定你的事务边界"
 
+#, fuzzy
 msgid ""
 "You can define your transaction boundaries either declaratively with `@Transactional` or programmatically with `QuarkusTransaction`. You can also use\n"
 "the JTA `UserTransaction` API directly, however this is less user-friendly than `QuarkusTransaction`."
-msgstr ""
+msgstr "您可以通过 `@Transactional` 声明式地定义事务边界，也可以通过 `QuarkusTransaction` 编程式地定义。您还可以直接使用 JTA `UserTransaction` API，但其易用性不如 `QuarkusTransaction` 。"
 
 msgid "Declarative approach"
 msgstr "声明式方法"
@@ -46,8 +47,9 @@ msgstr "定义你的事务边界的最简单的方法是在你的入口方法上
 msgid "This annotation defines your transaction boundaries and will wrap this call within a transaction."
 msgstr "这个注解定义了你的事务边界，并将把这个调用包含在一个事务中。"
 
+#, fuzzy
 msgid "A `RuntimeException` crossing the transaction boundaries will roll back the transaction."
-msgstr ""
+msgstr "跨越事务边界的 `RuntimeException` 会导致事务回滚。"
 
 msgid ""
 "`@Transactional` can be used to control transaction boundaries on any CDI bean at the method level or at the class level to ensure every method is transactional.\n"
@@ -175,16 +177,18 @@ msgstr "第二个例子展示了lambda范围内事务的使用，第一个例子
 msgid "The following semantics are supported:"
 msgstr "支持以下语义："
 
+#, fuzzy
 msgid "DISALLOW_EXISTING"
-msgstr ""
+msgstr "不允许存在"
 
 msgid ""
 "If a transaction is already associated with the current thread a `QuarkusTransactionException` will be thrown,\n"
 "otherwise a new transaction is started, and follows all the normal lifecycle rules."
 msgstr "如果一个事务已经与当前线程相关联，将抛出一个 `QuarkusTransactionException` ，否则将启动一个新的事务，并遵循所有正常的生命周期规则。"
 
+#, fuzzy
 msgid "JOIN_EXISTING"
-msgstr ""
+msgstr "连接_现有"
 
 msgid ""
 "If no transaction is active then a new transaction will be started, and committed when the method ends.\n"
@@ -196,8 +200,9 @@ msgid ""
 "`ExceptionResult#COMMIT` will result in no action being taken."
 msgstr "如果没有活动的事务，那么一个新的事务将被启动，并在方法结束时提交。如果一个异常被抛出，由 `#exceptionHandler(Function)` 注册的异常处理程序将被调用，以决定TX是否应该被提交或回滚。如果一个现有的事务处于活动状态，那么该方法将在现有事务的背景下运行。如果抛出一个异常，将调用异常处理程序，但是 `ExceptionResult#ROLLBACK` 的结果将导致TX被标记为回滚，而 `ExceptionResult#COMMIT` 的结果将导致不采取任何行动。"
 
+#, fuzzy
 msgid "REQUIRE_NEW"
-msgstr ""
+msgstr "要求_新"
 
 msgid ""
 "This is the default semantic.\n"
@@ -207,8 +212,9 @@ msgid ""
 "A new transaction is started after the existing transaction is suspended, and follows all the normal lifecycle rules."
 msgstr "这是默认的语义。如果一个现有的事务已经与当前线程相关联，那么该事务将被暂停，并在当前事务完成后恢复。一个新的事务在现有事务被暂停后开始，并遵循所有正常的生命周期规则。"
 
+#, fuzzy
 msgid "SUSPEND_EXISTING"
-msgstr ""
+msgstr "暂停现有"
 
 msgid ""
 "If no transaction is active then this semantic is basically a no-op.\n"
@@ -296,6 +302,7 @@ msgstr "不，这是一个古老的民间故事。让我们假设它基本上是
 msgid "I don't need transaction when I do read only operations, it's faster."
 msgstr "当我做只读操作时，就不需要事务，这样会更快"
 
+#, fuzzy
 msgid ""
 "Wrong. +\n"
 "First off, just disable the transaction by marking your transaction boundary with `@Transactional(NOT_SUPPORTED)` (or `NEVER` or `SUPPORTS` depending on the semantic you want). +\n"
@@ -308,6 +315,16 @@ msgid ""
 "If you read one and the other from two different transactions, then they can be inconsistent.\n"
 "It can be more dramatic if you read data related to rights and access management for example."
 msgstr ""
+"不对。\n"
+"\n"
+"\n"
+"首先，只需通过在事务边界添加 `@Transactional(NOT_SUPPORTED)` （或根据所需语义选择 `NEVER` 或 `SUPPORTS` ）来禁用事务。\n"
+"\n"
+"\n"
+"其次，认为不使用事务会更快，这又是一个误区。答案是：这取决于你的数据库以及你执行了多少条 SQL SELECT 语句。不使用事务并不意味着数据库不会建立单操作的事务上下文。\n"
+"\n"
+"\n"
+"第三，当你执行多个 SELECT 语句时，最好将它们封装在一个事务中，因为这样它们之间才能保持一致性。 假设你的数据库代表汽车仪表盘，你可以看到剩余公里数和油量表的读数。如果在一个事务中读取这些数据，它们将保持一致；如果你分别在两个不同的事务中读取其中一项，则可能出现不一致。例如，如果你读取与权限和访问管理相关的数据，这种情况可能会更加明显。"
 
 msgid "Why do you prefer JTA vs Hibernate's transaction management API"
 msgstr "为什么相对Hibernate 的事务管理 API你更推荐JTA"
@@ -320,9 +337,10 @@ msgstr "通过 `entityManager.getTransaction().begin()` 和手动管理事务会
 msgid "It's a mess because I don't know if my JPA persistence unit is using `JTA` or `Resource-level` Transaction"
 msgstr "当不知道JPA persistence unit 使用的是“JTA”还是“Resource-level”事务，这可能会造成混乱"
 
+#, fuzzy
 msgid ""
 "It's not a mess in Quarkus :)\n"
 "Resource-level was introduced to support JPA in a non managed environment.\n"
 "But Quarkus is both lean and a managed environment, so we can safely always assume we are in JTA mode.\n"
 "The end result is that the difficulties of running Hibernate ORM + CDI + a transaction manager in Java SE mode are solved by Quarkus."
-msgstr ""
+msgstr "在 Quarkus 中并不是一团糟:)引入资源级是为了在非托管环境中支持 JPA。但 Quarkus 既是精益环境，也是托管环境，因此我们可以放心地假设我们处于 JTA 模式。最终，Quarkus 解决了在 Java SE 模式下运行 Hibernate ORM + CDI + 事务管理器的难题。"
