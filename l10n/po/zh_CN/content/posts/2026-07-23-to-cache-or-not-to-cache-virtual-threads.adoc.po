@@ -152,8 +152,10 @@ msgstr "什么是 StackChunk？"
 msgid "When a virtual thread parks — blocks on I/O, waits on a lock, sleeps — the JVM needs to free up the *carrier thread* (the platform thread https://dev.java/learn/new-features/virtual-threads/[currently running] the virtual thread) so it can run other virtual threads. To do this, it needs to save the virtual thread's execution state: which methods are in progress, what their local variables are, and where to resume when the VT is unparked. This state lives on the *call stack* — the runtime data structure that tracks method calls. The JVM *\"freezes\"* this stack — copies it from the carrier thread into a *StackChunk*, a regular Java heap object. When the virtual thread is later unparked, the JVM *\"https://youtu.be/6nRS6UiN7X0[thaws]\"* it — copies the stack back from the StackChunk onto a carrier thread, and execution resumes."
 msgstr "当一个虚拟线程被“停驻”（因 I/O 阻塞、等待锁或进入睡眠状态）时，JVM 需要释放 *承载线程* （ link:https://dev.java/learn/new-features/virtual-threads/[即当前正在运行] 该虚拟线程的平台线程），以便其能够运行其他虚拟线程。 为此，它需要保存虚拟线程的执行状态：哪些方法正在执行、其局部变量的值是什么，以及在虚拟线程恢复运行时应从何处继续执行。该状态保存在 *调用栈* 中——即用于跟踪方法调用的运行时数据结构。 JVM *会“冻结”* 该栈——将其从承载线程复制到一个 *StackChunk* 中，这是一个普通的 Java 堆对象。当虚拟线程随后被解锁时，JVM *link:https://youtu.be/6nRS6UiN7X0[会“解冻] ”* 它——将栈从 StackChunk 复制回承载线程，并恢复执行。"
 
+#. mt: deepl
+#, fuzzy
 msgid "What&#8217;s inside a StackChunk?"
-msgstr ""
+msgstr "StackChunk 里面有什么？"
 
 #, fuzzy
 msgid "A StackChunk is a Java heap object with a header and a blob of raw stack memory. The blob contains an integral number of *stack frames* — copied verbatim from the carrier thread's platform stack. Each frame holds the state of one method activation:"
@@ -235,8 +237,10 @@ msgstr "放弃了 10,000 个旧代块——在下次完整垃圾回收（Full GC
 msgid "On a 1 GB heap, this churn was *severe enough to dominate GC behavior*."
 msgstr "在 1 GB 的堆内存上，这种内存波动 *非常严重，以至于主导了垃圾回收的行为* 。"
 
+#. mt: deepl
+#, fuzzy
 msgid "When Pooling Doesn&#8217;t Help, Pool More."
-msgstr ""
+msgstr "当资源池化不起作用时，就增加资源池。"
 
 #, fuzzy
 msgid "So we're pooling virtual threads but the JVM keeps throwing away and re-allocating their StackChunks. The obvious question: *can we make the JVM reuse those chunks* instead?"
@@ -410,8 +414,10 @@ msgstr "在仅启用 C1 的情况下，块容量与正常编译下池化运行�
 msgid "The reuse fix keeps those bloated chunks alive in old gen — forever — leaving the garbage collector to fight over the scraps of a heap it can never fully reclaim."
 msgstr "“重用修复”机制会让这些臃肿的块在旧代中永远存活下去，导致垃圾回收器只能在堆中争夺那些残渣，却永远无法完全回收该堆。"
 
+#. mt: deepl
+#, fuzzy
 msgid "So&#8230;&#8203; Don&#8217;t Pool?"
-msgstr ""
+msgstr "那么……​ 不要凑钱？"
 
 #, fuzzy
 msgid "It depends. With small heaps, clearly not. In production, you don't control VT lifecycles — and with a shared pool, you can't predict which code path a VT will be used for, whether that code is warm, hot, or never compiled by C2. Too aggressive caching risks bloating the runtime heap forever."
