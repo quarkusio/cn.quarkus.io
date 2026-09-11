@@ -26,11 +26,20 @@ jobs:
         uses: actions/github-script@v9
         with:
           script: |
-            const prs = context.payload.workflow_run.pull_requests;
-            if (!prs || prs.length === 0) {
-              core.setFailed('No pull request found for this workflow run');
+            const owner = context.payload.workflow_run.head_repository.owner.login;
+            const branch = context.payload.workflow_run.head_branch;
+
+            const { data: prs } = await github.rest.pulls.list({
+              ...context.repo,
+              state: 'all',
+              head: `${owner}:${branch}`
+            });
+
+            if (prs.length !== 1) {
+              core.setFailed(`Expected one pull request, found ${prs.length}`);
               return;
             }
+
             core.setOutput('pr_number', prs[0].number);
 
       - name: Read surge domain suffix
@@ -39,7 +48,7 @@ jobs:
           echo "surge_domain_suffix=$(yq '.tsuji.roq.surge-domain-suffix' config/application.yaml)" >> $GITHUB_OUTPUT
 
       - name: Download site artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: pr-preview-site
           path: docs/
