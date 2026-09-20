@@ -6,184 +6,298 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: roq-plugin-l10n-adoc\n"
 
+#. mt: deepl
+#, fuzzy
 msgid "Quarkus Insights #257: Optimizing Java Workloads on OpenShift &amp; Kubernetes"
-msgstr ""
+msgstr "Quarkus Insights 第 257 期：在 OpenShift 和 Kubernetes 上优化 Java 工作负载"
 
+#. mt: deepl
+#, fuzzy
 msgid "This summary was generated using AI, reviewed by humans - https://youtube.com/live/UQWcXTB6Cfg[watch the video] for the full story."
-msgstr ""
+msgstr "本摘要由人工智能生成，并经人工审核—— link:https://youtube.com/live/UQWcXTB6Cfg[请观看视频] 了解完整内容。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Rob Sedor, an Architect at https://www.redhat.com/[Red Hat] with a storied background in https://camel.apache.org/[Apache Camel] integration and low-latency systems, joins host Eric Deandrea for episode 257 to tackle one of the most common friction points in enterprise modernization: running https://openjdk.org/[Java] workloads on https://kubernetes.io/[Kubernetes] and https://www.redhat.com/en/technologies/cloud-computing/openshift[OpenShift]."
-msgstr ""
+msgstr "link:https://www.redhat.com/[Red Hat] 架构师 Rob Sedor 在 link:https://camel.apache.org/[Apache Camel] 集成和低延迟系统领域拥有丰富经验，他将在第 257 期节目中与主持人 Eric Deandrea 一起探讨企业现代化过程中最常见的痛点之一：在 link:https://kubernetes.io/[Kubernetes] 和 link:https://www.redhat.com/en/technologies/cloud-computing/openshift[OpenShift] 上运行 link:https://openjdk.org/[Java] 工作负载。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Instead of theoretical advice, Rob brings a suite of practical calculations, live diagnostics, and architectural insights showing how to tune JVM deployments beyond default limits, select the best garbage collector, accelerate cold starts, optimize service-to-service communication, and even eliminate https://www.python.org/[Python] sidecars for local AI inferencing."
-msgstr ""
+msgstr "罗布没有提供理论上的建议，而是带来了一系列实用的计算方法、实时诊断以及架构见解，展示了如何将 JVM 部署调优至超越默认限制的水平、选择最佳的垃圾回收器、加速冷启动、优化服务间通信，甚至消除用于本地 AI 推理的 link:https://www.python.org/[Python] 侧车。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The Container Sizing Trap: Why Legacy Java 8 Fails"
-msgstr ""
+msgstr "容器规格选择的陷阱：为什么传统的 Java 8 方案会失败"
 
+#. mt: deepl
+#, fuzzy
 msgid "Rob opened the discussion by highlighting a common pitfall for organizations moving older legacy workloads into containers. Many enterprise applications are still running on various flavors of Java 8. Unless you are on a specific backported micro-version (such as `8u191` or `8u257` or later), older JVM runtimes are completely container-unaware."
-msgstr ""
+msgstr "罗布在讨论伊始就指出了企业将旧的遗留工作负载迁移到容器时常会遇到的一个常见陷阱。 许多企业应用程序仍运行在各种版本的 Java 8 上。除非您使用的是特定的回溯移植微版本（例如 `8u191` 、 `8u257` 或更高版本），否则较旧的 JVM 运行时完全不支持容器环境。"
 
+#. mt: deepl
+#, fuzzy
 msgid "When a non-container-aware JVM starts inside a container, it does not look at the cgroup limits configured for that container. Instead, it reads `/proc/meminfo` on the underlying Linux host. If your host has 64 GB of RAM, the JVM sees 64 GB. By default, the JVM initializes with a maximum heap size (`-XX:MaxRAMPercentage`) of 25% of visible memory, which on a 64 GB host equates to a 16 GB heap limit."
-msgstr ""
+msgstr "当一个不支持容器的 JVM 在容器内启动时，它不会参考为该容器配置的 cgroup 限制，而是读取底层 Linux 主机上的 `/proc/meminfo 文件` 。如果主机拥有 64 GB 内存，JVM 就会识别出 64 GB 内存。 默认情况下，JVM 初始化时将最大堆大小（ `-XX:MaxRAMPercentage` ）设置为可见内存的 25%，在 64 GB 内存的主机上，这相当于 16 GB 的堆限制。"
 
+#. mt: deepl
+#, fuzzy
 msgid "If you deploy this legacy pod in a container limited to 512 MB of RAM, the mismatch is immediate: the JVM will happily attempt to allocate memory beyond 512 MB, resulting in the container being instantly terminated by the kernel with an `OOMKilled` status."
-msgstr ""
+msgstr "如果你将这个旧版 Pod 部署到内存限制为 512 MB 的容器中，不匹配的情况会立即显现：JVM 会理所当然地尝试分配超过 512 MB 的内存，导致容器被内核以 `OOMKilled` 状态立即终止。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Remediation: Modern JDKs and Heap Tuning"
-msgstr ""
+msgstr "解决方案：现代 JDK 与堆内存调优"
 
+#. mt: deepl
+#, fuzzy
 msgid "Upgrading to modern LTS runtimes like JDK 21 or JDK 25 resolves container awareness out of the box, but proper heap sizing remains crucial."
-msgstr ""
+msgstr "升级到 JDK 21 或 JDK 25 等现代 LTS 运行时，可开箱即用地解决容器感知问题，但正确的堆大小配置仍然至关重要。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Set MaxRAMPercentage to 75.0**: Configured via `-XX:MaxRAMPercentage=75.0`, this allocates 75% of the container memory to the heap."
-msgstr ""
+msgstr "*将 MaxRAMPercentage 设置为 75.0* ：通过 `-XX:MaxRAMPercentage=75.0` 进行配置，这将把容器内存的 75% 分配给堆。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Leave 25% Headroom**: The remaining 25% is essential headroom for native memory allocations, metaspace, JIT compiler cache, garbage collection metadata, and OS thread stacks. Over-allocating the heap to 90% or 100% of the container memory is a recipe for sporadic kernel OOM kills."
-msgstr ""
+msgstr "*预留 25% 的余量* ：剩余的 25% 是必不可少的余量，用于本机内存分配、元空间、JIT 编译器缓存、垃圾回收元数据以及操作系统线程堆栈。 将堆内存分配到容器内存的90%或100%，会导致内核因内存不足（OOM）而间歇性地终止进程。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The Heisenbug: Kubernetes HPA and GC Thrashing"
-msgstr ""
+msgstr "海森堡错误：Kubernetes 的 HPA 和 GC 抖动"
 
+#. mt: deepl
+#, fuzzy
 msgid "One of the most striking parts of Rob's presentation was the demonstration of an autoscale \"Heisenbug\" that frequently catches Kubernetes administrators off guard."
-msgstr ""
+msgstr "罗伯演讲中最引人注目的部分之一，是对一种自动缩放“海森堡 bug”的演示，这种 bug 经常让 Kubernetes 管理员猝不及防。"
 
+#. mt: deepl
+#, fuzzy
 msgid "By default, the Kubernetes Horizontal Pod Autoscaler (HPA) monitors the CPU and memory utilization of the container process. This process-driven approach creates a dangerous feedback loop when paired with heavy garbage collection pauses:"
-msgstr ""
+msgstr "默认情况下，Kubernetes 水平 Pod 自动缩放器 (HPA) 会监控容器进程的 CPU 和内存使用率。这种基于进程的方法，一旦与频繁的垃圾回收暂停相结合，就会形成一个危险的反馈循环："
 
+#. mt: deepl
+#, fuzzy
 msgid "**The GC Spike**: Under load, a garbage collector performing a \"stop-the-world\" sweep (like the default https://openjdk.org/jeps/248[G1GC]) experiences a transient CPU utilization spike."
-msgstr ""
+msgstr "*GC 峰值* ：在负载下，执行“停世界”清扫的垃圾回收器（如默认的 link:https://openjdk.org/jeps/248[G1GC] ）会出现短暂的 CPU 利用率峰值。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**The HPA Reaction**: The HPA detects this CPU spike, assumes the service is overwhelmed by client traffic, and triggers a scale-out, spawning three new pods."
-msgstr ""
+msgstr "*HPA 的反应* ：HPA 检测到 CPU 使用率骤升，判断该服务因客户端流量过载而无法应对，于是触发横向扩展，创建了三个新的 Pod。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**The Warmup Penalty**: As these new pods initialize, they experience minor garbage collections and compilation overhead (C1/C2 JIT warmup), causing their own initial CPU spikes."
-msgstr ""
+msgstr "*预热开销* ：当这些新的 Pod 进行初始化时，会经历轻微的垃圾回收和编译开销（C1/C2 JIT 预热），从而导致其自身的初始 CPU 峰值。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**The Thrashing Loop**: The HPA sees these new startup spikes, assumes *even more* capacity is needed, and scales up again. Rob has observed clusters thrashing and scaling up to 20 pods in a desperate attempt to damp down CPU spikes that were actually caused by initialization and GC overhead, only to scale back down once the cluster stabilized."
-msgstr ""
+msgstr "*“振荡循环”* ：HPA 检测到这些新的启动峰值，便认为需要 *更大的* 容量，于是再次进行扩容。Rob 观察到，集群会陷入振荡状态，并急剧扩容至多达 20 个 Pod，试图竭力抑制实际上由初始化和垃圾回收开销引起的 CPU 峰值，但一旦集群稳定下来，又会立即缩减规模。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Remediation: Requests-per-Second Scaling"
-msgstr ""
+msgstr "修复：每秒请求数的扩展"
 
+#. mt: deepl
+#, fuzzy
 msgid "To prevent autoscale thrashing, engineers should decouple Kubernetes scaling from raw CPU utilization. Rob recommends configuring https://keda.sh/[KEDA] or https://prometheus.io/[Prometheus] metrics adapters to scale pods based on HTTP requests-per-second rather than CPU, ensuring that scaling only triggers in response to actual incoming workload volume."
-msgstr ""
+msgstr "为防止自动缩放失控，工程师应将 Kubernetes 的缩放机制与原始 CPU 利用率脱钩。Rob 建议配置 link:https://keda.sh/[KEDA] 或 link:https://prometheus.io/[Prometheus] 指标适配器，根据每秒 HTTP 请求数（而非 CPU）来缩放 Pod，从而确保缩放仅在实际传入的工作负载量达到一定水平时触发。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Choosing the Right Garbage Collector"
-msgstr ""
+msgstr "选择合适的垃圾回收器"
 
+#. mt: deepl
+#, fuzzy
 msgid "While the default G1GC is suitable for the vast majority of standard enterprise applications, Rob contrasted it with alternative garbage collectors tailored for specific deployment scenarios:"
-msgstr ""
+msgstr "虽然默认的 G1GC 适用于绝大多数标准的企业级应用程序，但 Rob 将其与针对特定部署场景量身定制的其他垃圾回收器进行了对比："
 
+#. mt: deepl
+#, fuzzy
 msgid "**ZGC**: The https://openjdk.org/jeps/377[ZGC] is a concurrent, ultra-low-latency collector designed to keep pause times under 1 millisecond, even on multi-gigabyte heaps. However, because it runs concurrently alongside application threads, it demands a higher CPU throughput price."
-msgstr ""
+msgstr "*ZGC* ： link:https://openjdk.org/jeps/377[ZGC] 是一种并发、超低延迟的垃圾回收器，旨在即使在多吉字节级别的堆上，也能将暂停时间控制在 1 毫秒以内。然而，由于它与应用程序线程并行运行，因此需要付出更高的 CPU 吞吐量代价。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Shenandoah GC**: Developed by Red Hat, https://openjdk.org/jeps/189[Shenandoah GC] is an excellent middle ground, offering concurrent compaction to minimize pause times without requiring the massive heap sizes traditionally associated with ZGC. It can be enabled via `-XX:+UseShenandoahGC` with adaptive heuristics."
-msgstr ""
+msgstr "*Shenandoah GC* ：由 Red Hat 开发的 link:https://openjdk.org/jeps/189[Shenandoah GC] 是一个绝佳的折中方案，它支持并发压实以最大限度地减少暂停时间，同时无需像 ZGC 那样使用巨大的堆大小。可以通过 `-XX:+UseShenandoahGC` 参数配合自适应启发式算法来启用该垃圾回收器。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Crucial GC Settings for Containers"
-msgstr ""
+msgstr "容器中至关重要的 GC 设置"
 
+#. mt: deepl
+#, fuzzy
 msgid "When tuning GC inside containers, you must manually align the JVM's thread count with the container limits. By default, the JVM may spawn parallel GC threads based on the host's total CPU cores, rather than the container's CPU quota."
-msgstr ""
+msgstr "在容器内调优垃圾回收（GC）时，必须手动将 JVM 的线程数与容器的限制保持一致。默认情况下，JVM 可能会根据主机的总 CPU 核心数来创建并行 GC 线程，而不是根据容器的 CPU 配额。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Use `-XX:ParallelGCThreads` and `-XX:ConcGCThreads` to restrict GC threads to match your allocated container CPU limits. Failing to do so causes severe thread-switching overhead and CPU thrashing."
-msgstr ""
+msgstr "使用 `-XX:ParallelGCThreads` 和 `-XX:ConcGCThreads` 来限制垃圾回收线程数，使其符合您所分配容器的 CPU 限制。若未这样做，将导致严重的线程切换开销和 CPU 抖动。"
 
+#. mt: deepl
+#, fuzzy
 msgid "AppCDS vs. Project Leyden AOT Caching"
-msgstr ""
+msgstr "AppCDS 与 Project Leyden 的 AOT 缓存对比"
 
+#. mt: deepl
+#, fuzzy
 msgid "Rob shared comparative data between the startup optimizations of https://docs.oracle.com/en/java/javase/11/vm/class-data-sharing.html[AppCDS] (Application Class Data Sharing) and the upcoming https://openjdk.org/projects/leyden[Project Leyden] (AOT cache)."
-msgstr ""
+msgstr "Rob 分享了 link:https://docs.oracle.com/en/java/javase/11/vm/class-data-sharing.html[AppCDS] （应用程序类数据共享）与即将推出的 link:https://openjdk.org/projects/leyden[Project Leyden] （AOT 缓存）在启动优化方面的对比数据。"
 
+#. mt: deepl
+#, fuzzy
 msgid "For standard Spring Boot applications, AppCDS offers a substantial 30% to 35% startup improvement on non-trivial applications (especially those with 100+ classes, https://hibernate.org/[Hibernate], and heavy runtime reflection)."
-msgstr ""
+msgstr "对于标准的 Spring Boot 应用程序，AppCDS 能显著提升非简单应用程序（尤其是包含 100 多个类、使用 link:https://hibernate.org/[Hibernate] 以及大量运行时反射的应用程序）的启动速度，提升幅度达到 30% 至 35%。"
 
+#. mt: deepl
+#, fuzzy
 msgid "However, because Quarkus is already optimized at build-time—pre-booting, resolving reflection, and eliminating dynamic class-loading overhead during compilation—running AppCDS on Quarkus yields negligible differences."
-msgstr ""
+msgstr "然而，由于 Quarkus 已经在构建时进行了优化——包括预启动、解决反射问题，以及在编译过程中消除动态类加载的开销——因此在 Quarkus 上运行 AppCDS 所产生的差异可以忽略不计。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Project Leyden Training Runs"
-msgstr ""
+msgstr "“莱顿计划”训练演练"
 
+#. mt: deepl
+#, fuzzy
 msgid "Where Quarkus truly shines is with Project Leyden. Unlike other frameworks where training runs simply capture a basic startup-and-shutdown sequence, Quarkus leverages your existing integration test suite via `maven-verify` to build its AOT cache file. This ensures that the generated cache is highly optimized and incredibly compact, resulting in blazing-fast cold starts that make scale-to-zero serverless highly practical."
-msgstr ""
+msgstr "Quarkus 真正脱颖而出的地方在于 Project Leyden。与其他仅通过训练运行捕获基本启动和关闭序列的框架不同，Quarkus 利用 `maven-verify` 调用您现有的集成测试套件来构建其 AOT 缓存文件。 这确保了生成的缓存经过高度优化且极其紧凑，从而实现极快的冷启动，使“缩放至零”的无服务器架构变得切实可行。"
 
+#. mt: deepl
+#, fuzzy
 msgid "gRPC vs. REST for Internal Microservices"
-msgstr ""
+msgstr "内部微服务中 gRPC 与 REST 的对比"
 
+#. mt: deepl
+#, fuzzy
 msgid "When designing microservice architectures, Rob offers a simple rule of thumb: use REST APIs for public, external-facing boundaries, but default to https://grpc.io/[gRPC] for internal, container-to-container service communication."
-msgstr ""
+msgstr "在设计微服务架构时，Rob 提出了一条简单的经验法则：对于面向公众的外部接口，应使用 REST API；而对于内部的容器间服务通信，则默认使用 link:https://grpc.io/[gRPC] 。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Testing gRPC on your local machine (`localhost` loopback) is often misleading, as REST can occasionally outperform it due to the absence of network latency. However, on a real Kubernetes cluster network, gRPC consistently outperforms REST by 2× to 4×."
-msgstr ""
+msgstr "在本地机器（ `localhost` 回环）上测试 gRPC 往往会产生误导，因为在没有网络延迟的情况下，REST 偶尔会表现得比 gRPC 更好。然而，在真实的 Kubernetes 集群网络中，gRPC 的性能始终比 REST 高出 2 到 4 倍。"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "gRPC achieves this through:\n"
 "* **HTTP/2 Multiplexing**: Multiple requests and responses can be multiplexed over a single TCP connection, eliminating connection-negotiation bottlenecks.\n"
 "* **Binary Protobuf Serialization**: Payload sizes are dramatically smaller compared to verbose JSON.\n"
 "* **Strict Schema Versioning**: Built-in contract enforcement ensures stable, backwards-compatible API evolution."
-msgstr ""
+msgstr "gRPC 通过以下方式实现这一点：* *HTTP/2 多路复用* ：多个请求和响应可通过单个 TCP 连接进行多路复用，从而消除了连接协商带来的瓶颈。 * *二进制 Protobuf 序列化* ：与冗长的 JSON 相比，有效载荷大小大幅缩减。 * *严格的模式版本控制* ：内置的契约强制执行机制确保 API 演进的稳定性和向后兼容性。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Scaling WebSockets with Kafka"
-msgstr ""
+msgstr "利用 Kafka 实现 WebSockets 的横向扩展"
 
+#. mt: deepl
+#, fuzzy
 msgid "For real-time browser communication, Rob warned against naive https://html.spec.whatwg.org/multipage/web-sockets.html[WebSocket] pinning, which attaches connections to a specific pod and prevents horizontal scaling. Instead, he recommends backing WebSockets with https://kafka.apache.org/[Apache Kafka] to handle horizontal message distribution, and using binary Protobuf payloads over WebSockets to dramatically improve web performance."
-msgstr ""
+msgstr "对于实时浏览器通信，Rob 警告不要采用简单的 link:https://html.spec.whatwg.org/multipage/web-sockets.html[WebSocket] 固定连接机制，因为这种机制会将连接绑定到特定的 Pod 上，从而阻碍水平扩展。相反，他建议利用 link:https://kafka.apache.org/[Apache Kafka] 作为 WebSocket 的后端来处理消息的水平分发，并通过 WebSocket 传输二进制 Protobuf 有效载荷，从而大幅提升 Web 性能。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Project Panama: Native C++ and Local AI Inferencing"
-msgstr ""
+msgstr "“巴拿马”项目：原生 C++ 和本地 AI 推理"
 
+#. mt: deepl
+#, fuzzy
 msgid "Historically, integrating Java with high-performance native code required the notoriously complex and error-prone https://docs.oracle.com/javase/8/docs/technotes/guides/jni/[JNI] (Java Native Interface), which suffers from high execution overhead and is difficult to compile."
-msgstr ""
+msgstr "从历史上看，要将 Java 与高性能的本机代码集成，必须使用以复杂且容易出错而闻名的 link:https://docs.oracle.com/javase/8/docs/technotes/guides/jni/[JNI] （Java 本机接口），该接口不仅执行开销大，而且难以编译。"
 
+#. mt: deepl
+#, fuzzy
 msgid "With https://openjdk.org/projects/panama[Project Panama] (the Foreign Function & Memory API), Java developers can now directly link and execute native https://isocpp.org/[C++] or https://www.rust-lang.org/[Rust] library functions with native-like speed and zero JNI boilerplate."
-msgstr ""
+msgstr "借助 link:https://openjdk.org/projects/panama[“巴拿马项目”] （即“外部函数与内存 API”），Java 开发者现在可以直接调用并执行原生 link:https://isocpp.org/[C++] 或 link:https://www.rust-lang.org/[Rust] 库函数，既能达到接近原生的运行速度，又无需编写任何 JNI 冗余代码。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Rob demonstrated the power of Panama by integrating it with https://onnx.ai/[ONNX Runtime] and https://github.com/langchain4j/langchain4j[LangChain4j]. Instead of spinning up a separate, resource-intensive Python sidecar container to serve an AI model, Rob ran a local C++ model (`all-miniLM-L6-v2`) in-process."
-msgstr ""
+msgstr "Rob 通过将 Panama 与 link:https://onnx.ai/[ONNX Runtime] 和 link:https://github.com/langchain4j/langchain4j[LangChain4j] 集成，展示了 Panama 的强大功能。他没有为了运行 AI 模型而启动一个单独的、占用大量资源的 Python 旁车容器，而是直接在进程内运行了一个本地 C++ 模型（ `all-miniLM-L6-v2` ）。"
 
+#. mt: deepl
+#, fuzzy
 msgid "This Panama-based architecture allows LangChain4j to invoke local AI model inferences directly inside the Java process, bypassing JNI and network serialization overhead, delivering a lightweight, ultra-low-latency local AI pipeline."
-msgstr ""
+msgstr "这种基于Panama的架构使LangChain4j能够直接在Java进程内部调用本地AI模型的推理，从而绕过JNI和网络序列化的开销，提供了一个轻量级、超低延迟的本地AI管道。"
 
 #, fuzzy
 msgid "Key Takeaways"
 msgstr "要点总结"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Avoid the Legacy Trap**: Non-container-aware JVMs (legacy Java 8) read host RAM instead of cgroup limits, triggering immediate kernel `OOMKilled` crashes inside restricted containers."
-msgstr ""
+msgstr "*避免“遗留系统陷阱”* ：不支持容器的 JVM（旧版 Java 8）会读取主机内存而非 cgroup 限制，从而在受限容器内立即触发内核 `OOMKilled` 崩溃。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Optimize Memory Limits**: Configure `-XX:MaxRAMPercentage=75.0` to allocate 75% of your container RAM to the heap, keeping 25% free for metaspace, thread stacks, and JIT compilation."
-msgstr ""
+msgstr "*优化内存限制* ：配置 `-XX:MaxRAMPercentage=75.0` ，将容器内存的 75% 分配给堆，保留 25% 用于元空间、线程栈和 JIT 编译。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Decouple HPA from CPU**: Stop-the-world GC pauses and pod warmup spikes can trigger an autoscale feedback loop. Configure KEDA to scale pods based on HTTP requests-per-second instead."
-msgstr ""
+msgstr "*将 HPA 与 CPU 解耦* ：全系统暂停的垃圾回收暂停和 Pod 预热峰值可能会触发自动缩放的反馈循环。请配置 KEDA，使其根据每秒 HTTP 请求数来缩放 Pod。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Constrain GC Threads**: Limit GC thread allocations with `-XX:ParallelGCThreads` and `-XX:ConcGCThreads` to match your container's CPU quota, avoiding severe host context-switching."
-msgstr ""
+msgstr "*限制垃圾回收线程* ：使用 `-XX:ParallelGCThreads` 和 `-XX:ConcGCThreads` 限制垃圾回收线程的分配数量，使其与容器的 CPU 配额相匹配，从而避免主机发生严重的上下文切换。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Shenandoah GC for Middle Ground**: Shenandoah GC offers a highly concurrent compaction model, keeping pause times low on standard container shapes without ZGC’s resource requirements."
-msgstr ""
+msgstr "*Shenandoah GC 用于 Middle Ground* ：Shenandoah GC 提供了一种高度并行的压缩模型，在处理标准容器形状时能保持较低的暂停时间，且无需 ZGC 的资源需求。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**AppCDS is Framework-Dependent**: AppCDS yields a 30%+ startup boost for Spring Boot but has almost no effect on Quarkus, which is already fully optimized at build-time."
-msgstr ""
+msgstr "*AppCDS 受框架影响* ：AppCDS 可使 Spring Boot 的启动速度提升 30% 以上，但对 Quarkus 几乎没有影响，因为 Quarkus 在构建时已经过全面优化。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Leverage Project Leyden**: Quarkus reuses integration test suites to produce highly compact, optimized Project Leyden AOT cache files, enabling scale-to-zero serverless."
-msgstr ""
+msgstr "*利用 Project Leyden* ：Quarkus 重用集成测试套件，生成高度紧凑且经过优化的 Project Leyden AOT 缓存文件，从而实现可缩减至零的无服务器架构。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**gRPC for Internal Traffic**: gRPC outperforms REST by 2× to 4× on real cluster networks due to HTTP/2 multiplexing and smaller binary Protobuf payloads."
-msgstr ""
+msgstr "*gRPC 在内部流量中的应用* ：得益于 HTTP/2 多路复用和更小的二进制 Protobuf 有效载荷，gRPC 在真实的集群网络中比 REST 的性能高出 2 到 4 倍。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Horizontal WebSockets**: Avoid naively pinning WebSockets to single hosts. Scale them horizontally by backing them with Apache Kafka."
-msgstr ""
+msgstr "*水平 WebSockets* ：避免将 WebSockets 简单地绑定到单个主机上。通过借助 Apache Kafka 作为后端，实现其水平扩展。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Ditch JNI and Sidecars**: Use Project Panama to link native C++ ONNX runtimes directly inside the Java process, enabling fast, local AI inference without Python overhead."
-msgstr ""
+msgstr "*摒弃 JNI 和 Sidecars* ：使用 Project Panama 将原生 C++ ONNX 运行时直接链接到 Java 进程内部，从而实现快速、本地化的 AI 推理，且无需 Python 带来的开销。"
 
 msgid "Conclusion"
 msgstr "解决方案"
 
+#. mt: deepl
+#, fuzzy
 msgid "Rob Sedor’s presentation demystifies the black box of running Java inside containerized environments. By combining modern JVM configuration, smart GC alignment, and cutting-edge OpenJDK APIs like Project Leyden and Project Panama, developers can run highly optimized, cost-efficient, and low-latency microservices on OpenShift and Kubernetes. As Rob emphasizes: don't guess—measure on your cluster, run a pilot, and let the real-world metrics guide your architecture decisions."
-msgstr ""
+msgstr "Rob Sedor 的演讲揭开了在容器化环境中运行 Java 的“黑箱”之谜。 通过结合现代 JVM 配置、智能 GC 对齐以及 Project Leyden 和 Project Panama 等前沿的 OpenJDK API，开发人员可以在 OpenShift 和 Kubernetes 上运行高度优化、成本效益高且低延迟的微服务。 正如罗布所强调的：不要凭空猜测——要在您的集群上进行实际测量，开展试点，并让真实环境的指标来指导您的架构决策。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Watch the full episode on the <a href=\"https://www.youtube.com/quarkusio\">Quarkus YouTube channel</a>. You can find Rob&#8217;s demo code and presentation slides on the <a href=\"https://github.com/patterncatalyst/quarkus-optimization\">Pattern Catalyst GitHub repository</a>."
-msgstr ""
+msgstr "请在 <a href=\"https://www.youtube.com/quarkusio\">Quarkus YouTube 频道</a> 上观看完整视频。 您可以在<a href=\"https://github.com/patterncatalyst/quarkus-optimization\">Pattern Catalyst GitHub 代码库</a>中找到 Rob 的演示代码和演示文稿幻灯片。"

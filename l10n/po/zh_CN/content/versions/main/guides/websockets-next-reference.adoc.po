@@ -761,33 +761,47 @@ msgid ""
 "For this cases, the `InboundProcessingMode#CONCURRENT` should be used."
 msgstr "WebSocket 端点可以通过 `@WebSocket#inboundProcessingMode()` 和 `@WebSocketClient.inboundProcessingMode()` 分别定义用于处理特定连接中传入事件的模式。 传入事件可以是消息（文本、二进制、pong）、建立连接或关闭连接。默认情况下，事件按顺序处理，且顺序得到保证。这意味着，如果某个端点接收了事件 `A` 和 `事件 B` （按此特定顺序），则事件 `B` 的回调将在事件 `A` 的回调完成后被调用。 然而，在某些情况下，更倾向于并行处理事件，即不保证顺序，但也没有并发限制。对于此类情况，应使用 `InboundProcessingMode#CONCURRENT` 。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Limiting the number of pending messages"
-msgstr ""
+msgstr "限制待处理消息的数量"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "A peer that sends messages faster than the application can process them may cause an unbounded number of messages to be buffered in memory; this is especially relevant when `InboundProcessingMode#CONCURRENT` is used.\n"
 "To prevent this, Quarkus bounds the number of _pending_ (in-flight) messages, i.e. messages that a connection has received but has not yet fully processed, for a single connection.\n"
 "The limit is controlled by the following configuration property:"
-msgstr ""
+msgstr "如果某个对等节点的消息发送速度超过了应用程序的处理速度，可能会导致内存中缓冲的消息数量无限增加；在使用 `InboundProcessingMode#CONCURRENT` 时，这一点尤为重要。 为防止这种情况，Quarkus 对单个连接的 _待处理_ （传输中）消息数量（即连接已接收但尚未完全处理的消息）设定了上限。该限制由以下配置属性控制："
 
+#. mt: deepl
+#, fuzzy
 msgid "`quarkus.websockets-next.server.max-pending-messages` for server endpoints, and"
-msgstr ""
+msgstr "服务器端点的 `quarkus.websockets-next.server.` max-pending-messages，以及"
 
+#. mt: deepl
+#, fuzzy
 msgid "`quarkus.websockets-next.client.max-pending-messages` for client endpoints."
-msgstr ""
+msgstr "客户端端点的 `quarkus.websockets-next.client.max-pending-messages` 。"
 
+#. mt: deepl
+#, fuzzy
 msgid "When the limit is reached, the underlying WebSocket read stream is paused and no more messages are received until the pending messages are processed."
-msgstr ""
+msgstr "当达到限制时，底层的 WebSocket 读取流将被暂停，并且在处理完待处理的消息之前，将不再接收任何消息。"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "The default value is `256`.\n"
 "Set the property to `0` or a negative value to disable this back-pressure completely, in which case there is no limit on the number of in-flight messages."
-msgstr ""
+msgstr "默认值为 `256` 。将该属性设置为 `0` 或负数可完全禁用此背压机制，此时对待处理消息的数量不再设限。"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "Pausing the read stream also pauses the delivery of ping/pong control frames for the affected connection.\n"
 "Under sustained saturation, i.e. when the number of pending messages stays at the limit, automatic pong replies and `@OnPingMessage`/`@OnPongMessage` callbacks may be delayed."
-msgstr ""
+msgstr "暂停读取流也会暂停受影响连接的 ping/pong 控制帧的发送。在持续饱和状态下，即当待处理消息的数量保持在上限时，自动 pong 响应以及 `@OnPingMessage/@OnPongMessage` 回调可能会出现延迟。"
 
 #, fuzzy
 msgid "Server API"
@@ -1143,29 +1157,41 @@ msgstr "实现 `HttpUpgradeCheck` 接口的 CDI Bean 可以是 `@ApplicationScop
 msgid "Reject the HTTP upgrade. Initial HTTP handshake ends with the 400 Bad Request response status code."
 msgstr "拒绝 HTTP 升级请求。初始 HTTP 握手以 400 Bad Request 响应状态码结束。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Limiting the number of connections"
-msgstr ""
+msgstr "限制连接数"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "There is no built-in configuration property to cap the number of open connections.\n"
 "However, a stateful `HttpUpgradeCheck` can reject the HTTP upgrade once a limit is reached.\n"
 "The <<list-open-connections,`OpenConnections`>> bean provides a live snapshot of the open connections and can be consulted to count the connections of a specific endpoint."
-msgstr ""
+msgstr "没有内置的配置属性可用于限制打开的连接数。不过，一旦达到限制，带状态的 `HttpUpgradeCheck` 可以拒绝 HTTP 升级请求。 xref:list-open-connections[OpenConnections] Bean 提供了打开连接的实时快照，可通过它统计特定端点的连接数。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Only apply this check to the `foo-endpoint-id` endpoint; the `perform` method is not invoked for HTTP upgrades of other endpoints."
-msgstr ""
+msgstr "仅对 `foo-endpoint-id` 端点应用此检查；对于其他端点的 HTTP 升级，不会调用 `perform` 方法。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The endpoint id defaults to the simple name of the endpoint class but can be set with `@WebSocket#endpointId()`."
-msgstr ""
+msgstr "端点 ID 默认采用端点类的简单名称，但可以通过 `@WebSocket#endpointId()` 进行设置。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Reject the HTTP upgrade with the 503 Service Unavailable response status code once the limit is reached."
-msgstr ""
+msgstr "一旦达到限制，请使用 503 服务不可用响应状态码拒绝该 HTTP 升级请求。"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "The check runs _before_ the HTTP upgrade completes, and a connection only appears in `OpenConnections` after it has been established.\n"
 "Therefore, the snapshot returned by `OpenConnections` may not account for connections that are being established concurrently, and the limit is not strictly enforced under high concurrency.\n"
 "If you need a strict cap, maintain your own counter (e.g. an `AtomicInteger` incremented in the check and decremented in an `@OnClose` callback)."
-msgstr ""
+msgstr "该检查 _在_ HTTP 升级完成 _之前_ 执行，而连接只有在建立之后才会出现在 `OpenConnections` 中。 因此， `OpenConnections` 返回的快照可能无法涵盖正在并发建立的连接，且在高并发情况下，该限制并不会被严格执行。若需严格限制，请自行维护计数器（例如，在检查中递增、在 `@OnClose` 回调中递减的 `AtomicInteger` ）。"
 
 #, fuzzy
 msgid "TLS"
@@ -1438,8 +1464,10 @@ msgstr "启用 Micrometer 扩展后，Quarkus 可以收集有关消息、错误�
 msgid "Configuration reference"
 msgstr "配置参考"
 
+#. mt: deepl
+#, fuzzy
 msgid "icon:lock[title=Fixed at build time] Configuration property fixed at build time - All other configuration properties are overridable at runtime +++<input type=\"search\" id=\"config-search-1\" placeholder=\"FILTER CONFIGURATION\" disabled>+++"
-msgstr ""
+msgstr "[lock]构建时固定的配置属性——所有其他配置属性均可在运行时覆盖"
 
 #, fuzzy
 msgid "[.header-title]##Configuration property##"
@@ -1691,6 +1719,8 @@ msgstr "帧的最大大小（以字节为单位）。默认值为 `io.vertx.core
 msgid "Environment variable: env_var_with_copy_button:+++QUARKUS_WEBSOCKETS_NEXT_CLIENT_MAX_FRAME_SIZE+++[]"
 msgstr "环境变量：env_var_with_copy_button:QUARKUS_WEBSOCKETS_NEXT_CLIENT_MAX_FRAME_SIZE[]"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "[[quarkus-websockets-next_quarkus-websockets-next-client-max-pending-messages]] [.property-path]##link:#quarkus-websockets-next_quarkus-websockets-next-client-max-pending-messages[`+++quarkus.websockets-next.client.max-pending-messages+++`]##\n"
 "config_property_copy_button:+++quarkus.websockets-next.client.max-pending-messages+++[]\n"
@@ -1705,21 +1735,29 @@ msgid ""
 "\n"
 "Environment variable: env_var_with_copy_button:+++QUARKUS_WEBSOCKETS_NEXT_CLIENT_MAX_PENDING_MESSAGES+++[]\n"
 "--"
-msgstr ""
+msgstr " link:#quarkus-websockets-next_quarkus-websockets-next-client-max-pending-messages[quarkus.websockets-next.client.max-pending-messages]config_property_copy_button:quarkus.websockets-next.client.max-pending-messages[]"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "[[quarkus-websockets-next_quarkus-websockets-next-client-max-pending-messages]] [.property-path]##link:#quarkus-websockets-next_quarkus-websockets-next-client-max-pending-messages[`+++quarkus.websockets-next.client.max-pending-messages+++`]##\n"
 "config_property_copy_button:+++quarkus.websockets-next.client.max-pending-messages+++[]"
-msgstr ""
+msgstr " link:#quarkus-websockets-next_quarkus-websockets-next-client-max-pending-messages[quarkus.websockets-next.client.max-pending-messages]config_property_copy_button:quarkus.websockets-next.client.max-pending-messages[]"
 
+#. mt: deepl
+#, fuzzy
 msgid "The maximum number of pending (in-flight) messages processed concurrently for a single connection."
-msgstr ""
+msgstr "单个连接中可同时处理的待处理（处理中）消息的最大数量。"
 
+#. mt: deepl
+#, fuzzy
 msgid "When set to a positive value, the connection applies back-pressure so that no more than this number of messages are received but not yet fully processed, bounding the memory a connection can retain. Set to `0` or a negative value to disable back-pressure completely."
-msgstr ""
+msgstr "当设置为正值时，连接会施加反压，确保待处理的消息数量不超过该数值，从而限制连接可保留的内存大小。若设置为 `0` 或负值，则完全禁用反压。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Environment variable: env_var_with_copy_button:+++QUARKUS_WEBSOCKETS_NEXT_CLIENT_MAX_PENDING_MESSAGES+++[]"
-msgstr ""
+msgstr "环境变量：env_var_with_copy_button:QUARKUS_WEBSOCKETS_NEXT_CLIENT_MAX_PENDING_MESSAGES[]"
 
 #, fuzzy
 msgid "`+++256+++`"
@@ -2201,6 +2239,8 @@ msgstr "帧的最大大小（以字节为单位）。默认值为 `io.vertx.core
 msgid "Environment variable: env_var_with_copy_button:+++QUARKUS_WEBSOCKETS_NEXT_SERVER_MAX_FRAME_SIZE+++[]"
 msgstr "环境变量：env_var_with_copy_button:QUARKUS_WEBSOCKETS_NEXT_SERVER_MAX_FRAME_SIZE[]"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "[[quarkus-websockets-next_quarkus-websockets-next-server-max-pending-messages]] [.property-path]##link:#quarkus-websockets-next_quarkus-websockets-next-server-max-pending-messages[`+++quarkus.websockets-next.server.max-pending-messages+++`]##\n"
 "config_property_copy_button:+++quarkus.websockets-next.server.max-pending-messages+++[]\n"
@@ -2215,15 +2255,19 @@ msgid ""
 "\n"
 "Environment variable: env_var_with_copy_button:+++QUARKUS_WEBSOCKETS_NEXT_SERVER_MAX_PENDING_MESSAGES+++[]\n"
 "--"
-msgstr ""
+msgstr " link:#quarkus-websockets-next_quarkus-websockets-next-server-max-pending-messages[quarkus.websockets-next.server.max-pending-messages]config_property_copy_button:quarkus.websockets-next.server.max-pending-messages[]"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "[[quarkus-websockets-next_quarkus-websockets-next-server-max-pending-messages]] [.property-path]##link:#quarkus-websockets-next_quarkus-websockets-next-server-max-pending-messages[`+++quarkus.websockets-next.server.max-pending-messages+++`]##\n"
 "config_property_copy_button:+++quarkus.websockets-next.server.max-pending-messages+++[]"
-msgstr ""
+msgstr " link:#quarkus-websockets-next_quarkus-websockets-next-server-max-pending-messages[quarkus.websockets-next.server.max-pending-messages]config_property_copy_button:quarkus.websockets-next.server.max-pending-messages[]"
 
+#. mt: deepl
+#, fuzzy
 msgid "Environment variable: env_var_with_copy_button:+++QUARKUS_WEBSOCKETS_NEXT_SERVER_MAX_PENDING_MESSAGES+++[]"
-msgstr ""
+msgstr "环境变量：env_var_with_copy_button:QUARKUS_WEBSOCKETS_NEXT_SERVER_MAX_PENDING_MESSAGES[]"
 
 #. mt: deepl
 #, fuzzy
