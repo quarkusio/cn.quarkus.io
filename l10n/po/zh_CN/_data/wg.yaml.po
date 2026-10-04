@@ -12,15 +12,558 @@ msgstr ""
 #. type: Hash Value: working-groups board-url
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
+msgid "https://github.com/orgs/quarkusio/projects/74"
+msgstr "https://github.com/orgs/quarkusio/projects/74"
+
+#. type: Hash Value: working-groups discussion
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-graceful-shutdown/with/581626831"
+msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-graceful-shutdown/with/581626831"
+
+#. type: Hash Value: working-groups last-activity
+#: _data/wg.yaml:1
+#, no-wrap
+msgid "2026-10-03"
+msgstr ""
+
+#. type: Hash Value: working-groups last-update
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid ""
+"The Graceful Shutdown group focused on tracing shutdown sequences this week, implementing JFR events for that purpose.\n"
+"In addition to this, @ozangunalp has done a lot of work to standardize the graceful shutdown of reactive messaging connectors (and other components). \n"
+"(This status update was automatically generated using AI.)\n"
+msgstr ""
+"本周，“优雅关闭”小组专注于追踪关闭序列，并为此实现了 JFR 事件。\n"
+"此外，@ozangunalp 为规范化响应式消息连接器（及其他组件）的优雅关闭做了大量工作。\n"
+"（此状态更新由 AI 自动生成。）\n"
+
+#. type: Hash Value: working-groups last-update-date
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "2026-08-31"
+msgstr "2026年8月31日"
+
+#. type: Hash Value: working-groups proposal
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "https://github.com/quarkusio/quarkus/discussions/53206-"
+msgstr "https://github.com/quarkusio/quarkus/discussions/53206-"
+
+#. type: Hash Value: working-groups readme
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid ""
+"<h2>Objective</h2>\n"
+"<p>Make Quarkus shutdown truly graceful by providing two complementary capabilities: (1) a mechanism for extensions to block incoming traffic and drain in-flight work to reach a quiescent state, integrated with readiness health checks, and (2) a well-ordered, phased shutdown API that gives extension developers clear control over when and how their shutdown logic executes.</p>\n"
+"<h2>The Problem</h2>\n"
+"<h3>No Quiescence Mechanism</h3>\n"
+"<p>When a Quarkus application receives a shutdown signal, there is no standard way for extensions to transition gracefully from &quot;serving&quot; to &quot;draining&quot; to &quot;stopped.&quot; The core issue is the lack of a <strong>quiescence protocol</strong>, a coordinated mechanism where:</p>\n"
+"<ol>\n"
+"<li>The application signals it is no longer ready to accept new work (readiness probe goes unhealthy)</li>\n"
+"<li>Incoming traffic is blocked at the ingress layer (load balancer, Kubernetes, service mesh)</li>\n"
+"<li>In-flight requests, transactions, and background work are given time to complete</li>\n"
+"<li>Only once the application reaches a quiescent state does actual resource teardown begin</li>\n"
+"</ol>\n"
+"<p>Today, each extension that wants to participate in graceful shutdown must implement this pattern ad hoc. Most don't. The result is interrupted HTTP requests, half-processed messages, aborted scheduled jobs, and data loss during rolling deployments.</p>\n"
+"<p>The readiness health check (<code>/q/health/ready</code>, SmallRye Health, Kubernetes readiness probes) is the natural signal to orchestrators that an instance should stop receiving traffic, but the shutdown sequence does not integrate with it in a first-class way. Extensions cannot easily declare &quot;I am draining, mark me as not ready&quot; and have that reflected in the health check automatically.</p>\n"
+"<h3>Confusing and Under-Documented Shutdown APIs</h3>\n"
+"<p>Quarkus currently has <strong>three separate shutdown API layers</strong> with unclear boundaries:</p>\n"
+"<ul>\n"
+"<li>\n"
+"<p><strong>Primordial API</strong> (<code>ShutdownContext</code>): <code>addShutdownTask(Runnable)</code> (reverse order) and <code>addLastShutdownTask(Runnable)</code>, used via <code>ShutdownContextBuildItem</code> at build time. The <code>addLastShutdownTask()</code> name is universally disliked (at least we reached a consensus).</p>\n"
+"</li>\n"
+"<li></li>\n"
+"<li>\n"
+"<p><strong>Graceful Shutdown API</strong> (<code>ShutdownListener</code>): <code>preShutdown(ShutdownNotification)</code> and <code>shutdown(ShutdownNotification)</code> with <code>done()</code> callback, used via <code>ShutdownListenerBuildItem</code>. Also exposes <code>@ShutdownDelayInitiated</code> which maps to <code>preShutdown</code>.</p>\n"
+"</li>\n"
+"<li>\n"
+"<p><strong>CDI layer</strong>: <code>@Shutdown</code> (fires <code>ShutdownEvent</code> before ArC shutdown), <code>@BeforeDestroyed(ApplicationScoped.class)</code> (fired when ArC shuts down), <code>@PreDestroy</code> on beans/interceptors.</p>\n"
+"</li>\n"
+"</ul>\n"
+"<p>There is no documentation explaining when to use which API. The actual shutdown sequence is only discoverable by reading the source code:</p>\n"
+"<ol>\n"
+"<li>\n"
+"<p><strong>Graceful shutdown phase:</strong> <code>ShutdownListener#preShutdown()</code> → delay wait (if <code>quarkus.shutdown.delay-enabled=true</code>, duration = <code>quarkus.shutdown.delay</code>) → <code>ShutdownListener#shutdown()</code> → timeout wait</p>\n"
+"</li>\n"
+"<li>\n"
+"<p><strong>Shutdown tasks phase:</strong> <code>ShutdownEvent</code> fired → ArC shutdown (<code>@BeforeDestroyed(ApplicationScoped.class)</code>, <code>@PreDestroy</code>)</p>\n"
+"</li>\n"
+"<li>\n"
+"<p><strong>Last shutdown tasks phase:</strong> Tasks registered via <code>addLastShutdownTask()</code></p>\n"
+"</li>\n"
+"</ol>\n"
+"<h3>No Cross-Extension Ordering</h3>\n"
+"<p>There is no way to express that the shutdown logic from extension A should execute before or after the logic from extension B. Extensions shut down in an undefined order, which causes real issues; for example, a scheduler extension may try to complete a job that requires a datasource that has already been closed.</p>\n"
+"<h3>No Debug/Tracing Tools</h3>\n"
+"<p>There is no way to log, trace, or inspect the shutdown sequence at runtime. When shutdown hangs or misbehaves, developers have no tooling to identify which task is blocking or how tasks are ordered.</p>\n"
+"<h3>Limited Extension Coverage</h3>\n"
+"<p>Many extensions do not participate in graceful shutdown at all. For example, <code>quarkus-scheduler</code> does not drain running or scheduled jobs before shutdown, which can cause work to be interrupted.</p>\n"
+"<h2>The Proposed Solution</h2>\n"
+"<p>The work is organized around two complementary parts.</p>\n"
+"<h3>Part 1: Pre-Shutdown Phase (Traffic Draining)</h3>\n"
+"<p>Design and implement a standard protocol for extensions to participate in graceful traffic draining, allowing the application to reach a quiescent state before any ordering-sensitive teardown begins. This phase is independent of the dependency-ordered teardown in Part 2 — it runs first and is about stopping new work, not tearing down resources.</p>\n"
+"<p><strong>Traffic blocking and readiness integration:</strong></p>\n"
+"<ul>\n"
+"<li>When shutdown is initiated, the application's readiness health check (<code>/q/health/ready</code>) immediately reports <code>DOWN</code>, signaling to Kubernetes / load balancers to stop routing new traffic</li>\n"
+"<li>Extensions can register as &quot;drainable&quot; components, when shutdown begins, they stop accepting new work and drain in-flight work</li>\n"
+"<li>A configurable drain timeout governs how long the system waits for quiescence before forcing teardown</li>\n"
+"</ul>\n"
+"<p><strong>Extension participation model:</strong></p>\n"
+"<ul>\n"
+"<li>Extensions declare their draining capability and report when they have reached quiescence (no in-flight work remaining)</li>\n"
+"<li>The shutdown sequence waits for all drainable extensions to report quiescence (or for the drain timeout to expire) before proceeding to resource teardown</li>\n"
+"<li>This replaces the current ad hoc pattern where extensions individually implement <code>ShutdownListener#preShutdown()</code> with a <code>done()</code> callback</li>\n"
+"</ul>\n"
+"<p><strong>Key integrations:</strong></p>\n"
+"<ul>\n"
+"<li>HTTP server: stop accepting new connections, finish in-flight requests</li>\n"
+"<li>Quarkus Messaging: stop polling for new messages, finish processing in-flight messages</li>\n"
+"<li>Scheduler: stop scheduling new jobs, wait for running jobs to complete</li>\n"
+"<li>gRPC server: send GOAWAY, drain active RPCs</li>\n"
+"<li>WebSocket: send close frames, wait for graceful close</li>\n"
+"</ul>\n"
+"<h3>Part 2: Dependency-Ordered Shutdown (and Startup) API</h3>\n"
+"<p>The correct shutdown order is the reverse of the correct startup order. Today, Quarkus has no explicit startup ordering API (only build-time ordering via build items), and the shutdown ordering is ad hoc. This part of the work normalizes both.</p>\n"
+"<p><strong>Dependency-oriented ordering:</strong></p>\n"
+"<ul>\n"
+"<li>Design a proper <strong>startup ordering API</strong> that is dependency-oriented, so extensions can declare what they depend on</li>\n"
+"<li>Shutdown ordering is derived automatically as the <strong>reverse</strong> of the startup dependency graph — no separate shutdown ordering annotations needed</li>\n"
+"<li>This is a partial ordering (a DAG), not a linear sequence — independent extensions can shut down concurrently (see concurrent shutdown below)</li>\n"
+"<li>The ordering model should be type-based (like build items), not string-based, for consistency with Quarkus conventions</li>\n"
+"</ul>\n"
+"<p><strong>Clear API guidance:</strong></p>\n"
+"<ul>\n"
+"<li>Document which API to use for each scenario with a decision guide</li>\n"
+"<li>Provide clear examples for extension developers and application developers</li>\n"
+"<li>Clarify the relationship between the Primordial API, Graceful Shutdown API, and CDI layer</li>\n"
+"</ul>\n"
+"<p><strong>Concurrent shutdown investigation:</strong></p>\n"
+"<ul>\n"
+"<li>Coordinate with David's work on concurrent shutdown (running independent shutdown tasks in parallel)</li>\n"
+"<li>Ensure concurrent execution respects phase boundaries and ordering constraints</li>\n"
+"<li>Produce a recommendation on opt-in vs. automatic concurrency for independent tasks</li>\n"
+"</ul>\n"
+"<p><strong>Shutdown tracing and debugging:</strong></p>\n"
+"<ul>\n"
+"<li>Investigate JFR events for shutdown activities</li>\n"
+"<li>Provide a debug mode that logs all shutdown tasks, their phase, ordering, and execution duration</li>\n"
+"<li>Surface shutdown activity in Dev UI during development</li>\n"
+"</ul>\n"
+"<p><strong>API naming improvements:</strong></p>\n"
+"<ul>\n"
+"<li>Improve naming where possible (e.g., <code>addLastShutdownTask()</code>) within the Quarkus 4 breaking-change window</li>\n"
+"</ul>\n"
+"<h2>Definition of Done</h2>\n"
+"<h3>Part 1: Pre-Shutdown</h3>\n"
+"<ul>\n"
+"<li>[ ] Extensions can register as drainable components and signal completion</li>\n"
+"<li>[ ] Readiness health check automatically reports <code>DOWN</code> when shutdown is initiated</li>\n"
+"<li>[ ] The pre-shutdown phase waits for all drainable extensions to complete (or drain timeout)</li>\n"
+"<li>[ ] Graceful shutdown implemented for HTTP server, Reactive Messaging, <code>quarkus-scheduler</code>, gRPC, and WebSocket</li>\n"
+"<li>[ ] Configurable drain timeout with clear behavior when exceeded</li>\n"
+"</ul>\n"
+"<h3>Part 2: Dependency-Ordered Shutdown</h3>\n"
+"<ul>\n"
+"<li>[ ] A dependency-oriented startup/shutdown ordering API exists (type-based, not string-based)</li>\n"
+"<li>[ ] Shutdown order is automatically derived as the reverse of startup order</li>\n"
+"<li>[ ] Shutdown sequence fully documented in the Quarkus guides with a clear diagram</li>\n"
+"<li>[ ] Decision guide published: which shutdown API to use for each scenario</li>\n"
+"<li>[ ] Shutdown activities can be traced/debugged (JFR events or equivalent)</li>\n"
+"<li>[ ] Concurrent shutdown investigation completed with clear recommendation</li>\n"
+"<li>[ ] Integration tests demonstrating correct shutdown ordering under load</li>\n"
+"<li>[ ] Shutdown debug information available in Dev UI</li>\n"
+"</ul>\n"
+"<h2>Scope of Work</h2>\n"
+"<h3>In Scope</h3>\n"
+"<ul>\n"
+"<li>Pre-shutdown phase: traffic blocking, drain signaling, readiness health check integration</li>\n"
+"<li>Startup ordering API (dependency-oriented) — shutdown ordering derived as its reverse</li>\n"
+"<li>Implementing graceful drain for key extensions (HTTP, Reactive Messaging, scheduler, gRPC, WebSocket)</li>\n"
+"<li>Dependency-ordered shutdown with cross-extension ordering</li>\n"
+"<li>API clarification, documentation, and decision guide</li>\n"
+"<li>Shutdown debug/tracing tooling (JFR events investigation, debug logging)</li>\n"
+"<li>Concurrent shutdown investigation and recommendation</li>\n"
+"<li>API naming improvements where feasible in the Quarkus 4 window</li>\n"
+"</ul>\n"
+"<h3>Out of Scope</h3>\n"
+"<ul>\n"
+"<li>Merging <code>ShutdownContext</code> and <code>ShutdownListener</code> APIs</li>\n"
+"<li>Cluster-wide coordinated shutdown (multi-instance orchestration)</li>\n"
+"<li>Graceful startup (separate concern)</li>\n"
+"</ul>\n"
+"<h2>Organizing the Work</h2>\n"
+"<h3>Communication</h3>\n"
+"<ul>\n"
+"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/53206-</li>\n"
+"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-graceful-shutdown/with/581626831\">wg-graceful-shutdown</a></li>\n"
+"<li>Point of contact @mkouba, @ozangunalp</li>\n"
+"</ul>\n"
+"<h3>Timeline</h3>\n"
+"<ul>\n"
+"<li>Target: Quarkus 4 release cycle</li>\n"
+"</ul>\n"
+"<h3>Existing Issues</h3>\n"
+"<ul>\n"
+"<li><a href=\"https://github.com/quarkusio/quarkus/issues/45946\">#45946</a></li>\n"
+"<li><a href=\"https://github.com/quarkusio/quarkus/issues/31072\">#31072</a></li>\n"
+"<li><a href=\"https://github.com/quarkusio/quarkus/issues/38119\">#38119</a></li>\n"
+"<li><a href=\"https://github.com/quarkusio/quarkus/issues/41233\">#41233</a></li>\n"
+"<li><a href=\"https://github.com/quarkusio/quarkus/issues/52389\">#52389</a></li>\n"
+"<li><a href=\"https://github.com/quarkusio/quarkus/issues/51327\">#51327</a></li>\n"
+"<li><a href=\"https://github.com/quarkusio/quarkus/issues/50475\">#50475</a></li>\n"
+"<li><a href=\"https://github.com/quarkusio/quarkus/issues/44894\">#44894</a></li>\n"
+"</ul>\n"
+msgstr ""
+"<h2>目标</h2>\n"
+"<p>通过提供两项互补功能，使 Quarkus 的关闭过程真正做到优雅： (1) 一种机制，允许扩展模块阻断传入流量并处理正在进行中的任务以进入静止状态，该机制与就绪性健康检查集成；以及 (2) 一个有序、分阶段的关机 API，使扩展开发者能够清晰地控制其关机逻辑的执行时机和方式。</p>\n"
+"<h2>问题</h2>\n"
+"<h3>缺乏静止状态机制</h3>\n"
+"<p>当 Quarkus 应用程序接收到关机信号时，扩展模块缺乏一种标准方式来从“服务中”平滑过渡到“清理中”，再到“已停止”。核心问题在于缺少一种<strong>静默协议</strong>——即一种协调机制，其中：</p>\n"
+"<ol>\n"
+"<li>应用程序发出信号，表明其不再准备好接受新任务（就绪探针状态变为不健康）</li>\n"
+"<li>入站流量在入口层（负载均衡器、Kubernetes、服务网格）被阻断</li>\n"
+"<li>正在处理的请求、事务和后台任务将获得足够时间完成</li>\n"
+"<li>只有当应用程序达到静止状态后，才会开始实际的资源释放</li>\n"
+"</ol>\n"
+"<p>目前，每个希望参与优雅关机的扩展都必须临时实现这一模式，但大多数并未如此。其结果是：HTTP 请求中断、消息处理不完整、计划任务被中止，以及在滚动部署过程中发生数据丢失。</p>\n"
+"<p>就绪性健康检查（<code>/q/health/ready</code>、SmallRye Health、Kubernetes 就绪性探针）是向调度器发出“实例应停止接收流量”这一自然信号的途径，但关机序列并未与其进行一等公民式的集成。 扩展难以轻松声明“我正在进行数据排空，请将我标记为未就绪”，也无法让这一状态自动反映在健康检查中。</p>\n"
+"<h3>令人困惑且文档不足的关闭 API</h3>\n"
+"<p>Quarkus 目前拥有<strong>三个</strong>边界模糊的<strong>独立关机 API 层</strong>：</p>\n"
+"<ul>\n"
+"<li>\n"
+"<p><strong>原始 API</strong>（<code>ShutdownContext</code>）：<code>addShutdownTask(Runnable)</code>（逆序）和<code>addLastShutdownTask(Runnable)</code>，在构建时通过<code>ShutdownContextBuildItem</code>使用。<code>addLastShutdownTask()</code>这个名称普遍不受欢迎（至少我们达成了共识）。</p>\n"
+"</li>\n"
+"<li></li>\n"
+"<li>\n"
+"<p><strong>优雅关闭 API</strong>（<code>ShutdownListener</code>）：<code>preShutdown(ShutdownNotification)</code>和<code>shutdown(ShutdownNotification)</code>（带有<code>done()</code>回调），通过<code>ShutdownListenerBuildItem</code> 使用。还暴露了<code>@ShutdownDelayInitiated</code>注解，该注解映射到<code>preShutdown</code>。</p>\n"
+"</li>\n"
+"<li>\n"
+"<p><strong>CDI 层</strong>：<code>@Shutdown</code>（在 ArC 关闭前触发<code>ShutdownEvent</code>）、<code>@BeforeDestroyed(ApplicationScoped.class)</code>（在 ArC 关闭时触发）、bean/拦截器上的<code>@PreDestroy</code>。</p>\n"
+"</li>\n"
+"</ul>\n"
+"<p>没有文档说明何时使用哪种 API。实际的关闭顺序只能通过阅读源代码来了解：</p>\n"
+"<ol>\n"
+"<li>\n"
+"<p><strong>优雅关闭阶段：</strong> <code>ShutdownListener#preShutdown()</code>→ 延迟等待（如果<code>quarkus.shutdown.delay-enabled=true</code>，持续时间 =<code>quarkus.shutdown.delay</code>）→<code>ShutdownListener#shutdown()</code>→ 超时等待</p>\n"
+"</li>\n"
+"<li>\n"
+"<p><strong>关机任务阶段：</strong>触发<code>ShutdownEvent</code>→ ArC 关机（<code>@BeforeDestroyed(ApplicationScoped.class)</code> <code>，@PreDestroy</code>）</p>\n"
+"</li>\n"
+"<li>\n"
+"<p><strong>最后关机任务阶段：</strong>通过<code>addLastShutdownTask()</code>注册的任务</p>\n"
+"</li>\n"
+"</ol>\n"
+"<h3>无跨扩展顺序</h3>\n"
+"<p>无法指定扩展 A 的关闭逻辑应在扩展 B 的逻辑之前或之后执行。扩展以未定义的顺序关闭，这会引发实际问题；例如，调度器扩展可能会尝试完成一个需要数据源的任务，而该数据源已被关闭。</p>\n"
+"<h3>缺乏调试/跟踪工具</h3>\n"
+"<p>无法在运行时对关机序列进行日志记录、跟踪或检查。当关机过程挂起或出现异常时，开发人员没有工具来识别是哪项任务导致阻塞，也无法了解任务的执行顺序。</p>\n"
+"<h3>扩展覆盖范围有限</h3>\n"
+"<p>许多扩展根本不参与有序关闭。例如，<code>quarkus-scheduler</code>在关闭前不会清空正在运行或已排程的任务，这可能会导致工作流中断。</p>\n"
+"<h2>建议的解决方案</h2>\n"
+"<p>本项工作围绕两个互补的部分展开。</p>\n"
+"<h3>第一部分：关机前阶段（流量排空）</h3>\n"
+"<p>设计并实现一种标准协议，使扩展程序能够参与有序流量释放，从而允许应用程序在开始任何顺序敏感的拆除操作之前进入静止状态。该阶段独立于第 2 部分中基于依赖关系的拆除操作——它首先运行，旨在停止新任务，而非拆除资源。</p>\n"
+"<p><strong>流量阻断与就绪状态集成：</strong></p>\n"
+"<ul>\n"
+"<li>当关闭流程启动时，应用程序的就绪状态检查（<code>/q/health/ready</code>）会立即报告<code>DOWN 状态</code>，从而通知 Kubernetes 和负载均衡器停止路由新流量</li>\n"
+"<li>扩展组件可注册为“可排空”组件，当关闭开始时，它们将停止接受新任务并排空正在处理的任务</li>\n"
+"<li>可配置的排空超时时间控制着系统在强制执行清理前等待系统进入静止状态的时间长度</li>\n"
+"</ul>\n"
+"<p><strong>扩展参与模型：</strong></p>\n"
+"<ul>\n"
+"<li>扩展模块声明其清理能力，并在达到静止状态（无待处理任务）时报告</li>\n"
+"<li>关机序列会等待所有可排空扩展报告已进入静止状态（或排空超时到期），然后才继续进行资源拆除</li>\n"
+"<li>这取代了当前的临时模式——即扩展分别通过调用<code>done()</code>回调来实现<code>ShutdownListener#preShutdown()</code>方法</li>\n"
+"</ul>\n"
+"<p><strong>关键集成：</strong></p>\n"
+"<ul>\n"
+"<li>HTTP 服务器：停止接受新连接，完成正在处理的请求</li>\n"
+"<li>Quarkus 消息传递：停止轮询新消息，完成正在处理的消息</li>\n"
+"<li>调度器：停止调度新任务，等待正在运行的任务完成</li>\n"
+"<li>gRPC 服务器：发送 GOAWAY 消息，清空活动中的 RPC 连接</li>\n"
+"<li>WebSocket：发送关闭帧，等待优雅关闭</li>\n"
+"</ul>\n"
+"<h3>第 2 部分：基于依赖关系的关闭（和启动）API</h3>\n"
+"<p>正确的关闭顺序与正确的启动顺序相反。目前，Quarkus 没有明确的启动排序 API（仅通过构建项在构建时进行排序），且关闭顺序也是临时确定的。本部分工作将对这两者进行规范化处理。</p>\n"
+"<p><strong>基于依赖关系的排序：</strong></p>\n"
+"<ul>\n"
+"<li>设计一个基于依赖关系的正确<strong>启动排序 API</strong>，以便扩展模块能够声明其依赖项</li>\n"
+"<li>关闭顺序将自动推导为启动依赖关系图的<strong>逆序</strong>——无需单独的关闭顺序注解</li>\n"
+"<li>这是一种偏序关系（有向无环图，DAG），而非线性序列——独立的扩展可并发关闭（参见下文的“并发关闭”）</li>\n"
+"<li>为与 Quarkus 规范保持一致，排序模型应基于类型（如构建项），而非基于字符串</li>\n"
+"</ul>\n"
+"<p><strong>清晰的 API 指导：</strong></p>\n"
+"<ul>\n"
+"<li>通过决策指南，说明每种场景应使用哪个 API</li>\n"
+"<li>为扩展开发者和应用程序开发者提供清晰的示例</li>\n"
+"<li>澄清 Primordial API、Graceful Shutdown API 与 CDI 层之间的关系</li>\n"
+"</ul>\n"
+"<p><strong>并发关闭研究：</strong></p>\n"
+"<ul>\n"
+"<li>与 David 关于并发关闭（并行运行独立的关闭任务）的工作进行协调</li>\n"
+"<li>确保并发执行遵守阶段边界和顺序约束</li>\n"
+"<li>针对独立任务的“主动启用”与“自动并发”模式提出建议</li>\n"
+"</ul>\n"
+"<p><strong>关机跟踪与调试：</strong></p>\n"
+"<ul>\n"
+"<li>调查关机活动的JFR事件</li>\n"
+"<li>提供一种调试模式，用于记录所有关机任务、其阶段、顺序及执行时长</li>\n"
+"<li>在开发过程中通过开发界面（Dev UI）展示关机活动</li>\n"
+"</ul>\n"
+"<p><strong>API 命名改进：</strong></p>\n"
+"<ul>\n"
+"<li>在 Quarkus 4 的兼容性变更窗口内，尽可能优化命名（例如<code>addLastShutdownTask()</code>）</li>\n"
+"</ul>\n"
+"<h2>完成标准</h2>\n"
+"<h3>第 1 部分：关机前</h3>\n"
+"<ul>\n"
+"<li>[ ] 扩展可注册为可排空组件并报告完成状态</li>\n"
+"<li>[ ] 当启动关闭时，就绪状态检查会自动报告<code>DOWN</code></li>\n"
+"<li>[ ] 关机前阶段会等待所有可排空扩展完成（或排空超时）</li>\n"
+"<li>[ ] 已为 HTTP 服务器、Reactive Messaging、<code>quarkus-scheduler</code>、gRPC 和 WebSocket 实现了优雅关闭</li>\n"
+"<li>[ ] 可配置的排空超时，超时后行为明确</li>\n"
+"</ul>\n"
+"<h3>第 2 部分：基于依赖关系的关机</h3>\n"
+"<ul>\n"
+"<li>[ ] 存在基于依赖关系的启动/关闭排序 API（基于类型，而非基于字符串）</li>\n"
+"<li>[ ] 关闭顺序自动推导为启动顺序的逆序</li>\n"
+"<li>[ ] Quarkus 指南中已通过清晰的图表对关闭序列进行了全面说明</li>\n"
+"<li>[ ] 已发布决策指南：针对不同场景应使用哪种关闭 API</li>\n"
+"<li>[ ] 关闭操作可被追踪/调试（JFR 事件或等效机制）</li>\n"
+"<li>[ ] 已完成并发关机调查，并给出明确建议</li>\n"
+"<li>[ ] 集成测试验证了在负载条件下关机顺序的正确性</li>\n"
+"<li>[ ] 开发界面（Dev UI）中提供关机调试信息</li>\n"
+"</ul>\n"
+"<h2>工作范围</h2>\n"
+"<h3>工作范围</h3>\n"
+"<ul>\n"
+"<li>关机前阶段：流量阻断、信令排空、就绪状态健康检查集成</li>\n"
+"<li>启动顺序 API（基于依赖关系）——关闭顺序为其逆序</li>\n"
+"<li>为关键扩展（HTTP、响应式消息传递、调度器、gRPC、WebSocket）实现优雅的资源释放</li>\n"
+"<li>基于依赖关系的关闭，包含跨扩展的关闭顺序</li>\n"
+"<li>API 说明、文档及决策指南</li>\n"
+"<li>关机调试/追踪工具（JFR 事件调查、调试日志）</li>\n"
+"<li>并发关闭的调查与建议</li>\n"
+"<li>在 Quarkus 4 开发周期内，在可行范围内改进 API 命名</li>\n"
+"</ul>\n"
+"<h3>不在范围之内</h3>\n"
+"<ul>\n"
+"<li>合并<code>ShutdownContext</code>和<code>ShutdownListener</code>API</li>\n"
+"<li>集群范围内的协调关机（多实例编排）</li>\n"
+"<li>优雅启动（独立关注点）</li>\n"
+"</ul>\n"
+"<h2>工作组织</h2>\n"
+"<h3>通信</h3>\n"
+"<ul>\n"
+"<li>提案：https://github.com/quarkusio/quarkus/discussions/53206-</li>\n"
+"<li>讨论：<a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-graceful-shutdown/with/581626831\">wg-graceful-shutdown</a></li>\n"
+"<li>联系人 @mkouba, @ozangunalp</li>\n"
+"</ul>\n"
+"<h3>时间表</h3>\n"
+"<ul>\n"
+"<li>目标：Quarkus 4 发布周期</li>\n"
+"</ul>\n"
+"<h3>现有问题</h3>\n"
+"<ul>\n"
+"<li><a href=\"https://github.com/quarkusio/quarkus/issues/45946\">#45946</a></li>\n"
+"<li><a href=\"https://github.com/quarkusio/quarkus/issues/31072\">#31072</a></li>\n"
+"<li><a href=\"https://github.com/quarkusio/quarkus/issues/38119\">#38119</a></li>\n"
+"<li><a href=\"https://github.com/quarkusio/quarkus/issues/41233\">#41233</a></li>\n"
+"<li><a href=\"https://github.com/quarkusio/quarkus/issues/52389\">#52389</a></li>\n"
+"<li><a href=\"https://github.com/quarkusio/quarkus/issues/51327\">#51327</a></li>\n"
+"<li><a href=\"https://github.com/quarkusio/quarkus/issues/50475\">#50475</a></li>\n"
+"<li><a href=\"https://github.com/quarkusio/quarkus/issues/44894\">#44894</a></li>\n"
+"</ul>\n"
+
+#. type: Hash Value: working-groups short-description
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "Make Quarkus shutdown truly graceful by providing two complementary capabilities: (1) a mechanism for extensions to block incoming traffic and drain in-flight work to reach a quiescent state, integrated with readiness health checks, and (2) a well-ordered, phased shutdown API that gives extension de\n"
+msgstr "通过提供两项互补功能，使 Quarkus 的关闭过程真正做到优雅：(1) 一种机制，允许扩展程序阻断传入流量并处理正在进行中的工作以进入静止状态，该机制与就绪性健康检查集成；以及 (2) 一个有序、分阶段的关闭 API，该 API 允许扩展程序\n"
+
+#. type: Hash Value: working-groups status
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "on track"
+msgstr "未离题"
+
+#. type: Hash Value: working-groups title
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "Graceful Shutdown"
+msgstr "优雅关机"
+
+#. type: Hash Value: working-groups board-url
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "https://github.com/orgs/quarkusio/projects/50"
+msgstr "https://github.com/orgs/quarkusio/projects/50"
+
+#. type: Hash Value: working-groups deliverable
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "<a rel=\"nofollow\" href=\"https://quarkus.io/blog/hibernate-panache-next/\">Blog Post</a>"
+msgstr "<a rel=\"nofollow\" href=\"https://quarkus.io/blog/hibernate-panache-next/\">博客文章</a>"
+
+#. type: Hash Value: working-groups discussion
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Panache.2ENext/with/529258261"
+msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Panache.2ENext/with/529258261"
+
+#. type: Hash Value: working-groups last-update
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid ""
+"The Quarkus Data group wrapped up a couple of items this week. They ensured Panache 2 prevents opening managed and stateless sessions simultaneously, and resolved a Panache Next projection failure involving Kotlin's value class.\n"
+"(This status update was automatically generated using AI.)\n"
+msgstr ""
+"Quarkus Data 团队本周完成了几项工作。他们确保 Panache 2 不会同时打开受管会话和无状态会话，并修复了 Panache Next 中一个涉及 Kotlin 值类的投影错误。\n"
+"（此状态更新由 AI 自动生成。）\n"
+
+#. type: Hash Value: working-groups point-of-contact
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "@FroMage  (@<strong>Stephane Epardaud</strong>  on Zulip)"
+msgstr "@FroMage  （Zulip 上的<strong>@Stephane Epardaud</strong>）"
+
+#. type: Hash Value: working-groups proposal
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "https://github.com/quarkusio/quarkus/discussions/48949"
+msgstr "https://github.com/quarkusio/quarkus/discussions/48949"
+
+#. type: Hash Value: working-groups readme
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid ""
+"<h1>Objective</h1>\n"
+"<p>The main objective of this working group is to bring forth the next version of Panache.</p>\n"
+"<h1>The Problem</h1>\n"
+"<p>Panache is great for many things, but over time, we realised the following limitations:</p>\n"
+"<ul>\n"
+"<li>We have three distinct versions: Hibernate ORM, Hibernate Reactive and Mongo (blocking and reactive)</li>\n"
+"<li>It is impossible to use the same entities with Hibernate ORM and Hibernate Reactive</li>\n"
+"<li>Stateless sessions are not supported</li>\n"
+"<li>Hibernate Processor annotations, and Jakarta Data are not supported</li>\n"
+"<li>We have triplicate types such as <code>Sort</code> and <code>Order</code> between Panache, ORM and Jakarta Data</li>\n"
+"<li>We have two ways to place entity query operations : on the entity itself, or in repositories</li>\n"
+"<li>Entity query operations require type-system hacks which makes them less type-safe than we want with <code>var</code> and <code>for-each</code> and especially with reactive operations.</li>\n"
+"</ul>\n"
+"<h1>The proposed Solution</h1>\n"
+"<p>We propose a new Panache version that will solve all these issues:</p>\n"
+"<ul>\n"
+"<li>Unify all variants in a single module, supporting blocking, reactive, stateless and stateful sessions</li>\n"
+"<li>Provide an entity toplevel class for each 4 modes of operation, yet allow access to the other modes</li>\n"
+"<li>Move all entity query operations from the entity class to the repository class</li>\n"
+"<li>Provide a repository toplevel class for each 4 modes of operation, yet allow access to the other modes</li>\n"
+"<li>Provide easy access to any type of repository by placing them as nested interfaces in the entity class, via a generated accessor on the entity metamodel class</li>\n"
+"<li>Provide out of the box accessors for the 4 modes of operation repositories on the entity metamodel class</li>\n"
+"<li>Support Jakarta Data and Hibernate Processor type-safe annotations</li>\n"
+"<li>Optional: Support of Mongo via the coming ORM JDBC support</li>\n"
+"<li>Optional: provide JD repository type alternatives for the missing three modes</li>\n"
+"<li>Optional: provide a way to convert Panache 1 to Panache.Next</li>\n"
+"</ul>\n"
+"<h1>Definition of Done</h1>\n"
+"<ul>\n"
+"<li>Deliver the new Panache extension as a <code>stable</code> state (after preview/experimental versions for feedback)</li>\n"
+"<li>Tests</li>\n"
+"<li>Documentation</li>\n"
+"<li>Codestart</li>\n"
+"<li>REST Data with Panache support</li>\n"
+"<li>Renarde support</li>\n"
+"<li>Quarkus Insights</li>\n"
+"</ul>\n"
+"<h1>Scope of Work</h1>\n"
+"<p>It is currently out of scope to retrofit this with the existing Panache modules. This will be a new module with no backward compatibility (although most type-unsafe operations will continue as-is, so you will be familiar with them).</p>\n"
+"<h1>Organizing the Work</h1>\n"
+"<h2>Communication and Transparency:</h2>\n"
+"<p>This will be done via GitHub issues on the Quarkus core project.</p>\n"
+"<h2>Expected Timeline:</h2>\n"
+"<p>Most of the R&amp;D and design work has been completed over the last two years. Now remains the task of merging, documenting, testing, and tweaking it until it's complete.</p>\n"
+"<ul>\n"
+"<li>Point of contact: @FroMage  (@<strong>Stephane Epardaud</strong>  on Zulip)</li>\n"
+"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/48949</li>\n"
+"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Panache.2ENext/with/529258261\">Zulip</a></li>\n"
+"<li>Deliverable: <a href=\"https://quarkus.io/blog/hibernate-panache-next/\">Blog Post</a></li>\n"
+"</ul>\n"
+msgstr ""
+"<h1>目标</h1>\n"
+"<p>本工作组的主要目标是推出 Panache 的下一个版本。</p>\n"
+"<h1>问题</h1>\n"
+"<p>Panache 在许多方面表现出色，但随着时间的推移，我们意识到它存在以下局限性：</p>\n"
+"<ul>\n"
+"<li>我们目前有三个不同的版本：Hibernate ORM、Hibernate Reactive 以及 Mongo（阻塞式和响应式）</li>\n"
+"<li>无法在 Hibernate ORM 和 Hibernate Reactive 中使用相同的实体</li>\n"
+"<li>不支持无状态会话</li>\n"
+"<li>不支持 Hibernate Processor 注解和 Jakarta Data</li>\n"
+"<li>在 Panache、ORM 和 Jakarta Data 之间存在诸如<code>Sort</code>和<code>Order</code>之类的重复类型</li>\n"
+"<li>我们有两种方式来放置实体查询操作：在实体本身，或在存储库中</li>\n"
+"<li>实体查询操作需要借助类型系统的变通方案，这使得它们的类型安全性不如我们期望的那样高——尤其是使用<code>var</code>和<code>for-each</code>时，以及在进行响应式操作时。</li>\n"
+"</ul>\n"
+"<h1>建议的解决方案</h1>\n"
+"<p>我们提议发布一个新的 Panache 版本来解决所有这些问题：</p>\n"
+"<ul>\n"
+"<li>将所有变体统一到单个模块中，支持阻塞式、响应式、无状态和有状态会话</li>\n"
+"<li>为每种操作模式提供一个实体顶级类，同时允许访问其他模式</li>\n"
+"<li>将所有实体查询操作从实体类移至存储库类</li>\n"
+"<li>为这四种操作模式分别提供一个仓库顶级类，同时允许访问其他模式</li>\n"
+"<li>通过在实体元模型类上生成访问器，将各类存储库作为嵌套接口放置在实体类中，从而实现对任意类型存储库的便捷访问</li>\n"
+"<li>在实体元模型类上为这四种操作模式的存储库提供开箱即用的访问器</li>\n"
+"<li>支持 Jakarta Data 和 Hibernate Processor 的类型安全注解</li>\n"
+"<li>可选：通过即将推出的 ORM JDBC 支持，支持 Mongo</li>\n"
+"<li>可选：为缺失的三种模式提供 JD 存储库类型的替代方案</li>\n"
+"<li>可选：提供将 Panache 1 转换为 Panache.Next 的方法</li>\n"
+"</ul>\n"
+"<h1>完成标准</h1>\n"
+"<ul>\n"
+"<li>将新的 Panache 扩展交付为<code>稳定</code>版本（在发布预览版/实验版以收集反馈之后）</li>\n"
+"<li>测试</li>\n"
+"<li>文档</li>\n"
+"<li>Codestart</li>\n"
+"<li>支持 Panache 的 REST 数据</li>\n"
+"<li>Renarde 支持</li>\n"
+"<li>Quarkus 洞察</li>\n"
+"</ul>\n"
+"<h1>工作范围</h1>\n"
+"<p>目前，将此功能与现有的 Panache 模块进行适配不在工作范围内。这将是一个不向后兼容的新模块（尽管大多数类型不安全的操作将保持原样，因此您会感到熟悉）。</p>\n"
+"<h1>工作组织</h1>\n"
+"<h2>沟通与透明度：</h2>\n"
+"<p>相关沟通将通过 Quarkus 核心项目上的 GitHub 问题进行。</p>\n"
+"<h2>预计时间表：</h2>\n"
+"<p>过去两年中，大部分研发和设计工作已经完成。现在剩下的任务是进行代码合并、编写文档、测试以及微调，直至项目完成。</p>\n"
+"<ul>\n"
+"<li>联系人：@FroMage  （Zulip 上的<strong>@Stephane Epardaud</strong>）</li>\n"
+"<li>提案：https://github.com/quarkusio/quarkus/discussions/48949</li>\n"
+"<li>讨论：<a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Panache.2ENext/with/529258261\">Zulip</a></li>\n"
+"<li>交付成果：<a href=\"https://quarkus.io/blog/hibernate-panache-next/\">博客文章</a></li>\n"
+"</ul>\n"
+
+#. type: Hash Value: working-groups short-description
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "The primary objective of this working group is to develop the next version of Panache, now known as Quarkus Data.\n"
+msgstr "该工作组的主要目标是开发 Panache 的下一个版本，该版本现称为 Quarkus Data。\n"
+
+#. type: Hash Value: working-groups title
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "Quarkus Data"
+msgstr "Quarkus 数据"
+
+#. type: Hash Value: working-groups board-url
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
 msgid "https://github.com/orgs/quarkusio/projects/51"
 msgstr "https://github.com/orgs/quarkusio/projects/51"
 
 #. type: Hash Value: working-groups last-activity
-#. mt: deepl
 #: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "2026-09-26"
-msgstr "2026年9月26日"
+#, no-wrap
+msgid "2026-10-02"
+msgstr ""
 
 #. type: Hash Value: working-groups last-update
 #: _data/wg.yaml:1
@@ -39,12 +582,6 @@ msgstr ""
 "- 针对 Netty 4.2 和 Vert.x 5 的改进\n"
 "- 围绕观察 API 开展的初步工作\n"
 "- 以 Java 21 为基础。\n"
-
-#. type: Hash Value: working-groups last-update-date
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "2026-08-31"
-msgstr "2026年8月31日"
 
 #. type: Hash Value: working-groups readme
 #: _data/wg.yaml:1
@@ -116,12 +653,6 @@ msgstr ""
 msgid "The Quarkus 4 working group aims to coordinate and track all Quarkus 4-related development in a long-running effort.\n"
 msgstr "Quarkus 4 工作组的宗旨是，通过一项长期持续的工作，协调并跟踪所有与 Quarkus 4 相关的开发工作。\n"
 
-#. type: Hash Value: working-groups status
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "on track"
-msgstr "未离题"
-
 #. type: Hash Value: working-groups title
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
@@ -133,6 +664,12 @@ msgstr "Quarkus 4"
 #, fuzzy, no-wrap
 msgid "https://github.com/orgs/quarkusio/projects/42"
 msgstr "https://github.com/orgs/quarkusio/projects/42"
+
+#. type: Hash Value: working-groups last-activity
+#: _data/wg.yaml:1
+#, no-wrap
+msgid "2026-10-01"
+msgstr ""
 
 #. type: Hash Value: working-groups last-update
 #: _data/wg.yaml:1
@@ -299,332 +836,80 @@ msgstr "可观察性.下一页"
 #. type: Hash Value: working-groups board-url
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "https://github.com/orgs/quarkusio/projects/59"
-msgstr "https://github.com/orgs/quarkusio/projects/59"
+msgid "https://github.com/orgs/quarkusio/projects/49"
+msgstr "https://github.com/orgs/quarkusio/projects/49"
 
 #. type: Hash Value: working-groups discussion
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Java.2025.20chat"
-msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Java.2025.20chat"
+msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev"
+msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev"
 
 #. type: Hash Value: working-groups last-activity
 #: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "2026-09-25"
-msgstr "2026年9月25日"
+#, no-wrap
+msgid "2026-09-30"
+msgstr ""
 
 #. type: Hash Value: working-groups last-update
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
 msgid ""
-"Now that Quarkus supports Java 25, the few remaining issues are mostly about polishing. There are no more blockers. \n"
-"We're now tracking an effort to eliminate the FFM downcall warning in dev-mode.\n"
+"The Dev Services Lifecycle group addressed dependencies for the devservices runtime module. They resolved the problem of dev services containers not reusing across tests when profiles were set and bolstered test coverage, especially for container identity tracking. Further work is now open to improve lifecycle test coverage and specifically address container reuse/replacement with profile changes.\n"
 "(This status update was automatically generated using AI.)\n"
 msgstr ""
-"既然 Quarkus 已经支持 Java 25，目前剩下的几个问题主要涉及细节打磨。已经没有阻碍进展的重大问题了。\n"
-"我们目前正在推进一项工作，旨在消除开发模式下 FFM 的下调调用警告。\n"
-"（此状态更新由 AI 自动生成。）\n"
+"开发服务生命周期小组解决了开发服务运行时模块的依赖关系问题。他们解决了在设置配置文件时开发服务容器无法在不同测试间重复使用的问题，并提高了测试覆盖率，特别是在容器身份追踪方面。目前正在开展进一步工作，以改进生命周期测试的覆盖率，并专门解决因配置文件变更导致的容器重复使用/替换问题。\n"
+"（此状态更新由人工智能自动生成。）\n"
 
 #. type: Hash Value: working-groups point-of-contact
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "@Sanne (@<strong>Sanne</strong> on Zulip) and @gsmet (@_<strong>Guillaume Smet</strong> on Zulip)"
-msgstr "@Sanne（Zulip 上的<strong>@Sanne</strong>）和 @gsmet（Zulip 上的<strong>@_Guillaume Smet</strong>）"
+msgid "@holly-cummins (@<strong>Holly Cummins</strong>  on Zulip), @ozangunalp (@<strong>Ozan Günalp</strong> on Zulip )"
+msgstr "@holly-cummins（Zulip 上的<strong>@Holly Cummins</strong>），@ozangunalp（Zulip 上的<strong>@Ozan Günalp</strong>）"
 
 #. type: Hash Value: working-groups proposal
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "https://github.com/quarkusio/quarkus/discussions/49696"
-msgstr "https://github.com/quarkusio/quarkus/discussions/49696"
+msgid "https://github.com/quarkusio/quarkus/discussions/47683"
+msgstr "https://github.com/quarkusio/quarkus/discussions/47683"
 
 #. type: Hash Value: working-groups readme
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
 msgid ""
-"<h3>Objective</h3>\n"
-"<p>To enable Quarkus applications to run cleanly across dev/test/production modes on Java 25, with no requirement to adopt Java 25 as a baseline.</p>\n"
-"<h3>The Problem</h3>\n"
-"<p>Java 25 brings new features and platform-level changes (e.g., new JEPs, VM flags, performance tweaks) that may trigger warnings, break behavior, or degrade Quarkus experiences. Dependencies or extensions may also face compatibility challenges. A coordinated effort is needed to identify, fix, document, and optionally leverage these changes.</p>\n"
-"<h3>The Solution</h3>\n"
-"<p>The working group will:</p>\n"
+"<p>This working group was formed to address long-standing inconsistencies and pain points in the Dev Services lifecycle within Quarkus. Dev Services are essential for simplifying local development and testing by automatically provisioning runtime dependencies (e.g., databases, message brokers), but their current lifecycle behavior leads to confusion and inefficiencies. Most notably, they are started during the augmentation phase, which conflicts with their inherently runtime-oriented nature and causes issues with newer efforts such as the test classloading revamp.</p>\n"
+"<p>The primary goal of this group is to define and implement a consistent, runtime-aligned lifecycle model for Dev Services. This includes shifting their startup to a phase after augmentation but before the application begins execution, ensuring better alignment with the runtime environment. A critical focus will also be on enabling optional reuse of Dev Services across dev and test modes — including reuse between repeated test executions — to reduce startup time and improve the iterative development experience.</p>\n"
+"<p>The group's scope covers several strategic areas: formalizing when and how Dev Services are started, reused, or stopped; defining rules for discoverability and sharing between profiles or processes; and avoiding resource leaks or accidental retention. It explicitly excludes broader orchestration features (such as service dependency graphs) and unrelated feature enhancements.</p>\n"
+"<p>The working group will produce a set of deliverables to support the new model. These include one or more Architecture Decision Records (ADRs) describing the new lifecycle model, the implementation of lifecycle logic in Quarkus Core, and updates to both user-facing and contributor documentation. Additionally, enhancements to the Dev Services development model will make it easier for extension authors to adopt and follow the new lifecycle standards. A public communication effort (e.g., blog posts or demos) will also be used to showcase the improvements.</p>\n"
+"<p>The new API is described here: https://quarkus.io/blog/new-dev-services-api/</p>\n"
 "<ul>\n"
-"<li>Attempt to run representative Quarkus applications under Java 25 in dev, test, and production modes.</li>\n"
-"<li>Catalog issues, warnings, or incompatibilities in a Wiki or issue tracker.</li>\n"
-"<li>Propose and implement fixes or mitigations (or document workarounds).</li>\n"
-"<li>Optionally explore beneficial Java 25 features (e.g., Scoped Values, Flexible Constructor Bodies), without requiring their use.</li>\n"
-"<li>Identify and remediate or flag problematic Quarkus extensions.\n"
-"⠀</li>\n"
-"</ul>\n"
-"<h3>Definition of Done</h3>\n"
-"<ul>\n"
-"<li>Publish a wiki page detailing issues and resolutions.</li>\n"
-"<li>Ensure Quarkus core and its ecosystem can operate cleanly under Java 25 in all modes.</li>\n"
-"<li>Integrate any selected Java 25 features in an optional, non-breaking manner.</li>\n"
-"<li>Document or fix problematic extensions, offering guidance where needed.</li>\n"
-"<li>Communicate results via a blog post or quarkus-dev announcement.\n"
-"⠀</li>\n"
-"</ul>\n"
-"<h3>Scope of Work</h3>\n"
-"<p><strong>In scope:</strong></p>\n"
-"<ul>\n"
-"<li>Running and diagnosing Quarkus on Java 25.</li>\n"
-"<li>Fixing issues in Quarkus core repository and extensions.</li>\n"
-"<li>Exploring select Java 25 enhancements.</li>\n"
-"</ul>\n"
-"<p>⠀\n"
-"<strong>Out of scope:</strong></p>\n"
-"<ul>\n"
-"<li>Mandating Java 25 as the minimum supported runtime.</li>\n"
-"</ul>\n"
-"<p>⠀</p>\n"
-"<h3>Organizing the Work</h3>\n"
-"<ol>\n"
-"<li><strong>Communication &amp; Transparency:</strong>\n"
-"<ul>\n"
-"<li>Use GitHub discussion, project board, and issues.</li>\n"
-"<li>Coordinate via Quarkus Zulip and GitHub.</li>\n"
-"</ul>\n"
-"</li>\n"
-"<li><strong>Timeline &amp; Milestones:</strong>\n"
-"<ul>\n"
-"<li><strong>Exploration Phase:</strong> Run tests on Java 25 Candidate Release, document findings before GA (target: <em>before September 16, 2025</em>), so we can guide our users as soon as Java 25 reaches GA.</li>\n"
-"</ul>\n"
-"</li>\n"
-"</ol>\n"
-"<hr />\n"
-"<ul>\n"
-"<li>Point of contact: @Sanne (@<strong>Sanne</strong> on Zulip) and @gsmet (@_<strong>Guillaume Smet</strong> on Zulip)</li>\n"
-"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/49696</li>\n"
-"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Java.2025.20chat\">Zulip</a></li>\n"
+"<li>Point of contact: @holly-cummins (@<strong>Holly Cummins</strong>  on Zulip), @ozangunalp (@<strong>Ozan Günalp</strong> on Zulip )</li>\n"
+"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/47683</li>\n"
+"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev\">Zulip</a>)</li>\n"
 "</ul>\n"
 msgstr ""
-"<h3>目标</h3>\n"
-"<p>使 Quarkus 应用程序能够在 Java 25 上跨开发、测试和生产环境无缝运行，且无需将 Java 25 作为基线。</p>\n"
-"<h3>问题</h3>\n"
-"<p>Java 25 引入了新功能和平台级变更（例如新的 JEP、VM 标志、性能调整），这些变更可能会触发警告、导致行为异常或降低 Quarkus 的使用体验。依赖项或扩展也可能面临兼容性挑战。 需要通过协调一致的努力来识别、修复、记录这些变更，并酌情加以利用。</p>\n"
-"<h3>解决方案</h3>\n"
-"<p>工作组将：</p>\n"
+"<p>成立该工作组的目的是为了解决 Quarkus 中 Dev Services 生命周期中长期存在的不一致性和痛点。Dev Services 通过自动配置运行时依赖项（例如数据库、消息代理），对于简化本地开发和测试至关重要，但其当前的生命周期行为却导致了混淆和效率低下。 最值得注意的是，这些服务是在增强阶段启动的，这与其固有的运行时导向特性相冲突，并给测试类加载重构等新举措带来了问题。</p>\n"
+"<p>本工作组的主要目标是为开发服务定义并实现一个一致且与运行时相协调的生命周期模型。这包括将开发服务的启动时间调整到“增强”阶段之后、应用程序开始执行之前，以确保与运行时环境更好地协调。 另一个关键重点是支持在开发和测试模式下可选地复用开发服务——包括在重复的测试执行之间进行复用——以缩短启动时间并改善迭代开发体验。</p>\n"
+"<p>该工作组的范围涵盖多个战略领域：规范 Dev Services 的启动、复用和停止的时间及方式；定义配置文件或进程之间的可发现性和共享规则；以及避免资源泄漏或意外保留。它明确排除了更广泛的编排功能（如服务依赖关系图）以及无关的功能增强。</p>\n"
+"<p>该工作组将产出一系列成果以支持新模型。其中包括一份或多份描述新生命周期模型的架构决策记录（ADR）、在 Quarkus Core 中实现生命周期逻辑，以及针对用户端和贡献者文档的更新。 此外，对 Dev Services 开发模型的增强将使扩展作者更轻松地采用并遵循新的生命周期标准。还将通过公开宣传活动（例如博客文章或演示）来展示这些改进。</p>\n"
+"<p>新 API 的说明请参见：https://quarkus.io/blog/new-dev-services-api/</p>\n"
 "<ul>\n"
-"<li>尝试在 Java 25 环境下，以开发、测试和生产模式运行具有代表性的 Quarkus 应用程序。</li>\n"
-"<li>在 Wiki 或问题跟踪系统中整理问题、警告或不兼容情况。</li>\n"
-"<li>提出并实施修复方案或缓解措施（或记录临时解决方案）。</li>\n"
-"<li>可选地探索 Java 25 的有益特性（例如，作用域值、灵活的构造函数体），但不强制要求使用这些特性。</li>\n"
-"<li>识别并修复或标记存在问题的 Quarkus 扩展。\n"
-"⠀</li>\n"
-"</ul>\n"
-"<h3>完成标准</h3>\n"
-"<ul>\n"
-"<li>发布一篇详细说明问题及解决方案的维基页面。</li>\n"
-"<li>确保 Quarkus 核心及其生态系统在所有模式下均能在 Java 25 环境下稳定运行。</li>\n"
-"<li>以可选且不破坏兼容性的方式集成所选的 Java 25 特性。</li>\n"
-"<li>对存在问题的扩展进行文档记录或修复，并在必要时提供指导。</li>\n"
-"<li>通过博客文章或 quarkus-dev 公告发布结果。\n"
-"⠀</li>\n"
-"</ul>\n"
-"<h3>工作范围</h3>\n"
-"<p><strong>工作范围：</strong></p>\n"
-"<ul>\n"
-"<li>在 Java 25 上运行并诊断 Quarkus。</li>\n"
-"<li>修复 Quarkus 核心仓库及扩展中的问题。</li>\n"
-"<li>探索部分 Java 25 增强功能。</li>\n"
-"</ul>\n"
-"<p>⠀\n"
-"<strong>工作范围外：</strong></p>\n"
-"<ul>\n"
-"<li>强制要求 Java 25 作为最低支持的运行时版本。</li>\n"
-"</ul>\n"
-"<p>⠀</p>\n"
-"<h3>工作组织</h3>\n"
-"<ol>\n"
-"<li><strong>沟通与透明度：</strong>\n"
-"<ul>\n"
-"<li>使用 GitHub 讨论、项目看板和问题跟踪功能。</li>\n"
-"<li>通过 Quarkus Zulip 和 GitHub 进行协调。</li>\n"
-"</ul>\n"
-"</li>\n"
-"<li><strong>时间表与里程碑：</strong>\n"
-"<ul>\n"
-"<li><strong>探索阶段：</strong>在 Java 25 候选版本上运行测试，并在正式发布（目标：<em>2025 年 9 月 16 日之前</em>）前记录测试结果，以便在 Java 25 正式发布后立即为用户提供指导。</li>\n"
-"</ul>\n"
-"</li>\n"
-"</ol>\n"
-"<hr />\n"
-"<ul>\n"
-"<li>联系人：@Sanne（<strong>Zulip上的@Sanne</strong>）和@gsmet（<strong>Zulip上的@_Guillaume Smet</strong>）</li>\n"
-"<li>提案：https://github.com/quarkusio/quarkus/discussions/49696</li>\n"
-"<li>讨论：<a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Java.2025.20chat\">Zulip</a></li>\n"
+"<li>联系人：@holly-cummins（Zulip 上的<strong>@Holly Cummins</strong>）、@ozangunalp（Zulip 上的<strong>@Ozan Günalp</strong>）</li>\n"
+"<li>提案：https://github.com/quarkusio/quarkus/discussions/47683</li>\n"
+"<li>讨论：<a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev\">Zulip</a>)</li>\n"
 "</ul>\n"
 
 #. type: Hash Value: working-groups short-description
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "The objective of this working group is to enable Quarkus applications to run cleanly across dev/test/production modes on Java 25, with no requirement to adopt Java 25 as a baseline.\n"
-msgstr "该工作组的目标是确保 Quarkus 应用程序能够在 Java 25 上跨开发、测试和生产环境无缝运行，且无需将 Java 25 作为基准。\n"
+msgid "This working group will define and implement a consistent and configurable lifecycle model for Dev Services. It will shift the startup to the correct phase, enable optional reuse across dev and test modes, and clarify teardown and sharing behavior. The goal is to improve the developer experience.\n"
+msgstr "该工作组将定义并实施一个一致且可配置的开发服务生命周期模型。它将把启动操作移至正确的阶段，支持在开发和测试模式间可选地复用资源，并明确资源释放和共享的行为。其目标是提升开发者体验。\n"
 
 #. type: Hash Value: working-groups title
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "Java 25 support"
-msgstr "Java 25 支持"
-
-#. type: Hash Value: working-groups board-url
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "https://github.com/orgs/quarkusio/projects/50"
-msgstr "https://github.com/orgs/quarkusio/projects/50"
-
-#. type: Hash Value: working-groups deliverable
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "<a rel=\"nofollow\" href=\"https://quarkus.io/blog/hibernate-panache-next/\">Blog Post</a>"
-msgstr "<a rel=\"nofollow\" href=\"https://quarkus.io/blog/hibernate-panache-next/\">博客文章</a>"
-
-#. type: Hash Value: working-groups discussion
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Panache.2ENext/with/529258261"
-msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Panache.2ENext/with/529258261"
-
-#. type: Hash Value: working-groups last-update
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid ""
-"The Quarkus Data group wrapped up a couple of items this week. They ensured Panache 2 prevents opening managed and stateless sessions simultaneously, and resolved a Panache Next projection failure involving Kotlin's value class.\n"
-"(This status update was automatically generated using AI.)\n"
-msgstr ""
-"Quarkus Data 团队本周完成了几项工作。他们确保 Panache 2 不会同时打开受管会话和无状态会话，并修复了 Panache Next 中一个涉及 Kotlin 值类的投影错误。\n"
-"（此状态更新由 AI 自动生成。）\n"
-
-#. type: Hash Value: working-groups point-of-contact
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "@FroMage  (@<strong>Stephane Epardaud</strong>  on Zulip)"
-msgstr "@FroMage  （Zulip 上的<strong>@Stephane Epardaud</strong>）"
-
-#. type: Hash Value: working-groups proposal
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "https://github.com/quarkusio/quarkus/discussions/48949"
-msgstr "https://github.com/quarkusio/quarkus/discussions/48949"
-
-#. type: Hash Value: working-groups readme
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid ""
-"<h1>Objective</h1>\n"
-"<p>The main objective of this working group is to bring forth the next version of Panache.</p>\n"
-"<h1>The Problem</h1>\n"
-"<p>Panache is great for many things, but over time, we realised the following limitations:</p>\n"
-"<ul>\n"
-"<li>We have three distinct versions: Hibernate ORM, Hibernate Reactive and Mongo (blocking and reactive)</li>\n"
-"<li>It is impossible to use the same entities with Hibernate ORM and Hibernate Reactive</li>\n"
-"<li>Stateless sessions are not supported</li>\n"
-"<li>Hibernate Processor annotations, and Jakarta Data are not supported</li>\n"
-"<li>We have triplicate types such as <code>Sort</code> and <code>Order</code> between Panache, ORM and Jakarta Data</li>\n"
-"<li>We have two ways to place entity query operations : on the entity itself, or in repositories</li>\n"
-"<li>Entity query operations require type-system hacks which makes them less type-safe than we want with <code>var</code> and <code>for-each</code> and especially with reactive operations.</li>\n"
-"</ul>\n"
-"<h1>The proposed Solution</h1>\n"
-"<p>We propose a new Panache version that will solve all these issues:</p>\n"
-"<ul>\n"
-"<li>Unify all variants in a single module, supporting blocking, reactive, stateless and stateful sessions</li>\n"
-"<li>Provide an entity toplevel class for each 4 modes of operation, yet allow access to the other modes</li>\n"
-"<li>Move all entity query operations from the entity class to the repository class</li>\n"
-"<li>Provide a repository toplevel class for each 4 modes of operation, yet allow access to the other modes</li>\n"
-"<li>Provide easy access to any type of repository by placing them as nested interfaces in the entity class, via a generated accessor on the entity metamodel class</li>\n"
-"<li>Provide out of the box accessors for the 4 modes of operation repositories on the entity metamodel class</li>\n"
-"<li>Support Jakarta Data and Hibernate Processor type-safe annotations</li>\n"
-"<li>Optional: Support of Mongo via the coming ORM JDBC support</li>\n"
-"<li>Optional: provide JD repository type alternatives for the missing three modes</li>\n"
-"<li>Optional: provide a way to convert Panache 1 to Panache.Next</li>\n"
-"</ul>\n"
-"<h1>Definition of Done</h1>\n"
-"<ul>\n"
-"<li>Deliver the new Panache extension as a <code>stable</code> state (after preview/experimental versions for feedback)</li>\n"
-"<li>Tests</li>\n"
-"<li>Documentation</li>\n"
-"<li>Codestart</li>\n"
-"<li>REST Data with Panache support</li>\n"
-"<li>Renarde support</li>\n"
-"<li>Quarkus Insights</li>\n"
-"</ul>\n"
-"<h1>Scope of Work</h1>\n"
-"<p>It is currently out of scope to retrofit this with the existing Panache modules. This will be a new module with no backward compatibility (although most type-unsafe operations will continue as-is, so you will be familiar with them).</p>\n"
-"<h1>Organizing the Work</h1>\n"
-"<h2>Communication and Transparency:</h2>\n"
-"<p>This will be done via GitHub issues on the Quarkus core project.</p>\n"
-"<h2>Expected Timeline:</h2>\n"
-"<p>Most of the R&amp;D and design work has been completed over the last two years. Now remains the task of merging, documenting, testing, and tweaking it until it's complete.</p>\n"
-"<ul>\n"
-"<li>Point of contact: @FroMage  (@<strong>Stephane Epardaud</strong>  on Zulip)</li>\n"
-"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/48949</li>\n"
-"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Panache.2ENext/with/529258261\">Zulip</a></li>\n"
-"<li>Deliverable: <a href=\"https://quarkus.io/blog/hibernate-panache-next/\">Blog Post</a></li>\n"
-"</ul>\n"
-msgstr ""
-"<h1>目标</h1>\n"
-"<p>本工作组的主要目标是推出 Panache 的下一个版本。</p>\n"
-"<h1>问题</h1>\n"
-"<p>Panache 在许多方面表现出色，但随着时间的推移，我们意识到它存在以下局限性：</p>\n"
-"<ul>\n"
-"<li>我们目前有三个不同的版本：Hibernate ORM、Hibernate Reactive 以及 Mongo（阻塞式和响应式）</li>\n"
-"<li>无法在 Hibernate ORM 和 Hibernate Reactive 中使用相同的实体</li>\n"
-"<li>不支持无状态会话</li>\n"
-"<li>不支持 Hibernate Processor 注解和 Jakarta Data</li>\n"
-"<li>在 Panache、ORM 和 Jakarta Data 之间存在诸如<code>Sort</code>和<code>Order</code>之类的重复类型</li>\n"
-"<li>我们有两种方式来放置实体查询操作：在实体本身，或在存储库中</li>\n"
-"<li>实体查询操作需要借助类型系统的变通方案，这使得它们的类型安全性不如我们期望的那样高——尤其是使用<code>var</code>和<code>for-each</code>时，以及在进行响应式操作时。</li>\n"
-"</ul>\n"
-"<h1>建议的解决方案</h1>\n"
-"<p>我们提议发布一个新的 Panache 版本来解决所有这些问题：</p>\n"
-"<ul>\n"
-"<li>将所有变体统一到单个模块中，支持阻塞式、响应式、无状态和有状态会话</li>\n"
-"<li>为每种操作模式提供一个实体顶级类，同时允许访问其他模式</li>\n"
-"<li>将所有实体查询操作从实体类移至存储库类</li>\n"
-"<li>为这四种操作模式分别提供一个仓库顶级类，同时允许访问其他模式</li>\n"
-"<li>通过在实体元模型类上生成访问器，将各类存储库作为嵌套接口放置在实体类中，从而实现对任意类型存储库的便捷访问</li>\n"
-"<li>在实体元模型类上为这四种操作模式的存储库提供开箱即用的访问器</li>\n"
-"<li>支持 Jakarta Data 和 Hibernate Processor 的类型安全注解</li>\n"
-"<li>可选：通过即将推出的 ORM JDBC 支持，支持 Mongo</li>\n"
-"<li>可选：为缺失的三种模式提供 JD 存储库类型的替代方案</li>\n"
-"<li>可选：提供将 Panache 1 转换为 Panache.Next 的方法</li>\n"
-"</ul>\n"
-"<h1>完成标准</h1>\n"
-"<ul>\n"
-"<li>将新的 Panache 扩展交付为<code>稳定</code>版本（在发布预览版/实验版以收集反馈之后）</li>\n"
-"<li>测试</li>\n"
-"<li>文档</li>\n"
-"<li>Codestart</li>\n"
-"<li>支持 Panache 的 REST 数据</li>\n"
-"<li>Renarde 支持</li>\n"
-"<li>Quarkus 洞察</li>\n"
-"</ul>\n"
-"<h1>工作范围</h1>\n"
-"<p>目前，将此功能与现有的 Panache 模块进行适配不在工作范围内。这将是一个不向后兼容的新模块（尽管大多数类型不安全的操作将保持原样，因此您会感到熟悉）。</p>\n"
-"<h1>工作组织</h1>\n"
-"<h2>沟通与透明度：</h2>\n"
-"<p>相关沟通将通过 Quarkus 核心项目上的 GitHub 问题进行。</p>\n"
-"<h2>预计时间表：</h2>\n"
-"<p>过去两年中，大部分研发和设计工作已经完成。现在剩下的任务是进行代码合并、编写文档、测试以及微调，直至项目完成。</p>\n"
-"<ul>\n"
-"<li>联系人：@FroMage  （Zulip 上的<strong>@Stephane Epardaud</strong>）</li>\n"
-"<li>提案：https://github.com/quarkusio/quarkus/discussions/48949</li>\n"
-"<li>讨论：<a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Panache.2ENext/with/529258261\">Zulip</a></li>\n"
-"<li>交付成果：<a href=\"https://quarkus.io/blog/hibernate-panache-next/\">博客文章</a></li>\n"
-"</ul>\n"
-
-#. type: Hash Value: working-groups short-description
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "The primary objective of this working group is to develop the next version of Panache, now known as Quarkus Data.\n"
-msgstr "该工作组的主要目标是开发 Panache 的下一个版本，该版本现称为 Quarkus Data。\n"
-
-#. type: Hash Value: working-groups title
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "Quarkus Data"
-msgstr "Quarkus 数据"
+msgid "Dev Services Lifecycle"
+msgstr "开发服务生命周期"
 
 #. type: Hash Value: working-groups board-url
 #: _data/wg.yaml:1
@@ -931,80 +1216,592 @@ msgstr "模块化（JPMS）与JLink"
 #. type: Hash Value: working-groups board-url
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "https://github.com/orgs/quarkusio/projects/49"
-msgstr "https://github.com/orgs/quarkusio/projects/49"
+msgid "https://github.com/orgs/quarkusio/projects/89"
+msgstr "https://github.com/orgs/quarkusio/projects/89"
 
-#. type: Hash Value: working-groups discussion
+#. type: Hash Value: working-groups last-update-date
 #: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev"
-msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev"
-
-#. type: Hash Value: working-groups last-activity
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "2026-09-23"
-msgstr "2026年9月23日"
+#, no-wrap
+msgid "2026-09-28"
+msgstr ""
 
 #. type: Hash Value: working-groups last-update
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid ""
-"The Dev Services Lifecycle group addressed dependencies for the devservices runtime module. They resolved the problem of dev services containers not reusing across tests when profiles were set and bolstered test coverage, especially for container identity tracking. Further work is now open to improve lifecycle test coverage and specifically address container reuse/replacement with profile changes.\n"
-"(This status update was automatically generated using AI.)\n"
-msgstr ""
-"开发服务生命周期小组解决了开发服务运行时模块的依赖关系问题。他们解决了在设置配置文件时开发服务容器无法在不同测试间重复使用的问题，并提高了测试覆盖率，特别是在容器身份追踪方面。目前正在开展进一步工作，以改进生命周期测试的覆盖率，并专门解决因配置文件变更导致的容器重复使用/替换问题。\n"
-"（此状态更新由人工智能自动生成。）\n"
+msgid "WG started\n"
+msgstr "WG 已启动\n"
+
+#. type: Hash Value: working-groups last-update-date
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "2026-09-11"
+msgstr "2026年9月11日"
 
 #. type: Hash Value: working-groups point-of-contact
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "@holly-cummins (@<strong>Holly Cummins</strong>  on Zulip), @ozangunalp (@<strong>Ozan Günalp</strong> on Zulip )"
-msgstr "@holly-cummins（Zulip 上的<strong>@Holly Cummins</strong>），@ozangunalp（Zulip 上的<strong>@Ozan Günalp</strong>）"
+msgid "@patriot1burke"
+msgstr "@patriot1burke"
 
 #. type: Hash Value: working-groups proposal
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "https://github.com/quarkusio/quarkus/discussions/47683"
-msgstr "https://github.com/quarkusio/quarkus/discussions/47683"
+msgid "https://github.com/quarkusio/quarkus/discussions/56502"
+msgstr "https://github.com/quarkusio/quarkus/discussions/56502"
 
 #. type: Hash Value: working-groups readme
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
 msgid ""
-"<p>This working group was formed to address long-standing inconsistencies and pain points in the Dev Services lifecycle within Quarkus. Dev Services are essential for simplifying local development and testing by automatically provisioning runtime dependencies (e.g., databases, message brokers), but their current lifecycle behavior leads to confusion and inefficiencies. Most notably, they are started during the augmentation phase, which conflicts with their inherently runtime-oriented nature and causes issues with newer efforts such as the test classloading revamp.</p>\n"
-"<p>The primary goal of this group is to define and implement a consistent, runtime-aligned lifecycle model for Dev Services. This includes shifting their startup to a phase after augmentation but before the application begins execution, ensuring better alignment with the runtime environment. A critical focus will also be on enabling optional reuse of Dev Services across dev and test modes — including reuse between repeated test executions — to reduce startup time and improve the iterative development experience.</p>\n"
-"<p>The group's scope covers several strategic areas: formalizing when and how Dev Services are started, reused, or stopped; defining rules for discoverability and sharing between profiles or processes; and avoiding resource leaks or accidental retention. It explicitly excludes broader orchestration features (such as service dependency graphs) and unrelated feature enhancements.</p>\n"
-"<p>The working group will produce a set of deliverables to support the new model. These include one or more Architecture Decision Records (ADRs) describing the new lifecycle model, the implementation of lifecycle logic in Quarkus Core, and updates to both user-facing and contributor documentation. Additionally, enhancements to the Dev Services development model will make it easier for extension authors to adopt and follow the new lifecycle standards. A public communication effort (e.g., blog posts or demos) will also be used to showcase the improvements.</p>\n"
-"<p>The new API is described here: https://quarkus.io/blog/new-dev-services-api/</p>\n"
+"<h2>The Problem</h2>\n"
+"<p>There are a bunch of things we want to address this year for Quarkus AI strategy:</p>\n"
 "<ul>\n"
-"<li>Point of contact: @holly-cummins (@<strong>Holly Cummins</strong>  on Zulip), @ozangunalp (@<strong>Ozan Günalp</strong> on Zulip )</li>\n"
-"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/47683</li>\n"
-"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev\">Zulip</a>)</li>\n"
+"<li>Revamp the Quarkus AI webpage</li>\n"
+"<li>Create Blueprint samples for Quarkus AI that show full Quarkus stack and AI application archetypes</li>\n"
+"<li>Align Quarkus LC4J extension with LC4J upstream project. Because Q-LC4J reimplements a lot of things to Quarkize LC4J, new features and bug fixes in upstream don't percolate down to Q-LC4J.</li>\n"
+"<li>LangFuse integration. This will give us Observability, Tracing, Metrics, and a playground for development. Will also make Java a first class language in the overall AI dev community</li>\n"
+"<li>Revamp Q-LC4J RAG implementation</li>\n"
+"<li>Bring Quarkus/CDI style programming to more LC4J components</li>\n"
+"<li>Handle shutdown and recovery more gracefully.</li>\n"
+"</ul>\n"
+"<h2>Definition of Done</h2>\n"
+"<p>When the Epic issues defined in the Quarkus AI umbrella GitHub projects are closed.</p>\n"
+"<h2>Scope of Work</h2>\n"
+"<p>Scope of work will be well defined within various GitHub issues linked to within the Epic Issues of the Quarkus AI umbrella repo.</p>\n"
+"<h2>Organizing the Work</h2>\n"
+"<p><strong>Communication and Transparency:</strong></p>\n"
+"<p>A new umbrella <a href=\"https://github.com/quarkusio/quarkus-ai\">quarkus-ai</a> has been created. This will hold high-level issues (epics) that link to lists of tasks and issues spread out between the other repos we are trying to coordinate.</p>\n"
+"<p><strong>Expected Timeline:</strong>\n"
+"Work will start sometime in September 2026 and will continue into early 2027</p>\n"
+"<ul>\n"
+"<li>Point of contact: @patriot1burke</li>\n"
+"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/56502</li>\n"
 "</ul>\n"
 msgstr ""
-"<p>成立该工作组的目的是为了解决 Quarkus 中 Dev Services 生命周期中长期存在的不一致性和痛点。Dev Services 通过自动配置运行时依赖项（例如数据库、消息代理），对于简化本地开发和测试至关重要，但其当前的生命周期行为却导致了混淆和效率低下。 最值得注意的是，这些服务是在增强阶段启动的，这与其固有的运行时导向特性相冲突，并给测试类加载重构等新举措带来了问题。</p>\n"
-"<p>本工作组的主要目标是为开发服务定义并实现一个一致且与运行时相协调的生命周期模型。这包括将开发服务的启动时间调整到“增强”阶段之后、应用程序开始执行之前，以确保与运行时环境更好地协调。 另一个关键重点是支持在开发和测试模式下可选地复用开发服务——包括在重复的测试执行之间进行复用——以缩短启动时间并改善迭代开发体验。</p>\n"
-"<p>该工作组的范围涵盖多个战略领域：规范 Dev Services 的启动、复用和停止的时间及方式；定义配置文件或进程之间的可发现性和共享规则；以及避免资源泄漏或意外保留。它明确排除了更广泛的编排功能（如服务依赖关系图）以及无关的功能增强。</p>\n"
-"<p>该工作组将产出一系列成果以支持新模型。其中包括一份或多份描述新生命周期模型的架构决策记录（ADR）、在 Quarkus Core 中实现生命周期逻辑，以及针对用户端和贡献者文档的更新。 此外，对 Dev Services 开发模型的增强将使扩展作者更轻松地采用并遵循新的生命周期标准。还将通过公开宣传活动（例如博客文章或演示）来展示这些改进。</p>\n"
-"<p>新 API 的说明请参见：https://quarkus.io/blog/new-dev-services-api/</p>\n"
+"<h2>问题</h2>\n"
+"<p>今年，针对 Quarkus AI 战略，我们希望解决以下几个问题：</p>\n"
 "<ul>\n"
-"<li>联系人：@holly-cummins（Zulip 上的<strong>@Holly Cummins</strong>）、@ozangunalp（Zulip 上的<strong>@Ozan Günalp</strong>）</li>\n"
-"<li>提案：https://github.com/quarkusio/quarkus/discussions/47683</li>\n"
-"<li>讨论：<a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev\">Zulip</a>)</li>\n"
+"<li>重构 Quarkus AI 网页</li>\n"
+"<li>为 Quarkus AI 创建 Blueprint 示例，展示完整的 Quarkus 技术栈和 AI 应用原型</li>\n"
+"<li>使 Quarkus LC4J 扩展与 LC4J 上游项目保持同步。由于 Q-LC4J 为使 LC4J 适应 Quarkus 而重新实现了许多功能，因此上游的新功能和错误修复无法传递到 Q-LC4J 中。</li>\n"
+"<li>集成 LangFuse。这将为我们提供可观测性、追踪、指标以及一个开发实验平台。同时也将使 Java 在整个 AI 开发社区中成为一等语言</li>\n"
+"<li>重构 Q-LC4J 的 RAG 实现</li>\n"
+"<li>将 Quarkus/CDI 风格的编程引入更多 LC4J 组件</li>\n"
+"<li>更优雅地处理关机和恢复操作。</li>\n"
+"</ul>\n"
+"<h2>完成标准</h2>\n"
+"<p>当 Quarkus AI 伞形 GitHub 项目中定义的 Epic 问题全部关闭时。</p>\n"
+"<h2>工作范围</h2>\n"
+"<p>工作范围将在 Quarkus AI 总库的 Epic 问题中链接的各个 GitHub 问题内明确界定。</p>\n"
+"<h2>工作组织</h2>\n"
+"<p><strong>沟通与透明度：</strong></p>\n"
+"<p>已创建一个新的<a href=\"https://github.com/quarkusio/quarkus-ai\">“quarkus-ai”</a>总库。该库将包含高级别问题（Epic），并链接到分散在我们试图协调的其他仓库中的任务和问题列表。</p>\n"
+"<p><strong>预计时间表：</strong>\n"
+"工作将于 2026 年 9 月某时启动，并持续至 2027 年初</p>\n"
+"<ul>\n"
+"<li>联系人：@patriot1burke</li>\n"
+"<li>提案：https://github.com/quarkusio/quarkus/discussions/56502</li>\n"
 "</ul>\n"
 
 #. type: Hash Value: working-groups short-description
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "This working group will define and implement a consistent and configurable lifecycle model for Dev Services. It will shift the startup to the correct phase, enable optional reuse across dev and test modes, and clarify teardown and sharing behavior. The goal is to improve the developer experience.\n"
-msgstr "该工作组将定义并实施一个一致且可配置的开发服务生命周期模型。它将把启动操作移至正确的阶段，支持在开发和测试模式间可选地复用资源，并明确资源释放和共享的行为。其目标是提升开发者体验。\n"
+msgid "The main objective of this working group is to revamp the Quarkus AI message and to coordinate work for Quarkus AI during the 2026/27 timeframe.\n"
+msgstr "该工作组的主要目标是重塑 Quarkus AI 的宣传信息，并在 2026/27 年期间协调 Quarkus AI 相关工作。\n"
 
 #. type: Hash Value: working-groups title
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "Dev Services Lifecycle"
-msgstr "开发服务生命周期"
+msgid "Quarkus AI Coordination"
+msgstr "Quarkus AI 协调工作"
+
+#. type: Hash Value: working-groups board-url
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "https://github.com/orgs/quarkusio/projects/75"
+msgstr "https://github.com/orgs/quarkusio/projects/75"
+
+#. type: Hash Value: working-groups discussion
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-dev-star/with/581636141"
+msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-dev-star/with/581636141"
+
+#. type: Hash Value: working-groups last-update
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "The working group is collecting missing features and issues, but the initial scope is now complete.\n"
+msgstr "该工作组正在收集缺失的功能和问题，但初步工作范围现已完成。\n"
+
+#. type: Hash Value: working-groups point-of-contact
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "@phillip-kruger"
+msgstr "@phillip-kruger"
+
+#. type: Hash Value: working-groups proposal
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "https://github.com/quarkusio/quarkus/discussions/53093#discussioncomment-16271096"
+msgstr "https://github.com/quarkusio/quarkus/discussions/53093#discussioncomment-16271096"
+
+#. type: Hash Value: working-groups readme
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid ""
+"<h2>Objective</h2>\n"
+"<p>Decompose and modernize the Quarkus developer tooling runtime (Dev UI, Dev MCP, Dev Shell, Dev Assistant) so that each component can operate independently, without requiring the full <code>vertx-http</code> web stack. This enables AI-powered developer assistance (via MCP) and terminal-based tooling (Dev Shell) to work even when dev mode or the HTTP layer is broken, and lays the foundation for a unified &quot;Dev Star&quot; developer experience across all interaction surfaces.</p>\n"
+"<p>Quarkus has always been a developer experience champion; live coding, Dev UI, Dev Services, and continuous testing set the standard for Java frameworks. Dev Star extends this effort into the AI era by focusing equally on <strong>AI experience (AIx)</strong>: making Quarkus the easiest framework for coding agents (Claude, Copilot, Gemini, etc.) to work with. By exposing the full power of Quarkus dev mode (configuration, build output, documentation, testing, error diagnostics) through MCP, and by providing agents with the right documentation for the specific extensions and APIs used in the application being built (via RAG over Quarkus Docs), coding agents can understand, build, and debug Quarkus applications as effectively as human developers using the Dev UI. Developer and AI experiences are two sides of the same coin: every improvement to one benefits the other.</p>\n"
+"<h2>The Problem</h2>\n"
+"<p>Today, the entire Quarkus developer tooling stack is tightly coupled to the Dev UI Runtime, which depends on <code>vertx-http</code>. This creates several problems:</p>\n"
+"<ol>\n"
+"<li>\n"
+"<p><strong>Fragile dependency chain:</strong> Dev MCP and Dev Shell cannot function without the full HTTP stack running. If dev mode is broken (e.g., a compilation error prevents the application from starting), all developer tooling becomes unavailable — precisely when developers need help the most.</p>\n"
+"</li>\n"
+"<li>\n"
+"<p><strong>No fallback for broken applications:</strong> There is no lightweight mechanism to provide application lifecycle information, documentation access, or workspace navigation when the Quarkus application cannot start. AI assistants connected via MCP are completely cut off.</p>\n"
+"</li>\n"
+"<li>\n"
+"<p><strong>Monolithic runtime:</strong> The Dev UI Runtime bundles WebSocket transport, JsonRPC routing, MCP transport, and shell connectivity into a single unit. Extensions that only need JsonRPC services or MCP tools must still pull in the entire web stack.</p>\n"
+"</li>\n"
+"<li>\n"
+"<p><strong>Limited AI integration surface:</strong> The Chappie WG established AI assistance capabilities, but the current architecture does not cleanly separate the AI runtime (Chappie Runtime + RAG over Quarkus Docs) from the transport layer, making it difficult to expose AI assistance through multiple channels (UI, MCP, Shell, stdio).</p>\n"
+"</li>\n"
+"<li>\n"
+"<p><strong>Developer experience gaps:</strong> Several core developer workflows (continuous testing, hot reload, exception reporting, example projects, file navigation) have not been re-evaluated in the context of MCP and AI-assisted development. Features like tool filtering/search in MCP are missing.</p>\n"
+"</li>\n"
+"</ol>\n"
+"<h2>The Proposed Solution</h2>\n"
+"<h3>Architecture Decomposition</h3>\n"
+"<p>Break the current monolithic Dev UI Runtime into four independent runtimes:</p>\n"
+"<p>| Runtime                 | Transport       | Dependency                     | Purpose                                                               |\n"
+"| ----------------------- | --------------- | ------------------------------ | --------------------------------------------------------------------- |\n"
+"| <strong>Dev UI Runtime</strong>      | WebSocket       | <code>vertx-http</code>                   | Browser-based Dev UI (For Human)                                      |\n"
+"| <strong>Dev JsonRPC Runtime</strong> | JsonRPCRouter   | CDI                            | Core routing layer for JsonRPC services; shared by Dev UI and Dev MCP |\n"
+"| <strong>Dev MCP Runtime</strong>     | Streamable HTTP | CDI (no <code>vertx-http</code> required) | MCP server for AI agents (e.g., Claude, Copilot)                      |\n"
+"| <strong>Dev Shell Runtime</strong>   | CDI-connected   | CDI (no <code>vertx-http</code> required) | Terminal-based developer interaction                                  |</p>\n"
+"<p>The key architectural change is <strong>breaking the <code>vertx-http</code> dependency</strong> so that Dev MCP and Dev Shell can operate independently. The JsonRPC Router becomes a shared component connected via CDI, enabling extensions to expose <code>JsonRpcService</code> beans that are accessible from any runtime.</p>\n"
+"<h3>Dev Assistant</h3>\n"
+"<p>The Dev Assistant combines:</p>\n"
+"<ul>\n"
+"<li><strong>Chappie Runtime</strong>: AI interaction engine (successor to the Chappie WG)</li>\n"
+"<li><strong>Quarkus Docs (RAG)</strong>: Retrieval-augmented generation over Quarkus documentation</li>\n"
+"</ul>\n"
+"<p>The Dev Assistant connects to the Dev Shell Runtime via CDI, and to the Dev UI Runtime via the existing JsonRPC path. This means AI assistance is available from the browser (Dev UI), the terminal (Dev Shell), and external AI tools (Dev MCP).</p>\n"
+"<h3>Standalone stdio MCP Application</h3>\n"
+"<p>A lightweight, standalone MCP application using <strong>stdio transport</strong> that provides:</p>\n"
+"<ul>\n"
+"<li>Application lifecycle information (build status, errors, configuration)</li>\n"
+"<li>Quarkus documentation access</li>\n"
+"<li>Workspace file navigation</li>\n"
+"</ul>\n"
+"<p>This stdio app operates <strong>outside</strong> dev mode, ensuring developers can get AI assistance even when the application is completely broken (compilation failures, missing dependencies, misconfiguration). It complements the in-process Dev MCP Runtime.</p>\n"
+"<h3>Reconsider Dev* Features</h3>\n"
+"<p>Re-evaluate existing developer features for the new architecture:</p>\n"
+"<ul>\n"
+"<li><strong>Dev Mode resilience</strong>: What works when dev mode is broken?</li>\n"
+"<li><strong>Continuous Testing</strong>: Expose test status and controls via MCP tools</li>\n"
+"<li><strong>Hot Reload</strong>: Trigger and monitor reloads from MCP/Shell</li>\n"
+"<li><strong>Example Project</strong>: Generate example code via AI assistance</li>\n"
+"<li><strong>Exception Reporting</strong> : Surface exceptions as MCP resources/tools</li>\n"
+"<li><strong>Workspace Navigation</strong> : Find files and navigate project structure via MCP</li>\n"
+"<li><strong>Tool Filter/Search</strong>: Enable discovery and filtering of available MCP tools</li>\n"
+"<li><strong>Response Size Optimization</strong>: Reduce MCP response payload sizes to minimize context window consumption by coding agents; provide concise, structured responses rather than raw verbose output</li>\n"
+"</ul>\n"
+"<h3>Skills Investigation</h3>\n"
+"<p>Investigate the concept of &quot;Skills&quot; (composable, higher-level developer actions built on top of MCP tools). The idea is to allow each extension to ship one or more Skills that describe how the extension is intended to be used, configured, and tested, along with best practices, common pitfalls, and troubleshooting guidance. Rather than requiring an AI agent to discover this knowledge through trial and error, Skills provide it upfront as structured, actionable context.</p>\n"
+"<p><strong>Success criteria:</strong> define what a Skill is, how it differs from a raw MCP tool (tools <em>do</em> things; Skills <em>teach</em> how to do things well), and whether a Skills API adds meaningful value over direct tool composition by AI agents.</p>\n"
+"<h2>Definition of Done</h2>\n"
+"<ul>\n"
+"<li>[ ] Dev MCP Runtime responds to the MCP <code>initialize</code> handshake without Dev UI or <code>vertx-http</code> running</li>\n"
+"<li>[ ] Dev Shell Runtime starts and provides interactive developer commands without <code>vertx-http</code></li>\n"
+"<li>[ ] Dev Assistant (Chappie + RAG) is accessible from Dev UI, Dev MCP, and Dev Shell</li>\n"
+"<li>[ ] Clear design of the RAG pipeline: from documentation to the agent</li>\n"
+"<li>[ ] Standalone stdio MCP app provides application lifecycle, docs, and workspace tools when dev mode is broken</li>\n"
+"<li>[ ] Existing <code>JsonRpcService</code> extensions work across all runtimes without modification</li>\n"
+"<li>[ ] Continuous testing status and controls are available via MCP tools</li>\n"
+"<li>[ ] Exception information is surfaced as MCP resources</li>\n"
+"<li>[ ] MCP tool discovery supports filtering and search</li>\n"
+"<li>[ ] Architecture documented with clear extension author guidance</li>\n"
+"<li>[ ] Integration tests verify that each runtime operates independently</li>\n"
+"</ul>\n"
+"<h2>Scope of Work</h2>\n"
+"<h3>In Scope</h3>\n"
+"<ul>\n"
+"<li>Decompose Dev UI Runtime into four independent runtimes (Dev UI, Dev JsonRPC, Dev MCP, Dev Shell)</li>\n"
+"<li>Break <code>vertx-http</code> dependency for Dev Shell</li>\n"
+"<li>Implement Dev Assistant (Chappie Runtime + Quarkus Docs RAG) connected via CDI</li>\n"
+"<li>Build standalone stdio MCP application for broken-dev-mode scenarios</li>\n"
+"<li>Re-evaluate continuous testing, hot reload, exception reporting, and workspace navigation for MCP</li>\n"
+"<li>Implement MCP tool filtering and search</li>\n"
+"<li>Investigate Skills concept and define success criteria</li>\n"
+"<li>Documentation for extension authors on the new architecture</li>\n"
+"</ul>\n"
+"<h3>Out of Scope</h3>\n"
+"<ul>\n"
+"<li>Production-mode MCP server (this is dev-mode tooling only)</li>\n"
+"<li>Dev Shell is not part of this working group, a dedicated working group will be created.</li>\n"
+"<li>Third-party AI provider integrations beyond MCP protocol support</li>\n"
+"<li>IDE-specific plugins (VS Code, IntelliJ) — these consume MCP, not provide it</li>\n"
+"</ul>\n"
+"<h2>Organizing the Work</h2>\n"
+"<h3>Communication</h3>\n"
+"<ul>\n"
+"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-dev-star/with/581636141\">wg-dev-star</a></li>\n"
+"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/53093#discussioncomment-16271096</li>\n"
+"<li>Point of Contact: @phillip-kruger</li>\n"
+"</ul>\n"
+"<h3>Timeline</h3>\n"
+"<ul>\n"
+"<li>Target: Quarkus 4 release cycle</li>\n"
+"</ul>\n"
+msgstr ""
+"<h2>目标</h2>\n"
+"<p>将 Quarkus 开发工具运行时（Dev UI、Dev MCP、Dev Shell、Dev Assistant）进行拆分和现代化改造，使每个组件都能独立运行，无需依赖完整的<code>vertx-http</code>Web 堆栈。 这使得基于 AI 的开发者辅助功能（通过 MCP）和基于终端的工具（Dev Shell）即使在开发模式或 HTTP 层出现故障时仍能正常工作，并为在所有交互界面上实现统一的“Dev Star”开发者体验奠定了基础。</p>\n"
+"<p>Quarkus 一直以来都是开发者体验的领军者；实时编码、Dev UI、Dev Services 和持续测试为 Java 框架树立了标杆。 Dev Star 将这一努力延伸至 AI 时代，同时注重<strong>AI 体验（AIx）</strong>：使 Quarkus 成为最易于与编码代理（Claude、Copilot、Gemini 等）协作的框架。 通过 MCP 充分展现 Quarkus 开发模式的全部功能（配置、构建输出、文档、测试、错误诊断），并为智能代理提供针对正在构建的应用程序中所用特定扩展和 API 的正确文档（通过基于 Quarkus Docs 的 RAG）， 编程代理能够像使用开发界面的人类开发者一样，高效地理解、构建和调试 Quarkus 应用程序。开发者体验与 AI 体验是一枚硬币的两面：对其中一方的任何改进，都会惠及另一方。</p>\n"
+"<h2>问题</h2>\n"
+"<p>目前，整个 Quarkus 开发工具栈与 Dev UI 运行时紧密耦合，而该运行时依赖于<code>vertx-http</code>。这导致了以下几个问题：</p>\n"
+"<ol>\n"
+"<li>\n"
+"<p><strong>脆弱的依赖链：</strong>若完整的 HTTP 栈未运行，Dev MCP 和 Dev Shell 将无法工作。如果开发模式出现故障（例如，编译错误导致应用程序无法启动），所有开发工具都将无法使用——而这恰恰是开发人员最需要帮助的时候。</p>\n"
+"</li>\n"
+"<li>\n"
+"<p><strong>应用程序故障时无备用方案：</strong>当 Quarkus 应用程序无法启动时，没有轻量级的机制来提供应用程序生命周期信息、文档访问或工作区导航。通过 MCP 连接的 AI 助手将完全断开。</p>\n"
+"</li>\n"
+"<li>\n"
+"<p><strong>单体式运行时：</strong>Dev UI 运行时将 WebSocket 传输、JsonRPC 路由、MCP 传输和 shell 连接打包为单一单元。即使仅需 JsonRPC 服务或 MCP 工具的扩展，仍必须引入整个 Web 堆栈。</p>\n"
+"</li>\n"
+"<li>\n"
+"<p><strong>AI 集成接口有限：</strong>Chappie 工作组确立了 AI 辅助功能，但当前架构未能将 AI 运行时（Chappie 运行时 + 基于 Quarkus Docs 的 RAG）与传输层清晰分离，导致难以通过多种渠道（UI、MCP、Shell、stdio）提供 AI 辅助功能。</p>\n"
+"</li>\n"
+"<li>\n"
+"<p><strong>开发者体验缺口：</strong>若干核心开发者工作流（持续测试、热重载、异常报告、示例项目、文件导航）尚未在 MCP 和 AI 辅助开发背景下进行重新评估。MCP 中缺少工具筛选/搜索等功能。</p>\n"
+"</li>\n"
+"</ol>\n"
+"<h2>建议的解决方案</h2>\n"
+"<h3>架构分解</h3>\n"
+"<p>将当前单体式的开发 UI 运行时拆分为四个独立的运行时：</p>\n"
+"<p>| 运行时                 | 传输机制       | 依赖项                     | 用途                                                               |\n"
+"| ----------------------- | --------------- | ------------------------------ | --------------------------------------------------------------------- |\n"
+"|<strong>开发 UI 运行时</strong>     | WebSocket       |<code>vertx-http</code>                  | 基于浏览器的开发 UI（面向用户）                                      |\n"
+"|<strong>开发 JsonRPC 运行时</strong>| JsonRPCRouter   | CDI                            | JsonRPC 服务的核心路由层；由开发 UI 和开发 MCP 共享 |\n"
+"|<strong>开发 MCP 运行时</strong>    | Streamable HTTP | CDI（无需<code>vertx-http</code>） | 用于 AI 代理（例如 Claude、Copilot）的 MCP 服务器                      |\n"
+"|<strong>开发 Shell 运行时</strong>  | 通过 CDI 连接   | CDI（无需<code>vertx-http</code>） | 基于终端的开发者交互                                  |</p>\n"
+"<p>关键的架构变更在于<strong>摆脱对<code>vertx-http</code>的依赖</strong>，从而使 Dev MCP 和 Dev Shell 能够独立运行。JsonRPC 路由器成为通过 CDI 连接的共享组件，允许扩展程序暴露<code>JsonRpcService</code>Bean，这些 Bean 可从任何运行时访问。</p>\n"
+"<h3>开发助手</h3>\n"
+"<p>开发助手整合了：</p>\n"
+"<ul>\n"
+"<li><strong>Chappie 运行时</strong>：AI 交互引擎（Chappie WG 的继任者）</li>\n"
+"<li><strong>Quarkus 文档（RAG）</strong>：基于 Quarkus 文档的检索增强生成</li>\n"
+"</ul>\n"
+"<p>Dev Assistant 通过 CDI 连接到 Dev Shell 运行时，并通过现有的 JsonRPC 路径连接到 Dev UI 运行时。这意味着无论是在浏览器（Dev UI）、终端（Dev Shell）还是外部 AI 工具（Dev MCP）中，均可使用 AI 辅助功能。</p>\n"
+"<h3>独立的 stdio MCP 应用程序</h3>\n"
+"<p>一款采用<strong>stdio 传输协议的</strong>轻量级、独立 MCP 应用程序，提供：</p>\n"
+"<ul>\n"
+"<li>应用程序生命周期信息（构建状态、错误、配置）</li>\n"
+"<li>Quarkus 文档访问</li>\n"
+"<li>工作区文件导航</li>\n"
+"</ul>\n"
+"<p>该 stdio 应用程序<strong>在非开发模式下</strong>运行，确保即使应用程序完全无法运行（编译失败、依赖项缺失、配置错误），开发人员仍可获得 AI 辅助。它与进程内的 Dev MCP 运行时相辅相成。</p>\n"
+"<h3>重新审视 Dev* 功能</h3>\n"
+"<p>针对新架构重新评估现有开发者功能：</p>\n"
+"<ul>\n"
+"<li><strong>开发模式的容错性</strong>：当开发模式失效时，哪些功能仍可正常运行？</li>\n"
+"<li><strong>持续测试</strong>：通过 MCP 工具展示测试状态和控制选项</li>\n"
+"<li><strong>热重载</strong>：通过 MCP/Shell 触发并监控重载</li>\n"
+"<li><strong>示例项目</strong>：通过 AI 辅助生成示例代码</li>\n"
+"<li><strong>异常报告</strong>：将异常以 MCP 资源/工具的形式呈现</li>\n"
+"<li><strong>工作区导航</strong>：通过 MCP 查找文件并浏览项目结构</li>\n"
+"<li><strong>工具筛选/搜索</strong>：支持发现和筛选可用的 MCP 工具</li>\n"
+"<li><strong>响应大小优化</strong>：缩减 MCP 响应负载大小，以最大限度减少编码代理对上下文窗口的占用；提供简洁、结构化的响应，而非冗长的原始输出</li>\n"
+"</ul>\n"
+"<h3>技能研究</h3>\n"
+"<p>探究“技能”（Skills）的概念（即基于 MCP 工具构建的可组合、更高层次的开发者操作）。 其核心理念是允许每个扩展程序提供一个或多个“技能”，这些技能描述了该扩展程序的预期使用方式、配置方法和测试流程，同时包含最佳实践、常见陷阱及故障排除指南。与要求AI代理通过试错来发现这些知识不同，“技能”将其作为结构化且可操作的上下文信息预先提供。</p>\n"
+"<p><strong>成功标准：</strong>定义什么是“技能”，它与原始 MCP 工具的区别（工具<em>执行</em>操作；技能<em>则指导</em>如何高效地完成操作），以及“技能”API 是否比 AI 代理直接组合工具更能带来实质性价值。</p>\n"
+"<h2>完成标准</h2>\n"
+"<ul>\n"
+"<li>[ ] 在未运行 Dev UI 或<code>vertx-http</code>的情况下，Dev MCP 运行时能响应 MCP<code>初始化</code>握手</li>\n"
+"<li>[ ] Dev Shell 运行时可在不依赖<code>vertx-http</code>的情况下启动并提供交互式开发者命令</li>\n"
+"<li>[ ] 可通过开发 UI、开发 MCP 和开发 Shell 访问开发助手（Chappie + RAG）</li>\n"
+"<li>[ ] RAG 管道设计清晰：从文档到智能代理</li>\n"
+"<li>[ ] 当开发模式出现故障时，独立的 stdio MCP 应用程序可提供应用程序生命周期管理、文档及工作区工具</li>\n"
+"<li>[ ] 现有的<code>JsonRpcService</code>扩展无需修改即可在所有运行时环境中正常工作</li>\n"
+"<li>[ ] 可通过 MCP 工具查看持续测试状态并进行控制</li>\n"
+"<li>[ ] 异常信息以 MCP 资源的形式呈现</li>\n"
+"<li>[ ] MCP 工具发现功能支持筛选和搜索</li>\n"
+"<li>[ ] 架构文档包含清晰的扩展作者指南</li>\n"
+"<li>[ ] 集成测试可验证每个运行时均能独立运行</li>\n"
+"</ul>\n"
+"<h2>工作范围</h2>\n"
+"<h3>工作范围</h3>\n"
+"<ul>\n"
+"<li>将 Dev UI 运行时分解为四个独立的运行时（Dev UI、Dev JsonRPC、Dev MCP、Dev Shell）</li>\n"
+"<li>解除 Dev Shell 对<code>vertx-http</code>的依赖</li>\n"
+"<li>实现通过 CDI 连接的开发助手（Chappie 运行时 + Quarkus Docs RAG）</li>\n"
+"<li>为“开发模式失效”场景构建独立的 stdio MCP 应用程序</li>\n"
+"<li>针对 MCP 重新评估持续测试、热重载、异常报告和工作区导航功能</li>\n"
+"<li>实现 MCP 工具过滤和搜索功能</li>\n"
+"<li>研究“技能”概念并定义成功标准</li>\n"
+"<li>面向扩展开发者的新架构文档</li>\n"
+"</ul>\n"
+"<h3>不在范围之内</h3>\n"
+"<ul>\n"
+"<li>生产环境的 MCP 服务器（本工作组仅涉及开发模式工具）</li>\n"
+"<li>Dev Shell 不属于本工作组，将另行组建专门的工作组。</li>\n"
+"<li>超出 MCP 协议支持范围的第三方 AI 提供商集成</li>\n"
+"<li>特定于 IDE 的插件（VS Code、IntelliJ）——这些插件调用 MCP，而非提供 MCP 协议</li>\n"
+"</ul>\n"
+"<h2>工作组织</h2>\n"
+"<h3>沟通</h3>\n"
+"<ul>\n"
+"<li>讨论：<a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-dev-star/with/581636141\">wg-dev-star</a></li>\n"
+"<li>提案：https://github.com/quarkusio/quarkus/discussions/53093#discussioncomment-16271096</li>\n"
+"<li>联系人：@phillip-kruger</li>\n"
+"</ul>\n"
+"<h3>时间表</h3>\n"
+"<ul>\n"
+"<li>目标：Quarkus 4 发布周期</li>\n"
+"</ul>\n"
+
+#. type: Hash Value: working-groups short-description
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "Decompose and modernize the Quarkus developer tooling runtime (Dev UI, Dev MCP, Dev Shell, Dev Assistant) so that each component can operate independently, without requiring the full `vertx-http` web stack. This enables AI-powered developer assistance (via MCP) and terminal-based tooling (Dev Shell)\n"
+msgstr "将 Quarkus 开发工具运行时（Dev UI、Dev MCP、Dev Shell、Dev Assistant）进行拆分和现代化改造，使每个组件都能独立运行，无需依赖完整的 `vertx-http` Web 技术栈。 这将支持基于 AI 的开发者辅助功能（通过 MCP）和基于终端的工具（Dev Shell）。\n"
+
+#. type: Hash Value: working-groups title
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "Dev Star"
+msgstr "Dev Star"
+
+#. type: Hash Value: working-groups board-url
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "https://github.com/orgs/quarkusio/projects/28"
+msgstr "https://github.com/orgs/quarkusio/projects/28"
+
+#. type: Hash Value: working-groups last-update
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "3.15 is now EOL.\n"
+msgstr "3.15 现已停止支持。\n"
+
+#. type: Hash Value: working-groups last-activity
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "2025-11-03"
+msgstr "2025年11月3日"
+
+#. type: Hash Value: working-groups readme
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid ""
+"<p>This working group uses a different board:</p>\n"
+"<ul>\n"
+"<li>The <code>under discussion</code> column contains the issues we would like to have in the next LTS but are still under consideration.</li>\n"
+"<li>The <code>out of scope</code> column contains the issues under discussion' that won't be included. The reason can be time or technical...</li>\n"
+"<li>The <code>in progress</code> means that the work has started and should be completed before the TLS cut date</li>\n"
+"<li>The <code>done</code> column means that the issues have been completed</li>\n"
+"</ul>\n"
+msgstr ""
+"<p>该工作组使用不同的板卡：</p>\n"
+"<ul>\n"
+"<li><code>under discussion</code> 一栏包含我们希望在下一个 LTS 中包含但仍在考虑中的问题。</li>\n"
+"<li><code>out of scope</code> 栏包含 \"正在讨论 \"但不会被纳入的问题。原因可能是时间或技术......</li>\n"
+"<li><code>in progress</code> 表示工作已经开始，应在 TLS 截止日期前完成</li>\n"
+"<li><code>done</code> 栏表示问题已经完成</li>\n"
+"</ul>\n"
+
+#. type: Hash Value: working-groups short-description
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "This WG focuses on defining the issues we would like to have in the next-to-be LTS (Quarkus 3.14/3.15)\n"
+msgstr "该工作组主要致力于明确我们希望在即将发布的长期支持版本（LTS，即 Quarkus 3.14/3.15）中包含的功能。\n"
+
+#. type: Hash Value: working-groups status
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "complete"
+msgstr "完整"
+
+#. type: Hash Value: working-groups title
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "Quarkus 3.15 LTS"
+msgstr "Quarkus 3.15 LTS"
+
+#. type: Hash Value: working-groups board-url
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "https://github.com/orgs/quarkusio/projects/59"
+msgstr "https://github.com/orgs/quarkusio/projects/59"
+
+#. type: Hash Value: working-groups discussion
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Java.2025.20chat"
+msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Java.2025.20chat"
+
+#. type: Hash Value: working-groups last-activity
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "2026-09-25"
+msgstr "2026年9月25日"
+
+#. type: Hash Value: working-groups last-update
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid ""
+"Now that Quarkus supports Java 25, the few remaining issues are mostly about polishing. There are no more blockers. \n"
+"We're now tracking an effort to eliminate the FFM downcall warning in dev-mode.\n"
+"(This status update was automatically generated using AI.)\n"
+msgstr ""
+"既然 Quarkus 已经支持 Java 25，目前剩下的几个问题主要涉及细节打磨。已经没有阻碍进展的重大问题了。\n"
+"我们目前正在推进一项工作，旨在消除开发模式下 FFM 的下调调用警告。\n"
+"（此状态更新由 AI 自动生成。）\n"
+
+#. type: Hash Value: working-groups point-of-contact
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "@Sanne (@<strong>Sanne</strong> on Zulip) and @gsmet (@_<strong>Guillaume Smet</strong> on Zulip)"
+msgstr "@Sanne（Zulip 上的<strong>@Sanne</strong>）和 @gsmet（Zulip 上的<strong>@_Guillaume Smet</strong>）"
+
+#. type: Hash Value: working-groups proposal
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "https://github.com/quarkusio/quarkus/discussions/49696"
+msgstr "https://github.com/quarkusio/quarkus/discussions/49696"
+
+#. type: Hash Value: working-groups readme
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid ""
+"<h3>Objective</h3>\n"
+"<p>To enable Quarkus applications to run cleanly across dev/test/production modes on Java 25, with no requirement to adopt Java 25 as a baseline.</p>\n"
+"<h3>The Problem</h3>\n"
+"<p>Java 25 brings new features and platform-level changes (e.g., new JEPs, VM flags, performance tweaks) that may trigger warnings, break behavior, or degrade Quarkus experiences. Dependencies or extensions may also face compatibility challenges. A coordinated effort is needed to identify, fix, document, and optionally leverage these changes.</p>\n"
+"<h3>The Solution</h3>\n"
+"<p>The working group will:</p>\n"
+"<ul>\n"
+"<li>Attempt to run representative Quarkus applications under Java 25 in dev, test, and production modes.</li>\n"
+"<li>Catalog issues, warnings, or incompatibilities in a Wiki or issue tracker.</li>\n"
+"<li>Propose and implement fixes or mitigations (or document workarounds).</li>\n"
+"<li>Optionally explore beneficial Java 25 features (e.g., Scoped Values, Flexible Constructor Bodies), without requiring their use.</li>\n"
+"<li>Identify and remediate or flag problematic Quarkus extensions.\n"
+"⠀</li>\n"
+"</ul>\n"
+"<h3>Definition of Done</h3>\n"
+"<ul>\n"
+"<li>Publish a wiki page detailing issues and resolutions.</li>\n"
+"<li>Ensure Quarkus core and its ecosystem can operate cleanly under Java 25 in all modes.</li>\n"
+"<li>Integrate any selected Java 25 features in an optional, non-breaking manner.</li>\n"
+"<li>Document or fix problematic extensions, offering guidance where needed.</li>\n"
+"<li>Communicate results via a blog post or quarkus-dev announcement.\n"
+"⠀</li>\n"
+"</ul>\n"
+"<h3>Scope of Work</h3>\n"
+"<p><strong>In scope:</strong></p>\n"
+"<ul>\n"
+"<li>Running and diagnosing Quarkus on Java 25.</li>\n"
+"<li>Fixing issues in Quarkus core repository and extensions.</li>\n"
+"<li>Exploring select Java 25 enhancements.</li>\n"
+"</ul>\n"
+"<p>⠀\n"
+"<strong>Out of scope:</strong></p>\n"
+"<ul>\n"
+"<li>Mandating Java 25 as the minimum supported runtime.</li>\n"
+"</ul>\n"
+"<p>⠀</p>\n"
+"<h3>Organizing the Work</h3>\n"
+"<ol>\n"
+"<li><strong>Communication &amp; Transparency:</strong>\n"
+"<ul>\n"
+"<li>Use GitHub discussion, project board, and issues.</li>\n"
+"<li>Coordinate via Quarkus Zulip and GitHub.</li>\n"
+"</ul>\n"
+"</li>\n"
+"<li><strong>Timeline &amp; Milestones:</strong>\n"
+"<ul>\n"
+"<li><strong>Exploration Phase:</strong> Run tests on Java 25 Candidate Release, document findings before GA (target: <em>before September 16, 2025</em>), so we can guide our users as soon as Java 25 reaches GA.</li>\n"
+"</ul>\n"
+"</li>\n"
+"</ol>\n"
+"<hr />\n"
+"<ul>\n"
+"<li>Point of contact: @Sanne (@<strong>Sanne</strong> on Zulip) and @gsmet (@_<strong>Guillaume Smet</strong> on Zulip)</li>\n"
+"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/49696</li>\n"
+"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Java.2025.20chat\">Zulip</a></li>\n"
+"</ul>\n"
+msgstr ""
+"<h3>目标</h3>\n"
+"<p>使 Quarkus 应用程序能够在 Java 25 上跨开发、测试和生产环境无缝运行，且无需将 Java 25 作为基线。</p>\n"
+"<h3>问题</h3>\n"
+"<p>Java 25 引入了新功能和平台级变更（例如新的 JEP、VM 标志、性能调整），这些变更可能会触发警告、导致行为异常或降低 Quarkus 的使用体验。依赖项或扩展也可能面临兼容性挑战。 需要通过协调一致的努力来识别、修复、记录这些变更，并酌情加以利用。</p>\n"
+"<h3>解决方案</h3>\n"
+"<p>工作组将：</p>\n"
+"<ul>\n"
+"<li>尝试在 Java 25 环境下，以开发、测试和生产模式运行具有代表性的 Quarkus 应用程序。</li>\n"
+"<li>在 Wiki 或问题跟踪系统中整理问题、警告或不兼容情况。</li>\n"
+"<li>提出并实施修复方案或缓解措施（或记录临时解决方案）。</li>\n"
+"<li>可选地探索 Java 25 的有益特性（例如，作用域值、灵活的构造函数体），但不强制要求使用这些特性。</li>\n"
+"<li>识别并修复或标记存在问题的 Quarkus 扩展。\n"
+"⠀</li>\n"
+"</ul>\n"
+"<h3>完成标准</h3>\n"
+"<ul>\n"
+"<li>发布一篇详细说明问题及解决方案的维基页面。</li>\n"
+"<li>确保 Quarkus 核心及其生态系统在所有模式下均能在 Java 25 环境下稳定运行。</li>\n"
+"<li>以可选且不破坏兼容性的方式集成所选的 Java 25 特性。</li>\n"
+"<li>对存在问题的扩展进行文档记录或修复，并在必要时提供指导。</li>\n"
+"<li>通过博客文章或 quarkus-dev 公告发布结果。\n"
+"⠀</li>\n"
+"</ul>\n"
+"<h3>工作范围</h3>\n"
+"<p><strong>工作范围：</strong></p>\n"
+"<ul>\n"
+"<li>在 Java 25 上运行并诊断 Quarkus。</li>\n"
+"<li>修复 Quarkus 核心仓库及扩展中的问题。</li>\n"
+"<li>探索部分 Java 25 增强功能。</li>\n"
+"</ul>\n"
+"<p>⠀\n"
+"<strong>工作范围外：</strong></p>\n"
+"<ul>\n"
+"<li>强制要求 Java 25 作为最低支持的运行时版本。</li>\n"
+"</ul>\n"
+"<p>⠀</p>\n"
+"<h3>工作组织</h3>\n"
+"<ol>\n"
+"<li><strong>沟通与透明度：</strong>\n"
+"<ul>\n"
+"<li>使用 GitHub 讨论、项目看板和问题跟踪功能。</li>\n"
+"<li>通过 Quarkus Zulip 和 GitHub 进行协调。</li>\n"
+"</ul>\n"
+"</li>\n"
+"<li><strong>时间表与里程碑：</strong>\n"
+"<ul>\n"
+"<li><strong>探索阶段：</strong>在 Java 25 候选版本上运行测试，并在正式发布（目标：<em>2025 年 9 月 16 日之前</em>）前记录测试结果，以便在 Java 25 正式发布后立即为用户提供指导。</li>\n"
+"</ul>\n"
+"</li>\n"
+"</ol>\n"
+"<hr />\n"
+"<ul>\n"
+"<li>联系人：@Sanne（<strong>Zulip上的@Sanne</strong>）和@gsmet（<strong>Zulip上的@_Guillaume Smet</strong>）</li>\n"
+"<li>提案：https://github.com/quarkusio/quarkus/discussions/49696</li>\n"
+"<li>讨论：<a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Java.2025.20chat\">Zulip</a></li>\n"
+"</ul>\n"
+
+#. type: Hash Value: working-groups short-description
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "The objective of this working group is to enable Quarkus applications to run cleanly across dev/test/production modes on Java 25, with no requirement to adopt Java 25 as a baseline.\n"
+msgstr "该工作组的目标是确保 Quarkus 应用程序能够在 Java 25 上跨开发、测试和生产环境无缝运行，且无需将 Java 25 作为基准。\n"
+
+#. type: Hash Value: working-groups title
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "Java 25 support"
+msgstr "Java 25 支持"
 
 #. type: Hash Value: working-groups board-url
 #: _data/wg.yaml:1
@@ -1013,7 +1810,6 @@ msgid "https://github.com/orgs/quarkusio/projects/79"
 msgstr "https://github.com/orgs/quarkusio/projects/79"
 
 #. type: Hash Value: working-groups last-activity
-#. mt: deepl
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
 msgid "2026-09-22"
@@ -1180,12 +1976,6 @@ msgstr ""
 #, fuzzy, no-wrap
 msgid "The main objective of this working group is to convert our Jekyll-based website to one built on Roq. A side-effect may be a more generalised set of tools and docs for others to use to convert their sites.\n"
 msgstr "该工作组的主要目标是将我们基于 Jekyll 的网站迁移到 Roq 平台。这一举措的附带效果可能是形成一套更通用的工具和文档，供其他人用于迁移他们的网站。\n"
-
-#. type: Hash Value: working-groups status
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "complete"
-msgstr "完整"
 
 #. type: Hash Value: working-groups title
 #: _data/wg.yaml:1
@@ -1498,108 +2288,6 @@ msgstr "统一事件总线"
 #. type: Hash Value: working-groups board-url
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "https://github.com/orgs/quarkusio/projects/89"
-msgstr "https://github.com/orgs/quarkusio/projects/89"
-
-#. type: Hash Value: working-groups last-activity
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "2026-09-14"
-msgstr "2026年9月14日"
-
-#. type: Hash Value: working-groups last-update
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "WG started\n"
-msgstr "WG 已启动\n"
-
-#. type: Hash Value: working-groups last-update-date
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "2026-09-11"
-msgstr "2026年9月11日"
-
-#. type: Hash Value: working-groups point-of-contact
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "@patriot1burke"
-msgstr "@patriot1burke"
-
-#. type: Hash Value: working-groups proposal
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "https://github.com/quarkusio/quarkus/discussions/56502"
-msgstr "https://github.com/quarkusio/quarkus/discussions/56502"
-
-#. type: Hash Value: working-groups readme
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid ""
-"<h2>The Problem</h2>\n"
-"<p>There are a bunch of things we want to address this year for Quarkus AI strategy:</p>\n"
-"<ul>\n"
-"<li>Revamp the Quarkus AI webpage</li>\n"
-"<li>Create Blueprint samples for Quarkus AI that show full Quarkus stack and AI application archetypes</li>\n"
-"<li>Align Quarkus LC4J extension with LC4J upstream project. Because Q-LC4J reimplements a lot of things to Quarkize LC4J, new features and bug fixes in upstream don't percolate down to Q-LC4J.</li>\n"
-"<li>LangFuse integration. This will give us Observability, Tracing, Metrics, and a playground for development. Will also make Java a first class language in the overall AI dev community</li>\n"
-"<li>Revamp Q-LC4J RAG implementation</li>\n"
-"<li>Bring Quarkus/CDI style programming to more LC4J components</li>\n"
-"<li>Handle shutdown and recovery more gracefully.</li>\n"
-"</ul>\n"
-"<h2>Definition of Done</h2>\n"
-"<p>When the Epic issues defined in the Quarkus AI umbrella GitHub projects are closed.</p>\n"
-"<h2>Scope of Work</h2>\n"
-"<p>Scope of work will be well defined within various GitHub issues linked to within the Epic Issues of the Quarkus AI umbrella repo.</p>\n"
-"<h2>Organizing the Work</h2>\n"
-"<p><strong>Communication and Transparency:</strong></p>\n"
-"<p>A new umbrella <a href=\"https://github.com/quarkusio/quarkus-ai\">quarkus-ai</a> has been created. This will hold high-level issues (epics) that link to lists of tasks and issues spread out between the other repos we are trying to coordinate.</p>\n"
-"<p><strong>Expected Timeline:</strong>\n"
-"Work will start sometime in September 2026 and will continue into early 2027</p>\n"
-"<ul>\n"
-"<li>Point of contact: @patriot1burke</li>\n"
-"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/56502</li>\n"
-"</ul>\n"
-msgstr ""
-"<h2>问题</h2>\n"
-"<p>今年，针对 Quarkus AI 战略，我们希望解决以下几个问题：</p>\n"
-"<ul>\n"
-"<li>重构 Quarkus AI 网页</li>\n"
-"<li>为 Quarkus AI 创建 Blueprint 示例，展示完整的 Quarkus 技术栈和 AI 应用原型</li>\n"
-"<li>使 Quarkus LC4J 扩展与 LC4J 上游项目保持同步。由于 Q-LC4J 为使 LC4J 适应 Quarkus 而重新实现了许多功能，因此上游的新功能和错误修复无法传递到 Q-LC4J 中。</li>\n"
-"<li>集成 LangFuse。这将为我们提供可观测性、追踪、指标以及一个开发实验平台。同时也将使 Java 在整个 AI 开发社区中成为一等语言</li>\n"
-"<li>重构 Q-LC4J 的 RAG 实现</li>\n"
-"<li>将 Quarkus/CDI 风格的编程引入更多 LC4J 组件</li>\n"
-"<li>更优雅地处理关机和恢复操作。</li>\n"
-"</ul>\n"
-"<h2>完成标准</h2>\n"
-"<p>当 Quarkus AI 伞形 GitHub 项目中定义的 Epic 问题全部关闭时。</p>\n"
-"<h2>工作范围</h2>\n"
-"<p>工作范围将在 Quarkus AI 总库的 Epic 问题中链接的各个 GitHub 问题内明确界定。</p>\n"
-"<h2>工作组织</h2>\n"
-"<p><strong>沟通与透明度：</strong></p>\n"
-"<p>已创建一个新的<a href=\"https://github.com/quarkusio/quarkus-ai\">“quarkus-ai”</a>总库。该库将包含高级别问题（Epic），并链接到分散在我们试图协调的其他仓库中的任务和问题列表。</p>\n"
-"<p><strong>预计时间表：</strong>\n"
-"工作将于 2026 年 9 月某时启动，并持续至 2027 年初</p>\n"
-"<ul>\n"
-"<li>联系人：@patriot1burke</li>\n"
-"<li>提案：https://github.com/quarkusio/quarkus/discussions/56502</li>\n"
-"</ul>\n"
-
-#. type: Hash Value: working-groups short-description
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "The main objective of this working group is to revamp the Quarkus AI message and to coordinate work for Quarkus AI during the 2026/27 timeframe.\n"
-msgstr "该工作组的主要目标是重塑 Quarkus AI 的宣传信息，并在 2026/27 年期间协调 Quarkus AI 相关工作。\n"
-
-#. type: Hash Value: working-groups title
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "Quarkus AI Coordination"
-msgstr "Quarkus AI 协调工作"
-
-#. type: Hash Value: working-groups board-url
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
 msgid "https://github.com/orgs/quarkusio/projects/48"
 msgstr "https://github.com/orgs/quarkusio/projects/48"
 
@@ -1609,21 +2297,19 @@ msgstr "https://github.com/orgs/quarkusio/projects/48"
 msgid "TBD"
 msgstr "待定"
 
+#. type: Hash Value: working-groups last-activity
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "2026-09-14"
+msgstr "2026年9月14日"
+
 #. type: Hash Value: working-groups last-update
 #: _data/wg.yaml:1
-#, fuzzy, no-wrap
+#, no-wrap
 msgid ""
-"The Unified Saga group focused on \"Default extension capability providers\" this period. We closed out the previous issue, and a new one is now open to track further efforts on this topic.\n"
+"Work continued on OpenTelemetry trace context propagation for Signals; the original issue was closed and then reopened. We also started tracking an item to collect metrics covering messages, errors, and bytes transferred.\n"
 "(This status update was automatically generated using AI.)\n"
 msgstr ""
-"本周期，Unified Saga 工作组重点关注了“默认扩展功能提供程序”。我们已关闭上一期议题，并已开启新议题以跟踪该主题的后续工作。\n"
-"（此状态更新由人工智能自动生成。）\n"
-
-#. type: Hash Value: working-groups last-update-date
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "2026-05-26"
-msgstr "2026年5月26日"
 
 #. type: Hash Value: working-groups point-of-contact
 #: _data/wg.yaml:1
@@ -1708,12 +2394,6 @@ msgstr ""
 #, fuzzy, no-wrap
 msgid "The main objective of this working group is to unify Quarkus's story about Saga-based transactions.\n"
 msgstr "该工作组的主要目标是统一 Quarkus 关于基于 Saga 的事务的说明。\n"
-
-#. type: Hash Value: working-groups status
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "staled"
-msgstr "过期了"
 
 #. type: Hash Value: working-groups title
 #: _data/wg.yaml:1
@@ -2089,19 +2769,11 @@ msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/AOT.20c
 
 #. type: Hash Value: working-groups last-update
 #: _data/wg.yaml:1
-#, fuzzy, no-wrap
+#, no-wrap
 msgid ""
-"The team introduced the first version of `aot-jar` packaging, making it the default when AOT is enabled. We also completed several small adjustments for JLink integration. No new issues were reported.\n"
+"The AOT Support WG wrapped up several key items. We handled AOT file management and integrated Semeru's AOT features into our configuration. Measurement work also concluded, covering RSS usage and warmup when using AOT.\n"
 "(This status update was automatically generated using AI.)\n"
 msgstr ""
-"团队推出了 `aot-jar` 打包方案的首个版本，并在启用 AOT 时将其设为默认选项。此外，我们还针对 JLink 集成完成了若干细微调整。本期未收到任何新问题报告。\n"
-"（此状态更新由 AI 自动生成。）\n"
-
-#. type: Hash Value: working-groups last-update-date
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "2026-06-29"
-msgstr "2026年6月29日"
 
 #. type: Hash Value: working-groups point-of-contact
 #: _data/wg.yaml:1
@@ -2284,272 +2956,6 @@ msgstr "AOT 支持"
 #. type: Hash Value: working-groups board-url
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "https://github.com/orgs/quarkusio/projects/75"
-msgstr "https://github.com/orgs/quarkusio/projects/75"
-
-#. type: Hash Value: working-groups discussion
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-dev-star/with/581636141"
-msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-dev-star/with/581636141"
-
-#. type: Hash Value: working-groups last-activity
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "2026-08-28"
-msgstr "2026年8月28日"
-
-#. type: Hash Value: working-groups last-update
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "The working group is collecting missing features and issues, but the initial scope is now complete.\n"
-msgstr "该工作组正在收集缺失的功能和问题，但初步工作范围现已完成。\n"
-
-#. type: Hash Value: working-groups point-of-contact
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "@phillip-kruger"
-msgstr "@phillip-kruger"
-
-#. type: Hash Value: working-groups proposal
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "https://github.com/quarkusio/quarkus/discussions/53093#discussioncomment-16271096"
-msgstr "https://github.com/quarkusio/quarkus/discussions/53093#discussioncomment-16271096"
-
-#. type: Hash Value: working-groups readme
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid ""
-"<h2>Objective</h2>\n"
-"<p>Decompose and modernize the Quarkus developer tooling runtime (Dev UI, Dev MCP, Dev Shell, Dev Assistant) so that each component can operate independently, without requiring the full <code>vertx-http</code> web stack. This enables AI-powered developer assistance (via MCP) and terminal-based tooling (Dev Shell) to work even when dev mode or the HTTP layer is broken, and lays the foundation for a unified &quot;Dev Star&quot; developer experience across all interaction surfaces.</p>\n"
-"<p>Quarkus has always been a developer experience champion; live coding, Dev UI, Dev Services, and continuous testing set the standard for Java frameworks. Dev Star extends this effort into the AI era by focusing equally on <strong>AI experience (AIx)</strong>: making Quarkus the easiest framework for coding agents (Claude, Copilot, Gemini, etc.) to work with. By exposing the full power of Quarkus dev mode (configuration, build output, documentation, testing, error diagnostics) through MCP, and by providing agents with the right documentation for the specific extensions and APIs used in the application being built (via RAG over Quarkus Docs), coding agents can understand, build, and debug Quarkus applications as effectively as human developers using the Dev UI. Developer and AI experiences are two sides of the same coin: every improvement to one benefits the other.</p>\n"
-"<h2>The Problem</h2>\n"
-"<p>Today, the entire Quarkus developer tooling stack is tightly coupled to the Dev UI Runtime, which depends on <code>vertx-http</code>. This creates several problems:</p>\n"
-"<ol>\n"
-"<li>\n"
-"<p><strong>Fragile dependency chain:</strong> Dev MCP and Dev Shell cannot function without the full HTTP stack running. If dev mode is broken (e.g., a compilation error prevents the application from starting), all developer tooling becomes unavailable — precisely when developers need help the most.</p>\n"
-"</li>\n"
-"<li>\n"
-"<p><strong>No fallback for broken applications:</strong> There is no lightweight mechanism to provide application lifecycle information, documentation access, or workspace navigation when the Quarkus application cannot start. AI assistants connected via MCP are completely cut off.</p>\n"
-"</li>\n"
-"<li>\n"
-"<p><strong>Monolithic runtime:</strong> The Dev UI Runtime bundles WebSocket transport, JsonRPC routing, MCP transport, and shell connectivity into a single unit. Extensions that only need JsonRPC services or MCP tools must still pull in the entire web stack.</p>\n"
-"</li>\n"
-"<li>\n"
-"<p><strong>Limited AI integration surface:</strong> The Chappie WG established AI assistance capabilities, but the current architecture does not cleanly separate the AI runtime (Chappie Runtime + RAG over Quarkus Docs) from the transport layer, making it difficult to expose AI assistance through multiple channels (UI, MCP, Shell, stdio).</p>\n"
-"</li>\n"
-"<li>\n"
-"<p><strong>Developer experience gaps:</strong> Several core developer workflows (continuous testing, hot reload, exception reporting, example projects, file navigation) have not been re-evaluated in the context of MCP and AI-assisted development. Features like tool filtering/search in MCP are missing.</p>\n"
-"</li>\n"
-"</ol>\n"
-"<h2>The Proposed Solution</h2>\n"
-"<h3>Architecture Decomposition</h3>\n"
-"<p>Break the current monolithic Dev UI Runtime into four independent runtimes:</p>\n"
-"<p>| Runtime                 | Transport       | Dependency                     | Purpose                                                               |\n"
-"| ----------------------- | --------------- | ------------------------------ | --------------------------------------------------------------------- |\n"
-"| <strong>Dev UI Runtime</strong>      | WebSocket       | <code>vertx-http</code>                   | Browser-based Dev UI (For Human)                                      |\n"
-"| <strong>Dev JsonRPC Runtime</strong> | JsonRPCRouter   | CDI                            | Core routing layer for JsonRPC services; shared by Dev UI and Dev MCP |\n"
-"| <strong>Dev MCP Runtime</strong>     | Streamable HTTP | CDI (no <code>vertx-http</code> required) | MCP server for AI agents (e.g., Claude, Copilot)                      |\n"
-"| <strong>Dev Shell Runtime</strong>   | CDI-connected   | CDI (no <code>vertx-http</code> required) | Terminal-based developer interaction                                  |</p>\n"
-"<p>The key architectural change is <strong>breaking the <code>vertx-http</code> dependency</strong> so that Dev MCP and Dev Shell can operate independently. The JsonRPC Router becomes a shared component connected via CDI, enabling extensions to expose <code>JsonRpcService</code> beans that are accessible from any runtime.</p>\n"
-"<h3>Dev Assistant</h3>\n"
-"<p>The Dev Assistant combines:</p>\n"
-"<ul>\n"
-"<li><strong>Chappie Runtime</strong>: AI interaction engine (successor to the Chappie WG)</li>\n"
-"<li><strong>Quarkus Docs (RAG)</strong>: Retrieval-augmented generation over Quarkus documentation</li>\n"
-"</ul>\n"
-"<p>The Dev Assistant connects to the Dev Shell Runtime via CDI, and to the Dev UI Runtime via the existing JsonRPC path. This means AI assistance is available from the browser (Dev UI), the terminal (Dev Shell), and external AI tools (Dev MCP).</p>\n"
-"<h3>Standalone stdio MCP Application</h3>\n"
-"<p>A lightweight, standalone MCP application using <strong>stdio transport</strong> that provides:</p>\n"
-"<ul>\n"
-"<li>Application lifecycle information (build status, errors, configuration)</li>\n"
-"<li>Quarkus documentation access</li>\n"
-"<li>Workspace file navigation</li>\n"
-"</ul>\n"
-"<p>This stdio app operates <strong>outside</strong> dev mode, ensuring developers can get AI assistance even when the application is completely broken (compilation failures, missing dependencies, misconfiguration). It complements the in-process Dev MCP Runtime.</p>\n"
-"<h3>Reconsider Dev* Features</h3>\n"
-"<p>Re-evaluate existing developer features for the new architecture:</p>\n"
-"<ul>\n"
-"<li><strong>Dev Mode resilience</strong>: What works when dev mode is broken?</li>\n"
-"<li><strong>Continuous Testing</strong>: Expose test status and controls via MCP tools</li>\n"
-"<li><strong>Hot Reload</strong>: Trigger and monitor reloads from MCP/Shell</li>\n"
-"<li><strong>Example Project</strong>: Generate example code via AI assistance</li>\n"
-"<li><strong>Exception Reporting</strong> : Surface exceptions as MCP resources/tools</li>\n"
-"<li><strong>Workspace Navigation</strong> : Find files and navigate project structure via MCP</li>\n"
-"<li><strong>Tool Filter/Search</strong>: Enable discovery and filtering of available MCP tools</li>\n"
-"<li><strong>Response Size Optimization</strong>: Reduce MCP response payload sizes to minimize context window consumption by coding agents; provide concise, structured responses rather than raw verbose output</li>\n"
-"</ul>\n"
-"<h3>Skills Investigation</h3>\n"
-"<p>Investigate the concept of &quot;Skills&quot; (composable, higher-level developer actions built on top of MCP tools). The idea is to allow each extension to ship one or more Skills that describe how the extension is intended to be used, configured, and tested, along with best practices, common pitfalls, and troubleshooting guidance. Rather than requiring an AI agent to discover this knowledge through trial and error, Skills provide it upfront as structured, actionable context.</p>\n"
-"<p><strong>Success criteria:</strong> define what a Skill is, how it differs from a raw MCP tool (tools <em>do</em> things; Skills <em>teach</em> how to do things well), and whether a Skills API adds meaningful value over direct tool composition by AI agents.</p>\n"
-"<h2>Definition of Done</h2>\n"
-"<ul>\n"
-"<li>[ ] Dev MCP Runtime responds to the MCP <code>initialize</code> handshake without Dev UI or <code>vertx-http</code> running</li>\n"
-"<li>[ ] Dev Shell Runtime starts and provides interactive developer commands without <code>vertx-http</code></li>\n"
-"<li>[ ] Dev Assistant (Chappie + RAG) is accessible from Dev UI, Dev MCP, and Dev Shell</li>\n"
-"<li>[ ] Clear design of the RAG pipeline: from documentation to the agent</li>\n"
-"<li>[ ] Standalone stdio MCP app provides application lifecycle, docs, and workspace tools when dev mode is broken</li>\n"
-"<li>[ ] Existing <code>JsonRpcService</code> extensions work across all runtimes without modification</li>\n"
-"<li>[ ] Continuous testing status and controls are available via MCP tools</li>\n"
-"<li>[ ] Exception information is surfaced as MCP resources</li>\n"
-"<li>[ ] MCP tool discovery supports filtering and search</li>\n"
-"<li>[ ] Architecture documented with clear extension author guidance</li>\n"
-"<li>[ ] Integration tests verify that each runtime operates independently</li>\n"
-"</ul>\n"
-"<h2>Scope of Work</h2>\n"
-"<h3>In Scope</h3>\n"
-"<ul>\n"
-"<li>Decompose Dev UI Runtime into four independent runtimes (Dev UI, Dev JsonRPC, Dev MCP, Dev Shell)</li>\n"
-"<li>Break <code>vertx-http</code> dependency for Dev Shell</li>\n"
-"<li>Implement Dev Assistant (Chappie Runtime + Quarkus Docs RAG) connected via CDI</li>\n"
-"<li>Build standalone stdio MCP application for broken-dev-mode scenarios</li>\n"
-"<li>Re-evaluate continuous testing, hot reload, exception reporting, and workspace navigation for MCP</li>\n"
-"<li>Implement MCP tool filtering and search</li>\n"
-"<li>Investigate Skills concept and define success criteria</li>\n"
-"<li>Documentation for extension authors on the new architecture</li>\n"
-"</ul>\n"
-"<h3>Out of Scope</h3>\n"
-"<ul>\n"
-"<li>Production-mode MCP server (this is dev-mode tooling only)</li>\n"
-"<li>Dev Shell is not part of this working group, a dedicated working group will be created.</li>\n"
-"<li>Third-party AI provider integrations beyond MCP protocol support</li>\n"
-"<li>IDE-specific plugins (VS Code, IntelliJ) — these consume MCP, not provide it</li>\n"
-"</ul>\n"
-"<h2>Organizing the Work</h2>\n"
-"<h3>Communication</h3>\n"
-"<ul>\n"
-"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-dev-star/with/581636141\">wg-dev-star</a></li>\n"
-"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/53093#discussioncomment-16271096</li>\n"
-"<li>Point of Contact: @phillip-kruger</li>\n"
-"</ul>\n"
-"<h3>Timeline</h3>\n"
-"<ul>\n"
-"<li>Target: Quarkus 4 release cycle</li>\n"
-"</ul>\n"
-msgstr ""
-"<h2>目标</h2>\n"
-"<p>将 Quarkus 开发工具运行时（Dev UI、Dev MCP、Dev Shell、Dev Assistant）进行拆分和现代化改造，使每个组件都能独立运行，无需依赖完整的<code>vertx-http</code>Web 堆栈。 这使得基于 AI 的开发者辅助功能（通过 MCP）和基于终端的工具（Dev Shell）即使在开发模式或 HTTP 层出现故障时仍能正常工作，并为在所有交互界面上实现统一的“Dev Star”开发者体验奠定了基础。</p>\n"
-"<p>Quarkus 一直以来都是开发者体验的领军者；实时编码、Dev UI、Dev Services 和持续测试为 Java 框架树立了标杆。 Dev Star 将这一努力延伸至 AI 时代，同时注重<strong>AI 体验（AIx）</strong>：使 Quarkus 成为最易于与编码代理（Claude、Copilot、Gemini 等）协作的框架。 通过 MCP 充分展现 Quarkus 开发模式的全部功能（配置、构建输出、文档、测试、错误诊断），并为智能代理提供针对正在构建的应用程序中所用特定扩展和 API 的正确文档（通过基于 Quarkus Docs 的 RAG）， 编程代理能够像使用开发界面的人类开发者一样，高效地理解、构建和调试 Quarkus 应用程序。开发者体验与 AI 体验是一枚硬币的两面：对其中一方的任何改进，都会惠及另一方。</p>\n"
-"<h2>问题</h2>\n"
-"<p>目前，整个 Quarkus 开发工具栈与 Dev UI 运行时紧密耦合，而该运行时依赖于<code>vertx-http</code>。这导致了以下几个问题：</p>\n"
-"<ol>\n"
-"<li>\n"
-"<p><strong>脆弱的依赖链：</strong>若完整的 HTTP 栈未运行，Dev MCP 和 Dev Shell 将无法工作。如果开发模式出现故障（例如，编译错误导致应用程序无法启动），所有开发工具都将无法使用——而这恰恰是开发人员最需要帮助的时候。</p>\n"
-"</li>\n"
-"<li>\n"
-"<p><strong>应用程序故障时无备用方案：</strong>当 Quarkus 应用程序无法启动时，没有轻量级的机制来提供应用程序生命周期信息、文档访问或工作区导航。通过 MCP 连接的 AI 助手将完全断开。</p>\n"
-"</li>\n"
-"<li>\n"
-"<p><strong>单体式运行时：</strong>Dev UI 运行时将 WebSocket 传输、JsonRPC 路由、MCP 传输和 shell 连接打包为单一单元。即使仅需 JsonRPC 服务或 MCP 工具的扩展，仍必须引入整个 Web 堆栈。</p>\n"
-"</li>\n"
-"<li>\n"
-"<p><strong>AI 集成接口有限：</strong>Chappie 工作组确立了 AI 辅助功能，但当前架构未能将 AI 运行时（Chappie 运行时 + 基于 Quarkus Docs 的 RAG）与传输层清晰分离，导致难以通过多种渠道（UI、MCP、Shell、stdio）提供 AI 辅助功能。</p>\n"
-"</li>\n"
-"<li>\n"
-"<p><strong>开发者体验缺口：</strong>若干核心开发者工作流（持续测试、热重载、异常报告、示例项目、文件导航）尚未在 MCP 和 AI 辅助开发背景下进行重新评估。MCP 中缺少工具筛选/搜索等功能。</p>\n"
-"</li>\n"
-"</ol>\n"
-"<h2>建议的解决方案</h2>\n"
-"<h3>架构分解</h3>\n"
-"<p>将当前单体式的开发 UI 运行时拆分为四个独立的运行时：</p>\n"
-"<p>| 运行时                 | 传输机制       | 依赖项                     | 用途                                                               |\n"
-"| ----------------------- | --------------- | ------------------------------ | --------------------------------------------------------------------- |\n"
-"|<strong>开发 UI 运行时</strong>     | WebSocket       |<code>vertx-http</code>                  | 基于浏览器的开发 UI（面向用户）                                      |\n"
-"|<strong>开发 JsonRPC 运行时</strong>| JsonRPCRouter   | CDI                            | JsonRPC 服务的核心路由层；由开发 UI 和开发 MCP 共享 |\n"
-"|<strong>开发 MCP 运行时</strong>    | Streamable HTTP | CDI（无需<code>vertx-http</code>） | 用于 AI 代理（例如 Claude、Copilot）的 MCP 服务器                      |\n"
-"|<strong>开发 Shell 运行时</strong>  | 通过 CDI 连接   | CDI（无需<code>vertx-http</code>） | 基于终端的开发者交互                                  |</p>\n"
-"<p>关键的架构变更在于<strong>摆脱对<code>vertx-http</code>的依赖</strong>，从而使 Dev MCP 和 Dev Shell 能够独立运行。JsonRPC 路由器成为通过 CDI 连接的共享组件，允许扩展程序暴露<code>JsonRpcService</code>Bean，这些 Bean 可从任何运行时访问。</p>\n"
-"<h3>开发助手</h3>\n"
-"<p>开发助手整合了：</p>\n"
-"<ul>\n"
-"<li><strong>Chappie 运行时</strong>：AI 交互引擎（Chappie WG 的继任者）</li>\n"
-"<li><strong>Quarkus 文档（RAG）</strong>：基于 Quarkus 文档的检索增强生成</li>\n"
-"</ul>\n"
-"<p>Dev Assistant 通过 CDI 连接到 Dev Shell 运行时，并通过现有的 JsonRPC 路径连接到 Dev UI 运行时。这意味着无论是在浏览器（Dev UI）、终端（Dev Shell）还是外部 AI 工具（Dev MCP）中，均可使用 AI 辅助功能。</p>\n"
-"<h3>独立的 stdio MCP 应用程序</h3>\n"
-"<p>一款采用<strong>stdio 传输协议的</strong>轻量级、独立 MCP 应用程序，提供：</p>\n"
-"<ul>\n"
-"<li>应用程序生命周期信息（构建状态、错误、配置）</li>\n"
-"<li>Quarkus 文档访问</li>\n"
-"<li>工作区文件导航</li>\n"
-"</ul>\n"
-"<p>该 stdio 应用程序<strong>在非开发模式下</strong>运行，确保即使应用程序完全无法运行（编译失败、依赖项缺失、配置错误），开发人员仍可获得 AI 辅助。它与进程内的 Dev MCP 运行时相辅相成。</p>\n"
-"<h3>重新审视 Dev* 功能</h3>\n"
-"<p>针对新架构重新评估现有开发者功能：</p>\n"
-"<ul>\n"
-"<li><strong>开发模式的容错性</strong>：当开发模式失效时，哪些功能仍可正常运行？</li>\n"
-"<li><strong>持续测试</strong>：通过 MCP 工具展示测试状态和控制选项</li>\n"
-"<li><strong>热重载</strong>：通过 MCP/Shell 触发并监控重载</li>\n"
-"<li><strong>示例项目</strong>：通过 AI 辅助生成示例代码</li>\n"
-"<li><strong>异常报告</strong>：将异常以 MCP 资源/工具的形式呈现</li>\n"
-"<li><strong>工作区导航</strong>：通过 MCP 查找文件并浏览项目结构</li>\n"
-"<li><strong>工具筛选/搜索</strong>：支持发现和筛选可用的 MCP 工具</li>\n"
-"<li><strong>响应大小优化</strong>：缩减 MCP 响应负载大小，以最大限度减少编码代理对上下文窗口的占用；提供简洁、结构化的响应，而非冗长的原始输出</li>\n"
-"</ul>\n"
-"<h3>技能研究</h3>\n"
-"<p>探究“技能”（Skills）的概念（即基于 MCP 工具构建的可组合、更高层次的开发者操作）。 其核心理念是允许每个扩展程序提供一个或多个“技能”，这些技能描述了该扩展程序的预期使用方式、配置方法和测试流程，同时包含最佳实践、常见陷阱及故障排除指南。与要求AI代理通过试错来发现这些知识不同，“技能”将其作为结构化且可操作的上下文信息预先提供。</p>\n"
-"<p><strong>成功标准：</strong>定义什么是“技能”，它与原始 MCP 工具的区别（工具<em>执行</em>操作；技能<em>则指导</em>如何高效地完成操作），以及“技能”API 是否比 AI 代理直接组合工具更能带来实质性价值。</p>\n"
-"<h2>完成标准</h2>\n"
-"<ul>\n"
-"<li>[ ] 在未运行 Dev UI 或<code>vertx-http</code>的情况下，Dev MCP 运行时能响应 MCP<code>初始化</code>握手</li>\n"
-"<li>[ ] Dev Shell 运行时可在不依赖<code>vertx-http</code>的情况下启动并提供交互式开发者命令</li>\n"
-"<li>[ ] 可通过开发 UI、开发 MCP 和开发 Shell 访问开发助手（Chappie + RAG）</li>\n"
-"<li>[ ] RAG 管道设计清晰：从文档到智能代理</li>\n"
-"<li>[ ] 当开发模式出现故障时，独立的 stdio MCP 应用程序可提供应用程序生命周期管理、文档及工作区工具</li>\n"
-"<li>[ ] 现有的<code>JsonRpcService</code>扩展无需修改即可在所有运行时环境中正常工作</li>\n"
-"<li>[ ] 可通过 MCP 工具查看持续测试状态并进行控制</li>\n"
-"<li>[ ] 异常信息以 MCP 资源的形式呈现</li>\n"
-"<li>[ ] MCP 工具发现功能支持筛选和搜索</li>\n"
-"<li>[ ] 架构文档包含清晰的扩展作者指南</li>\n"
-"<li>[ ] 集成测试可验证每个运行时均能独立运行</li>\n"
-"</ul>\n"
-"<h2>工作范围</h2>\n"
-"<h3>工作范围</h3>\n"
-"<ul>\n"
-"<li>将 Dev UI 运行时分解为四个独立的运行时（Dev UI、Dev JsonRPC、Dev MCP、Dev Shell）</li>\n"
-"<li>解除 Dev Shell 对<code>vertx-http</code>的依赖</li>\n"
-"<li>实现通过 CDI 连接的开发助手（Chappie 运行时 + Quarkus Docs RAG）</li>\n"
-"<li>为“开发模式失效”场景构建独立的 stdio MCP 应用程序</li>\n"
-"<li>针对 MCP 重新评估持续测试、热重载、异常报告和工作区导航功能</li>\n"
-"<li>实现 MCP 工具过滤和搜索功能</li>\n"
-"<li>研究“技能”概念并定义成功标准</li>\n"
-"<li>面向扩展开发者的新架构文档</li>\n"
-"</ul>\n"
-"<h3>不在范围之内</h3>\n"
-"<ul>\n"
-"<li>生产环境的 MCP 服务器（本工作组仅涉及开发模式工具）</li>\n"
-"<li>Dev Shell 不属于本工作组，将另行组建专门的工作组。</li>\n"
-"<li>超出 MCP 协议支持范围的第三方 AI 提供商集成</li>\n"
-"<li>特定于 IDE 的插件（VS Code、IntelliJ）——这些插件调用 MCP，而非提供 MCP 协议</li>\n"
-"</ul>\n"
-"<h2>工作组织</h2>\n"
-"<h3>沟通</h3>\n"
-"<ul>\n"
-"<li>讨论：<a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-dev-star/with/581636141\">wg-dev-star</a></li>\n"
-"<li>提案：https://github.com/quarkusio/quarkus/discussions/53093#discussioncomment-16271096</li>\n"
-"<li>联系人：@phillip-kruger</li>\n"
-"</ul>\n"
-"<h3>时间表</h3>\n"
-"<ul>\n"
-"<li>目标：Quarkus 4 发布周期</li>\n"
-"</ul>\n"
-
-#. type: Hash Value: working-groups short-description
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "Decompose and modernize the Quarkus developer tooling runtime (Dev UI, Dev MCP, Dev Shell, Dev Assistant) so that each component can operate independently, without requiring the full `vertx-http` web stack. This enables AI-powered developer assistance (via MCP) and terminal-based tooling (Dev Shell)\n"
-msgstr "将 Quarkus 开发工具运行时（Dev UI、Dev MCP、Dev Shell、Dev Assistant）进行拆分和现代化改造，使每个组件都能独立运行，无需依赖完整的 `vertx-http` Web 技术栈。 这将支持基于 AI 的开发者辅助功能（通过 MCP）和基于终端的工具（Dev Shell）。\n"
-
-#. type: Hash Value: working-groups title
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "Dev Star"
-msgstr "Dev Star"
-
-#. type: Hash Value: working-groups board-url
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
 msgid "https://github.com/orgs/quarkusio/projects/30"
 msgstr "https://github.com/orgs/quarkusio/projects/30"
 
@@ -2632,380 +3038,6 @@ msgstr "测试类加载"
 #. type: Hash Value: working-groups board-url
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "https://github.com/orgs/quarkusio/projects/74"
-msgstr "https://github.com/orgs/quarkusio/projects/74"
-
-#. type: Hash Value: working-groups discussion
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-graceful-shutdown/with/581626831"
-msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-graceful-shutdown/with/581626831"
-
-#. type: Hash Value: working-groups last-activity
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "2026-08-12"
-msgstr "2026年8月12日"
-
-#. type: Hash Value: working-groups last-update
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid ""
-"The Graceful Shutdown group focused on tracing shutdown sequences this week, implementing JFR events for that purpose.\n"
-"In addition to this, @ozangunalp has done a lot of work to standardize the graceful shutdown of reactive messaging connectors (and other components). \n"
-"(This status update was automatically generated using AI.)\n"
-msgstr ""
-"本周，“优雅关闭”小组专注于追踪关闭序列，并为此实现了 JFR 事件。\n"
-"此外，@ozangunalp 为规范化响应式消息连接器（及其他组件）的优雅关闭做了大量工作。\n"
-"（此状态更新由 AI 自动生成。）\n"
-
-#. type: Hash Value: working-groups proposal
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "https://github.com/quarkusio/quarkus/discussions/53206-"
-msgstr "https://github.com/quarkusio/quarkus/discussions/53206-"
-
-#. type: Hash Value: working-groups readme
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid ""
-"<h2>Objective</h2>\n"
-"<p>Make Quarkus shutdown truly graceful by providing two complementary capabilities: (1) a mechanism for extensions to block incoming traffic and drain in-flight work to reach a quiescent state, integrated with readiness health checks, and (2) a well-ordered, phased shutdown API that gives extension developers clear control over when and how their shutdown logic executes.</p>\n"
-"<h2>The Problem</h2>\n"
-"<h3>No Quiescence Mechanism</h3>\n"
-"<p>When a Quarkus application receives a shutdown signal, there is no standard way for extensions to transition gracefully from &quot;serving&quot; to &quot;draining&quot; to &quot;stopped.&quot; The core issue is the lack of a <strong>quiescence protocol</strong>, a coordinated mechanism where:</p>\n"
-"<ol>\n"
-"<li>The application signals it is no longer ready to accept new work (readiness probe goes unhealthy)</li>\n"
-"<li>Incoming traffic is blocked at the ingress layer (load balancer, Kubernetes, service mesh)</li>\n"
-"<li>In-flight requests, transactions, and background work are given time to complete</li>\n"
-"<li>Only once the application reaches a quiescent state does actual resource teardown begin</li>\n"
-"</ol>\n"
-"<p>Today, each extension that wants to participate in graceful shutdown must implement this pattern ad hoc. Most don't. The result is interrupted HTTP requests, half-processed messages, aborted scheduled jobs, and data loss during rolling deployments.</p>\n"
-"<p>The readiness health check (<code>/q/health/ready</code>, SmallRye Health, Kubernetes readiness probes) is the natural signal to orchestrators that an instance should stop receiving traffic, but the shutdown sequence does not integrate with it in a first-class way. Extensions cannot easily declare &quot;I am draining, mark me as not ready&quot; and have that reflected in the health check automatically.</p>\n"
-"<h3>Confusing and Under-Documented Shutdown APIs</h3>\n"
-"<p>Quarkus currently has <strong>three separate shutdown API layers</strong> with unclear boundaries:</p>\n"
-"<ul>\n"
-"<li>\n"
-"<p><strong>Primordial API</strong> (<code>ShutdownContext</code>): <code>addShutdownTask(Runnable)</code> (reverse order) and <code>addLastShutdownTask(Runnable)</code>, used via <code>ShutdownContextBuildItem</code> at build time. The <code>addLastShutdownTask()</code> name is universally disliked (at least we reached a consensus).</p>\n"
-"</li>\n"
-"<li></li>\n"
-"<li>\n"
-"<p><strong>Graceful Shutdown API</strong> (<code>ShutdownListener</code>): <code>preShutdown(ShutdownNotification)</code> and <code>shutdown(ShutdownNotification)</code> with <code>done()</code> callback, used via <code>ShutdownListenerBuildItem</code>. Also exposes <code>@ShutdownDelayInitiated</code> which maps to <code>preShutdown</code>.</p>\n"
-"</li>\n"
-"<li>\n"
-"<p><strong>CDI layer</strong>: <code>@Shutdown</code> (fires <code>ShutdownEvent</code> before ArC shutdown), <code>@BeforeDestroyed(ApplicationScoped.class)</code> (fired when ArC shuts down), <code>@PreDestroy</code> on beans/interceptors.</p>\n"
-"</li>\n"
-"</ul>\n"
-"<p>There is no documentation explaining when to use which API. The actual shutdown sequence is only discoverable by reading the source code:</p>\n"
-"<ol>\n"
-"<li>\n"
-"<p><strong>Graceful shutdown phase:</strong> <code>ShutdownListener#preShutdown()</code> → delay wait (if <code>quarkus.shutdown.delay-enabled=true</code>, duration = <code>quarkus.shutdown.delay</code>) → <code>ShutdownListener#shutdown()</code> → timeout wait</p>\n"
-"</li>\n"
-"<li>\n"
-"<p><strong>Shutdown tasks phase:</strong> <code>ShutdownEvent</code> fired → ArC shutdown (<code>@BeforeDestroyed(ApplicationScoped.class)</code>, <code>@PreDestroy</code>)</p>\n"
-"</li>\n"
-"<li>\n"
-"<p><strong>Last shutdown tasks phase:</strong> Tasks registered via <code>addLastShutdownTask()</code></p>\n"
-"</li>\n"
-"</ol>\n"
-"<h3>No Cross-Extension Ordering</h3>\n"
-"<p>There is no way to express that the shutdown logic from extension A should execute before or after the logic from extension B. Extensions shut down in an undefined order, which causes real issues; for example, a scheduler extension may try to complete a job that requires a datasource that has already been closed.</p>\n"
-"<h3>No Debug/Tracing Tools</h3>\n"
-"<p>There is no way to log, trace, or inspect the shutdown sequence at runtime. When shutdown hangs or misbehaves, developers have no tooling to identify which task is blocking or how tasks are ordered.</p>\n"
-"<h3>Limited Extension Coverage</h3>\n"
-"<p>Many extensions do not participate in graceful shutdown at all. For example, <code>quarkus-scheduler</code> does not drain running or scheduled jobs before shutdown, which can cause work to be interrupted.</p>\n"
-"<h2>The Proposed Solution</h2>\n"
-"<p>The work is organized around two complementary parts.</p>\n"
-"<h3>Part 1: Pre-Shutdown Phase (Traffic Draining)</h3>\n"
-"<p>Design and implement a standard protocol for extensions to participate in graceful traffic draining, allowing the application to reach a quiescent state before any ordering-sensitive teardown begins. This phase is independent of the dependency-ordered teardown in Part 2 — it runs first and is about stopping new work, not tearing down resources.</p>\n"
-"<p><strong>Traffic blocking and readiness integration:</strong></p>\n"
-"<ul>\n"
-"<li>When shutdown is initiated, the application's readiness health check (<code>/q/health/ready</code>) immediately reports <code>DOWN</code>, signaling to Kubernetes / load balancers to stop routing new traffic</li>\n"
-"<li>Extensions can register as &quot;drainable&quot; components, when shutdown begins, they stop accepting new work and drain in-flight work</li>\n"
-"<li>A configurable drain timeout governs how long the system waits for quiescence before forcing teardown</li>\n"
-"</ul>\n"
-"<p><strong>Extension participation model:</strong></p>\n"
-"<ul>\n"
-"<li>Extensions declare their draining capability and report when they have reached quiescence (no in-flight work remaining)</li>\n"
-"<li>The shutdown sequence waits for all drainable extensions to report quiescence (or for the drain timeout to expire) before proceeding to resource teardown</li>\n"
-"<li>This replaces the current ad hoc pattern where extensions individually implement <code>ShutdownListener#preShutdown()</code> with a <code>done()</code> callback</li>\n"
-"</ul>\n"
-"<p><strong>Key integrations:</strong></p>\n"
-"<ul>\n"
-"<li>HTTP server: stop accepting new connections, finish in-flight requests</li>\n"
-"<li>Quarkus Messaging: stop polling for new messages, finish processing in-flight messages</li>\n"
-"<li>Scheduler: stop scheduling new jobs, wait for running jobs to complete</li>\n"
-"<li>gRPC server: send GOAWAY, drain active RPCs</li>\n"
-"<li>WebSocket: send close frames, wait for graceful close</li>\n"
-"</ul>\n"
-"<h3>Part 2: Dependency-Ordered Shutdown (and Startup) API</h3>\n"
-"<p>The correct shutdown order is the reverse of the correct startup order. Today, Quarkus has no explicit startup ordering API (only build-time ordering via build items), and the shutdown ordering is ad hoc. This part of the work normalizes both.</p>\n"
-"<p><strong>Dependency-oriented ordering:</strong></p>\n"
-"<ul>\n"
-"<li>Design a proper <strong>startup ordering API</strong> that is dependency-oriented, so extensions can declare what they depend on</li>\n"
-"<li>Shutdown ordering is derived automatically as the <strong>reverse</strong> of the startup dependency graph — no separate shutdown ordering annotations needed</li>\n"
-"<li>This is a partial ordering (a DAG), not a linear sequence — independent extensions can shut down concurrently (see concurrent shutdown below)</li>\n"
-"<li>The ordering model should be type-based (like build items), not string-based, for consistency with Quarkus conventions</li>\n"
-"</ul>\n"
-"<p><strong>Clear API guidance:</strong></p>\n"
-"<ul>\n"
-"<li>Document which API to use for each scenario with a decision guide</li>\n"
-"<li>Provide clear examples for extension developers and application developers</li>\n"
-"<li>Clarify the relationship between the Primordial API, Graceful Shutdown API, and CDI layer</li>\n"
-"</ul>\n"
-"<p><strong>Concurrent shutdown investigation:</strong></p>\n"
-"<ul>\n"
-"<li>Coordinate with David's work on concurrent shutdown (running independent shutdown tasks in parallel)</li>\n"
-"<li>Ensure concurrent execution respects phase boundaries and ordering constraints</li>\n"
-"<li>Produce a recommendation on opt-in vs. automatic concurrency for independent tasks</li>\n"
-"</ul>\n"
-"<p><strong>Shutdown tracing and debugging:</strong></p>\n"
-"<ul>\n"
-"<li>Investigate JFR events for shutdown activities</li>\n"
-"<li>Provide a debug mode that logs all shutdown tasks, their phase, ordering, and execution duration</li>\n"
-"<li>Surface shutdown activity in Dev UI during development</li>\n"
-"</ul>\n"
-"<p><strong>API naming improvements:</strong></p>\n"
-"<ul>\n"
-"<li>Improve naming where possible (e.g., <code>addLastShutdownTask()</code>) within the Quarkus 4 breaking-change window</li>\n"
-"</ul>\n"
-"<h2>Definition of Done</h2>\n"
-"<h3>Part 1: Pre-Shutdown</h3>\n"
-"<ul>\n"
-"<li>[ ] Extensions can register as drainable components and signal completion</li>\n"
-"<li>[ ] Readiness health check automatically reports <code>DOWN</code> when shutdown is initiated</li>\n"
-"<li>[ ] The pre-shutdown phase waits for all drainable extensions to complete (or drain timeout)</li>\n"
-"<li>[ ] Graceful shutdown implemented for HTTP server, Reactive Messaging, <code>quarkus-scheduler</code>, gRPC, and WebSocket</li>\n"
-"<li>[ ] Configurable drain timeout with clear behavior when exceeded</li>\n"
-"</ul>\n"
-"<h3>Part 2: Dependency-Ordered Shutdown</h3>\n"
-"<ul>\n"
-"<li>[ ] A dependency-oriented startup/shutdown ordering API exists (type-based, not string-based)</li>\n"
-"<li>[ ] Shutdown order is automatically derived as the reverse of startup order</li>\n"
-"<li>[ ] Shutdown sequence fully documented in the Quarkus guides with a clear diagram</li>\n"
-"<li>[ ] Decision guide published: which shutdown API to use for each scenario</li>\n"
-"<li>[ ] Shutdown activities can be traced/debugged (JFR events or equivalent)</li>\n"
-"<li>[ ] Concurrent shutdown investigation completed with clear recommendation</li>\n"
-"<li>[ ] Integration tests demonstrating correct shutdown ordering under load</li>\n"
-"<li>[ ] Shutdown debug information available in Dev UI</li>\n"
-"</ul>\n"
-"<h2>Scope of Work</h2>\n"
-"<h3>In Scope</h3>\n"
-"<ul>\n"
-"<li>Pre-shutdown phase: traffic blocking, drain signaling, readiness health check integration</li>\n"
-"<li>Startup ordering API (dependency-oriented) — shutdown ordering derived as its reverse</li>\n"
-"<li>Implementing graceful drain for key extensions (HTTP, Reactive Messaging, scheduler, gRPC, WebSocket)</li>\n"
-"<li>Dependency-ordered shutdown with cross-extension ordering</li>\n"
-"<li>API clarification, documentation, and decision guide</li>\n"
-"<li>Shutdown debug/tracing tooling (JFR events investigation, debug logging)</li>\n"
-"<li>Concurrent shutdown investigation and recommendation</li>\n"
-"<li>API naming improvements where feasible in the Quarkus 4 window</li>\n"
-"</ul>\n"
-"<h3>Out of Scope</h3>\n"
-"<ul>\n"
-"<li>Merging <code>ShutdownContext</code> and <code>ShutdownListener</code> APIs</li>\n"
-"<li>Cluster-wide coordinated shutdown (multi-instance orchestration)</li>\n"
-"<li>Graceful startup (separate concern)</li>\n"
-"</ul>\n"
-"<h2>Organizing the Work</h2>\n"
-"<h3>Communication</h3>\n"
-"<ul>\n"
-"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/53206-</li>\n"
-"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-graceful-shutdown/with/581626831\">wg-graceful-shutdown</a></li>\n"
-"<li>Point of contact @mkouba, @ozangunalp</li>\n"
-"</ul>\n"
-"<h3>Timeline</h3>\n"
-"<ul>\n"
-"<li>Target: Quarkus 4 release cycle</li>\n"
-"</ul>\n"
-"<h3>Existing Issues</h3>\n"
-"<ul>\n"
-"<li><a href=\"https://github.com/quarkusio/quarkus/issues/45946\">#45946</a></li>\n"
-"<li><a href=\"https://github.com/quarkusio/quarkus/issues/31072\">#31072</a></li>\n"
-"<li><a href=\"https://github.com/quarkusio/quarkus/issues/38119\">#38119</a></li>\n"
-"<li><a href=\"https://github.com/quarkusio/quarkus/issues/41233\">#41233</a></li>\n"
-"<li><a href=\"https://github.com/quarkusio/quarkus/issues/52389\">#52389</a></li>\n"
-"<li><a href=\"https://github.com/quarkusio/quarkus/issues/51327\">#51327</a></li>\n"
-"<li><a href=\"https://github.com/quarkusio/quarkus/issues/50475\">#50475</a></li>\n"
-"<li><a href=\"https://github.com/quarkusio/quarkus/issues/44894\">#44894</a></li>\n"
-"</ul>\n"
-msgstr ""
-"<h2>目标</h2>\n"
-"<p>通过提供两项互补功能，使 Quarkus 的关闭过程真正做到优雅： (1) 一种机制，允许扩展模块阻断传入流量并处理正在进行中的任务以进入静止状态，该机制与就绪性健康检查集成；以及 (2) 一个有序、分阶段的关机 API，使扩展开发者能够清晰地控制其关机逻辑的执行时机和方式。</p>\n"
-"<h2>问题</h2>\n"
-"<h3>缺乏静止状态机制</h3>\n"
-"<p>当 Quarkus 应用程序接收到关机信号时，扩展模块缺乏一种标准方式来从“服务中”平滑过渡到“清理中”，再到“已停止”。核心问题在于缺少一种<strong>静默协议</strong>——即一种协调机制，其中：</p>\n"
-"<ol>\n"
-"<li>应用程序发出信号，表明其不再准备好接受新任务（就绪探针状态变为不健康）</li>\n"
-"<li>入站流量在入口层（负载均衡器、Kubernetes、服务网格）被阻断</li>\n"
-"<li>正在处理的请求、事务和后台任务将获得足够时间完成</li>\n"
-"<li>只有当应用程序达到静止状态后，才会开始实际的资源释放</li>\n"
-"</ol>\n"
-"<p>目前，每个希望参与优雅关机的扩展都必须临时实现这一模式，但大多数并未如此。其结果是：HTTP 请求中断、消息处理不完整、计划任务被中止，以及在滚动部署过程中发生数据丢失。</p>\n"
-"<p>就绪性健康检查（<code>/q/health/ready</code>、SmallRye Health、Kubernetes 就绪性探针）是向调度器发出“实例应停止接收流量”这一自然信号的途径，但关机序列并未与其进行一等公民式的集成。 扩展难以轻松声明“我正在进行数据排空，请将我标记为未就绪”，也无法让这一状态自动反映在健康检查中。</p>\n"
-"<h3>令人困惑且文档不足的关闭 API</h3>\n"
-"<p>Quarkus 目前拥有<strong>三个</strong>边界模糊的<strong>独立关机 API 层</strong>：</p>\n"
-"<ul>\n"
-"<li>\n"
-"<p><strong>原始 API</strong>（<code>ShutdownContext</code>）：<code>addShutdownTask(Runnable)</code>（逆序）和<code>addLastShutdownTask(Runnable)</code>，在构建时通过<code>ShutdownContextBuildItem</code>使用。<code>addLastShutdownTask()</code>这个名称普遍不受欢迎（至少我们达成了共识）。</p>\n"
-"</li>\n"
-"<li></li>\n"
-"<li>\n"
-"<p><strong>优雅关闭 API</strong>（<code>ShutdownListener</code>）：<code>preShutdown(ShutdownNotification)</code>和<code>shutdown(ShutdownNotification)</code>（带有<code>done()</code>回调），通过<code>ShutdownListenerBuildItem</code> 使用。还暴露了<code>@ShutdownDelayInitiated</code>注解，该注解映射到<code>preShutdown</code>。</p>\n"
-"</li>\n"
-"<li>\n"
-"<p><strong>CDI 层</strong>：<code>@Shutdown</code>（在 ArC 关闭前触发<code>ShutdownEvent</code>）、<code>@BeforeDestroyed(ApplicationScoped.class)</code>（在 ArC 关闭时触发）、bean/拦截器上的<code>@PreDestroy</code>。</p>\n"
-"</li>\n"
-"</ul>\n"
-"<p>没有文档说明何时使用哪种 API。实际的关闭顺序只能通过阅读源代码来了解：</p>\n"
-"<ol>\n"
-"<li>\n"
-"<p><strong>优雅关闭阶段：</strong> <code>ShutdownListener#preShutdown()</code>→ 延迟等待（如果<code>quarkus.shutdown.delay-enabled=true</code>，持续时间 =<code>quarkus.shutdown.delay</code>）→<code>ShutdownListener#shutdown()</code>→ 超时等待</p>\n"
-"</li>\n"
-"<li>\n"
-"<p><strong>关机任务阶段：</strong>触发<code>ShutdownEvent</code>→ ArC 关机（<code>@BeforeDestroyed(ApplicationScoped.class)</code> <code>，@PreDestroy</code>）</p>\n"
-"</li>\n"
-"<li>\n"
-"<p><strong>最后关机任务阶段：</strong>通过<code>addLastShutdownTask()</code>注册的任务</p>\n"
-"</li>\n"
-"</ol>\n"
-"<h3>无跨扩展顺序</h3>\n"
-"<p>无法指定扩展 A 的关闭逻辑应在扩展 B 的逻辑之前或之后执行。扩展以未定义的顺序关闭，这会引发实际问题；例如，调度器扩展可能会尝试完成一个需要数据源的任务，而该数据源已被关闭。</p>\n"
-"<h3>缺乏调试/跟踪工具</h3>\n"
-"<p>无法在运行时对关机序列进行日志记录、跟踪或检查。当关机过程挂起或出现异常时，开发人员没有工具来识别是哪项任务导致阻塞，也无法了解任务的执行顺序。</p>\n"
-"<h3>扩展覆盖范围有限</h3>\n"
-"<p>许多扩展根本不参与有序关闭。例如，<code>quarkus-scheduler</code>在关闭前不会清空正在运行或已排程的任务，这可能会导致工作流中断。</p>\n"
-"<h2>建议的解决方案</h2>\n"
-"<p>本项工作围绕两个互补的部分展开。</p>\n"
-"<h3>第一部分：关机前阶段（流量排空）</h3>\n"
-"<p>设计并实现一种标准协议，使扩展程序能够参与有序流量释放，从而允许应用程序在开始任何顺序敏感的拆除操作之前进入静止状态。该阶段独立于第 2 部分中基于依赖关系的拆除操作——它首先运行，旨在停止新任务，而非拆除资源。</p>\n"
-"<p><strong>流量阻断与就绪状态集成：</strong></p>\n"
-"<ul>\n"
-"<li>当关闭流程启动时，应用程序的就绪状态检查（<code>/q/health/ready</code>）会立即报告<code>DOWN 状态</code>，从而通知 Kubernetes 和负载均衡器停止路由新流量</li>\n"
-"<li>扩展组件可注册为“可排空”组件，当关闭开始时，它们将停止接受新任务并排空正在处理的任务</li>\n"
-"<li>可配置的排空超时时间控制着系统在强制执行清理前等待系统进入静止状态的时间长度</li>\n"
-"</ul>\n"
-"<p><strong>扩展参与模型：</strong></p>\n"
-"<ul>\n"
-"<li>扩展模块声明其清理能力，并在达到静止状态（无待处理任务）时报告</li>\n"
-"<li>关机序列会等待所有可排空扩展报告已进入静止状态（或排空超时到期），然后才继续进行资源拆除</li>\n"
-"<li>这取代了当前的临时模式——即扩展分别通过调用<code>done()</code>回调来实现<code>ShutdownListener#preShutdown()</code>方法</li>\n"
-"</ul>\n"
-"<p><strong>关键集成：</strong></p>\n"
-"<ul>\n"
-"<li>HTTP 服务器：停止接受新连接，完成正在处理的请求</li>\n"
-"<li>Quarkus 消息传递：停止轮询新消息，完成正在处理的消息</li>\n"
-"<li>调度器：停止调度新任务，等待正在运行的任务完成</li>\n"
-"<li>gRPC 服务器：发送 GOAWAY 消息，清空活动中的 RPC 连接</li>\n"
-"<li>WebSocket：发送关闭帧，等待优雅关闭</li>\n"
-"</ul>\n"
-"<h3>第 2 部分：基于依赖关系的关闭（和启动）API</h3>\n"
-"<p>正确的关闭顺序与正确的启动顺序相反。目前，Quarkus 没有明确的启动排序 API（仅通过构建项在构建时进行排序），且关闭顺序也是临时确定的。本部分工作将对这两者进行规范化处理。</p>\n"
-"<p><strong>基于依赖关系的排序：</strong></p>\n"
-"<ul>\n"
-"<li>设计一个基于依赖关系的正确<strong>启动排序 API</strong>，以便扩展模块能够声明其依赖项</li>\n"
-"<li>关闭顺序将自动推导为启动依赖关系图的<strong>逆序</strong>——无需单独的关闭顺序注解</li>\n"
-"<li>这是一种偏序关系（有向无环图，DAG），而非线性序列——独立的扩展可并发关闭（参见下文的“并发关闭”）</li>\n"
-"<li>为与 Quarkus 规范保持一致，排序模型应基于类型（如构建项），而非基于字符串</li>\n"
-"</ul>\n"
-"<p><strong>清晰的 API 指导：</strong></p>\n"
-"<ul>\n"
-"<li>通过决策指南，说明每种场景应使用哪个 API</li>\n"
-"<li>为扩展开发者和应用程序开发者提供清晰的示例</li>\n"
-"<li>澄清 Primordial API、Graceful Shutdown API 与 CDI 层之间的关系</li>\n"
-"</ul>\n"
-"<p><strong>并发关闭研究：</strong></p>\n"
-"<ul>\n"
-"<li>与 David 关于并发关闭（并行运行独立的关闭任务）的工作进行协调</li>\n"
-"<li>确保并发执行遵守阶段边界和顺序约束</li>\n"
-"<li>针对独立任务的“主动启用”与“自动并发”模式提出建议</li>\n"
-"</ul>\n"
-"<p><strong>关机跟踪与调试：</strong></p>\n"
-"<ul>\n"
-"<li>调查关机活动的JFR事件</li>\n"
-"<li>提供一种调试模式，用于记录所有关机任务、其阶段、顺序及执行时长</li>\n"
-"<li>在开发过程中通过开发界面（Dev UI）展示关机活动</li>\n"
-"</ul>\n"
-"<p><strong>API 命名改进：</strong></p>\n"
-"<ul>\n"
-"<li>在 Quarkus 4 的兼容性变更窗口内，尽可能优化命名（例如<code>addLastShutdownTask()</code>）</li>\n"
-"</ul>\n"
-"<h2>完成标准</h2>\n"
-"<h3>第 1 部分：关机前</h3>\n"
-"<ul>\n"
-"<li>[ ] 扩展可注册为可排空组件并报告完成状态</li>\n"
-"<li>[ ] 当启动关闭时，就绪状态检查会自动报告<code>DOWN</code></li>\n"
-"<li>[ ] 关机前阶段会等待所有可排空扩展完成（或排空超时）</li>\n"
-"<li>[ ] 已为 HTTP 服务器、Reactive Messaging、<code>quarkus-scheduler</code>、gRPC 和 WebSocket 实现了优雅关闭</li>\n"
-"<li>[ ] 可配置的排空超时，超时后行为明确</li>\n"
-"</ul>\n"
-"<h3>第 2 部分：基于依赖关系的关机</h3>\n"
-"<ul>\n"
-"<li>[ ] 存在基于依赖关系的启动/关闭排序 API（基于类型，而非基于字符串）</li>\n"
-"<li>[ ] 关闭顺序自动推导为启动顺序的逆序</li>\n"
-"<li>[ ] Quarkus 指南中已通过清晰的图表对关闭序列进行了全面说明</li>\n"
-"<li>[ ] 已发布决策指南：针对不同场景应使用哪种关闭 API</li>\n"
-"<li>[ ] 关闭操作可被追踪/调试（JFR 事件或等效机制）</li>\n"
-"<li>[ ] 已完成并发关机调查，并给出明确建议</li>\n"
-"<li>[ ] 集成测试验证了在负载条件下关机顺序的正确性</li>\n"
-"<li>[ ] 开发界面（Dev UI）中提供关机调试信息</li>\n"
-"</ul>\n"
-"<h2>工作范围</h2>\n"
-"<h3>工作范围</h3>\n"
-"<ul>\n"
-"<li>关机前阶段：流量阻断、信令排空、就绪状态健康检查集成</li>\n"
-"<li>启动顺序 API（基于依赖关系）——关闭顺序为其逆序</li>\n"
-"<li>为关键扩展（HTTP、响应式消息传递、调度器、gRPC、WebSocket）实现优雅的资源释放</li>\n"
-"<li>基于依赖关系的关闭，包含跨扩展的关闭顺序</li>\n"
-"<li>API 说明、文档及决策指南</li>\n"
-"<li>关机调试/追踪工具（JFR 事件调查、调试日志）</li>\n"
-"<li>并发关闭的调查与建议</li>\n"
-"<li>在 Quarkus 4 开发周期内，在可行范围内改进 API 命名</li>\n"
-"</ul>\n"
-"<h3>不在范围之内</h3>\n"
-"<ul>\n"
-"<li>合并<code>ShutdownContext</code>和<code>ShutdownListener</code>API</li>\n"
-"<li>集群范围内的协调关机（多实例编排）</li>\n"
-"<li>优雅启动（独立关注点）</li>\n"
-"</ul>\n"
-"<h2>工作组织</h2>\n"
-"<h3>通信</h3>\n"
-"<ul>\n"
-"<li>提案：https://github.com/quarkusio/quarkus/discussions/53206-</li>\n"
-"<li>讨论：<a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-graceful-shutdown/with/581626831\">wg-graceful-shutdown</a></li>\n"
-"<li>联系人 @mkouba, @ozangunalp</li>\n"
-"</ul>\n"
-"<h3>时间表</h3>\n"
-"<ul>\n"
-"<li>目标：Quarkus 4 发布周期</li>\n"
-"</ul>\n"
-"<h3>现有问题</h3>\n"
-"<ul>\n"
-"<li><a href=\"https://github.com/quarkusio/quarkus/issues/45946\">#45946</a></li>\n"
-"<li><a href=\"https://github.com/quarkusio/quarkus/issues/31072\">#31072</a></li>\n"
-"<li><a href=\"https://github.com/quarkusio/quarkus/issues/38119\">#38119</a></li>\n"
-"<li><a href=\"https://github.com/quarkusio/quarkus/issues/41233\">#41233</a></li>\n"
-"<li><a href=\"https://github.com/quarkusio/quarkus/issues/52389\">#52389</a></li>\n"
-"<li><a href=\"https://github.com/quarkusio/quarkus/issues/51327\">#51327</a></li>\n"
-"<li><a href=\"https://github.com/quarkusio/quarkus/issues/50475\">#50475</a></li>\n"
-"<li><a href=\"https://github.com/quarkusio/quarkus/issues/44894\">#44894</a></li>\n"
-"</ul>\n"
-
-#. type: Hash Value: working-groups short-description
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "Make Quarkus shutdown truly graceful by providing two complementary capabilities: (1) a mechanism for extensions to block incoming traffic and drain in-flight work to reach a quiescent state, integrated with readiness health checks, and (2) a well-ordered, phased shutdown API that gives extension de\n"
-msgstr "通过提供两项互补功能，使 Quarkus 的关闭过程真正做到优雅：(1) 一种机制，允许扩展程序阻断传入流量并处理正在进行中的工作以进入静止状态，该机制与就绪性健康检查集成；以及 (2) 一个有序、分阶段的关闭 API，该 API 允许扩展程序\n"
-
-#. type: Hash Value: working-groups title
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "Graceful Shutdown"
-msgstr "优雅关机"
-
-#. type: Hash Value: working-groups board-url
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
 msgid "https://github.com/orgs/quarkusio/projects/60"
 msgstr "https://github.com/orgs/quarkusio/projects/60"
 
@@ -3030,6 +3062,12 @@ msgid ""
 msgstr ""
 "工作重点在于使 `@SpringBootTest` 注解正常运行。所有相关问题现已关闭，在此期间未新增任何任务。\n"
 "（此状态更新由 AI 自动生成。）\n"
+
+#. type: Hash Value: working-groups last-update-date
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "2026-06-29"
+msgstr "2026年6月29日"
 
 #. type: Hash Value: working-groups point-of-contact
 #: _data/wg.yaml:1
@@ -3144,6 +3182,12 @@ msgstr ""
 #, fuzzy, no-wrap
 msgid "Enable Spring developers to migrate to Quarkus with minimal friction by exploring and providing compatibility layers for the most common Spring testing patterns. So they don’t need to rewrite their existing tests.\n"
 msgstr "通过探索并提供针对最常见的 Spring 测试模式的兼容性层，帮助 Spring 开发者以最小的阻力迁移到 Quarkus。这样他们就无需重写现有的测试。\n"
+
+#. type: Hash Value: working-groups status
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "staled"
+msgstr "过期了"
 
 #. type: Hash Value: working-groups title
 #: _data/wg.yaml:1
@@ -3342,12 +3386,6 @@ msgid ""
 msgstr ""
 "尽管 Gizmo 2 还有大量工作待完成，但它已符合提案中对“完成”的定义。\n"
 "Arc 已迁移至 Gizmo 2——详见 https://quarkus.io/blog/arc-migrates-to-gizmo2/。\n"
-
-#. type: Hash Value: working-groups last-activity
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "2025-11-03"
-msgstr "2025年11月3日"
 
 #. type: Hash Value: working-groups point-of-contact
 #: _data/wg.yaml:1
@@ -3758,56 +3796,6 @@ msgstr "该工作组旨在跟踪围绕 Quarkus 3.33 LTS 版本开展的工作。
 #, fuzzy, no-wrap
 msgid "Quarkus 3.33 LTS"
 msgstr "Quarkus 3.33 LTS"
-
-#. type: Hash Value: working-groups board-url
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "https://github.com/orgs/quarkusio/projects/28"
-msgstr "https://github.com/orgs/quarkusio/projects/28"
-
-#. type: Hash Value: working-groups last-activity
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "2026-06-02"
-msgstr "2026年6月2日"
-
-#. type: Hash Value: working-groups last-update
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "3.15 is now EOL.\n"
-msgstr "3.15 现已停止支持。\n"
-
-#. type: Hash Value: working-groups readme
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid ""
-"<p>This working group uses a different board:</p>\n"
-"<ul>\n"
-"<li>The <code>under discussion</code> column contains the issues we would like to have in the next LTS but are still under consideration.</li>\n"
-"<li>The <code>out of scope</code> column contains the issues under discussion' that won't be included. The reason can be time or technical...</li>\n"
-"<li>The <code>in progress</code> means that the work has started and should be completed before the TLS cut date</li>\n"
-"<li>The <code>done</code> column means that the issues have been completed</li>\n"
-"</ul>\n"
-msgstr ""
-"<p>该工作组使用不同的板卡：</p>\n"
-"<ul>\n"
-"<li><code>under discussion</code> 一栏包含我们希望在下一个 LTS 中包含但仍在考虑中的问题。</li>\n"
-"<li><code>out of scope</code> 栏包含 \"正在讨论 \"但不会被纳入的问题。原因可能是时间或技术......</li>\n"
-"<li><code>in progress</code> 表示工作已经开始，应在 TLS 截止日期前完成</li>\n"
-"<li><code>done</code> 栏表示问题已经完成</li>\n"
-"</ul>\n"
-
-#. type: Hash Value: working-groups short-description
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "This WG focuses on defining the issues we would like to have in the next-to-be LTS (Quarkus 3.14/3.15)\n"
-msgstr "该工作组主要致力于明确我们希望在即将发布的长期支持版本（LTS，即 Quarkus 3.14/3.15）中包含的功能。\n"
-
-#. type: Hash Value: working-groups title
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "Quarkus 3.15 LTS"
-msgstr "Quarkus 3.15 LTS"
 
 #. type: Hash Value: working-groups board-url
 #: _data/wg.yaml:1
