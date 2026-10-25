@@ -12,26 +12,36 @@ msgstr ""
 #. type: Hash Value: working-groups board-url
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "https://github.com/orgs/quarkusio/projects/75"
-msgstr "https://github.com/orgs/quarkusio/projects/75"
+msgid "https://github.com/orgs/quarkusio/projects/50"
+msgstr "https://github.com/orgs/quarkusio/projects/50"
+
+#. type: Hash Value: working-groups deliverable
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "<a rel=\"nofollow\" href=\"https://quarkus.io/blog/hibernate-panache-next/\">Blog Post</a>"
+msgstr "<a rel=\"nofollow\" href=\"https://quarkus.io/blog/hibernate-panache-next/\">博客文章</a>"
 
 #. type: Hash Value: working-groups discussion
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-dev-star/with/581636141"
-msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-dev-star/with/581636141"
+msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Panache.2ENext/with/529258261"
+msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Panache.2ENext/with/529258261"
 
 #. type: Hash Value: working-groups last-activity
 #: _data/wg.yaml:1
 #, no-wrap
-msgid "2026-10-18"
+msgid "2026-10-23"
 msgstr ""
 
 #. type: Hash Value: working-groups last-update
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "The working group is collecting missing features and issues, but the initial scope is now complete.\n"
-msgstr "该工作组正在收集缺失的功能和问题，但初步工作范围现已完成。\n"
+msgid ""
+"The Quarkus Data group wrapped up a couple of items this week. They ensured Panache 2 prevents opening managed and stateless sessions simultaneously, and resolved a Panache Next projection failure involving Kotlin's value class.\n"
+"(This status update was automatically generated using AI.)\n"
+msgstr ""
+"Quarkus Data 团队本周完成了几项工作。他们确保 Panache 2 不会同时打开受管会话和无状态会话，并修复了 Panache Next 中一个涉及 Kotlin 值类的投影错误。\n"
+"（此状态更新由 AI 自动生成。）\n"
 
 #. type: Hash Value: working-groups last-update-date
 #: _data/wg.yaml:1
@@ -42,238 +52,126 @@ msgstr "2026年8月31日"
 #. type: Hash Value: working-groups point-of-contact
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "@phillip-kruger"
-msgstr "@phillip-kruger"
+msgid "@FroMage  (@<strong>Stephane Epardaud</strong>  on Zulip)"
+msgstr "@FroMage  （Zulip 上的<strong>@Stephane Epardaud</strong>）"
 
 #. type: Hash Value: working-groups proposal
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "https://github.com/quarkusio/quarkus/discussions/53093#discussioncomment-16271096"
-msgstr "https://github.com/quarkusio/quarkus/discussions/53093#discussioncomment-16271096"
+msgid "https://github.com/quarkusio/quarkus/discussions/48949"
+msgstr "https://github.com/quarkusio/quarkus/discussions/48949"
 
 #. type: Hash Value: working-groups readme
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
 msgid ""
-"<h2>Objective</h2>\n"
-"<p>Decompose and modernize the Quarkus developer tooling runtime (Dev UI, Dev MCP, Dev Shell, Dev Assistant) so that each component can operate independently, without requiring the full <code>vertx-http</code> web stack. This enables AI-powered developer assistance (via MCP) and terminal-based tooling (Dev Shell) to work even when dev mode or the HTTP layer is broken, and lays the foundation for a unified &quot;Dev Star&quot; developer experience across all interaction surfaces.</p>\n"
-"<p>Quarkus has always been a developer experience champion; live coding, Dev UI, Dev Services, and continuous testing set the standard for Java frameworks. Dev Star extends this effort into the AI era by focusing equally on <strong>AI experience (AIx)</strong>: making Quarkus the easiest framework for coding agents (Claude, Copilot, Gemini, etc.) to work with. By exposing the full power of Quarkus dev mode (configuration, build output, documentation, testing, error diagnostics) through MCP, and by providing agents with the right documentation for the specific extensions and APIs used in the application being built (via RAG over Quarkus Docs), coding agents can understand, build, and debug Quarkus applications as effectively as human developers using the Dev UI. Developer and AI experiences are two sides of the same coin: every improvement to one benefits the other.</p>\n"
-"<h2>The Problem</h2>\n"
-"<p>Today, the entire Quarkus developer tooling stack is tightly coupled to the Dev UI Runtime, which depends on <code>vertx-http</code>. This creates several problems:</p>\n"
-"<ol>\n"
-"<li>\n"
-"<p><strong>Fragile dependency chain:</strong> Dev MCP and Dev Shell cannot function without the full HTTP stack running. If dev mode is broken (e.g., a compilation error prevents the application from starting), all developer tooling becomes unavailable — precisely when developers need help the most.</p>\n"
-"</li>\n"
-"<li>\n"
-"<p><strong>No fallback for broken applications:</strong> There is no lightweight mechanism to provide application lifecycle information, documentation access, or workspace navigation when the Quarkus application cannot start. AI assistants connected via MCP are completely cut off.</p>\n"
-"</li>\n"
-"<li>\n"
-"<p><strong>Monolithic runtime:</strong> The Dev UI Runtime bundles WebSocket transport, JsonRPC routing, MCP transport, and shell connectivity into a single unit. Extensions that only need JsonRPC services or MCP tools must still pull in the entire web stack.</p>\n"
-"</li>\n"
-"<li>\n"
-"<p><strong>Limited AI integration surface:</strong> The Chappie WG established AI assistance capabilities, but the current architecture does not cleanly separate the AI runtime (Chappie Runtime + RAG over Quarkus Docs) from the transport layer, making it difficult to expose AI assistance through multiple channels (UI, MCP, Shell, stdio).</p>\n"
-"</li>\n"
-"<li>\n"
-"<p><strong>Developer experience gaps:</strong> Several core developer workflows (continuous testing, hot reload, exception reporting, example projects, file navigation) have not been re-evaluated in the context of MCP and AI-assisted development. Features like tool filtering/search in MCP are missing.</p>\n"
-"</li>\n"
-"</ol>\n"
-"<h2>The Proposed Solution</h2>\n"
-"<h3>Architecture Decomposition</h3>\n"
-"<p>Break the current monolithic Dev UI Runtime into four independent runtimes:</p>\n"
-"<p>| Runtime                 | Transport       | Dependency                     | Purpose                                                               |\n"
-"| ----------------------- | --------------- | ------------------------------ | --------------------------------------------------------------------- |\n"
-"| <strong>Dev UI Runtime</strong>      | WebSocket       | <code>vertx-http</code>                   | Browser-based Dev UI (For Human)                                      |\n"
-"| <strong>Dev JsonRPC Runtime</strong> | JsonRPCRouter   | CDI                            | Core routing layer for JsonRPC services; shared by Dev UI and Dev MCP |\n"
-"| <strong>Dev MCP Runtime</strong>     | Streamable HTTP | CDI (no <code>vertx-http</code> required) | MCP server for AI agents (e.g., Claude, Copilot)                      |\n"
-"| <strong>Dev Shell Runtime</strong>   | CDI-connected   | CDI (no <code>vertx-http</code> required) | Terminal-based developer interaction                                  |</p>\n"
-"<p>The key architectural change is <strong>breaking the <code>vertx-http</code> dependency</strong> so that Dev MCP and Dev Shell can operate independently. The JsonRPC Router becomes a shared component connected via CDI, enabling extensions to expose <code>JsonRpcService</code> beans that are accessible from any runtime.</p>\n"
-"<h3>Dev Assistant</h3>\n"
-"<p>The Dev Assistant combines:</p>\n"
+"<h1>Objective</h1>\n"
+"<p>The main objective of this working group is to bring forth the next version of Panache.</p>\n"
+"<h1>The Problem</h1>\n"
+"<p>Panache is great for many things, but over time, we realised the following limitations:</p>\n"
 "<ul>\n"
-"<li><strong>Chappie Runtime</strong>: AI interaction engine (successor to the Chappie WG)</li>\n"
-"<li><strong>Quarkus Docs (RAG)</strong>: Retrieval-augmented generation over Quarkus documentation</li>\n"
+"<li>We have three distinct versions: Hibernate ORM, Hibernate Reactive and Mongo (blocking and reactive)</li>\n"
+"<li>It is impossible to use the same entities with Hibernate ORM and Hibernate Reactive</li>\n"
+"<li>Stateless sessions are not supported</li>\n"
+"<li>Hibernate Processor annotations, and Jakarta Data are not supported</li>\n"
+"<li>We have triplicate types such as <code>Sort</code> and <code>Order</code> between Panache, ORM and Jakarta Data</li>\n"
+"<li>We have two ways to place entity query operations : on the entity itself, or in repositories</li>\n"
+"<li>Entity query operations require type-system hacks which makes them less type-safe than we want with <code>var</code> and <code>for-each</code> and especially with reactive operations.</li>\n"
 "</ul>\n"
-"<p>The Dev Assistant connects to the Dev Shell Runtime via CDI, and to the Dev UI Runtime via the existing JsonRPC path. This means AI assistance is available from the browser (Dev UI), the terminal (Dev Shell), and external AI tools (Dev MCP).</p>\n"
-"<h3>Standalone stdio MCP Application</h3>\n"
-"<p>A lightweight, standalone MCP application using <strong>stdio transport</strong> that provides:</p>\n"
+"<h1>The proposed Solution</h1>\n"
+"<p>We propose a new Panache version that will solve all these issues:</p>\n"
 "<ul>\n"
-"<li>Application lifecycle information (build status, errors, configuration)</li>\n"
-"<li>Quarkus documentation access</li>\n"
-"<li>Workspace file navigation</li>\n"
+"<li>Unify all variants in a single module, supporting blocking, reactive, stateless and stateful sessions</li>\n"
+"<li>Provide an entity toplevel class for each 4 modes of operation, yet allow access to the other modes</li>\n"
+"<li>Move all entity query operations from the entity class to the repository class</li>\n"
+"<li>Provide a repository toplevel class for each 4 modes of operation, yet allow access to the other modes</li>\n"
+"<li>Provide easy access to any type of repository by placing them as nested interfaces in the entity class, via a generated accessor on the entity metamodel class</li>\n"
+"<li>Provide out of the box accessors for the 4 modes of operation repositories on the entity metamodel class</li>\n"
+"<li>Support Jakarta Data and Hibernate Processor type-safe annotations</li>\n"
+"<li>Optional: Support of Mongo via the coming ORM JDBC support</li>\n"
+"<li>Optional: provide JD repository type alternatives for the missing three modes</li>\n"
+"<li>Optional: provide a way to convert Panache 1 to Panache.Next</li>\n"
 "</ul>\n"
-"<p>This stdio app operates <strong>outside</strong> dev mode, ensuring developers can get AI assistance even when the application is completely broken (compilation failures, missing dependencies, misconfiguration). It complements the in-process Dev MCP Runtime.</p>\n"
-"<h3>Reconsider Dev* Features</h3>\n"
-"<p>Re-evaluate existing developer features for the new architecture:</p>\n"
+"<h1>Definition of Done</h1>\n"
 "<ul>\n"
-"<li><strong>Dev Mode resilience</strong>: What works when dev mode is broken?</li>\n"
-"<li><strong>Continuous Testing</strong>: Expose test status and controls via MCP tools</li>\n"
-"<li><strong>Hot Reload</strong>: Trigger and monitor reloads from MCP/Shell</li>\n"
-"<li><strong>Example Project</strong>: Generate example code via AI assistance</li>\n"
-"<li><strong>Exception Reporting</strong> : Surface exceptions as MCP resources/tools</li>\n"
-"<li><strong>Workspace Navigation</strong> : Find files and navigate project structure via MCP</li>\n"
-"<li><strong>Tool Filter/Search</strong>: Enable discovery and filtering of available MCP tools</li>\n"
-"<li><strong>Response Size Optimization</strong>: Reduce MCP response payload sizes to minimize context window consumption by coding agents; provide concise, structured responses rather than raw verbose output</li>\n"
+"<li>Deliver the new Panache extension as a <code>stable</code> state (after preview/experimental versions for feedback)</li>\n"
+"<li>Tests</li>\n"
+"<li>Documentation</li>\n"
+"<li>Codestart</li>\n"
+"<li>REST Data with Panache support</li>\n"
+"<li>Renarde support</li>\n"
+"<li>Quarkus Insights</li>\n"
 "</ul>\n"
-"<h3>Skills Investigation</h3>\n"
-"<p>Investigate the concept of &quot;Skills&quot; (composable, higher-level developer actions built on top of MCP tools). The idea is to allow each extension to ship one or more Skills that describe how the extension is intended to be used, configured, and tested, along with best practices, common pitfalls, and troubleshooting guidance. Rather than requiring an AI agent to discover this knowledge through trial and error, Skills provide it upfront as structured, actionable context.</p>\n"
-"<p><strong>Success criteria:</strong> define what a Skill is, how it differs from a raw MCP tool (tools <em>do</em> things; Skills <em>teach</em> how to do things well), and whether a Skills API adds meaningful value over direct tool composition by AI agents.</p>\n"
-"<h2>Definition of Done</h2>\n"
+"<h1>Scope of Work</h1>\n"
+"<p>It is currently out of scope to retrofit this with the existing Panache modules. This will be a new module with no backward compatibility (although most type-unsafe operations will continue as-is, so you will be familiar with them).</p>\n"
+"<h1>Organizing the Work</h1>\n"
+"<h2>Communication and Transparency:</h2>\n"
+"<p>This will be done via GitHub issues on the Quarkus core project.</p>\n"
+"<h2>Expected Timeline:</h2>\n"
+"<p>Most of the R&amp;D and design work has been completed over the last two years. Now remains the task of merging, documenting, testing, and tweaking it until it's complete.</p>\n"
 "<ul>\n"
-"<li>[ ] Dev MCP Runtime responds to the MCP <code>initialize</code> handshake without Dev UI or <code>vertx-http</code> running</li>\n"
-"<li>[ ] Dev Shell Runtime starts and provides interactive developer commands without <code>vertx-http</code></li>\n"
-"<li>[ ] Dev Assistant (Chappie + RAG) is accessible from Dev UI, Dev MCP, and Dev Shell</li>\n"
-"<li>[ ] Clear design of the RAG pipeline: from documentation to the agent</li>\n"
-"<li>[ ] Standalone stdio MCP app provides application lifecycle, docs, and workspace tools when dev mode is broken</li>\n"
-"<li>[ ] Existing <code>JsonRpcService</code> extensions work across all runtimes without modification</li>\n"
-"<li>[ ] Continuous testing status and controls are available via MCP tools</li>\n"
-"<li>[ ] Exception information is surfaced as MCP resources</li>\n"
-"<li>[ ] MCP tool discovery supports filtering and search</li>\n"
-"<li>[ ] Architecture documented with clear extension author guidance</li>\n"
-"<li>[ ] Integration tests verify that each runtime operates independently</li>\n"
-"</ul>\n"
-"<h2>Scope of Work</h2>\n"
-"<h3>In Scope</h3>\n"
-"<ul>\n"
-"<li>Decompose Dev UI Runtime into four independent runtimes (Dev UI, Dev JsonRPC, Dev MCP, Dev Shell)</li>\n"
-"<li>Break <code>vertx-http</code> dependency for Dev Shell</li>\n"
-"<li>Implement Dev Assistant (Chappie Runtime + Quarkus Docs RAG) connected via CDI</li>\n"
-"<li>Build standalone stdio MCP application for broken-dev-mode scenarios</li>\n"
-"<li>Re-evaluate continuous testing, hot reload, exception reporting, and workspace navigation for MCP</li>\n"
-"<li>Implement MCP tool filtering and search</li>\n"
-"<li>Investigate Skills concept and define success criteria</li>\n"
-"<li>Documentation for extension authors on the new architecture</li>\n"
-"</ul>\n"
-"<h3>Out of Scope</h3>\n"
-"<ul>\n"
-"<li>Production-mode MCP server (this is dev-mode tooling only)</li>\n"
-"<li>Dev Shell is not part of this working group, a dedicated working group will be created.</li>\n"
-"<li>Third-party AI provider integrations beyond MCP protocol support</li>\n"
-"<li>IDE-specific plugins (VS Code, IntelliJ) — these consume MCP, not provide it</li>\n"
-"</ul>\n"
-"<h2>Organizing the Work</h2>\n"
-"<h3>Communication</h3>\n"
-"<ul>\n"
-"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-dev-star/with/581636141\">wg-dev-star</a></li>\n"
-"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/53093#discussioncomment-16271096</li>\n"
-"<li>Point of Contact: @phillip-kruger</li>\n"
-"</ul>\n"
-"<h3>Timeline</h3>\n"
-"<ul>\n"
-"<li>Target: Quarkus 4 release cycle</li>\n"
+"<li>Point of contact: @FroMage  (@<strong>Stephane Epardaud</strong>  on Zulip)</li>\n"
+"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/48949</li>\n"
+"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Panache.2ENext/with/529258261\">Zulip</a></li>\n"
+"<li>Deliverable: <a href=\"https://quarkus.io/blog/hibernate-panache-next/\">Blog Post</a></li>\n"
 "</ul>\n"
 msgstr ""
-"<h2>目标</h2>\n"
-"<p>将 Quarkus 开发工具运行时（Dev UI、Dev MCP、Dev Shell、Dev Assistant）进行拆分和现代化改造，使每个组件都能独立运行，无需依赖完整的<code>vertx-http</code>Web 堆栈。 这使得基于 AI 的开发者辅助功能（通过 MCP）和基于终端的工具（Dev Shell）即使在开发模式或 HTTP 层出现故障时仍能正常工作，并为在所有交互界面上实现统一的“Dev Star”开发者体验奠定了基础。</p>\n"
-"<p>Quarkus 一直以来都是开发者体验的领军者；实时编码、Dev UI、Dev Services 和持续测试为 Java 框架树立了标杆。 Dev Star 将这一努力延伸至 AI 时代，同时注重<strong>AI 体验（AIx）</strong>：使 Quarkus 成为最易于与编码代理（Claude、Copilot、Gemini 等）协作的框架。 通过 MCP 充分展现 Quarkus 开发模式的全部功能（配置、构建输出、文档、测试、错误诊断），并为智能代理提供针对正在构建的应用程序中所用特定扩展和 API 的正确文档（通过基于 Quarkus Docs 的 RAG）， 编程代理能够像使用开发界面的人类开发者一样，高效地理解、构建和调试 Quarkus 应用程序。开发者体验与 AI 体验是一枚硬币的两面：对其中一方的任何改进，都会惠及另一方。</p>\n"
-"<h2>问题</h2>\n"
-"<p>目前，整个 Quarkus 开发工具栈与 Dev UI 运行时紧密耦合，而该运行时依赖于<code>vertx-http</code>。这导致了以下几个问题：</p>\n"
-"<ol>\n"
-"<li>\n"
-"<p><strong>脆弱的依赖链：</strong>若完整的 HTTP 栈未运行，Dev MCP 和 Dev Shell 将无法工作。如果开发模式出现故障（例如，编译错误导致应用程序无法启动），所有开发工具都将无法使用——而这恰恰是开发人员最需要帮助的时候。</p>\n"
-"</li>\n"
-"<li>\n"
-"<p><strong>应用程序故障时无备用方案：</strong>当 Quarkus 应用程序无法启动时，没有轻量级的机制来提供应用程序生命周期信息、文档访问或工作区导航。通过 MCP 连接的 AI 助手将完全断开。</p>\n"
-"</li>\n"
-"<li>\n"
-"<p><strong>单体式运行时：</strong>Dev UI 运行时将 WebSocket 传输、JsonRPC 路由、MCP 传输和 shell 连接打包为单一单元。即使仅需 JsonRPC 服务或 MCP 工具的扩展，仍必须引入整个 Web 堆栈。</p>\n"
-"</li>\n"
-"<li>\n"
-"<p><strong>AI 集成接口有限：</strong>Chappie 工作组确立了 AI 辅助功能，但当前架构未能将 AI 运行时（Chappie 运行时 + 基于 Quarkus Docs 的 RAG）与传输层清晰分离，导致难以通过多种渠道（UI、MCP、Shell、stdio）提供 AI 辅助功能。</p>\n"
-"</li>\n"
-"<li>\n"
-"<p><strong>开发者体验缺口：</strong>若干核心开发者工作流（持续测试、热重载、异常报告、示例项目、文件导航）尚未在 MCP 和 AI 辅助开发背景下进行重新评估。MCP 中缺少工具筛选/搜索等功能。</p>\n"
-"</li>\n"
-"</ol>\n"
-"<h2>建议的解决方案</h2>\n"
-"<h3>架构分解</h3>\n"
-"<p>将当前单体式的开发 UI 运行时拆分为四个独立的运行时：</p>\n"
-"<p>| 运行时                 | 传输机制       | 依赖项                     | 用途                                                               |\n"
-"| ----------------------- | --------------- | ------------------------------ | --------------------------------------------------------------------- |\n"
-"|<strong>开发 UI 运行时</strong>     | WebSocket       |<code>vertx-http</code>                  | 基于浏览器的开发 UI（面向用户）                                      |\n"
-"|<strong>开发 JsonRPC 运行时</strong>| JsonRPCRouter   | CDI                            | JsonRPC 服务的核心路由层；由开发 UI 和开发 MCP 共享 |\n"
-"|<strong>开发 MCP 运行时</strong>    | Streamable HTTP | CDI（无需<code>vertx-http</code>） | 用于 AI 代理（例如 Claude、Copilot）的 MCP 服务器                      |\n"
-"|<strong>开发 Shell 运行时</strong>  | 通过 CDI 连接   | CDI（无需<code>vertx-http</code>） | 基于终端的开发者交互                                  |</p>\n"
-"<p>关键的架构变更在于<strong>摆脱对<code>vertx-http</code>的依赖</strong>，从而使 Dev MCP 和 Dev Shell 能够独立运行。JsonRPC 路由器成为通过 CDI 连接的共享组件，允许扩展程序暴露<code>JsonRpcService</code>Bean，这些 Bean 可从任何运行时访问。</p>\n"
-"<h3>开发助手</h3>\n"
-"<p>开发助手整合了：</p>\n"
+"<h1>目标</h1>\n"
+"<p>本工作组的主要目标是推出 Panache 的下一个版本。</p>\n"
+"<h1>问题</h1>\n"
+"<p>Panache 在许多方面表现出色，但随着时间的推移，我们意识到它存在以下局限性：</p>\n"
 "<ul>\n"
-"<li><strong>Chappie 运行时</strong>：AI 交互引擎（Chappie WG 的继任者）</li>\n"
-"<li><strong>Quarkus 文档（RAG）</strong>：基于 Quarkus 文档的检索增强生成</li>\n"
+"<li>我们目前有三个不同的版本：Hibernate ORM、Hibernate Reactive 以及 Mongo（阻塞式和响应式）</li>\n"
+"<li>无法在 Hibernate ORM 和 Hibernate Reactive 中使用相同的实体</li>\n"
+"<li>不支持无状态会话</li>\n"
+"<li>不支持 Hibernate Processor 注解和 Jakarta Data</li>\n"
+"<li>在 Panache、ORM 和 Jakarta Data 之间存在诸如<code>Sort</code>和<code>Order</code>之类的重复类型</li>\n"
+"<li>我们有两种方式来放置实体查询操作：在实体本身，或在存储库中</li>\n"
+"<li>实体查询操作需要借助类型系统的变通方案，这使得它们的类型安全性不如我们期望的那样高——尤其是使用<code>var</code>和<code>for-each</code>时，以及在进行响应式操作时。</li>\n"
 "</ul>\n"
-"<p>Dev Assistant 通过 CDI 连接到 Dev Shell 运行时，并通过现有的 JsonRPC 路径连接到 Dev UI 运行时。这意味着无论是在浏览器（Dev UI）、终端（Dev Shell）还是外部 AI 工具（Dev MCP）中，均可使用 AI 辅助功能。</p>\n"
-"<h3>独立的 stdio MCP 应用程序</h3>\n"
-"<p>一款采用<strong>stdio 传输协议的</strong>轻量级、独立 MCP 应用程序，提供：</p>\n"
+"<h1>建议的解决方案</h1>\n"
+"<p>我们提议发布一个新的 Panache 版本来解决所有这些问题：</p>\n"
 "<ul>\n"
-"<li>应用程序生命周期信息（构建状态、错误、配置）</li>\n"
-"<li>Quarkus 文档访问</li>\n"
-"<li>工作区文件导航</li>\n"
+"<li>将所有变体统一到单个模块中，支持阻塞式、响应式、无状态和有状态会话</li>\n"
+"<li>为每种操作模式提供一个实体顶级类，同时允许访问其他模式</li>\n"
+"<li>将所有实体查询操作从实体类移至存储库类</li>\n"
+"<li>为这四种操作模式分别提供一个仓库顶级类，同时允许访问其他模式</li>\n"
+"<li>通过在实体元模型类上生成访问器，将各类存储库作为嵌套接口放置在实体类中，从而实现对任意类型存储库的便捷访问</li>\n"
+"<li>在实体元模型类上为这四种操作模式的存储库提供开箱即用的访问器</li>\n"
+"<li>支持 Jakarta Data 和 Hibernate Processor 的类型安全注解</li>\n"
+"<li>可选：通过即将推出的 ORM JDBC 支持，支持 Mongo</li>\n"
+"<li>可选：为缺失的三种模式提供 JD 存储库类型的替代方案</li>\n"
+"<li>可选：提供将 Panache 1 转换为 Panache.Next 的方法</li>\n"
 "</ul>\n"
-"<p>该 stdio 应用程序<strong>在非开发模式下</strong>运行，确保即使应用程序完全无法运行（编译失败、依赖项缺失、配置错误），开发人员仍可获得 AI 辅助。它与进程内的 Dev MCP 运行时相辅相成。</p>\n"
-"<h3>重新审视 Dev* 功能</h3>\n"
-"<p>针对新架构重新评估现有开发者功能：</p>\n"
+"<h1>完成标准</h1>\n"
 "<ul>\n"
-"<li><strong>开发模式的容错性</strong>：当开发模式失效时，哪些功能仍可正常运行？</li>\n"
-"<li><strong>持续测试</strong>：通过 MCP 工具展示测试状态和控制选项</li>\n"
-"<li><strong>热重载</strong>：通过 MCP/Shell 触发并监控重载</li>\n"
-"<li><strong>示例项目</strong>：通过 AI 辅助生成示例代码</li>\n"
-"<li><strong>异常报告</strong>：将异常以 MCP 资源/工具的形式呈现</li>\n"
-"<li><strong>工作区导航</strong>：通过 MCP 查找文件并浏览项目结构</li>\n"
-"<li><strong>工具筛选/搜索</strong>：支持发现和筛选可用的 MCP 工具</li>\n"
-"<li><strong>响应大小优化</strong>：缩减 MCP 响应负载大小，以最大限度减少编码代理对上下文窗口的占用；提供简洁、结构化的响应，而非冗长的原始输出</li>\n"
+"<li>将新的 Panache 扩展交付为<code>稳定</code>版本（在发布预览版/实验版以收集反馈之后）</li>\n"
+"<li>测试</li>\n"
+"<li>文档</li>\n"
+"<li>Codestart</li>\n"
+"<li>支持 Panache 的 REST 数据</li>\n"
+"<li>Renarde 支持</li>\n"
+"<li>Quarkus 洞察</li>\n"
 "</ul>\n"
-"<h3>技能研究</h3>\n"
-"<p>探究“技能”（Skills）的概念（即基于 MCP 工具构建的可组合、更高层次的开发者操作）。 其核心理念是允许每个扩展程序提供一个或多个“技能”，这些技能描述了该扩展程序的预期使用方式、配置方法和测试流程，同时包含最佳实践、常见陷阱及故障排除指南。与要求AI代理通过试错来发现这些知识不同，“技能”将其作为结构化且可操作的上下文信息预先提供。</p>\n"
-"<p><strong>成功标准：</strong>定义什么是“技能”，它与原始 MCP 工具的区别（工具<em>执行</em>操作；技能<em>则指导</em>如何高效地完成操作），以及“技能”API 是否比 AI 代理直接组合工具更能带来实质性价值。</p>\n"
-"<h2>完成标准</h2>\n"
+"<h1>工作范围</h1>\n"
+"<p>目前，将此功能与现有的 Panache 模块进行适配不在工作范围内。这将是一个不向后兼容的新模块（尽管大多数类型不安全的操作将保持原样，因此您会感到熟悉）。</p>\n"
+"<h1>工作组织</h1>\n"
+"<h2>沟通与透明度：</h2>\n"
+"<p>相关沟通将通过 Quarkus 核心项目上的 GitHub 问题进行。</p>\n"
+"<h2>预计时间表：</h2>\n"
+"<p>过去两年中，大部分研发和设计工作已经完成。现在剩下的任务是进行代码合并、编写文档、测试以及微调，直至项目完成。</p>\n"
 "<ul>\n"
-"<li>[ ] 在未运行 Dev UI 或<code>vertx-http</code>的情况下，Dev MCP 运行时能响应 MCP<code>初始化</code>握手</li>\n"
-"<li>[ ] Dev Shell 运行时可在不依赖<code>vertx-http</code>的情况下启动并提供交互式开发者命令</li>\n"
-"<li>[ ] 可通过开发 UI、开发 MCP 和开发 Shell 访问开发助手（Chappie + RAG）</li>\n"
-"<li>[ ] RAG 管道设计清晰：从文档到智能代理</li>\n"
-"<li>[ ] 当开发模式出现故障时，独立的 stdio MCP 应用程序可提供应用程序生命周期管理、文档及工作区工具</li>\n"
-"<li>[ ] 现有的<code>JsonRpcService</code>扩展无需修改即可在所有运行时环境中正常工作</li>\n"
-"<li>[ ] 可通过 MCP 工具查看持续测试状态并进行控制</li>\n"
-"<li>[ ] 异常信息以 MCP 资源的形式呈现</li>\n"
-"<li>[ ] MCP 工具发现功能支持筛选和搜索</li>\n"
-"<li>[ ] 架构文档包含清晰的扩展作者指南</li>\n"
-"<li>[ ] 集成测试可验证每个运行时均能独立运行</li>\n"
-"</ul>\n"
-"<h2>工作范围</h2>\n"
-"<h3>工作范围</h3>\n"
-"<ul>\n"
-"<li>将 Dev UI 运行时分解为四个独立的运行时（Dev UI、Dev JsonRPC、Dev MCP、Dev Shell）</li>\n"
-"<li>解除 Dev Shell 对<code>vertx-http</code>的依赖</li>\n"
-"<li>实现通过 CDI 连接的开发助手（Chappie 运行时 + Quarkus Docs RAG）</li>\n"
-"<li>为“开发模式失效”场景构建独立的 stdio MCP 应用程序</li>\n"
-"<li>针对 MCP 重新评估持续测试、热重载、异常报告和工作区导航功能</li>\n"
-"<li>实现 MCP 工具过滤和搜索功能</li>\n"
-"<li>研究“技能”概念并定义成功标准</li>\n"
-"<li>面向扩展开发者的新架构文档</li>\n"
-"</ul>\n"
-"<h3>不在范围之内</h3>\n"
-"<ul>\n"
-"<li>生产环境的 MCP 服务器（本工作组仅涉及开发模式工具）</li>\n"
-"<li>Dev Shell 不属于本工作组，将另行组建专门的工作组。</li>\n"
-"<li>超出 MCP 协议支持范围的第三方 AI 提供商集成</li>\n"
-"<li>特定于 IDE 的插件（VS Code、IntelliJ）——这些插件调用 MCP，而非提供 MCP 协议</li>\n"
-"</ul>\n"
-"<h2>工作组织</h2>\n"
-"<h3>沟通</h3>\n"
-"<ul>\n"
-"<li>讨论：<a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-dev-star/with/581636141\">wg-dev-star</a></li>\n"
-"<li>提案：https://github.com/quarkusio/quarkus/discussions/53093#discussioncomment-16271096</li>\n"
-"<li>联系人：@phillip-kruger</li>\n"
-"</ul>\n"
-"<h3>时间表</h3>\n"
-"<ul>\n"
-"<li>目标：Quarkus 4 发布周期</li>\n"
+"<li>联系人：@FroMage  （Zulip 上的<strong>@Stephane Epardaud</strong>）</li>\n"
+"<li>提案：https://github.com/quarkusio/quarkus/discussions/48949</li>\n"
+"<li>讨论：<a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Panache.2ENext/with/529258261\">Zulip</a></li>\n"
+"<li>交付成果：<a href=\"https://quarkus.io/blog/hibernate-panache-next/\">博客文章</a></li>\n"
 "</ul>\n"
 
 #. type: Hash Value: working-groups short-description
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "Decompose and modernize the Quarkus developer tooling runtime (Dev UI, Dev MCP, Dev Shell, Dev Assistant) so that each component can operate independently, without requiring the full `vertx-http` web stack. This enables AI-powered developer assistance (via MCP) and terminal-based tooling (Dev Shell)\n"
-msgstr "将 Quarkus 开发工具运行时（Dev UI、Dev MCP、Dev Shell、Dev Assistant）进行拆分和现代化改造，使每个组件都能独立运行，无需依赖完整的 `vertx-http` Web 技术栈。 这将支持基于 AI 的开发者辅助功能（通过 MCP）和基于终端的工具（Dev Shell）。\n"
+msgid "The primary objective of this working group is to develop the next version of Panache, now known as Quarkus Data.\n"
+msgstr "该工作组的主要目标是开发 Panache 的下一个版本，该版本现称为 Quarkus Data。\n"
 
 #. type: Hash Value: working-groups status
 #: _data/wg.yaml:1
@@ -284,500 +182,104 @@ msgstr "未离题"
 #. type: Hash Value: working-groups title
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "Dev Star"
-msgstr "Dev Star"
+msgid "Quarkus Data"
+msgstr "Quarkus 数据"
 
 #. type: Hash Value: working-groups board-url
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "https://github.com/orgs/quarkusio/projects/43"
-msgstr "https://github.com/orgs/quarkusio/projects/43"
-
-#. type: Hash Value: working-groups deliverable
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "<a rel=\"nofollow\" href=\"https://quarkus.io/blog/arc-migrates-to-gizmo2/\">Blog</a>"
-msgstr "<a rel=\"nofollow\" href=\"https://quarkus.io/blog/arc-migrates-to-gizmo2/\">博客</a>"
-
-#. type: Hash Value: working-groups discussion
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/Gizmo.202.2Ex.20WG.20chat"
-msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/Gizmo.202.2Ex.20WG.20chat"
-
-#. type: Hash Value: working-groups last-activity
-#: _data/wg.yaml:1
-#, no-wrap
-msgid "2026-10-17"
-msgstr ""
+msgid "https://github.com/orgs/quarkusio/projects/89"
+msgstr "https://github.com/orgs/quarkusio/projects/89"
 
 #. type: Hash Value: working-groups last-update
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid ""
-"While there are still tons of work to do on Gizmo 2, it meets the definition of done from the proposal. \n"
-"Arc got migrated to Gizmo 2 - see https://quarkus.io/blog/arc-migrates-to-gizmo2/.\n"
-msgstr ""
-"尽管 Gizmo 2 还有大量工作待完成，但它已符合提案中对“完成”的定义。\n"
-"Arc 已迁移至 Gizmo 2——详见 https://quarkus.io/blog/arc-migrates-to-gizmo2/。\n"
+msgid "WG started\n"
+msgstr "WG 已启动\n"
 
 #. type: Hash Value: working-groups last-activity
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "2025-11-03"
-msgstr "2025年11月3日"
+msgid "2026-09-11"
+msgstr "2026年9月11日"
 
 #. type: Hash Value: working-groups point-of-contact
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "@mkouba (@<strong>Martin Kouba</strong>  on Zulip)"
-msgstr "@mkouba（@Martin<strong>Kouba</strong>on Zulip）"
+msgid "@patriot1burke"
+msgstr "@patriot1burke"
 
 #. type: Hash Value: working-groups proposal
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "https://github.com/quarkusio/quarkus/discussions/46627"
-msgstr "https://github.com/quarkusio/quarkus/discussions/46627"
+msgid "https://github.com/quarkusio/quarkus/discussions/56502"
+msgstr "https://github.com/quarkusio/quarkus/discussions/56502"
 
 #. type: Hash Value: working-groups readme
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
 msgid ""
-"<p>This _working group aims to make the <a href=\"https://github.com/dmlloyd/gizmo/tree/gizmo2\">Gizmo 2 POC</a> production-ready and integrate it into Quarkus core.</p>\n"
-"<ul>\n"
-"<li>Point of contact: @mkouba (@<strong>Martin Kouba</strong>  on Zulip)</li>\n"
-"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/46627</li>\n"
-"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/Gizmo.202.2Ex.20WG.20chat\">Zulip topic</a></li>\n"
-"<li>Deliverable: <a href=\"https://quarkus.io/blog/arc-migrates-to-gizmo2/\">Blog</a></li>\n"
-"</ul>\n"
-msgstr ""
-"<p>该工作组旨在使<a href=\"https://github.com/dmlloyd/gizmo/tree/gizmo2\">Gizmo 2 概念</a>验证（<a href=\"https://github.com/dmlloyd/gizmo/tree/gizmo2\">POC）</a>达到生产就绪状态，并将其集成到 Quarkus 核心中。</p>\n"
-"<ul>\n"
-"<li>联系人：@mkouba（Zulip 上的<strong>@Martin Kouba</strong>）</li>\n"
-"<li>提案：https://github.com/quarkusio/quarkus/discussions/46627</li>\n"
-"<li>讨论：<a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/Gizmo.202.2Ex.20WG.20chat\">Zulip 主题</a></li>\n"
-"<li>交付成果：<a href=\"https://quarkus.io/blog/arc-migrates-to-gizmo2/\">博客</a></li>\n"
-"</ul>\n"
-
-#. type: Hash Value: working-groups short-description
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "Gizmo 2 related tasks\n"
-msgstr "与 Gizmo 2 相关的任务\n"
-
-#. type: Hash Value: working-groups status
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "complete"
-msgstr "完整"
-
-#. type: Hash Value: working-groups title
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "Gizmo 2"
-msgstr "小玩意 2"
-
-#. type: Hash Value: working-groups board-url
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "https://github.com/orgs/quarkusio/projects/76"
-msgstr "https://github.com/orgs/quarkusio/projects/76"
-
-#. type: Hash Value: working-groups discussion
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-modularity/with/581640512"
-msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-modularity/with/581640512"
-
-#. type: Hash Value: working-groups last-update
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid ""
-"The Modularity and JLink group resolved two issues this week. They tackled the problem of `io.quarkus.oidc.client.filter` being split across multiple modules. The team also addressed the missing ability to read the application name from configuration.\n"
-"(This status update was automatically generated using AI.)\n"
-msgstr ""
-"本周，模块化与JLink小组解决了两个问题。他们处理了`io.quarkus.oidc.client.filter`被拆分到多个模块中的问题。该团队还解决了无法从配置中读取应用程序名称的问题。\n"
-"（此状态更新由AI自动生成。）\n"
-
-#. type: Hash Value: working-groups point-of-contact
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "@dmlloyd"
-msgstr "@dmlloyd"
-
-#. type: Hash Value: working-groups proposal
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "https://github.com/quarkusio/quarkus/discussions/53223"
-msgstr "https://github.com/quarkusio/quarkus/discussions/53223"
-
-#. type: Hash Value: working-groups readme
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid ""
-"<h2>Objective</h2>\n"
-"<p>Make Quarkus applications fully modular using JPMS (Java Platform Module System) and enable <code>jlink</code> as a first-class packaging strategy, producing smaller, faster, self-contained application images, with the long-term goal of making modular packaging the default and phasing out the legacy fast-jar layout.</p>\n"
 "<h2>The Problem</h2>\n"
-"<h3>Class Loading Architecture Debt</h3>\n"
-"<p>The Quarkus codebase contains between 15 and 20 class loader implementations, each with different behavior. These serve a variety of purposes, exposing hidden APIs, setting up execution environments for different launch modes, working around upstream issues, customizing parent delegation; but the ad hoc approach creates concurrency issues, virtual thread pinning, delegation bugs, and makes it nearly impossible to support JPMS properly.</p>\n"
-"<h3>No JPMS Support</h3>\n"
-"<p>Quarkus applications cannot take advantage of the Java Platform Module System. This means:</p>\n"
+"<p>There are a bunch of things we want to address this year for Quarkus AI strategy:</p>\n"
 "<ul>\n"
-"<li><strong>No module isolation</strong>: all application code, extensions, and dependencies share a flat classpath. There is no enforcement of encapsulation boundaries between artifacts at runtime.</li>\n"
-"<li><strong>No <code>jlink</code> support</strong>: applications cannot use <code>jlink</code> to produce optimized, stripped-down JVM images containing only the modules actually needed, resulting in unnecessarily large deployments.</li>\n"
-"<li><strong>No forward compatibility</strong>: future JDK features (FFM restrictions, Leyden AOT, serialization restrictions) increasingly assume or require JPMS. Without module support, Quarkus will face growing friction with each JDK release.</li>\n"
-"<li><strong>Split packages and service loading issues</strong>: the current flat classpath tolerates split packages and uncontrolled service loading, which masks real dependency problems and makes the classpath fragile.</li>\n"
-"</ul>\n"
-"<h3>Packaging Inefficiency</h3>\n"
-"<p>The current fast-jar packaging produces application images that are significantly larger than they need to be:</p>\n"
-"<ul>\n"
-"<li>Applications bundle the entire JDK (or require one to be pre-installed), even though most applications use a small fraction of JDK modules</li>\n"
-"<li>No tree-shaking of unused JDK modules</li>\n"
-"<li>Container images cannot effectively share JVM layers across different Quarkus applications</li>\n"
-"<li>Image size comparison from prototype work shows: <strong>GraalVM native &lt; jlink (modular) &lt; fast-jar &lt; AOT</strong> — meaning jlink provides a substantial size improvement over fast-jar without the complexity and limitations of native compilation</li>\n"
-"</ul>\n"
-"<h3>No Optimized Container Layering</h3>\n"
-"<p>A <code>jlink</code>-based modular image contains its own JVM, which allows container images to use a minimal base layer (no JDK required in the base). This opens the door to effective layer sharing across Quarkus applications running the same Quarkus version, the Quarkus core + JDK modules layer can be shared, with only the application layer differing. Today, this is not possible.</p>\n"
-"<h2>The Proposed Solution</h2>\n"
-"<h3>JPMS Modularization of Quarkus</h3>\n"
-"<p>Systematically modularize the Quarkus codebase so that each dependency/artifact gets its own class loader and module:</p>\n"
-"<ul>\n"
-"<li>Artifacts with <code>module-info.java</code> are created as named modules</li>\n"
-"<li>Other artifacts are created as unnamed modules with automatic module names</li>\n"
-"<li>A modular class loader architecture (based on David's <code>modules3</code> prototype) replaces the current ad hoc class loaders</li>\n"
-"<li>Each module has proper <code>exports</code>, <code>opens</code>, <code>requires</code>, <code>uses</code>, and <code>provides</code> declarations</li>\n"
-"</ul>\n"
-"<p><strong>Current prototype status:</strong> David's prototype (<code>dmlloyd/quarkus@modular</code> + <code>dmlloyd/modules3</code>) demonstrates this approach working. In the <code>getting-started</code> example, 39 out of 111 JARs are already modular. The remaining need automatic module names or full <code>module-info</code> files. Approximately 6-7 manual module patches are still required to start an application.</p>\n"
-"<p><strong>Key challenges to resolve:</strong></p>\n"
-"<ul>\n"
-"<li>Split packages between artifacts (tracked in #44710, not as bad as it initially appears)</li>\n"
-"<li>Generated classes at build time need a module home (#44657, more serious)</li>\n"
-"<li>Service loading across module boundaries needs correct <code>uses</code>/<code>provides</code> declarations</li>\n"
-"<li>Some artifacts will remain as unnamed modules until upstream projects add <code>module-info</code></li>\n"
-"</ul>\n"
-"<h3>JLink Packaging</h3>\n"
-"<p>Introduce <code>jlink</code> as a packaging type for Quarkus applications:</p>\n"
-"<ul>\n"
-"<li>Produce a self-contained application image with only the JDK modules actually used</li>\n"
-"<li>The image includes a custom JVM runtime, the modular application, and a launcher</li>\n"
-"<li>No external JDK installation required to run the application</li>\n"
-"<li>Performance is slightly better than fast-jar even without AOT (demonstrated in prototype)</li>\n"
-"</ul>\n"
-"<p><strong>Image layout:</strong></p>\n"
-"<ul>\n"
-"<li>A <code>jlink</code>-produced image is a directory containing <code>bin/</code> (launcher), <code>lib/</code> (JVM modules + application modules), and <code>conf/</code></li>\n"
-"<li>The layout naturally supports container image layering: JVM + Quarkus core in a shared base layer, application modules in the top layer</li>\n"
-"</ul>\n"
-"<h3>Container Image Optimization</h3>\n"
-"<p>Leverage the modular architecture for optimized container images:</p>\n"
-"<ul>\n"
-"<li><strong>Shared base layers</strong>: multiple Quarkus applications running the same Quarkus version share a common layer containing the JDK modules and Quarkus core, dramatically reducing per-application image size</li>\n"
-"<li><strong>Minimal base image</strong>: since jlink embeds the JVM, containers can use a minimal base (e.g., <code>ubi-micro</code>, <code>scratch</code> or <code>distroless</code>) instead of a JDK base image</li>\n"
-"<li><strong>AOT layering</strong>: AOT cache currently causes prohibitive image size bloat, but a layering strategy (AOT cache in a shared layer) may provide a partial solution; this needs investigation</li>\n"
-"</ul>\n"
-"<h3>Long-Term: Default Modular Packaging</h3>\n"
-"<p>The long-term goal is to make modular packaging the default build and test mode, phasing out the legacy fast-jar layout:</p>\n"
-"<ol>\n"
-"<li>First, modular packaging exists as an opt-in alternative (<code>MODULAR</code> packaging type or dedicated extension)</li>\n"
-"<li>Then, CI builds and tests run against both fast-jar and modular packaging</li>\n"
-"<li>Eventually, modular packaging becomes the default, with fast-jar available as a fallback</li>\n"
-"<li>Finally, fast-jar is deprecated and removed</li>\n"
-"</ol>\n"
-"<h3>Leyden / CDS Integration</h3>\n"
-"<p>The modular architecture positions Quarkus well for Project Leyden:</p>\n"
-"<ul>\n"
-"<li>The Quarkus core and bootstrap layer is loaded by the system class loader, making it eligible for Leyden premain optimizations</li>\n"
-"<li>A shared Leyden-trained layer (JDK modules + Quarkus core) could be reused across applications</li>\n"
-"<li>Extension and user code in separate module layers can benefit from Leyden independently</li>\n"
-"<li>Full Leyden integration is out of scope for this WG but the architecture should not preclude it</li>\n"
+"<li>Revamp the Quarkus AI webpage</li>\n"
+"<li>Create Blueprint samples for Quarkus AI that show full Quarkus stack and AI application archetypes</li>\n"
+"<li>Align Quarkus LC4J extension with LC4J upstream project. Because Q-LC4J reimplements a lot of things to Quarkize LC4J, new features and bug fixes in upstream don't percolate down to Q-LC4J.</li>\n"
+"<li>LangFuse integration. This will give us Observability, Tracing, Metrics, and a playground for development. Will also make Java a first class language in the overall AI dev community</li>\n"
+"<li>Revamp Q-LC4J RAG implementation</li>\n"
+"<li>Bring Quarkus/CDI style programming to more LC4J components</li>\n"
+"<li>Handle shutdown and recovery more gracefully.</li>\n"
 "</ul>\n"
 "<h2>Definition of Done</h2>\n"
-"<ul>\n"
-"<li>[ ] Quarkus core modules have <code>module-info.java</code> descriptors (or automatic module names as an intermediate step)</li>\n"
-"<li>[ ] Applications can be built with modular packaging (<code>jlink</code> output)</li>\n"
-"<li>[ ] A <code>jlink</code>-packaged application starts and runs correctly (getting-started, REST, database scenarios)</li>\n"
-"<li>[ ] No manual module patches required to start an application</li>\n"
-"<li>[ ] Split package issues resolved for core Quarkus modules</li>\n"
-"<li>[ ] Generated classes have a proper module home</li>\n"
-"<li>[ ] Service loading works correctly across module boundaries</li>\n"
-"<li>[ ] <code>jlink</code> image size is smaller than fast-jar for equivalent applications</li>\n"
-"<li>[ ] Container image guide documents the layering strategy for modular images</li>\n"
-"<li>[ ] Performance is on par with or better than fast-jar</li>\n"
-"<li>[ ] Dev mode works with modular class loading</li>\n"
-"<li>[ ] Extension developer guide for making extensions module-friendly</li>\n"
-"</ul>\n"
+"<p>When the Epic issues defined in the Quarkus AI umbrella GitHub projects are closed.</p>\n"
 "<h2>Scope of Work</h2>\n"
-"<h3>In Scope</h3>\n"
-"<ul>\n"
-"<li>JPMS modularization of Quarkus core modules (<code>module-info.java</code> + automatic module names)</li>\n"
-"<li>Modular class loader architecture (replacing ad hoc class loaders for the modular packaging path)</li>\n"
-"<li><code>jlink</code> packaging type for Quarkus applications (name to be defined)</li>\n"
-"<li>Resolving split packages and generated class module assignment</li>\n"
-"<li>Service loading across module boundaries</li>\n"
-"<li>Container image layering strategy for modular images</li>\n"
-"<li>Dev mode support with modular class loading</li>\n"
-"<li>Extension author guidance for module compatibility</li>\n"
-"<li>Performance validation (startup time, memory, image size)</li>\n"
-"</ul>\n"
-"<h3>Out of Scope</h3>\n"
-"<ul>\n"
-"<li>Full rewrite of all 15-20 existing class loaders (incremental cleanup continues separately)</li>\n"
-"<li>Test class loading rework (covered by a separate WG)</li>\n"
-"<li>Project Leyden / CDS integration (parrallel work, but architecture should not preclude it)</li>\n"
-"<li>Modularizing third-party dependencies (upstream responsibility; Quarkus handles them as unnamed/automatic modules)</li>\n"
-"</ul>\n"
+"<p>Scope of work will be well defined within various GitHub issues linked to within the Epic Issues of the Quarkus AI umbrella repo.</p>\n"
 "<h2>Organizing the Work</h2>\n"
-"<h3>Communication</h3>\n"
+"<p><strong>Communication and Transparency:</strong></p>\n"
+"<p>A new umbrella <a href=\"https://github.com/quarkusio/quarkus-ai\">quarkus-ai</a> has been created. This will hold high-level issues (epics) that link to lists of tasks and issues spread out between the other repos we are trying to coordinate.</p>\n"
+"<p><strong>Expected Timeline:</strong>\n"
+"Work will start sometime in September 2026 and will continue into early 2027</p>\n"
 "<ul>\n"
-"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/53223</li>\n"
-"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-modularity/with/581640512\">#wg-modularity</a></li>\n"
-"<li>Point of contact: @dmlloyd</li>\n"
-"</ul>\n"
-"<h3>Existing Issues and Discussions</h3>\n"
-"<ul>\n"
-"<li><a href=\"https://github.com/quarkusio/quarkus/discussions/43749\">#43749</a> — Class loading WG discussion</li>\n"
-"<li><a href=\"https://github.com/quarkusio/quarkus/issues/43726\">#43726</a> — Class loader cleanup umbrella</li>\n"
-"<li><a href=\"https://github.com/quarkusio/quarkus/issues/44710\">#44710</a> — Split packages</li>\n"
-"<li><a href=\"https://github.com/quarkusio/quarkus/issues/44657\">#44657</a> — Generated classes and modules</li>\n"
+"<li>Point of contact: @patriot1burke</li>\n"
+"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/56502</li>\n"
 "</ul>\n"
 msgstr ""
-"<h2>目标</h2>\n"
-"<p>利用 JPMS（Java 平台模块系统）使 Quarkus 应用程序完全模块化，并将<code>jlink</code>作为一等打包策略，从而生成更小、更快、自包含的应用程序镜像；长期目标是将模块化打包设为默认方案，并逐步淘汰传统的 fast-jar 布局。</p>\n"
 "<h2>问题</h2>\n"
-"<h3>类加载架构债务</h3>\n"
-"<p>Quarkus 代码库中包含 15 到 20 个类加载器实现，每个实现的行为各不相同。 这些实现服务于多种目的，包括暴露隐藏的 API、为不同的启动模式设置执行环境、绕过上游问题以及自定义父类委托；但这种临时拼凑的方法会引发并发问题、虚拟线程固定以及委托错误，并使得几乎无法正确支持 JPMS。</p>\n"
-"<h3>不支持 JPMS</h3>\n"
-"<p>Quarkus 应用程序无法利用 Java 平台模块系统。这意味着：</p>\n"
+"<p>今年，针对 Quarkus AI 战略，我们希望解决以下几个问题：</p>\n"
 "<ul>\n"
-"<li><strong>无模块隔离</strong>：所有应用程序代码、扩展和依赖项共享一个扁平化的类路径。运行时不会强制执行工件之间的封装边界。</li>\n"
-"<li><strong>不支持<code>jlink</code></strong>：应用程序无法使用<code>jlink</code>生成仅包含实际所需模块的优化、精简版 JVM 映像，导致部署包体积过大。</li>\n"
-"<li><strong>缺乏向前兼容性</strong>：未来的 JDK 功能（FFM 限制、Leyden AOT、序列化限制）将越来越多地假设或要求使用 JPMS。由于缺乏模块支持，Quarkus 将随着每次 JDK 版本的发布而面临日益加剧的兼容性问题。</li>\n"
-"<li><strong>拆分包和服务加载问题</strong>：当前的扁平类路径容许拆分包和不受控的服务加载，这掩盖了真正的依赖问题，并导致类路径变得脆弱。</li>\n"
-"</ul>\n"
-"<h3>打包效率低下</h3>\n"
-"<p>当前的 fast-jar 打包方式生成的应用程序镜像远大于实际所需：</p>\n"
-"<ul>\n"
-"<li>应用程序会打包整个 JDK（或要求预先安装 JDK），尽管大多数应用程序仅使用了极少部分的 JDK 模块</li>\n"
-"<li>未对未使用的 JDK 模块进行树摇（tree-shaking）</li>\n"
-"<li>容器镜像无法在不同的 Quarkus 应用程序之间有效共享 JVM 层</li>\n"
-"<li>原型工作的镜像大小对比显示：<strong>GraalVM 本机编译 &lt; jlink（模块化）&lt; fast-jar &lt; AOT</strong>—— 这意味着 jlink 相比 fast-jar 提供了显著的大小优化，同时又避免了本机编译的复杂性和局限性</li>\n"
-"</ul>\n"
-"<h3>缺乏优化的容器分层</h3>\n"
-"<p><code>基于 jlink 的</code>模块化镜像包含其自身的 JVM，这使得容器镜像能够使用最小的基础层（基础层中无需 JDK）。 这为运行相同 Quarkus 版本的 Quarkus 应用程序之间实现有效的层共享打开了大门——Quarkus 核心 + JDK 模块层可以共享，仅应用程序层有所不同。目前，这尚不可行。</p>\n"
-"<h2>建议的解决方案</h2>\n"
-"<h3>Quarkus 的 JPMS 模块化</h3>\n"
-"<p>系统地将 Quarkus 代码库模块化，使每个依赖项/构建产物都拥有独立的类加载器和模块：</p>\n"
-"<ul>\n"
-"<li>包含<code>module-info.java</code>的构建产物将作为命名模块创建</li>\n"
-"<li>其他构建产物将作为无名模块创建，并自动生成模块名称</li>\n"
-"<li>采用基于 David 的<code>modules3</code>原型的模块化类加载器架构，取代当前临时拼凑的类加载器</li>\n"
-"<li>每个模块都包含正确的<code>exports</code>、<code>opens</code>、<code>requires</code>、<code>uses</code> 和<code>provides</code>声明</li>\n"
-"</ul>\n"
-"<p><strong>当前原型状态：</strong>David 的原型（<code>dmlloyd/quarkus@modular</code>+<code>dmlloyd/modules3</code>）已验证该方法可行。 在<code>入门</code>示例中，111 个 JAR 文件中有 39 个已实现模块化。其余的则需要自动生成的模块名称或完整的<code>modules-info</code>文件。启动应用程序仍需大约 6-7 个手动模块补丁。</p>\n"
-"<p><strong>亟待解决的关键挑战：</strong></p>\n"
-"<ul>\n"
-"<li>将包拆分到不同工件中（在 #44710 中跟踪，情况并不像最初看起来那么严重）</li>\n"
-"<li>构建时生成的类需要模块根目录（#44657，问题更为严重）</li>\n"
-"<li>跨模块边界的服务加载需要正确的<code>uses/provides</code>声明</li>\n"
-"<li>部分工件将作为无名模块存在，直到上游项目添加<code>module-info 文件</code></li>\n"
-"</ul>\n"
-"<h3>JLink 打包</h3>\n"
-"<p>引入<code>jlink</code>作为 Quarkus 应用程序的打包类型：</p>\n"
-"<ul>\n"
-"<li>生成一个仅包含实际使用的 JDK 模块的自包含应用程序镜像</li>\n"
-"<li>该映像包含自定义 JVM 运行时、模块化应用程序以及启动器</li>\n"
-"<li>运行该应用程序无需安装外部 JDK</li>\n"
-"<li>即使未启用 AOT，性能也略优于 fast-jar（原型已验证）</li>\n"
-"</ul>\n"
-"<p><strong>镜像结构：</strong></p>\n"
-"<ul>\n"
-"<li><code>由 jlink 生成的</code>镜像是一个目录，其中包含<code>bin/</code>（启动器）、<code>lib/</code>（JVM 模块 + 应用程序模块）和<code>conf/</code></li>\n"
-"<li>该结构天然支持容器镜像分层：JVM + Quarkus 核心位于共享的基础层，应用程序模块位于顶层</li>\n"
-"</ul>\n"
-"<h3>容器镜像优化</h3>\n"
-"<p>利用模块化架构优化容器镜像：</p>\n"
-"<ul>\n"
-"<li><strong>共享基础层</strong>：运行相同 Quarkus 版本的多个 Quarkus 应用程序共享一个包含 JDK 模块和 Quarkus 核心的公共层，从而大幅减少每个应用程序的镜像大小</li>\n"
-"<li><strong>精简基础镜像</strong>：由于 jlink 内嵌了 JVM，容器可以使用精简基础镜像（例如<code>ubi-micro</code>、<code>scratch</code>或<code>distroless</code>），而非 JDK 基础镜像</li>\n"
-"<li><strong>AOT 分层</strong>：AOT 缓存目前会导致镜像大小过度膨胀，但分层策略（将 AOT 缓存置于共享层中）可能提供部分解决方案；这需要进一步研究</li>\n"
-"</ul>\n"
-"<h3>长期目标：默认采用模块化打包</h3>\n"
-"<p>长期目标是将模块化打包设为默认的构建和测试模式，逐步淘汰传统的 fast-jar 布局：</p>\n"
-"<ol>\n"
-"<li>首先，模块化打包作为一种可选方案存在（<code>MODULAR</code>打包类型或专用扩展）</li>\n"
-"<li>随后，持续集成（CI）构建和测试将同时支持 fast-jar 和模块化打包</li>\n"
-"<li>最终，模块化打包将成为默认选项，而 fast-jar 将作为备用方案</li>\n"
-"<li>最后，fast-jar 将被废弃并移除</li>\n"
-"</ol>\n"
-"<h3>Leyden / CDS 集成</h3>\n"
-"<p>模块化架构使 Quarkus 能够很好地适应 Leyden 项目：</p>\n"
-"<ul>\n"
-"<li>Quarkus 核心和引导层由系统类加载器加载，因此符合 Leyden 预主程序优化的条件</li>\n"
-"<li>一个经过 Leyden 训练的共享层（JDK 模块 + Quarkus 核心）可在不同应用程序中复用</li>\n"
-"<li>位于独立模块层中的扩展和用户代码可独立受益于 Leyden</li>\n"
-"<li>虽然本工作组的范围不包括与 Leyden 的全面集成，但该架构不应排除这种可能性</li>\n"
+"<li>重构 Quarkus AI 网页</li>\n"
+"<li>为 Quarkus AI 创建 Blueprint 示例，展示完整的 Quarkus 技术栈和 AI 应用原型</li>\n"
+"<li>使 Quarkus LC4J 扩展与 LC4J 上游项目保持同步。由于 Q-LC4J 为使 LC4J 适应 Quarkus 而重新实现了许多功能，因此上游的新功能和错误修复无法传递到 Q-LC4J 中。</li>\n"
+"<li>集成 LangFuse。这将为我们提供可观测性、追踪、指标以及一个开发实验平台。同时也将使 Java 在整个 AI 开发社区中成为一等语言</li>\n"
+"<li>重构 Q-LC4J 的 RAG 实现</li>\n"
+"<li>将 Quarkus/CDI 风格的编程引入更多 LC4J 组件</li>\n"
+"<li>更优雅地处理关机和恢复操作。</li>\n"
 "</ul>\n"
 "<h2>完成标准</h2>\n"
-"<ul>\n"
-"<li>[ ] Quarkus 核心模块具有<code>module-info.java</code>描述符（或作为中间步骤的自动生成的模块名称）</li>\n"
-"<li>[ ] 应用程序可采用模块化打包方式构建（<code>jlink</code>输出）</li>\n"
-"<li>[ ]<code>采用 jlink 打包的</code>应用程序能够正确启动并运行（入门、REST、数据库场景）</li>\n"
-"<li>[ ] 启动应用程序无需手动修改模块补丁</li>\n"
-"<li>[ ] 核心 Quarkus 模块的分包问题已解决</li>\n"
-"<li>[ ] 生成的类具有正确的模块根目录</li>\n"
-"<li>[ ] 服务加载在模块边界之间运行正常</li>\n"
-"<li>[ ] 对于同等应用程序，<code>jlink</code>镜像大小小于 fast-jar</li>\n"
-"<li>[ ] 容器镜像指南详细说明了模块化镜像的分层策略</li>\n"
-"<li>[ ] 性能与 fast-jar 相当或更优</li>\n"
-"<li>[ ] 开发模式支持模块化类加载</li>\n"
-"<li>[ ] 扩展开发指南，旨在使扩展支持模块化</li>\n"
-"</ul>\n"
+"<p>当 Quarkus AI 伞形 GitHub 项目中定义的 Epic 问题全部关闭时。</p>\n"
 "<h2>工作范围</h2>\n"
-"<h3>工作范围</h3>\n"
-"<ul>\n"
-"<li>Quarkus 核心模块的 JPMS 模块化（<code>module-info.java</code>+ 自动生成的模块名称）</li>\n"
-"<li>模块化类加载器架构（替换模块化打包路径中临时类加载器）</li>\n"
-"<li>Quarkus 应用程序的<code>jlink</code>打包类型（名称待定）</li>\n"
-"<li>解决拆分包及生成的类模块分配问题</li>\n"
-"<li>跨模块边界的服务加载</li>\n"
-"<li>模块化镜像的容器镜像分层策略</li>\n"
-"<li>支持采用模块化类加载的开发模式</li>\n"
-"<li>针对模块兼容性的扩展作者指南</li>\n"
-"<li>性能验证（启动时间、内存、镜像大小）</li>\n"
-"</ul>\n"
-"<h3>不在范围之内</h3>\n"
-"<ul>\n"
-"<li>对所有 15-20 个现有类加载器的全面重写（增量清理工作将继续单独进行）</li>\n"
-"<li>测试类加载重构（由单独的工作组负责）</li>\n"
-"<li>Project Leyden / CDS 集成（并行工作，但架构不应排除该可能性）</li>\n"
-"<li>将第三方依赖进行模块化（上游的责任；Quarkus将其作为无名/自动模块处理）</li>\n"
-"</ul>\n"
+"<p>工作范围将在 Quarkus AI 总库的 Epic 问题中链接的各个 GitHub 问题内明确界定。</p>\n"
 "<h2>工作组织</h2>\n"
-"<h3>沟通</h3>\n"
+"<p><strong>沟通与透明度：</strong></p>\n"
+"<p>已创建一个新的<a href=\"https://github.com/quarkusio/quarkus-ai\">“quarkus-ai”</a>总库。该库将包含高级别问题（Epic），并链接到分散在我们试图协调的其他仓库中的任务和问题列表。</p>\n"
+"<p><strong>预计时间表：</strong>\n"
+"工作将于 2026 年 9 月某时启动，并持续至 2027 年初</p>\n"
 "<ul>\n"
-"<li>提案：https://github.com/quarkusio/quarkus/discussions/53223</li>\n"
-"<li>讨论：<a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-modularity/with/581640512\">#wg-modularity</a></li>\n"
-"<li>联系人：@dmlloyd</li>\n"
-"</ul>\n"
-"<h3>现有问题与讨论</h3>\n"
-"<ul>\n"
-"<li><a href=\"https://github.com/quarkusio/quarkus/discussions/43749\">#43749</a>— 类加载工作组讨论</li>\n"
-"<li><a href=\"https://github.com/quarkusio/quarkus/issues/43726\">#43726</a>— 类加载器清理总议题</li>\n"
-"<li><a href=\"https://github.com/quarkusio/quarkus/issues/44710\">#44710</a>— 拆分包</li>\n"
-"<li><a href=\"https://github.com/quarkusio/quarkus/issues/44657\">#44657</a>— 生成的类和模块</li>\n"
+"<li>联系人：@patriot1burke</li>\n"
+"<li>提案：https://github.com/quarkusio/quarkus/discussions/56502</li>\n"
 "</ul>\n"
 
 #. type: Hash Value: working-groups short-description
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "Make Quarkus applications fully modular using JPMS (Java Platform Module System) and enable jlink as a first-class packaging strategy, producing smaller, faster, self-contained application images, with the long-term goal of making modular packaging the default and phasing out the legacy fast-jar lay\n"
-msgstr "利用 JPMS（Java 平台模块系统）使 Quarkus 应用程序完全模块化，并将 jlink 作为一种一等公民的打包策略，从而生成更小、更快、自包含的应用程序镜像；其长期目标是让模块化打包成为默认方案，并逐步淘汰传统的 fast-jar 布局。\n"
+msgid "The main objective of this working group is to revamp the Quarkus AI message and to coordinate work for Quarkus AI during the 2026/27 timeframe.\n"
+msgstr "该工作组的主要目标是重塑 Quarkus AI 的宣传信息，并在 2026/27 年期间协调 Quarkus AI 相关工作。\n"
 
 #. type: Hash Value: working-groups title
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "Modularity (JPMS) and JLink"
-msgstr "模块化（JPMS）与JLink"
-
-#. type: Hash Value: working-groups board-url
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "https://github.com/orgs/quarkusio/projects/51"
-msgstr "https://github.com/orgs/quarkusio/projects/51"
-
-#. type: Hash Value: working-groups last-update
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid ""
-"The working group is on track. Some noticeable updates:\n"
-"- Usage of the Vert.x Context Local SPI\n"
-"- Quantum-safe TLS\n"
-"- Improvements around Netty 4.2 and Vert.x 5\n"
-"- Initial work around the observation API\n"
-"- Java 21 as base.\n"
-msgstr ""
-"工作组进展顺利。以下是一些值得注意的更新：\n"
-"- 采用了 Vert.x Context Local SPI\n"
-"- 量子安全的 TLS\n"
-"- 针对 Netty 4.2 和 Vert.x 5 的改进\n"
-"- 围绕观察 API 开展的初步工作\n"
-"- 以 Java 21 为基础。\n"
-
-#. type: Hash Value: working-groups readme
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid ""
-"<h2>Objective</h2>\n"
-"<p>This long‑running working group is dedicated to tracking development and ensuring a smooth rollout for Quarkus 4. It will serve as the central coordination point for feature tracking, release hygiene, migration guidance, and community alignment related to Quarkus 4.</p>\n"
-"<h2>The Problem</h2>\n"
-"<p>Quarkus 4 introduces significant shifts, including new Java 25 flags, architectural refinements, deprecations, and ecosystem changes. Without a focused group, efforts become fragmented, and downstream consumers (extensions, integrations, platform partners) may struggle to stay aligned.</p>\n"
-"<h2>Proposed Solution</h2>\n"
-"<p>Establish a designated WG to:</p>\n"
-"<ul>\n"
-"<li>Track all Quarkus 4‑related issues and PRs (using label triage/quarkus-4)</li>\n"
-"<li>Maintain a GitHub project board for feature status, blockers, and timelines</li>\n"
-"<li>Coordinate across teams (core, extensions, platform, tooling)</li>\n"
-"<li>Surface migration considerations and flag impacts (e.g. new --add-opens needs, optimized defaults) - useful to create the migration guide and rules</li>\n"
-"<li>Publish ADRs, migration guides, and summary docs</li>\n"
-"</ul>\n"
-"<h2>Definition of Done</h2>\n"
-"<p>This WG will be considered complete when:</p>\n"
-"<ul>\n"
-"<li>Quarkus 4 GA is released (including the platform)</li>\n"
-"<li>All major features are merged and tested</li>\n"
-"<li>Migration documentation is publicly available</li>\n"
-"</ul>\n"
-"<h2>Organizing the Work</h2>\n"
-"<p>Coordination via:</p>\n"
-"<ul>\n"
-"<li>GitHub Discussions: use design‑discussions category</li>\n"
-"<li>Issues/PRs: label with <code>triage/quarkus-4</code></li>\n"
-"<li>Project board to track status</li>\n"
-"</ul>\n"
-"<h2>Expected Timeline:</h2>\n"
-"<p>This is a long-running WG, starting now and wrapping up post‑GA (~late Q2 2026). We’ll mark it as “done” upon the public release of Quarkus 4 GA.</p>\n"
-msgstr ""
-"<h2>目标</h2>\n"
-"<p>这个长期运作的工作组致力于跟踪 Quarkus 4 的开发进展，并确保其顺利发布。该工作组将作为 Quarkus 4 相关功能跟踪、发布规范、迁移指南以及社区协调工作的核心协调点。</p>\n"
-"<h2>问题</h2>\n"
-"<p>Quarkus 4 带来了重大变革，包括新的 Java 25 标志、架构优化、弃用项以及生态系统变化。如果没有一个专门的工作组，相关工作将变得分散，下游用户（扩展、集成、平台合作伙伴）可能难以保持同步。</p>\n"
-"<h2>建议的解决方案</h2>\n"
-"<p>成立一个专门的工作组（WG），以：</p>\n"
-"<ul>\n"
-"<li>跟踪所有与 Quarkus 4 相关的 issue 和 PR（使用标签 triage/quarkus-4）</li>\n"
-"<li>维护 GitHub 项目看板，用于记录功能状态、阻塞项和时间表</li>\n"
-"<li>协调各团队（核心、扩展、平台、工具）的工作</li>\n"
-"<li>梳理迁移注意事项并标注影响（例如：新增的 --add-opens 需求、优化后的默认设置）——这对编写迁移指南和规则很有帮助</li>\n"
-"<li>发布 ADR、迁移指南和摘要文档</li>\n"
-"</ul>\n"
-"<h2>完成标准</h2>\n"
-"<p>当满足以下条件时，本工作组将被视为完成：</p>\n"
-"<ul>\n"
-"<li>Quarkus 4 GA 正式发布（包括平台）</li>\n"
-"<li>所有主要功能均已合并并经过测试</li>\n"
-"<li>迁移文档已公开发布</li>\n"
-"</ul>\n"
-"<h2>工作组织</h2>\n"
-"<p>协调方式：</p>\n"
-"<ul>\n"
-"<li>GitHub 讨论区：请使用 design‑discussions 分类</li>\n"
-"<li>问题/拉取请求：添加<code>triage/quarkus-4</code>标签</li>\n"
-"<li>项目看板用于跟踪状态</li>\n"
-"</ul>\n"
-"<h2>预计时间表：</h2>\n"
-"<p>这是一个长期运行的工作组，即日起启动，并将在正式发布（GA）后结束（约2026年第二季度末）。待 Quarkus 4 正式版公开发布后，我们将将其标记为“已完成”。</p>\n"
-
-#. type: Hash Value: working-groups short-description
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "The Quarkus 4 working group aims to coordinate and track all Quarkus 4-related development in a long-running effort.\n"
-msgstr "Quarkus 4 工作组的宗旨是，通过一项长期持续的工作，协调并跟踪所有与 Quarkus 4 相关的开发工作。\n"
-
-#. type: Hash Value: working-groups title
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "Quarkus 4"
-msgstr "Quarkus 4"
+msgid "Quarkus AI Coordination"
+msgstr "Quarkus AI 协调工作"
 
 #. type: Hash Value: working-groups board-url
 #: _data/wg.yaml:1
@@ -790,12 +292,6 @@ msgstr "https://github.com/orgs/quarkusio/projects/74"
 #, fuzzy, no-wrap
 msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-graceful-shutdown/with/581626831"
 msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-graceful-shutdown/with/581626831"
-
-#. type: Hash Value: working-groups last-activity
-#: _data/wg.yaml:1
-#, no-wrap
-msgid "2026-10-16"
-msgstr ""
 
 #. type: Hash Value: working-groups last-update
 #: _data/wg.yaml:1
@@ -1156,338 +652,480 @@ msgstr "优雅关机"
 #. type: Hash Value: working-groups board-url
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "https://github.com/orgs/quarkusio/projects/50"
-msgstr "https://github.com/orgs/quarkusio/projects/50"
-
-#. type: Hash Value: working-groups deliverable
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "<a rel=\"nofollow\" href=\"https://quarkus.io/blog/hibernate-panache-next/\">Blog Post</a>"
-msgstr "<a rel=\"nofollow\" href=\"https://quarkus.io/blog/hibernate-panache-next/\">博客文章</a>"
-
-#. type: Hash Value: working-groups discussion
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Panache.2ENext/with/529258261"
-msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Panache.2ENext/with/529258261"
+msgid "https://github.com/orgs/quarkusio/projects/46"
+msgstr "https://github.com/orgs/quarkusio/projects/46"
 
 #. type: Hash Value: working-groups last-update
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid ""
-"The Quarkus Data group wrapped up a couple of items this week. They ensured Panache 2 prevents opening managed and stateless sessions simultaneously, and resolved a Panache Next projection failure involving Kotlin's value class.\n"
-"(This status update was automatically generated using AI.)\n"
-msgstr ""
-"Quarkus Data 团队本周完成了几项工作。他们确保 Panache 2 不会同时打开受管会话和无状态会话，并修复了 Panache Next 中一个涉及 Kotlin 值类的投影错误。\n"
-"（此状态更新由 AI 自动生成。）\n"
+msgid "Done! Lots of ODIC features have been shipped by this working group.\n"
+msgstr "完成！该工作组已交付了大量 ODIC 功能。\n"
+
+#. type: Hash Value: working-groups last-update-date
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "2026-03-23"
+msgstr "2026年3月23日"
 
 #. type: Hash Value: working-groups point-of-contact
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "@FroMage  (@<strong>Stephane Epardaud</strong>  on Zulip)"
-msgstr "@FroMage  （Zulip 上的<strong>@Stephane Epardaud</strong>）"
+msgid "@sberyozkin (@_<strong>Sergey Beryozkin</strong>  on Zulip)"
+msgstr "@sberyozkin（Zulip 上的<strong>@_Sergey Beryozkin</strong>）"
 
 #. type: Hash Value: working-groups proposal
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "https://github.com/quarkusio/quarkus/discussions/48949"
-msgstr "https://github.com/quarkusio/quarkus/discussions/48949"
+msgid "https://github.com/quarkusio/quarkus/discussions/42116"
+msgstr "https://github.com/quarkusio/quarkus/discussions/42116"
 
 #. type: Hash Value: working-groups readme
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
 msgid ""
-"<h1>Objective</h1>\n"
-"<p>The main objective of this working group is to bring forth the next version of Panache.</p>\n"
-"<h1>The Problem</h1>\n"
-"<p>Panache is great for many things, but over time, we realised the following limitations:</p>\n"
+"<p>The goal of this working group is to improve quarkus-oidc by: implementing crucial new security features, continuing with improving the way OIDC requests can be intercepted, prioritizing some other open issues, such as using JWT bearer client authentication to complete the authorization code flow</p>\n"
 "<ul>\n"
-"<li>We have three distinct versions: Hibernate ORM, Hibernate Reactive and Mongo (blocking and reactive)</li>\n"
-"<li>It is impossible to use the same entities with Hibernate ORM and Hibernate Reactive</li>\n"
-"<li>Stateless sessions are not supported</li>\n"
-"<li>Hibernate Processor annotations, and Jakarta Data are not supported</li>\n"
-"<li>We have triplicate types such as <code>Sort</code> and <code>Order</code> between Panache, ORM and Jakarta Data</li>\n"
-"<li>We have two ways to place entity query operations : on the entity itself, or in repositories</li>\n"
-"<li>Entity query operations require type-system hacks which makes them less type-safe than we want with <code>var</code> and <code>for-each</code> and especially with reactive operations.</li>\n"
-"</ul>\n"
-"<h1>The proposed Solution</h1>\n"
-"<p>We propose a new Panache version that will solve all these issues:</p>\n"
-"<ul>\n"
-"<li>Unify all variants in a single module, supporting blocking, reactive, stateless and stateful sessions</li>\n"
-"<li>Provide an entity toplevel class for each 4 modes of operation, yet allow access to the other modes</li>\n"
-"<li>Move all entity query operations from the entity class to the repository class</li>\n"
-"<li>Provide a repository toplevel class for each 4 modes of operation, yet allow access to the other modes</li>\n"
-"<li>Provide easy access to any type of repository by placing them as nested interfaces in the entity class, via a generated accessor on the entity metamodel class</li>\n"
-"<li>Provide out of the box accessors for the 4 modes of operation repositories on the entity metamodel class</li>\n"
-"<li>Support Jakarta Data and Hibernate Processor type-safe annotations</li>\n"
-"<li>Optional: Support of Mongo via the coming ORM JDBC support</li>\n"
-"<li>Optional: provide JD repository type alternatives for the missing three modes</li>\n"
-"<li>Optional: provide a way to convert Panache 1 to Panache.Next</li>\n"
-"</ul>\n"
-"<h1>Definition of Done</h1>\n"
-"<ul>\n"
-"<li>Deliver the new Panache extension as a <code>stable</code> state (after preview/experimental versions for feedback)</li>\n"
-"<li>Tests</li>\n"
-"<li>Documentation</li>\n"
-"<li>Codestart</li>\n"
-"<li>REST Data with Panache support</li>\n"
-"<li>Renarde support</li>\n"
-"<li>Quarkus Insights</li>\n"
-"</ul>\n"
-"<h1>Scope of Work</h1>\n"
-"<p>It is currently out of scope to retrofit this with the existing Panache modules. This will be a new module with no backward compatibility (although most type-unsafe operations will continue as-is, so you will be familiar with them).</p>\n"
-"<h1>Organizing the Work</h1>\n"
-"<h2>Communication and Transparency:</h2>\n"
-"<p>This will be done via GitHub issues on the Quarkus core project.</p>\n"
-"<h2>Expected Timeline:</h2>\n"
-"<p>Most of the R&amp;D and design work has been completed over the last two years. Now remains the task of merging, documenting, testing, and tweaking it until it's complete.</p>\n"
-"<ul>\n"
-"<li>Point of contact: @FroMage  (@<strong>Stephane Epardaud</strong>  on Zulip)</li>\n"
-"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/48949</li>\n"
-"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Panache.2ENext/with/529258261\">Zulip</a></li>\n"
-"<li>Deliverable: <a href=\"https://quarkus.io/blog/hibernate-panache-next/\">Blog Post</a></li>\n"
+"<li>Point of contact: @sberyozkin (@_<strong>Sergey Beryozkin</strong>  on Zulip)</li>\n"
+"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/42116</li>\n"
 "</ul>\n"
 msgstr ""
-"<h1>目标</h1>\n"
-"<p>本工作组的主要目标是推出 Panache 的下一个版本。</p>\n"
-"<h1>问题</h1>\n"
-"<p>Panache 在许多方面表现出色，但随着时间的推移，我们意识到它存在以下局限性：</p>\n"
+"<p>该工作组的目标是通过以下方式改进 quarkus-oidc：实现关键的新安全功能；继续改进拦截 OIDC 请求的方式；优先处理其他一些未解决的问题，例如使用 JWT 承载式客户端身份验证来完成授权码流程</p>\n"
 "<ul>\n"
-"<li>我们目前有三个不同的版本：Hibernate ORM、Hibernate Reactive 以及 Mongo（阻塞式和响应式）</li>\n"
-"<li>无法在 Hibernate ORM 和 Hibernate Reactive 中使用相同的实体</li>\n"
-"<li>不支持无状态会话</li>\n"
-"<li>不支持 Hibernate Processor 注解和 Jakarta Data</li>\n"
-"<li>在 Panache、ORM 和 Jakarta Data 之间存在诸如<code>Sort</code>和<code>Order</code>之类的重复类型</li>\n"
-"<li>我们有两种方式来放置实体查询操作：在实体本身，或在存储库中</li>\n"
-"<li>实体查询操作需要借助类型系统的变通方案，这使得它们的类型安全性不如我们期望的那样高——尤其是使用<code>var</code>和<code>for-each</code>时，以及在进行响应式操作时。</li>\n"
-"</ul>\n"
-"<h1>建议的解决方案</h1>\n"
-"<p>我们提议发布一个新的 Panache 版本来解决所有这些问题：</p>\n"
-"<ul>\n"
-"<li>将所有变体统一到单个模块中，支持阻塞式、响应式、无状态和有状态会话</li>\n"
-"<li>为每种操作模式提供一个实体顶级类，同时允许访问其他模式</li>\n"
-"<li>将所有实体查询操作从实体类移至存储库类</li>\n"
-"<li>为这四种操作模式分别提供一个仓库顶级类，同时允许访问其他模式</li>\n"
-"<li>通过在实体元模型类上生成访问器，将各类存储库作为嵌套接口放置在实体类中，从而实现对任意类型存储库的便捷访问</li>\n"
-"<li>在实体元模型类上为这四种操作模式的存储库提供开箱即用的访问器</li>\n"
-"<li>支持 Jakarta Data 和 Hibernate Processor 的类型安全注解</li>\n"
-"<li>可选：通过即将推出的 ORM JDBC 支持，支持 Mongo</li>\n"
-"<li>可选：为缺失的三种模式提供 JD 存储库类型的替代方案</li>\n"
-"<li>可选：提供将 Panache 1 转换为 Panache.Next 的方法</li>\n"
-"</ul>\n"
-"<h1>完成标准</h1>\n"
-"<ul>\n"
-"<li>将新的 Panache 扩展交付为<code>稳定</code>版本（在发布预览版/实验版以收集反馈之后）</li>\n"
-"<li>测试</li>\n"
-"<li>文档</li>\n"
-"<li>Codestart</li>\n"
-"<li>支持 Panache 的 REST 数据</li>\n"
-"<li>Renarde 支持</li>\n"
-"<li>Quarkus 洞察</li>\n"
-"</ul>\n"
-"<h1>工作范围</h1>\n"
-"<p>目前，将此功能与现有的 Panache 模块进行适配不在工作范围内。这将是一个不向后兼容的新模块（尽管大多数类型不安全的操作将保持原样，因此您会感到熟悉）。</p>\n"
-"<h1>工作组织</h1>\n"
-"<h2>沟通与透明度：</h2>\n"
-"<p>相关沟通将通过 Quarkus 核心项目上的 GitHub 问题进行。</p>\n"
-"<h2>预计时间表：</h2>\n"
-"<p>过去两年中，大部分研发和设计工作已经完成。现在剩下的任务是进行代码合并、编写文档、测试以及微调，直至项目完成。</p>\n"
-"<ul>\n"
-"<li>联系人：@FroMage  （Zulip 上的<strong>@Stephane Epardaud</strong>）</li>\n"
-"<li>提案：https://github.com/quarkusio/quarkus/discussions/48949</li>\n"
-"<li>讨论：<a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.20Panache.2ENext/with/529258261\">Zulip</a></li>\n"
-"<li>交付成果：<a href=\"https://quarkus.io/blog/hibernate-panache-next/\">博客文章</a></li>\n"
+"<li>联系人：@sberyozkin（Zulip 上的<strong>@_Sergey Beryozkin</strong>）</li>\n"
+"<li>提案：https://github.com/quarkusio/quarkus/discussions/42116</li>\n"
 "</ul>\n"
 
 #. type: Hash Value: working-groups short-description
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "The primary objective of this working group is to develop the next version of Panache, now known as Quarkus Data.\n"
-msgstr "该工作组的主要目标是开发 Panache 的下一个版本，该版本现称为 Quarkus Data。\n"
+msgid "The goal of this working group is to improve quarkus-oidc by: implementing crucial new security features, continuing with improving the way OIDC requests can be intercepted, prioritizing some other open issues, such as using JWT bearer client authentication to complete the authorization code flow\n"
+msgstr "该工作组的目标是通过以下方式改进 quarkus-oidc：实现关键的新安全功能；继续改进拦截 OIDC 请求的方式；优先处理其他一些未解决的问题，例如使用 JWT 承载式客户端身份验证来完成授权码流程。\n"
+
+#. type: Hash Value: working-groups status
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "complete"
+msgstr "完整"
 
 #. type: Hash Value: working-groups title
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "Quarkus Data"
-msgstr "Quarkus 数据"
+msgid "OIDC improvements"
+msgstr "OIDC 的改进"
 
 #. type: Hash Value: working-groups board-url
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "https://github.com/orgs/quarkusio/projects/89"
-msgstr "https://github.com/orgs/quarkusio/projects/89"
+msgid "https://github.com/orgs/quarkusio/projects/76"
+msgstr "https://github.com/orgs/quarkusio/projects/76"
+
+#. type: Hash Value: working-groups discussion
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-modularity/with/581640512"
+msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-modularity/with/581640512"
 
 #. type: Hash Value: working-groups last-activity
 #: _data/wg.yaml:1
 #, no-wrap
-msgid "2026-10-14"
+msgid "2026-10-22"
 msgstr ""
 
 #. type: Hash Value: working-groups last-update
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "WG started\n"
-msgstr "WG 已启动\n"
-
-#. type: Hash Value: working-groups last-activity
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "2026-09-11"
-msgstr "2026年9月11日"
+msgid ""
+"The Modularity and JLink group resolved two issues this week. They tackled the problem of `io.quarkus.oidc.client.filter` being split across multiple modules. The team also addressed the missing ability to read the application name from configuration.\n"
+"(This status update was automatically generated using AI.)\n"
+msgstr ""
+"本周，模块化与JLink小组解决了两个问题。他们处理了`io.quarkus.oidc.client.filter`被拆分到多个模块中的问题。该团队还解决了无法从配置中读取应用程序名称的问题。\n"
+"（此状态更新由AI自动生成。）\n"
 
 #. type: Hash Value: working-groups point-of-contact
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "@patriot1burke"
-msgstr "@patriot1burke"
+msgid "@dmlloyd"
+msgstr "@dmlloyd"
 
 #. type: Hash Value: working-groups proposal
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "https://github.com/quarkusio/quarkus/discussions/56502"
-msgstr "https://github.com/quarkusio/quarkus/discussions/56502"
+msgid "https://github.com/quarkusio/quarkus/discussions/53223"
+msgstr "https://github.com/quarkusio/quarkus/discussions/53223"
 
 #. type: Hash Value: working-groups readme
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
 msgid ""
+"<h2>Objective</h2>\n"
+"<p>Make Quarkus applications fully modular using JPMS (Java Platform Module System) and enable <code>jlink</code> as a first-class packaging strategy, producing smaller, faster, self-contained application images, with the long-term goal of making modular packaging the default and phasing out the legacy fast-jar layout.</p>\n"
 "<h2>The Problem</h2>\n"
-"<p>There are a bunch of things we want to address this year for Quarkus AI strategy:</p>\n"
+"<h3>Class Loading Architecture Debt</h3>\n"
+"<p>The Quarkus codebase contains between 15 and 20 class loader implementations, each with different behavior. These serve a variety of purposes, exposing hidden APIs, setting up execution environments for different launch modes, working around upstream issues, customizing parent delegation; but the ad hoc approach creates concurrency issues, virtual thread pinning, delegation bugs, and makes it nearly impossible to support JPMS properly.</p>\n"
+"<h3>No JPMS Support</h3>\n"
+"<p>Quarkus applications cannot take advantage of the Java Platform Module System. This means:</p>\n"
 "<ul>\n"
-"<li>Revamp the Quarkus AI webpage</li>\n"
-"<li>Create Blueprint samples for Quarkus AI that show full Quarkus stack and AI application archetypes</li>\n"
-"<li>Align Quarkus LC4J extension with LC4J upstream project. Because Q-LC4J reimplements a lot of things to Quarkize LC4J, new features and bug fixes in upstream don't percolate down to Q-LC4J.</li>\n"
-"<li>LangFuse integration. This will give us Observability, Tracing, Metrics, and a playground for development. Will also make Java a first class language in the overall AI dev community</li>\n"
-"<li>Revamp Q-LC4J RAG implementation</li>\n"
-"<li>Bring Quarkus/CDI style programming to more LC4J components</li>\n"
-"<li>Handle shutdown and recovery more gracefully.</li>\n"
+"<li><strong>No module isolation</strong>: all application code, extensions, and dependencies share a flat classpath. There is no enforcement of encapsulation boundaries between artifacts at runtime.</li>\n"
+"<li><strong>No <code>jlink</code> support</strong>: applications cannot use <code>jlink</code> to produce optimized, stripped-down JVM images containing only the modules actually needed, resulting in unnecessarily large deployments.</li>\n"
+"<li><strong>No forward compatibility</strong>: future JDK features (FFM restrictions, Leyden AOT, serialization restrictions) increasingly assume or require JPMS. Without module support, Quarkus will face growing friction with each JDK release.</li>\n"
+"<li><strong>Split packages and service loading issues</strong>: the current flat classpath tolerates split packages and uncontrolled service loading, which masks real dependency problems and makes the classpath fragile.</li>\n"
+"</ul>\n"
+"<h3>Packaging Inefficiency</h3>\n"
+"<p>The current fast-jar packaging produces application images that are significantly larger than they need to be:</p>\n"
+"<ul>\n"
+"<li>Applications bundle the entire JDK (or require one to be pre-installed), even though most applications use a small fraction of JDK modules</li>\n"
+"<li>No tree-shaking of unused JDK modules</li>\n"
+"<li>Container images cannot effectively share JVM layers across different Quarkus applications</li>\n"
+"<li>Image size comparison from prototype work shows: <strong>GraalVM native &lt; jlink (modular) &lt; fast-jar &lt; AOT</strong> — meaning jlink provides a substantial size improvement over fast-jar without the complexity and limitations of native compilation</li>\n"
+"</ul>\n"
+"<h3>No Optimized Container Layering</h3>\n"
+"<p>A <code>jlink</code>-based modular image contains its own JVM, which allows container images to use a minimal base layer (no JDK required in the base). This opens the door to effective layer sharing across Quarkus applications running the same Quarkus version, the Quarkus core + JDK modules layer can be shared, with only the application layer differing. Today, this is not possible.</p>\n"
+"<h2>The Proposed Solution</h2>\n"
+"<h3>JPMS Modularization of Quarkus</h3>\n"
+"<p>Systematically modularize the Quarkus codebase so that each dependency/artifact gets its own class loader and module:</p>\n"
+"<ul>\n"
+"<li>Artifacts with <code>module-info.java</code> are created as named modules</li>\n"
+"<li>Other artifacts are created as unnamed modules with automatic module names</li>\n"
+"<li>A modular class loader architecture (based on David's <code>modules3</code> prototype) replaces the current ad hoc class loaders</li>\n"
+"<li>Each module has proper <code>exports</code>, <code>opens</code>, <code>requires</code>, <code>uses</code>, and <code>provides</code> declarations</li>\n"
+"</ul>\n"
+"<p><strong>Current prototype status:</strong> David's prototype (<code>dmlloyd/quarkus@modular</code> + <code>dmlloyd/modules3</code>) demonstrates this approach working. In the <code>getting-started</code> example, 39 out of 111 JARs are already modular. The remaining need automatic module names or full <code>module-info</code> files. Approximately 6-7 manual module patches are still required to start an application.</p>\n"
+"<p><strong>Key challenges to resolve:</strong></p>\n"
+"<ul>\n"
+"<li>Split packages between artifacts (tracked in #44710, not as bad as it initially appears)</li>\n"
+"<li>Generated classes at build time need a module home (#44657, more serious)</li>\n"
+"<li>Service loading across module boundaries needs correct <code>uses</code>/<code>provides</code> declarations</li>\n"
+"<li>Some artifacts will remain as unnamed modules until upstream projects add <code>module-info</code></li>\n"
+"</ul>\n"
+"<h3>JLink Packaging</h3>\n"
+"<p>Introduce <code>jlink</code> as a packaging type for Quarkus applications:</p>\n"
+"<ul>\n"
+"<li>Produce a self-contained application image with only the JDK modules actually used</li>\n"
+"<li>The image includes a custom JVM runtime, the modular application, and a launcher</li>\n"
+"<li>No external JDK installation required to run the application</li>\n"
+"<li>Performance is slightly better than fast-jar even without AOT (demonstrated in prototype)</li>\n"
+"</ul>\n"
+"<p><strong>Image layout:</strong></p>\n"
+"<ul>\n"
+"<li>A <code>jlink</code>-produced image is a directory containing <code>bin/</code> (launcher), <code>lib/</code> (JVM modules + application modules), and <code>conf/</code></li>\n"
+"<li>The layout naturally supports container image layering: JVM + Quarkus core in a shared base layer, application modules in the top layer</li>\n"
+"</ul>\n"
+"<h3>Container Image Optimization</h3>\n"
+"<p>Leverage the modular architecture for optimized container images:</p>\n"
+"<ul>\n"
+"<li><strong>Shared base layers</strong>: multiple Quarkus applications running the same Quarkus version share a common layer containing the JDK modules and Quarkus core, dramatically reducing per-application image size</li>\n"
+"<li><strong>Minimal base image</strong>: since jlink embeds the JVM, containers can use a minimal base (e.g., <code>ubi-micro</code>, <code>scratch</code> or <code>distroless</code>) instead of a JDK base image</li>\n"
+"<li><strong>AOT layering</strong>: AOT cache currently causes prohibitive image size bloat, but a layering strategy (AOT cache in a shared layer) may provide a partial solution; this needs investigation</li>\n"
+"</ul>\n"
+"<h3>Long-Term: Default Modular Packaging</h3>\n"
+"<p>The long-term goal is to make modular packaging the default build and test mode, phasing out the legacy fast-jar layout:</p>\n"
+"<ol>\n"
+"<li>First, modular packaging exists as an opt-in alternative (<code>MODULAR</code> packaging type or dedicated extension)</li>\n"
+"<li>Then, CI builds and tests run against both fast-jar and modular packaging</li>\n"
+"<li>Eventually, modular packaging becomes the default, with fast-jar available as a fallback</li>\n"
+"<li>Finally, fast-jar is deprecated and removed</li>\n"
+"</ol>\n"
+"<h3>Leyden / CDS Integration</h3>\n"
+"<p>The modular architecture positions Quarkus well for Project Leyden:</p>\n"
+"<ul>\n"
+"<li>The Quarkus core and bootstrap layer is loaded by the system class loader, making it eligible for Leyden premain optimizations</li>\n"
+"<li>A shared Leyden-trained layer (JDK modules + Quarkus core) could be reused across applications</li>\n"
+"<li>Extension and user code in separate module layers can benefit from Leyden independently</li>\n"
+"<li>Full Leyden integration is out of scope for this WG but the architecture should not preclude it</li>\n"
 "</ul>\n"
 "<h2>Definition of Done</h2>\n"
-"<p>When the Epic issues defined in the Quarkus AI umbrella GitHub projects are closed.</p>\n"
-"<h2>Scope of Work</h2>\n"
-"<p>Scope of work will be well defined within various GitHub issues linked to within the Epic Issues of the Quarkus AI umbrella repo.</p>\n"
-"<h2>Organizing the Work</h2>\n"
-"<p><strong>Communication and Transparency:</strong></p>\n"
-"<p>A new umbrella <a href=\"https://github.com/quarkusio/quarkus-ai\">quarkus-ai</a> has been created. This will hold high-level issues (epics) that link to lists of tasks and issues spread out between the other repos we are trying to coordinate.</p>\n"
-"<p><strong>Expected Timeline:</strong>\n"
-"Work will start sometime in September 2026 and will continue into early 2027</p>\n"
 "<ul>\n"
-"<li>Point of contact: @patriot1burke</li>\n"
-"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/56502</li>\n"
+"<li>[ ] Quarkus core modules have <code>module-info.java</code> descriptors (or automatic module names as an intermediate step)</li>\n"
+"<li>[ ] Applications can be built with modular packaging (<code>jlink</code> output)</li>\n"
+"<li>[ ] A <code>jlink</code>-packaged application starts and runs correctly (getting-started, REST, database scenarios)</li>\n"
+"<li>[ ] No manual module patches required to start an application</li>\n"
+"<li>[ ] Split package issues resolved for core Quarkus modules</li>\n"
+"<li>[ ] Generated classes have a proper module home</li>\n"
+"<li>[ ] Service loading works correctly across module boundaries</li>\n"
+"<li>[ ] <code>jlink</code> image size is smaller than fast-jar for equivalent applications</li>\n"
+"<li>[ ] Container image guide documents the layering strategy for modular images</li>\n"
+"<li>[ ] Performance is on par with or better than fast-jar</li>\n"
+"<li>[ ] Dev mode works with modular class loading</li>\n"
+"<li>[ ] Extension developer guide for making extensions module-friendly</li>\n"
+"</ul>\n"
+"<h2>Scope of Work</h2>\n"
+"<h3>In Scope</h3>\n"
+"<ul>\n"
+"<li>JPMS modularization of Quarkus core modules (<code>module-info.java</code> + automatic module names)</li>\n"
+"<li>Modular class loader architecture (replacing ad hoc class loaders for the modular packaging path)</li>\n"
+"<li><code>jlink</code> packaging type for Quarkus applications (name to be defined)</li>\n"
+"<li>Resolving split packages and generated class module assignment</li>\n"
+"<li>Service loading across module boundaries</li>\n"
+"<li>Container image layering strategy for modular images</li>\n"
+"<li>Dev mode support with modular class loading</li>\n"
+"<li>Extension author guidance for module compatibility</li>\n"
+"<li>Performance validation (startup time, memory, image size)</li>\n"
+"</ul>\n"
+"<h3>Out of Scope</h3>\n"
+"<ul>\n"
+"<li>Full rewrite of all 15-20 existing class loaders (incremental cleanup continues separately)</li>\n"
+"<li>Test class loading rework (covered by a separate WG)</li>\n"
+"<li>Project Leyden / CDS integration (parrallel work, but architecture should not preclude it)</li>\n"
+"<li>Modularizing third-party dependencies (upstream responsibility; Quarkus handles them as unnamed/automatic modules)</li>\n"
+"</ul>\n"
+"<h2>Organizing the Work</h2>\n"
+"<h3>Communication</h3>\n"
+"<ul>\n"
+"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/53223</li>\n"
+"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-modularity/with/581640512\">#wg-modularity</a></li>\n"
+"<li>Point of contact: @dmlloyd</li>\n"
+"</ul>\n"
+"<h3>Existing Issues and Discussions</h3>\n"
+"<ul>\n"
+"<li><a href=\"https://github.com/quarkusio/quarkus/discussions/43749\">#43749</a> — Class loading WG discussion</li>\n"
+"<li><a href=\"https://github.com/quarkusio/quarkus/issues/43726\">#43726</a> — Class loader cleanup umbrella</li>\n"
+"<li><a href=\"https://github.com/quarkusio/quarkus/issues/44710\">#44710</a> — Split packages</li>\n"
+"<li><a href=\"https://github.com/quarkusio/quarkus/issues/44657\">#44657</a> — Generated classes and modules</li>\n"
 "</ul>\n"
 msgstr ""
+"<h2>目标</h2>\n"
+"<p>利用 JPMS（Java 平台模块系统）使 Quarkus 应用程序完全模块化，并将<code>jlink</code>作为一等打包策略，从而生成更小、更快、自包含的应用程序镜像；长期目标是将模块化打包设为默认方案，并逐步淘汰传统的 fast-jar 布局。</p>\n"
 "<h2>问题</h2>\n"
-"<p>今年，针对 Quarkus AI 战略，我们希望解决以下几个问题：</p>\n"
+"<h3>类加载架构债务</h3>\n"
+"<p>Quarkus 代码库中包含 15 到 20 个类加载器实现，每个实现的行为各不相同。 这些实现服务于多种目的，包括暴露隐藏的 API、为不同的启动模式设置执行环境、绕过上游问题以及自定义父类委托；但这种临时拼凑的方法会引发并发问题、虚拟线程固定以及委托错误，并使得几乎无法正确支持 JPMS。</p>\n"
+"<h3>不支持 JPMS</h3>\n"
+"<p>Quarkus 应用程序无法利用 Java 平台模块系统。这意味着：</p>\n"
 "<ul>\n"
-"<li>重构 Quarkus AI 网页</li>\n"
-"<li>为 Quarkus AI 创建 Blueprint 示例，展示完整的 Quarkus 技术栈和 AI 应用原型</li>\n"
-"<li>使 Quarkus LC4J 扩展与 LC4J 上游项目保持同步。由于 Q-LC4J 为使 LC4J 适应 Quarkus 而重新实现了许多功能，因此上游的新功能和错误修复无法传递到 Q-LC4J 中。</li>\n"
-"<li>集成 LangFuse。这将为我们提供可观测性、追踪、指标以及一个开发实验平台。同时也将使 Java 在整个 AI 开发社区中成为一等语言</li>\n"
-"<li>重构 Q-LC4J 的 RAG 实现</li>\n"
-"<li>将 Quarkus/CDI 风格的编程引入更多 LC4J 组件</li>\n"
-"<li>更优雅地处理关机和恢复操作。</li>\n"
+"<li><strong>无模块隔离</strong>：所有应用程序代码、扩展和依赖项共享一个扁平化的类路径。运行时不会强制执行工件之间的封装边界。</li>\n"
+"<li><strong>不支持<code>jlink</code></strong>：应用程序无法使用<code>jlink</code>生成仅包含实际所需模块的优化、精简版 JVM 映像，导致部署包体积过大。</li>\n"
+"<li><strong>缺乏向前兼容性</strong>：未来的 JDK 功能（FFM 限制、Leyden AOT、序列化限制）将越来越多地假设或要求使用 JPMS。由于缺乏模块支持，Quarkus 将随着每次 JDK 版本的发布而面临日益加剧的兼容性问题。</li>\n"
+"<li><strong>拆分包和服务加载问题</strong>：当前的扁平类路径容许拆分包和不受控的服务加载，这掩盖了真正的依赖问题，并导致类路径变得脆弱。</li>\n"
+"</ul>\n"
+"<h3>打包效率低下</h3>\n"
+"<p>当前的 fast-jar 打包方式生成的应用程序镜像远大于实际所需：</p>\n"
+"<ul>\n"
+"<li>应用程序会打包整个 JDK（或要求预先安装 JDK），尽管大多数应用程序仅使用了极少部分的 JDK 模块</li>\n"
+"<li>未对未使用的 JDK 模块进行树摇（tree-shaking）</li>\n"
+"<li>容器镜像无法在不同的 Quarkus 应用程序之间有效共享 JVM 层</li>\n"
+"<li>原型工作的镜像大小对比显示：<strong>GraalVM 本机编译 &lt; jlink（模块化）&lt; fast-jar &lt; AOT</strong>—— 这意味着 jlink 相比 fast-jar 提供了显著的大小优化，同时又避免了本机编译的复杂性和局限性</li>\n"
+"</ul>\n"
+"<h3>缺乏优化的容器分层</h3>\n"
+"<p><code>基于 jlink 的</code>模块化镜像包含其自身的 JVM，这使得容器镜像能够使用最小的基础层（基础层中无需 JDK）。 这为运行相同 Quarkus 版本的 Quarkus 应用程序之间实现有效的层共享打开了大门——Quarkus 核心 + JDK 模块层可以共享，仅应用程序层有所不同。目前，这尚不可行。</p>\n"
+"<h2>建议的解决方案</h2>\n"
+"<h3>Quarkus 的 JPMS 模块化</h3>\n"
+"<p>系统地将 Quarkus 代码库模块化，使每个依赖项/构建产物都拥有独立的类加载器和模块：</p>\n"
+"<ul>\n"
+"<li>包含<code>module-info.java</code>的构建产物将作为命名模块创建</li>\n"
+"<li>其他构建产物将作为无名模块创建，并自动生成模块名称</li>\n"
+"<li>采用基于 David 的<code>modules3</code>原型的模块化类加载器架构，取代当前临时拼凑的类加载器</li>\n"
+"<li>每个模块都包含正确的<code>exports</code>、<code>opens</code>、<code>requires</code>、<code>uses</code> 和<code>provides</code>声明</li>\n"
+"</ul>\n"
+"<p><strong>当前原型状态：</strong>David 的原型（<code>dmlloyd/quarkus@modular</code>+<code>dmlloyd/modules3</code>）已验证该方法可行。 在<code>入门</code>示例中，111 个 JAR 文件中有 39 个已实现模块化。其余的则需要自动生成的模块名称或完整的<code>modules-info</code>文件。启动应用程序仍需大约 6-7 个手动模块补丁。</p>\n"
+"<p><strong>亟待解决的关键挑战：</strong></p>\n"
+"<ul>\n"
+"<li>将包拆分到不同工件中（在 #44710 中跟踪，情况并不像最初看起来那么严重）</li>\n"
+"<li>构建时生成的类需要模块根目录（#44657，问题更为严重）</li>\n"
+"<li>跨模块边界的服务加载需要正确的<code>uses/provides</code>声明</li>\n"
+"<li>部分工件将作为无名模块存在，直到上游项目添加<code>module-info 文件</code></li>\n"
+"</ul>\n"
+"<h3>JLink 打包</h3>\n"
+"<p>引入<code>jlink</code>作为 Quarkus 应用程序的打包类型：</p>\n"
+"<ul>\n"
+"<li>生成一个仅包含实际使用的 JDK 模块的自包含应用程序镜像</li>\n"
+"<li>该映像包含自定义 JVM 运行时、模块化应用程序以及启动器</li>\n"
+"<li>运行该应用程序无需安装外部 JDK</li>\n"
+"<li>即使未启用 AOT，性能也略优于 fast-jar（原型已验证）</li>\n"
+"</ul>\n"
+"<p><strong>镜像结构：</strong></p>\n"
+"<ul>\n"
+"<li><code>由 jlink 生成的</code>镜像是一个目录，其中包含<code>bin/</code>（启动器）、<code>lib/</code>（JVM 模块 + 应用程序模块）和<code>conf/</code></li>\n"
+"<li>该结构天然支持容器镜像分层：JVM + Quarkus 核心位于共享的基础层，应用程序模块位于顶层</li>\n"
+"</ul>\n"
+"<h3>容器镜像优化</h3>\n"
+"<p>利用模块化架构优化容器镜像：</p>\n"
+"<ul>\n"
+"<li><strong>共享基础层</strong>：运行相同 Quarkus 版本的多个 Quarkus 应用程序共享一个包含 JDK 模块和 Quarkus 核心的公共层，从而大幅减少每个应用程序的镜像大小</li>\n"
+"<li><strong>精简基础镜像</strong>：由于 jlink 内嵌了 JVM，容器可以使用精简基础镜像（例如<code>ubi-micro</code>、<code>scratch</code>或<code>distroless</code>），而非 JDK 基础镜像</li>\n"
+"<li><strong>AOT 分层</strong>：AOT 缓存目前会导致镜像大小过度膨胀，但分层策略（将 AOT 缓存置于共享层中）可能提供部分解决方案；这需要进一步研究</li>\n"
+"</ul>\n"
+"<h3>长期目标：默认采用模块化打包</h3>\n"
+"<p>长期目标是将模块化打包设为默认的构建和测试模式，逐步淘汰传统的 fast-jar 布局：</p>\n"
+"<ol>\n"
+"<li>首先，模块化打包作为一种可选方案存在（<code>MODULAR</code>打包类型或专用扩展）</li>\n"
+"<li>随后，持续集成（CI）构建和测试将同时支持 fast-jar 和模块化打包</li>\n"
+"<li>最终，模块化打包将成为默认选项，而 fast-jar 将作为备用方案</li>\n"
+"<li>最后，fast-jar 将被废弃并移除</li>\n"
+"</ol>\n"
+"<h3>Leyden / CDS 集成</h3>\n"
+"<p>模块化架构使 Quarkus 能够很好地适应 Leyden 项目：</p>\n"
+"<ul>\n"
+"<li>Quarkus 核心和引导层由系统类加载器加载，因此符合 Leyden 预主程序优化的条件</li>\n"
+"<li>一个经过 Leyden 训练的共享层（JDK 模块 + Quarkus 核心）可在不同应用程序中复用</li>\n"
+"<li>位于独立模块层中的扩展和用户代码可独立受益于 Leyden</li>\n"
+"<li>虽然本工作组的范围不包括与 Leyden 的全面集成，但该架构不应排除这种可能性</li>\n"
 "</ul>\n"
 "<h2>完成标准</h2>\n"
-"<p>当 Quarkus AI 伞形 GitHub 项目中定义的 Epic 问题全部关闭时。</p>\n"
-"<h2>工作范围</h2>\n"
-"<p>工作范围将在 Quarkus AI 总库的 Epic 问题中链接的各个 GitHub 问题内明确界定。</p>\n"
-"<h2>工作组织</h2>\n"
-"<p><strong>沟通与透明度：</strong></p>\n"
-"<p>已创建一个新的<a href=\"https://github.com/quarkusio/quarkus-ai\">“quarkus-ai”</a>总库。该库将包含高级别问题（Epic），并链接到分散在我们试图协调的其他仓库中的任务和问题列表。</p>\n"
-"<p><strong>预计时间表：</strong>\n"
-"工作将于 2026 年 9 月某时启动，并持续至 2027 年初</p>\n"
 "<ul>\n"
-"<li>联系人：@patriot1burke</li>\n"
-"<li>提案：https://github.com/quarkusio/quarkus/discussions/56502</li>\n"
+"<li>[ ] Quarkus 核心模块具有<code>module-info.java</code>描述符（或作为中间步骤的自动生成的模块名称）</li>\n"
+"<li>[ ] 应用程序可采用模块化打包方式构建（<code>jlink</code>输出）</li>\n"
+"<li>[ ]<code>采用 jlink 打包的</code>应用程序能够正确启动并运行（入门、REST、数据库场景）</li>\n"
+"<li>[ ] 启动应用程序无需手动修改模块补丁</li>\n"
+"<li>[ ] 核心 Quarkus 模块的分包问题已解决</li>\n"
+"<li>[ ] 生成的类具有正确的模块根目录</li>\n"
+"<li>[ ] 服务加载在模块边界之间运行正常</li>\n"
+"<li>[ ] 对于同等应用程序，<code>jlink</code>镜像大小小于 fast-jar</li>\n"
+"<li>[ ] 容器镜像指南详细说明了模块化镜像的分层策略</li>\n"
+"<li>[ ] 性能与 fast-jar 相当或更优</li>\n"
+"<li>[ ] 开发模式支持模块化类加载</li>\n"
+"<li>[ ] 扩展开发指南，旨在使扩展支持模块化</li>\n"
+"</ul>\n"
+"<h2>工作范围</h2>\n"
+"<h3>工作范围</h3>\n"
+"<ul>\n"
+"<li>Quarkus 核心模块的 JPMS 模块化（<code>module-info.java</code>+ 自动生成的模块名称）</li>\n"
+"<li>模块化类加载器架构（替换模块化打包路径中临时类加载器）</li>\n"
+"<li>Quarkus 应用程序的<code>jlink</code>打包类型（名称待定）</li>\n"
+"<li>解决拆分包及生成的类模块分配问题</li>\n"
+"<li>跨模块边界的服务加载</li>\n"
+"<li>模块化镜像的容器镜像分层策略</li>\n"
+"<li>支持采用模块化类加载的开发模式</li>\n"
+"<li>针对模块兼容性的扩展作者指南</li>\n"
+"<li>性能验证（启动时间、内存、镜像大小）</li>\n"
+"</ul>\n"
+"<h3>不在范围之内</h3>\n"
+"<ul>\n"
+"<li>对所有 15-20 个现有类加载器的全面重写（增量清理工作将继续单独进行）</li>\n"
+"<li>测试类加载重构（由单独的工作组负责）</li>\n"
+"<li>Project Leyden / CDS 集成（并行工作，但架构不应排除该可能性）</li>\n"
+"<li>将第三方依赖进行模块化（上游的责任；Quarkus将其作为无名/自动模块处理）</li>\n"
+"</ul>\n"
+"<h2>工作组织</h2>\n"
+"<h3>沟通</h3>\n"
+"<ul>\n"
+"<li>提案：https://github.com/quarkusio/quarkus/discussions/53223</li>\n"
+"<li>讨论：<a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-modularity/with/581640512\">#wg-modularity</a></li>\n"
+"<li>联系人：@dmlloyd</li>\n"
+"</ul>\n"
+"<h3>现有问题与讨论</h3>\n"
+"<ul>\n"
+"<li><a href=\"https://github.com/quarkusio/quarkus/discussions/43749\">#43749</a>— 类加载工作组讨论</li>\n"
+"<li><a href=\"https://github.com/quarkusio/quarkus/issues/43726\">#43726</a>— 类加载器清理总议题</li>\n"
+"<li><a href=\"https://github.com/quarkusio/quarkus/issues/44710\">#44710</a>— 拆分包</li>\n"
+"<li><a href=\"https://github.com/quarkusio/quarkus/issues/44657\">#44657</a>— 生成的类和模块</li>\n"
 "</ul>\n"
 
 #. type: Hash Value: working-groups short-description
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "The main objective of this working group is to revamp the Quarkus AI message and to coordinate work for Quarkus AI during the 2026/27 timeframe.\n"
-msgstr "该工作组的主要目标是重塑 Quarkus AI 的宣传信息，并在 2026/27 年期间协调 Quarkus AI 相关工作。\n"
+msgid "Make Quarkus applications fully modular using JPMS (Java Platform Module System) and enable jlink as a first-class packaging strategy, producing smaller, faster, self-contained application images, with the long-term goal of making modular packaging the default and phasing out the legacy fast-jar lay\n"
+msgstr "利用 JPMS（Java 平台模块系统）使 Quarkus 应用程序完全模块化，并将 jlink 作为一种一等公民的打包策略，从而生成更小、更快、自包含的应用程序镜像；其长期目标是让模块化打包成为默认方案，并逐步淘汰传统的 fast-jar 布局。\n"
 
 #. type: Hash Value: working-groups title
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "Quarkus AI Coordination"
-msgstr "Quarkus AI 协调工作"
+msgid "Modularity (JPMS) and JLink"
+msgstr "模块化（JPMS）与JLink"
 
 #. type: Hash Value: working-groups board-url
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "https://github.com/orgs/quarkusio/projects/30"
-msgstr "https://github.com/orgs/quarkusio/projects/30"
+msgid "https://github.com/orgs/quarkusio/projects/51"
+msgstr "https://github.com/orgs/quarkusio/projects/51"
 
-#. type: Hash Value: working-groups discussion
+#. type: Hash Value: working-groups last-activity
 #: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20.2330.20Test.20Classloading.20chatter/"
-msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20.2330.20Test.20Classloading.20chatter/"
+#, no-wrap
+msgid "2026-10-21"
+msgstr ""
 
 #. type: Hash Value: working-groups last-update
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
 msgid ""
-"The Test classloading group addressed a specific issue this week. They resolved the problem where database dev services weren't reused when unit tests used a `@QuarkusTestResource` annotation, particularly in Quarkus 3.22.\n"
-"(This status update was automatically generated using AI.)\n"
+"The working group is on track. Some noticeable updates:\n"
+"- Usage of the Vert.x Context Local SPI\n"
+"- Quantum-safe TLS\n"
+"- Improvements around Netty 4.2 and Vert.x 5\n"
+"- Initial work around the observation API\n"
+"- Java 21 as base.\n"
 msgstr ""
-"本周，测试类加载小组解决了一个具体问题。他们解决了在单元测试中使用 `@QuarkusTestResource` 注解时，数据库开发服务未能被复用的问题，特别是在 Quarkus 3.22 中。\n"
-"（此状态更新由 AI 自动生成。）\n"
-
-#. type: Hash Value: working-groups point-of-contact
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "@holly-cummins (@<strong>Holly Cummins</strong>  on Zulip)"
-msgstr "@holly-cummins (@Holly<strong>Cummins</strong>on Zulip)"
-
-#. type: Hash Value: working-groups proposal
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "https://github.com/quarkusio/quarkus/discussions/41867"
-msgstr "https://github.com/quarkusio/quarkus/discussions/41867"
+"工作组进展顺利。以下是一些值得注意的更新：\n"
+"- 采用了 Vert.x Context Local SPI\n"
+"- 量子安全的 TLS\n"
+"- 针对 Netty 4.2 和 Vert.x 5 的改进\n"
+"- 围绕观察 API 开展的初步工作\n"
+"- 以 Java 21 为基础。\n"
 
 #. type: Hash Value: working-groups readme
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
 msgid ""
-"<p>At the moment, Quarkus tests are invoked using one classloader, and then executed in a different classloader. This mostly works well, but means some use cases don't work: extensions cannot manipulate test classes in the same way that they do normal application classes. For example, anything run via a JUnit @TestTemplate test case will see the un-transformed class.</p>\n"
-"<p>It also means we have extra user-facing complexity, such as the QuarkusTest*Callbacks](https://quarkus.io/guides/getting-started-testing#enrichment-via-quarkustestcallback):</p>\n"
-"<blockquote>\n"
-"<p>While it is possible to use JUnit Jupiter callback interfaces like BeforeEachCallback, you might run into classloading issues because Quarkus has to run tests in a custom classloader which JUnit is not aware of.</p>\n"
-"</blockquote>\n"
-"<p>A final benefit is a reduction in the internal complexity of our code. Hopping between classloaders during test execution takes a lot of work, and adds a lot of code! It also is brittle in places. For example, because the hop between classloaders relies on serialization in some cases, it's becoming harder to do as the JVM tightens up security restrictions. We used to rely on xstream, but that stopped working in Java 17. In https://github.com/quarkusio/quarkus/pull/40601, @dmlloyd moved us to use the JBoss Serializer, which works better, but might still be affected by future restrictions on class access.</p>\n"
-"<p>The goal of this working group is to allow test classes to fully participate in the 'quarkification' of classes. The mechanism for this is probably just to load the test classes with the classloader we intend to run them with, so that JUnit sees the 'correct' version of the class.</p>\n"
+"<h2>Objective</h2>\n"
+"<p>This long‑running working group is dedicated to tracking development and ensuring a smooth rollout for Quarkus 4. It will serve as the central coordination point for feature tracking, release hygiene, migration guidance, and community alignment related to Quarkus 4.</p>\n"
+"<h2>The Problem</h2>\n"
+"<p>Quarkus 4 introduces significant shifts, including new Java 25 flags, architectural refinements, deprecations, and ecosystem changes. Without a focused group, efforts become fragmented, and downstream consumers (extensions, integrations, platform partners) may struggle to stay aligned.</p>\n"
+"<h2>Proposed Solution</h2>\n"
+"<p>Establish a designated WG to:</p>\n"
 "<ul>\n"
-"<li>Point of contact: @holly-cummins (@<strong>Holly Cummins</strong>  on Zulip)</li>\n"
-"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/41867</li>\n"
-"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20.2330.20Test.20Classloading.20chatter/\">Zulip topic</a></li>\n"
+"<li>Track all Quarkus 4‑related issues and PRs (using label triage/quarkus-4)</li>\n"
+"<li>Maintain a GitHub project board for feature status, blockers, and timelines</li>\n"
+"<li>Coordinate across teams (core, extensions, platform, tooling)</li>\n"
+"<li>Surface migration considerations and flag impacts (e.g. new --add-opens needs, optimized defaults) - useful to create the migration guide and rules</li>\n"
+"<li>Publish ADRs, migration guides, and summary docs</li>\n"
 "</ul>\n"
+"<h2>Definition of Done</h2>\n"
+"<p>This WG will be considered complete when:</p>\n"
+"<ul>\n"
+"<li>Quarkus 4 GA is released (including the platform)</li>\n"
+"<li>All major features are merged and tested</li>\n"
+"<li>Migration documentation is publicly available</li>\n"
+"</ul>\n"
+"<h2>Organizing the Work</h2>\n"
+"<p>Coordination via:</p>\n"
+"<ul>\n"
+"<li>GitHub Discussions: use design‑discussions category</li>\n"
+"<li>Issues/PRs: label with <code>triage/quarkus-4</code></li>\n"
+"<li>Project board to track status</li>\n"
+"</ul>\n"
+"<h2>Expected Timeline:</h2>\n"
+"<p>This is a long-running WG, starting now and wrapping up post‑GA (~late Q2 2026). We’ll mark it as “done” upon the public release of Quarkus 4 GA.</p>\n"
 msgstr ""
-"<p>目前，Quarkus 测试使用一个类加载器调用，然后在另一个类加载器中执行。这在大多数情况下运行良好，但也意味着某些用例无法运行：扩展无法像操作普通应用程序类那样操作测试类。例如，通过 JUnit @TestTemplate 测试用例运行的任何程序都将看到未转换的类。</p>\n"
-"<p>这也意味着我们有额外的面向用户的复杂性，例如 QuarkusTest*Callbacks](https://quarkus.io/guides/getting-started-testing#enrichment-via-quarkustestcallback) ：</p>\n"
-"<blockquote>\n"
-"<p>虽然可以使用 JUnit Jupiter 回调接口（如 BeforeEachCallback），但可能会遇到类加载问题，因为 Quarkus 必须在 JUnit 不知道的自定义类加载器中运行测试。</p>\n"
-"</blockquote>\n"
-"<p>最后一个好处是降低了代码的内部复杂性。在测试执行过程中，在类加载器之间跳来跳去会耗费大量工作，并增加大量代码！而且在某些地方还很脆弱。例如，由于类加载器之间的跳转在某些情况下依赖于序列化，随着 JVM 收紧安全限制，这种跳转变得越来越难。我们曾经依赖 xstream，但在 Java 17 中它已停止工作。在 https://github.com/quarkusio/quarkus/pull/40601 中，@dmlloyd 让我们使用 JBoss Serializer，它的效果更好，但仍可能受到未来类访问限制的影响。</p>\n"
-"<p>该工作组的目标是允许测试类完全参与类的 \"夸克化\"。其机制可能只是用我们打算运行的类加载器加载测试类，以便让 JUnit 看到类的 \"正确 \"版本。</p>\n"
+"<h2>目标</h2>\n"
+"<p>这个长期运作的工作组致力于跟踪 Quarkus 4 的开发进展，并确保其顺利发布。该工作组将作为 Quarkus 4 相关功能跟踪、发布规范、迁移指南以及社区协调工作的核心协调点。</p>\n"
+"<h2>问题</h2>\n"
+"<p>Quarkus 4 带来了重大变革，包括新的 Java 25 标志、架构优化、弃用项以及生态系统变化。如果没有一个专门的工作组，相关工作将变得分散，下游用户（扩展、集成、平台合作伙伴）可能难以保持同步。</p>\n"
+"<h2>建议的解决方案</h2>\n"
+"<p>成立一个专门的工作组（WG），以：</p>\n"
 "<ul>\n"
-"<li>联系人：@holly-cummins （Zulip 上的 @Holly<strong>Cummins）</strong></li>\n"
-"<li>建议： https://github.com/quarkusio/quarkus/discussions/41867</li>\n"
-"<li>讨论：<a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20.2330.20Test.20Classloading.20chatter/\">Zulip 主题</a></li>\n"
+"<li>跟踪所有与 Quarkus 4 相关的 issue 和 PR（使用标签 triage/quarkus-4）</li>\n"
+"<li>维护 GitHub 项目看板，用于记录功能状态、阻塞项和时间表</li>\n"
+"<li>协调各团队（核心、扩展、平台、工具）的工作</li>\n"
+"<li>梳理迁移注意事项并标注影响（例如：新增的 --add-opens 需求、优化后的默认设置）——这对编写迁移指南和规则很有帮助</li>\n"
+"<li>发布 ADR、迁移指南和摘要文档</li>\n"
 "</ul>\n"
+"<h2>完成标准</h2>\n"
+"<p>当满足以下条件时，本工作组将被视为完成：</p>\n"
+"<ul>\n"
+"<li>Quarkus 4 GA 正式发布（包括平台）</li>\n"
+"<li>所有主要功能均已合并并经过测试</li>\n"
+"<li>迁移文档已公开发布</li>\n"
+"</ul>\n"
+"<h2>工作组织</h2>\n"
+"<p>协调方式：</p>\n"
+"<ul>\n"
+"<li>GitHub 讨论区：请使用 design‑discussions 分类</li>\n"
+"<li>问题/拉取请求：添加<code>triage/quarkus-4</code>标签</li>\n"
+"<li>项目看板用于跟踪状态</li>\n"
+"</ul>\n"
+"<h2>预计时间表：</h2>\n"
+"<p>这是一个长期运行的工作组，即日起启动，并将在正式发布（GA）后结束（约2026年第二季度末）。待 Quarkus 4 正式版公开发布后，我们将将其标记为“已完成”。</p>\n"
 
 #. type: Hash Value: working-groups short-description
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "The goal of this working group is to rewrite Quarkus's test classloading, so that tests are run in the same classloader as the application under tests, and Quarkus extensions can do \"Quarkus-y\" manipulations of test classes.\n"
-msgstr "该工作组的目标是重写 Quarkus 的测试类加载机制，以便测试在与被测应用程序相同的类加载器中运行，并且 Quarkus 扩展能够对测试类进行“Quarkus 风格”的操作。\n"
+msgid "The Quarkus 4 working group aims to coordinate and track all Quarkus 4-related development in a long-running effort.\n"
+msgstr "Quarkus 4 工作组的宗旨是，通过一项长期持续的工作，协调并跟踪所有与 Quarkus 4 相关的开发工作。\n"
 
 #. type: Hash Value: working-groups title
 #: _data/wg.yaml:1
 #, fuzzy, no-wrap
-msgid "Test classloading"
-msgstr "测试类加载"
+msgid "Quarkus 4"
+msgstr "Quarkus 4"
 
 #. type: Hash Value: working-groups board-url
 #: _data/wg.yaml:1
@@ -1672,7 +1310,7 @@ msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20-.
 #. type: Hash Value: working-groups last-activity
 #: _data/wg.yaml:1
 #, no-wrap
-msgid "2026-10-13"
+msgid "2026-10-20"
 msgstr ""
 
 #. type: Hash Value: working-groups last-update
@@ -1828,6 +1466,438 @@ msgstr "该工作组的目标是确保 Quarkus 应用程序能够在 Java 25 上
 #, fuzzy, no-wrap
 msgid "Java 25 support"
 msgstr "Java 25 支持"
+
+#. type: Hash Value: working-groups board-url
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "https://github.com/orgs/quarkusio/projects/43"
+msgstr "https://github.com/orgs/quarkusio/projects/43"
+
+#. type: Hash Value: working-groups deliverable
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "<a rel=\"nofollow\" href=\"https://quarkus.io/blog/arc-migrates-to-gizmo2/\">Blog</a>"
+msgstr "<a rel=\"nofollow\" href=\"https://quarkus.io/blog/arc-migrates-to-gizmo2/\">博客</a>"
+
+#. type: Hash Value: working-groups discussion
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/Gizmo.202.2Ex.20WG.20chat"
+msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/Gizmo.202.2Ex.20WG.20chat"
+
+#. type: Hash Value: working-groups last-activity
+#: _data/wg.yaml:1
+#, no-wrap
+msgid "2026-10-19"
+msgstr ""
+
+#. type: Hash Value: working-groups last-update
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid ""
+"While there are still tons of work to do on Gizmo 2, it meets the definition of done from the proposal. \n"
+"Arc got migrated to Gizmo 2 - see https://quarkus.io/blog/arc-migrates-to-gizmo2/.\n"
+msgstr ""
+"尽管 Gizmo 2 还有大量工作待完成，但它已符合提案中对“完成”的定义。\n"
+"Arc 已迁移至 Gizmo 2——详见 https://quarkus.io/blog/arc-migrates-to-gizmo2/。\n"
+
+#. type: Hash Value: working-groups last-activity
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "2025-11-03"
+msgstr "2025年11月3日"
+
+#. type: Hash Value: working-groups point-of-contact
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "@mkouba (@<strong>Martin Kouba</strong>  on Zulip)"
+msgstr "@mkouba（@Martin<strong>Kouba</strong>on Zulip）"
+
+#. type: Hash Value: working-groups proposal
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "https://github.com/quarkusio/quarkus/discussions/46627"
+msgstr "https://github.com/quarkusio/quarkus/discussions/46627"
+
+#. type: Hash Value: working-groups readme
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid ""
+"<p>This _working group aims to make the <a href=\"https://github.com/dmlloyd/gizmo/tree/gizmo2\">Gizmo 2 POC</a> production-ready and integrate it into Quarkus core.</p>\n"
+"<ul>\n"
+"<li>Point of contact: @mkouba (@<strong>Martin Kouba</strong>  on Zulip)</li>\n"
+"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/46627</li>\n"
+"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/Gizmo.202.2Ex.20WG.20chat\">Zulip topic</a></li>\n"
+"<li>Deliverable: <a href=\"https://quarkus.io/blog/arc-migrates-to-gizmo2/\">Blog</a></li>\n"
+"</ul>\n"
+msgstr ""
+"<p>该工作组旨在使<a href=\"https://github.com/dmlloyd/gizmo/tree/gizmo2\">Gizmo 2 概念</a>验证（<a href=\"https://github.com/dmlloyd/gizmo/tree/gizmo2\">POC）</a>达到生产就绪状态，并将其集成到 Quarkus 核心中。</p>\n"
+"<ul>\n"
+"<li>联系人：@mkouba（Zulip 上的<strong>@Martin Kouba</strong>）</li>\n"
+"<li>提案：https://github.com/quarkusio/quarkus/discussions/46627</li>\n"
+"<li>讨论：<a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/Gizmo.202.2Ex.20WG.20chat\">Zulip 主题</a></li>\n"
+"<li>交付成果：<a href=\"https://quarkus.io/blog/arc-migrates-to-gizmo2/\">博客</a></li>\n"
+"</ul>\n"
+
+#. type: Hash Value: working-groups short-description
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "Gizmo 2 related tasks\n"
+msgstr "与 Gizmo 2 相关的任务\n"
+
+#. type: Hash Value: working-groups title
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "Gizmo 2"
+msgstr "小玩意 2"
+
+#. type: Hash Value: working-groups board-url
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "https://github.com/orgs/quarkusio/projects/75"
+msgstr "https://github.com/orgs/quarkusio/projects/75"
+
+#. type: Hash Value: working-groups discussion
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-dev-star/with/581636141"
+msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-dev-star/with/581636141"
+
+#. type: Hash Value: working-groups last-activity
+#: _data/wg.yaml:1
+#, no-wrap
+msgid "2026-10-18"
+msgstr ""
+
+#. type: Hash Value: working-groups last-update
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "The working group is collecting missing features and issues, but the initial scope is now complete.\n"
+msgstr "该工作组正在收集缺失的功能和问题，但初步工作范围现已完成。\n"
+
+#. type: Hash Value: working-groups point-of-contact
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "@phillip-kruger"
+msgstr "@phillip-kruger"
+
+#. type: Hash Value: working-groups proposal
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "https://github.com/quarkusio/quarkus/discussions/53093#discussioncomment-16271096"
+msgstr "https://github.com/quarkusio/quarkus/discussions/53093#discussioncomment-16271096"
+
+#. type: Hash Value: working-groups readme
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid ""
+"<h2>Objective</h2>\n"
+"<p>Decompose and modernize the Quarkus developer tooling runtime (Dev UI, Dev MCP, Dev Shell, Dev Assistant) so that each component can operate independently, without requiring the full <code>vertx-http</code> web stack. This enables AI-powered developer assistance (via MCP) and terminal-based tooling (Dev Shell) to work even when dev mode or the HTTP layer is broken, and lays the foundation for a unified &quot;Dev Star&quot; developer experience across all interaction surfaces.</p>\n"
+"<p>Quarkus has always been a developer experience champion; live coding, Dev UI, Dev Services, and continuous testing set the standard for Java frameworks. Dev Star extends this effort into the AI era by focusing equally on <strong>AI experience (AIx)</strong>: making Quarkus the easiest framework for coding agents (Claude, Copilot, Gemini, etc.) to work with. By exposing the full power of Quarkus dev mode (configuration, build output, documentation, testing, error diagnostics) through MCP, and by providing agents with the right documentation for the specific extensions and APIs used in the application being built (via RAG over Quarkus Docs), coding agents can understand, build, and debug Quarkus applications as effectively as human developers using the Dev UI. Developer and AI experiences are two sides of the same coin: every improvement to one benefits the other.</p>\n"
+"<h2>The Problem</h2>\n"
+"<p>Today, the entire Quarkus developer tooling stack is tightly coupled to the Dev UI Runtime, which depends on <code>vertx-http</code>. This creates several problems:</p>\n"
+"<ol>\n"
+"<li>\n"
+"<p><strong>Fragile dependency chain:</strong> Dev MCP and Dev Shell cannot function without the full HTTP stack running. If dev mode is broken (e.g., a compilation error prevents the application from starting), all developer tooling becomes unavailable — precisely when developers need help the most.</p>\n"
+"</li>\n"
+"<li>\n"
+"<p><strong>No fallback for broken applications:</strong> There is no lightweight mechanism to provide application lifecycle information, documentation access, or workspace navigation when the Quarkus application cannot start. AI assistants connected via MCP are completely cut off.</p>\n"
+"</li>\n"
+"<li>\n"
+"<p><strong>Monolithic runtime:</strong> The Dev UI Runtime bundles WebSocket transport, JsonRPC routing, MCP transport, and shell connectivity into a single unit. Extensions that only need JsonRPC services or MCP tools must still pull in the entire web stack.</p>\n"
+"</li>\n"
+"<li>\n"
+"<p><strong>Limited AI integration surface:</strong> The Chappie WG established AI assistance capabilities, but the current architecture does not cleanly separate the AI runtime (Chappie Runtime + RAG over Quarkus Docs) from the transport layer, making it difficult to expose AI assistance through multiple channels (UI, MCP, Shell, stdio).</p>\n"
+"</li>\n"
+"<li>\n"
+"<p><strong>Developer experience gaps:</strong> Several core developer workflows (continuous testing, hot reload, exception reporting, example projects, file navigation) have not been re-evaluated in the context of MCP and AI-assisted development. Features like tool filtering/search in MCP are missing.</p>\n"
+"</li>\n"
+"</ol>\n"
+"<h2>The Proposed Solution</h2>\n"
+"<h3>Architecture Decomposition</h3>\n"
+"<p>Break the current monolithic Dev UI Runtime into four independent runtimes:</p>\n"
+"<p>| Runtime                 | Transport       | Dependency                     | Purpose                                                               |\n"
+"| ----------------------- | --------------- | ------------------------------ | --------------------------------------------------------------------- |\n"
+"| <strong>Dev UI Runtime</strong>      | WebSocket       | <code>vertx-http</code>                   | Browser-based Dev UI (For Human)                                      |\n"
+"| <strong>Dev JsonRPC Runtime</strong> | JsonRPCRouter   | CDI                            | Core routing layer for JsonRPC services; shared by Dev UI and Dev MCP |\n"
+"| <strong>Dev MCP Runtime</strong>     | Streamable HTTP | CDI (no <code>vertx-http</code> required) | MCP server for AI agents (e.g., Claude, Copilot)                      |\n"
+"| <strong>Dev Shell Runtime</strong>   | CDI-connected   | CDI (no <code>vertx-http</code> required) | Terminal-based developer interaction                                  |</p>\n"
+"<p>The key architectural change is <strong>breaking the <code>vertx-http</code> dependency</strong> so that Dev MCP and Dev Shell can operate independently. The JsonRPC Router becomes a shared component connected via CDI, enabling extensions to expose <code>JsonRpcService</code> beans that are accessible from any runtime.</p>\n"
+"<h3>Dev Assistant</h3>\n"
+"<p>The Dev Assistant combines:</p>\n"
+"<ul>\n"
+"<li><strong>Chappie Runtime</strong>: AI interaction engine (successor to the Chappie WG)</li>\n"
+"<li><strong>Quarkus Docs (RAG)</strong>: Retrieval-augmented generation over Quarkus documentation</li>\n"
+"</ul>\n"
+"<p>The Dev Assistant connects to the Dev Shell Runtime via CDI, and to the Dev UI Runtime via the existing JsonRPC path. This means AI assistance is available from the browser (Dev UI), the terminal (Dev Shell), and external AI tools (Dev MCP).</p>\n"
+"<h3>Standalone stdio MCP Application</h3>\n"
+"<p>A lightweight, standalone MCP application using <strong>stdio transport</strong> that provides:</p>\n"
+"<ul>\n"
+"<li>Application lifecycle information (build status, errors, configuration)</li>\n"
+"<li>Quarkus documentation access</li>\n"
+"<li>Workspace file navigation</li>\n"
+"</ul>\n"
+"<p>This stdio app operates <strong>outside</strong> dev mode, ensuring developers can get AI assistance even when the application is completely broken (compilation failures, missing dependencies, misconfiguration). It complements the in-process Dev MCP Runtime.</p>\n"
+"<h3>Reconsider Dev* Features</h3>\n"
+"<p>Re-evaluate existing developer features for the new architecture:</p>\n"
+"<ul>\n"
+"<li><strong>Dev Mode resilience</strong>: What works when dev mode is broken?</li>\n"
+"<li><strong>Continuous Testing</strong>: Expose test status and controls via MCP tools</li>\n"
+"<li><strong>Hot Reload</strong>: Trigger and monitor reloads from MCP/Shell</li>\n"
+"<li><strong>Example Project</strong>: Generate example code via AI assistance</li>\n"
+"<li><strong>Exception Reporting</strong> : Surface exceptions as MCP resources/tools</li>\n"
+"<li><strong>Workspace Navigation</strong> : Find files and navigate project structure via MCP</li>\n"
+"<li><strong>Tool Filter/Search</strong>: Enable discovery and filtering of available MCP tools</li>\n"
+"<li><strong>Response Size Optimization</strong>: Reduce MCP response payload sizes to minimize context window consumption by coding agents; provide concise, structured responses rather than raw verbose output</li>\n"
+"</ul>\n"
+"<h3>Skills Investigation</h3>\n"
+"<p>Investigate the concept of &quot;Skills&quot; (composable, higher-level developer actions built on top of MCP tools). The idea is to allow each extension to ship one or more Skills that describe how the extension is intended to be used, configured, and tested, along with best practices, common pitfalls, and troubleshooting guidance. Rather than requiring an AI agent to discover this knowledge through trial and error, Skills provide it upfront as structured, actionable context.</p>\n"
+"<p><strong>Success criteria:</strong> define what a Skill is, how it differs from a raw MCP tool (tools <em>do</em> things; Skills <em>teach</em> how to do things well), and whether a Skills API adds meaningful value over direct tool composition by AI agents.</p>\n"
+"<h2>Definition of Done</h2>\n"
+"<ul>\n"
+"<li>[ ] Dev MCP Runtime responds to the MCP <code>initialize</code> handshake without Dev UI or <code>vertx-http</code> running</li>\n"
+"<li>[ ] Dev Shell Runtime starts and provides interactive developer commands without <code>vertx-http</code></li>\n"
+"<li>[ ] Dev Assistant (Chappie + RAG) is accessible from Dev UI, Dev MCP, and Dev Shell</li>\n"
+"<li>[ ] Clear design of the RAG pipeline: from documentation to the agent</li>\n"
+"<li>[ ] Standalone stdio MCP app provides application lifecycle, docs, and workspace tools when dev mode is broken</li>\n"
+"<li>[ ] Existing <code>JsonRpcService</code> extensions work across all runtimes without modification</li>\n"
+"<li>[ ] Continuous testing status and controls are available via MCP tools</li>\n"
+"<li>[ ] Exception information is surfaced as MCP resources</li>\n"
+"<li>[ ] MCP tool discovery supports filtering and search</li>\n"
+"<li>[ ] Architecture documented with clear extension author guidance</li>\n"
+"<li>[ ] Integration tests verify that each runtime operates independently</li>\n"
+"</ul>\n"
+"<h2>Scope of Work</h2>\n"
+"<h3>In Scope</h3>\n"
+"<ul>\n"
+"<li>Decompose Dev UI Runtime into four independent runtimes (Dev UI, Dev JsonRPC, Dev MCP, Dev Shell)</li>\n"
+"<li>Break <code>vertx-http</code> dependency for Dev Shell</li>\n"
+"<li>Implement Dev Assistant (Chappie Runtime + Quarkus Docs RAG) connected via CDI</li>\n"
+"<li>Build standalone stdio MCP application for broken-dev-mode scenarios</li>\n"
+"<li>Re-evaluate continuous testing, hot reload, exception reporting, and workspace navigation for MCP</li>\n"
+"<li>Implement MCP tool filtering and search</li>\n"
+"<li>Investigate Skills concept and define success criteria</li>\n"
+"<li>Documentation for extension authors on the new architecture</li>\n"
+"</ul>\n"
+"<h3>Out of Scope</h3>\n"
+"<ul>\n"
+"<li>Production-mode MCP server (this is dev-mode tooling only)</li>\n"
+"<li>Dev Shell is not part of this working group, a dedicated working group will be created.</li>\n"
+"<li>Third-party AI provider integrations beyond MCP protocol support</li>\n"
+"<li>IDE-specific plugins (VS Code, IntelliJ) — these consume MCP, not provide it</li>\n"
+"</ul>\n"
+"<h2>Organizing the Work</h2>\n"
+"<h3>Communication</h3>\n"
+"<ul>\n"
+"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-dev-star/with/581636141\">wg-dev-star</a></li>\n"
+"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/53093#discussioncomment-16271096</li>\n"
+"<li>Point of Contact: @phillip-kruger</li>\n"
+"</ul>\n"
+"<h3>Timeline</h3>\n"
+"<ul>\n"
+"<li>Target: Quarkus 4 release cycle</li>\n"
+"</ul>\n"
+msgstr ""
+"<h2>目标</h2>\n"
+"<p>将 Quarkus 开发工具运行时（Dev UI、Dev MCP、Dev Shell、Dev Assistant）进行拆分和现代化改造，使每个组件都能独立运行，无需依赖完整的<code>vertx-http</code>Web 堆栈。 这使得基于 AI 的开发者辅助功能（通过 MCP）和基于终端的工具（Dev Shell）即使在开发模式或 HTTP 层出现故障时仍能正常工作，并为在所有交互界面上实现统一的“Dev Star”开发者体验奠定了基础。</p>\n"
+"<p>Quarkus 一直以来都是开发者体验的领军者；实时编码、Dev UI、Dev Services 和持续测试为 Java 框架树立了标杆。 Dev Star 将这一努力延伸至 AI 时代，同时注重<strong>AI 体验（AIx）</strong>：使 Quarkus 成为最易于与编码代理（Claude、Copilot、Gemini 等）协作的框架。 通过 MCP 充分展现 Quarkus 开发模式的全部功能（配置、构建输出、文档、测试、错误诊断），并为智能代理提供针对正在构建的应用程序中所用特定扩展和 API 的正确文档（通过基于 Quarkus Docs 的 RAG）， 编程代理能够像使用开发界面的人类开发者一样，高效地理解、构建和调试 Quarkus 应用程序。开发者体验与 AI 体验是一枚硬币的两面：对其中一方的任何改进，都会惠及另一方。</p>\n"
+"<h2>问题</h2>\n"
+"<p>目前，整个 Quarkus 开发工具栈与 Dev UI 运行时紧密耦合，而该运行时依赖于<code>vertx-http</code>。这导致了以下几个问题：</p>\n"
+"<ol>\n"
+"<li>\n"
+"<p><strong>脆弱的依赖链：</strong>若完整的 HTTP 栈未运行，Dev MCP 和 Dev Shell 将无法工作。如果开发模式出现故障（例如，编译错误导致应用程序无法启动），所有开发工具都将无法使用——而这恰恰是开发人员最需要帮助的时候。</p>\n"
+"</li>\n"
+"<li>\n"
+"<p><strong>应用程序故障时无备用方案：</strong>当 Quarkus 应用程序无法启动时，没有轻量级的机制来提供应用程序生命周期信息、文档访问或工作区导航。通过 MCP 连接的 AI 助手将完全断开。</p>\n"
+"</li>\n"
+"<li>\n"
+"<p><strong>单体式运行时：</strong>Dev UI 运行时将 WebSocket 传输、JsonRPC 路由、MCP 传输和 shell 连接打包为单一单元。即使仅需 JsonRPC 服务或 MCP 工具的扩展，仍必须引入整个 Web 堆栈。</p>\n"
+"</li>\n"
+"<li>\n"
+"<p><strong>AI 集成接口有限：</strong>Chappie 工作组确立了 AI 辅助功能，但当前架构未能将 AI 运行时（Chappie 运行时 + 基于 Quarkus Docs 的 RAG）与传输层清晰分离，导致难以通过多种渠道（UI、MCP、Shell、stdio）提供 AI 辅助功能。</p>\n"
+"</li>\n"
+"<li>\n"
+"<p><strong>开发者体验缺口：</strong>若干核心开发者工作流（持续测试、热重载、异常报告、示例项目、文件导航）尚未在 MCP 和 AI 辅助开发背景下进行重新评估。MCP 中缺少工具筛选/搜索等功能。</p>\n"
+"</li>\n"
+"</ol>\n"
+"<h2>建议的解决方案</h2>\n"
+"<h3>架构分解</h3>\n"
+"<p>将当前单体式的开发 UI 运行时拆分为四个独立的运行时：</p>\n"
+"<p>| 运行时                 | 传输机制       | 依赖项                     | 用途                                                               |\n"
+"| ----------------------- | --------------- | ------------------------------ | --------------------------------------------------------------------- |\n"
+"|<strong>开发 UI 运行时</strong>     | WebSocket       |<code>vertx-http</code>                  | 基于浏览器的开发 UI（面向用户）                                      |\n"
+"|<strong>开发 JsonRPC 运行时</strong>| JsonRPCRouter   | CDI                            | JsonRPC 服务的核心路由层；由开发 UI 和开发 MCP 共享 |\n"
+"|<strong>开发 MCP 运行时</strong>    | Streamable HTTP | CDI（无需<code>vertx-http</code>） | 用于 AI 代理（例如 Claude、Copilot）的 MCP 服务器                      |\n"
+"|<strong>开发 Shell 运行时</strong>  | 通过 CDI 连接   | CDI（无需<code>vertx-http</code>） | 基于终端的开发者交互                                  |</p>\n"
+"<p>关键的架构变更在于<strong>摆脱对<code>vertx-http</code>的依赖</strong>，从而使 Dev MCP 和 Dev Shell 能够独立运行。JsonRPC 路由器成为通过 CDI 连接的共享组件，允许扩展程序暴露<code>JsonRpcService</code>Bean，这些 Bean 可从任何运行时访问。</p>\n"
+"<h3>开发助手</h3>\n"
+"<p>开发助手整合了：</p>\n"
+"<ul>\n"
+"<li><strong>Chappie 运行时</strong>：AI 交互引擎（Chappie WG 的继任者）</li>\n"
+"<li><strong>Quarkus 文档（RAG）</strong>：基于 Quarkus 文档的检索增强生成</li>\n"
+"</ul>\n"
+"<p>Dev Assistant 通过 CDI 连接到 Dev Shell 运行时，并通过现有的 JsonRPC 路径连接到 Dev UI 运行时。这意味着无论是在浏览器（Dev UI）、终端（Dev Shell）还是外部 AI 工具（Dev MCP）中，均可使用 AI 辅助功能。</p>\n"
+"<h3>独立的 stdio MCP 应用程序</h3>\n"
+"<p>一款采用<strong>stdio 传输协议的</strong>轻量级、独立 MCP 应用程序，提供：</p>\n"
+"<ul>\n"
+"<li>应用程序生命周期信息（构建状态、错误、配置）</li>\n"
+"<li>Quarkus 文档访问</li>\n"
+"<li>工作区文件导航</li>\n"
+"</ul>\n"
+"<p>该 stdio 应用程序<strong>在非开发模式下</strong>运行，确保即使应用程序完全无法运行（编译失败、依赖项缺失、配置错误），开发人员仍可获得 AI 辅助。它与进程内的 Dev MCP 运行时相辅相成。</p>\n"
+"<h3>重新审视 Dev* 功能</h3>\n"
+"<p>针对新架构重新评估现有开发者功能：</p>\n"
+"<ul>\n"
+"<li><strong>开发模式的容错性</strong>：当开发模式失效时，哪些功能仍可正常运行？</li>\n"
+"<li><strong>持续测试</strong>：通过 MCP 工具展示测试状态和控制选项</li>\n"
+"<li><strong>热重载</strong>：通过 MCP/Shell 触发并监控重载</li>\n"
+"<li><strong>示例项目</strong>：通过 AI 辅助生成示例代码</li>\n"
+"<li><strong>异常报告</strong>：将异常以 MCP 资源/工具的形式呈现</li>\n"
+"<li><strong>工作区导航</strong>：通过 MCP 查找文件并浏览项目结构</li>\n"
+"<li><strong>工具筛选/搜索</strong>：支持发现和筛选可用的 MCP 工具</li>\n"
+"<li><strong>响应大小优化</strong>：缩减 MCP 响应负载大小，以最大限度减少编码代理对上下文窗口的占用；提供简洁、结构化的响应，而非冗长的原始输出</li>\n"
+"</ul>\n"
+"<h3>技能研究</h3>\n"
+"<p>探究“技能”（Skills）的概念（即基于 MCP 工具构建的可组合、更高层次的开发者操作）。 其核心理念是允许每个扩展程序提供一个或多个“技能”，这些技能描述了该扩展程序的预期使用方式、配置方法和测试流程，同时包含最佳实践、常见陷阱及故障排除指南。与要求AI代理通过试错来发现这些知识不同，“技能”将其作为结构化且可操作的上下文信息预先提供。</p>\n"
+"<p><strong>成功标准：</strong>定义什么是“技能”，它与原始 MCP 工具的区别（工具<em>执行</em>操作；技能<em>则指导</em>如何高效地完成操作），以及“技能”API 是否比 AI 代理直接组合工具更能带来实质性价值。</p>\n"
+"<h2>完成标准</h2>\n"
+"<ul>\n"
+"<li>[ ] 在未运行 Dev UI 或<code>vertx-http</code>的情况下，Dev MCP 运行时能响应 MCP<code>初始化</code>握手</li>\n"
+"<li>[ ] Dev Shell 运行时可在不依赖<code>vertx-http</code>的情况下启动并提供交互式开发者命令</li>\n"
+"<li>[ ] 可通过开发 UI、开发 MCP 和开发 Shell 访问开发助手（Chappie + RAG）</li>\n"
+"<li>[ ] RAG 管道设计清晰：从文档到智能代理</li>\n"
+"<li>[ ] 当开发模式出现故障时，独立的 stdio MCP 应用程序可提供应用程序生命周期管理、文档及工作区工具</li>\n"
+"<li>[ ] 现有的<code>JsonRpcService</code>扩展无需修改即可在所有运行时环境中正常工作</li>\n"
+"<li>[ ] 可通过 MCP 工具查看持续测试状态并进行控制</li>\n"
+"<li>[ ] 异常信息以 MCP 资源的形式呈现</li>\n"
+"<li>[ ] MCP 工具发现功能支持筛选和搜索</li>\n"
+"<li>[ ] 架构文档包含清晰的扩展作者指南</li>\n"
+"<li>[ ] 集成测试可验证每个运行时均能独立运行</li>\n"
+"</ul>\n"
+"<h2>工作范围</h2>\n"
+"<h3>工作范围</h3>\n"
+"<ul>\n"
+"<li>将 Dev UI 运行时分解为四个独立的运行时（Dev UI、Dev JsonRPC、Dev MCP、Dev Shell）</li>\n"
+"<li>解除 Dev Shell 对<code>vertx-http</code>的依赖</li>\n"
+"<li>实现通过 CDI 连接的开发助手（Chappie 运行时 + Quarkus Docs RAG）</li>\n"
+"<li>为“开发模式失效”场景构建独立的 stdio MCP 应用程序</li>\n"
+"<li>针对 MCP 重新评估持续测试、热重载、异常报告和工作区导航功能</li>\n"
+"<li>实现 MCP 工具过滤和搜索功能</li>\n"
+"<li>研究“技能”概念并定义成功标准</li>\n"
+"<li>面向扩展开发者的新架构文档</li>\n"
+"</ul>\n"
+"<h3>不在范围之内</h3>\n"
+"<ul>\n"
+"<li>生产环境的 MCP 服务器（本工作组仅涉及开发模式工具）</li>\n"
+"<li>Dev Shell 不属于本工作组，将另行组建专门的工作组。</li>\n"
+"<li>超出 MCP 协议支持范围的第三方 AI 提供商集成</li>\n"
+"<li>特定于 IDE 的插件（VS Code、IntelliJ）——这些插件调用 MCP，而非提供 MCP 协议</li>\n"
+"</ul>\n"
+"<h2>工作组织</h2>\n"
+"<h3>沟通</h3>\n"
+"<ul>\n"
+"<li>讨论：<a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/wg-dev-star/with/581636141\">wg-dev-star</a></li>\n"
+"<li>提案：https://github.com/quarkusio/quarkus/discussions/53093#discussioncomment-16271096</li>\n"
+"<li>联系人：@phillip-kruger</li>\n"
+"</ul>\n"
+"<h3>时间表</h3>\n"
+"<ul>\n"
+"<li>目标：Quarkus 4 发布周期</li>\n"
+"</ul>\n"
+
+#. type: Hash Value: working-groups short-description
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "Decompose and modernize the Quarkus developer tooling runtime (Dev UI, Dev MCP, Dev Shell, Dev Assistant) so that each component can operate independently, without requiring the full `vertx-http` web stack. This enables AI-powered developer assistance (via MCP) and terminal-based tooling (Dev Shell)\n"
+msgstr "将 Quarkus 开发工具运行时（Dev UI、Dev MCP、Dev Shell、Dev Assistant）进行拆分和现代化改造，使每个组件都能独立运行，无需依赖完整的 `vertx-http` Web 技术栈。 这将支持基于 AI 的开发者辅助功能（通过 MCP）和基于终端的工具（Dev Shell）。\n"
+
+#. type: Hash Value: working-groups title
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "Dev Star"
+msgstr "Dev Star"
+
+#. type: Hash Value: working-groups board-url
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "https://github.com/orgs/quarkusio/projects/30"
+msgstr "https://github.com/orgs/quarkusio/projects/30"
+
+#. type: Hash Value: working-groups discussion
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20.2330.20Test.20Classloading.20chatter/"
+msgstr "https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20.2330.20Test.20Classloading.20chatter/"
+
+#. type: Hash Value: working-groups last-activity
+#: _data/wg.yaml:1
+#, no-wrap
+msgid "2026-10-14"
+msgstr ""
+
+#. type: Hash Value: working-groups last-update
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid ""
+"The Test classloading group addressed a specific issue this week. They resolved the problem where database dev services weren't reused when unit tests used a `@QuarkusTestResource` annotation, particularly in Quarkus 3.22.\n"
+"(This status update was automatically generated using AI.)\n"
+msgstr ""
+"本周，测试类加载小组解决了一个具体问题。他们解决了在单元测试中使用 `@QuarkusTestResource` 注解时，数据库开发服务未能被复用的问题，特别是在 Quarkus 3.22 中。\n"
+"（此状态更新由 AI 自动生成。）\n"
+
+#. type: Hash Value: working-groups point-of-contact
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "@holly-cummins (@<strong>Holly Cummins</strong>  on Zulip)"
+msgstr "@holly-cummins (@Holly<strong>Cummins</strong>on Zulip)"
+
+#. type: Hash Value: working-groups proposal
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "https://github.com/quarkusio/quarkus/discussions/41867"
+msgstr "https://github.com/quarkusio/quarkus/discussions/41867"
+
+#. type: Hash Value: working-groups readme
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid ""
+"<p>At the moment, Quarkus tests are invoked using one classloader, and then executed in a different classloader. This mostly works well, but means some use cases don't work: extensions cannot manipulate test classes in the same way that they do normal application classes. For example, anything run via a JUnit @TestTemplate test case will see the un-transformed class.</p>\n"
+"<p>It also means we have extra user-facing complexity, such as the QuarkusTest*Callbacks](https://quarkus.io/guides/getting-started-testing#enrichment-via-quarkustestcallback):</p>\n"
+"<blockquote>\n"
+"<p>While it is possible to use JUnit Jupiter callback interfaces like BeforeEachCallback, you might run into classloading issues because Quarkus has to run tests in a custom classloader which JUnit is not aware of.</p>\n"
+"</blockquote>\n"
+"<p>A final benefit is a reduction in the internal complexity of our code. Hopping between classloaders during test execution takes a lot of work, and adds a lot of code! It also is brittle in places. For example, because the hop between classloaders relies on serialization in some cases, it's becoming harder to do as the JVM tightens up security restrictions. We used to rely on xstream, but that stopped working in Java 17. In https://github.com/quarkusio/quarkus/pull/40601, @dmlloyd moved us to use the JBoss Serializer, which works better, but might still be affected by future restrictions on class access.</p>\n"
+"<p>The goal of this working group is to allow test classes to fully participate in the 'quarkification' of classes. The mechanism for this is probably just to load the test classes with the classloader we intend to run them with, so that JUnit sees the 'correct' version of the class.</p>\n"
+"<ul>\n"
+"<li>Point of contact: @holly-cummins (@<strong>Holly Cummins</strong>  on Zulip)</li>\n"
+"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/41867</li>\n"
+"<li>Discussion: <a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20.2330.20Test.20Classloading.20chatter/\">Zulip topic</a></li>\n"
+"</ul>\n"
+msgstr ""
+"<p>目前，Quarkus 测试使用一个类加载器调用，然后在另一个类加载器中执行。这在大多数情况下运行良好，但也意味着某些用例无法运行：扩展无法像操作普通应用程序类那样操作测试类。例如，通过 JUnit @TestTemplate 测试用例运行的任何程序都将看到未转换的类。</p>\n"
+"<p>这也意味着我们有额外的面向用户的复杂性，例如 QuarkusTest*Callbacks](https://quarkus.io/guides/getting-started-testing#enrichment-via-quarkustestcallback) ：</p>\n"
+"<blockquote>\n"
+"<p>虽然可以使用 JUnit Jupiter 回调接口（如 BeforeEachCallback），但可能会遇到类加载问题，因为 Quarkus 必须在 JUnit 不知道的自定义类加载器中运行测试。</p>\n"
+"</blockquote>\n"
+"<p>最后一个好处是降低了代码的内部复杂性。在测试执行过程中，在类加载器之间跳来跳去会耗费大量工作，并增加大量代码！而且在某些地方还很脆弱。例如，由于类加载器之间的跳转在某些情况下依赖于序列化，随着 JVM 收紧安全限制，这种跳转变得越来越难。我们曾经依赖 xstream，但在 Java 17 中它已停止工作。在 https://github.com/quarkusio/quarkus/pull/40601 中，@dmlloyd 让我们使用 JBoss Serializer，它的效果更好，但仍可能受到未来类访问限制的影响。</p>\n"
+"<p>该工作组的目标是允许测试类完全参与类的 \"夸克化\"。其机制可能只是用我们打算运行的类加载器加载测试类，以便让 JUnit 看到类的 \"正确 \"版本。</p>\n"
+"<ul>\n"
+"<li>联系人：@holly-cummins （Zulip 上的 @Holly<strong>Cummins）</strong></li>\n"
+"<li>建议： https://github.com/quarkusio/quarkus/discussions/41867</li>\n"
+"<li>讨论：<a href=\"https://quarkusio.zulipchat.com/#narrow/channel/187038-dev/topic/WG.20.2330.20Test.20Classloading.20chatter/\">Zulip 主题</a></li>\n"
+"</ul>\n"
+
+#. type: Hash Value: working-groups short-description
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "The goal of this working group is to rewrite Quarkus's test classloading, so that tests are run in the same classloader as the application under tests, and Quarkus extensions can do \"Quarkus-y\" manipulations of test classes.\n"
+msgstr "该工作组的目标是重写 Quarkus 的测试类加载机制，以便测试在与被测应用程序相同的类加载器中运行，并且 Quarkus 扩展能够对测试类进行“Quarkus 风格”的操作。\n"
+
+#. type: Hash Value: working-groups title
+#: _data/wg.yaml:1
+#, fuzzy, no-wrap
+msgid "Test classloading"
+msgstr "测试类加载"
 
 #. type: Hash Value: working-groups board-url
 #: _data/wg.yaml:1
@@ -3788,70 +3858,6 @@ msgstr "该工作组旨在跟踪围绕 Quarkus 3.33 LTS 版本开展的工作。
 #, fuzzy, no-wrap
 msgid "Quarkus 3.33 LTS"
 msgstr "Quarkus 3.33 LTS"
-
-#. type: Hash Value: working-groups board-url
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "https://github.com/orgs/quarkusio/projects/46"
-msgstr "https://github.com/orgs/quarkusio/projects/46"
-
-#. type: Hash Value: working-groups last-activity
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "2026-04-30"
-msgstr "2026年4月30日"
-
-#. type: Hash Value: working-groups last-update
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "Done! Lots of ODIC features have been shipped by this working group.\n"
-msgstr "完成！该工作组已交付了大量 ODIC 功能。\n"
-
-#. type: Hash Value: working-groups last-update-date
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "2026-03-23"
-msgstr "2026年3月23日"
-
-#. type: Hash Value: working-groups point-of-contact
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "@sberyozkin (@_<strong>Sergey Beryozkin</strong>  on Zulip)"
-msgstr "@sberyozkin（Zulip 上的<strong>@_Sergey Beryozkin</strong>）"
-
-#. type: Hash Value: working-groups proposal
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "https://github.com/quarkusio/quarkus/discussions/42116"
-msgstr "https://github.com/quarkusio/quarkus/discussions/42116"
-
-#. type: Hash Value: working-groups readme
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid ""
-"<p>The goal of this working group is to improve quarkus-oidc by: implementing crucial new security features, continuing with improving the way OIDC requests can be intercepted, prioritizing some other open issues, such as using JWT bearer client authentication to complete the authorization code flow</p>\n"
-"<ul>\n"
-"<li>Point of contact: @sberyozkin (@_<strong>Sergey Beryozkin</strong>  on Zulip)</li>\n"
-"<li>Proposal: https://github.com/quarkusio/quarkus/discussions/42116</li>\n"
-"</ul>\n"
-msgstr ""
-"<p>该工作组的目标是通过以下方式改进 quarkus-oidc：实现关键的新安全功能；继续改进拦截 OIDC 请求的方式；优先处理其他一些未解决的问题，例如使用 JWT 承载式客户端身份验证来完成授权码流程</p>\n"
-"<ul>\n"
-"<li>联系人：@sberyozkin（Zulip 上的<strong>@_Sergey Beryozkin</strong>）</li>\n"
-"<li>提案：https://github.com/quarkusio/quarkus/discussions/42116</li>\n"
-"</ul>\n"
-
-#. type: Hash Value: working-groups short-description
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "The goal of this working group is to improve quarkus-oidc by: implementing crucial new security features, continuing with improving the way OIDC requests can be intercepted, prioritizing some other open issues, such as using JWT bearer client authentication to complete the authorization code flow\n"
-msgstr "该工作组的目标是通过以下方式改进 quarkus-oidc：实现关键的新安全功能；继续改进拦截 OIDC 请求的方式；优先处理其他一些未解决的问题，例如使用 JWT 承载式客户端身份验证来完成授权码流程。\n"
-
-#. type: Hash Value: working-groups title
-#: _data/wg.yaml:1
-#, fuzzy, no-wrap
-msgid "OIDC improvements"
-msgstr "OIDC 的改进"
 
 #. type: Hash Value: working-groups board-url
 #: _data/wg.yaml:1
