@@ -6,251 +6,415 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: roq-plugin-l10n-adoc\n"
 
+#. mt: deepl
+#, fuzzy
 msgid "A deterministic backbone, with model judgment inside"
-msgstr ""
+msgstr "一个确定性框架，内部包含模型判断机制"
 
+#. mt: deepl
+#, fuzzy
 msgid "At the moment when I write this, the LangChain4j project has received 1,698 pull requests since the beginning of this year. Reviewing them all is a lot of work, and we wanted an agentic system to help. But a single pattern can't do it: routing, debating, voting and reflection all need to work together, within a cost budget, in a real Quarkus application. Here's how we built one that reviews a 2900-line pull request for $0.45."
-msgstr ""
+msgstr "在我撰写本文的此刻，LangChain4j 项目自今年年初以来已收到 1,698 个拉取请求。审查所有这些请求工作量巨大，因此我们希望借助一个基于代理的系统来提供帮助。 但仅靠单一模式无法实现这一目标：在真实的 Quarkus 应用程序中，路由、辩论、投票和反思必须在成本预算范围内协同工作。以下是我们如何构建这样一个系统，仅需 0.45 美元即可审核一份 2900 行的 pull request。"
 
+#. mt: deepl
+#, fuzzy
 msgid "In previous articles we discussed why no single agentic pattern can cover all use cases, introducing a https://quarkus.io/blog/agentic-ai-patterns/[generic `Planner` abstraction] to define custom orchestration strategies, and we showed how the https://quarkus.io/blog/introducing-voting-pattern/[voting pattern and dynamic chat model selection] make an agentic system more reliable and more cost-efficient. Each of those articles focused on one pattern, applied to a deliberately small example. This time we want to see what happens when many of these patterns have to work together in a real application, with real costs, real failures, and a human who wants to have the last word."
-msgstr ""
+msgstr "在之前的文章中，我们探讨了为何没有任何一种代理模式能够涵盖所有用例，并引入 link:https://quarkus.io/blog/agentic-ai-patterns/[了一个通用的“规划器”（Planner）抽象概念] 来定义自定义的协调策略；此外，我们还展示了 link:https://quarkus.io/blog/introducing-voting-pattern/[“投票模式”和“动态聊天模型选择”] 如何使代理系统更加可靠且更具成本效益。 每篇文章都聚焦于一种模式，并将其应用于一个刻意设计得比较简单的示例。这次，我们想看看当许多这样的模式必须在真实的应用程序中协同工作时会发生什么——这个应用程序涉及真实的成本、真实的故障，以及一位希望拥有最终决定权的人类。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Given a pull request, the reviewer produces a report saying what is good, what is wrong and what could be improved, with every problem anchored to a file and a line of the diff. It also gives a score from 0 to 10 for usefulness, correctness, conciseness, security, test coverage, maintainability, API and documentation, and PR hygiene, plus an overall score with its confidence, and a verdict: `APPROVE`, `COMMENT` or `REQUEST_CHANGES`."
-msgstr ""
+msgstr "针对某个拉取请求，审阅者会生成一份报告，指出哪些地方做得好、哪些地方有问题以及哪些地方可以改进，每个问题都会明确指向diff中的具体文件和行号。 报告还会针对实用性、正确性、简洁性、安全性、测试覆盖率、可维护性、API 和文档以及拉取请求规范性，分别给出 0 到 10 分的评分，并给出包含置信度的综合评分，以及最终裁决： `批准 (APPROVE)` 、 `评论 (COMMENT)` `或请求修改 (REQUEST_CHANGES)` 。"
 
+#. mt: deepl
+#, fuzzy
 msgid "It only reads GitHub, with a read-only token, and never writes to it: its output is a Markdown report, the same report in JSON, and an HTML trace of the execution of its agents."
-msgstr ""
+msgstr "它仅使用只读令牌读取 GitHub，绝不会向其写入数据：其输出包括一份 Markdown 报告、同一份报告的 JSON 版本，以及其代理执行过程的 HTML 跟踪记录。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The reviewer is a Quarkus application built with the Quarkus LangChain4j extensions, version 1.15 on LangChain4j 1.21: `quarkus-langchain4j-agentic` for the agents, the Anthropic and OpenAI extensions for the chat models, `quarkus-langchain4j-typesafe` for the decision model (where https://typesafe.ai[TypeSafe] is the company behind the Jev decision models), and `quarkus-github-api` to read GitHub."
-msgstr ""
+msgstr "该评审器是一个基于 Quarkus LangChain4j 扩展构建的 Quarkus 应用程序，版本为 1.15（基于 LangChain4j 1.21）： 用于代理的 `quarkus-langchain4j-agentic` 、用于聊天模型的 Anthropic 和 OpenAI 扩展、用于决策模型的 `quarkus-langchain4j-typesafe` （其中 link:https://typesafe.ai[TypeSafe] 是 Jev 决策模型背后的公司），以及用于读取 GitHub 的 `quarkus-github-api` 。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The agents are plain Java interfaces written with the declarative agentic API: the extension finds them at build time, validates how they are wired together and registers each of them as a CDI bean. The reviewer can be used both from the command line and from a local web interface. Let's see how it works."
-msgstr ""
+msgstr "这些代理是使用声明式代理 API 编写的普通 Java 接口：该扩展程序会在构建时自动发现它们，验证它们之间的连接方式，并将每个代理注册为 CDI Bean。该审查工具既可以通过命令行使用，也可以通过本地 Web 界面使用。让我们来看看它是如何工作的。"
 
+#. mt: deepl
+#, fuzzy
 msgid "When designing an agentic system, it is tempting to hand everything to a supervisor and let an LLM decide what to do next. For a reviewer this would be a poor choice: we want every review to fetch the same data, to run the checks that matter and to produce a report with the same structure, and we want to be able to test all of this. For this reason, the root of the reviewer is a plain sequence, and model judgment lives inside its steps, where it is actually needed."
-msgstr ""
+msgstr "在设计一个基于代理的系统时，人们往往会忍不住将一切交给监督器，让大型语言模型（LLM）来决定下一步该做什么。对于审稿人而言，这将是一个糟糕的选择：我们希望每次审稿都能获取相同的数据、执行关键的检查，并生成结构一致的报告，同时我们还希望能够对所有这些环节进行测试。 因此，评审器的根节点是一个普通的序列，而模型的判断则位于其各个步骤之中——这正是它真正被需要的地方。"
 
+#. mt: deepl
+#, fuzzy
 msgid "There is nothing to implement behind this interface. Quarkus LangChain4j detects it at build time, checks that every parameter an agent reads is the output key of another agent or an input of the root, and registers the whole system as a CDI bean, so that running a review is one injection away:"
-msgstr ""
+msgstr "该接口背后无需实现任何内容。Quarkus LangChain4j 会在构建时检测到该接口，检查代理读取的每个参数是否为另一个代理的输出键或根代理的输入，并将整个系统注册为 CDI Bean，因此只需一次注入即可运行审查："
 
+#. mt: deepl
+#, fuzzy
 msgid "A parameter named after a key that no agent produces fails the build, with the message `No agent provides an output key named '...'`, instead of failing a review."
-msgstr ""
+msgstr "如果某个参数的名称与某个代理均未生成的键相同，则会导致构建失败，并显示错误信息 `“没有代理提供名为'…​'的输出键` ”，而不是导致代码审查失败。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Many of these subagents don't use an LLM at all. Fetching the pull request, parsing and classifying its diff, validating the findings and rendering the report are better done by plain code, which in the declarative API is simply a static method annotated with `@Agent`. For instance, this non-AI agent renders the description of the pull request that all the reviewers read:"
-msgstr ""
+msgstr "其中许多子代理根本不使用大型语言模型（LLM）。 获取拉取请求、解析并分类其差异、验证结果以及生成报告，这些任务最好由纯代码来完成，而在声明式 API 中，这仅仅是一个标注了 `@Agent` 注解的静态方法。例如，这个非 AI 代理会生成所有审阅者都会阅读的拉取请求描述："
 
+#. mt: deepl
+#, fuzzy
 msgid "Two ways to read GitHub: structured fetch vs. tool-calling agents"
-msgstr ""
+msgstr "阅读 GitHub 的两种方式：结构化获取与调用工具的代理"
 
+#. mt: deepl
+#, fuzzy
 msgid "The reviewer reads GitHub through the https://github.com/hub4j/github-api[hub4j] client that the https://github.com/quarkiverse/quarkus-github-api[`quarkus-github-api`] extension brings, with a read-only token, in two different ways. The first agent of the sequence reads the pull request with its diff, commits, CI checks, previous reviews and linked issue through a small `GitHubReads` interface: there is no point in asking an LLM what to fetch, when the answer is always the same."
-msgstr ""
+msgstr "审阅者通过 link:https://github.com/quarkiverse/quarkus-github-api[quarkus-github-api] 扩展提供的 link:https://github.com/hub4j/github-api[hub4j] 客户端，使用只读令牌，以两种不同的方式阅读 GitHub。 该序列中的第一个代理通过一个简短的 `GitHubReads` 接口读取拉取请求及其差异、提交、CI 检查、之前的评审以及关联的问题：既然答案总是相同的，就没有必要询问 LLM 该获取哪些内容。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Conversely, the agents that need to explore the repository, like the context gatherer collecting the code around the change, get five read-only tools: the `@Tool` methods of a CDI bean, reading files, searching code, reading commits and issues, that the agent declares with `@ToolBox`:"
-msgstr ""
+msgstr "相反，需要探索代码库的代理（例如收集变更相关代码的上下文收集器）会获得五个只读工具：CDI Bean 的 `@Tool` 方法、读取文件、搜索代码、读取提交记录和问题，这些工具由代理通过 `@ToolBox` 声明："
 
+#. mt: deepl
+#, fuzzy
 msgid "Quarkus LangChain4j generates the executors of these tools at build time, and lets a wrapper bean see every tool call together with the invocation context of the agent call. The reviewer uses one to enforce a budget on the number of tool calls per invocation, so that a curious agent cannot spend the whole review budget browsing the repository. Read-only access is a matter of construction: the interface has no write method, and the bean exposes exactly these five read tools."
-msgstr ""
+msgstr "Quarkus LangChain4j 会在构建时生成这些工具的执行器，并允许一个包装 Bean 同时查看每个工具调用及其对应的代理调用上下文。审核器利用其中一个执行器，对每次调用中的工具调用次数设置上限，从而防止好奇的代理耗尽整个审核预算来浏览代码库。 只读访问是通过设计实现的：该接口没有写入方法，且该 Bean 仅暴露这五个读取工具。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Moreover, this agent runs only when the triage agent says that the diff alone is not enough to understand the change: it is the subagent of a `@ConditionalAgent` whose activation condition reads the `PrSummary` produced by the triage."
-msgstr ""
+msgstr "此外，该代理仅在分诊代理判定仅凭差异信息不足以理解该变更时才会运行：它是 `@ConditionalAgent` 的子代理，其激活条件会读取由分诊代理生成的 `PrSummary` 。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Choosing the reviewers with a decision model"
-msgstr ""
+msgstr "使用决策模型选择审稿人"
 
+#. mt: deepl
+#, fuzzy
 msgid "The heart of the review is a panel of five specialized reviewers: correctness, security, design, tests, and documentation and API. Running all of them on every pull request would be a waste: a fix in a README doesn't need a security review, and a dependency bump doesn't need a design review. We could ask an LLM which reviewers to run, but every routing decision would cost a full LLM call whose textual answer has to be parsed, and it would say nothing about how sure the LLM was about its choice."
-msgstr ""
+msgstr "代码审查的核心是由五位专业评审员组成的评审小组：正确性、安全性、设计、测试以及文档与 API。如果对每个拉取请求都进行全部这些评审，那将是一种浪费：README 中的修改不需要安全审查，依赖项的版本升级也不需要设计审查。 我们可以询问一个大型语言模型（LLM）该启动哪些评审员，但每次路由决策都会消耗一次完整的 LLM 调用——其文本回答还需进行解析——而且这并不能说明 LLM 对自己的选择有多大把握。"
 
+#. mt: deepl
+#, fuzzy
 msgid "This is a job for a https://docs.langchain4j.dev/tutorials/decision-models[decision model]: a model that doesn't generate text, but answers typed questions about an input, returning the probability of each possible answer. The https://docs.langchain4j.dev/tutorials/agents/#decision-router-agentic-pattern[decision router pattern] uses one to choose among its subagents: given an activation threshold, it asks in a single call whether each subagent should handle the request, and then runs in parallel all those whose probability of \"yes\" reaches the threshold."
-msgstr ""
+msgstr "这正是 link:https://docs.langchain4j.dev/tutorials/decision-models[决策模型] 的用武之地：这种模型不会生成文本，而是针对输入内容回答输入的提问，并返回每个可能答案的概率。 link:https://docs.langchain4j.dev/tutorials/agents/#decision-router-agentic-pattern[决策路由器模式] 利用该模型在子代理之间进行选择：给定一个激活阈值后，它通过单次调用询问每个子代理是否应处理该请求，然后并行运行所有“是”的概率达到阈值的子代理。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The decision model reads the arguments of the router agent and the descriptions of its subagents. Here the argument is a compact routing input made of a few flags computed by a non-AI agent: whether the change touches production code, tests, security-sensitive code, the public API or the build files, and whether it is documentation only. For this reason, the description of each reviewer states the flags it needs:"
-msgstr ""
+msgstr "决策模型会读取路由代理的参数及其子代理的描述。 此处的参数是由一个非人工智能代理计算得出的、由几个标志组成的紧凑型路由输入：该变更是否涉及生产代码、测试、安全敏感代码、公共 API 或构建文件，以及是否仅涉及文档。因此，每个审阅者的描述中都会注明其所需的标志："
 
+#. mt: deepl
+#, fuzzy
 msgid "This made a big difference. We measured 25 routing decisions on five synthetic changes: with topic-style descriptions, a small decision model with 0.8 billion parameters running locally got 13 of them right; with the flags it got 22 at its best threshold, and a hosted decision model got all 25."
-msgstr ""
+msgstr "这带来了显著的差异。我们针对五项合成变更，对25项路由决策进行了测试：在使用主题式描述的情况下，一个在本地运行的、拥有8亿个参数的小型决策模型正确判断了其中13项；在使用标志的情况下，该模型在最佳阈值下正确判断了22项，而托管式决策模型则正确判断了全部25项。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Decision models are configured in `application.properties` like any other model, here with the `quarkus-langchain4j-typesafe` extension, both for the small model served locally and for the hosted one, and, like the chat models, they become beans qualified by their name, which is how the planner supplier above picks the local or the hosted one at each review:"
-msgstr ""
+msgstr "决策模型与其他模型一样，在 `application.properties` 中进行配置， 此处使用了 `quarkus-langchain4j-typesafe` 扩展，无论是在本地提供的小型模型还是托管模型中均是如此；与聊天模型一样，它们会成为通过名称标识的 Bean，这就是上述规划器提供程序在每次审查时选择本地模型或托管模型的方式："
 
+#. mt: deepl
+#, fuzzy
 msgid "A small local model is free and fast, but it can be wrong, and some reviews are too important to be skipped. For this reason, a deterministic safety net follows the router: a `@ConditionalAgent` runs a fallback correctness review on production code, a security review on security-sensitive code, and a documentation review on documentation-only changes, whenever the router skipped them."
-msgstr ""
+msgstr "小型本地模型虽然免费且快速，但可能存在错误，而且有些审查工作至关重要，绝不能省略。 因此，在路由器之后设置了一个确定性的安全网：每当路由器跳过这些步骤时，一个 `@ConditionalAgent` 就会对生产代码执行备用正确性审查，对涉及安全敏感的代码执行安全审查，并对仅涉及文档的更改执行文档审查。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Finally, very large pull requests don't fit in the token budget of the reviewers. The files left out of the main diff are split into chunks, and a `@ParallelMapperAgent` reviews all of them in parallel, one chunk reviewer per chunk."
-msgstr ""
+msgstr "最后，体积过大的拉取请求会超出审阅者的令牌配额。主差异文件中未包含的文件会被拆分成多个块，然后由 `@ParallelMapperAgent` 并行审阅所有这些块，每个块由一名审阅者负责。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The reviewer panel: the decision router, the coverage floor and the chunked review of very large pull requests"
-msgstr ""
+msgstr "评审小组：决策路由器、覆盖率下限以及对超大拉取请求的分块评审"
 
+#. mt: deepl
+#, fuzzy
 msgid "Putting findings on trial: the debate pattern"
-msgstr ""
+msgstr "将研究结果付诸检验：辩论模式"
 
+#. mt: deepl
+#, fuzzy
 msgid "The reviewers return raw findings, each one with a category, a severity, a confidence, a file and a line. LLMs sometimes see problems that aren't there, so before reaching the report, the findings are validated by a non-AI agent: a finding must point at a file of the diff, at a line near a changed hunk, otherwise it is discarded. This removes hallucinated locations, and also anything smuggled into the prompts through the text of the pull request. Then duplicates reported by different reviewers are merged, and each finding gets an id, from F1 to Fn."
-msgstr ""
+msgstr "审核员返回原始检测结果，每条结果都包含类别、严重程度、可信度、文件和行号。 大型语言模型（LLMs）有时会识别出实际上并不存在的问题，因此在生成报告之前，这些发现会由非人工智能人员进行验证：一个发现必须指向差异比较中的某个文件，且位于已更改代码块附近的某一行，否则将被剔除。 这既能消除虚构的位置，也能剔除通过拉取请求正文“混入”提示词中的内容。随后，由不同审核员报告的重复问题会被合并，每个发现都会获得一个 ID，编号从 F1 到 Fn。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Some findings deserve a second look before being accepted: a high-severity finding reported with low confidence, or contradicted by another reviewer rating the same place as minor, is too important to be either trusted or ignored. These findings are put on trial with the https://docs.langchain4j.dev/tutorials/agents/#debate-agentic-pattern[debate pattern]: a prosecutor argues that the problem is real, a defender argues that it is not, both reading the changes of the file in question with read-only tools, and a judge decides."
-msgstr ""
+msgstr "有些发现值得在接受前重新审视：如果一个严重程度较高的发现所报告的可信度较低，或者与另一位评审员将同一处问题评定为“轻微”的结论相矛盾，那么该发现的重要性既不容轻信，也不容忽视。 这些发现将通过 link:https://docs.langchain4j.dev/tutorials/agents/#debate-agentic-pattern[辩论模式] 接受检验：检方主张问题确实存在，辩方则主张问题并不存在，双方均使用只读工具查阅相关文件的修改记录，最终由法官作出裁决。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The prosecutor and the defender argue in parallel for up to two rounds, each one reading the arguments of the other in the transcript of the debate, and the debate stops early when both end with the same word. Then the judge, always last, confirms the finding, rejects it, or lowers its severity. A finding that the debate could not settle stays in the report, but it no longer drives the verdict."
-msgstr ""
+msgstr "控方和辩方将进行最多两轮并行辩论，每轮双方都会在辩论记录中宣读对方的论点；当双方以同一个词结束陈述时，辩论即提前结束。随后，法官（始终最后发言）将确认该裁决、驳回该裁决，或减轻其处罚力度。 辩论未能解决的裁定结果仍保留在报告中，但不再作为判决依据。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The contested findings are debated one at a time, inside a `@LoopAgent` that takes the next one at each iteration, and stops when there are no more contested findings or when the cost cap is reached."
-msgstr ""
+msgstr "有争议的发现将逐一进行讨论，这一过程在 `@LoopAgent` 中进行，该循环在每次迭代时处理下一个有争议的发现，并在不再有争议的发现或达到成本上限时停止。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Findings: the validation of the findings and the debates of the contested ones"
-msgstr ""
+msgstr "研究结果：对研究结果的验证以及对有争议结果的讨论"
 
+#. mt: deepl
+#, fuzzy
 msgid "Scoring: voting only when it matters"
-msgstr ""
+msgstr "评分：仅在关键时刻投票"
 
+#. mt: deepl
+#, fuzzy
 msgid "A scorer agent reads the surviving findings and proposes a score card, with a score and a rationale for each metric, a verdict and its reasoning."
-msgstr ""
+msgstr "评分员会审阅保留的调查结果，并提出一份评分表，其中包含每项指标的评分及理由、最终结论及其依据。"
 
+#. mt: deepl
+#, fuzzy
 msgid "A single scorer is usually enough, but when its card is borderline, we would rather have more opinions: this is exactly the use case of the voting pattern discussed in the https://quarkus.io/blog/introducing-voting-pattern/[previous article]. Here three scorers with different perspectives, neutral, skeptical and lenient, vote in parallel, and their score cards are aggregated by averaging the scores and taking the majority verdict:"
-msgstr ""
+msgstr "通常一个评分者就足够了，但当其评分卡处于临界点时，我们更希望听取更多意见：这正是 link:https://quarkus.io/blog/introducing-voting-pattern/[上一篇文章] 中讨论的投票模式的适用场景。在此，三位具有不同视角的评分者——中立、持怀疑态度和宽容——并行进行评分，他们的评分卡通过计算平均分并采纳多数意见的方式进行汇总："
 
+#. mt: deepl
+#, fuzzy
 msgid "However, voting on every review would multiply the cost of scoring for no benefit when the first card is clear-cut. For this reason, the voting runs only when the draft is borderline: an overall score within half a point of the approval threshold, a verdict that the findings would make one step stricter on the strength of a finding of middling confidence, or a request for changes without any high-severity finding. A `@ConditionalAgent` makes this decision, also checking how much the review has cost so far:"
-msgstr ""
+msgstr "然而，当第一张卡片的情况一目了然时，对每份评审都进行投票会使评分成本成倍增加，却毫无益处。 因此，只有当草案处于临界状态时才会进行投票：即总体评分与通过门槛相差半分以内；基于中等可信度的发现，裁决结果将使标准收紧一个等级；或者在没有高严重性发现的情况下要求修改。 由一个 `@ConditionalAgent` 做出这一决定，同时还会检查该评审到目前为止的成本："
 
+#. mt: deepl
+#, fuzzy
 msgid "The models propose, but a non-AI calibrator has the last word, and it can only make the outcome stricter. It caps the scores that the findings contradict, for instance a credible critical security finding caps the security score at 2.0, and it raises the verdict to the minimum that the findings require, so that a medium correctness finding means at least `COMMENT`."
-msgstr ""
+msgstr "模型会提出建议，但最终决定权在于非AI校准器，而它只会使结果更加严格。 它会对与发现结果相矛盾的评分设置上限——例如，一个可信的严重安全发现会将安全评分上限设为2.0；同时，它会将判定结果提升至该发现所要求的最低级别，因此，一个中等正确性发现至少意味着 `“COMMENT”级别` 。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Writing the report: a reflection loop"
-msgstr ""
+msgstr "撰写报告：一个反思循环"
 
+#. mt: deepl
+#, fuzzy
 msgid "The report writer produces only the prose: the summary, what is good and what could be improved. The findings, the scores and the verdict are rendered from the data by a non-AI assembler, so that the writer can neither invent a finding nor lose one."
-msgstr ""
+msgstr "报告撰写者仅负责撰写正文：包括摘要、优点以及需要改进之处。调查结果、评分和结论均由非人工智能的汇总系统根据数据生成，因此撰写者既无法捏造调查结果，也不会遗漏任何结果。"
 
+#. mt: deepl
+#, fuzzy
 msgid "A critic then rates the rendered report, and the writer rewrites it until the critic is satisfied, in a classic reflection loop:"
-msgstr ""
+msgstr "随后，一位评论家会对生成的报告进行评分，撰稿人则会不断修改报告，直到评论家满意为止，这形成了一个典型的反思循环："
 
+#. mt: deepl
+#, fuzzy
 msgid "The bar is lowered after the first round, so that the loop converges, and a report that has been criticized is rewritten by a more capable model, as we will see in a moment."
-msgstr ""
+msgstr "第一轮之后，阈值会被调低，以便循环收敛；而一份曾受到批评的报告，则会由一个更强大的模型重新撰写——这一点我们稍后将看到。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Keeping the human in the loop"
-msgstr ""
+msgstr "让人始终参与其中"
 
+#. mt: deepl
+#, fuzzy
 msgid "By default the review runs unattended, but in interactive mode the human reviewer takes part in it at two points. Before the review, they can answer up to three clarification questions generated from the pull request, plus an open question about the areas to focus on, and their answers reach every reviewer. After the report is written, they can approve it, edit it with some notes, reject it, drop some findings, or contest them:"
-msgstr ""
+msgstr "默认情况下，代码审查以无人值守模式进行，但在交互模式下，人工审查员会在两个环节参与其中。在审查开始前，他们可以回答最多三个由拉取请求生成的澄清问题，以及一个关于审查重点领域的开放性问题，他们的回答将发送给每位审查员。 报告撰写完成后，评审员可以批准报告、添加注释进行编辑、驳回报告、剔除某些发现，或对发现提出异议："
 
+#. mt: deepl
+#, fuzzy
 msgid "Contesting a finding sends it to a debate, together with the notes of the human, and then scoring and writing run again. All these steps belong to a `@LoopAgent`, whose exit condition simply checks the decision of the human, with at most two contest rounds:"
-msgstr ""
+msgstr "对某项判定结果提出异议后，该判定结果将连同人类的注释一并进入辩论环节，随后评分和撰写过程将重新运行。所有这些步骤都属于一个 `@LoopAgent` ，其退出条件仅需检查人类的决定，且最多进行两轮辩论："
 
+#. mt: deepl
+#, fuzzy
 msgid "The human-in-the-loop agent doesn't know whether the human is sitting in front of a terminal or of a browser: it talks to a `ReviewerConsole`, with one implementation reading the answers from the standard input and another one for the web interface. The latter publishes the question to the page of the review, and then blocks the review until the browser posts the answer:"
-msgstr ""
+msgstr "“人机协同”代理无法得知用户是坐在终端机前还是浏览器前：它与 `ReviewerConsole` 进行通信，其中一种实现方式是从标准输入中读取答案，另一种则是通过网页界面获取答案。 后者将问题发布到审阅页面上，然后阻塞审阅流程，直到浏览器提交答案为止："
 
+#. mt: deepl
+#, fuzzy
 msgid "The right model for each agent, within a budget"
-msgstr ""
+msgstr "在预算范围内，为每个代理选择合适的模型"
 
+#. mt: deepl
+#, fuzzy
 msgid "Not every agent needs the most capable model. The reviewer uses three tiers: a small model for the triage, the checklists and the critic, a medium model for judging code, scoring and writing, and a large model only when there is evidence that it is needed: a high-risk or large change, security-sensitive code, a critical contested finding, a report that the critic didn't like, or an explicit request for a deep review."
-msgstr ""
+msgstr "并非每个代理都需要功能最强大的模型。评审员采用三级分类：小型模型用于初步筛选、检查清单和批评环节；中型模型用于代码评审、评分和写作；大型模型仅在有证据表明确实需要时才使用： 高风险或重大变更、涉及安全敏感的代码、存在争议的关键发现、评审员不认可的报告，或是明确要求进行深度评审的情况。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The tiers are named models, a feature of Quarkus LangChain4j: each `quarkus.langchain4j.<name>` block in `application.properties` becomes a `ChatModel` bean qualified with `@ModelName`, here one per provider and tier, Anthropic and OpenAI:"
-msgstr ""
+msgstr "这些层级被命名为“模型”，这是 Quarkus LangChain4j 的一项特性： `application.properties` 文件中的每个 `quarkus.langchain4j.<name>` 块都会成为一个带有 `@ModelName` 注解的 `ChatModel` Bean，这里每个提供商和层级各有一个，即 Anthropic 和 OpenAI："
 
+#. mt: deepl
+#, fuzzy
 msgid "Each agent then selects its model at every invocation, through the https://docs.langchain4j.dev/tutorials/agents/#dynamic-chat-model-selection[dynamic chat model selection] also discussed in the previous article. The `@ChatModelSupplier` method receives both a CDI bean, marked `@CdiBean`, a catalog that is nothing more than an `Instance<ChatModel>` selecting the model beans by name, and the `AgenticScope`, which tells whether the evidence for an escalation is there:"
-msgstr ""
+msgstr "随后，每个代理在每次调用时都会通过上一篇文章中也提到的 link:https://docs.langchain4j.dev/tutorials/agents/#dynamic-chat-model-selection[动态聊天模型选择] 机制来选择其模型。 `@ChatModelSupplier` 方法接收三个参数：一个标记为 `@CdiBean 的` CDI Bean、一个仅由 `Instance<ChatModel>` 组成的目录（该目录通过名称选择模型 Bean），以及 `AgenticScope` ——它用于判断是否存在升级的依据："
 
+#. mt: deepl
+#, fuzzy
 msgid "A `ChatModelListener` bean, which the extension attaches to every configured model, prices every call as it happens, including each round trip of the tool-using agents, and a soft cost cap, 2 USD by default, governs all the optional work: once it is reached, voting, debates and escalations are skipped. The review always completes, and its report lists what was skipped."
-msgstr ""
+msgstr "一个 `名为 ChatModelListener 的` Bean（该扩展将其附加到每个已配置的模型上）会在每次调用发生时对其进行计费，包括使用该工具的代理的每次往返通信；同时，一个默认值为 2 美元的软成本上限会管控所有可选操作：一旦达到该上限，投票、辩论和升级流程将被跳过。 审查始终会完成，其报告中会列出被跳过的内容。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Why transient failures don&#8217;t kill the review"
-msgstr ""
+msgstr "为什么暂时的失误不会导致评审失败"
 
+#. mt: deepl
+#, fuzzy
 msgid "Model calls fail: rate limits, timeouts, malformed answers, an exhausted account. Since the `AgenticScope` is shared by the whole tree of agents, a single `@ErrorHandler` on the root, a static method whose signature the extension checks at build time like every supplier and condition, sees the failures of all of them:"
-msgstr ""
+msgstr "调用模型失败：速率限制、超时、响应格式错误、账户额度用尽。由于整个代理树共享同一个 `AgenticScope，` 因此根节点上的单个 `@ErrorHandler` （这是一个静态方法，其签名会像所有供应商和条件一样在构建时由扩展程序进行检查）能够捕获所有代理的失败情况："
 
+#. mt: deepl
+#, fuzzy
 msgid "It retries a transient failure once. When a reviewer, a voter, a debater or the router keeps failing, it replaces its output with a neutral fallback, like a reviewer with no findings, and the report discloses it among its limitations."
-msgstr ""
+msgstr "系统会对临时性故障重试一次。当评审员、投票者、辩论者或路由器持续出现故障时，系统会将其输出替换为中立的备用结果（例如，评审员未发现任何问题），并在报告的“局限性”部分予以说明。"
 
+#. mt: deepl
+#, fuzzy
 msgid "On the other hand, it stops the run at once on an account problem, like an invalid key or no credit left, where degrading every agent one after another would be pointless, and when the failing agent is one without which there can be no review, like the fetcher or the scorer."
-msgstr ""
+msgstr "另一方面，当出现账户问题（例如密钥无效或余额不足）时，它会立即终止运行——因为此时逐个降级各个代理毫无意义；而且当出现故障的代理是无法缺少的（例如数据提取器或评分器）时，系统也无法进行评审。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Two front ends on the same core"
-msgstr ""
+msgstr "同一内核上的两个前端"
 
+#. mt: deepl
+#, fuzzy
 msgid "The command line and the web interface run reviews through the same `ReviewService` bean, into which Quarkus injects the agentic system, as shown above. The picocli commands and the REST resources are CDI beans as well, so each front end is a thin layer that injects the service."
-msgstr ""
+msgstr "命令行和Web界面都是通过 `同一个ReviewService` Bean来运行代码审查的，Quarkus会向该Bean注入代理系统，如上所述。picocli命令和REST资源同样是CDI Bean，因此每个前端都只是一个注入该服务的薄层。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The command line is built with the `quarkus-picocli` extension, and has subcommands to review a pull request, to start the web interface, and to evaluate the reviewer against a set of past pull requests labeled from their outcome:"
-msgstr ""
+msgstr "该命令行是使用 `quarkus-picocli` 扩展构建的，包含用于审查拉取请求、启动 Web 界面以及根据一组按结果标注的过往拉取请求对审阅者进行评估的子命令："
 
+#. mt: deepl
+#, fuzzy
 msgid "The application is packaged as an uber-jar and installed as a JBang alias, so that `pr-reviewer` is just another command on the `PATH`."
-msgstr ""
+msgstr "该应用程序被打包为一个 uber-jar 文件，并作为 JBang 别名进行安装，因此 `pr-reviewer` 只是 `PATH` 环境变量中的另一个命令。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The `serve` subcommand starts a local web interface built with Qute templates and htmx, with no JavaScript build at all: a form with the same options of the command line, the past reports, and a page following each review live."
-msgstr ""
+msgstr "`“serve”` 子命令会启动一个基于 Qute 模板和 htmx 构建的本地 Web 界面，完全不包含任何 JavaScript 代码：该界面包含一个与命令行选项相同的表单、历史报告，以及在每次审核完成后生成的页面。"
 
+#. mt: deepl
+#, fuzzy
 msgid "An `AgentListener` bean, which the extension attaches to every agent, publishes the start and the end of each agent, with its model, its duration and the running cost of the review, and the page receives them as server-sent events. In interactive mode, the same page shows the clarification questions first, and then the report with a checkbox to contest and one to drop each finding."
-msgstr ""
+msgstr "`AgentListener` bean（该扩展将其附加到每个代理上）会发布每个代理的开始和结束信息，包括其模型、持续时间以及审查的运行成本，而页面则将这些信息作为服务器发送的事件接收。 在交互模式下，同一页面会先显示澄清问题，随后显示报告，报告中针对每项发现分别提供一个用于提出异议的复选框和一个用于放弃的复选框。"
 
+#. mt: deepl
+#, fuzzy
 msgid "What happens when you review a 2900-line PR for $0.45"
-msgstr ""
+msgstr "当你以0.45美元的价格审阅一份2900行的PR时，会发生什么？"
 
+#. mt: deepl
+#, fuzzy
 msgid "Let's try the reviewer on a real pull request, https://github.com/langchain4j/langchain4j/pull/6731[langchain4j#6731], one of ours, which allows any agent or agentic pattern to declare its own activation condition, so that a single agent no longer needs to be wrapped in a `@ConditionalAgent`, as the context gatherer above is. An extract of the report produced by the reviewer for this pull request follows."
-msgstr ""
+msgstr "让我们在真实的拉取请求上试用一下该评审工具，即我们团队的 link:https://github.com/langchain4j/langchain4j/pull/6731[langchain4j#6731] 。该拉取请求允许任何代理或代理模式声明其自身的激活条件，从而使单个代理不再需要像上文中的上下文收集器那样被封装在 `@ConditionalAgent` 中。 以下是审阅器针对此拉取请求生成的报告节选。"
 
+#. mt: deepl
+#, fuzzy
 msgid "A review rendered by the web interface"
-msgstr ""
+msgstr "通过网页界面提交的一条评论"
 
+#. mt: deepl
+#, fuzzy
 msgid "The same report also scores the pull request, with a score from 0 to 10 for each metric, and an overall score with its confidence, and a verdict: `APPROVE`, `COMMENT` or `REQUEST_CHANGES`. The scores are produced by the scorers, and the verdict is the result of the calibrator."
-msgstr ""
+msgstr "该报告还会对拉取请求进行评分，每项指标的评分范围为0到10，并给出包含置信度的总分以及最终裁决： `APPROVE` （ `批准` ）、 `COMMENT` （ `评论` ） `或REQUEST_CHANGES` （请求修改）。评分由评分器生成，而最终裁决则由校准器得出。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The scores produced by the reviewers"
-msgstr ""
+msgstr "评审员给出的评分"
 
+#. mt: deepl
+#, fuzzy
 msgid "It is a large change, about 2900 added and 300 deleted lines across 56 files, and we reviewed it using the OpenAI models and the small local decision model for the routing."
-msgstr ""
+msgstr "这是一次重大变更，涉及56个文件，共新增约2900行、删除约300行代码，我们使用OpenAI模型以及用于路由的小型本地决策模型对其进行了审查。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Making `PrReviewSystem` extend `MonitoredAgent` allows us to save the trace of every review in an HTML page, which shows the topology of the system and the history of its executions:"
-msgstr ""
+msgstr "让 `PrReviewSystem` 继承 `MonitoredAgent，` 使我们能够将每次审查的轨迹保存到一个 HTML 页面中，该页面展示了系统的拓扑结构及其执行历史："
 
+#. mt: deepl
+#, fuzzy
 msgid "The execution of the review of langchain4j#6731"
-msgstr ""
+msgstr "langchain4j#6731 审查的执行情况"
 
+#. mt: deepl
+#, fuzzy
 msgid "The review: routing, findings and a debate"
-msgstr ""
+msgstr "该评估报告：研究方法、研究结果及讨论"
 
+#. mt: deepl
+#, fuzzy
 msgid "This execution shows almost all the patterns we discussed at work. The triage classified the change as a large, high-risk feature that could be understood from the diff alone, so the context gatherer was skipped."
-msgstr ""
+msgstr "此次实施几乎涵盖了我们在工作中讨论过的所有模式。在分类评估中，该变更被归类为一项大型、高风险的功能，仅凭代码差异（diff）即可理解，因此跳过了上下文收集步骤。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The decision router selected all five reviewers, which ran in parallel, leaving nothing for the coverage floor to add; the correctness reviewer, escalated to the large model by the risk and the size of the change, took 3 minutes and 48 seconds, two thirds of the whole review, to report no finding at all."
-msgstr ""
+msgstr "决策路由器选定了全部五位评审员，他们并行开展评审工作，导致覆盖率门槛无需再补充任何内容；而正确性评审员——因其评审对象涉及的风险及变更规模较大，被升级至大型模型进行评审——耗时3分48秒（占整个评审时间的三分之二），最终报告称未发现任何问题。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Seven files didn't fit in the token budget of the reviewers, five test classes, the documentation and the Revapi configuration, so the large diff gate handed them, as a single chunk, to a chunk reviewer."
-msgstr ""
+msgstr "有七个文件超出了审阅者的代币配额，包括五个测试类、文档和 Revapi 配置文件，因此大型差异门将它们作为一个整体转交给了块审阅者。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The reviewers returned seven findings, all pointing at a valid location of the diff. One of them was contested: the documentation and API reviewer, running on the small model, reported as high severity, but with a confidence of 0.65, that adding a `skipped` component to the `AgentInvocation` record breaks binary compatibility. The prosecutor and the defender argued for the full two rounds, the defender reading the record and searching its usages in the repository, and the judge rejected the finding: the five-argument constructor is kept as an explicit overload, with the same JVM descriptor as the former canonical constructor, so the existing compiled callers still link."
-msgstr ""
+msgstr "评审人员反馈了七项发现，均指向了差异的有效位置。其中一项存在争议：在小型模型上运行的文档和 API 评审工具报告称，向 `AgentInvocation` 记录中添加一个 `被跳过的` 组件会破坏二进制兼容性，该问题被标记为高严重性，但置信度仅为 0.65。 控方和辩方进行了整整两轮辩论，辩方阅读了该记录并检索了其在代码库中的使用情况，最终法官驳回了该发现：该五参数构造函数被保留为显式重载，且与之前的规范构造函数具有相同的 JVM 描述符，因此现有的已编译调用方仍能成功链接。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Meanwhile, a real compatibility problem survived among the medium-severity findings, and it came from the chunk reviewer: the Revapi configuration suppresses the warning about the abstract `activationCondition` methods added to the public `AgenticService` and `SupervisorAgentService` interfaces, which breaks the source compatibility of anybody implementing them, while the description of the pull request claims that there is no breaking change."
-msgstr ""
+msgstr "与此同时，在中等严重级别的发现中仍存在一个真正的兼容性问题，该问题源自代码块审核员： Revapi 的配置会抑制针对公共接口 `AgenticService` 和 `SupervisorAgentService` 中新增的抽象 `activationCondition` 方法所产生的警告，这会破坏任何实现这些接口的代码的源代码兼容性，而拉取请求的说明中却声称不存在破坏性变更。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Scoring and reporting: voting, reflection and the cost"
-msgstr ""
+msgstr "评分与报告：投票、反思及成本"
 
+#. mt: deepl
+#, fuzzy
 msgid "The first score card was borderline on two counts: an overall score of 6.8, within half a point of the approval threshold, and a request for changes without any high-severity finding left to back it. The three scorers then voted in parallel, all three for `REQUEST_CHANGES`, and the average of their cards was again 6.8, with a confidence of 0.5; the calibrator had nothing to correct."
-msgstr ""
+msgstr "第一份评分卡在两方面处于临界状态：总分6.8，距离通过门槛仅差0.5分；且虽然提出了修改请求，但已无任何高严重性问题作为依据。 随后，三位评分员分别进行了投票，均选择了 `“REQUEST_CHANGES` ”，其评分卡的平均分再次为6.8，置信度为0.5；校准员无需进行任何修正。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Finally, the report went through all the three rounds of the reflection loop: the critic rated the first draft 0.68, so the writer, escalated to the large model, rewrote it twice, but the critic rated the second draft 0.68 again and the third 0.28, and the loop stopped at its last iteration."
-msgstr ""
+msgstr "最后， 该报告经历了反思循环的全部三轮：评审员给初稿打分0.68，于是作者将稿件提交给大型模型，并进行了两次修改，但评审员仍给第二稿打分0.68，第三稿则打分0.28，该循环在最后一次迭代时终止。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Here the critic, on the small model, was the weak link of the review: it listed the findings themselves as the issues to fix, as if it had been asked to review the pull request rather than the report about it."
-msgstr ""
+msgstr "在此，这位评论者在“小模型”方面成了评论中的薄弱环节：它将研究结果本身列为需要解决的问题，仿佛是被要求评审该拉取请求，而不是评审关于该拉取请求的报告。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The whole review took 5 minutes and 49 seconds and cost $0.45."
-msgstr ""
+msgstr "整个审核过程耗时5分49秒，费用为0.45美元。"
 
 msgid "Conclusion"
 msgstr "解决方案"
 
+#. mt: deepl
+#, fuzzy
 msgid "A real application needs more than one agentic pattern, and the reviewer uses many of those made available by LangChain4j: a sequence as its backbone, conditional agents as gates, a decision router choosing the reviewers, a parallel mapper for very large pull requests, debates for the doubtful findings, voting for the borderline scores, reflection loops for the report, and a human in the loop for the final decision."
-msgstr ""
+msgstr "一个实际应用需要不止一种代理模式，评审员会使用 LangChain4j 提供的多种模式： 以序列作为主干，条件代理作为门控，决策路由器用于选择评审员，针对超大拉取请求的并行映射器，针对存疑结果的讨论机制，针对临界评分的投票机制，用于生成报告的反身循环，以及由人工介入的最终决策流程。"
 
+#. mt: deepl
+#, fuzzy
 msgid "What made them work together was not using any of them everywhere, but each one only where it pays off, while plain code does everything that doesn't need judgment: fetching, validating, calibrating, rendering. The same principle drives the choice of the models, with a small one by default, a larger one only when there is evidence that it is needed, and a decision model, instead of an LLM, for routing."
-msgstr ""
+msgstr "让它们能够协同工作的关键，并非在所有地方都使用其中任何一种，而是让每种技术只在能发挥作用的地方使用，同时由普通代码处理所有不需要判断力的任务：数据获取、验证、校准和渲染。 同样的原则也指导着模型的选择：默认使用小型模型，只有在有证据表明需要时才使用大型模型，并且在路由时采用决策模型，而非大型语言模型（LLM）。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Quarkus LangChain4j is what turns these patterns into an application. The agent interfaces are detected and validated at build time and become beans, so the whole system is injected like any other service; chat models and decision models are named configurations, and what the agents choose from at run time is the set of beans the extension builds from them; the tools of the agents are the methods of a bean, with their executors generated at build time; the listener that prices every call and the one that feeds the web page are beans the extension attaches to every model and every agent; and the same core serves a command line and a web interface."
-msgstr ""
+msgstr "Quarkus LangChain4j 正是将这些模式转化为应用程序的关键。代理接口会在构建时被检测和验证，并转化为 Bean，因此整个系统可以像其他服务一样被注入；聊天模型和决策模型是命名配置，而代理在运行时所选择的，正是扩展基于这些配置生成的 Bean 集合； 代理的工具即为 Bean 的方法，其执行器在构建时生成；负责计算每次调用成本的监听器以及向网页提供数据的监听器，都是扩展为每个模型和每个代理附加的 Bean；同一核心既支持命令行界面，也支持 Web 界面。"
 
+#. mt: deepl
+#, fuzzy
 msgid "In the near future we plan to keep growing the set of agentic patterns available out-of-the-box, in LangChain4j and in its Quarkus extension, using real applications like this one to find out what is still missing. The reviewer is open source: clone https://github.com/mariofusco/langchain4j-pr-reviewer[the repository], try it on one of your own pull requests, and tell us what it finds, and what it gets wrong."
-msgstr ""
+msgstr "在不久的将来，我们计划继续扩充 LangChain4j 及其 Quarkus 扩展中开箱即用的代理模式集，并借助像这样真实的应用程序来发现还缺少哪些内容。 该审查工具是开源的：克隆 link:https://github.com/mariofusco/langchain4j-pr-reviewer[代码库] ，在您自己的某个拉取请求上试用一下，并告诉我们它发现了什么，以及哪些地方出了错。"

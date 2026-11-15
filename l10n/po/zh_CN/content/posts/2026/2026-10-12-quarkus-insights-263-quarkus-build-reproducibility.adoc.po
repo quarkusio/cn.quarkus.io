@@ -6,209 +6,345 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: roq-plugin-l10n-adoc\n"
 
+#. mt: deepl
+#, fuzzy
 msgid "Quarkus Insights # 263: Everything You Didn&#8217;t Want to Know About Quarkus Build Reproducibility"
-msgstr ""
+msgstr "Quarkus 洞察 #263：关于 Quarkus 构建可重现性，你不想知道的一切"
 
+#. mt: deepl
+#, fuzzy
 msgid "This summary was generated using AI, reviewed by humans - https://youtube.com/live/8cZ-oc6ma9g[watch the video] for the full story."
-msgstr ""
+msgstr "本摘要由人工智能生成，并经人工审核—— link:https://youtube.com/live/8cZ-oc6ma9g[请观看视频] 了解完整内容。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Achieving reproducible builds in modern software is often described as straightforward: pin your dependencies, use a deterministic compiler, and let your build tool do the rest. In a framework like Quarkus, however, where the build process performs heavy ahead-of-time bytecode generation and executes build steps across multiple parallel threads, determinism is anything but simple. In episode 263, community contributor Teymur (Tim) Babayev and Quarkus core maintainers Guillaume Smet and Ladislav Thon join host Holly Cummins to unpack the technical challenges of making Quarkus builds bit-for-bit reproducible, the insidious sources of non-determinism they uncovered, and the infrastructure now in place to ensure our binaries continue to stay reproducible."
-msgstr ""
+msgstr "在现代软件中实现可重现的构建，通常被描述为一件很简单的事情：锁定依赖项、使用确定性编译器，然后让构建工具处理剩下的工作。 然而，在 Quarkus 这样的框架中，构建过程会进行大量的事前字节码生成，并通过多个并行线程执行构建步骤，因此确定性绝非易事。 在第 263 期节目中，社区贡献者 Teymur (Tim) Babayev 以及 Quarkus 核心维护者 Guillaume Smet 和 Ladislav Thon 与主持人 Holly Cummins 一起，深入探讨了让 Quarkus 构建实现字节级可重现性所面临的技术挑战， 他们发现的非确定性隐蔽根源，以及目前已建立的、用于确保二进制文件持续可重现的基础设施。"
 
 #, fuzzy
 msgid "Quarkus News"
 msgstr "Quarkus 新闻"
 
+#. mt: deepl
+#, fuzzy
 msgid "Holly opened the episode with an unusual announcement: for the first time in months, there was no new minor or micro release during the week. With the release cadence briefly paused, Guillaume took a well-earned break from preparing backports. The core team is currently focused on iterating on the Quarkus 4 betas leading up to the final release, with micro releases on earlier streams reserved strictly for critical CVEs. Community members are encouraged to try out the Quarkus 4 beta, test their applications, and report any issues or feedback."
-msgstr ""
+msgstr "霍莉以一条不同寻常的公告拉开了本期节目的序幕：这是数月来首次，本周没有发布任何新的次要版本或微版本。随着发布节奏短暂暂停，纪尧姆也从准备向后移植的工作中抽身，享受了一段应得的休息时间。 核心团队目前正专注于迭代 Quarkus 4 测试版，以备最终发布；此前分支的微版本更新将严格保留给关键 CVE 的修复。我们鼓励社区成员尝试 Quarkus 4 测试版，测试其应用程序，并报告任何问题或反馈。"
 
+#. mt: deepl
+#, fuzzy
 msgid "What Is Build Reproducibility and Why Does It Matter?"
-msgstr ""
+msgstr "什么是构建可重现性，它为何重要？"
 
+#. mt: deepl
+#, fuzzy
 msgid "Guillaume kicked off the technical discussion by defining build reproducibility according to the principles of https://reproducible-builds.org/[Reproducible Builds]: given the exact same source code, same Java Development Kit (JDK), same operating system, and identical build inputs, the build must produce the exact same binary output bit-for-bit."
-msgstr ""
+msgstr "纪尧姆根据 link:https://reproducible-builds.org/[“可重现构建] ”（ link:https://reproducible-builds.org/[Reproducible Builds] ）的原则，对构建可重现性进行了定义，从而拉开了技术讨论的序幕：在源代码、Java开发工具包（JDK）、操作系统以及构建输入完全相同的情况下，构建必须生成位对位完全相同的二进制输出。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Two major requirements drive the need for reproducible builds:"
-msgstr ""
+msgstr "有两个主要要求促使人们需要可重现的构建："
 
+#. mt: deepl
+#, fuzzy
 msgid "**Supply chain security and forensics:** High-profile security breaches across ecosystems like https://www.npmjs.com/[npm] have highlighted the risk of compromised Continuous Integration (CI) and build infrastructure. If a build is fully reproducible, anyone can independently rebuild an artifact from source using the matching build environment and verify that the output matches what was published to https://central.sonatype.com/[Maven Central]. If the hashes match, developers have cryptographic assurance that the binary contains no backdoors injected during the build."
-msgstr ""
+msgstr "*供应链安全与取证：* link:https://www.npmjs.com/[npm] 等生态系统中备受瞩目的安全漏洞事件，凸显了持续集成（CI）和构建基础设施遭到破坏的风险。 如果构建过程完全可重现，任何人都可以使用匹配的构建环境，从源代码独立重建构建产物，并验证输出结果是否与发布到 link:https://central.sonatype.com/[Maven Central] 的内容一致。如果哈希值匹配，开发人员就能通过加密手段确信该二进制文件在构建过程中未被植入后门。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Build caching:** In modern build tools like https://gradle.org/[Gradle] and https://maven.apache.org/[Apache Maven] (with build caching enabled), non-deterministic task outputs invalidate downstream caches. If a build step generates non-identical bytecode across runs, the build tool assumes the output has changed and is forced to re-execute downstream steps, eliminating the performance benefits of caching."
-msgstr ""
+msgstr "*构建缓存：* 在 link:https://gradle.org/[Gradle] 和 link:https://maven.apache.org/[Apache Maven] 等现代构建工具中（启用构建缓存时），非确定性的任务输出会导致下游缓存失效。 如果某个构建步骤在不同运行中生成的字节码不完全相同，构建工具会认为输出已发生变化，从而被迫重新执行下游步骤，这会抵消缓存带来的性能优势。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Why Reproducibility Is Uniquely Challenging in Quarkus"
-msgstr ""
+msgstr "为什么在 Quarkus 中可重现性具有独特的挑战性"
 
+#. mt: deepl
+#, fuzzy
 msgid "For traditional Java frameworks, reproducible builds are relatively simple because they rely on standard sequential compilation where the JDK and build plugins handle determinism. Quarkus is fundamentally different:"
-msgstr ""
+msgstr "对于传统的 Java 框架而言，可重现构建相对简单，因为它们依赖于标准的顺序编译，其中 JDK 和构建插件负责确保确定性。Quarkus 则截然不同："
 
+#. mt: deepl
+#, fuzzy
 msgid "**Ahead-of-time augmentation:** Quarkus analyzes application classes and generates extensive bytecode at build time rather than at runtime."
-msgstr ""
+msgstr "*预先增强：* Quarkus 在构建时（而非运行时）分析应用程序类并生成大量字节码。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Massive concurrency:** To keep build times fast, the Quarkus build engine executes build steps concurrently across a thread pool. Concurrency inherently introduces non-deterministic execution timing."
-msgstr ""
+msgstr "*大规模并发：* 为了保持构建速度，Quarkus 构建引擎会通过线程池并行执行构建步骤。并发本身会导致执行时机具有非确定性。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Bytecode recorders:** Quarkus extensions execute configuration and initialization logic at build time and record invocations into generated bytecode classes."
-msgstr ""
+msgstr "*字节码记录器：* Quarkus 扩展会在构建时执行配置和初始化逻辑，并将调用记录到生成的字节码类中。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Parallel packaging:** Packaging steps also push class files into JAR archives in parallel."
-msgstr ""
+msgstr "*并行打包：* 打包步骤也会并行地将类文件打包到 JAR 归档文件中。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Because reproducibility requires 100% bit-for-bit equality, a single non-deterministic timestamp, random collection iteration, or static counter anywhere in any extension invalidates the entire resulting artifact."
-msgstr ""
+msgstr "由于可重现性要求100%的位对位一致性，因此任何扩展中的任何位置若存在单个非确定性时间戳、随机集合迭代或静态计数器，都会导致生成的整个工件失效。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The Roadblocks and Architectural Fixes"
-msgstr ""
+msgstr "障碍与架构层面的解决方案"
 
+#. mt: deepl
+#, fuzzy
 msgid "The effort to make Quarkus reproducible began in 2020 when Peter Palaga, working on https://camel.apache.org/[Apache Camel] and https://cxf.apache.org/[Apache CXF], submitted early pull requests to eliminate non-determinism in some outputs. At the time, the fixes were considered too invasive. The effort was revived over the past year when Tim Babayev started investigating Gradle build caching and teamed up with Guillaume and Ladislav to tackle the core root causes."
-msgstr ""
+msgstr "让 Quarkus 具备可重现性的工作始于 2020 年，当时负责 link:https://camel.apache.org/[Apache Camel] 和 link:https://cxf.apache.org/[Apache CXF] 开发的 Peter Palaga 提交了早期拉取请求，旨在消除某些输出结果中的非确定性。当时，这些修复方案被认为过于侵入性。 过去一年间，随着蒂姆·巴巴耶夫（Tim Babayev）开始研究 Gradle 构建缓存，并联合纪尧姆（Guillaume）和拉迪斯拉夫（Ladislav）共同解决核心根本原因，这项工作得以重启。"
 
+#. mt: deepl
+#, fuzzy
 msgid "1. Non-Deterministic Multi-Build Item Ordering"
 msgstr ""
+"\n"
+" 非确定性多构建项排序"
 
+#. mt: deepl
+#, fuzzy
 msgid "In Quarkus, multiple parallel build steps can produce build items of the same type. Downstream consumers receive these as a list. Because the producer steps run concurrently, the order of items in that list was originally timing-dependent."
-msgstr ""
+msgstr "在 Quarkus 中，多个并行构建步骤可能会生成同类型的构建项。下游消费者会将这些构建项作为列表接收。由于生成步骤是并发运行的，因此该列表中项的顺序原本取决于执行时间。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The team resolved this by resurrecting Peter Palaga's original approach: enforcing a deterministic sorting order on multi-build items by having them implement `Comparable` with clear tie-breakers."
-msgstr ""
+msgstr "该团队通过重新采用彼得·帕拉加（Peter Palaga）的原始方法解决了这个问题：要求多构建项实现 `Comparable` `接口` ，并明确规定平局时的决胜规则，从而对其强制执行确定性的排序顺序。"
 
+#. mt: deepl
+#, fuzzy
 msgid "However, fixing item ordering introduced an unexpected side effect: recorded bytecode execution order shifted, delaying logging initialization. Because the application had to buffer early log messages in memory until the logging layer was initialized, application memory footprint grew. Guillaume resolved this by making logging initialization an explicit upstream dependency for all related steps, ensuring early startup without sacrificing reproducibility."
-msgstr ""
+msgstr "然而，修正项目排序却带来了一个意想不到的副作用：记录的字节码执行顺序发生了偏移，导致日志记录初始化被延迟。由于应用程序必须在内存中缓冲早期的日志消息，直到日志记录层初始化完成，因此应用程序的内存占用量随之增加。 Guillaume 通过将日志记录初始化设为所有相关步骤的显式上游依赖项来解决了这个问题，从而确保了早期启动，同时又不牺牲可重现性。"
 
+#. mt: deepl
+#, fuzzy
 msgid "2. Static Counters in Bytecode Recorders"
 msgstr ""
+"\n"
+" 字节码记录器中的静态计数器"
 
+#. mt: deepl
+#, fuzzy
 msgid "When generating proxy classes, bytecode recorder implementations previously appended an incrementing static counter (`proxyKey + counter++`) shared across parallel worker threads. Because thread scheduling varied across builds, proxy class names differed between runs."
-msgstr ""
+msgstr "在生成代理类时，字节码记录器的实现此前会附加一个递增的静态计数器（ `proxyKey + counter++` ），该计数器在并行工作线程之间共享。由于不同构建版本中的线程调度存在差异，因此不同运行次数生成的代理类名称也不尽相同。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The fix eliminated the static shared counter, scoping unique identifiers strictly per class generation instance rather than globally across threads."
-msgstr ""
+msgstr "该修复方案移除了静态共享计数器，将唯一标识符的作用域严格限定在每个类生成的实例范围内，而非跨线程全局范围。"
 
+#. mt: deepl
+#, fuzzy
 msgid "3. Non-Deterministic Collections"
 msgstr ""
+"\n"
+" 非确定性集合"
 
+#. mt: deepl
+#, fuzzy
 msgid "A major source of unstable bytecode came from standard Java collections used in build steps and recorders. Methods such as `Set.copyOf()` and `Map.copyOf()`, as well as iterating over standard `HashSet` and `HashMap` instances containing objects with identity-based hash codes (such as `java.lang.Class`), produced different iteration orders across builds."
-msgstr ""
+msgstr "不稳定的字节码的主要来源是构建步骤和记录器中使用的标准 Java 集合。 诸如 `Set.copyOf()` 和 `Map.copyOf()` 之类的方法，以及对包含基于标识符的哈希码的对象（如 `java.lang.Class` ）的标准 `HashSet` 和 `HashMap` 实例进行迭代时，会在不同构建中产生不同的迭代顺序。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Whenever recorder methods were invoked in loops over unstable collections, or unstable collections were passed as parameters, the generated bytecode diverged. The solution involved switching to deterministic collections, sorting inputs, and defining comprehensive tie-breaker comparisons."
-msgstr ""
+msgstr "每当在遍历不稳定集合的循环中调用记录器方法，或者将不稳定集合作为参数传递时，生成的字节码就会出现分歧。解决方案包括切换到确定性集合、对输入进行排序，以及定义全面的平局决胜比较规则。"
 
+#. mt: deepl
+#, fuzzy
 msgid "4. Jandex Composite Index Ordering and Arc"
 msgstr ""
+"\n"
+" Jandex 综合指数排序与弧线"
 
+#. mt: deepl
+#, fuzzy
 msgid "Quarkus relies extensively on https://github.com/smallrye/jandex[Jandex] for class indexing and offline annotation scanning. While individual Jandex indices are deterministic, Quarkus builds a composite index across multiple JARs."
-msgstr ""
+msgstr "Quarkus 在类索引和离线注释扫描方面大量依赖 link:https://github.com/smallrye/jandex[Jandex] 。虽然单个 Jandex 索引是确定性的，但 Quarkus 会跨多个 JAR 文件构建一个复合索引。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Ladislav explained that the composite index previously returned classes in arbitrary order because Quarkus passed indexed JARs to the composite index in non-deterministic order. Fixing the composite index construction in Quarkus and refining Jandex and Arc internals eliminated dozens of individual extension-level workarounds in one stroke."
-msgstr ""
+msgstr "拉迪斯拉夫解释说，此前复合索引会以任意顺序返回类，这是因为Quarkus以非确定性顺序将索引JAR文件传递给复合索引。通过修复Quarkus中的复合索引构建机制，并优化Jandex和Arc的内部实现，一举消除了数十个扩展层级的临时解决方案。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Diagnosis, Tooling, and the Role of AI"
-msgstr ""
+msgstr "诊断、工装以及人工智能的作用"
 
+#. mt: deepl
+#, fuzzy
 msgid "Answering an audience question from Douglas Allen about whether AI assisted in tracking down issues, Tim and Guillaume highlighted the complementary roles of tooling and LLMs:"
-msgstr ""
+msgstr "在回答道格拉斯·艾伦（Douglas Allen）提出的关于人工智能是否有助于排查问题这一观众提问时，蒂姆和纪尧姆强调了工具与大型语言模型（LLMs）之间的互补作用："
 
+#. mt: deepl
+#, fuzzy
 msgid "**diffoscope:** The team used https://diffoscope.org/[diffoscope] paired with the https://github.com/mstrobel/procyon[Procyon] Java decompiler to inspect differing JARs, archive entries, and class bytecode."
-msgstr ""
+msgstr "*diffoscope：* 该团队使用 link:https://diffoscope.org/[diffoscope] 配合 link:https://github.com/mstrobel/procyon[Procyon] Java 反编译器，对不同的 JAR 文件、归档条目和类字节码进行了检查。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**AI for triage and categorization:** Running the initial reproducibility test harness against Quarkus extensions produced roughly 2,000 test failures. The team fed large batches of diffoscope outputs to LLMs to categorize failure modes (e.g., timestamps, collection iteration, counters) and pinpoint likely culprits."
-msgstr ""
+msgstr "*利用 AI 进行故障分拣和分类：* 对 Quarkus 扩展运行初始可重复性测试框架时，出现了大约 2,000 次测试失败。团队将大量 diffoscope 输出结果输入到大型语言模型（LLMs）中，以对故障模式（例如时间戳、集合迭代、计数器）进行分类，并精准定位可能的故障根源。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Human architectural decisions:** While AI accelerated mechanical diagnosis, human insight was essential for avoiding simplistic fixes (such as blindly replacing maps with `TreeSet` everywhere, which would degrade build performance) in favor of upstream framework improvements."
-msgstr ""
+msgstr "*人类的架构决策：* 虽然人工智能加速了机械化诊断，但人类的洞察力对于避免采取过于简单的修复方案（例如盲目地将所有地图替换为 `TreeSet` ，这会降低构建性能）至关重要，从而能够优先进行上游框架的改进。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Testing Infrastructure: Three Tiers of Verification"
-msgstr ""
+msgstr "测试基础设施：三层验证体系"
 
+#. mt: deepl
+#, fuzzy
 msgid "To prevent regressions, Tim developed a multi-tiered test harness:"
-msgstr ""
+msgstr "为了防止回归，Tim 开发了一个多层测试框架："
 
+#. mt: deepl
+#, fuzzy
 msgid "**In-JVM augmentation check:** Integrated into `QuarkusExtensionTest` and activated via `-Dquarkus.internal.test.reproducibility-check=true`. It runs build augmentation three times in memory within the same JVM, capturing generated bytecode and asserting bit-for-bit equality. If a difference is detected, diffs and decompiled `.java` files are written to `target/debug/reproducibility-mismatch/`."
-msgstr ""
+msgstr "*JVM 内增强检查：* 已集成到 `QuarkusExtensionTest` 中，并通过 `-Dquarkus.internal.test.reproducibility-check=true` 启用。该检查会在同一 JVM 内将构建增强操作在内存中运行三次，捕获生成的字节码并验证其位对位相等性。 若检测到差异，差异报告和反编译后的 `.java` 文件将写入 `target/debug/reproducibility-mismatch/ 目录。`"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Cross-JVM check:** Re-runs augmentation across separate JVM processes."
-msgstr ""
+msgstr "*跨JVM检查：* 在不同的JVM进程中重新运行增强操作。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Integration test file-system check:** A shell script (`check-reproducibility.sh`) that executes complete Maven builds from scratch and compares final output JARs on disk with diffoscope reports."
-msgstr ""
+msgstr "*集成测试文件系统检查：* 一个 shell 脚本（ `check-reproducibility.sh` ），用于从头开始执行完整的 Maven 构建，并将磁盘上的最终输出 JAR 文件与 diffoscope 报告进行比较。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The team also introduced `ReproducibilityCheckBuildItem` to allow test-only constructs (such as temporary directories used by https://www.webjars.org/[WebJars] in Dev Services) to be isolated from production artifact comparisons, and fixed timestamp stability in https://cyclonedx.org/[CycloneDX] Software Bill of Materials (SBOM) generation using the `PackageConfig` build item."
-msgstr ""
+msgstr "该团队还引入了 `ReproducibilityCheckBuildItem，` 以便将仅用于测试的构建项（例如 Dev Services 中 link:https://www.webjars.org/[WebJars] 使用的临时目录）与生产环境构建项的比较隔离，并修复了使用 `PackageConfig` 构建项生成 link:https://cyclonedx.org/[CycloneDX] 软件物料清单 (SBOM) 时时间戳的稳定性问题。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Can Reproducibility Ever Be Guaranteed?"
-msgstr ""
+msgstr "可重复性真的能得到保证吗？"
 
+#. mt: deepl
+#, fuzzy
 msgid "Addressing a question from attendee Douglas Allen on whether these changes represent a patchwork or a deliberate deterministic framework, Ladislav and Guillaume noted that concurrency and underlying system interactions (filesystem system calls, OS metadata, thread scheduling) mean absolute theoretical guarantees are virtually impossible."
-msgstr ""
+msgstr "针对与会者道格拉斯·艾伦（Douglas Allen）提出的疑问——这些变更究竟是东拼西凑的结果，还是经过深思熟虑的确定性框架——拉迪斯拉夫和纪尧姆指出，由于并发性以及底层系统交互（文件系统系统调用、操作系统元数据、线程调度）等因素，绝对的理论保证实际上几乎不可能实现。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Instead, confidence is built through continuous verification and falsification:"
-msgstr ""
+msgstr "相反，信心是通过持续的验证与证伪而建立的："
 
+#. mt: deepl
+#, fuzzy
 msgid "Nightly CI workflows now run reproducibility test suites across core extension deployment tests, the https://jakarta.ee/specifications/restful-ws/[Jakarta REST] TCK, integration tests, and quickstarts."
-msgstr ""
+msgstr "夜间持续集成（CI）工作流现已在核心扩展部署测试、 link:https://jakarta.ee/specifications/restful-ws/[Jakarta REST] TCK、集成测试以及快速入门示例中运行可重复性测试套件。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Current reproducibility status can be monitored live on https://status.quarkus.io/[status.quarkus.io], where checks are consistently green."
-msgstr ""
+msgstr "当前的可重现性状态可在 link:https://status.quarkus.io/[status.quarkus.io] 上实时查看，该处的检测结果始终显示为绿色。"
 
+#. mt: deepl
+#, fuzzy
 msgid "A comprehensive guide documenting reproducibility rules and common pitfalls has been merged into the root of the Quarkus repository for extension authors."
-msgstr ""
+msgstr "一份详细记录可重复性规则及常见陷阱的综合指南已合并到 Quarkus 代码库的根目录下，供扩展作者参考。"
 
 #, fuzzy
 msgid "What&#8217;s Next?"
 msgstr "接下来会怎样？"
 
+#. mt: deepl
+#, fuzzy
 msgid "Looking ahead, the team outlined several next steps:"
-msgstr ""
+msgstr "展望未来，该团队概述了以下几个下一步措施："
 
+#. mt: deepl
+#, fuzzy
 msgid "**New service architecture:** Ongoing work by David Lloyd on a new service start/stop model will gradually replace legacy bytecode recorders, further simplifying the framework and reinforcing determinism at its core."
-msgstr ""
+msgstr "*新的服务架构：* David Lloyd 正在研发一种新的服务启动/停止模型，该模型将逐步取代旧有的字节码记录器，进一步简化框架，并强化其核心的确定性。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Faster CI feedback:** Optimizing reproducibility test execution so checks can eventually run on pull requests rather than solely during nightly builds."
-msgstr ""
+msgstr "*更快的持续集成反馈：* 优化可重复性测试的执行，以便最终能在拉取请求上运行检查，而不仅仅是在夜间构建期间。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Ecosystem outreach:** Collaborating with Quarkiverse extension maintainers (including Camel Quarkus) to expand reproducibility verification across third-party extensions."
-msgstr ""
+msgstr "*生态系统推广：* 与 Quarkiverse 扩展维护者（包括 Camel Quarkus）合作，将可重现性验证范围扩展至第三方扩展。"
 
 #, fuzzy
 msgid "Key Takeaways"
 msgstr "要点总结"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Bit-for-bit reproducibility matters:** Identical builds provide cryptographic assurance for supply chain security and prevent cache invalidation in Gradle and Maven."
-msgstr ""
+msgstr "*逐位可重现性至关重要：* 完全相同的构建结果可为供应链安全提供加密保障，并防止在 Gradle 和 Maven 中发生缓存失效。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Concurrency makes determinism hard:** Running build steps and packaging in parallel produces non-deterministic ordering unless inputs and collections are strictly controlled."
-msgstr ""
+msgstr "*并发性使得确定性难以实现：* 除非严格控制输入和集合，否则并行运行构建步骤和打包操作会产生非确定性的执行顺序。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Multi-build item ordering:** Sorting build items deterministically resolved list ordering issues, coupled with explicit logging dependencies for fast startup."
-msgstr ""
+msgstr "*多构建项排序：* 通过确定性地对构建项进行排序，解决了列表排序问题，并结合了显式的日志依赖关系，以实现快速启动。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Scoping recorder identifiers:** Replacing shared static counters with instance-scoped identifiers eliminated race conditions in generated proxy class names."
-msgstr ""
+msgstr "*作用域记录器标识符：* 用实例作用域标识符替换共享的静态计数器，消除了生成的代理类名称中的竞争条件。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Collection stability:** Avoiding iteration over unstable hash codes and using deterministic tie-breakers prevents subtle bytecode diffs."
-msgstr ""
+msgstr "*集合稳定性：* 避免对不稳定的哈希码进行迭代，并使用确定性的平局决胜规则，可防止出现细微的字节码差异。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Jandex and Arc framework fixes:** Upstream improvements to Jandex composite indexing fixed dozens of extension-level inconsistencies simultaneously."
-msgstr ""
+msgstr "*Jandex 和 Arc 框架的修复：* 上游对 Jandex 复合索引的改进同时修复了数十处扩展层面的不一致问题。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**`diffoscope` + AI triage:** Combining diffoscope bytecode decompilation with LLM analysis enabled rapid classification of thousands of initial test failures."
-msgstr ""
+msgstr "*diffoscope+ AI 分诊：* 通过将 diffoscope 字节码反编译与 LLM 分析相结合，实现了对数千个初始测试失败案例的快速分类。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Multi-tiered test harness:** Developers can test extensions in memory using `-Dquarkus.internal.test.reproducibility-check=true` or across full builds with `check-reproducibility.sh`."
-msgstr ""
+msgstr "*多层测试框架：* 开发者可以使用 `-Dquarkus.internal.test.reproducibility-check=true` 在内存中测试扩展，或者通过 `check-reproducibility.sh` 在完整构建环境中进行测试。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Status is green:** Nightly CI runs for core deployment tests, integration tests, and quickstarts are tracked on https://status.quarkus.io/[status.quarkus.io]."
-msgstr ""
+msgstr "*状态为绿色：* link:https://status.quarkus.io/[status.quarkus.io] 上会跟踪核心部署测试、集成测试和快速入门指南的夜间持续集成（CI）运行情况。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**A collaborative milestone:** The effort united core maintainers and community contributors."
-msgstr ""
+msgstr "*一个协作里程碑：* 这项工作将核心维护者和社区贡献者凝聚在了一起。"
 
 msgid "Conclusion"
 msgstr "解决方案"
 
+#. mt: deepl
+#, fuzzy
 msgid "Achieving reproducible builds in a high-performance, ahead-of-time framework like Quarkus is a remarkable engineering accomplishment. By tackling non-determinism directly at the framework level (spanning Jandex, Arc, build items, and recorder infrastructure) rather than applying brittle workarounds, the Quarkus team and community have established a robust foundation for supply chain security and build caching. Next week, Quarkus Insights returns with a deep dive into https://www.jobrunr.io/[JobRunr]."
-msgstr ""
+msgstr "在 Quarkus 这样的高性能、提前编译（AOT）框架中实现可重现的构建，是一项了不起的工程成就。 通过在框架层面（涵盖 Jandex、Arc、构建项和记录器基础设施）直接解决非确定性问题，而非采用脆弱的临时解决方案，Quarkus 团队和社区为供应链安全与构建缓存奠定了坚实的基础。 下周，《Quarkus Insights》将回归，深入探讨 link:https://www.jobrunr.io/[JobRunr] 。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Watch the full episode on the <a href=\"https://www.youtube.com/quarkusio\">Quarkus YouTube channel</a>, monitor build status at <a href=\"https://status.quarkus.io/\">status.quarkus.io</a>, and check the Quarkus repository documentation for <a href=\"https://github.com/quarkusio/quarkus/blob/main/REPRODUCIBILITY.md\">guidelines on authoring reproducible extensions</a>."
-msgstr ""
+msgstr "在 <a href=\"https://www.youtube.com/quarkusio\">Quarkus YouTube 频道</a> 上观看完整视频，在 <a href=\"https://status.quarkus.io/\">status.quarkus.io</a>上查看完整剧集，并在 Quarkus 代码库文档中查阅 <a href=\"https://github.com/quarkusio/quarkus/blob/main/REPRODUCIBILITY.md\">关于编写可重现扩展的指南</a>。"

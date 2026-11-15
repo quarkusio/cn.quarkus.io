@@ -1341,14 +1341,20 @@ msgstr "另一个构建步骤仅在开发模式下执行。"
 msgid "Application Startup and Services"
 msgstr "应用程序启动与服务"
 
+#. mt: deepl
+#, fuzzy
 msgid "Quarkus extensions need to perform initialization work at application startup: creating CDI beans, opening connections, binding sockets, starting subsystems. Extensions declare this work as lightweight services that form an explicit dependency graph. Each service specifies exactly what it needs to run (other services, configuration, build-time state) and what it produces (typed values, initialization side effects). At runtime, Quarkus executes this graph directly: services start as soon as their dependencies are satisfied, allowing independent work to proceed in parallel while respecting ordering constraints."
-msgstr ""
+msgstr "Quarkus 扩展需要在应用程序启动时执行初始化工作：创建 CDI Bean、建立连接、绑定套接字、启动子系统。扩展将这些工作声明为轻量级服务，这些服务共同构成一个显式的依赖图。 每个服务都会精确指定其运行所需的条件（其他服务、配置、构建时状态）以及其产出的结果（类型化值、初始化副作用）。在运行时，Quarkus 会直接执行该图：一旦依赖关系得到满足，服务便会立即启动，从而在遵守顺序约束的同时，允许独立任务并行执行。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Services are build-time declarations that generate runtime bytecode. You provide a lambda expression that runs at startup. The lambda is transliterated into bytecode at build time, with captured values embedded as constants. This preserves Quarkus's build-time/runtime split while giving you direct control over initialization."
-msgstr ""
+msgstr "服务是构建时声明的，用于生成运行时字节码。您需要提供一个在启动时运行的lambda表达式。该lambda表达式会在构建时被转换为字节码，其中捕获的值将作为常量嵌入其中。这既保持了Quarkus的构建时/运行时分离特性，又使您能够直接控制初始化过程。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The core guarantee is **deterministic partial ordering**: if service A depends on service B, then B always completes before A starts. Services with no dependency relationship may start in any order or concurrently, but any given dependency chain always executes in the same order. Shutdown reverses the graph: services stop in the exact reverse of their start dependencies, so cleanup always happens in a safe sequence."
-msgstr ""
+msgstr "其核心保证 *是确定性偏序* ：如果服务 A 依赖于服务 B，那么 B 总是在 A 启动之前完成。没有依赖关系的服务可以按任意顺序或并发启动，但任何给定的依赖链总是按相同的顺序执行。 关闭过程会反转该图：服务停止的顺序与它们的启动依赖关系完全相反，因此清理操作总是按照安全的顺序进行。"
 
 #. mt: deepl
 #, fuzzy
@@ -1365,43 +1371,65 @@ msgstr "定义启动服务的主要入口是 `io.quarkus.core.deployment.service
 msgid "Service Types"
 msgstr "服务类型"
 
+#. mt: deepl
+#, fuzzy
 msgid "Services can be typed or void. Typed services produce a value at startup and are defined via `reg.forService(Class<T>)` or `reg.forService(Class<T>, String name)`. The value they produce becomes available to other services that depend on them. Void services produce no value and are identified solely by name, defined via `reg.forService(String name)` or `reg.forService(List<String> nameParts)`. By convention, void service names use hierarchical dot-separated names like `\"io.quarkus.<extension>.<purpose>\"`."
-msgstr ""
+msgstr "服务可以是类型化的，也可以是 void 类型的。类型化服务在启动时生成一个值，并通过 `reg.forService(Class<T>)` 或 `reg.forService(Class<T>, String name)` 进行定义。它们生成的值可供依赖它们的其他服务使用。 无返回值的服务不产生任何值，仅通过名称进行标识，可通过 `reg.forService(String name)` 或 `reg.forService(List<String> nameParts)` 进行定义。按惯例，无返回值服务的名称采用分层且以点分隔的命名方式， `例如“io.quarkus.<扩展名>.<用途>”` 。"
 
 #. mt: deepl
 #, fuzzy
 msgid "Synchronous and Asynchronous Start Actions"
 msgstr "同步和异步启动操作"
 
+#. mt: deepl
+#, fuzzy
 msgid "Services can be started either synchronously or asynchronously. When using synchronous start (`onStart`), the service is considered started when the action returns. The action receives a `StartContext` as its first parameter, followed by any declared dependencies. Typed services return the service value; void services return nothing."
-msgstr ""
+msgstr "服务可以以同步或异步方式启动。使用同步启动（ `onStart` ）时，当该操作返回时，即视为服务已启动。该操作将接收一个 `StartContext` 作为其第一个参数，随后是任何已声明的依赖项。带类型的服务会返回服务值；void 类型的服务则不返回任何值。"
 
+#. mt: deepl
+#, fuzzy
 msgid "When using asynchronous start (`onStartAsync`), the action is initially invoked in the calling thread, but the service is not considered started until a completion method is called. The action receives an `AsyncVoidStartContext` (for void services) or `AsyncStartContext<T>` (for typed services). The completion method can be called from the same thread or from a different thread, allowing the action to schedule asynchronous work."
-msgstr ""
+msgstr "使用异步启动（ `onStartAsync` ）时，该操作最初会在调用线程中被调用，但直到调用完成方法之前，服务才被视为已启动。该操作会接收一个 `AsyncVoidStartContext` （用于 void 服务）或 `AsyncStartContext<T>` （用于类型化服务）。 完成方法可以在同一线程或不同线程中调用，从而允许该操作调度异步任务。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The asynchronous start context provides three completion methods:"
-msgstr ""
+msgstr "异步启动上下文提供了三个完成方法："
 
+#. mt: deepl
+#, fuzzy
 msgid "`startComplete()` or `startComplete(T value)` indicates that the service start operation completed successfully."
-msgstr ""
+msgstr "`startComplete()` 或 `startComplete(T value)` 表示服务启动操作已成功完成。"
 
+#. mt: deepl
+#, fuzzy
 msgid "`startFailed(Throwable)` indicates that the service failed to start."
-msgstr ""
+msgstr "`startFailed(Throwable)` 表示服务启动失败。"
 
+#. mt: deepl
+#, fuzzy
 msgid "`startCanceled()` indicates that the service start was canceled."
-msgstr ""
+msgstr "`startCanceled()` 表示服务启动已被取消。"
 
+#. mt: deepl
+#, fuzzy
 msgid "When to Use Asynchronous Start or Stop"
-msgstr ""
+msgstr "何时应使用异步启动或停止"
 
+#. mt: deepl
+#, fuzzy
 msgid "In most cases, synchronous start and stop are adequate. Use `onStart()` and `ctx.onStop()` when the initialization or cleanup work completes before the method returns."
-msgstr ""
+msgstr "在大多数情况下，同步启动和停止就足够了。当初始化或清理工作在方法返回之前完成时，请使用 `onStart()` 和 `ctx.onStop()` 。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Use asynchronous start and stop when the underlying resource being initialized uses a callback-based completion mechanism. If starting a server, opening a connection, or initializing a subsystem signals completion via a callback, `CompletableFuture`, or listener rather than blocking until complete, wire that callback to the asynchronous context's completion method."
-msgstr ""
+msgstr "当正在初始化的底层资源使用基于回调的完成机制时，请使用异步启动和停止。如果启动服务器、建立连接或初始化子系统是通过回调、 `CompletableFuture` 或监听器来通知完成，而不是阻塞直到完成，请将该回调与异步上下文的完成方法关联起来。"
 
+#. mt: deepl
+#, fuzzy
 msgid "In other words, use `onStartAsync()` when initialization continues after the action returns and you need to signal completion from a different thread or callback. The same principle applies to stop handlers: use `onStopAsync()` when shutdown is callback-driven, `onStop()` when it completes synchronously."
-msgstr ""
+msgstr "换句话说，当操作返回后初始化仍继续进行，且需要从另一个线程或回调中发出完成信号时，应使用 `onStartAsync()` 。同样的原则也适用于停止处理程序：当关闭操作由回调驱动时，应使用 `onStopAsync()` ；当关闭操作同步完成时，应 `使用 onStop()` 。"
 
 #. mt: deepl
 #, fuzzy
@@ -1418,8 +1446,10 @@ msgstr "服务在应用程序启动过程中按预定义的有序阶段执行。
 msgid "The available startup phases (defined in `io.quarkus.core.Phase`) in execution order are:"
 msgstr "可用的启动阶段（在 `io.quarkus.core.Phase` 中定义）按执行顺序依次为："
 
+#. mt: deepl
+#, fuzzy
 msgid "`STATIC_INIT`: Runs during static initialization of the generated application class. Results are baked into the native image heap when building a native image."
-msgstr ""
+msgstr "`STATIC_INIT` ：在生成的应用程序类的静态初始化期间运行。构建本机映像时，结果会被嵌入到本机映像的堆中。"
 
 #. mt: deepl
 #, fuzzy
@@ -1475,20 +1505,30 @@ msgstr "运行时不会等待阶段 _N_ 中的所有服务都完成后才启动�
 msgid "Execution Model"
 msgstr "执行模式"
 
+#. mt: deepl
+#, fuzzy
 msgid "At build time, Quarkus constructs a directed acyclic graph (DAG) of service nodes based on the dependency declarations you provide. Each service is a node; each `require()`, `after()`, or `before()` call creates an edge. At runtime, the generated startup code executes this graph directly."
-msgstr ""
+msgstr "在构建时，Quarkus 会根据您提供的依赖声明，构建一个由服务节点组成的有向无环图（DAG）。每个服务是一个节点；每次调用 `require()` 、 `after()` 或 `before()` 都会创建一条边。在运行时，生成的启动代码会直接执行该图。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Services form a partial order: if service A depends on service B, then B always completes before A starts. Services with no dependency relationship may execute in any order or concurrently. The runtime may exploit this parallelism: for example, independent services may start simultaneously, constrained only by their declared dependencies."
-msgstr ""
+msgstr "服务构成一个偏序关系：如果服务 A 依赖于服务 B，那么 B 总是在 A 开始之前完成。没有依赖关系的服务可以按任意顺序执行，也可以并发执行。运行时可以利用这种并行性：例如，独立的服务可以同时启动，其唯一限制仅来自它们声明的依赖关系。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The execution guarantee is deterministic: given the same dependency graph, the same dependency chains always execute in the same order across runs. What varies is the interleaving of independent work. If services A and B have no dependency relationship, they may start in either order or overlap in time, but if A depends on C and B depends on C, then C always completes before both A and B start."
-msgstr ""
+msgstr "执行保证是确定性的：对于相同的依赖图，相同的依赖链在每次运行中始终按相同的顺序执行。 变化的是独立任务的交错执行方式。如果服务 A 和 B 之间没有依赖关系，它们可以按任意顺序启动，或在时间上发生重叠；但如果 A 依赖于 C，且 B 也依赖于 C，那么 C 总是在 A 和 B 都启动之前完成。"
 
+#. mt: deepl
+#, fuzzy
 msgid "When a service fails to start (by throwing an exception from `onStart()` or calling `startFailed()` from an asynchronous context), the failure propagates to all services that transitively depend on it. Those dependent services never start. Services that have no dependency path to the failed service still execute and complete their initialization. The application startup fails overall, but the partial graph that did execute represents a consistent state: every service that started had all its dependencies satisfied. All successfully started services are then stopped cleanly before the process exits."
-msgstr ""
+msgstr "当某个服务无法启动（无论是通过 `onStart()` 抛出异常，还是在异步上下文中调用 `startFailed()` ）时，该故障会传播到所有传递依赖于该服务的服务。这些依赖服务将永远无法启动。 与失败服务没有依赖路径的服务仍会执行并完成其初始化。应用程序的整体启动虽然失败，但已执行的部分图代表了一个一致的状态：每个已启动的服务都满足了其所有依赖关系。随后，在进程退出之前，所有成功启动的服务都会被干净地停止。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Shutdown (whether triggered by failure or normal application termination) reverses the dependency graph. Services stop in the exact reverse order of their start dependencies: if A started after B, then A stops before B. This ensures that cleanup always happens in a safe sequence — a service's dependencies remain available throughout its stop handler."
-msgstr ""
+msgstr "关闭（无论是因故障还是应用程序正常终止而触发）都会反转依赖关系图。服务停止的顺序与它们的启动依赖关系完全相反：如果 A 在 B 之后启动，那么 A 会在 B 之前停止。这确保了清理操作始终按照安全的顺序进行——在服务停止处理程序执行期间，其依赖项始终保持可用。"
 
 #. mt: deepl
 #, fuzzy
@@ -1530,44 +1570,70 @@ msgstr "`after(…​)` ：声明该服务必须在指定的服务类或服务�
 msgid "`before(...)`: Declares that this service must run before the specified service class or name. This is particularly useful for cleanup services that must outlive their dependents."
 msgstr "`before(…​)` ：声明该服务必须在指定的服务类或服务名称之前运行。这对于必须比其依赖项运行更久的清理服务特别有用。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Optional Service Dependencies"
-msgstr ""
+msgstr "可选的服务依赖项"
 
+#. mt: deepl
+#, fuzzy
 msgid "When a service might or might not be present, use `request()` instead of `require()`. The dependency is injected as `Optional<T>`:"
-msgstr ""
+msgstr "当某个服务可能存在也可能不存在时，请使用 `request()` 代替 `require()` 。该依赖项将作为 `Optional<T>` 注入："
 
+#. mt: deepl
+#, fuzzy
 msgid "Use `request()` when depending on services from optional extensions or when the service might be conditionally produced."
-msgstr ""
+msgstr "当依赖于可选扩展中的服务，或者服务可能有条件地生成时，请使用 `request()` 。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Consuming Multiple Services"
-msgstr ""
+msgstr "使用多项服务"
 
+#. mt: deepl
+#, fuzzy
 msgid "To consume all services of a given type, use `consumeAll(Class<T>)`. The services are injected as a `Map<String, T>` where keys are the service names:"
-msgstr ""
+msgstr "要使用某类的所有服务，请使用 `consumeAll(Class<T>)` 。这些服务将作为 `Map<String, T>` 注入，其中键为服务名称："
 
+#. mt: deepl
+#, fuzzy
 msgid "Services consumed by `consumeAll()` must be named (created via `forService(Class<T>, String name)`). Only one level of the naming hierarchy is consumed: `consumeAll(Foo.class)` will consume services registered as `forService(Foo.class, \"bar\")` but will not consume services registered as `forService(Foo.class, List.of(\"bar\", \"baz\"))`."
-msgstr ""
+msgstr "由 `consumeAll()` 调用的服务必须命名（通过 `forService(Class<T>, String name)` 创建）。 仅会消费命名层次结构中的一层： `consumeAll(Foo.class)` 将消费以 `forService(Foo.class, \"bar\")` 方式注册的服务，但不会消费以 `forService(Foo.class, List.of(\"bar\", \"baz\"))` 方式注册的服务。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Optional Service Production"
-msgstr ""
+msgstr "可选服务制作"
 
+#. mt: deepl
+#, fuzzy
 msgid "A service can declare that it may produce no value at runtime by calling `.optional()` on the builder. This changes the action's return type to `Optional<T>`:"
-msgstr ""
+msgstr "服务可以通过在构建器上调用 `.optional()` 来声明其在运行时可能不返回任何值。这会将操作的返回类型更改为 `Optional<T>` ："
 
+#. mt: deepl
+#, fuzzy
 msgid "Returning `Optional.empty()` marks the service as present-but-valueless. This is different from a service failing to start:"
-msgstr ""
+msgstr "返回 `Optional.empty()` 表示该服务“存在但无值”。这与服务启动失败的情况不同："
 
+#. mt: deepl
+#, fuzzy
 msgid "Services that `require()` an optional service will fail at runtime if the service returned empty."
-msgstr ""
+msgstr "如果某个服务返回了空结果，则 `调用该服务并使用其作为` 可选参数的服务将在运行时失败。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Services that `request()` an optional service will receive an empty `Optional` if the service returned empty."
-msgstr ""
+msgstr "如果通过 `request() 调用` 可选服务时该服务返回的是空值，则调用该服务的服务将收到一个空 `的可选对象` 。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Services using `consumeAll()` skip optional services that returned empty — they do not appear in the map."
-msgstr ""
+msgstr "使用 `consumeAll()` 的服务会跳过返回值为空的可选服务——这些服务不会出现在映射中。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Use `.optional()` for services that may legitimately have nothing to produce based on configuration or runtime conditions."
-msgstr ""
+msgstr "对于那些根据配置或运行时条件，可能确实没有任何输出结果的服务，请使用 `.optional()` 。"
 
 #. mt: deepl
 #, fuzzy
@@ -1594,8 +1660,10 @@ msgstr "基本类型、 `字符串` 、 `类` 和枚举值。"
 msgid "Immutable collections (e.g., via `List.of()`, `Set.copyOf()`, `Map.copyOf()`)."
 msgstr "不可变集合（例如，通过 `List.of()` 、 `Set.copyOf()` 、 `Map.copyOf()` 创建的集合）。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Configuration mappings from `BUILD_AND_RUN_TIME_FIXED` phase."
-msgstr ""
+msgstr "来自 `BUILD_AND_RUN_TIME_FIXED` 阶段的配置映射。"
 
 #. mt: deepl
 #, fuzzy
@@ -1622,8 +1690,10 @@ msgstr "可变集合（在调用lambda表达式之前，务必通过 `List.copyO
 msgid "`BUILD_TIME` configuration objects (extract the specific values into local variables first)."
 msgstr "`BUILD_TIME` 配置对象（请先将具体值提取到局部变量中）。"
 
+#. mt: deepl
+#, fuzzy
 msgid "`RUN_TIME` configuration objects (use `.require(ConfigType.class)` instead)."
-msgstr ""
+msgstr "`RUN_TIME` 配置对象（请改用 `.require(ConfigType.class)` ）。"
 
 #. mt: deepl
 #, fuzzy
@@ -1669,11 +1739,15 @@ msgstr ""
 "\n"
 " 包私有可见性"
 
+#. mt: deepl
+#, fuzzy
 msgid "Service lambdas are transliterated into generated bytecode that executes in a runtime context where package-private access can fail. The failure mode is subtle — it typically occurs when the lambda contains nested lambdas, anonymous classes, or method references that indirectly reference package-private runtime types. If you encounter an `IllegalAccessError` at runtime involving a package-private class that appears to be reachable from your service lambda, this is the cause."
-msgstr ""
+msgstr "服务 lambda 表达式会被转换为生成的字节码，该字节码在运行时上下文中执行，而在此上下文中，包私有访问可能会失败。 这种失败模式较为隐蔽——通常发生在 lambda 表达式中包含嵌套的 lambda 表达式、匿名类或间接引用包私有运行时类型的方法引用时。如果您在运行时遇到涉及包私有类的 `IllegalAccessError` 异常，且该类似乎可从您的服务 lambda 访问到，则这就是原因所在。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The solution is to make referenced runtime classes `public`. If you are promoting a class from package-private to public solely for service access (and it was not previously part of your public API), move it to a `.impl` subpackage to signal that it remains internal."
-msgstr ""
+msgstr "解决方法是将被引用的运行时类设为 `public` 。如果你仅仅是为了服务访问而将一个类从包私有提升为 public（且该类此前并不属于你的公共 API），请将其移至 `.impl` 子包，以表明它仍然是内部的。"
 
 #. mt: deepl
 #, fuzzy
@@ -1712,11 +1786,15 @@ msgstr "服务可以在 `onStart` 或 `onStartAsync` 方法中注册清理操作
 msgid "Synchronous and Asynchronous Stop Handlers"
 msgstr "同步和异步停止处理程序"
 
+#. mt: deepl
+#, fuzzy
 msgid "Similar to start actions, stop handlers can be either synchronous or asynchronous. When using synchronous stop (`ctx.onStop(Runnable)`), the service is considered stopped when the runnable returns."
-msgstr ""
+msgstr "与启动操作类似，停止处理程序可以是同步的，也可以是异步的。使用同步停止（ `ctx.onStop(Runnable)` ）时，当可运行对象返回时，该服务即被视为已停止。"
 
+#. mt: deepl
+#, fuzzy
 msgid "When using asynchronous stop (`ctx.onStopAsync(Consumer<AsyncStopContext>)`), the stop handler is initially invoked in the calling thread, but the service is not considered stopped until `AsyncStopContext.stopComplete()` is called. The completion method can be called from the same thread or from a different thread, allowing the handler to schedule asynchronous cleanup work."
-msgstr ""
+msgstr "使用异步停止（ `ctx.onStopAsync(Consumer<AsyncStopContext>)` ）时，停止处理程序最初会在调用线程中被调用，但只有在调用 `AsyncStopContext.stopComplete()` 之后，服务才被视为已停止。 该完成方法既可以在同一线程中调用，也可以在不同线程中调用，从而允许处理程序安排异步清理工作。"
 
 #. mt: deepl
 #, fuzzy
@@ -2622,14 +2700,18 @@ msgstr "`io.quarkus.deployment.builditem.nativeimage.ReflectiveClassBuildItem`"
 msgid "Registers a class for reflection in Substrate. Constructors are always registered, while methods and fields are optional."
 msgstr "在 Substrate 中注册一个类以供反射使用。构造函数始终会被注册，而方法和字段则是可选的。"
 
+#. mt: deepl
+#, fuzzy
 msgid "`io.quarkus.deployment.builditem.nativeimage.ConstantBootstrapBuildItem`"
-msgstr ""
+msgstr "`io.quarkus.deployment.builditem.nativeimage.ConstantBootstrapBuildItem`"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "Registers a bootstrap method for execution at native image build time, allowing GraalVM to constant-fold dynamic constants and `invokedynamic` call sites.\n"
 "The third bootstrap parameter must be `Class` for dynamic constants, `MethodType` for `invokedynamic`, or `TypeDescriptor` for a method supporting both.\n"
 "Quarkus uses the public bootstrap registration API on GraalVM 25.4 and later and the internal API on earlier versions that support registration (25.0.4 and later)."
-msgstr ""
+msgstr "注册一个在原生映像构建时执行的引导方法，允许 GraalVM 对动态常量和 `invokedynamic` 调用点进行常量折叠。第三个引导参数必须为：动态常量时 `为 Class` ， `invokedynamic` 时为 `MethodType` ，或同时支持两者的方法时为 `TypeDescriptor` 。 Quarkus 在 GraalVM 25.4 及更高版本中使用公共引导程序注册 API，而在支持注册的早期版本（25.0.4 及更高版本）中则使用内部 API。"
 
 #, fuzzy
 msgid "`io.quarkus.deployment.builditem.nativeimage.RuntimeInitializedClassBuildItem`"
@@ -2866,40 +2948,52 @@ msgstr "该功能名称还应与扩展程序中 `devtools/common/src/main/filter
 msgid "Capabilities"
 msgstr "功能"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "A _capability_ represents a technical capability that can be queried by other extensions.\n"
 "An extension may provide multiple capabilities, but only a single provider of a given capability is allowed in an application: if more than one is detected, the build fails.\n"
 "By default, capabilities are not displayed to users.\n"
 "Capabilities should be used when checking for the presence of an extension rather than class path based checks."
-msgstr ""
+msgstr "_功能_ 代表一种技术能力，其他扩展可以对其进行查询。 一个扩展可能提供多个功能，但在一个应用程序中，给定功能仅允许存在一个提供者：若检测到多个提供者，则构建将失败。默认情况下，功能不会向用户显示。在检查扩展是否存在时，应使用功能，而非基于类路径的检查。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The preferred way to declare the capabilities an extension provides (or requires) is by configuring the `quarkus-extension-maven-plugin` in the runtime module's `pom.xml`:"
-msgstr ""
+msgstr "声明扩展所提供（或所需）的功能的首选方法是在运行时模块的 `pom.xml` 中配置 `quarkus-extension-maven-plugin` ："
 
+#. mt: deepl
+#, fuzzy
 msgid "See xref:capabilities.adoc[Extension capabilities] for the full details, including required capabilities and the Gradle equivalent."
-msgstr ""
+msgstr "有关完整详细信息（包括所需功能及其在 Gradle 中的对应实现），请参阅 xref:capabilities.adoc[“扩展功能”部分] 。"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "Capabilities can also be registered in a <<build-step-processors>> method that produces a `CapabilityBuildItem`.\n"
 "However, capabilities declared this way are not part of the extension descriptor, so they are not visible to the Quarkus dev tools\n"
 "and cannot be taken into account when checking extension compatibility while creating a project or adding extensions:"
-msgstr ""
+msgstr "功能还可以通过在 <<build-step-processors>> 方法中进行注册，该方法会返回 `一个CapabilityBuildItem对象` 。但是，以这种方式声明的功能不属于扩展描述符的一部分，因此Quarkus开发工具无法识别它们，在创建项目或添加扩展时检查扩展兼容性时也不会将其纳入考虑范围："
 
 #, fuzzy
 msgid "Extensions can consume registered capabilities using the `Capabilities` build item:"
 msgstr "扩展程序可以使用 `“Capabilities` ”构建项来调用已注册的功能："
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "Capabilities should follow the naming conventions of Java packages; e.g. `io.quarkus.security.jpa`.\n"
 "Capabilities provided by core extensions should be listed in the `io.quarkus.deployment.Capability` interface and their name should always start with the `io.quarkus` prefix."
-msgstr ""
+msgstr "功能应遵循 Java 包的命名约定；例如： `io.quarkus.security.jpa` 。核心扩展提供的功能应列在 `io.quarkus.deployment.Capability` 接口中，且其名称应始终以 `io.quarkus` 前缀开头。"
 
 #, fuzzy
 msgid "Bean Defining Annotations"
 msgstr "Bean 定义注解"
 
+#. mt: deepl
+#, fuzzy
 msgid "The CDI layer processes CDI beans that are either explicitly registered or that it discovers based on bean defining annotations as defined in https://jakarta.ee/specifications/cdi/5.0/jakarta-cdi-spec-5.0.html#bean_defining_annotations[2.5.1. Bean defining annotations]. You can expand this set of annotations to include annotations your extension processes using a `BeanDefiningAnnotationBuildItem` as shown in this `TestProcessor#registerBeanDefinningAnnotations` example:"
-msgstr ""
+msgstr "CDI 层处理那些被显式注册的 CDI Bean，或者根据 link:https://jakarta.ee/specifications/cdi/5.0/jakarta-cdi-spec-5.0.html#bean_defining_annotations[2.5.1] 节“Bean 定义注解”中定义的 link:https://jakarta.ee/specifications/cdi/5.0/jakarta-cdi-spec-5.0.html#bean_defining_annotations[Bean 定义注解] 所发现的 CDI Bean link:https://jakarta.ee/specifications/cdi/5.0/jakarta-cdi-spec-5.0.html#bean_defining_annotations[。] 您可以使用 `BeanDefiningAnnotationBuildItem` 扩展这组注解，以包含您的扩展所处理的注解，如下面的 `TestProcessor#registerBeanDefinningAnnotations` 示例所示："
 
 #, fuzzy
 msgid "Register the annotation class and CDI default scope using the Jandex `DotName` class."

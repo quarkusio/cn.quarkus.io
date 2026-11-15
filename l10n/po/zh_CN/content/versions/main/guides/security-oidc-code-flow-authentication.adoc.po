@@ -288,60 +288,92 @@ msgstr "POST 请求"
 msgid "Some providers, such as the xref:security-openid-connect-providers.adoc#strava[Strava OAuth2 provider], require client credentials to be posted as HTTP POST query parameters:"
 msgstr "某些提供商（例如 xref:security-openid-connect-providers.adoc#strava[Strava OAuth2 提供商] ）要求将客户端凭据作为 HTTP POST 查询参数提交："
 
+#. mt: deepl
+#, fuzzy
 msgid "Attestation-based client authentication"
-msgstr ""
+msgstr "基于证书的客户端身份验证"
 
+#. mt: deepl
+#, fuzzy
 msgid "https://datatracker.ietf.org/doc/draft-ietf-oauth-attestation-based-client-auth/[OAuth2 Attestation-Based Client Authentication] allows clients to authenticate without a pre-shared secret."
-msgstr ""
+msgstr "link:https://datatracker.ietf.org/doc/draft-ietf-oauth-attestation-based-client-auth/[基于 OAuth 2.0 证明的客户端身份验证] 允许客户端无需预共享密钥即可进行身份验证。"
 
+#. mt: deepl
+#, fuzzy
 msgid "When attestation is enabled, Quarkus OIDC generates a key pair, requests an Attestation JWT from a default or registered Client Attester, generates a Proof of Possession JWT that proves it owns a private key and is cryptographically bound to the Attestation JWT and sends both JWTs as HTTP headers:"
-msgstr ""
+msgstr "启用认证功能后，Quarkus OIDC 会生成一对密钥，向默认或已注册的客户端认证者请求一份认证 JWT，生成一份“持有证明”JWT（用于证明其拥有私钥，且该 JWT 与认证 JWT 存在加密绑定关系），并将这两份 JWT 作为 HTTP 头发送："
 
+#. mt: deepl
+#, fuzzy
 msgid "`OAuth-Client-Attestation` — a Client Attestation JWT containing the public key in the `cnf` claim"
-msgstr ""
+msgstr "`OAuth-Client-Attestation` —— 一个包含 `cnf` 声明中公钥的客户端认证 JWT"
 
+#. mt: deepl
+#, fuzzy
 msgid "`OAuth-Client-Attestation-PoP` — a Proof of Possession JWT signed with the corresponding private key"
-msgstr ""
+msgstr "`OAuth-Client-Attestation-PoP` —— 一条使用相应私钥签名的“持有证明”JWT"
 
+#. mt: deepl
+#, fuzzy
 msgid "To enable attestation-based client authentication:"
-msgstr ""
+msgstr "要启用基于证书的客户端身份验证："
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "The signature algorithm defaults to `ES256`. Only EC algorithms (`ES256`, `ES384`, `ES512`) are currently supported.\n"
 "This algorithm is used for proof-of-possession (PoP) JWTs and self-attested attestation JWTs. Custom attesters may use different algorithms for signing attestation JWTs.\n"
 "To use a different EC algorithm:"
-msgstr ""
+msgstr "签名算法默认使用 `ES256` 。目前仅支持椭圆曲线（EC）算法（ `ES256` 、 `ES384` 、 `ES512` ）。该算法用于所有权证明（PoP）JWT 和自我认证的认证 JWT。 自定义认证者可使用不同的算法对认证 JWT 进行签名。若要使用其他 EC 算法："
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "The default Client Attester performs self-attestation: it acts as both Client Instance and Client Attester.\n"
 "It uses separate key pairs for the attestation JWT and the client instance. The attestation JWT is signed with the attestation key pair whose public key is exposed via a JWKS endpoint at `/.well-known/attestation-jwks` for the default tenant, or `/.well-known/attestation-jwks/<tenant-id>` for named OIDC tenants. The client instance key pair is used for the `cnf` claim and for signing the proof-of-possession JWT."
-msgstr ""
+msgstr "默认的客户端认证器会执行自我认证：它同时充当客户端实例和客户端认证器。它为认证 JWT 和客户端实例分别使用独立的密钥对。 认证 JWT 使用认证密钥对进行签名，其公钥通过 JWKS 端点公开：对于默认租户，该端点位于 `/.well-known/attestation-jwks` ；对于命名 OIDC 租户，则位于 `/.well-known/attestation-jwks/<tenant-id>` 。 客户端实例密钥对用于 `cnf` 声明以及对持有证明 JWT 进行签名。"
 
+#. mt: deepl
+#, fuzzy
 msgid "To obtain an Attestation JWT from an external Client Attester, provide a custom `io.quarkus.oidc.common.ClientAttester` CDI bean:"
-msgstr ""
+msgstr "要从外部客户端验证器获取认证 JWT，请提供一个自定义的 `io.quarkus.oidc.common.ClientAttester` CDI Bean："
 
+#. mt: deepl
+#, fuzzy
 msgid "The `io.quarkus.oidc.common.ClientAttester` API is currently experimental and may change in future releases."
-msgstr ""
+msgstr "`io.quarkus.oidc.common.ClientAttester` API 目前处于实验阶段，未来版本中可能会发生变更。"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "Without a qualifier, the custom bean overrides the default `ClientAttester` for all tenants.\n"
 "To restrict a custom attestation to specific tenants, use the `@TenantFeature` qualifier:"
-msgstr ""
+msgstr "如果没有限定符，自定义 Bean 将覆盖所有租户的默认 `ClientAttester` 。若要将自定义验证限制在特定租户范围内，请使用 `@TenantFeature` 限定符："
 
+#. mt: deepl
+#, fuzzy
 msgid "By default, a custom `ClientAttester` is assumed to delegate to a remote attestation service, so Quarkus does not publish an attestation public key for its tenant and the attestation JWKS endpoint is not registered."
-msgstr ""
+msgstr "默认情况下，自定义 `ClientAttester` 被视为会将任务委托给远程认证服务，因此 Quarkus 不会为其租户发布认证公钥，也不会注册认证 JWKS 端点。"
 
+#. mt: deepl
+#, fuzzy
 msgid "If instead a custom attester self-attests the client by signing the Client Attestation JWT with the attestation key pair managed by Quarkus, it must override `selfAttesting()` to return `true`. This tells Quarkus to publish the attestation public key at the attestation JWKS endpoint so the OAuth2 authorization server can verify the Client Attestation JWT."
-msgstr ""
+msgstr "如果由自定义认证者通过使用 Quarkus 管理的认证密钥对对客户端认证 JWT 进行签名来对客户端进行自我认证，则必须重写 `selfAttesting()` 方法，使其返回 `true` 。 这会指示 Quarkus 在认证 JWKS 端点上发布认证公钥，以便 OAuth2 授权服务器能够验证客户端认证 JWT。"
 
+#. mt: deepl
+#, fuzzy
 msgid "A self-attesting custom attester signs the Client Attestation JWT with the attestation signing key provided in the attestation context. This key is only available to attesters which return `true` from `selfAttesting()`:"
-msgstr ""
+msgstr "一个自认证的自定义认证者使用认证上下文中提供的认证签名密钥对“客户端认证 JWT”进行签名。该密钥仅提供给在 `selfAttesting()` 方法中返回 `true 的` 认证者："
 
+#. mt: deepl
+#, fuzzy
 msgid "The Proof of Possession JWT is always generated by the Quarkus Client Instance."
-msgstr ""
+msgstr "“持有证明”JWT 总是由 Quarkus 客户端实例生成的。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Note that the client attestation may also be used alongside other forms of the client authentication to prove the workload provenance."
-msgstr ""
+msgstr "请注意，客户端证明也可与其他形式的客户端身份验证结合使用，以证明工作负载的来源。"
 
 #, fuzzy
 msgid "Introspection endpoint authentication"
@@ -1340,11 +1372,13 @@ msgstr "某些 OIDC 提供商不支持 link:https://openid.net/specs/openid-conn
 msgid "According to the https://openid.net/specs/openid-connect-session-1_0.html#RPLogout[RP-initiated logout] specification, the `quarkus.oidc.logout.post-logout-path` property is represented as a `post_logout_redirect_uri` query parameter, which is not recognized by the providers that do not support this specification."
 msgstr "根据 link:https://openid.net/specs/openid-connect-session-1_0.html#RPLogout[RP 发起的注销] 规范 `，quarkus.oidc.logout.post-logout-path` 属性以 `post_logout_redirect_uri` 查询参数的形式表示，但不支持该规范的提供商无法识别该参数。"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "You can use `quarkus.oidc.logout.post-logout-uri-param` to work around this issue.\n"
 "You can also request that more logout query parameters be added with `quarkus.oidc.logout.extra-params`.\n"
 "For example, here is how you can support a logout with `Auth0`:"
-msgstr ""
+msgstr "您可以使用 `quarkus.oidc.logout.post-logout-uri-param` 来解决此问题。此外，您还可以通过 `quarkus.oidc.logout.extra-params` 请求添加更多的注销查询参数。例如，以下是支持通过 `Auth0` 注销的方法："
 
 #, fuzzy
 msgid "Back-channel logout"
@@ -1365,10 +1399,12 @@ msgstr "OIDC 提供商使用 link:https://openid.net/specs/openid-connect-backch
 msgid "You can configure Quarkus to support Back-channel logout as follows:"
 msgstr "您可以按照以下方式配置 Quarkus 以支持后通道注销："
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "The absolute `back-channel logout` URL is calculated by adding `quarkus.oidc.logout.backchannel.path` to the current endpoint URL, for example, `http://localhost:8080/back-channel-logout`.\n"
 "You will need to configure this URL in the admin console of your OIDC provider."
-msgstr ""
+msgstr "`绝对后通道注销` URL 是通过在当前端点 URL 后添加 `quarkus.oidc.logout.backchannel.path` 计算得出的，例如 `http://localhost:8080/back-channel-logout` 。您需要在 OIDC 提供商的管理控制台中配置此 URL。"
 
 #, fuzzy
 msgid ""
@@ -1376,6 +1412,8 @@ msgid ""
 "For example, set `quarkus.oidc.token.age=10S` to ensure that no more than 10 seconds elapse since the logout token's `iat` (issued at) time."
 msgstr "如果您的 OIDC 提供商未在当前注销令牌中设置过期声明，您还需要配置令牌有效期属性，以确保注销令牌验证成功。 例如，将 `quarkus.oidc.token.age 设置为 10S` ，以确保自注销令牌的 `iat` （签发时间）起，经过的时间不超过 10 秒。"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "A logout token which has a `sid` (session id) claim logs out only the session whose ID token has the same `sid` claim, so make sure that the OIDC provider includes the `sid` claim in its ID tokens.\n"
 "By default, a logout token without the `sid` claim logs out only one session of the user identified by the logout token `sub` (subject) claim: the first session which accesses the application after the logout token has arrived.\n"
@@ -1385,7 +1423,7 @@ msgid ""
 "A logout token which targets all the sessions of the user is removed only by the cleanup timer or when the cache is full.\n"
 "Set `quarkus.oidc.logout.backchannel.clean-up-timer-interval` to activate the cleanup timer and keep `quarkus.oidc.logout.backchannel.token-cache-time-to-live` short so that stale logout tokens are removed promptly.\n"
 "Increase `quarkus.oidc.logout.backchannel.token-cache-size` if many logout tokens can arrive within this period."
-msgstr ""
+msgstr "包含 `sid` （会话 ID）声明的注销令牌仅会注销其 ID 令牌具有相同 `sid` 声明的会话，因此请确保 OIDC 提供商在其 ID 令牌中包含 `sid` 声明。 默认情况下，不包含 `sid` 声明的注销令牌仅会注销由该注销令牌的 `sub` （主体）声明所标识的用户的一个会话：即在注销令牌到达后首个访问该应用程序的会话。 如果同一用户通过多个浏览器登录，请将 `quarkus.oidc.logout.backchannel.logout-all-sessions 设置为 true` ，以便注销该用户在签发注销令牌时拥有的所有会话。 随后，Quarkus 会将此类注销令牌保存在缓存中，并尽最大努力注销该用户的所有其他会话。注销令牌将一直保存在缓存中，直到其所针对的会话访问应用程序为止——但这可能永远不会发生。 针对用户所有会话的注销令牌仅会在清理定时器触发或缓存已满时被移除。 请将 `quarkus.oidc.logout.backchannel.clean-up-timer-interval` 设置为启用清理定时器，并将 `quarkus.oidc.logout.backchannel.token-cache-time-to-live` 设置为较短的时间，以便及时清除过期的注销令牌。 如果在此期间可能会收到大量注销令牌，请增加 `quarkus.oidc.logout.backchannel.token-cache-size` 的值。"
 
 #, fuzzy
 msgid "Front-channel logout"

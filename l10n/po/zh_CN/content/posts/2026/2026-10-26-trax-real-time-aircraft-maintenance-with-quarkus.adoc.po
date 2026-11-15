@@ -6,264 +6,388 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: roq-plugin-l10n-adoc\n"
 
+#. mt: deepl
+#, fuzzy
 msgid "A short background on Trax"
-msgstr ""
+msgstr "关于Trax的简要背景介绍"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "Quarkus turns up in places most people never think to look for it.\n"
 "This one lives on the ramp, in the hangar, and in the hands of the mechanic standing under a wing at 3am."
-msgstr ""
+msgstr "Quarkus 总出现在大多数人根本想不到的地方。这台就栖身在登机坡道上、机库里，还有凌晨3点站在机翼下那位机械师的手中。"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "https://www.trax.aero/[Trax^] builds MRO software — Maintenance, Repair and Overhaul — for airlines, cargo operators and independent maintenance providers.\n"
 "If an aircraft is being worked on, something has to track it: the work orders, the task cards, the parts consumed, the sign-offs, the airworthiness records that a regulator can ask to see years later.\n"
 "Trax has been doing that for over 25 years, and today its systems cover thousands of aircraft for customers across dozens of countries."
-msgstr ""
+msgstr "link:https://www.trax.aero/[Trax] 为航空公司、货运运营商和独立维修服务商开发 MRO（维护、修理和大修）软件。当一架飞机正在进行维修时，必须有系统对其进行追踪：包括工作单、任务卡、消耗的零部件、签字确认，以及监管机构数年后可能要求查阅的适航记录。 Trax 从事这一领域已有 25 多年，如今其系统为遍布数十个国家的客户管理的数千架飞机提供支持。"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "Historically this was a heavyweight desktop application backed by a very large Oracle database.\n"
 "The modern push is *paperless* maintenance: get the mechanic off the clipboard and onto an iPad at the aircraft, and give the maintenance controller a live web dashboard instead of a report that was true ten minutes ago.\n"
 "That product line is called *eMobility*, and the technology behind it is a suite of Quarkus applications."
-msgstr ""
+msgstr "从历史上看，这曾是一款由庞大的Oracle数据库支撑的重量级桌面应用程序。 如今的发展趋势是 *无纸化* 维护：让维修技师摆脱记事板，直接在飞机旁使用iPad进行操作；同时为维护调度员提供实时网络仪表盘，而非一份十分钟前才更新的报告。该产品线名为 *eMobility* ，其背后的技术是一套Quarkus应用程序。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The problem"
-msgstr ""
+msgstr "问题"
 
+#. mt: deepl
+#, fuzzy
 msgid "These services have to serve two very different front ends:"
-msgstr ""
+msgstr "这些服务必须为两个截然不同的前端提供支持："
 
+#. mt: deepl
+#, fuzzy
 msgid "A **React** web application used by maintenance control and line control staff on desktops."
-msgstr ""
+msgstr "一款由维护控制和生产线控制人员在台式机上使用的 *React* 网页应用程序。"
 
+#. mt: deepl
+#, fuzzy
 msgid "A **Swift/SwiftUI iOS** application used by mechanics on iPads out at the aircraft."
-msgstr ""
+msgstr "一款由机械师在飞机旁通过iPad使用的 *Swift/SwiftUI iOS* 应用程序。"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "Both need the same data, and both need it to be *current*.\n"
 "When a work order changes status, when a flight's maintenance crew assignment moves, when a defect is raised against an aircraft, every connected client should know within seconds — without hammering the database with polling."
-msgstr ""
+msgstr "两者都需要相同的数据，且这些数据必须 *是最新的* 。当工单状态发生变化、航班的维护人员分配发生变动，或是针对某架飞机报告了缺陷时，每个已连接的客户端都应在几秒内获知这些信息——而无需通过轮询给数据库造成过重负担。"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "The wrinkle is that the system of record is the existing Oracle ERP database, and a great deal of what writes to it is *not* our service.\n"
 "Other Trax applications, batch jobs, and integrations all write to the same tables.\n"
 "We cannot simply fire an event from our own code after a transaction commits, because most of the interesting changes do not originate in our code at all."
-msgstr ""
+msgstr "问题在于，主数据系统是现有的 Oracle ERP 数据库，而写入其中的大量数据 *并非* 来自我们的服务。其他 Trax 应用程序、批处理作业以及集成系统都会向同一组表写入数据。 我们无法在事务提交后直接从自己的代码中触发事件，因为大多数关键的变更根本并非源自我们的代码。"
 
+#. mt: deepl
+#, fuzzy
 msgid "So the requirement became: **react to changes in the database itself, regardless of who made them, and fan them out to every connected client.**"
-msgstr ""
+msgstr "因此，需求变成了： *对数据库本身的变更做出响应——无论这些变更由谁发起——并将这些变更分发给每个已连接的客户端。*"
 
+#. mt: deepl
+#, fuzzy
 msgid "The architecture"
-msgstr ""
+msgstr "建筑"
 
+#. mt: deepl
+#, fuzzy
 msgid "The answer was change data capture, and Quarkus made every hop of it boring in the best possible way:"
-msgstr ""
+msgstr "答案是变更数据捕获，而 Quarkus 以最妙的方式让这个过程的每一步都变得索然无味："
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "Debezium tails the Oracle redo log and publishes change events to Kafka.\n"
 "The Quarkus service consumes those topics with Kafka Streams, refreshes whatever cached view the change affects, and then broadcasts a compact \"something you care about changed\" message to every open WebSocket.\n"
 "Clients re-fetch only what they need over REST."
-msgstr ""
+msgstr "Debezium 监听 Oracle 的重做日志，并将变更事件发布到 Kafka。Quarkus 服务通过 Kafka Streams 订阅这些主题，刷新受变更影响的任何缓存视图，然后向每个已打开的 WebSocket 广播一条简洁的“您关心的内容已发生变更”消息。 客户端仅通过 REST 重新获取所需的数据。"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "What I like about this shape is that the payload on the wire is deliberately *thin*.\n"
 "We are not trying to replicate the database into the browser — we are telling the client which slice of its state is now stale."
-msgstr ""
+msgstr "我喜欢这种设计的原因在于，传输数据流中的有效载荷被刻意设计得 *非常精简* 。我们并不是试图将数据库复制到浏览器中——而是告知客户端，其状态中的哪一部分数据已经过时了。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Consuming CDC with Kafka Streams"
-msgstr ""
+msgstr "使用 Kafka Streams 处理 CDC"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "The `quarkus-kafka-streams` extension gives you a `Topology` producer and Quarkus handles the lifecycle.\n"
 "We wanted adding a new captured table to be a one-class change, so the topology is assembled by discovering CDI beans:"
-msgstr ""
+msgstr "`quarkus-kafka-streams` 扩展为您提供了一个 `Topology` 生产者，而 Quarkus 负责处理其生命周期。我们希望添加一个新的捕获表只需修改一个类，因此该拓扑是通过发现 CDI Bean 来组装的："
 
+#. mt: deepl
+#, fuzzy
 msgid "Every handler extends a small base class that takes care of the serdes, the error handling and the logging context, so the subclass only has to say which topic it wants and what to do with a record:"
-msgstr ""
+msgstr "每个处理器都继承了一个小型基类，该基类负责处理序列化/反序列化、错误处理和日志记录上下文，因此子类只需指定所需的主题以及如何处理记录即可："
 
+#. mt: deepl
+#, fuzzy
 msgid "A concrete handler for the work order table is then almost entirely business logic:"
-msgstr ""
+msgstr "因此，工作单表的具体处理器几乎完全由业务逻辑构成："
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "Adding capture for a new table is: write one handler, add one topic property.\n"
 "CDI discovery does the rest — there is no registry to remember to update, which is exactly the kind of thing that rots in a long-lived codebase."
-msgstr ""
+msgstr "为新表添加捕获操作的方法是：编写一个处理程序，添加一个主题属性。剩下的工作由 CDI 自动发现机制完成——无需记住要更新哪个注册表，而这正是长期运行的代码库中容易导致问题的那类事情。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The topic names live in configuration rather than in the handlers, so a new capture never touches Java that is already working:"
-msgstr ""
+msgstr "主题名称存储在配置中，而非处理程序中，因此新的捕获规则绝不会影响已经正常运行的 Java 代码："
 
+#. mt: deepl
+#, fuzzy
 msgid "The `${HOSTNAME}` in the application id is the detail worth stopping on."
-msgstr ""
+msgstr "应用程序 ID 中的 `${HOSTNAME}` 正是值得重点关注的细节。"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "Kafka Streams derives the consumer group from the application id, and a consumer group *divides* partitions among its members.\n"
 "That is exactly what you want when you are processing work — and exactly what you do not want here.\n"
 "If every pod shared one application id, a change event would be delivered to one pod, and only the users connected to that pod would ever hear about it.\n"
 "We need the opposite: every pod must see every record, so it can notify the browsers and iPads holding open WebSockets against *it*.\n"
 "This is a broadcast, not a work queue, so each pod needs a consumer group of its own."
-msgstr ""
+msgstr "Kafka Streams 根据应用程序 ID 推导出消费者组，而消费者组 *会* 将其成员之间 *分配* 分区。这正是你在处理任务时所期望的——但恰恰也是你在此处所不希望看到的。 如果每个 Pod 共享一个应用程序 ID，那么一个变更事件会被传递给某个 Pod，而只有连接到该 Pod 的用户才会收到该事件。 我们需要的是相反的情况：每个 Pod 都必须看到每一条记录，这样它才能通知那些 *与其* 保持 WebSocket 连接的浏览器和 iPad。这是一种广播，而不是工作队列，因此每个 Pod 都需要拥有自己的消费者组。"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "The container runtime hands us a unique value for free.\n"
 "Kubernetes sets `HOSTNAME` to the pod name, and pod names are unique within a namespace — a Deployment appends a random suffix, a StatefulSet an ordinal — so two replicas of the same Deployment land in different consumer groups without any coordination between them.\n"
 "Docker does the same thing with the container id.\n"
 "No config to template per replica, no init container to generate an identity."
-msgstr ""
+msgstr "容器运行时会自动为我们提供一个唯一的值。Kubernetes 将 `HOSTNAME` 设置为 Pod 名称，而 Pod 名称在命名空间内是唯一的——Deployment 会附加一个随机后缀，StatefulSet 会附加一个序号——因此，同一 Deployment 的两个副本会进入不同的消费者组，而无需它们之间进行任何协调。 Docker 通过容器 ID 实现了相同的效果。无需为每个副本配置模板，也无需初始化容器来生成标识。"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "Uniqueness alone is not the whole reason, though.\n"
 "A random UUID regenerated at boot would also be unique — and that is precisely the problem.\n"
 "Every restart would strand the old consumer group with its committed offsets and its state store directory, and the pod would come back as a stranger.\n"
 "`HOSTNAME` is *stable for the life of the pod*, so a container that crashes and restarts in place rejoins the same group and picks up where it left off.\n"
 "Unique across pods, stable across restarts: those are the two properties an application id actually needs, and the pod name has both."
-msgstr ""
+msgstr "不过，仅凭唯一性并不能解释全部原因。在启动时重新生成的随机 UUID 同样是唯一的——而这恰恰就是问题所在。每次重启都会让旧的消费者组及其已提交的偏移量和状态存储目录被遗留下来，而 Pod 重新启动后却会像一个陌生人一样出现。 `HOSTNAME` *在 pod 的整个生命周期内* 保持 *稳定* ，因此，发生崩溃并在原地重启的容器会重新加入同一组，并从中断处继续运行。跨 pod 唯一、跨重启稳定：这些正是应用程序 ID 真正需要的两个属性，而 pod 名称兼具这两点。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Pushing to clients with WebSockets Next"
-msgstr ""
+msgstr "使用 WebSockets 向客户端推送数据（下）"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "On the other end, `quarkus-websockets-next` turned out to be a genuine pleasure.\n"
 "The endpoint is a plain CDI bean with annotated methods:"
-msgstr ""
+msgstr "`另一方面，quarkus-websockets-next` 却带来了一种真正的愉悦体验。该端点是一个带有注解方法的普通 CDI Bean："
 
+#. mt: deepl
+#, fuzzy
 msgid "Two small details in there solved real production problems."
-msgstr ""
+msgstr "其中的两个小细节解决了实际生产中的问题。"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "First, keeping a connection alive through corporate firewalls and airport Wi-Fi needs two different mechanisms, because the two clients are not equally capable.\n"
 "A native client can send RFC 6455 ping control frames, and `@OnPingMessage` / `@OnPongMessage` hand those to you directly.\n"
 "JavaScript in the browser has no API to send a ping frame at all, so the React client sends a literal `\"ping\"` text message instead and `@OnTextMessage` answers it.\n"
 "Two keepalive strategies, one endpoint, no branching in the transport layer.\n"
 "On the server side, Quarkus sends its own pings for us:"
-msgstr ""
+msgstr "首先，要通过企业防火墙和机场 Wi-Fi 保持连接活跃，需要两种不同的机制，因为这两个客户端的能力并不相同。原生客户端可以发送 RFC 6455 标准的 ping 控制帧，而 `@OnPingMessage` / `@OnPongMessage` 会将这些帧直接传递给你。 浏览器中的 JavaScript 完全没有用于发送 ping 帧的 API，因此 React 客户端会改发一条字面意义 `上的“ping”` 文本消息，而 `@OnTextMessage` 则负责处理该消息。两种保持连接策略，一个端点，传输层无需分支处理。在服务器端，Quarkus 会为我们发送其自身的 ping 请求："
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "Second, `@OnError` gets a real exception rather than a swallowed one.\n"
 "`HttpClosedException` just means someone closed their laptop lid, so we log it at warn and move on, while anything else gets a full stack trace.\n"
 "Before we separated those two cases, the logs were unreadable."
-msgstr ""
+msgstr "其次 `，@OnError` 捕获的是真正的异常，而不是被吞噬的异常。 `HttpClosedException` 仅仅表示有人合上了笔记本电脑的盖子，因此我们将其以警告级别记录并继续处理；而其他任何情况都会生成完整的堆栈跟踪。在我们将这两种情况区分开来之前，日志根本无法阅读。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Broadcasting uses the injectable `OpenConnections` bean:"
-msgstr ""
+msgstr "广播功能使用了可注入的 `OpenConnections` Bean："
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "`OpenConnections` is iterable, and the handshake request is available on each connection, so routing a message to just one application's clients is a filter on a query parameter.\n"
 "No session registry of our own, no `ConcurrentHashMap` of connection ids to maintain."
-msgstr ""
+msgstr "`OpenConnections` 是可迭代的，且每个连接上都提供握手请求，因此将消息路由到某个应用程序的客户端，只需对查询参数进行过滤即可。无需维护自己的会话注册表，也无需维护连接 ID 的 `ConcurrentHashMap` 。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The message itself is intentionally small — an id, a timestamp, and a set of enum values naming what changed:"
-msgstr ""
+msgstr "该消息本身故意设计得非常简短——包含一个 ID、一个时间戳以及一组枚举值，用于标明发生了哪些变化："
 
+#. mt: deepl
+#, fuzzy
 msgid "So a CDC event on the work order table ends up as `updates: [\"WORK_ORDER\"]` plus a little metadata naming the aircraft and station, and the React app invalidates exactly one TanStack Query cache key."
-msgstr ""
+msgstr "因此，工作单表中的一条 CDC 事件最终会生成如下 `更新：[\"WORK_ORDER\"]` 以及包含飞机名称和站点的少量元数据，而 React 应用会清空恰好一个 TanStack Query 缓存键。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Debouncing the firehose"
-msgstr ""
+msgstr "对“信息洪流”进行去抖动处理"
 
+#. mt: deepl
+#, fuzzy
 msgid "Here is the lesson we learned the hard way, and it is not a Quarkus problem — it is a CDC problem."
-msgstr ""
+msgstr "这是我们通过惨痛教训学到的经验，这并不是 Quarkus 的问题——而是 CDC 的问题。"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "Change data capture is *chatty*.\n"
 "One human action in the ERP can be a multi-statement transaction touching the same row several times, and a batch job can rewrite thousands of rows in a few seconds.\n"
 "Forwarding every one of those to the browser meant a React app re-rendering itself into the ground and an iPad burning battery for no reason."
-msgstr ""
+msgstr "变更数据捕获（CDC）会 *产生大量通信* 。ERP系统中的一次人工操作可能是一项涉及多条语句的交易，会多次触及同一行数据；而一个批处理作业则可能在几秒钟内重写数千行数据。如果将其中每一项都转发给浏览器，React应用就会因不断重渲染而瘫痪，iPad的电池也会无缘无故地被耗尽。"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "So updates are coalesced before they leave the building.\n"
 "Handlers do not broadcast directly; they enqueue into a per-type map keyed by the record's natural identity, and a shared trailing timer flushes the whole batch a second later:"
-msgstr ""
+msgstr "因此，更新会在离开系统之前被合并。处理程序不会直接广播；它们会将更新按类型放入以记录的自然标识为键的映射中，然后由一个共享的尾随计时器在一秒后将整个批次刷新出去："
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "Because the pending map is keyed by identity, five updates to the same work order inside the window collapse to one.\n"
 "Because the timer is shared and trailing, a burst across several tables still produces a single `SocketMessage` carrying every affected type.\n"
 "A thousand-row batch job becomes one notification instead of a thousand."
-msgstr ""
+msgstr "由于待处理映射以标识为键，因此在该时间窗口内对同一工作单进行的五次更新会被合并为一次。由于计时器是共享的且采用滞后机制，因此即使跨多个表的突发更新，最终仍会生成一条包含所有受影响类型的 `SocketMessage` 。一个包含一千行的批处理作业只会触发一次通知，而不是一千次。"
 
+#. mt: deepl
+#, fuzzy
 msgid "When the iPad is asleep"
-msgstr ""
+msgstr "当 iPad 处于睡眠状态时"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "A WebSocket is only useful while the app is in the foreground.\n"
 "Mechanics put the iPad down, walk around the aircraft, and come back.\n"
 "So the same event that broadcasts over WebSockets also fans out to Apple Push Notification Service, driven by CDI events so the notification path never blocks the caller:"
-msgstr ""
+msgstr "WebSocket 仅在应用程序处于前台时才有用。机务人员会放下 iPad，在飞机周围走动，然后返回。因此，通过 WebSocket 广播的同一事件也会通过 Apple 推送通知服务进行分发，该过程由 CDI 事件驱动，因此通知路径绝不会阻塞调用方："
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "`@ObservesAsync` from ArC is the whole implementation of \"do this off the request thread\".\n"
 "No executor to configure, no thread pool to tune, no `@Async` annotation processor."
-msgstr ""
+msgstr "ArC 中的 `@ObservesAsync` 实现了“在请求线程之外执行此操作”的完整方案。无需配置执行器，无需调整线程池，也无需 `@Async` 注解处理器。"
 
+#. mt: deepl
+#, fuzzy
 msgid "One OpenAPI contract, two generated clients"
-msgstr ""
+msgstr "一个 OpenAPI 契约，两个生成的客户端"
 
+#. mt: deepl
+#, fuzzy
 msgid "This is the part the front-end teams care about most."
-msgstr ""
+msgstr "这是前端团队最关心的部分。"
 
+#. mt: deepl
+#, fuzzy
 msgid "`quarkus-smallrye-openapi` generates the specification from the JAX-RS resources and the `@Schema` annotations, and one property makes it a build artifact rather than a runtime curiosity:"
-msgstr ""
+msgstr "`quarkus-smallrye-openapi` 根据 JAX-RS 资源和 `@Schema` 注解生成规范，而其中一个属性使其成为构建产物，而非运行时的花哨功能："
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "The generated `openapi.json` is committed alongside the code, which means it is reviewed in the same pull request as the endpoint change.\n"
 "Both clients are generated from that one file."
-msgstr ""
+msgstr "生成的 `openapi.json` 文件会随代码一起提交，这意味着它将与端点变更在同一个拉取请求中进行审核。这两个客户端都是从该文件生成的。"
 
+#. mt: deepl
+#, fuzzy
 msgid "For iOS:"
-msgstr ""
+msgstr "适用于 iOS："
 
+#. mt: deepl
+#, fuzzy
 msgid "For React, https://orval.dev/[Orval^] emits TanStack Query hooks:"
-msgstr ""
+msgstr "对于 React， link:https://orval.dev/[Orval] 会发布 TanStack Query 钩子："
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "The effect is that a Java developer renaming a field breaks the Swift build and the TypeScript build, at compile time, instead of at an airport.\n"
 "`@Schema` annotations on the DTOs are not documentation busywork — they are the input to two code generators, and the `SocketUpdate` enum above lands in both clients as a real type."
-msgstr ""
+msgstr "其结果是，当 Java 开发者重命名一个字段时，会在编译时导致 Swift 和 TypeScript 的构建失败，而不是在机场发生。DTO 上的 `@Schema` 注解并非无谓的文档工作——它们是两个代码生成器的输入，而上文中的 `SocketUpdate` 枚举会作为真实类型出现在两个客户端中。"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "Error responses are standardized too.\n"
 "The https://github.com/quarkiverse/quarkus-http-problem[quarkus-http-problem^] extension gives us RFC 7807 problem details across the whole API, with tracing identifiers folded in:"
-msgstr ""
+msgstr "错误响应也已标准化。 link:https://github.com/quarkiverse/quarkus-http-problem[quarkus-http-problem] 扩展在整个 API 中提供了符合 RFC 7807 标准的问题详情，其中包含跟踪标识符："
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "So a Bean Validation failure comes back as a `422` with a machine-readable body, and the `traceId` in it is the same one in the Grafana trace.\n"
 "When a mechanic reports \"it said something went wrong\", support has a trace id to paste."
-msgstr ""
+msgstr "因此，Bean Validation 验证失败会返回一个 `422` 状态码，其正文为机器可读格式，其中的 `traceId` 与 Grafana 跟踪记录中的 traceId 一致。当维修人员报告“系统提示出现错误”时，技术支持人员便可以直接粘贴该 traceId。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The rest of the stack"
-msgstr ""
+msgstr "栈中的其余部分"
 
+#. mt: deepl
+#, fuzzy
 msgid "Because everything is a Quarkus extension, a lot of what would normally be infrastructure work was configuration:"
-msgstr ""
+msgstr "由于一切都是 Quarkus 扩展，因此许多原本属于基础架构的工作都变成了配置："
 
+#. mt: deepl
+#, fuzzy
 msgid "**`quarkus-hibernate-orm-panache` + `quarkus-jdbc-oracle`** against the existing Oracle schema, with a snake-case physical naming strategy so the Java entities read like Java and the tables stay as the ERP defined them decades ago."
-msgstr ""
+msgstr "*quarkus-hibernate-orm-panache+quarkus-jdbc-oracle* 基于现有的 Oracle 模式，采用蛇形命名法作为物理命名策略，这样 Java 实体名称读起来像 Java 代码，而表名则保持数十年前 ERP 定义时的原样。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**`quarkus-cache`** and the Hibernate second-level cache for reference data — aircraft master, locations, gates, profiles — warmed at startup and invalidated by the CDC handlers. Reference data that changes twice a year should not be a database round trip on every request."
-msgstr ""
+msgstr "*quarkus-cache* 以及用于参考数据（飞机主数据、位置、登机口、配置文件）的 Hibernate 二级缓存——在启动时预热，并由 CDC 处理程序进行失效操作。每年仅更新两次的参考数据，不应在每次请求时都进行数据库往返操作。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**`quarkus-oidc`** with Keycloak, mapping OIDC token claims onto the fine-grained permissions already modeled in the ERP."
-msgstr ""
+msgstr "*quarkus-oidc* 与 Keycloak 配合使用，将 OIDC 令牌声明映射到 ERP 中已建模的细粒度权限上。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**`quarkus-micrometer-opentelemetry`** and **`quarkus-micrometer-registry-prometheus`**, pointed at a Grafana LGTM stack. JDBC telemetry, scheduler metrics and WebSocket metrics are all one property each."
-msgstr ""
+msgstr "*quarkus-micrometer-opentelemetry* 和 *quarkus-micrometer-registry-prometheus，* 指向一个 Grafana LGTM 堆栈。JDBC 遥测、调度器指标和 WebSocket 指标各占一个属性。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**`quarkus-scheduler`**, **`quarkus-qute`**, **`quarkus-amazon-s3`** and a couple of Quarkiverse PDF extensions for the reporting and document side."
-msgstr ""
+msgstr "*quarkus-scheduler* 、 *quarkus-qute* 、 *quarkus-amazon-s3* 以及几个用于报表和文档处理的 Quarkiverse PDF 扩展。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**`quarkus-smallrye-health`** and **`quarkus-info`** so the platform team gets liveness, readiness and build metadata without us writing an endpoint."
-msgstr ""
+msgstr "*quarkus-smallrye-health* 和 *quarkus-info* ，这样平台团队就能获取系统运行状态、就绪状态和构建元数据，而无需我们编写端点。"
 
 msgid "Conclusion"
 msgstr "解决方案"
 
+#. mt: deepl
+#, fuzzy
 msgid "The thing that stands out to me about this project is how *little* of it is plumbing."
-msgstr ""
+msgstr "这个项目最让我印象深刻的一点是，其中涉及的水管工程部分 *非常少* 。"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "The hard parts of the problem are genuinely hard: capturing changes from an Oracle database you do not exclusively own, getting them to a mechanic's iPad reliably enough that they trust it, and keeping two independently-built front ends in lockstep with a Java API.\n"
 "But the code that solves those problems is a topology producer, a handful of handler classes, one annotated WebSocket endpoint and a build property that writes an OpenAPI file to disk."
-msgstr ""
+msgstr "该问题的难点确实很难解决：从一个并非由你独家拥有的 Oracle 数据库中捕获变更，将这些变更可靠地传输到维修技师的 iPad 上，使其能够信任这些数据，并确保两个独立开发的前端通过 Java API 保持步调一致。 但解决这些问题的代码其实很简单：一个拓扑生成器、几个处理程序类、一个带注解的 WebSocket 端点，以及一个将 OpenAPI 文件写入磁盘的构建属性。"
 
+#. mt: deepl
+#, fuzzy
 msgid ""
 "Kafka Streams, WebSockets, CDI events, OIDC, OpenTelemetry, Oracle and OpenAPI are one dependency each and one consistent configuration file, and they all show up together in Dev UI when something is not behaving.\n"
 "That is the Quarkus pitch, and on this project it held up."
-msgstr ""
+msgstr "Kafka Streams、WebSockets、CDI 事件、OIDC、OpenTelemetry、Oracle 和 OpenAPI 各占一个依赖项，且仅需一个统一的配置文件，当系统出现异常时，这些组件都会在开发界面中同时显示出来。这就是 Quarkus 的卖点，而在本项目中，这一优势得到了充分验证。"

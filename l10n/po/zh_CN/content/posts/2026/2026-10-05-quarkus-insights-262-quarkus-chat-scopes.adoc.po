@@ -6,154 +6,248 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: roq-plugin-l10n-adoc\n"
 
+#. mt: deepl
+#, fuzzy
 msgid "Quarkus Insights #262: What is Quarkus Chat Scopes?"
-msgstr ""
+msgstr "Quarkus 洞察 #262：什么是 Quarkus 聊天作用域？"
 
+#. mt: deepl
+#, fuzzy
 msgid "This summary was generated using AI, reviewed by humans - https://www.youtube.com/watch?v=-aIIXB2auks[watch the video] for the full story."
-msgstr ""
+msgstr "本摘要由人工智能生成，并经人工审核—— link:https://www.youtube.com/watch?v=-aIIXB2auks[请观看视频] 了解完整内容。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Building a chat UI backed by an LLM sounds straightforward until you try to hold a real multi-turn conversation on a server that only knows about request scope and application scope. In episode 262, Bill Burke, a longtime Red Hat/IBM architect, EJB specification veteran, author of https://www.oreilly.com/[O'Reilly] books on https://www.oreilly.com/library/view/restful-java-with/9781449361433/[RESTful Java], and contributor to Quarkus Lambda and Azure Functions integrations, joins hosts Eric Deandrea and Holly Cummins to present the solution he built: Quarkus Chat Scopes, a new CDI conversational scope and client-server remoting framework living inside https://github.com/quarkiverse/quarkus-langchain4j[Quarkus LangChain4j]."
-msgstr ""
+msgstr "构建一个由大型语言模型（LLM）支持的聊天界面听起来很简单，直到你尝试在仅了解请求范围和应用程序范围的服务器上进行真正的多轮对话时，才会发现其中的难度。 在第262期节目中，Bill Burke——一位长期任职于Red Hat/IBM的架构师、EJB规范领域的资深专家、 link:https://www.oreilly.com/[O’Reilly出版社] link:https://www.oreilly.com/library/view/restful-java-with/9781449361433/[RESTful Java系列] 书籍的作者，以及Quarkus Lambda和Azure Functions集成项目的贡献者——将与主持人Eric Deandrea和Holly Cummins共同介绍他构建的解决方案： Quarkus Chat Scopes——一个内置于 link:https://github.com/quarkiverse/quarkus-langchain4j[Quarkus LangChain4j] 中的全新 CDI 对话作用域及客户端-服务器远程调用框架。"
 
 #, fuzzy
 msgid "Quarkus News"
 msgstr "Quarkus 新闻"
 
+#. mt: deepl
+#, fuzzy
 msgid "Holly opened with a notable week of releases. The long-awaited Quarkus 4 beta is now available for anyone who wants to kick the tires. Quarkus 3.40, the last LTS on the 3.x stream, is also out and ready for teams looking to move to the latest long-term support baseline. For those who prefer in-person feedback, several members of the Quarkus team will be at https://devoxx.be/[Devoxx Belgium], and Eric will be at https://www.dev2next.com/[dev2next] in Denver, Colorado the following week for anyone who cannot make it to Europe."
-msgstr ""
+msgstr "Holly 以一周引人注目的发布拉开序幕。备受期待的 Quarkus 4 测试版现已发布，欢迎大家前来试用。作为 3.x 系列中的最后一个长期支持（LTS）版本，Quarkus 3.40 也已发布，供希望迁移到最新长期支持基线的团队使用。 对于更倾向于当面交流的用户，Quarkus 团队的几位成员将出席 link:https://devoxx.be/[比利时 Devoxx 大会] ；而无法前往欧洲的开发者，下周 Eric 还将在科罗拉多州丹佛市举办的 link:https://www.dev2next.com/[dev2next 大会] 上与大家见面。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The Problem: Chat Applications Need More Than Request Scope"
-msgstr ""
+msgstr "问题：聊天应用需要的不仅仅是请求范围"
 
+#. mt: deepl
+#, fuzzy
 msgid "Bill's framing is rooted in direct experience. A year and a half ago he started writing chat applications with Quarkus LangChain4j and quickly ran into three gaps:"
-msgstr ""
+msgstr "Bill 的框架设计源于亲身实践。一年半前，他开始使用 Quarkus LangChain4j 开发聊天应用，很快就遇到了三个不足之处："
 
+#. mt: deepl
+#, fuzzy
 msgid "**No conversation-scoped state.** LLM conversations are managed on the server, but beyond chat memory, applications need to store and reference intermediate business state across multiple user messages. The built-in `@RequestScoped` and `@ApplicationScoped` CDI scopes are the wrong shape: request scope destroys everything when the response returns, and application scope is global."
-msgstr ""
+msgstr "*没有对话范围的状态。* 大型语言模型（LLM）的对话在服务器端进行管理，但在聊天内存之外，应用程序需要存储并引用跨越多个用户消息的中间业务状态。内置的 `@RequestScoped` 和 `@ApplicationScoped` CDI 作用域并不合适：请求作用域会在响应返回时销毁所有内容，而应用程序作用域则是全局的。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**No structured memory ID management.** Without a first-class conversation scope, developers had to manually pass `@MemoryId`-annotated parameters throughout their AI services to keep chat histories separate."
-msgstr ""
+msgstr "*没有结构化的记忆ID管理。* 由于缺乏一流的对话作用域，开发人员不得不手动在整个AI服务中传递 `带有@MemoryId注解的` 参数，以确保聊天记录相互独立。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**No remote client framework.** There was no dedicated API for chat UIs (web, mobile, terminal) to talk to Quarkus AI services. Clients had to wire their own WebSocket handling and figure out a protocol from scratch."
-msgstr ""
+msgstr "*没有远程客户端框架。* 此前没有专用的 API 供聊天界面（网页、移动端、终端）与 Quarkus AI 服务进行通信。客户端必须自行实现 WebSocket 处理，并从头开始设计协议。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Chat Scopes addresses all three."
-msgstr ""
+msgstr "Chat Scopes 同时解决了这三个问题。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The New CDI Scope: <code>@ChatScoped</code>"
-msgstr ""
+msgstr "新的 CDI 作用域：<code>@ChatScoped</code>"
 
+#. mt: deepl
+#, fuzzy
 msgid "The first half of Chat Scopes is a new https://jakarta.ee/specifications/cdi/[CDI] conversational scope, `@ChatScoped`, which sits between request scope and session scope in its lifetime. It is manually started and stopped, and its lifetime maps precisely to a conversation with a user."
-msgstr ""
+msgstr "Chat Scopes 的前半部分是一个新的 link:https://jakarta.ee/specifications/cdi/[CDI] 对话作用域 `@ChatScoped` ，其生命周期介于请求作用域和会话作用域之间。该作用域需手动启动和停止，其生命周期与用户的一次对话完全对应。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Starting a conversation is a single call: `ChatScope.begin()`. The conversation is tied to the current thread. It can be deactivated and reactivated by ID (supporting reconnections and failover), and `ChatScope.end()` destroys it, cleaning up all associated state. Because the scope is tied to a long-running conversation rather than a single request, chat memory lifecycle is also tied to it: when the conversation ends, the memory is destroyed. Developers no longer need to manage memory IDs by hand; the framework generates a default ID from the conversation ID, the AI service interface name, and the method name."
-msgstr ""
+msgstr "启动一次对话只需调用一次： `ChatScope.begin()` 。该对话与当前线程绑定。可以通过 ID 将其停用和重新激活（支持重新连接和故障转移），而 `ChatScope.end()` 会销毁该对话，并清理所有相关状态。 由于该作用域与长期运行的对话相关联，而非单次请求，因此聊天内存的生命周期也与其绑定：当对话结束时，内存将被释放。开发者无需再手动管理内存 ID；框架会根据对话 ID、AI 服务接口名称和方法名称自动生成默认 ID。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Tool classes (the beans containing `@Tool`-annotated methods called by the LLM) can themselves be `@ChatScoped`. This means tool instances can hold mutable fields that accumulate state as the LLM calls them across multiple turns. In the demo's travel agent example, a `FlightBookerToolbox` bean stores departure airport, arrival airport, and travel dates in ordinary fields, gradually filled by successive LLM tool calls within the same conversation, with no manual state threading required."
-msgstr ""
+msgstr "工具类（即包含被 LLM 调用的、 `带有 @Tool 注解的方法的` Bean）本身可以标注 `@ChatScoped` 。这意味着工具实例可以持有可变字段，随着 LLM 在多个对话轮次中调用它们，这些字段会累积状态。 在演示中的旅行社示例中，一个 `名为 FlightBookerToolbox 的` Bean 将出发机场、到达机场和旅行日期存储在普通字段中，这些字段会随着同一对话中连续的 LLM 工具调用而逐步填充，无需手动进行状态传递。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Nested Conversations"
-msgstr ""
+msgstr "嵌套对话"
 
+#. mt: deepl
+#, fuzzy
 msgid "Chat Scopes supports a conversation stack via `ChatScope.push()` and `ChatScope.pop()`. When the server decides a user interaction has shifted context (say, from a top-level vacation planner to a hotel reservation sub-workflow), it can push a new conversation onto the stack, handle the sub-workflow with its own scoped beans and chat memory, then pop back to the parent conversation when done. The parent conversation's beans and memory are cleanly restored."
-msgstr ""
+msgstr "Chat Scopes 通过 `ChatScope.push()` 和 `ChatScope.pop()` 支持对话栈。 当服务器判定用户交互已切换上下文（例如，从顶级度假规划器切换到酒店预订子工作流）时，它可以将新的对话压入栈中，使用其自身的范围限定 Bean 和聊天内存来处理该子工作流，处理完成后再弹回父对话。 父级对话的 Bean 和内存将被完整地恢复。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Passivation"
-msgstr ""
+msgstr "钝化"
 
+#. mt: deepl
+#, fuzzy
 msgid "Bill noted that passivation support is in progress: when a conversation is deactivated, any `@ChatScoped` CDI beans are serialized to JSON and stored in a backing store (a file, https://infinispan.org/[Infinispan], or any other backend). When the client reconnects and reactivates the conversation, beans are deserialized and restored transparently. This covers both the server crash and the client disconnect scenarios."
-msgstr ""
+msgstr "Bill 指出，当前正在开发休眠支持功能：当对话被停用时，任何 `@ChatScoped 标记的` CDI Bean 都会被序列化为 JSON，并存储在后端存储中（文件、 link:https://infinispan.org/[Infinispan] 或任何其他后端）。 当客户端重新连接并重新激活对话时，Bean 会自动反序列化并透明地恢复。这既涵盖了服务器崩溃的情形，也涵盖了客户端断开连接的情形。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The Chat Invocation Framework: <code>@ChatRoute</code>"
-msgstr ""
+msgstr "聊天调用框架：<code>@ChatRoute</code>"
 
+#. mt: deepl
+#, fuzzy
 msgid "The second half of Chat Scopes is a WebSocket-based message protocol and framework for remote chat UIs. Annotating an AI service method with `@ChatRoute` and giving it a name is all that is required to make it remotely invocable. The framework handles:"
-msgstr ""
+msgstr "Chat Scopes 的第二部分是一个基于 WebSocket 的消息协议和框架，用于远程聊天用户界面。只需在 AI 服务方法上添加 `@ChatRoute` 注解并为其命名，即可使其支持远程调用。该框架负责处理："
 
+#. mt: deepl
+#, fuzzy
 msgid "**Server-driven conversation routing.** The server can switch which chat route the client is currently talking to at any time. The client sends user messages and handles events; it does not need to track conversation context itself."
-msgstr ""
+msgstr "*服务器驱动的对话路由。* 服务器可以随时切换客户端当前正在与哪个聊天路由进行对话。客户端负责发送用户消息并处理事件；它无需自行跟踪对话上下文。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Asynchronous thinking messages.** From inside a tool method, injecting a `ChatRouteContext` object allows the server to push intermediate \"thinking\" events back to the client while long-running operations are in progress, keeping the UX responsive."
-msgstr ""
+msgstr "*异步“思考”消息。* 在工具方法内部，通过注入一个 `ChatRouteContext` 对象，服务器可以在长时间运行的操作进行期间，将中间的“思考”事件推送回客户端，从而保持用户体验的响应性。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Rich event types.** The server can send structured POJOs that are marshalled to JSON. Client event handlers render them appropriately, whether in a terminal, a browser, or a mobile app."
-msgstr ""
+msgstr "*丰富的事件类型。* 服务器可以发送经过JSON序列化的结构化POJO。无论是在终端、浏览器还是移动应用中，客户端事件处理程序都能对其进行恰当的渲染。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Security.** `@RolesAllowed` and other standard Quarkus security annotations apply directly to chat route methods."
-msgstr ""
+msgstr "*安全性。* `@RolesAllowed` 及其他标准的 Quarkus 安全注解可直接应用于聊天路由方法。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Client API: Java and JavaScript"
-msgstr ""
+msgstr "客户端 API：Java 和 JavaScript"
 
+#. mt: deepl
+#, fuzzy
 msgid "The Chat Scopes client API wraps the WebSocket connection and is intentionally designed to feel almost identical in Java and JavaScript. A JavaScript client is served over an HTTP URL so web apps can include it with a standard `<script>` tag. The Java client, demonstrated as a terminal console application, uses a promise-based async model that mirrors the JavaScript API."
-msgstr ""
+msgstr "Chat Scopes 客户端 API 封装了 WebSocket 连接，其设计初衷是让 Java 和 JavaScript 中的使用体验几乎完全一致。JavaScript 客户端通过 HTTP URL 提供，因此 Web 应用可以使用标准的 `<script>` 标签将其引入。Java 客户端以终端控制台应用程序的形式演示，采用基于 Promise 的异步模型，该模型与 JavaScript API 完全一致。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Client setup follows three steps: call `client.builder()`, register event handlers (including a default handler for plain string responses), and call `builder.connect()` specifying the initial chat route. All WebSocket lifecycle and multiplexing is handled by the framework; applications just send user messages and respond to events."
-msgstr ""
+msgstr "客户端的配置分为三个步骤：调用 `client.builder()` ，注册事件处理程序（包括一个用于处理纯字符串响应的默认处理程序），以及调用 `builder.connect()` 并指定初始聊天路由。WebSocket 的整个生命周期和多路复用均由框架处理；应用程序只需发送用户消息并响应事件即可。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Demo: A Terminal Travel Agent"
-msgstr ""
+msgstr "演示：一个终端旅行代理"
 
+#. mt: deepl
+#, fuzzy
 msgid "Bill's demo assembled the full picture with a three-AI-service travel agent:"
-msgstr ""
+msgstr "比尔的演示通过一个集成了三项AI服务的旅行代理，呈现了全貌："
 
+#. mt: deepl
+#, fuzzy
 msgid "**Travel agent:** the top-level `@ChatRoute`, annotated as the default endpoint. It inspects each incoming user message and routes to the appropriate sub-workflow tool."
-msgstr ""
+msgstr "*旅行代理：* 顶级 `@ChatRoute` ，被标记为默认端点。它会检查每条传入的用户消息，并将其路由到相应的子工作流工具。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Flight reservation AI service:** handles the conversation to gather departure city, destination airport, travel date, and return date, then books the flight."
-msgstr ""
+msgstr "*机票预订人工智能服务：* 通过对话收集出发城市、目的地机场、出行日期和返程日期等信息，然后完成机票预订。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Hotel reservation AI service:** handles the conversation to collect hotel name, check-in date, check-out date, and room type, then books the hotel."
-msgstr ""
+msgstr "*酒店预订AI服务：* 通过对话收集酒店名称、入住日期、退房日期和房型等信息，然后完成酒店预订。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The demo showed the full flow in a terminal client with ANSI colour output: asking to fly from Boston to London (Gatwick), the LLM collecting the required fields one by one via tool calls, booking the flight, then switching to a hotel reservation conversation (a `ChatScope.push()`) at the Ritz Carlton, collecting hotel details, booking the room, calling `ChatScope.pop()`, and returning to the top-level planner, all while sending real-time \"thinking\" messages to the terminal as each tool executed."
-msgstr ""
+msgstr "该演示展示了终端客户端中带 ANSI 颜色输出的完整流程：用户提出从波士顿飞往伦敦（盖特威克机场）的请求，LLM 通过调用工具逐一收集所需字段， 预订航班，随后切换至丽思卡尔顿酒店的预订对话（通过 `ChatScope.push()` 调用），收集酒店详情、预订房间、调用 `ChatScope.pop()` ，最后返回至顶级规划器；在此过程中，每当执行一个工具操作时，系统都会向终端实时发送“思考中”的消息。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Both a terminal client example and a web application using the JavaScript client API are in the https://github.com/quarkiverse/quarkus-langchain4j/tree/main/samples[samples directory of the quarkus-langchain4j repository]."
-msgstr ""
+msgstr "link:https://github.com/quarkiverse/quarkus-langchain4j/tree/main/samples[quarkus-langchain4j 存储库的 samples 目录] 中，既包含终端客户端示例，也包含使用 JavaScript 客户端 API 的 Web 应用程序。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Eric also mentioned that he has been building https://github.com/edeandrea/non-deterministic-no-problem[a more complex agentic example] on top of Chat Scopes: a fully agentic workflow with human-in-the-loop interactions and saved state."
-msgstr ""
+msgstr "埃里克还提到，他一直在基于 Chat Scopes 构建 link:https://github.com/edeandrea/non-deterministic-no-problem[一个更复杂的代理式示例] ：一个包含“人机协同”交互和状态保存功能的完整代理式工作流。"
 
 #, fuzzy
 msgid "Key Takeaways"
 msgstr "要点总结"
 
+#. mt: deepl
+#, fuzzy
 msgid "**`@ChatScoped` is a new first-class CDI bean scope**, longer-lived than request scope, shorter-lived and manually managed compared to session scope, and designed specifically for multi-turn LLM conversations."
-msgstr ""
+msgstr "*@ChatScoped是一个新的* 、 *一等公民级别的 CDI Bean 作用域* ，其生命周期比请求作用域更长，但比会话作用域更短且需手动管理，专为多轮 LLM 对话而设计。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Chat memory lifecycle is tied to the conversation.** No more manual `@MemoryId` annotations; the framework generates scoped memory IDs automatically."
-msgstr ""
+msgstr "*聊天记录的内存生命周期与对话相关联。* 无需再手动 *添加* `@MemoryId` 注解；框架会自动生成作用域内的内存 ID。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Tool beans can hold state.** `@ChatScoped` tool classes accumulate field values as the LLM calls them across turns, replacing the need to thread state through method parameters."
-msgstr ""
+msgstr "*工具类可以保存状态。* `@ChatScoped` 工具类会在 LLM 跨轮次调用时累积字段值，从而无需通过方法参数传递状态。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Nested conversations via push/pop.** `ChatScope.push()` starts a sub-conversation with its own scope; `ChatScope.pop()` ends it and restores the parent, enabling menu-style navigation across AI service workflows."
-msgstr ""
+msgstr "*通过 push/pop 实现嵌套对话。* `ChatScope.push()` 会启动一个具有独立作用域的子对话； `ChatScope.pop()` 则会结束该子对话并恢复父对话，从而实现跨 AI 服务工作流的菜单式导航。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Passivation is coming.** Conversation beans will be serializable to any backing store, supporting server restarts and client reconnections transparently."
-msgstr ""
+msgstr "*钝化功能即将推出。* 对话豆将能够序列化到任何后端存储中，并透明地支持服务器重启和客户端重新连接。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**`@ChatRoute` turns any AI service method into a WebSocket endpoint.** One annotation makes it remotely invocable with a structured protocol."
-msgstr ""
+msgstr "*@ChatRoute可将任何 AI 服务方法转换为 WebSocket 端点。* 只需添加一个注解，即可通过结构化协议实现远程调用。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Server drives the conversation.** The server can switch the active chat route at any time; the client only sends messages and handles events, keeping client logic thin."
-msgstr ""
+msgstr "*服务器主导对话。* 服务器可以随时切换活跃的聊天路径；客户端仅负责发送消息和处理事件，从而保持客户端逻辑的轻量级。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Asynchronous thinking messages.** Inject `ChatRouteContext` in a tool method to push intermediate status events to the client during long-running operations."
-msgstr ""
+msgstr "*异步思考消息。* 在工具方法中注入 `ChatRouteContext` ，以便在长时间运行的操作期间将中间状态事件推送给客户端。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**Java and JavaScript clients share the same API shape.** A promise-based model works identically whether you are writing a Java terminal app or a web front end."
-msgstr ""
+msgstr "*Java 和 JavaScript 客户端采用相同的 API 结构。* 无论您是编写 Java 终端应用还是 Web 前端，基于 Promise 的模型都以完全相同的方式工作。"
 
+#. mt: deepl
+#, fuzzy
 msgid "**All samples are in the quarkus-langchain4j repo.** Terminal and web examples are in the `samples` directory and ready to explore."
-msgstr ""
+msgstr "*所有示例均位于 quarkus-langchain4j 仓库中。* 终端和 Web 示例位于 `samples` 目录下，可供探索。"
 
 msgid "Conclusion"
 msgstr "解决方案"
 
+#. mt: deepl
+#, fuzzy
 msgid "Chat Scopes fills a gap that becomes apparent the moment you try to build a real, multi-turn, stateful chat application with Quarkus LangChain4j. The `@ChatScoped` bean scope gives the application a first-class container for conversational state that neither request scope nor application scope can provide. The `@ChatRoute` framework turns AI services into proper remote endpoints with a structured protocol, asynchronous events, and thin client libraries in both Java and JavaScript. Together they replace a collection of manual workarounds (memory ID bookkeeping, custom WebSocket handlers, ad-hoc state threading) with a clean programming model that lets CDI do what CDI is good at. Next week, the team turns to build reproducibility: what it takes to get the same binaries from the same source, every time."
-msgstr ""
+msgstr "Chat Scopes 填补了这样一个空白：当你尝试使用 Quarkus LangChain4j 构建一个真正的、多轮次、带状态的聊天应用时，这一空白便显而易见。 `@ChatScoped` Bean 作用域为应用程序提供了一个用于对话状态的一流容器，这是请求作用域或应用程序作用域都无法提供的。 `@ChatRoute` 框架通过结构化协议、异步事件以及 Java 和 JavaScript 两种语言的轻量级客户端库，将 AI 服务转化为标准的远程端点。 二者结合，用一个简洁的编程模型取代了一系列手动变通方案（内存 ID 记录、自定义 WebSocket 处理程序、临时状态线程管理），让 CDI 能够充分发挥其优势。 下周，团队将着手构建可重现性：确保每次都能从相同的源代码生成相同的二进制文件。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Watch the full episode on the <a href=\"https://www.youtube.com/quarkusio\">Quarkus YouTube channel</a>. Explore the samples at <a href=\"https://github.com/quarkiverse/quarkus-langchain4j/tree/main/samples\">github.com/quarkiverse/quarkus-langchain4j/tree/main/samples</a> and read the documentation at <a href=\"https://docs.quarkiverse.io/quarkus-langchain4j/dev/chat-scopes.html\">docs.quarkiverse.io</a>."
-msgstr ""
+msgstr "请在 <a href=\"https://www.youtube.com/quarkusio\">Quarkus YouTube 频道</a>上观看完整剧集。 在 <a href=\"https://github.com/quarkiverse/quarkus-langchain4j/tree/main/samples\">github.com/quarkiverse/quarkus-langchain4j/tree/main/samples</a> 中探索示例代码，并访问 <a href=\"https://docs.quarkiverse.io/quarkus-langchain4j/dev/chat-scopes.html\">docs.quarkiverse.io</a> 阅读文档。"

@@ -41,8 +41,10 @@ msgstr "服务 *不会* 从构建步骤图中获得隐式排序。所有排序�
 msgid "Services are Independent from Recorders in the Same Step"
 msgstr "同一步骤中的服务与记录器相互独立"
 
+#. mt: deepl
+#, fuzzy
 msgid "Even if a build step method contains both a `@Record` call and a `ServiceRegistrar` call, the service and recorder are separate nodes in the build execution plan with no implicit ordering between them."
-msgstr ""
+msgstr "即使某个构建步骤方法同时包含 `@Record` 调用和 `ServiceRegistrar` 调用，该服务和记录器在构建执行计划中也是独立的节点，两者之间不存在隐含的顺序关系。"
 
 #. mt: deepl
 #, fuzzy
@@ -283,8 +285,10 @@ msgstr "通过桥接实现步骤排序（<code>afterBuildItem()</code>）"
 msgid "When a service depends on state produced by a legacy recorder (e.g., synthetic beans must be initialized), declare the dependency via `afterBuildItem()`:"
 msgstr "当某个服务依赖于旧版记录器生成的状态时（例如，必须初始化合成 Bean），请通过 `afterBuildItem()` 声明该依赖关系："
 
+#. mt: deepl
+#, fuzzy
 msgid "This resolves the producing step's nodes and creates ordering edges."
-msgstr ""
+msgstr "这将解析生产步骤中的节点，并创建排序边。"
 
 #. mt: deepl
 #, fuzzy
@@ -306,8 +310,10 @@ msgstr "共存与桥梁 API"
 msgid "During the transitional period, the `ServiceRegistrar` provides bridge APIs to allow incremental migration of extensions."
 msgstr "在过渡期间， `ServiceRegistrar` 提供过渡 API，以支持扩展功能的增量迁移。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Recorder-to-Service Bridge"
-msgstr ""
+msgstr "记录器到服务桥"
 
 #. mt: deepl
 #, fuzzy
@@ -319,8 +325,10 @@ msgstr "如果某个旧版记录器生成了一个值，而新服务需要依赖
 msgid "Downstream services can now simply use `.require(MyLegacyValue.class)`."
 msgstr "下游服务现在只需使用 `.require(MyLegacyValue.class)` 即可。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Service-to-Recorder Bridge"
-msgstr ""
+msgstr "服务到记录器桥接"
 
 #. mt: deepl
 #, fuzzy
@@ -342,30 +350,40 @@ msgstr "*staticInitServiceAsRuntimeValue* ：为静态初始化服务生成一�
 msgid "**`getRecorderProxy`**: Produces a bare `T` proxy (for proxyable interfaces/classes)."
 msgstr "*getRecorderProxy* ：生成一个基本的 `T` 代理（适用于可代理的接口/类）。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Updating Downstream Consumers"
-msgstr ""
+msgstr "更新下游消费者"
 
+#. mt: deepl
+#, fuzzy
 msgid "After converting a recorder to a service, search for other extensions that use `afterBuildItem()` referencing build items your old recorder produced. Those consumers can now migrate from `afterBuildItem()` to `require()` or `after()` on your new service directly, removing one more link in the legacy bridge chain."
-msgstr ""
+msgstr "将记录器转换为服务后，请查找其他使用 `afterBuildItem()` 并引用旧记录器生成的构建项的扩展。这些调用方现在可以直接从 `afterBuildItem()` 迁移到新服务上的 `require()` 或 `after()` ，从而从旧版桥接链中移除一个环节。"
 
 #. mt: deepl
 #, fuzzy
 msgid "Common Conversion Pitfalls"
 msgstr "常见的转换误区"
 
+#. mt: deepl
+#, fuzzy
 msgid "Global Mutable State"
-msgstr ""
+msgstr "全局可变状态"
 
+#. mt: deepl
+#, fuzzy
 msgid "Recorders ran sequentially, so global mutable state (static maps, shared lists, singletons populated during startup) was incidentally safe. Services run concurrently — any global state that survives conversion must be made thread-safe. Prefer eliminating it entirely: the dependency graph carries values directly, so each entry becomes a named service and each lookup becomes `require()` or `request()`."
-msgstr ""
+msgstr "记录器按顺序运行，因此全局可变状态（静态映射、共享列表、启动时初始化的单例）在某种程度上是安全的。 服务是并发运行的——任何在转换后仍保留的全局状态都必须确保线程安全。最好完全消除它：依赖图会直接携带值，因此每个条目都成为一个命名服务，每次查找都通过 `require()` 或 `request()` 实现。"
 
 #. mt: deepl
 #, fuzzy
 msgid "ClassLoader &amp; Thread Context ClassLoader (TCCL)"
 msgstr "类加载器与线程上下文类加载器（TCCL）"
 
+#. mt: deepl
+#, fuzzy
 msgid "A wrong TCCL surfaces as `ServiceLoader` \"not a subtype\" errors or dev-mode failures. Threads created during startup inherit the creating thread's TCCL — a long-lived thread that captures the per-app runtime CL leaks the `QuarkusClassLoader` across restarts. Clean up threads or `ThreadLocal`s your service owns in `onStop()`; never rely on a global \"reset all TCCLs\" sweep."
-msgstr ""
+msgstr "错误的 TCCL 会导致 `ServiceLoader` 报错“不是子类型”或开发模式失败。启动过程中创建的线程会继承创建线程的 TCCL——这是一个长寿线程，它捕获了应用程序级别的运行时 CL，并在重启后导致 `QuarkusClassLoader` 发生内存泄漏。 `请在 `onStop()` 中` 清理 `服务拥有的` 线程或 `ThreadLocal` ；切勿依赖全局性的“重置所有 TCCL”清理机制。"
 
 #. mt: deepl
 #, fuzzy
@@ -382,19 +400,27 @@ msgstr "如果类具有非平凡构造函数，则 `staticInitServiceAsRecorderV
 msgid "Package-Private Visibility"
 msgstr "包私有可见性"
 
+#. mt: deepl
+#, fuzzy
 msgid "Lambda bytecode runs at runtime but references runtime classes directly. Package-private classes become inaccessible from the generated consolidated class. Ensure any classes referenced within the lambda are `public`, or move them to a `.impl` subpackage and make them public."
-msgstr ""
+msgstr "Lambda 字节码在运行时执行，但会直接引用运行时类。在生成的合并类中将无法访问包私有类。请确保 Lambda 内部引用的所有类均为 `public` ，或者将它们移至 `.impl` 子包并设为 public。"
 
 #. mt: deepl
 #, fuzzy
 msgid "Never Reference Deployment Classes inside Service Lambdas"
 msgstr "切勿在服务 Lambda 中引用部署类"
 
+#. mt: deepl
+#, fuzzy
 msgid "Service lambda bodies execute at **runtime** — deployment classes are absent from the runtime classpath. Anonymous inner classes inside instance-method lambdas silently capture `this` (the processor), causing `TransliterationException`. Moving the instantiation to a `private static` helper in the processor avoids the capture but still references a deployment class, causing `NoClassDefFoundError`. Place all helper methods and factories in **runtime** module classes."
-msgstr ""
+msgstr "服务 lambda 表达式主体在 *运行时* 执行——运行时类路径中不包含部署类。实例方法 lambda 表达式中的匿名内部类会无声地捕获 `this` （即处理器），从而引发 `TransliterationException` 。 将实例化操作移至处理器中的 `私有静态` 辅助方法可避免捕获，但仍会引用部署类，从而引发 `NoClassDefFoundError` 。请将所有辅助方法和工厂方法放置在 *运行时* 模块类中。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Teardown-Ordering Parity"
-msgstr ""
+msgstr "拆解-排序奇偶校验"
 
+#. mt: deepl
+#, fuzzy
 msgid "Start ordering is explicit — but so is **stop ordering**, and that is the easy thing to lose. The recorder model gave cleanup incidental ordering from build-step order; a converted service's `onStop` runs only in reverse dependency order. If a cleanup implicitly depended on running before/after another, declare it with `before()` or `after()`. Lost teardown ordering surfaces as unrelated downstream symptoms — verify shutdown explicitly."
-msgstr ""
+msgstr "开始顺序是显式的——但 *停止顺序* 也是显式的，而这一点却很容易被忽略。 记录器模型通过构建步骤的顺序提供了清理操作的附带排序；转换后的服务其 `onStop 方法` 仅按反向依赖顺序运行。如果某个清理操作隐式地依赖于在另一个操作之前或之后运行，请使用 `before()` 或 `after()` 进行声明。清理顺序的丢失会表现为看似无关的下游症状——请显式地验证关闭操作。"
