@@ -9,90 +9,144 @@ msgstr ""
 msgid "Architecture"
 msgstr "应用结构"
 
+#. mt: deepl
+#, fuzzy
 msgid "In the link:/blog/ai-root-cause-analysis/[introductory post], we showed what AI Root Cause Analysis does and how to get started. This post goes deeper -- into the architecture, the analysis pipeline, how we keep telemetry data within LLM context limits, and how we test analysis quality using chaos engineering with LLM-as-judge evaluation."
-msgstr ""
+msgstr "在 link:/blog/ai-root-cause-analysis/[介绍性文章中] ，我们展示了 AI 根本原因分析的功能以及如何入门。本文将深入探讨其架构、分析流程、如何在 LLM 上下文限制内处理遥测数据，以及如何利用混沌工程结合“LLM 作为评判者”的评估方法来测试分析质量。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The system has a layered architecture connecting monitored applications to the AI analysis engine through an observability stack:"
-msgstr ""
+msgstr "该系统采用分层架构，通过可观测性堆栈将受监控的应用程序与人工智能分析引擎连接起来："
 
+#. mt: deepl
+#, fuzzy
 msgid "Your applications just need OpenTelemetry instrumentation -- no code changes required. The AI module connects to your existing LGTM stack via MCP and optionally to your running Quarkus applications via Quarkus Dev MCP for source examination and dashboard generation."
-msgstr ""
+msgstr "您的应用程序只需进行 OpenTelemetry instrumentation，无需修改代码。AI 模块通过 MCP 连接到您现有的 LGTM 堆栈，并可选地通过 Quarkus Dev MCP 连接到正在运行的 Quarkus 应用程序，以便进行源代码分析和仪表盘生成。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The AI module uses https://docs.langchain4j.dev/[LangChain4j] `@RegisterAiService` interfaces backed by a ~290-line system prompt that instructs the LLM on three-way telemetry correlation, chaos detection patterns, severity classification, and structured output formatting."
-msgstr ""
+msgstr "该 AI 模块使用 link:https://docs.langchain4j.dev/[LangChain4j 的] `@RegisterAiService` 接口，其背后是一个约 290 行长的系统提示词，该提示词指导大型语言模型（LLM）进行三方遥测数据关联、混沌检测模式识别、严重程度分类以及结构化输出格式化。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Five tools are exposed to the LLM during analysis:"
-msgstr ""
+msgstr "在分析过程中，有五种工具会向大型语言模型（LLM）公开："
 
 #, fuzzy
 msgid "Tool"
 msgstr "工具"
 
+#. mt: deepl
+#, fuzzy
 msgid "What It Provides"
-msgstr ""
+msgstr "提供什么"
 
+#. mt: deepl
+#, fuzzy
 msgid "`provideLastNTraceIds`"
-msgstr ""
+msgstr "`provideLastNTraceIds`"
 
+#. mt: deepl
+#, fuzzy
 msgid "Recent trace IDs from Tempo (TraceQL)"
-msgstr ""
+msgstr "来自 Tempo 的最新跟踪 ID（TraceQL）"
 
+#. mt: deepl
+#, fuzzy
 msgid "`traceById`"
-msgstr ""
+msgstr "`traceById`"
 
+#. mt: deepl
+#, fuzzy
 msgid "Full trace data for a specific trace"
-msgstr ""
+msgstr "特定跟踪记录的完整跟踪数据"
 
+#. mt: deepl
+#, fuzzy
 msgid "`logsWithTraceId`"
-msgstr ""
+msgstr "`带跟踪ID的日志`"
 
+#. mt: deepl
+#, fuzzy
 msgid "Correlated Loki logs for a trace"
-msgstr ""
+msgstr "某条跟踪记录的相关 Loki 日志"
 
+#. mt: deepl
+#, fuzzy
 msgid "`getRootSpanStartTime`"
-msgstr ""
+msgstr "`getRootSpanStartTime`"
 
+#. mt: deepl
+#, fuzzy
 msgid "Timestamp for metric queries"
-msgstr ""
+msgstr "指标查询的时间戳"
 
+#. mt: deepl
+#, fuzzy
 msgid "`getAllMetricsForDatetime`"
-msgstr ""
+msgstr "`getAllMetricsForDatetime`"
 
+#. mt: deepl
+#, fuzzy
 msgid "Prometheus metrics at a point in time"
-msgstr ""
+msgstr "某个时间点的 Prometheus 指标"
 
+#. mt: deepl
+#, fuzzy
 msgid "The LLM orchestrates these tools autonomously -- it decides which traces look interesting, pulls their logs, checks metrics, and builds the analysis iteratively."
-msgstr ""
+msgstr "LLM 会自主协调这些工具——它会判断哪些跟踪记录值得关注，提取相关日志，检查指标，并以迭代的方式构建分析结果。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The Analysis Pipeline"
-msgstr ""
+msgstr "分析流程"
 
+#. mt: deepl
+#, fuzzy
 msgid "When you hit `GET /analyze/\\{n}`, the following sequence unfolds:"
-msgstr ""
+msgstr "当您调用 `GET /analyze/{n}` 时，将按以下顺序执行："
 
+#. mt: deepl
+#, fuzzy
 msgid "*Tool dispatch* -- The AI module sends the system prompt and tool definitions to the LLM"
-msgstr ""
+msgstr "*工具分发* ——AI模块将系统提示和工具定义发送给LLM"
 
+#. mt: deepl
+#, fuzzy
 msgid "*Trace retrieval* -- The LLM calls `provideLastNTraceIds` to get the N most recent traces"
-msgstr ""
+msgstr "*跟踪检索* ——LLM 调用 `provideLastNTraceIds` 方法以获取最近的 N 个跟踪记录"
 
+#. mt: deepl
+#, fuzzy
 msgid "*Per-trace investigation* -- For each trace, the LLM pulls full trace data and correlated logs through `StripMcpClient`, which strips SDK noise, localhost attributes, and redundant fields"
-msgstr ""
+msgstr "*按跟踪记录进行调查——对于* 每个跟踪记录，LLM 会通过 `StripMcpClient` 提取完整的跟踪数据和相关日志，该工具会过滤掉 SDK 噪声、localhost 属性以及冗余字段"
 
+#. mt: deepl
+#, fuzzy
 msgid "*Metrics context* -- The LLM queries Prometheus metrics at the root span's start time; the filtering layer removes Netty/OTel internals, static counters, and histogram bucket breakdowns"
-msgstr ""
+msgstr "*指标上下文——大型* 语言模型（LLM）会在根跨度（span）的起始时间查询 Prometheus 指标；过滤层会移除 Netty/OTel 的内部数据、静态计数器以及直方图桶的细分数据"
 
+#. mt: deepl
+#, fuzzy
 msgid "*Analysis synthesis* -- The LLM produces a structured report with per-trace sections covering root cause, slowest operations, error patterns, and cross-trace correlation"
-msgstr ""
+msgstr "*分析与综合——该* 大型语言模型（LLM）会生成一份结构化的报告，其中按每个跟踪记录划分章节，分别涵盖根本原因、最慢操作、错误模式以及跨跟踪记录的相关性。"
 
+#. mt: deepl
+#, fuzzy
 msgid "If source examination or dashboard generation is enabled, a post-analysis pipeline kicks in using `DevMcpAiService` -- a separate `@RegisterAiService` that uses Dev MCP tools to read application source code and write Grafana dashboard JSON back to each workspace."
-msgstr ""
+msgstr "如果启用了源代码检查或仪表盘生成功能，则会触发一个基于 `DevMcpAiService` 的分析后处理管道 `——这是一个` 独立的 `@RegisterAiService` ，它利用 Dev MCP 工具读取应用程序源代码，并将 Grafana 仪表盘的 JSON 数据写回各个工作区。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Data Filtering: Staying Within Context Limits"
-msgstr ""
+msgstr "数据过滤：保持在上下文限制范围内"
 
+#. mt: deepl
+#, fuzzy
 msgid "One of the trickiest engineering challenges is keeping telemetry data within LLM context limits while preserving signal. The `StripMcpClient` decorator applies per-tool filtering functions:"
-msgstr ""
+msgstr "最棘手的工程挑战之一，是在保持信号质量的同时，将遥测数据控制在大型语言模型（LLM）的上下文限制内。 `StripMcpClient` 装饰器会应用针对每种工具的过滤函数："
 
 #, fuzzy
 msgid "*Traces*: Removes SDK metadata (`telemetry.sdk.*`, `otel.*`), localhost attributes, and instrumentation library details"
@@ -102,245 +156,399 @@ msgstr "*Traces* ：移除 SDK 元数据（ `telemetry.sdk. **` *、otel.* ）�
 msgid "*Logs*: Strips SDK metadata, redundant fields, and duplicate information already present in trace spans"
 msgstr "*日志* ：去除 SDK 元数据、冗余字段以及已在跟踪跨度中存在的重复信息"
 
+#. mt: deepl
+#, fuzzy
 msgid "*Metrics*: Removes Netty internals, static/constant values, histogram bucket breakdowns, and per-region metric breakdowns -- reducing 586 entries to ~35"
-msgstr ""
+msgstr "*指标* ：移除了 Netty 的内部实现、静态/常量值、直方图桶细分以及按区域划分的指标细分——将 586 个条目减少至约 35 个"
 
+#. mt: deepl
+#, fuzzy
 msgid "The system prompt also instructs the LLM to treat chaos-related log entries as authoritative evidence, even when Prometheus metrics don't confirm them -- because point-in-time metric snapshots can miss transient pressure spikes that logs capture."
-msgstr ""
+msgstr "系统提示还指示大型语言模型（LLM）将与系统混乱相关的日志条目视为权威证据，即使Prometheus指标未能证实这些条目——因为特定时间点的指标快照可能会遗漏日志中捕获的瞬时压力峰值。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Testing with Chaos Engineering"
-msgstr ""
+msgstr "基于混沌工程的测试"
 
+#. mt: deepl
+#, fuzzy
 msgid "How do you test an AI-powered analysis tool? You need realistic failure scenarios with known root causes, and you need an objective way to score the analysis quality. AI Root Cause Analysis solves this with chaos engineering + LLM-as-judge evaluation."
-msgstr ""
+msgstr "如何测试一款基于人工智能的分析工具？你需要具备已知根本原因的现实故障场景，同时也需要一种客观的方法来评估分析质量。AI 根本原因分析通过混沌工程与“大语言模型（LLM）作为评委”的评估方式解决了这一问题。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Chaos Scenarios"
-msgstr ""
+msgstr "混沌情景"
 
+#. mt: deepl
+#, fuzzy
 msgid "The project includes companion test applications that simulate distributed microservices with configurable chaos failure modes. These expose 11 chaos types via `GET /chaos?type=\\{type}&intensity=\\{value}`:"
-msgstr ""
+msgstr "该项目包含配套的测试应用程序，这些应用程序通过可配置的混沌故障模式来模拟分布式微服务。这些应用程序通过 `GET /chaos?type={type}&intensity={value}` 接口提供了 11 种混沌类型："
 
+#. mt: deepl
+#, fuzzy
 msgid "Chaos Type"
-msgstr ""
+msgstr "混沌型"
 
 #, fuzzy
 msgid "What It Does"
 msgstr "功能介绍"
 
+#. mt: deepl
+#, fuzzy
 msgid "`delay`"
-msgstr ""
+msgstr "`延迟`"
 
+#. mt: deepl
+#, fuzzy
 msgid "Thread.sleep for configurable milliseconds"
-msgstr ""
+msgstr "Thread.sleep，可配置的毫秒数"
 
+#. mt: deepl
+#, fuzzy
 msgid "`memory`"
-msgstr ""
+msgstr "`记忆`"
 
+#. mt: deepl
+#, fuzzy
 msgid "Allocate N MB (released after request)"
-msgstr ""
+msgstr "分配 N MB（请求完成后释放）"
 
+#. mt: deepl
+#, fuzzy
 msgid "`cpu`"
-msgstr ""
+msgstr "`CPU`"
 
+#. mt: deepl
+#, fuzzy
 msgid "CPU burn loop for N ms"
-msgstr ""
+msgstr "CPU 持续运行 N 毫秒"
 
+#. mt: deepl
+#, fuzzy
 msgid "`leak`"
-msgstr ""
+msgstr "`泄漏`"
 
+#. mt: deepl
+#, fuzzy
 msgid "Allocate N MB (never freed)"
-msgstr ""
+msgstr "分配 N MB（永不释放）"
 
 #, fuzzy
 msgid "`error`"
 msgstr "`错误`"
 
+#. mt: deepl
+#, fuzzy
 msgid "Random 5xx WebApplicationException"
-msgstr ""
+msgstr "随机出现的 5xx WebApplicationException"
 
+#. mt: deepl
+#, fuzzy
 msgid "`exception`"
-msgstr ""
+msgstr "`例外`"
 
+#. mt: deepl
+#, fuzzy
 msgid "Unhandled RuntimeException (HTTP 500)"
-msgstr ""
+msgstr "未处理的 RuntimeException（HTTP 500）"
 
+#. mt: deepl
+#, fuzzy
 msgid "`threadpool`"
-msgstr ""
+msgstr "`线程池`"
 
+#. mt: deepl
+#, fuzzy
 msgid "Block 10 threads via CountDownLatch"
-msgstr ""
+msgstr "通过 CountDownLatch 阻塞 10 个线程"
 
+#. mt: deepl
+#, fuzzy
 msgid "`contention`"
-msgstr ""
+msgstr "`争议`"
 
+#. mt: deepl
+#, fuzzy
 msgid "10 threads competing for a synchronized lock"
-msgstr ""
+msgstr "10 个线程在争夺一个同步锁"
 
+#. mt: deepl
+#, fuzzy
 msgid "`gc`"
-msgstr ""
+msgstr "`gc`"
 
+#. mt: deepl
+#, fuzzy
 msgid "Rapid alloc/dealloc -> GC pressure"
-msgstr ""
+msgstr "快速分配/释放 → 垃圾回收压力"
 
+#. mt: deepl
+#, fuzzy
 msgid "`intermittent`"
-msgstr ""
+msgstr "`间歇性的`"
 
+#. mt: deepl
+#, fuzzy
 msgid "Random failures at configurable rate"
-msgstr ""
+msgstr "以可配置速率发生的随机故障"
 
+#. mt: deepl
+#, fuzzy
 msgid "`deadlock`"
-msgstr ""
+msgstr "`死锁`"
 
+#. mt: deepl
+#, fuzzy
 msgid "Two threads deadlocked on competing locks"
-msgstr ""
+msgstr "两个线程因竞争锁而陷入死锁"
 
+#. mt: deepl
+#, fuzzy
 msgid "Database and Weather Chaos"
-msgstr ""
+msgstr "数据库与天气混乱"
 
+#. mt: deepl
+#, fuzzy
 msgid "Beyond application-level chaos, the test suite also covers infrastructure-level failures using https://github.com/Shopify/toxiproxy[*Toxiproxy*] -- a TCP proxy that can inject latency, cut connections, and throttle bandwidth at the network layer:"
-msgstr ""
+msgstr "除了应用层混乱之外，该测试套件还利用 link:https://github.com/Shopify/toxiproxy[Toxiproxy] （ link:https://github.com/Shopify/toxiproxy[一种] 可在网络层注入延迟、中断连接并限制带宽的TCP代理）来模拟基础设施层的故障："
 
+#. mt: deepl
+#, fuzzy
 msgid "*Database chaos* routes JDBC connections through Toxiproxy to MySQL:"
-msgstr ""
+msgstr "*Database Chaos* 通过 Toxiproxy 将 JDBC 连接转发至 MySQL："
 
+#. mt: deepl
+#, fuzzy
 msgid "Tests include slow queries (3s latency injection), connection pool exhaustion (4s latency + small pool + concurrent requests), and full database outages (connection cut). JDBC telemetry creates separate database query spans, so the AI sees `GET /poke (3019ms) -> SELECT ... (3015ms)` and can identify database-level root causes."
-msgstr ""
+msgstr "测试内容包括慢查询（注入3秒延迟）、连接池耗尽（4秒延迟 + 小型连接池 + 并发请求）以及数据库完全中断（连接中断）。 JDBC 遥测会生成独立的数据库查询跨度，因此 AI 会看到 `GET /poke (3019 毫秒) → SELECT …​ (3015 毫秒)` ，从而能够识别数据库层面的根本原因。"
 
+#. mt: deepl
+#, fuzzy
 msgid "*Weather API chaos* routes REST client calls through Toxiproxy to an external API:"
-msgstr ""
+msgstr "*Weather API chaos* 将 REST 客户端请求通过 Toxiproxy 转发至外部 API："
 
+#. mt: deepl
+#, fuzzy
 msgid "Tests include slow external API responses and full API outages."
-msgstr ""
+msgstr "测试内容包括外部 API 响应缓慢以及 API 完全中断。"
 
+#. mt: deepl
+#, fuzzy
 msgid "No application code changes are required -- chaos is injected purely at the network layer via the Toxiproxy REST API."
-msgstr ""
+msgstr "无需修改应用程序代码——完全通过 Toxiproxy REST API 在网络层注入混乱。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The Evaluation Mechanism: LLM-as-Judge"
-msgstr ""
+msgstr "评估机制：大语言模型充当评判者"
 
+#. mt: deepl
+#, fuzzy
 msgid "Each integration test follows the same pattern:"
-msgstr ""
+msgstr "每个集成测试都遵循相同的模式："
 
+#. mt: deepl
+#, fuzzy
 msgid "*Inject chaos* into the test application (or do nothing for baseline tests)"
-msgstr ""
+msgstr "向测试应用程序中 *注入混乱* （对于基线测试则不进行任何操作）"
 
+#. mt: deepl
+#, fuzzy
 msgid "*Wait* for telemetry to propagate to LGTM"
-msgstr ""
+msgstr "*等待* 遥测数据传播到 LGTM"
 
+#. mt: deepl
+#, fuzzy
 msgid "*Run analysis* via `GET /analyze/\\{n}`"
-msgstr ""
+msgstr "通过 `GET /analyze/{n}` *运行分析*"
 
+#. mt: deepl
+#, fuzzy
 msgid "*Capture* all tool outputs (raw telemetry data the LLM saw)"
-msgstr ""
+msgstr "*捕获* 所有工具的输出（LLM 看到的原始遥测数据）"
 
+#. mt: deepl
+#, fuzzy
 msgid "*Score* the analysis using a separate LLM call"
-msgstr ""
+msgstr "使用单独的 LLM 调用对分析结果 *进行评分*"
 
+#. mt: deepl
+#, fuzzy
 msgid "The scoring uses an `AnalysisEvaluationStrategy` that builds a detailed evaluation prompt containing:"
-msgstr ""
+msgstr "评分采用一种 `AnalysisEvaluationStrategy` ，该策略会构建一个包含以下内容的详细评估提示："
 
+#. mt: deepl
+#, fuzzy
 msgid "The original telemetry data (traces, logs, metrics) the AI analyzed"
-msgstr ""
+msgstr "AI 分析的原始遥测数据（跟踪记录、日志、指标）"
 
+#. mt: deepl
+#, fuzzy
 msgid "The system prompt used for analysis"
-msgstr ""
+msgstr "用于分析的系统提示"
 
+#. mt: deepl
+#, fuzzy
 msgid "The analysis output being evaluated"
-msgstr ""
+msgstr "正在评估的分析结果"
 
+#. mt: deepl
+#, fuzzy
 msgid "Scenario-specific evaluation criteria"
-msgstr ""
+msgstr "针对特定场景的评估标准"
 
+#. mt: deepl
+#, fuzzy
 msgid "A judge LLM (`EvaluationJudge`) then scores the analysis on four dimensions, each worth 0-25 points:"
-msgstr ""
+msgstr "随后，一名拥有法学硕士学位（LLM）的法官（ `EvaluationJudge` ）将从四个维度对该分析进行评分，每个维度满分为0-25分："
 
+#. mt: deepl
+#, fuzzy
 msgid "Dimension"
-msgstr ""
+msgstr "维度"
 
+#. mt: deepl
+#, fuzzy
 msgid "What It Measures"
-msgstr ""
+msgstr "测量内容"
 
+#. mt: deepl
+#, fuzzy
 msgid "*Completeness*"
-msgstr ""
+msgstr "*完备性*"
 
+#. mt: deepl
+#, fuzzy
 msgid "Did it find all the issues present in the telemetry?"
-msgstr ""
+msgstr "它是否发现了遥测数据中存在的所有问题？"
 
+#. mt: deepl
+#, fuzzy
 msgid "*Accuracy*"
-msgstr ""
+msgstr "*准确性*"
 
+#. mt: deepl
+#, fuzzy
 msgid "Are the identified root causes correct?"
-msgstr ""
+msgstr "所确定的根本原因是否正确？"
 
+#. mt: deepl
+#, fuzzy
 msgid "*Correlation Quality*"
-msgstr ""
+msgstr "*相关性质量*"
 
+#. mt: deepl
+#, fuzzy
 msgid "Did it properly link traces, logs, and metrics?"
-msgstr ""
+msgstr "它是否正确地关联了跟踪信息、日志和指标？"
 
+#. mt: deepl
+#, fuzzy
 msgid "*Actionability*"
-msgstr ""
+msgstr "*可操作性*"
 
+#. mt: deepl
+#, fuzzy
 msgid "Are the remediation suggestions useful and specific?"
-msgstr ""
+msgstr "这些整改建议是否有用且具体？"
 
+#. mt: deepl
+#, fuzzy
 msgid "The passing threshold defaults to *70/100*. Set `EVALUATION_THRESHOLD` to override it for any test script:"
-msgstr ""
+msgstr "通过阈值的默认值为 *70/100* 。若要针对任何测试脚本覆盖此设置，请将 `EVALUATION_THRESHOLD` 进行设置："
 
+#. mt: deepl
+#, fuzzy
 msgid "If the score falls below the threshold, the evaluation also outputs *prompt improvement suggestions* -- concrete changes to the system prompt that would improve analysis quality. This creates a feedback loop: run tests, get scores, improve the prompt, run tests again."
-msgstr ""
+msgstr "如果得分低于阈值，评估还会输出 *提示语改进建议——* 即对系统提示语进行 *具体* 修改，以提高分析质量。这形成了一个反馈循环：运行测试、获取得分、改进提示语、再次运行测试。"
 
+#. mt: deepl
+#, fuzzy
 msgid "Cross-LLM Combinations"
-msgstr ""
+msgstr "跨大型语言模型（LLM）组合"
 
+#. mt: deepl
+#, fuzzy
 msgid "A critical design choice is that the *analyzer LLM* and the *scorer LLM* can be different providers. This prevents self-evaluation bias -- an LLM scoring its own output might be systematically lenient."
-msgstr ""
+msgstr "一个关键的设计选择是， *分析器大语言模型（LLM）* 和 *评分器大语言模型（LLM）* 可以来自不同的提供商。这可以避免自我评估偏差——如果由同一个大语言模型对自己的输出进行评分，可能会出现系统性的宽容倾向。"
 
+#. mt: deepl
+#, fuzzy
 msgid "The test scripts support all combinations:"
-msgstr ""
+msgstr "测试脚本支持所有组合："
 
+#. mt: deepl
+#, fuzzy
 msgid "All 19 test scenarios pass across provider combinations:"
-msgstr ""
+msgstr "在所有提供商组合下，全部 19 个测试场景均通过："
 
+#. mt: deepl
+#, fuzzy
 msgid "AI Provider"
-msgstr ""
+msgstr "AI 服务提供商"
 
+#. mt: deepl
+#, fuzzy
 msgid "Scorer"
-msgstr ""
+msgstr "得分手"
 
+#. mt: deepl
+#, fuzzy
 msgid "Chaos"
-msgstr ""
+msgstr "混沌"
 
+#. mt: deepl
+#, fuzzy
 msgid "DB"
-msgstr ""
+msgstr "DB"
 
+#. mt: deepl
+#, fuzzy
 msgid "Weather"
-msgstr ""
+msgstr "天气"
 
+#. mt: deepl
+#, fuzzy
 msgid "OpenAI"
-msgstr ""
+msgstr "OpenAI"
 
+#. mt: deepl
+#, fuzzy
 msgid "Grok"
-msgstr ""
+msgstr "Grok"
 
+#. mt: deepl
+#, fuzzy
 msgid "12/12"
-msgstr ""
+msgstr "12月12日"
 
+#. mt: deepl
+#, fuzzy
 msgid "4/4"
-msgstr ""
+msgstr "4/4"
 
+#. mt: deepl
+#, fuzzy
 msgid "3/3"
-msgstr ""
+msgstr "3/3"
 
+#. mt: deepl
+#, fuzzy
 msgid "The cross-provider combinations (OpenAI/Grok, Grok/OpenAI) are the most important -- they validate that analysis quality is genuine, not an artifact of one LLM being generous about its own or a peer's output."
-msgstr ""
+msgstr "跨提供商组合（OpenAI/Grok、Grok/OpenAI）最为关键——它们验证了分析质量的真实性，而非源于某个大型语言模型对其自身或同行输出的过度慷慨。"
 
 #, fuzzy
 msgid "What&#8217;s Next"
 msgstr "接下来会发生什么"
 
+#. mt: deepl
+#, fuzzy
 msgid "The project is designed for extensibility -- adding a new LLM provider is a Maven profile + Quarkus configuration, adding new chaos types is a method in the test application's chaos endpoint, and the evaluation framework automatically validates any changes against the full test matrix."
-msgstr ""
+msgstr "该项目设计时考虑了可扩展性——添加新的 LLM 提供商只需配置一个 Maven 配置文件和 Quarkus 配置；添加新的混沌类型只需在测试应用程序的混沌端点中添加一个方法；而评估框架会自动根据完整的测试矩阵对任何更改进行验证。"
 
+#. mt: deepl
+#, fuzzy
 msgid "AI Root Cause Analysis is a https://github.com/quarkiverse/quarkus-ai-rca[Quarkiverse project] -- contributions, feedback, and testing across different application architectures are welcome."
-msgstr ""
+msgstr "AI 根本原因分析是 link:https://github.com/quarkiverse/quarkus-ai-rca[Quarkiverse] 的一项项目——欢迎大家在不同的应用架构上 link:https://github.com/quarkiverse/quarkus-ai-rca[进行贡献] 、提供反馈并参与测试。"
